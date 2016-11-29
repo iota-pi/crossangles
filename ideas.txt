@@ -1,0 +1,21 @@
+Include TBT, Bible Study, Core...
+Preferred days to avoid
+Blacklist times of week
+More frequent "full class" updates
+Documentation about when it's updated for users
+Export to Google Calendar option
+Save as image (canvas - directly to file)
+Report # of clash hours to user?
+Maximum clash hours option (possible values: "Minimum", 0, 1, 2,...)
+Get rid of next/prev buttons
+Keep mobile phones in mind in UI design (bojangles is ugly on phones)
+Cross angles icon
+
+3 main tasks:
+	1. Frontend / display
+	2. Web data scraping (including info update) (twice a day?)
+	3. Timetable generation (in JS)
+
+Language things:
+	Frontend, naturally done in HTML5/JS/CSS
+	Serverside backend using PHP (probably)
