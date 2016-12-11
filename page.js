@@ -12,6 +12,8 @@
 (function () {
     "use strict";
     $(document).ready(function () {
-        /* code goes here */
+        function addcourse() {
+            var inputfield = $('input#coursein');
+        }
     });
 }());

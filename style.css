@@ -44,9 +44,10 @@ header {
 div.box {
     border-width: 1px;
     border-style: solid;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-	border-radius: 3px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+    overflow: hidden;
 	border-color: rgba(0,0,0,0.3);
 	box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
     vertical-align: top;
@@ -120,22 +121,18 @@ input {
 
 textarea, select, input {
     padding: 5px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius:3px;
-    box-shadow:0 0 4px #cccccc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
 	margin-bottom: 10px;
     color: #505050;
-    border: 1px solid rgba(0,0,0,0.4);
-}
-
-select, input {
-    height: 34px;
-    width: 150px;
+    transition-duration: 0.5s;
+    transition-property: border-color;
 }
 
 textarea:focus, select:focus, input:focus {
-    border: 1px solid #3071A9;
+    border-color: #00aaff;
 }
 
 textarea {
@@ -148,24 +145,37 @@ select {
     background-color: white;
 }
 
-input[type="button"], input[type="submit"] {
+input[type="button"] {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
     padding: 5px;
-    border:1px solid #cccccc;
-    box-shadow:0 0 3px #cccccc;
-    height: 34px;
+    border: 1px solid #cccccc;
+    min-width: 35px;
 }
 
-input[type="button"]:focus, input[type="submit"]:focus {
-    border-radius: 4px;
-    padding: 5px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+input[type="button"]:focus {
     border: 1px solid #3071A9;
-    height: 34px;
+}
+
+input.attach-left {
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+}
+
+input.attach-right {
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    float: left;
+    border-right: 0;
+}
+
+input#coursein {
+    width: 74%;
 }
 
 /* misc styles */
