@@ -24,8 +24,8 @@ div.flow {
 }
 
 header {
-	background-color: #099bdd;
-	border-bottom: #266099 1px solid;
+	background-color: #119944;
+	border-bottom: #0e6f32 1px solid;
     padding: 8px;
 	width: 100%;
 	z-index: 100;
@@ -60,7 +60,7 @@ div.box {
 }
 
 div.box-header {
-	background-color: #099bdd;
+	background-color: #119944;
 	color: white;
 }
 
@@ -178,6 +178,10 @@ input[type="button"]:focus, input[type="submit"]:focus {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+div.box#output {
+    display: none;
 }
 
 /* tooltip styles */
