@@ -117,9 +117,7 @@ td.final {
 /* input styles */
 input {
     margin-right: 10px;
-}
-
-textarea, select, input {
+    box-sizing: border-box;
     padding: 5px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -131,38 +129,20 @@ textarea, select, input {
     transition-property: border-color;
 }
 
-textarea:focus, select:focus, input:focus {
-    border-color: #00aaff;
-}
-
-textarea {
-    padding: 5px;
-    width: 100%;
-    resize: none;
-}
-
-select {
-    background-color: white;
-}
-
 input[type="button"] {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    padding: 5px;
-    border: 1px solid #cccccc;
     min-width: 35px;
+    background-color: #dddddd;
 }
 
-input[type="button"]:focus {
-    border: 1px solid #3071A9;
+input[type="button"]:hover {
+    background-color: #d4d4d4;
+}
+input[type="button"]:active {
+    background-color: #cccccc;
 }
 
-input.attach-left {
-    -webkit-border-radius: 0 4px 4px 0;
-    -moz-border-radius: 0 4px 4px 0;
-    border-radius: 0 4px 4px 0;
-    margin-right: 0;
+input:focus {
+    border-color: #00aaff;
 }
 
 input.attach-right {
@@ -171,11 +151,25 @@ input.attach-right {
     border-radius: 4px 0 0 4px;
     margin-right: 0;
     float: left;
-    border-right: 0;
+}
+
+input.attach-left {
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+    border-left-width: 0;
+}
+
+input.attach-left:focus {
+    border-left-width: 1px;
 }
 
 input#coursein {
-    width: 74%;
+    width: 100%;
+    width: -moz-calc(100% - 35px);
+    width: -webkit-calc(100% - 35px);
+    width: calc(100% - 35px);
 }
 
 /* misc styles */
