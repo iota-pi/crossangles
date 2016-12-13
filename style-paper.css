@@ -1,0 +1,212 @@
+/* style.css
+ * 
+ * Authors: David Adams
+ */
+
+html, body {
+    height: 100%;
+}
+
+body {
+	background-color: #f4f4f4;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+p {
+	margin-bottom: 7px;
+	margin-bottom: 0.5em;
+}
+
+div.flow {
+	display: inline-block;
+}
+
+header {
+	background-color: #119944;
+	border-bottom: #0e6f32 1px solid;
+    padding: 10px;
+	width: 100%;
+	z-index: 100;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	color: white;
+	font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+	cursor: default;
+}
+
+/* footer styles */
+footer {
+	color: white;
+	background-color: #303030;
+	text-align: center;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+footer p {
+    margin: 0;
+}
+footer div.content {
+    padding: 10px;
+}
+
+/* box styles */
+div.box {
+    border-width: 1px;
+    border-style: solid;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+    overflow: hidden;
+	border-color: rgba(0,0,0,0.3);
+	box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+    vertical-align: top;
+    margin-bottom: 20px;
+	padding: 0px;
+	background-color: #ffffff;
+	min-width: 290px;
+	position: relative;
+}
+
+div.box-header {
+	background-color: #119944;
+	color: white;
+}
+
+div.box-content {
+	padding: 10px 10px 5px 10px;
+}
+
+div.heading {
+	color: white;
+	font-weight: bold;
+	padding: 6px 6px 6px 10px;
+	display: inline-block;
+	cursor: default;
+}
+
+/* table styles */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border-bottom: solid 1px #d2d2d2;
+	min-width: 70px;
+	padding: 8px;
+	text-align: left;
+}
+
+td {
+	color: rgba(0,0,0,0.7);
+}
+
+tr:hover {
+	background-color: #f2f2f2;
+}
+
+tr.header {
+	background-color: #099bdd;
+	color: white;
+	font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+	cursor: default;
+}
+
+td.novalue {
+	color: rgba(0,0,0,0.4);
+}
+
+td.final {
+	color: rgba(0,0,0,1);
+}
+
+/* misc styles */
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div.box#output {
+    display: none;
+}
+
+.panel-group .panel, .panel-group .panel-primary {
+    margin-bottom: 15px;
+}
+
+.panel-primary .panel-heading {
+	font-weight: bold;
+    font-size: 14px;
+    padding: 10px 15px 8px;
+}
+
+/* BS3 fixes */
+.twitter-typeahead .tt-query,
+.twitter-typeahead .tt-hint {
+    margin-bottom: 0;
+}
+.tt-input {
+	height: 38px;
+    width: 100%;
+	padding: 8px !important;
+}
+.tt-hint {
+	display: block;
+	width: 100%;
+	height: 38px;
+	padding: 8px !important;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #999;
+	vertical-align: middle;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.tt-menu {
+	min-width: 160px;
+    position: absolute !important;
+    top: 38px !important;
+	padding: 5px 0;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 4px;
+	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	background-clip: padding-box;
+
+}
+.tt-suggestion {
+	display: block;
+	padding: 3px 20px;
+    background-color: white;
+}
+.tt-suggestion.tt-is-under-cursor {
+	color: #fff;
+	background-color: #428bca;
+}
+.tt-suggestion.tt-is-under-cursor a {
+	color: #fff;
+}
+.tt-suggestion p {
+	margin: 0;
+}
