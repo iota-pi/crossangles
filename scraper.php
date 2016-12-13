@@ -8,6 +8,14 @@
  * Authors: David Adams
  */
 
+function get_page_data($url) {
+    return file_get_contents($url);
+}
 
+function scrape() {
+    /* TODO */
+}
+
+scrape();
 
 ?>

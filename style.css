@@ -24,7 +24,7 @@ div.flow {
 header {
 	background-color: #119944;
 	border-bottom: #0e6f32 1px solid;
-    padding: 8px;
+    padding: 10px;
 	width: 100%;
 	z-index: 100;
 	position: fixed;
@@ -38,6 +38,26 @@ header {
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 	cursor: default;
+}
+
+h1 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+/* footer styles */
+footer {
+	color: white;
+	background-color: #303030;
+	text-align: center;
+}
+footer p {
+    margin: 0;
+}
+footer div.content {
+    padding: 10px;
 }
 
 /* box styles */
@@ -230,24 +250,11 @@ div.box#output {
     display:block;
 }
 
-/* footer styles */
-footer {
-	color: white;
-	background-color: #303030;
-	text-align: center;
-}
-footer p {
-    margin: 0;
-}
-footer div.content {
-    padding: 10px;
-}
-
 /* Container styles */
 div.container {
 	width: 980px;
     padding: 80px 0px 40px 0px;
-	margin: 0 auto -60px auto;
+	margin: 0 auto -66px auto;
     
     /* for footer */
     min-height: 100%; /* old css fallback */
@@ -260,7 +267,7 @@ div.container {
     content: "";
 }
 footer, .container:after {
-    min-height: 60px;
+    min-height: 66px;
 }
 @media only screen and (max-width: 1000px) and (min-width: 880px) {
 	div.container {

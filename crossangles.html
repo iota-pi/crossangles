@@ -17,60 +17,56 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         
         <!-- load javascript -->
-        <script type="text/javascript" src="typeahead.bundle.min.js"></script>
         <script type="text/javascript" src="jquery-3.0.0.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="typeahead.js"></script>
+        <script type="text/javascript" src="page.js"></script>
         
         <!-- load stylesheets -->
         <link rel="stylesheet" href="reset.css" type="text/css">
-        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="paper-bs3.min.css">
+        <link rel="stylesheet" href="style-paper.css" type="text/css">
     </head>
 
     <body>
-        <header>
-            <h1>CrossAngles</h1>
-        </header>
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">CrossAngles</a>
+                </div>
+            </div>
+        </nav>
 
         <div class="container">
-            <div class="box">
-                <div class="box-header">
-                    <div class="heading">
+            <div class="panel-group">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
                         Course Selection
                     </div>
-                </div>
-                <div class="box-content">
-                    <!-- content goes here -->
-                    <div>
-                        <input id="coursein" class="attach-right typeahead" type="text" placeholder="Enter course code or name" />
-                        <input type="button" class="attach-left square" onclick="addcourse()" value="+" />
+                    <div class="panel-body">
+                        <!-- content goes here -->
+                        <input class="coursein typeahead" type="text" placeholder="Enter course code or name" />
+                        <table class="table table-bordered" id="course-table">
+                            <tbody id="courses">
+                                
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </div>
-            
-            <div class="box">
-                <div class="box-header">
-                    <div class="heading">
+                
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
                         Options
                     </div>
-                </div>
-                <div class="box-content">
-                    <!-- content goes here -->
-                    Content placeholder
-                </div>
-            </div>
-            
-            <div class="box" id="output">
-                <div class="box-header">
-                    <div class="heading">
-                        Timetable
+                    <div class="panel-body">
+                        <!-- content goes here -->
+                        Placeholder
                     </div>
                 </div>
-                <div class="box-content">
-                    <!-- content goes here -->
-                    Content placeholder
-                </div>
+                
+                <!-- extra panels go here -->
             </div>
-
-            <!-- extra boxes go here -->
         </div>
 
         <footer>

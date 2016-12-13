@@ -7,17 +7,19 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true*/
-/*global $, jQuery, alert*/
+/*global $, jQuery, console, Typeahead */
 
 (function () {
     "use strict";
     var courses;
     
+    /* initialise typeahead */
     function init() {
-        var matcher = function (strs) {
+        var matcher = function (hash) {
             return function findMatches(q, cb) {
                 var matches = [];
-                $.each(strs, function (i, str) {
+                $.each(hash, function (key, val) {
+                    var str = (key + ' - ' + val);
                     if (str.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
                         matches.push(str);
                     }
@@ -25,25 +27,29 @@
                 cb(matches);
             };
         };
-        $('.typeahead#coursein').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        }, {
+        $('.typeahead.coursein').typeahead({
             name: 'courses',
             source: matcher(courses)
         });
     }
     
     // Load course data from courses.json
-    $.getJSON('courses.json', function (json) {
-        courses = json;
+    $.getJSON('courses.json', function (data) {
+        courses = data;
         $(document).ready(function () {
             init();
         });
     });
-    
-    function addcourse() {
-        var inputfield = $('input#coursein');
-    }
 }());
+    
+/* addcourse()
+ * Adds course from course input (typeahead) box to list of courses
+ */
+function addcourse(course) {
+    "use strict";
+    var tbody = $('#courses'),
+        icon = $('<div class="btn-lg">').append($('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true)),
+        tr = $('<tr>').html('<td>' + course + '</td>').append(icon);
+    tbody.append(tr);
+    $('#course-table').show();
+}
