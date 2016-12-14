@@ -7,7 +7,7 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true*/
-/*global $, jQuery, console, Typeahead */
+/*global $, jQuery, console */
 
 (function () {
     "use strict";

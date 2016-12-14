@@ -21,4 +21,5 @@ Pie graph showing time per course? (not sure if people would use this, but might
 
 Language things:
 	Frontend, naturally done in HTML5/JS/CSS
-	Serverside backend using PHP (probably)
+	Use SVG instead of canvas for timetable?
+	Server-side backend (scraping) in Python
