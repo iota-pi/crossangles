@@ -34,7 +34,6 @@ header {
 	font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
-    overflow: hidden;
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 	cursor: default;
@@ -69,6 +68,11 @@ footer div.content {
 /* panel styles */
 .panel-group .panel, .panel-group .panel-primary {
     margin-bottom: 15px;
+    
+    /* overflow rules */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
 }
 
 .panel-primary .panel-heading {
@@ -147,6 +151,10 @@ footer div.content {
 }
 
 /* checkboxes */
+.checkbox-inline+.checkbox-inline {
+	margin: 0;
+}
+
 .checkbox-inline label {
 	min-width: 150px;
 }
