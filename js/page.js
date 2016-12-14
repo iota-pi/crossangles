@@ -17,18 +17,20 @@
     function init() {
         var matcher = function (hash) {
             return function findMatches(q, cb) {
-                var matches = [];
+                var matches = [],
+                    initial = [];
                 $.each(hash, function (key, val) {
                     var str = (key + ' - ' + val),
                         index = str.toLowerCase().indexOf(q.toLowerCase());
                     if (index > 0) {
                         matches.push(str);
                     } else if (index === 0) {
-                        matches.unshift(str);
+                        initial.push(str);
                     }
                 });
                 matches.sort();
-                cb(matches);
+                initial.sort();
+                cb(initial + matches);
             };
         };
         $('.typeahead.coursein').typeahead({
