@@ -19,11 +19,15 @@
             return function findMatches(q, cb) {
                 var matches = [];
                 $.each(hash, function (key, val) {
-                    var str = (key + ' - ' + val);
-                    if (str.toLowerCase().indexOf(q.toLowerCase()) !== -1) {
+                    var str = (key + ' - ' + val),
+                        index = str.toLowerCase().indexOf(q.toLowerCase());
+                    if (index > 0) {
                         matches.push(str);
+                    } else if (index === 0) {
+                        matches.unshift(str);
                     }
                 });
+                matches.sort();
                 cb(matches);
             };
         };
