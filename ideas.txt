@@ -5,11 +5,14 @@ More frequent "full class" updates
 Documentation about when it's updated for users
 Export to Google Calendar option
 Save as image (canvas - directly to file)
+Export to image at fixed resolution (no tiny timetables from mobiles!)
+Double click on timetable for full screen?
 Report # of clash hours to user?
 Maximum clash hours option (possible values: "Minimum", 0, 1, 2,...)
 Get rid of next/prev buttons
 Keep mobile phones in mind in UI design (bojangles is ugly on phones)
 Cross angles icon
+Pie graph showing time per course? (not sure if people would use this, but might be a bit of fun)
 
 3 main tasks:
 	1. Frontend / display
