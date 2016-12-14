@@ -1,0 +1,313 @@
+/* style.css
+ * 
+ * Authors: David Adams
+ */
+
+html, body {
+    height: 100%;
+}
+
+body {
+	background-color: #f4f4f4;
+	color: rgba(0, 0, 0, 0.8);
+}
+
+p {
+	margin-bottom: 7px;
+	margin-bottom: 0.5em;
+}
+
+div.flow {
+	display: inline-block;
+}
+
+header {
+	background-color: #119944;
+	border-bottom: #0e6f32 1px solid;
+    padding: 10px;
+	width: 100%;
+	z-index: 100;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	color: white;
+	font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+	cursor: default;
+}
+
+h1 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+/* footer styles */
+footer {
+	color: white;
+	background-color: #303030;
+	text-align: center;
+}
+footer p {
+    margin: 0;
+}
+footer div.content {
+    padding: 10px;
+}
+
+/* box styles */
+div.box {
+    border-width: 1px;
+    border-style: solid;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+	border-radius: 5px;
+    overflow: hidden;
+	border-color: rgba(0,0,0,0.3);
+	box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+    vertical-align: top;
+    margin-bottom: 20px;
+	padding: 0px;
+	background-color: #ffffff;
+	min-width: 290px;
+	position: relative;
+}
+
+div.box-header {
+	background-color: #119944;
+	color: white;
+}
+
+div.box-content {
+	padding: 10px 10px 5px 10px;
+}
+
+div.heading {
+	color: white;
+	font-weight: bold;
+	padding: 6px 6px 6px 10px;
+	display: inline-block;
+	cursor: default;
+}
+
+/* table styles */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th, td {
+	border-bottom: solid 1px #d2d2d2;
+	min-width: 70px;
+	padding: 8px;
+	text-align: left;
+}
+
+td {
+	color: rgba(0,0,0,0.7);
+}
+
+tr:hover {
+	background-color: #f2f2f2;
+}
+
+tr.header {
+	background-color: #099bdd;
+	color: white;
+	font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+	cursor: default;
+}
+
+td.novalue {
+	color: rgba(0,0,0,0.4);
+}
+
+td.final {
+	color: rgba(0,0,0,1);
+}
+
+/* input styles */
+input {
+    margin-right: 10px;
+    box-sizing: border-box;
+    padding: 5px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+	margin-bottom: 10px;
+    color: #505050;
+    transition-duration: 0.5s;
+    transition-property: border-color;
+}
+
+input[type="button"] {
+    min-width: 35px;
+    background-color: #dddddd;
+}
+
+input[type="button"]:hover {
+    background-color: #d4d4d4;
+}
+input[type="button"]:active {
+    background-color: #cccccc;
+}
+
+input:focus {
+    border-color: #00aaff;
+}
+
+input.attach-right {
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+    margin-right: 0;
+    float: left;
+}
+
+input.attach-left {
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+    margin-right: 0;
+    border-left-width: 0;
+}
+
+input.attach-left:focus {
+    border-left-width: 1px;
+}
+
+input#coursein {
+    width: 100%;
+    width: -moz-calc(100% - 35px);
+    width: -webkit-calc(100% - 35px);
+    width: calc(100% - 35px);
+}
+
+/* misc styles */
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div.box#output {
+    display: none;
+}
+
+/* tooltip styles */
+[data-tip] {
+    position:relative;
+}
+[data-tip]:before {
+    content:'';
+    display:none; /* hides the tooltip when not hovered */
+    content:'';
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #1a1a1a;   
+    position:absolute;
+    top:35px;
+    left:12px;
+    z-index:20;
+    font-size:0;
+    line-height:0;
+    width:0;
+    height:0;
+}
+[data-tip]:after {
+    display:none;
+    content:attr(data-tip);
+    position:absolute;
+    top:40px;
+    left:0px;
+    padding:5px 8px;
+    background:#1a1a1a;
+    color:#fff;
+    z-index:21;
+    font-size: 0.75em;
+    height:18px;
+    line-height:18px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    white-space:nowrap;
+    word-wrap:normal;
+}
+[data-tip]:hover:before,
+[data-tip]:hover:after {
+    display:block;
+}
+
+/* Container styles */
+div.container {
+	width: 980px;
+    padding: 80px 0px 40px 0px;
+	margin: 0 auto -66px auto;
+    
+    /* for footer */
+    min-height: 100%; /* old css fallback */
+    min-height: -moz-calc(100% - 120px);
+    min-height: -webkit-calc(100% - 120px);
+    min-height: calc(100% - 120px);
+}
+.container:after {
+    display: block;
+    content: "";
+}
+footer, .container:after {
+    min-height: 66px;
+}
+@media only screen and (max-width: 1000px) and (min-width: 880px) {
+	div.container {
+		width: 860px;
+	}
+}
+@media only screen and (max-width: 879px) and (min-width: 768px) {
+	div.container {
+		width: 700px;
+	}
+}
+@media only screen and (max-width: 767px) and (min-width: 590px) {
+	div.container {
+		width: 560px;
+	}
+	div.spacing1 {
+		display: inline-block;
+	}
+	@viewport 600;
+}
+@media only screen and (max-width: 599px) and (min-width: 450px) {
+	div.container {
+		width: 430px;
+	}
+	div.spacing1, div.spacing2 {
+		display: inline-block;
+	}
+}
+@media only screen and (max-width: 449px) and (min-width: 320px) {
+	div.container {
+		width: 260px;
+	}
+}
+@media only screen and (max-width: 880px) {
+	div.placeholder {
+		display: none;
+	}
+}
+@media only screen and (min-width: 600px) {
+	div.placeholder.over600 {
+		display: inline-block;
+	}
+}
