@@ -116,7 +116,7 @@ footer div.content {
     background-color: white;
     cursor: default;
 }
-.dd-item:hover {
+.dd-item.focus {
 	background-color: #59b4ff;
 	/*background-color: #cccccc;
     background-color: rgba(0, 0, 0, 0.15);*/

@@ -30,7 +30,7 @@
                 });
                 matches.sort();
                 initial.sort();
-                cb(initial + matches);
+                cb(initial.concat(matches).slice(0, 10));
             };
         };
         $('.typeahead.coursein').typeahead({

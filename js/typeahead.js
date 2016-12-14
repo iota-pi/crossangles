@@ -25,6 +25,29 @@
         this.wrap(wrapper);
         menu.insertAfter(this);
         
+        this.keydown(function (e) {
+            // Check for Up and Down keypresses
+            var focus;
+            if (e.which === 38 || e.which === 40) {
+                if ($('.dropdown-menu').find('div.focus').length !== 0) {
+                    focus = $('.dropdown-menu').find('div.focus');
+                    if (e.which === 38) {
+                        if (focus.prev('div.dd-item').length !== 0) {
+                            focus.removeClass('focus');
+                            focus.prev('div.dd-item').addClass('focus');
+                        }
+                    }
+                    if (e.which === 40) {
+                        if (focus.next('div.dd-item').length !== 0) {
+                            focus.removeClass('focus');
+                            focus.next('div.dd-item').addClass('focus');
+                        }
+                    }
+                }
+                e.preventDefault();
+            }
+        });
+        
         this.keyup(function (e) {
             var el = $(this),
                 val = el.val(),
@@ -52,12 +75,29 @@
                         dditem = $('<div class="dd-item"></div>');
                         dditem.html(str);
                         dditem.click(function () { el.val(''); addcourse(item); menu.slideUp(200); });
+                        dditem.mousemove(function (e) { $('div.dd-item').removeClass('focus'); $(e.currentTarget).addClass('focus'); });
                         menu.append(dditem);
                         
                         // Ensure the menu is being shown
                         menu.show();
                     });
+                    $('div.dd-item').first().addClass('focus');
                 };
+            // Check for Enter keypresses
+            if (e.which === 13) {
+                if ($('.dropdown-menu').find('div.focus').length !== 0) {
+                    el.val('');
+                    addcourse($('.dropdown-menu').find('div.focus').html().replace(/<\/?strong>/gi, ''));
+                    menu.slideUp(200);
+                }
+            }
+            
+            // Check for Up and Down keypresses
+            if (e.which === 38 || e.which === 40) {
+                e.preventDefault();
+                return;
+            }
+            
             if (val) {
                 data.source(val, cb);
             } else {
