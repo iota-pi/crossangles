@@ -74,6 +74,7 @@
                         str = item.replace(re, '<strong>$1</strong>');
                         dditem = $('<div class="dd-item"></div>');
                         dditem.html(str);
+                        dditem.addClass('noselect');
                         dditem.click(function () { el.val(''); addcourse(item); menu.slideUp(200); });
                         dditem.mousemove(function (e) { $('div.dd-item').removeClass('focus'); $(e.currentTarget).addClass('focus'); });
                         menu.append(dditem);
@@ -97,6 +98,9 @@
                 e.preventDefault();
                 return;
             }
+            if (e.which === 27) {
+                cb();
+            }
             
             if (val) {
                 data.source(val, cb);
@@ -106,7 +110,16 @@
         });
         
         this.focusout(function () {
-            menu.slideUp(200);
+            var el = $(this);
+            if ($('.dd-item:active').length === 0) {
+                menu.slideUp(200);
+            } else {
+                menu.mouseout(function (e) {
+                    if (!el.is(':focus')) {
+                        menu.slideUp(200);
+                    }
+                });
+            }
         });
     };
     

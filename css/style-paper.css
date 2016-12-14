@@ -145,3 +145,8 @@ footer div.content {
     border-left: none;
     border-right: none;
 }
+
+/* checkboxes */
+.checkbox-inline label {
+	min-width: 150px;
+}

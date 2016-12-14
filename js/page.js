@@ -82,3 +82,8 @@ function addcourse(course) {
     tr.hide().fadeIn(200);
     /* TODO: add slideDown too? - bit tricky to do with table rows... */
 }
+
+$(document).ready(function () {
+    "use strict";
+    $('.checkbox-inline').addClass('noselect');
+});
