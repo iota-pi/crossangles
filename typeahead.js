@@ -7,7 +7,7 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true*/
-/*global $, jQuery, console, addcourse */
+/*global $, jQuery, console, addcourse, setTimeout */
 
 (function () {
     "use strict";
@@ -33,14 +33,28 @@
                     menu.hide();
                     menu.empty();
                     $.each(data, function (i, item) {
+                        var str, dditem, skip;
                         // Skip already complete ones
                         if (val.toLowerCase() === item.toLowerCase()) { return true; }
                         
-                        var str = item.replace(re, '<strong>$1</strong>'),
-                            dditem = $('<div class="dd-item"></div>');
+                        // Skip already added courses
+                        skip = false;
+                        $('#courses').find('td').each(function () {
+                            if ($(this).html() === item) {
+                                skip = true;
+                                return false;
+                            }
+                        });
+                        if (skip) { return true; }
+                        
+                        // Add this course to the dropdown
+                        str = item.replace(re, '<strong>$1</strong>');
+                        dditem = $('<div class="dd-item"></div>');
                         dditem.html(str);
-                        dditem.click(function () { el.val(''); addcourse(item); menu.hide(); });
+                        dditem.click(function () { el.val(''); addcourse(item); menu.slideUp(200); });
                         menu.append(dditem);
+                        
+                        // Ensure the menu is being shown
                         menu.show();
                     });
                 };
@@ -49,6 +63,10 @@
             } else {
                 cb();
             }
+        });
+        
+        this.focusout(function () {
+            menu.slideUp(200);
         });
     };
     

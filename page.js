@@ -41,15 +41,38 @@
         });
     });
 }());
-    
+
+/* removecourse()
+ * Adds course from course input (typeahead) box to list of courses
+ */
+function removecourse(e) {
+    "use strict";
+    var tr = $(e.currentTarget).parents('tr'),
+        h = tr.height();
+    tr.find('td').fadeOut(200, function () {
+        tr.empty();
+        tr.height(h);
+        tr.slideUp(200, function () {
+            var table = tr.parents('table');
+            tr.remove();
+            if (table.find('tr').length === 0) {
+                table.slideUp(50);
+            }
+        });
+    });
+}
+
 /* addcourse()
  * Adds course from course input (typeahead) box to list of courses
  */
 function addcourse(course) {
     "use strict";
     var tbody = $('#courses'),
-        icon = $('<div class="btn-lg">').append($('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true)),
-        tr = $('<tr>').html('<td>' + course + '</td>').append(icon);
+        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removecourse),
+        tr = $('<tr>').html('<td style="width:100%">' + course + '</td>').append($('<td>').append(icon)),
+        h = tr.height();
     tbody.append(tr);
     $('#course-table').show();
+    tr.hide().fadeIn(200);
+    /* TODO: add slideDown too? - bit tricky to do with table rows... */
 }

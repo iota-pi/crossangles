@@ -124,6 +124,24 @@ footer div.content {
 
 /* course-container */
 #course-table {
-    margin: 10px 0;
-    display: none; 
+    margin: 10px 0 0 0;
+    display: none;
+}
+
+.glyphicon.glyphicon-remove-circle {
+	font-size: 20px;
+    vertical-align: top;
+    color: #2196f3;
+}
+.glyphicon.glyphicon-remove-circle:hover {
+    color: #147fd4;
+}
+.glyphicon.glyphicon-remove-circle:active {
+    color: #0060aa;
+}
+
+.table.table-bordered tbody tr td {
+    vertical-align: middle;
+    border-left: none;
+    border-right: none;
 }
