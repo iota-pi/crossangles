@@ -70,7 +70,6 @@ footer div.content {
     margin-bottom: 15px;
     
     /* overflow rules */
-    overflow: hidden;
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
 }
