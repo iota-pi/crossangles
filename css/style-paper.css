@@ -80,6 +80,10 @@ footer div.content {
     padding: 10px 15px 8px;
 }
 
+.panel.panel-primary .panel-body {
+    max-height: 850px;
+}
+
 /* typeahead styles */
 .typeahead-container {
     position: relative;
