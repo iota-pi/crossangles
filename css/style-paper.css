@@ -55,16 +55,6 @@ footer div.content {
     padding: 10px;
 }
 
-/* misc styles */
-.noselect {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
-
 /* panel styles */
 .panel-group .panel, .panel-group .panel-primary {
     margin-bottom: 15px;
@@ -80,8 +70,8 @@ footer div.content {
     padding: 10px 15px 8px;
 }
 
-.panel.panel-primary .panel-body {
-    max-height: 850px;
+.panel.panel-primary .panel-body #timetable {
+    height: 800px;
 }
 
 /* typeahead styles */
@@ -160,4 +150,14 @@ footer div.content {
 
 .checkbox-inline label {
 	min-width: 150px;
+}
+
+/* misc styles */
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }

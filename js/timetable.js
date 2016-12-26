@@ -7,15 +7,16 @@
 /*jslint browser: true*/
 /*global $, jQuery, SVG, console */
 
-function drawGrid(draw) {
+function drawGrid(draw, maxHours) {
     "use strict";
+    maxHours = (maxHours === undefined) ? 14 : maxHours;
     var i,
         w = draw.viewbox().width,
         h = draw.viewbox().height,
         x = 90,
         y = 44,
         days  = 5,
-        hours = 14,
+        hours = Math.min(14, maxHours),
         xstep = (w - x) / days,
         ystep = (h - y) / hours;
     console.log(w, h);
@@ -30,16 +31,38 @@ function drawGrid(draw) {
     }
 }
 
-function drawTable(draw) {
+function drawLabels(draw) {
+    "use strict";
+    var i,
+        w = draw.viewbox().width,
+        h = draw.viewbox().height,
+        x = 90,
+        y = 44,
+        days  = 5,
+        hours = 14,
+        xstep = (w - x) / days,
+        ystep = (h - y) / hours,
+        dow = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        text;
+    
+    // Draw day labels
+    for (i = 0; i < days; i += 1) {
+        text = draw.plain(dow[i]);
+        console.log(text.width());
+    }
+}
+
+function drawTable(draw, maxHours) {
     "use strict";
     draw.clear();
     drawGrid(draw);
+    drawLabels(draw);
 }
 
 $(document).ready(function () {
     "use strict";
     // Create SVG
-    var draw = SVG('timetable').size('100%', 'auto');
+    var draw = SVG('timetable');
     draw.viewbox(0, 0, 690, 800); // 690x800 coordinate system, regardless of rendering size
     
     // Fix subpixel offset
