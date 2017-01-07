@@ -1,7 +1,7 @@
 /* typeahead.js
  *
  * JS to do a better job than https://github.com/twitter/typeahead.js
- *
+ * 
  * Authors: David Adams
  */
 
@@ -109,6 +109,7 @@
             }
         });
         
+        // Hide dropdown menu when focus is lost
         this.focusout(function () {
             var el = $(this);
             if ($('.dd-item:active').length === 0) {

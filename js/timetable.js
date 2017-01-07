@@ -7,6 +7,9 @@
 /*jslint browser: true*/
 /*global $, jQuery, SVG, console */
 
+/* drawGrid()
+ * Draws the background grid for the timetable on to the SVG
+ */
 function drawGrid(draw, maxHours) {
     "use strict";
     maxHours = (maxHours === undefined) ? 14 : maxHours;
@@ -31,6 +34,9 @@ function drawGrid(draw, maxHours) {
     }
 }
 
+/* drawLabels()
+ * Draws labels (days of the week, times) onto the timetable SVG
+ */
 function drawLabels(draw) {
     "use strict";
     var i,
@@ -52,6 +58,9 @@ function drawLabels(draw) {
     }
 }
 
+/* drawTable()
+ * Draws the timetable onto the SVG
+ */
 function drawTable(draw, maxHours) {
     "use strict";
     draw.clear();

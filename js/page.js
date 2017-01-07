@@ -49,7 +49,7 @@
 }());
 
 /* removecourse()
- * Adds course from course input (typeahead) box to list of courses
+ * Removes a course from the selected courses list
  */
 function removecourse(e) {
     "use strict";
@@ -69,7 +69,7 @@ function removecourse(e) {
 }
 
 /* addcourse()
- * Adds course from course input (typeahead) box to list of courses
+ * Adds the course from course input (typeahead) box to list of courses
  */
 function addcourse(course) {
     "use strict";
@@ -85,5 +85,7 @@ function addcourse(course) {
 
 $(document).ready(function () {
     "use strict";
+    
+    // Add noselect styling to checkboxes
     $('.checkbox-inline').addClass('noselect');
 });
