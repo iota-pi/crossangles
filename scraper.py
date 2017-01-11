@@ -26,7 +26,7 @@ def main():
             courses[course[0]] = course[1]
             data = getTimetable(page)
             timetable[course[0]] = data
-            print('Completed course', course[0], '(' + str(bytecount) + ' bytes downloaded)', end='\r')
+            print('Completed course', course[0], '(' + str(bytecount) + ' bytes downloaded in total)', end='\r')
             
         if len(courses) != 0:
             with open('data/courses.json', 'w') as f:
