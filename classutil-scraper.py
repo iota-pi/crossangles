@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from lxml import html
+from lxml import html, etree
 import requests
 import json
 import time
@@ -11,11 +11,13 @@ semcodes = {'sem1': 2, 'sem2': 3, 'summer': 1}
 semester = semcodes['sem1']
 
 def main():
+    global bytecount
+    
     courses = {}
     timetables = {}
     
     faculties = getPages()
-    for faculty in faculties:
+    for faculty in faculties[1:]:
         html = loadPage('http://classutil.unsw.edu.au/' + faculty)
         
         # Get course codes (and names)
@@ -53,11 +55,19 @@ def main():
         
         # Update dict of timetables
         timetables.update(timetable)
+        
+        # Some progress output
+        print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)', end='\n')
+        break
     
     with open('data/courses.json', 'w') as f:
         json.dump(courses, f)
     with open('data/timetable.json', 'w') as f:
         json.dump(timetables, f)
+    
+    print()
+    print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')
+    
 
 def getPages():
     global semester
@@ -84,37 +94,52 @@ def getTimetable(tree):
     component = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[1]/text()')
     status    = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[5]/text()')
     capacity  = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[6]/text()')
-    timetable = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[8]/text()')
+    timetable = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[8]')
+    # Get all the text from each of the elements with timetable data
+    timetable = map(lambda e: etree.XPath("string()")(e), timetable)
     
-    times = []
-    weeks = []
-    locations = []
+    data = []
     for timestring in timetable:
         # Skip any classes without timetable data
         if timestring.strip() == '':
             continue
         
-        time, running, location = splitTimetableData(timestring)
-        
-        times.append(time)
-        weeks.append(running)
-        locations.append(location)
+        data.append(splitTimetableData(timestring))
     
-    return list(zip(component, status, capacity, times, weeks, locations))
+    return list(zip(component, status, capacity, data))
 
 def splitTimetableData(string):
+    # Split up the parts of a string detailing multiple class times for one stream
+    if '; ' in string:
+        time = []
+        weeks = []
+        location = []
+        for x in string.split('; '):
+            a, b, c = splitTimetableData(x)
+            time.append(a)
+            weeks.append(b)
+            location.append(c)
+        return list(zip(time, weeks, location))
+    
     # Get first half of timetable string containing day of week and time of day info
     time = string.split('(', maxsplit=1)[0].strip()
+    
+    # Keep only the text within the brackets
+    string = string[string.index('(') + 1 : string.index(')')]
 
     # Process weeks where class is running
-    weeks = string.split('(', maxsplit=1)[1].split(' ')[0].strip('w,)')
+    weeks = string.split(' ')[0].strip('w,')
     weeks = expandRanges(weeks)
 
     # Get location if available
-    if ')' in string:
-        location = re.sub(r'.*, ', '', string[string.index('('):-1])
+    # NB: take from ', ' to end, but then remove the ', ' using string[2:]
+    location = string[string.index(', '):][2:]
+    
+    # Replace blank or 'See School' locations with a question mark for uniformity & simplicity
+    if location == '' or location == 'See School':
+        location = '?'
 
-    return time, weeks, location
+    return (time, weeks, location)
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
