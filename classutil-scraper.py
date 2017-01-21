@@ -53,12 +53,11 @@ def main():
         
         # Update dict of timetables
         timetables.update(timetable)
-        break
     
-    # TEMP, debugging only
-    for key, val in timetables.items():
-        print(key, '->', val)
-    # END TEMP
+    with open('data/courses.json', 'w') as f:
+        json.dump(courses, f)
+    with open('data/timetable.json', 'w') as f:
+        json.dump(timetables, f)
 
 def getPages():
     global semester
