@@ -12,17 +12,53 @@ semester = semcodes['sem1']
 
 def main():
     courses = {}
-    timetable = {}
+    timetables = {}
     
     faculties = getPages()
     for faculty in faculties:
-        tree = loadPage('http://classutil.unsw.edu.au/' + faculty)
+        html = loadPage('http://classutil.unsw.edu.au/' + faculty)
         
-        courses.update(getCourses(tree))
-        timetable.update(getTimetable(tree))
+        # Get course codes (and names)
+        cc = getCourses(html)
+        
+        # Update dict of courses
+        courses.update(dict(cc))
+        
+        # Get the timetable data
+        timetableRaw = getTimetable(html)
+        
+        # Work out how many classes correspond to each of the courses
+        prev = 0
+        classCounts = []
+        table = html.xpath('//table[3]')[0]
+        for child in table:
+            # NB: child here is a <tr> element, the course dividers have <td> children with class="cucourse"
+            if child[0].get('class') == 'cucourse':
+                i = table.index(child)
+                if i - prev - 1 != 0:
+                    classCounts.append(i - prev - 1)
+                prev = i
+            # Check for the end of the table (signalled by unclassed row without it being a table header or course divider)
+            elif child.get('class') == None and child[0].get('class') != 'cutabhead':
+                i = table.index(child)
+                classCounts.append(i - prev - 1)
+                break
+        
+        # Reconcile timetable data with course codes
+        timetable = {}
+        for i in range(len(classCounts)):
+            count = classCounts[i]
+            timetable[cc[i][0]] = timetableRaw[:count]
+            del timetableRaw[:count]
+        
+        # Update dict of timetables
+        timetables.update(timetable)
         break
     
-    #print(courses)
+    # TEMP, debugging only
+    for key, val in timetables.items():
+        print(key, '->', val)
+    # END TEMP
 
 def getPages():
     global semester
@@ -38,47 +74,48 @@ def getCourses(tree):
     # Remove strange characters (&nbsp;) from course codes
     courses = map(lambda s: s.replace('\xa0',''), courses)
     
-    # Convert to dict with course codes as keys and names as values
+    # Convert to array of pairs course codes first and names second (i.e. ready to be put into a dict)
     iterator = iter(courses)
-    course_dict = dict(zip(iterator, iterator))
+    courses = list(zip(iterator, iterator))
     
-    return course_dict
+    return courses
 
 def getTimetable(tree):
-    # Get course codes and names in a list.
-    # NB: this retrieves in a single list, with alternating course code and name
+    # Get course components and names in a list.
     component = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[1]/text()')
     status    = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[5]/text()')
     capacity  = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[6]/text()')
     timetable = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[8]/text()')
     
-    temp = []
+    times = []
+    weeks = []
+    locations = []
     for timestring in timetable:
         # Skip any classes without timetable data
         if timestring.strip() == '':
             continue
         
-        # Get first half of timetable string containing day of week and time of day info
-        time = timestring.split('(', maxsplit=1)[0].strip()
+        time, running, location = splitTimetableData(timestring)
         
-        # Process weeks where class is running
-        weeks = timestring.split('(', maxsplit=1)[1].split(' ')[0].strip('w,)')
-        weeks = expandRanges(weeks)
-        
-        # Get location if available
-        if ')' in timestring:
-            location = re.sub(r'.*, ', '', timestring[timestring.index('('):-1])
-        
-        print(time, '>', weeks, '>', location)
+        times.append(time)
+        weeks.append(running)
+        locations.append(location)
     
-    #print(component)
-    #print(status)
-    #print(capacity)
-    #print(timetable)
-    
-    # component, status, capacity, day&time, weeks, location
-    
-    return {}
+    return list(zip(component, status, capacity, times, weeks, locations))
+
+def splitTimetableData(string):
+    # Get first half of timetable string containing day of week and time of day info
+    time = string.split('(', maxsplit=1)[0].strip()
+
+    # Process weeks where class is running
+    weeks = string.split('(', maxsplit=1)[1].split(' ')[0].strip('w,)')
+    weeks = expandRanges(weeks)
+
+    # Get location if available
+    if ')' in string:
+        location = re.sub(r'.*, ', '', string[string.index('('):-1])
+
+    return time, weeks, location
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
@@ -87,6 +124,19 @@ def getTimetable(tree):
 def loadPage(url):
     page = getURL(url)
     tree = html.fromstring(page.content)
+    tree = stripComments(tree)
+    return tree
+
+#
+# stripComments(): removes all HTML comments from parsed HTML (required for traversing child nodes without error)
+#
+def stripComments(tree):
+    comments = tree.xpath('//comment()')
+
+    for c in comments:
+        p = c.getparent()
+        p.remove(c)
+    
     return tree
 
 #
