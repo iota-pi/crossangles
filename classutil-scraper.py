@@ -17,7 +17,7 @@ def main():
     timetables = {}
     
     faculties = getPages()
-    for faculty in faculties[1:]:
+    for faculty in faculties:
         html = loadPage('http://classutil.unsw.edu.au/' + faculty)
         
         # Get course codes (and names)
@@ -58,7 +58,6 @@ def main():
         
         # Some progress output
         print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)', end='\n')
-        break
     
     with open('data/courses.json', 'w') as f:
         json.dump(courses, f)
@@ -100,15 +99,15 @@ def getTimetable(tree):
     
     data = []
     for timestring in timetable:
-        # Skip any classes without timetable data
-        if timestring.strip() == '':
-            continue
-        
         data.append(splitTimetableData(timestring))
     
     return list(zip(component, status, capacity, data))
 
 def splitTimetableData(string):
+    # Handle blank strings - just return a 3-tuple of '?'s
+    if string.strip() == '':
+        return ('?', '?', '?')
+    
     # Split up the parts of a string detailing multiple class times for one stream
     if '; ' in string:
         time = []
@@ -125,18 +124,22 @@ def splitTimetableData(string):
     time = string.split('(', maxsplit=1)[0].strip()
     
     # Keep only the text within the brackets
-    string = string[string.index('(') + 1 : string.index(')')]
+    if '(' in string:
+        string = string[string.find('(') + 1 : string.find(')')]
 
-    # Process weeks where class is running
-    weeks = string.split(' ')[0].strip('w,')
-    weeks = expandRanges(weeks)
+        # Process weeks where class is running
+        weeks = string.split(' ')[0].strip('w,')
+        weeks = expandRanges(weeks)
 
-    # Get location if available
-    # NB: take from ', ' to end, but then remove the ', ' using string[2:]
-    location = string[string.index(', '):][2:]
-    
-    # Replace blank or 'See School' locations with a question mark for uniformity & simplicity
-    if location == '' or location == 'See School':
+        # Get location if available
+        # NB: take from ', ' to end, but then remove the ', ' using string[2:]
+        location = string[string.find(', '):][2:]
+
+        # Replace blank or 'See School' locations with a question mark for uniformity & simplicity
+        if location == '' or location == 'See School':
+            location = '?'
+    else:
+        weeks = '?'
         location = '?'
 
     return (time, weeks, location)
