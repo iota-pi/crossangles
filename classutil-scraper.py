@@ -1,4 +1,23 @@
 #!/usr/bin/python3
+#
+# classutil-scraper.py
+#
+# This Python script scrapes timetable data from the classutil site ('http://classutil.unsw.edu.au/')
+# and stores it in a JSON format in two files: `courses.json` and `timetable.json`
+#
+# courses.json   : contains a JSON hash with course code as key; course name as value
+# timetable.json : contains a JSON hash with course code as key; course classes & timetable info as value
+#                  format is:
+#                  {
+#                   coursecode: [[component, class_status, capacity, [[class_time, weeks, location], ...]], [...]],
+#                   ...
+#                  }
+#                    (please note that any unknown values for class_time, weeks or location will be stored as '?')
+#
+# NB: Approx. bandwidth used while running = 3.5MB
+#
+# Authors: David Adams
+#
 
 from lxml import html, etree
 import requests
@@ -57,7 +76,7 @@ def main():
         timetables.update(timetable)
         
         # Some progress output
-        print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)', end='\n')
+        print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
     
     with open('data/courses.json', 'w') as f:
         json.dump(courses, f)
@@ -68,12 +87,18 @@ def main():
     print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')
     
 
+#
+# getPages(): finds all the faculty pages for the current semester (NB: currently set by global variable "semester")
+#
 def getPages():
     global semester
     tree = loadPage('http://classutil.unsw.edu.au/')
     links = tree.xpath('//td[' + str(semester) + '][@class="data"]/a[contains(@href,".html")]/@href')
     return links
 
+#
+# getCourses(): scrapes the course codes and names from the page with the given tree structure
+#
 def getCourses(tree):
     # Get course codes and names in a list.
     # NB: this retrieves in a single list, with alternating course code and name
@@ -88,6 +113,9 @@ def getCourses(tree):
     
     return courses
 
+#
+# getTimetable(): scrapes the timetable data from the page with the given tree structure
+#
 def getTimetable(tree):
     # Get course components and names in a list.
     component = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[1]/text()')
@@ -103,6 +131,10 @@ def getTimetable(tree):
     
     return list(zip(component, status, capacity, data))
 
+#
+# splitTimetableData(): splits up a string of timetable data into an array of [(time, weeks, location), ...]
+# NB:                   any unknown values will be stored as '?'
+#
 def splitTimetableData(string):
     # Handle blank strings - just return a 3-tuple of '?'s
     if string.strip() == '':
