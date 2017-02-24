@@ -14,6 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
+/*globals console */
 
 function generateTimetable(data) {
     // data = {code: [[class_type, status, enrolments, [[class_time, class_weeks, class_locations], ...]], ...]}
@@ -57,7 +58,7 @@ function generateTimetable(data) {
     //     (i.e. perform sorts in ascending priority order)
     function heuristic(list) {
         // Sort by time best time
-        (function timesort() {
+        list = (function timesort() {
             // Time priority order for class starting at given time
             var order = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0];
             return list.sort(function (a, b) {
@@ -75,7 +76,7 @@ function generateTimetable(data) {
         }());
 
         // Sort by best days
-        (function daysort() {
+        list = (function daysort() {
             var order = ['mon', 'tue', 'thurs', 'fri', 'wed'];
             return list.sort(function (a, b) {
                 // Get the days with classes on them for both of streams a and b
@@ -89,13 +90,16 @@ function generateTimetable(data) {
         }());
 
         // Sort by limitations
-        (function limits() {
+        list = (function limits() {
 
         }());
 
         // Sort by non-full classes
-        (function nonfull() {
-
+        list = (function nonfull() {
+            return list.sort(function (a, b) {
+                // Sort based on priority (index) and use original array position as a tiebreak
+                return (a[3] === b[3]) ? cmp_stable(a, b) : (a[3] === 'full') ? 1 : -1;
+            });
         }());
     }
 
