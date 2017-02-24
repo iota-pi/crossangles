@@ -68,17 +68,14 @@ function generateTimetable(data) {
             optCount = {},
             i,
             key,
-            stream,
         // Resultant heuristic variable
             result,
             fnOrder;
 
         // Count # of options in each stream
         for (i = 0; i < list.length; i += 1) {
-            stream = list[i];
-
             // Use course code and course component as the key for the hash
-            key = stream[0] + stream[2];
+            key = list[i][0] + list[i][2];
             if (optCount.hasOwnProperty(key)) {
                 optCount[key] += 1;
             } else {
