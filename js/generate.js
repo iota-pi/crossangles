@@ -68,7 +68,10 @@ function generateTimetable(data) {
             optCount = {},
             i,
             key,
-            stream;
+            stream,
+        // Resultant heuristic variable
+            result,
+            fnOrder;
 
         // Count # of options in each stream
         for (i = 0; i < list.length; i += 1) {
@@ -122,6 +125,16 @@ function generateTimetable(data) {
         function nonfull(a, b) {
             // Sort based on priority (index) and use original array position as a tiebreak
             return (a.key[3] === b.key[3]) ? 0 : ((a.key[3] === 'full') ? 1 : -1);
+        }
+
+        result = 0;
+        fnOrder = [nonfull, limits, daysort, timesort];
+        while (result === 0) {
+            // Use the next heuristic function
+            result = fnOrder.pop()(a, b);
+
+            // No more ordering heuristics
+            if (fnOrder.length === 0) { break; }
         }
     }
 
