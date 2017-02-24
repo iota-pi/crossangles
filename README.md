@@ -1,7 +1,7 @@
 # CrossAngles
 ... soon to be the best UNSW timetabling program in existance!
 
-Things to work on
+## Things to work on
 
   * Timetable generation (algorithm to be executed clientside, in JS)
   * Timetable display (using either canvas or SVG probably)
