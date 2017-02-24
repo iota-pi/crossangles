@@ -146,7 +146,7 @@ def splitTimetableData(string):
         weeks = []
         location = []
         for x in string.split('; '):
-            a, b, c = splitTimetableData(x)
+            a, b, c = splitTimetableData(x)[0]
             time.append(a)
             weeks.append(b)
             location.append(c)
