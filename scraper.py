@@ -79,9 +79,9 @@ def main():
         print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
     
     with open('data/courses.json', 'w') as f:
-        json.dump(courses, f)
+        json.dump(courses, f, separators=(',',':'))
     with open('data/timetable.json', 'w') as f:
-        json.dump(timetables, f)
+        json.dump(timetables, f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')
@@ -138,7 +138,7 @@ def getTimetable(tree):
 def splitTimetableData(string):
     # Handle blank strings - just return a 3-tuple of '?'s
     if string.strip() == '':
-        return ('?', '?', '?')
+        return [('?', '?', '?')]
     
     # Split up the parts of a string detailing multiple class times for one stream
     if '; ' in string:
@@ -174,7 +174,7 @@ def splitTimetableData(string):
         weeks = '?'
         location = '?'
 
-    return (time, weeks, location)
+    return [(time, weeks, location)]
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
