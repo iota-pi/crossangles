@@ -63,12 +63,12 @@ function generateTimetable(data) {
             var order = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0];
             return list.sort(function (a, b) {
                 // Get all end times of classes in both stream a and b
-                var timesA = a[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
-                    timesB = b[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
+                var timesA = a.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
+                    timesB = b.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
                 // The priority of a class is the lowest priority of it's end times
                 // (NB: any middle will never have a lower priority than an end)
-                    indexA = Math.min.apply(order.indexOf.apply(a[1].split('-'))),
-                    indexB = Math.min.apply(order.indexOf.apply(b[1].split('-')));
+                    indexA = Math.min.apply(order.indexOf.apply(a.key[1].split('-'))),
+                    indexB = Math.min.apply(order.indexOf.apply(b.key[1].split('-')));
 
                 // Sort based on priority (index) and use original array position as a tiebreak
                 return (indexA !== indexB) ? indexA - indexB : cmp_stable(a, b);
@@ -80,8 +80,8 @@ function generateTimetable(data) {
             var order = ['mon', 'tue', 'thurs', 'fri', 'wed'];
             return list.sort(function (a, b) {
                 // Get the days with classes on them for both of streams a and b
-                var daysA = a[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
-                    daysB = b[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
+                var daysA = a.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
+                    daysB = b.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
                 // Find the worst day and use this as the sorting priority
                     indexA = Math.min.apply(order.indexOf.apply(daysA)),
                     indexB = Math.min.apply(order.indexOf.apply(daysB));
@@ -91,14 +91,34 @@ function generateTimetable(data) {
 
         // Sort by limitations
         list = (function limits() {
+            // Count # of options in each stream
+            var optCount = {}, i, key, stream;
+            for (i = 0; i < list.length; i += 1) {
+                stream = list[i];
 
+                // Use course code and course component as the key for the hash
+                key = stream[0] + stream[2];
+                if (optCount.hasOwnProperty(key)) {
+                    optCount[key] += 1;
+                } else {
+                    optCount[key] = 1;
+                }
+            }
+
+            // Sort based on # of options
+            return list.sort(function (a, b) {
+                var optsA = optCount[a.key[0] + a.key[2]],
+                    optsB = optCount[b.key[0] + b.key[2]],
+                    diff = optsA - optsB;
+                return (diff !== 0) ? diff : cmp_stable(a, b);
+            });
         }());
 
         // Sort by non-full classes
         list = (function nonfull() {
             return list.sort(function (a, b) {
                 // Sort based on priority (index) and use original array position as a tiebreak
-                return (a[3] === b[3]) ? cmp_stable(a, b) : (a[3] === 'full') ? 1 : -1;
+                return (a.key[3] === b.key[3]) ? cmp_stable(a, b) : (a.key[3] === 'full') ? 1 : -1;
             });
         }());
     }
