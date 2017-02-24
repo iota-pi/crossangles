@@ -124,6 +124,7 @@ function generateTimetable(data) {
             return (a.key[3] === b.key[3]) ? 0 : ((a.key[3] === 'full') ? 1 : -1);
         }
 
+        // Apply the heuristic sorting functions in order
         result = 0;
         fnOrder = [nonfull, limits, daysort, timesort];
         while (result === 0) {
@@ -137,4 +138,9 @@ function generateTimetable(data) {
 
     // Sort the list
     list.sort(heuristic);
+
+    console.log(list);
+
+    // Do back tracking search
+
 }
