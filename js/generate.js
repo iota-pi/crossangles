@@ -46,85 +46,84 @@ function generateTimetable(data) {
         return list;
     }
 
+    /*
     // Stable sort comparison function (only call if a and b are otherwise equal)
     // Not all js implementations of array.sort() are stable, hence this custom comparison function
     // In the sorted list, elements which were before *equal* elements in the unsorted lists will remain before them, and vice versa
     function cmp_stable(a, b) {
         return a.position - b.position;
     }
-
-    // Heuristic function
-    // NB: when doing a string of stable sorts, the lowest priority sort is done first
-    //     (i.e. perform sorts in ascending priority order)
-    function heuristic(list) {
-        // Sort by time best time
-        list = (function timesort() {
-            // Time priority order for class starting at given time
-            var order = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0];
-            return list.sort(function (a, b) {
-                // Get all end times of classes in both stream a and b
-                var timesA = a.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
-                    timesB = b.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
-                // The priority of a class is the lowest priority of it's end times
-                // (NB: any middle will never have a lower priority than an end)
-                    indexA = Math.min.apply(order.indexOf.apply(a.key[1].split('-'))),
-                    indexB = Math.min.apply(order.indexOf.apply(b.key[1].split('-')));
-
-                // Sort based on priority (index) and use original array position as a tiebreak
-                return (indexA !== indexB) ? indexA - indexB : cmp_stable(a, b);
-            });
-        }());
-
-        // Sort by best days
-        list = (function daysort() {
-            var order = ['mon', 'tue', 'thurs', 'fri', 'wed'];
-            return list.sort(function (a, b) {
-                // Get the days with classes on them for both of streams a and b
-                var daysA = a.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
-                    daysB = b.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
-                // Find the worst day and use this as the sorting priority
-                    indexA = Math.min.apply(order.indexOf.apply(daysA)),
-                    indexB = Math.min.apply(order.indexOf.apply(daysB));
-                return (indexA !== indexB) ? indexA - indexB : cmp_stable(a, b);
-            });
-        }());
-
-        // Sort by limitations
-        list = (function limits() {
-            // Count # of options in each stream
-            var optCount = {}, i, key, stream;
-            for (i = 0; i < list.length; i += 1) {
-                stream = list[i];
-
-                // Use course code and course component as the key for the hash
-                key = stream[0] + stream[2];
-                if (optCount.hasOwnProperty(key)) {
-                    optCount[key] += 1;
-                } else {
-                    optCount[key] = 1;
-                }
-            }
-
-            // Sort based on # of options
-            return list.sort(function (a, b) {
-                var optsA = optCount[a.key[0] + a.key[2]],
-                    optsB = optCount[b.key[0] + b.key[2]],
-                    diff = optsA - optsB;
-                return (diff !== 0) ? diff : cmp_stable(a, b);
-            });
-        }());
-
-        // Sort by non-full classes
-        list = (function nonfull() {
-            return list.sort(function (a, b) {
-                // Sort based on priority (index) and use original array position as a tiebreak
-                return (a.key[3] === b.key[3]) ? cmp_stable(a, b) : (a.key[3] === 'full') ? 1 : -1;
-            });
-        }());
-    }
+    */
 
     // Create the list of class time options
     var list = makeList();
+
+    // Heuristic function
+    function heuristic(a, b) {
+        // Time priority order for class starting at given time
+        var timeorder = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+        // Day priority order (Wed is generally a more desirable day-off)
+            dayorder = ['mon', 'tue', 'thurs', 'fri', 'wed'],
+        // Variable initialisation for option counting
+            optCount = {},
+            i,
+            key,
+            stream;
+
+        // Count # of options in each stream
+        for (i = 0; i < list.length; i += 1) {
+            stream = list[i];
+
+            // Use course code and course component as the key for the hash
+            key = stream[0] + stream[2];
+            if (optCount.hasOwnProperty(key)) {
+                optCount[key] += 1;
+            } else {
+                optCount[key] = 1;
+            }
+        }
+
+        // Sort by best time
+        function timesort(a, b) {
+            // Get all end times of classes in both stream a and b
+            var timesA = a.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
+                timesB = b.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
+            // The priority of a class is the lowest priority of it's end times
+            // (NB: any middle will never have a lower priority than an end)
+                indexA = Math.min.apply(timeorder.indexOf.apply(a.key[1].split('-'))),
+                indexB = Math.min.apply(timeorder.indexOf.apply(b.key[1].split('-')));
+
+            // Sort based on priority (index in timeorder)
+            return indexA - indexB;
+        }
+
+        // Sort by best days
+        function daysort(a, b) {
+            // Get the days with classes on them for both of streams a and b
+            var daysA = a.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
+                daysB = b.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
+            // Find the worst day and use this as the sorting priority
+                indexA = Math.min.apply(dayorder.indexOf.apply(daysA)),
+                indexB = Math.min.apply(dayorder.indexOf.apply(daysB));
+            return indexA - indexB;
+        }
+
+        // Sort by limitations
+        function limits(a, b) {
+            // Sort based on # of options
+            return list.sort(function (a, b) {
+                var optsA = optCount[a.key[0] + a.key[2]],
+                    optsB = optCount[b.key[0] + b.key[2]];
+                return optsA - optsB;
+            });
+        }
+
+        // Sort by non-full classes
+        function nonfull(a, b) {
+            // Sort based on priority (index) and use original array position as a tiebreak
+            return (a.key[3] === b.key[3]) ? 0 : ((a.key[3] === 'full') ? 1 : -1);
+        }
+    }
 
     // Sort the list
     list.sort(heuristic);
