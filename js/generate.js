@@ -3,8 +3,8 @@
  * Steps:
  * 1. Make a list of all class time options
  * 2. Sort list based on:
- *    - Low # of options first
  *    - Prioritise non-full classes (but keep full ones too!)
+ *    - Low # of options first
  *    - Sort on some preference of days of week (to try get off days)
  *    - Sort based on time
  *    - Class duration?
@@ -56,7 +56,7 @@ function generateTimetable(data) {
     // NB: when doing a string of stable sorts, the lowest priority sort is done first
     //     (i.e. perform sorts in ascending priority order)
     function heuristic(list) {
-        // Sort by time
+        // Sort by time best time
         (function timesort() {
             // Time priority order for class starting at given time
             var order = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0];
@@ -74,6 +74,7 @@ function generateTimetable(data) {
             });
         }());
 
+        // Sort by best days
         (function daysort() {
             var order = ['mon', 'tue', 'thurs', 'fri', 'wed'];
             return list.sort(function (a, b) {
@@ -85,6 +86,16 @@ function generateTimetable(data) {
                     indexB = Math.min.apply(order.indexOf.apply(daysB));
                 return (indexA !== indexB) ? indexA - indexB : cmp_stable(a, b);
             });
+        }());
+
+        // Sort by limitations
+        (function limits() {
+
+        }());
+
+        // Sort by non-full classes
+        (function nonfull() {
+
         }());
     }
 
