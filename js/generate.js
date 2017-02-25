@@ -14,9 +14,9 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals console */
+/*globals $, console, getCourses */
 
-function generateTimetable(data) {
+function generate(data) {
     // data = {code: [[class_type, status, enrolments, [[class_time, class_weeks, class_locations], ...]], ...]}
     'use strict';
 
@@ -143,4 +143,11 @@ function generateTimetable(data) {
 
     // Do back tracking search
 
+}
+
+function generateTimetable() {
+    'use strict';
+
+    var data = JSON.stringify({'courses': getCourses()});
+    $.getJSON('data.php', data, generate);
 }
