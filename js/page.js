@@ -6,7 +6,7 @@
  */
 
 /* --- JSLint Options --- */
-/*jslint browser: true*/
+/*jslint browser: true, regexp: true */
 /*global $, jQuery, console */
 
 (function () {
@@ -53,9 +53,12 @@
  */
 function removeCourse(e) {
     "use strict";
+
     var tr = $(e.currentTarget).parents('tr'),
+        td = tr.find('td'),
         h = tr.height();
-    tr.find('td').fadeOut(200, function () {
+
+    td.fadeOut(200, function () {
         tr.empty();
         tr.height(h);
         tr.slideUp(200, function () {
@@ -84,12 +87,17 @@ function addCourse(course) {
 }
 
 /* getCourses()
- *
+ * Gets a list of chosen courses
  */
 function getCourses() {
     'use strict';
 
+    var courses = [];
+    $('#courses').find('tr').each(function () {
+        courses.push($(this).find('td').first().html().replace(/ .*/, ''));
+    });
 
+    return courses;
 }
 
 $(document).ready(function () {
