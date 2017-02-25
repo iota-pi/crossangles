@@ -12,7 +12,7 @@
 #                   coursecode: [[component, class_status, capacity, [[class_time, weeks, location], ...]], [...]],
 #                   ...
 #                  }
-#                    (please note that any unknown values for class_time, weeks or location will be stored as '?')
+#                    (please note that any unknown values for class_time, weeks or location will be stored as empty strings (''))
 #
 # NB: Approx. bandwidth used while running = 3.5MB
 #
@@ -125,6 +125,12 @@ def getTimetable(tree):
     # Get all the text from each of the elements with timetable data
     timetable = map(lambda e: etree.XPath("string()")(e), timetable)
     
+    # Clean statuses
+    status = map(lambda x: substatus(x.strip('*')), status)
+
+    # Clean up capacity strings
+    capacity = map(lambda x: x.replace('/', ',').split()[0], capacity)
+
     data = []
     for timestring in timetable:
         data.append(splitTimetableData(timestring))
@@ -136,9 +142,13 @@ def getTimetable(tree):
 # NB:                   any unknown values will be stored as '?'
 #
 def splitTimetableData(string):
-    # Handle blank strings - just return a 3-tuple of '?'s
+    # Remove /odd and /even, as well as Comb/w descriptors
+    string = re.sub(r'Comb/w.*', '', string.replace('/odd', '').replace('/even', ''))
+
+    # Handle blank strings - just return a 3-tuple of ''s
     if string.strip() == '':
-        return [('?', '?', '?')]
+        #return [('', '', '')]
+        return [('', '')]
     
     # Split up the parts of a string detailing multiple class times for one stream
     if '; ' in string:
@@ -146,11 +156,12 @@ def splitTimetableData(string):
         weeks = []
         location = []
         for x in string.split('; '):
-            a, b, c = splitTimetableData(x)[0]
+            a, c = splitTimetableData(x)[0]
             time.append(a)
-            weeks.append(b)
+            #weeks.append(b)
             location.append(c)
-        return list(zip(time, weeks, location))
+        #return list(zip(time, weeks, location))
+        return list(zip(time, location))
     
     # Get first half of timetable string containing day of week and time of day info
     time = string.split('(', maxsplit=1)[0].strip()
@@ -160,21 +171,22 @@ def splitTimetableData(string):
         string = string[string.find('(') + 1 : string.find(')')]
 
         # Process weeks where class is running
-        weeks = string.split(' ')[0].strip('w,')
-        weeks = expandRanges(weeks)
+        #weeks = string.split(' ')[0].strip('w,')
+        #weeks = expandRanges(weeks)
 
         # Get location if available
         # NB: take from ', ' to end, but then remove the ', ' using string[2:]
         location = string[string.find(', '):][2:]
 
-        # Replace blank or 'See School' locations with a question mark for uniformity & simplicity
-        if location == '' or location == 'See School':
-            location = '?'
+        # Replace 'See School' locations with an empty string for uniformity
+        if location == 'See School':
+            location = ''
     else:
-        weeks = '?'
-        location = '?'
+        weeks = ''
+        location = ''
 
-    return [(time, weeks, location)]
+    #return [(time, weeks, location)]
+    return [(subday(time.strip('#')), location)]
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
@@ -208,12 +220,6 @@ def getURL(url):
     return response
 
 #
-# politeDelay(): a little small talk while we temporarily stop spamming UNSW's servers
-#
-def politeDelay(s=1):
-    time.sleep(s)
-
-#
 # expandRanges(): changes strings of format e.g. "1-4,6,10-12" to "1,2,3,4,6,10,11,12"
 #
 def expandRanges(string):
@@ -225,6 +231,19 @@ def expandRanges(string):
             a, b = x.split('-')
             expanded.append(','.join(map(str, list(range(int(a), int(b) + 1)))))
     return ','.join(expanded)
+
+#
+# subday(): gives a single-character representation of the day
+#
+def subday(timestr):
+    return timestr.replace('Mon', 'M').replace('Tue', 'T').replace('Wed', 'W').replace('Thu', 'H').replace('Fri', 'F')
+
+#
+# substatus(): gives a single-character representation of the status
+#
+def substatus(timestr):
+    return timestr.replace('Open', 'O').replace('Full', 'F').replace('Closed', 'C').replace('Stop', 'S').replace('Tent', 'T').replace('Canc', 'c')
+
 
 if __name__ == '__main__':
     main()
