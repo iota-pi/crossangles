@@ -7,7 +7,7 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true*/
-/*global $, jQuery, console, addcourse, setTimeout */
+/*global $, jQuery, console, addCourse, setTimeout */
 
 (function () {
     "use strict";
@@ -75,7 +75,7 @@
                         dditem = $('<div class="dd-item"></div>');
                         dditem.html(str);
                         dditem.addClass('noselect');
-                        dditem.click(function () { el.val(''); addcourse(item); menu.slideUp(200); });
+                        dditem.click(function () { el.val(''); addCourse(item); menu.slideUp(200); });
                         dditem.mousemove(function (e) { $('div.dd-item').removeClass('focus'); $(e.currentTarget).addClass('focus'); });
                         menu.append(dditem);
                         
@@ -88,7 +88,7 @@
             if (e.which === 13) {
                 if ($('.dropdown-menu').find('div.focus').length !== 0) {
                     el.val('');
-                    addcourse($('.dropdown-menu').find('div.focus').html().replace(/<\/?strong>/gi, ''));
+                    addCourse($('.dropdown-menu').find('div.focus').html().replace(/<\/?strong>/gi, ''));
                     menu.slideUp(200);
                 }
             }

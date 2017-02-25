@@ -48,10 +48,10 @@
     });
 }());
 
-/* removecourse()
+/* removeCourse()
  * Removes a course from the selected courses list
  */
-function removecourse(e) {
+function removeCourse(e) {
     "use strict";
     var tr = $(e.currentTarget).parents('tr'),
         h = tr.height();
@@ -68,19 +68,28 @@ function removecourse(e) {
     });
 }
 
-/* addcourse()
+/* addCourse()
  * Adds the course from course input (typeahead) box to list of courses
  */
-function addcourse(course) {
+function addCourse(course) {
     "use strict";
     var tbody = $('#courses'),
-        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removecourse),
+        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
         tr = $('<tr>').html('<td style="width:100%">' + course + '</td>').append($('<td>').append(icon)),
         h = tr.height();
     tbody.append(tr);
     $('#course-table').show();
     tr.hide().fadeIn(200);
     /* TODO: add slideDown too? - bit tricky to do with table rows... */
+}
+
+/* getCourses()
+ *
+ */
+function getCourses() {
+    'use strict';
+
+
 }
 
 $(document).ready(function () {
