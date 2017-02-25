@@ -17,10 +17,10 @@
 /*globals $, console, getCourses */
 
 function generate(data) {
-    // data = {code: [[class_type, status, enrolments, [[class_time, class_weeks, class_locations], ...]], ...]}
+    // data = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
     'use strict';
 
-    function makeList(data) {
+    function makeList() {
         var list = [], coursecode, coursedata, classdata, timedata, classtime, i, j;
 
         for (coursecode in data) {
@@ -38,7 +38,7 @@ function generate(data) {
 
                     // Make an entry in the list
                     // Format = [course_code, class_time, class_type, status, enrolments]
-                    list.push([coursecode, classtime, coursedata[0], coursedata[1], coursedata[2]]);
+                    list.push([coursecode, classtime, classdata[0], classdata[1], classdata[2]]);
                 }
             }
         }
@@ -63,7 +63,7 @@ function generate(data) {
         // Time priority order for class starting at given time
         var timeorder = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0],
         // Day priority order (Wed is generally a more desirable day-off)
-            dayorder = ['mon', 'tue', 'thurs', 'fri', 'wed'],
+            dayorder = ['M', 'T', 'H', 'F', 'W'],
         // Variable initialisation for option counting
             optCount = {},
             i,
@@ -86,12 +86,13 @@ function generate(data) {
         // Sort by best time
         function timesort(a, b) {
             // Get all end times of classes in both stream a and b
-            var timesA = a.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
-                timesB = b.key[1].replace(/[^\d\-,]/g, '').split(/[,\-]/),
+            var timesA = a[1].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
+                timesB = b[1].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
             // The priority of a class is the lowest priority of it's end times
             // (NB: any middle will never have a lower priority than an end)
-                indexA = Math.min.apply(timeorder.indexOf.apply(a.key[1].split('-'))),
-                indexB = Math.min.apply(timeorder.indexOf.apply(b.key[1].split('-')));
+                index = function (x) { return timeorder.indexOf(x); },
+                indexA = Math.max.apply(null, timesA.map(index)),
+                indexB = Math.max.apply(null, timesB.map(index));
 
             // Sort based on priority (index in timeorder)
             return indexA - indexB;
@@ -100,40 +101,41 @@ function generate(data) {
         // Sort by best days
         function daysort(a, b) {
             // Get the days with classes on them for both of streams a and b
-            var daysA = a.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
-                daysB = b.key[1].replace(/[\d\- ]/g, '').toLowerCase().split(','),
+            var daysA = a[1].replace(/[\d\- ]/g, '').split(','),
+                daysB = b[1].replace(/[\d\- ]/g, '').split(','),
             // Find the worst day and use this as the sorting priority
-                indexA = Math.min.apply(dayorder.indexOf.apply(daysA)),
-                indexB = Math.min.apply(dayorder.indexOf.apply(daysB));
+                index = function (x) { return dayorder.indexOf(x); },
+                indexA = Math.max.apply(null, daysA.map(index)),
+                indexB = Math.max.apply(null, daysB.map(index));
+
             return indexA - indexB;
         }
 
         // Sort by limitations
         function limits(a, b) {
-            // Sort based on # of options
-            return list.sort(function (a, b) {
-                var optsA = optCount[a.key[0] + a.key[2]],
-                    optsB = optCount[b.key[0] + b.key[2]];
-                return optsA - optsB;
-            });
+            var optsA = optCount[a[0] + a[2]],
+                optsB = optCount[b[0] + b[2]];
+            return optsA - optsB;
         }
 
         // Sort by non-full classes
         function nonfull(a, b) {
             // Sort based on priority (index) and use original array position as a tiebreak
-            return (a.key[3] === b.key[3]) ? 0 : ((a.key[3] === 'full') ? 1 : -1);
+            return (a[3] === b[3]) ? 0 : ((a[3] === 'O') ? -1 : 1);
         }
 
         // Apply the heuristic sorting functions in order
         result = 0;
-        fnOrder = [nonfull, limits, daysort, timesort];
+        fnOrder = [nonfull, limits, timesort, daysort];
         while (result === 0) {
             // Use the next heuristic function
-            result = fnOrder.pop()(a, b);
+            result = (fnOrder.shift())(a, b);
 
             // No more ordering heuristics
             if (fnOrder.length === 0) { break; }
         }
+
+        return result;
     }
 
     // Sort the list
@@ -148,6 +150,6 @@ function generate(data) {
 function generateTimetable() {
     'use strict';
 
-    var data = JSON.stringify({'courses': getCourses()});
+    var data = 'courses=' + encodeURI(JSON.stringify(getCourses()));
     $.getJSON('data.php', data, generate);
 }
