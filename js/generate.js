@@ -24,12 +24,14 @@ function generate(data) {
     'use strict';
 
     function makeList() {
-        var list = [], coursecode, coursedata, classdata, timedata, classtime, i, j;
+        var list = {}, course, coursedata, classdata, timedata, classtime, i, j;
 
-        for (coursecode in data) {
+        for (course in data) {
             // Loop through only properties which are not inherited
-            if (data.hasOwnProperty(coursecode)) {
-                coursedata = data[coursecode];
+            if (data.hasOwnProperty(course)) {
+                list[course] = {};
+
+                coursedata = data[course];
                 for (i = 0; i < coursedata.length; i += 1) {
                     classdata = coursedata[i];
                     timedata  = classdata[3];
@@ -40,26 +42,19 @@ function generate(data) {
                     classtime = classtime.join(',');
 
                     // Make an entry in the list
-                    // Format = [course_code, class_time, class_type, status, enrolments]
-                    list.push([coursecode, classtime, classdata[0], classdata[1], classdata[2]]);
+                    // Format = { course_code: { component: [class_time, status, enrolments], ... }, ...}
+                    if (!list[course].hasOwnProperty(classdata[0])) {
+                        // Initial list
+                        list[course][classdata[0]] = [];
+                    }
+                    // Add this stream's data to the list for the component
+                    list[course][classdata[0]].push([classtime, classdata[1], classdata[2]]);
                 }
             }
         }
 
         return list;
     }
-
-    /*
-    // Stable sort comparison function (only call if a and b are otherwise equal)
-    // Not all js implementations of array.sort() are stable, hence this custom comparison function
-    // In the sorted list, elements which were before *equal* elements in the unsorted lists will remain before them, and vice versa
-    function cmp_stable(a, b) {
-        return a.position - b.position;
-    }
-    */
-
-    // Create the list of class time options
-    var list = makeList();
 
     // Heuristic function
     function heuristic(a, b) {
@@ -76,6 +71,7 @@ function generate(data) {
             fnOrder;
 
         // Count # of options in each stream
+        /*
         for (i = 0; i < list.length; i += 1) {
             // Use course code and course component as the key for the hash
             key = list[i][0] + list[i][2];
@@ -85,6 +81,7 @@ function generate(data) {
                 optCount[key] = 1;
             }
         }
+        */
 
         // Sort by best time
         function timesort(a, b) {
@@ -114,12 +111,14 @@ function generate(data) {
             return indexA - indexB;
         }
 
+        /*
         // Sort by limitations
         function limits(a, b) {
             var optsA = optCount[a[0] + a[2]],
                 optsB = optCount[b[0] + b[2]];
             return optsA - optsB;
         }
+        */
 
         // Sort by non-full classes
         function nonfull(a, b) {
@@ -129,7 +128,7 @@ function generate(data) {
 
         // Apply the heuristic sorting functions in order
         result = 0;
-        fnOrder = [nonfull, limits, timesort, daysort];
+        fnOrder = [nonfull, timesort, daysort];
         while (result === 0) {
             // Use the next heuristic function
             result = (fnOrder.shift())(a, b);
@@ -141,11 +140,67 @@ function generate(data) {
         return result;
     }
 
+    // Create the list of class time options
+    var list = makeList(),
+        course,
+        component,
+        i;
+
     // Sort the list
-    list.sort(heuristic);
+    for (course in list) {
+        if (list.hasOwnProperty(course)) {
+            for (component in list[course]) {
+                if (list[course].hasOwnProperty(component)) {
+                    list[course][component].sort(heuristic);
+                }
+            }
+        }
+    }
+    console.log(list);
 
     // Do backtracking search
+    function dfs() {
+        var timetable = [];
 
+        // Checks whether two given time strings clash with each other
+        function classClash(a, b) {
+            // If days are different, then there is clearly no clash
+            if (a[0] !== b[0]) { return false; }
+
+            // Get start and end hours of both time strings
+            a = a.replace(/[^\d\-]/g, '').split('-');
+            b = b.replace(/[^\d\-]/g, '').split('-');
+
+            // If the lower of one is bigger than the higher of the other, then there is no overlap
+            if (a[0] >= b[1] || b[0] >= a[1]) {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Checks to see if the given time string clashes with any other time string in the timetable
+        function checkClash(timestr) {
+            var i, j, k, stream, times, time = timestr.split(',');
+            for (i = 0; i < time; i += 1) {
+                for (j = 0; j < list.length; j += 1) {
+                    stream = list[timetable[j]];
+                    times = stream[1].split(',');
+                    for (k = 0; k < times.length; k += 1) {
+                        if (classClash(time[i], times[k])) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return timetable;
+    }
+
+    //dfs();
 }
 
 function generateTimetable() {
