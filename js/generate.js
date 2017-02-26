@@ -42,13 +42,13 @@ function generate(data) {
                     classtime = classtime.join(',');
 
                     // Make an entry in the list
-                    // Format = { course_code: { component: [class_time, status, enrolments], ... }, ...}
+                    // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
                     if (!list[course].hasOwnProperty(classdata[0])) {
                         // Initial list
                         list[course][classdata[0]] = [];
                     }
                     // Add this stream's data to the list for the component
-                    list[course][classdata[0]].push([classtime, classdata[1], classdata[2]]);
+                    list[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
                 }
             }
         }
@@ -69,19 +69,6 @@ function generate(data) {
         // Resultant heuristic variable
             result,
             fnOrder;
-
-        // Count # of options in each stream
-        /*
-        for (i = 0; i < list.length; i += 1) {
-            // Use course code and course component as the key for the hash
-            key = list[i][0] + list[i][2];
-            if (optCount.hasOwnProperty(key)) {
-                optCount[key] += 1;
-            } else {
-                optCount[key] = 1;
-            }
-        }
-        */
 
         // Sort by best time
         function timesort(a, b) {
@@ -141,61 +128,64 @@ function generate(data) {
     }
 
     // Create the list of class time options
-    var list = makeList(),
+    var hash = makeList(),
+        list = [],
         course,
-        component,
-        i;
+        component;
 
     // Sort the list
-    for (course in list) {
-        if (list.hasOwnProperty(course)) {
-            for (component in list[course]) {
-                if (list[course].hasOwnProperty(component)) {
-                    list[course][component].sort(heuristic);
+    for (course in hash) {
+        if (hash.hasOwnProperty(course)) {
+            for (component in hash[course]) {
+                if (hash[course].hasOwnProperty(component)) {
+                    list.push([hash[course][component].sort(heuristic), hash[course][component].length]);
                 }
             }
         }
     }
-    console.log(list);
+    // Order components based on # of streams for component
+    list.sort(function (a, b) { return a[1] - b[1]; });
+    // Remove stream count info
+    list = list.map(function (x) { return x[0]; });
+
+    // Checks whether two given time strings clash with each other
+    function classClash(a, b) {
+        // If days are different, then there is clearly no clash
+        if (a[0] !== b[0]) { return false; }
+
+        // Get start and end hours of both time strings
+        a = a.replace(/[^\d\-.]/g, '').split('-');
+        b = b.replace(/[^\d\-.]/g, '').split('-');
+
+        // If the lower of one is bigger than the higher of the other, then there is no overlap
+        if (a[0] >= b[1] || b[0] >= a[1]) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Checks to see if the given time string clashes with any other time string in the timetable
+    function checkClash(timetable, timestr) {
+        var i, j, k, stream, times, time = timestr.split(',');
+        for (i = 0; i < time; i += 1) {
+            for (j = 0; j < list.length; j += 1) {
+                stream = list[timetable[j]];
+                times = stream[1].split(',');
+                for (k = 0; k < times.length; k += 1) {
+                    if (classClash(time[i], times[k])) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     // Do backtracking search
     function dfs() {
         var timetable = [];
-
-        // Checks whether two given time strings clash with each other
-        function classClash(a, b) {
-            // If days are different, then there is clearly no clash
-            if (a[0] !== b[0]) { return false; }
-
-            // Get start and end hours of both time strings
-            a = a.replace(/[^\d\-]/g, '').split('-');
-            b = b.replace(/[^\d\-]/g, '').split('-');
-
-            // If the lower of one is bigger than the higher of the other, then there is no overlap
-            if (a[0] >= b[1] || b[0] >= a[1]) {
-                return false;
-            }
-
-            return true;
-        }
-
-        // Checks to see if the given time string clashes with any other time string in the timetable
-        function checkClash(timestr) {
-            var i, j, k, stream, times, time = timestr.split(',');
-            for (i = 0; i < time; i += 1) {
-                for (j = 0; j < list.length; j += 1) {
-                    stream = list[timetable[j]];
-                    times = stream[1].split(',');
-                    for (k = 0; k < times.length; k += 1) {
-                        if (classClash(time[i], times[k])) {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            return true;
-        }
 
         return timetable;
     }
