@@ -9,6 +9,21 @@
 /*jslint browser: true, regexp: true */
 /*global $, jQuery, console */
 
+/* getCourses()
+ * Gets a list of chosen courses
+ */
+
+function getCourses() {
+    'use strict';
+
+    var courses = [];
+    $('#courses').find('tr').each(function () {
+        courses.push($(this).find('td').first().html().replace(/ .*/, ''));
+    });
+
+    return courses;
+}
+
 (function () {
     "use strict";
     var courses;
@@ -20,6 +35,11 @@
                 var matches = [],
                     initial = [];
                 $.each(hash, function (key, val) {
+                    // Skip any courses which have already been chosen
+                    if (getCourses().indexOf(key) >= 0) {
+                        return true; // continue
+                    }
+
                     var str = (key + ' - ' + val),
                         index = str.toLowerCase().indexOf(q.toLowerCase());
                     if (index > 0) {
@@ -84,20 +104,6 @@ function addCourse(course) {
     $('#course-table').show();
     tr.hide().fadeIn(200);
     /* TODO: add slideDown too? - bit tricky to do with table rows... */
-}
-
-/* getCourses()
- * Gets a list of chosen courses
- */
-function getCourses() {
-    'use strict';
-
-    var courses = [];
-    $('#courses').find('tr').each(function () {
-        courses.push($(this).find('td').first().html().replace(/ .*/, ''));
-    });
-
-    return courses;
 }
 
 $(document).ready(function () {
