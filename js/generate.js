@@ -86,8 +86,8 @@ function generate(data) {
         // Sort by best time
         function timesort(a, b) {
             // Get all end times of classes in both stream a and b
-            var timesA = a[0].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
-                timesB = b[0].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
+            var timesA = a[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
+                timesB = b[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
             // The priority of a class is the lowest priority of it's end times
             // (NB: any middle will never have a lower priority than an end)
                 index = function (x) { return timeorder.indexOf(x); },
@@ -200,7 +200,7 @@ function generate(data) {
         return timetable;
     }
 
-    //dfs();
+    return dfs();
 }
 
 function generateTimetable() {
