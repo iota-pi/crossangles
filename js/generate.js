@@ -86,8 +86,8 @@ function generate(data) {
         // Sort by best time
         function timesort(a, b) {
             // Get all end times of classes in both stream a and b
-            var timesA = a[1].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
-                timesB = b[1].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
+            var timesA = a[0].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
+                timesB = b[0].replace(/[^\d\-,]/g, '').split(/[,\-]/).map(function (x) { return +x; }),
             // The priority of a class is the lowest priority of it's end times
             // (NB: any middle will never have a lower priority than an end)
                 index = function (x) { return timeorder.indexOf(x); },
@@ -101,8 +101,8 @@ function generate(data) {
         // Sort by best days
         function daysort(a, b) {
             // Get the days with classes on them for both of streams a and b
-            var daysA = a[1].replace(/[\d\- ]/g, '').split(','),
-                daysB = b[1].replace(/[\d\- ]/g, '').split(','),
+            var daysA = a[0].replace(/[\d\- ]/g, '').split(','),
+                daysB = b[0].replace(/[\d\- ]/g, '').split(','),
             // Find the worst day and use this as the sorting priority
                 index = function (x) { return dayorder.indexOf(x); },
                 indexA = Math.max.apply(null, daysA.map(index)),
@@ -123,7 +123,7 @@ function generate(data) {
         // Sort by non-full classes
         function nonfull(a, b) {
             // Sort based on priority (index) and use original array position as a tiebreak
-            return (a[3] === b[3]) ? 0 : ((a[3] === 'O') ? -1 : 1);
+            return (a[1] === b[1]) ? 0 : ((a[1] === 'O') ? -1 : 1);
         }
 
         // Apply the heuristic sorting functions in order
