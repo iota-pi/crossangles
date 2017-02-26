@@ -3,12 +3,15 @@
  * Steps:
  * 1. Make a list of all class time options
  * 2. Sort list based on:
- *    - Prioritise non-full classes (but keep full ones too!)
- *    - Low # of options first
- *    - Sort on some preference of days of week (to try get off days)
- *    - Sort based on time
- *    - Class duration?
+ *   1- Prioritise non-full classes (but keep full ones too!)
+ *   2- Low # of options first
+ *   3- Sort based on time
+ *   4- Sort on some preference of days of week (to try get off days)
+ *   5- Class duration?
  * 3. Backtracking search
+ *
+ * NB: Step 2 (low # of options) could be de-prioritised for possibly slower generation, but nicer timetables
+ *     (since it is purely a performance heuristic, rather than a timetable enchancement)
  *
  */
 
@@ -63,7 +66,7 @@ function generate(data) {
         // Time priority order for class starting at given time
         var timeorder = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0],
         // Day priority order (Wed is generally a more desirable day-off)
-            dayorder = ['M', 'T', 'H', 'F', 'W'],
+            dayorder = ['M', 'T', 'H', 'F', 'W', 'S', 's'],
         // Variable initialisation for option counting
             optCount = {},
             i,
@@ -141,9 +144,7 @@ function generate(data) {
     // Sort the list
     list.sort(heuristic);
 
-    console.log(list);
-
-    // Do back tracking search
+    // Do backtracking search
 
 }
 

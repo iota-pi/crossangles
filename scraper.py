@@ -239,7 +239,7 @@ def expandRanges(string):
 # subday(): gives a single-character representation of the day
 #
 def subday(timestr):
-    return timestr.replace('Mon', 'M').replace('Tue', 'T').replace('Wed', 'W').replace('Thu', 'H').replace('Fri', 'F')
+    return timestr.replace('Mon', 'M').replace('Tue', 'T').replace('Wed', 'W').replace('Thu', 'H').replace('Fri', 'F').replace('Sat', 'S').replace('Sun', 's')
 
 #
 # substatus(): gives a single-character representation of the status
