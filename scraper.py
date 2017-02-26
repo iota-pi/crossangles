@@ -236,10 +236,10 @@ def expandRanges(string):
     return ','.join(expanded)
 
 #
-# subday(): gives a single-character representation of the day
+# subday(): gives a single-character representation of the day (also replace ":30" with ".5")
 #
 def subday(timestr):
-    return timestr.replace('Mon', 'M').replace('Tue', 'T').replace('Wed', 'W').replace('Thu', 'H').replace('Fri', 'F').replace('Sat', 'S').replace('Sun', 's')
+    return timestr.replace('Mon', 'M').replace('Tue', 'T').replace('Wed', 'W').replace('Thu', 'H').replace('Fri', 'F').replace('Sat', 'S').replace('Sun', 's').replace(':30', '.5')
 
 #
 # substatus(): gives a single-character representation of the status
