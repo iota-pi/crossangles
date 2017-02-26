@@ -46,7 +46,7 @@ def main():
         courses.update(dict(cc))
         
         # Get the timetable data
-        timetableRaw = getTimetable(html)
+        timetableRaw = [item for item in getTimetable(html) if not empty(item)]
         
         # Work out how many classes correspond to each of the courses
         prev = 0
@@ -136,6 +136,9 @@ def getTimetable(tree):
         data.append(splitTimetableData(timestring))
     
     return list(zip(component, status, capacity, data))
+
+def empty(l):
+    return len(l[3][0][0]) == 0
 
 #
 # splitTimetableData(): splits up a string of timetable data into an array of [(time, weeks, location), ...]
