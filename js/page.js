@@ -25,7 +25,7 @@
 }
 */
 
-var courseList;
+var courseList = [];
 
 (function () {
     "use strict";

@@ -1,5 +1,5 @@
 {
-    "brackets-minifier.on-save-project": true,
+    "brackets-minifier.on-save-project": false,
     "brackets-minifier.js-project-minify": true,
     "brackets-minifier.css-project-minify": true,
     "brackets-minifier.js-custom-path": "",
