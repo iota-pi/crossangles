@@ -145,8 +145,13 @@ function generate(data) {
         a = a.replace(/[^\d\-.]/g, '').split('-');
         b = b.replace(/[^\d\-.]/g, '').split('-');
 
+        // Ensure both have a length of 2
+        if (a.length === 1) { a[1] = a[0]; }
+        if (b.length === 1) { b[1] = b[0]; }
+
         // If the lower of one is bigger than the higher of the other, then there is no overlap
-        if (a[0] >= b[1] || b[0] >= a[1]) {
+        // NB: if a[0] === a[1], then this is not always true; hence the extra "a[0] > b[0]" condition
+        if ((a[0] >= b[1] && a[0] > b[0]) || (b[0] >= a[1] && b[0] > a[0])) {
             return false;
         }
 
@@ -156,10 +161,10 @@ function generate(data) {
     // Checks to see if the given time string clashes with any other time string in the timetable
     function checkClash(timetable, timestr) {
         var i, j, k, stream, times, time = timestr.split(',');
-        for (i = 0; i < time; i += 1) {
-            for (j = 0; j < list.length; j += 1) {
-                stream = list[timetable[j]];
-                times = stream[1].split(',');
+        for (i = 0; i < time.length; i += 1) {
+            for (j = 0; j < timetable.length; j += 1) {
+                stream = list[j][timetable[j]];
+                times = stream[0].split(',');
                 for (k = 0; k < times.length; k += 1) {
                     if (classClash(time[i], times[k])) {
                         return true;
@@ -173,14 +178,54 @@ function generate(data) {
 
     // Do backtracking search
     function dfs() {
-        var timetable = [];
+        var timetable = [],
+            i = 0,
+            component,
+            index;
 
+        while (i < list.length) {
+            component = list[i];
 
+            // Choose the first non-clashing stream
+            index = timetable[i] || 0;
+            while (checkClash(timetable, component[index][0])) {
+                index += 1;
+                if (index === component.length) {
+                    break;
+                }
+            }
+
+            // Check if we should backtrack or continue
+            if (index === component.length) {
+                //// Backtrack
+                // Remove this item from the timetable
+                timetable[i] = 0; // NB: set it first, in case it hasn't been set yet
+                timetable.pop();
+
+                // Step backwards
+                i -= 1;
+
+                // Impossibility Check
+                if (i < 0) {
+                    console.error('Could not generate timetable! Some clashes could not be resolved.');
+                    return null;
+                }
+            } else {
+                //// Continue
+                timetable[i] = index;
+
+                // Step forwards
+                i += 1;
+            }
+        }
+
+        // Transform index numbers into the actual data entries for the corresponding streams
+        timetable = timetable.map(function (x, i) { return list[i][x]; });
 
         return timetable;
     }
 
-    return dfs();
+    console.log(dfs());
 }
 
 function generateTimetable() {
