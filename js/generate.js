@@ -3,15 +3,12 @@
  * Steps:
  * 1. Make a list of all class time options
  * 2. Sort list based on:
- *   1- Prioritise non-full classes (but keep full ones too!)
- *   2- Low # of options first
- *   3- Sort based on time
- *   4- Sort on some preference of days of week (to try get off days)
- *   5- Class duration?
+ *    - Prioritise non-full classes (but keep full ones too!)
+ *    - Low # of options first
+ *    - Sort based on time
+ *    - Sort on some preference of days of week (to try get off days)
+ *    - Class duration?
  * 3. Backtracking search
- *
- * NB: Step 2 (low # of options) could be de-prioritised for possibly slower generation, but nicer timetables
- *     (since it is purely a performance heuristic, rather than a timetable enchancement)
  *
  */
 
