@@ -98,15 +98,6 @@ function generate(data) {
             return indexA - indexB;
         }
 
-        /*
-        // Sort by limitations
-        function limits(a, b) {
-            var optsA = optCount[a[0] + a[2]],
-                optsB = optCount[b[0] + b[2]];
-            return optsA - optsB;
-        }
-        */
-
         // Sort by non-full classes
         function nonfull(a, b) {
             // Sort based on priority (index) and use original array position as a tiebreak
@@ -186,6 +177,8 @@ function generate(data) {
     // Do backtracking search
     function dfs() {
         var timetable = [];
+
+
 
         return timetable;
     }
