@@ -13,16 +13,19 @@
  * Gets a list of chosen courses
  */
 
-function getCourses() {
+/*function getCourses() {
     'use strict';
 
     var courses = [];
     $('#courses').find('tr').each(function () {
-        courses.push($(this).find('td').first().html().replace(/ .*/, ''));
+        courses.push($(this).find('td').first().html().replace(/ .*\/, ''));
     });
 
     return courses;
 }
+*/
+
+var courseList;
 
 (function () {
     "use strict";
@@ -33,24 +36,37 @@ function getCourses() {
         var matcher = function (hash) {
             return function findMatches(q, cb) {
                 var matches = [],
-                    initial = [];
+                    initial = [],
+                    courses = courseList;
+                q = q.toLowerCase();
                 $.each(hash, function (key, val) {
                     // Skip any courses which have already been chosen
-                    if (getCourses().indexOf(key) >= 0) {
+                    if (courses.indexOf(key) >= 0) {
                         return true; // continue
                     }
 
                     var str = (key + ' - ' + val),
-                        index = str.toLowerCase().indexOf(q.toLowerCase());
+                        index = str.toLowerCase().indexOf(q);
                     if (index > 0) {
                         matches.push(str);
                     } else if (index === 0) {
                         initial.push(str);
                     }
                 });
-                matches.sort();
+
+                // Sort the found matches
                 initial.sort();
-                cb(initial.concat(matches).slice(0, 10));
+
+                // Add non-initial matches if there are fewer than 10 initial matches
+                if (initial.length < 10 && matches.length > 0) {
+                    // Sort the other matches
+                    matches.sort();
+
+                    // Add them to initial
+                    initial.concat(matches);
+                }
+
+                cb(initial.slice(0, 10));
             };
         };
         $('.typeahead.coursein').typeahead({
@@ -76,7 +92,14 @@ function removeCourse(e) {
 
     var tr = $(e.currentTarget).parents('tr'),
         td = tr.find('td'),
-        h = tr.height();
+        h = tr.height(),
+        course = td.html().replace(/ -.*/, ''),
+        i = courseList.indexOf(course);
+
+    // Remove this course from the list of courses
+    if (i !== -1) {
+        courseList.splice(i, 1);
+    }
 
     td.fadeOut(200, function () {
         tr.empty();
@@ -96,6 +119,9 @@ function removeCourse(e) {
  */
 function addCourse(course) {
     "use strict";
+
+    courseList.push(course.replace(/ -.*/, ''));
+
     var tbody = $('#courses'),
         icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
         tr = $('<tr>').html('<td style="width:100%">' + course + '</td>').append($('<td>').append(icon)),

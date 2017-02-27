@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, console, getCourses */
+/*globals $, console, courseList */
 
 function generate(data) {
     // data = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
@@ -231,6 +231,6 @@ function generate(data) {
 function generateTimetable() {
     'use strict';
 
-    var data = 'courses=' + encodeURI(JSON.stringify(getCourses()));
+    var data = 'courses=' + encodeURI(JSON.stringify(courseList));
     $.getJSON('data.php', data, generate);
 }
