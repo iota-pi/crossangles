@@ -143,6 +143,10 @@ footer div.content {
     border-right: none;
 }
 
+table.table-centered td, table.table-centered th {
+    text-align: center;
+}
+
 /* checkboxes */
 .checkbox-inline+.checkbox-inline {
 	margin: 0;
