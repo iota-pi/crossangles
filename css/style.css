@@ -70,8 +70,8 @@ footer div.content {
     padding: 10px 15px 8px;
 }
 
-.panel.panel-primary .panel-body #timetable {
-    height: 800px;
+.panel-primary .panel-body {
+    padding: 0;
 }
 
 /* typeahead styles */
@@ -145,6 +145,10 @@ footer div.content {
 
 table.table-centered td, table.table-centered th {
     text-align: center;
+}
+
+.table {
+    margin-bottom: 0;
 }
 
 /* checkboxes */
