@@ -70,7 +70,7 @@ footer div.content {
     padding: 10px 15px 8px;
 }
 
-.panel-primary .panel-body {
+.panel-primary .panel-body.nopadding {
     padding: 0;
 }
 
