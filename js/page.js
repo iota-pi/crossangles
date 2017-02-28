@@ -9,22 +9,6 @@
 /*jslint browser: true, regexp: true */
 /*global $, jQuery, console */
 
-/* getCourses()
- * Gets a list of chosen courses
- */
-
-/*function getCourses() {
-    'use strict';
-
-    var courses = [];
-    $('#courses').find('tr').each(function () {
-        courses.push($(this).find('td').first().html().replace(/ .*\/, ''));
-    });
-
-    return courses;
-}
-*/
-
 var courseList = [];
 
 (function () {
@@ -138,17 +122,6 @@ function addCourse(course) {
     div.hide().slideDown(200, function () {
         div.children().fadeIn(200);
     });
-
-    /*
-    var tbody = $('#courses'),
-        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
-        tr = $('<tr>').html('<td style="width:100%">' + course + '</td>').append($('<td>').append(icon)),
-        h = tr.height();
-    tbody.append(tr);
-    $('#course-table').show();
-    tr.hide().fadeIn(200);
-    */
-    /* TODO: add slideDown too? - bit tricky to do with table rows... */
 }
 
 $(document).ready(function () {
