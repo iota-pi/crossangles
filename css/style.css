@@ -21,22 +21,8 @@ div.flow {
 	display: inline-block;
 }
 
-header {
-	background-color: #119944;
-	border-bottom: #0e6f32 1px solid;
-    padding: 10px;
-	width: 100%;
-	z-index: 100;
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	color: white;
-	font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
-	cursor: default;
+span.blue {
+    color: #2196f3;
 }
 
 /* footer styles */
@@ -119,10 +105,16 @@ footer div.content {
     background-color: rgba(0, 0, 0, 0.15);*/
 }
 
-/* course-container */
-#course-table {
-    margin: 10px 0 0 0;
-    display: none;
+/* courses */
+#courses {
+    margin: 10px 0 -10px 0; /* NB: as soon as an element is added, margin-bottom is set to 0 */
+}
+
+#courses>div {
+    padding: 10px;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    margin-top: -1px;
 }
 
 .glyphicon.glyphicon-remove-circle {
@@ -137,12 +129,12 @@ footer div.content {
     color: #0060aa;
 }
 
-.table.table-bordered tbody tr td {
-    vertical-align: middle;
-    border-left: none;
-    border-right: none;
+#glyphloader {
+    visibility: hidden; /* stop it from being visible, but force the icon to load still */
+    position: absolute; /* don't let the glyphloader take up any space on the page */
 }
 
+/* table styles */
 table.table-centered td, table.table-centered th {
     text-align: center;
 }

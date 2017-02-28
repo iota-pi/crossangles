@@ -90,10 +90,10 @@ var courseList = [];
 function removeCourse(e) {
     "use strict";
 
-    var tr = $(e.currentTarget).parents('tr'),
-        td = tr.find('td'),
-        h = tr.height(),
-        course = td.html().replace(/ -.*/, ''),
+    var row = $(e.currentTarget).parents('div.row'),
+        parent = row.parent(),
+        div = row.children().first(),
+        course = div.html().replace(/ -.+/, ''),
         i = courseList.indexOf(course);
 
     // Remove this course from the list of courses
@@ -101,14 +101,15 @@ function removeCourse(e) {
         courseList.splice(i, 1);
     }
 
-    td.fadeOut(200, function () {
-        tr.empty();
-        tr.height(h);
-        tr.slideUp(200, function () {
-            var table = tr.parents('table');
-            tr.remove();
-            if (table.find('tr').length === 0) {
-                table.slideUp(50);
+    // Fade out and slide up neatly
+    row.children().fadeOut(200, function () {
+        row.children().show().css('visibility', 'hidden');
+        parent.slideUp(200, function () {
+            parent.remove();
+
+            // Put the extra -10px back at bottom of courses element when it's empty
+            if ($('#courses').children().length === 0) {
+                $('#courses').css('margin-bottom', '-10px');
             }
         });
     });
@@ -122,6 +123,23 @@ function addCourse(course) {
 
     courseList.push(course.replace(/ -.*/, ''));
 
+    var holder = $('#courses'),
+        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
+        div = $('<div>').append($('<div class="row">')
+                                .html('<div class="col-10">' + course + '</div>')
+                                .append($('<div class="col-2" style="text-align: right;">').append(icon))
+                               );
+
+    // Add this new item to the course holder and ensure the bottom margin is removed
+    holder.append(div)
+        .css('margin-bottom', 0);
+
+    div.children().hide();
+    div.hide().slideDown(200, function () {
+        div.children().fadeIn(200);
+    });
+
+    /*
     var tbody = $('#courses'),
         icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
         tr = $('<tr>').html('<td style="width:100%">' + course + '</td>').append($('<td>').append(icon)),
@@ -129,6 +147,7 @@ function addCourse(course) {
     tbody.append(tr);
     $('#course-table').show();
     tr.hide().fadeIn(200);
+    */
     /* TODO: add slideDown too? - bit tricky to do with table rows... */
 }
 
