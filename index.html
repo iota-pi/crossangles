@@ -16,9 +16,13 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
         <!-- load javascript -->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
+        <script src="js/app.min.js"></script>
+
         <script type="text/javascript" src="js/tether.min.js" defer></script>
         <script type="text/javascript" src="js/jquery-3.0.0.min.js" defer></script>
         <script type="text/javascript" src="js/bootstrap.min.js" defer></script>
+
         <script type="text/javascript" src="js/typeahead.min.js" defer></script>
         <script type="text/javascript" src="js/generate.min.js" defer></script>
         <script type="text/javascript" src="js/page.min.js" defer></script>
@@ -39,7 +43,7 @@
             </div>
         </nav>
 
-        <div class="container">
+        <div class="container" ng-app="app" ng-controller="ctrl">
             <div class="panel-group">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -88,17 +92,27 @@
                         Timetable
                     </div>
                     <div class="panel-body">
-                        <table class="table">
-                            <tr>
-                                <td></td>
-                                <td>Monday</td>
-                                <td>Tuesday</td>
-                                <td>Wednesday</td>
-                                <td>Thursday</td>
-                                <td>Friday</td>
-                                <td>Saturday</td>
-                                <td>Sunday</td>
-                            </tr>
+                        <table class="table table-centered noselect">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Monday</th>
+                                    <th>Tuesday</th>
+                                    <th>Wednesday</th>
+                                    <th>Thursday</th>
+                                    <th>Friday</th>
+                                </tr>
+                            </thead>
+                            <tbody id="timetable">
+                                <tr ng-repeat="hour in [8,9,10,11,12,13,14,15,16,17,18,19,20,21]">
+                                    <th scope="row">{{ hour | time }}</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
