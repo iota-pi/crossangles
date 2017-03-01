@@ -35,7 +35,7 @@
     </head>
 
     <body>
-        <nav class="navbar">
+        <nav class="navbar noselect">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <span class="navbar-brand blue">CrossAngles</span>
@@ -43,7 +43,7 @@
             </div>
         </nav>
 
-        <div class="container" ng-app="app" ng-controller="ctrl">
+        <div class="container noselect" ng-app="app" ng-controller="ctrl">
             <div class="panel-group">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
@@ -92,28 +92,23 @@
                         Timetable
                     </div>
                     <div class="panel-body nopadding">
-                        <table class="table table-centered noselect">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Monday</th>
-                                    <th>Tuesday</th>
-                                    <th>Wednesday</th>
-                                    <th>Thursday</th>
-                                    <th>Friday</th>
-                                </tr>
-                            </thead>
-                            <tbody id="timetable">
-                                <tr ng-repeat="hour in [8,9,10,11,12,13,14,15,16,17,18,19,20,21]">
-                                    <th scope="row">{{ hour | time }}</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="row-container" style="min-width: 510px;">
+                            <div class="row">
+                                <div class="col col-1 head first"></div>
+                                <div class="col head">Monday</div>
+                                <div class="col head">Tuesday</div>
+                                <div class="col head">Wednesday</div>
+                                <div class="col head">Thursday</div>
+                                <div class="col head">Friday</div>
+                                <div class="w-100" ng-repeat-start="hour in [8,9,10,11,12,13,14,15,16,17,18,19,20,21]"></div>
+                                <div class="col col-1 body small first">{{ hour | time }}</div>
+                                <div class="col body">{{ timetable['mon'][hour] }}</div>
+                                <div class="col body">{{ timetable['tue'][hour] }}</div>
+                                <div class="col body">{{ timetable['wed'][hour] }}</div>
+                                <div class="col body">{{ timetable['thu'][hour] }}</div>
+                                <div class="col body" ng-repeat-end>{{ timetable['fri'][hour] }}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
