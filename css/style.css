@@ -60,6 +60,10 @@ footer div.content {
     padding: 0;
 }
 
+.panel-primary .panel-body.scroll-x {
+    overflow-x: scroll;
+}
+
 /* typeahead styles */
 .typeahead-container {
     position: relative;
@@ -152,6 +156,7 @@ table.table-centered td, table.table-centered th {
     width: 100%;
     min-width: 510px;
     padding: 0 15px;
+    background-color: white;
 }
 
 .col.head {

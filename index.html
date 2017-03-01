@@ -16,7 +16,8 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
         <!-- load javascript -->
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
+        <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>-->
+        <script type="text/javascript" src="js/angular.min.js"></script>
         <script src="js/app.min.js"></script>
 
         <script type="text/javascript" src="js/tether.min.js" defer></script>
@@ -91,8 +92,8 @@
                     <div class="panel-heading">
                         Timetable
                     </div>
-                    <div class="panel-body nopadding">
-                        <div class="row-container" style="min-width: 510px;">
+                    <div class="panel-body nopadding scroll-x">
+                        <div class="row-container">
                             <div class="row">
                                 <div class="col col-1 head first"></div>
                                 <div class="col head">Monday</div>
@@ -102,11 +103,11 @@
                                 <div class="col head">Friday</div>
                                 <div class="w-100" ng-repeat-start="hour in [8,9,10,11,12,13,14,15,16,17,18,19,20,21]"></div>
                                 <div class="col col-1 body small first">{{ hour | time }}</div>
-                                <div class="col body">{{ timetable['mon'][hour] }}</div>
-                                <div class="col body">{{ timetable['tue'][hour] }}</div>
-                                <div class="col body">{{ timetable['wed'][hour] }}</div>
-                                <div class="col body">{{ timetable['thu'][hour] }}</div>
-                                <div class="col body" ng-repeat-end>{{ timetable['fri'][hour] }}</div>
+                                <div class="col body" id="m{{ hour }}"></div>
+                                <div class="col body" id="t{{ hour }}"></div>
+                                <div class="col body" id="w{{ hour }}"></div>
+                                <div class="col body" id="h{{ hour }}"></div>
+                                <div class="col body" id="f{{ hour }}" ng-repeat-end></div>
                             </div>
                         </div>
                     </div>
