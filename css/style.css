@@ -160,6 +160,16 @@ table.table-centered td, table.table-centered th {
     left: 0px;
     width: 100%;
     background-color: lightblue;
+    line-height: 1;
+    overflow: hidden;
+    text-align: center;
+    z-index: 10;
+}
+
+.class-drag>div {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 /* grid styles */
