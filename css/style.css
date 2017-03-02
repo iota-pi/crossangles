@@ -60,6 +60,10 @@ footer div.content {
     padding: 0;
 }
 
+.panel-primary .panel-body.scroll-x {
+    overflow-x: auto;
+}
+
 /* typeahead styles */
 .typeahead-container {
     position: relative;
@@ -141,6 +145,49 @@ table.table-centered td, table.table-centered th {
 
 .table {
     margin-bottom: 0;
+}
+
+.table.table-fixed {
+    table-layout: fixed;
+}
+
+/* grid styles */
+.row-container {
+    width: 100%;
+    min-width: 510px;
+    padding: 0 15px;
+    background-color: white;
+}
+
+.col.head {
+    border-bottom: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    font-weight: bold;
+    padding: 8px;
+}
+
+.col.body, .col.head {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    line-height: 1.846;
+    text-align: center;
+}
+
+.col.body {
+    border-top: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+}
+
+.col.first {
+    font-weight: bold;
+    border-left: 0;
+    border-right: 1px solid #dddddd;
+}
+
+.col.small {
+    font-size: 0.9em;
+    font-weight: normal;
+    padding: 8px 0;
 }
 
 /* checkboxes */
