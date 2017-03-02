@@ -16,14 +16,14 @@
 /*jslint regexp: true */
 /*globals $, console, courseList */
 
-function fetchData() {
+function fetchData(cb) {
     'use strict';
 
     var query = 'courses=' + encodeURI(JSON.stringify(courseList)),
         list = [];
     $.getJSON('data.php', query, function (r) {
         // format: r = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
-        var hash;
+        var hash = {};
 
         // Turn raw data into a hash
         (function makeHash() {
@@ -44,13 +44,13 @@ function fetchData() {
                         }
                         classtime = classtime.join(',');
 
-                        // Make an entry in the list
+                        // Make an entry in the hash
                         // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
                         if (!hash[course].hasOwnProperty(classdata[0])) {
-                            // Initial list
+                            // Initial stream list
                             hash[course][classdata[0]] = [];
                         }
-                        // Add this stream's data to the list for the component
+                        // Add this stream's data to the list for this component
                         hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
                     }
                 }
@@ -136,104 +136,104 @@ function fetchData() {
             // Remove stream count info
             list = list.map(function (x) { return x[0]; });
         }());
-    });
 
-    return list;
+        cb(list);
+    });
 }
 
 function generate() {
     'use strict';
 
-    var list = fetchData();
+    fetchData(function (list) {
+        // Checks whether two given time strings clash with each other
+        function classClash(a, b) {
+            // If days are different, then there is clearly no clash
+            if (a[0] !== b[0]) { return false; }
 
-    // Checks whether two given time strings clash with each other
-    function classClash(a, b) {
-        // If days are different, then there is clearly no clash
-        if (a[0] !== b[0]) { return false; }
+            // Get start and end hours of both time strings
+            a = a.replace(/[^\d\-.]/g, '').split('-');
+            b = b.replace(/[^\d\-.]/g, '').split('-');
 
-        // Get start and end hours of both time strings
-        a = a.replace(/[^\d\-.]/g, '').split('-');
-        b = b.replace(/[^\d\-.]/g, '').split('-');
+            // Ensure both have a length of 2
+            if (a.length === 1) { a[1] = a[0]; }
+            if (b.length === 1) { b[1] = b[0]; }
 
-        // Ensure both have a length of 2
-        if (a.length === 1) { a[1] = a[0]; }
-        if (b.length === 1) { b[1] = b[0]; }
+            // If the lower of one is bigger than the higher of the other, then there is no overlap
+            // NB: if a[0] === a[1], then this is not always true; hence the extra "a[0] > b[0]" condition
+            if ((a[0] >= b[1] && a[0] > b[0]) || (b[0] >= a[1] && b[0] > a[0])) {
+                return false;
+            }
 
-        // If the lower of one is bigger than the higher of the other, then there is no overlap
-        // NB: if a[0] === a[1], then this is not always true; hence the extra "a[0] > b[0]" condition
-        if ((a[0] >= b[1] && a[0] > b[0]) || (b[0] >= a[1] && b[0] > a[0])) {
-            return false;
+            return true;
         }
 
-        return true;
-    }
-
-    // Checks to see if the given time string clashes with any other time string in the timetable
-    function checkClash(timetable, timestr) {
-        var i, j, k, stream, times, time = timestr.split(',');
-        for (i = 0; i < time.length; i += 1) {
-            for (j = 0; j < timetable.length; j += 1) {
-                stream = list[j][timetable[j]];
-                times = stream[0].split(',');
-                for (k = 0; k < times.length; k += 1) {
-                    if (classClash(time[i], times[k])) {
-                        return true;
+        // Checks to see if the given time string clashes with any other time string in the timetable
+        function checkClash(timetable, timestr) {
+            var i, j, k, stream, times, time = timestr.split(',');
+            for (i = 0; i < time.length; i += 1) {
+                for (j = 0; j < timetable.length; j += 1) {
+                    stream = list[j][timetable[j]];
+                    times = stream[0].split(',');
+                    for (k = 0; k < times.length; k += 1) {
+                        if (classClash(time[i], times[k])) {
+                            return true;
+                        }
                     }
                 }
             }
+
+            return false;
         }
 
-        return false;
-    }
+        // Do backtracking search
+        function dfs() {
+            var timetable = [],
+                i = 0,
+                component,
+                index;
 
-    // Do backtracking search
-    function dfs() {
-        var timetable = [],
-            i = 0,
-            component,
-            index;
+            while (i < list.length) {
+                component = list[i];
 
-        while (i < list.length) {
-            component = list[i];
+                // Choose the first non-clashing stream
+                index = timetable[i] || 0;
+                while (checkClash(timetable, component[index][0])) {
+                    index += 1;
+                    if (index === component.length) {
+                        break;
+                    }
+                }
 
-            // Choose the first non-clashing stream
-            index = timetable[i] || 0;
-            while (checkClash(timetable, component[index][0])) {
-                index += 1;
+                // Check if we should backtrack or continue
                 if (index === component.length) {
-                    break;
+                    //// Backtrack
+                    // Remove this item from the timetable
+                    timetable[i] = 0; // NB: set it first, in case it hasn't been set yet
+                    timetable.pop();
+
+                    // Step backwards
+                    i -= 1;
+
+                    // Impossibility Check
+                    if (i < 0) {
+                        console.error('Could not generate timetable! Some clashes could not be resolved.');
+                        return null;
+                    }
+                } else {
+                    //// Continue
+                    timetable[i] = index;
+
+                    // Step forwards
+                    i += 1;
                 }
             }
 
-            // Check if we should backtrack or continue
-            if (index === component.length) {
-                //// Backtrack
-                // Remove this item from the timetable
-                timetable[i] = 0; // NB: set it first, in case it hasn't been set yet
-                timetable.pop();
+            // Transform index numbers into the actual data entries for the corresponding streams
+            timetable = timetable.map(function (x, i) { return list[i][x]; });
 
-                // Step backwards
-                i -= 1;
-
-                // Impossibility Check
-                if (i < 0) {
-                    console.error('Could not generate timetable! Some clashes could not be resolved.');
-                    return null;
-                }
-            } else {
-                //// Continue
-                timetable[i] = index;
-
-                // Step forwards
-                i += 1;
-            }
+            return timetable;
         }
 
-        // Transform index numbers into the actual data entries for the corresponding streams
-        timetable = timetable.map(function (x, i) { return list[i][x]; });
-
-        return timetable;
-    }
-
-    console.log(dfs());
+        console.log('dfs:', dfs());
+    });
 }
