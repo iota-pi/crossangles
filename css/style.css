@@ -61,7 +61,7 @@ footer div.content {
 }
 
 .panel-primary .panel-body.scroll-x {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 /* typeahead styles */
