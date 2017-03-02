@@ -20,7 +20,7 @@ function generate(data) {
     // data = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
     'use strict';
 
-    function makeList() {
+    function makeHash() {
         var list = {}, course, coursedata, classdata, timedata, classtime, i, j;
 
         for (course in data) {
@@ -116,25 +116,26 @@ function generate(data) {
     }
 
     // Create the list of class time options
-    var hash = makeList(),
-        list = [],
-        course,
-        component;
+    var hash = makeHash(),
+        list = [];
 
-    // Sort the list
-    for (course in hash) {
-        if (hash.hasOwnProperty(course)) {
-            for (component in hash[course]) {
-                if (hash[course].hasOwnProperty(component)) {
-                    list.push([hash[course][component].sort(heuristic), hash[course][component].length]);
+    // Sort the hash into a list
+    (function sortHash() {
+        var course, component;
+        for (course in hash) {
+            if (hash.hasOwnProperty(course)) {
+                for (component in hash[course]) {
+                    if (hash[course].hasOwnProperty(component)) {
+                        list.push([hash[course][component].sort(heuristic), hash[course][component].length]);
+                    }
                 }
             }
         }
-    }
-    // Order components based on # of streams for component
-    list.sort(function (a, b) { return a[1] - b[1]; });
-    // Remove stream count info
-    list = list.map(function (x) { return x[0]; });
+        // Order components based on # of streams for component
+        list.sort(function (a, b) { return a[1] - b[1]; });
+        // Remove stream count info
+        list = list.map(function (x) { return x[0]; });
+    }());
 
     // Checks whether two given time strings clash with each other
     function classClash(a, b) {
