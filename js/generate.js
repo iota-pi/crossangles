@@ -16,126 +16,135 @@
 /*jslint regexp: true */
 /*globals $, console, courseList */
 
-function generate(data) {
-    // data = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
+function fetchData() {
     'use strict';
 
-    function makeHash() {
-        var list = {}, course, coursedata, classdata, timedata, classtime, i, j;
-
-        for (course in data) {
-            // Loop through only properties which are not inherited
-            if (data.hasOwnProperty(course)) {
-                list[course] = {};
-
-                coursedata = data[course];
-                for (i = 0; i < coursedata.length; i += 1) {
-                    classdata = coursedata[i];
-                    timedata  = classdata[3];
-                    classtime = [];
-                    for (j = 0; j < timedata.length; j += 1) {
-                        classtime.push(timedata[j][0]);
-                    }
-                    classtime = classtime.join(',');
-
-                    // Make an entry in the list
-                    // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
-                    if (!list[course].hasOwnProperty(classdata[0])) {
-                        // Initial list
-                        list[course][classdata[0]] = [];
-                    }
-                    // Add this stream's data to the list for the component
-                    list[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
-                }
-            }
-        }
-
-        return list;
-    }
-
-    // Heuristic function
-    function heuristic(a, b) {
-        // Time priority order for class starting at given time
-        var timeorder = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-        // Day priority order (Wed is generally a more desirable day-off)
-            dayorder = ['M', 'T', 'H', 'F', 'W', 'S', 's'],
-        // Variable initialisation for option counting
-            optCount = {},
-            i,
-            key,
-        // Resultant heuristic variable
-            result,
-            fnOrder;
-
-        // Sort by best time
-        function timesort(a, b) {
-            // Get all end times of classes in both stream a and b
-            var timesA = a[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
-                timesB = b[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
-            // The priority of a class is the lowest priority of it's end times
-            // (NB: any middle will never have a lower priority than an end)
-                index = function (x) { return timeorder.indexOf(x); },
-                indexA = Math.max.apply(null, timesA.map(index)),
-                indexB = Math.max.apply(null, timesB.map(index));
-
-            // Sort based on priority (index in timeorder)
-            return indexA - indexB;
-        }
-
-        // Sort by best days
-        function daysort(a, b) {
-            // Get the days with classes on them for both of streams a and b
-            var daysA = a[0].replace(/[\d\- ]/g, '').split(','),
-                daysB = b[0].replace(/[\d\- ]/g, '').split(','),
-            // Find the worst day and use this as the sorting priority
-                index = function (x) { return dayorder.indexOf(x); },
-                indexA = Math.max.apply(null, daysA.map(index)),
-                indexB = Math.max.apply(null, daysB.map(index));
-
-            return indexA - indexB;
-        }
-
-        // Sort by non-full classes
-        function nonfull(a, b) {
-            // Sort based on priority (index) and use original array position as a tiebreak
-            return (a[1] === b[1]) ? 0 : ((a[1] === 'O') ? -1 : 1);
-        }
-
-        // Apply the heuristic sorting functions in order
-        result = 0;
-        fnOrder = [nonfull, timesort, daysort];
-        while (result === 0) {
-            // Use the next heuristic function
-            result = (fnOrder.shift())(a, b);
-
-            // No more ordering heuristics
-            if (fnOrder.length === 0) { break; }
-        }
-
-        return result;
-    }
-
-    // Create the list of class time options
-    var hash = makeHash(),
+    var query = 'courses=' + encodeURI(JSON.stringify(courseList)),
         list = [];
+    $.getJSON('data.php', query, function (r) {
+        // format: r = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
+        var hash;
 
-    // Sort the hash into a list
-    (function sortHash() {
-        var course, component;
-        for (course in hash) {
-            if (hash.hasOwnProperty(course)) {
-                for (component in hash[course]) {
-                    if (hash[course].hasOwnProperty(component)) {
-                        list.push([hash[course][component].sort(heuristic), hash[course][component].length]);
+        // Turn raw data into a hash
+        (function makeHash() {
+            var course, coursedata, classdata, timedata, classtime, i, j;
+
+            for (course in r) {
+                // Loop through only properties which are not inherited
+                if (r.hasOwnProperty(course)) {
+                    hash[course] = {};
+
+                    coursedata = r[course];
+                    for (i = 0; i < coursedata.length; i += 1) {
+                        classdata = coursedata[i];
+                        timedata  = classdata[3];
+                        classtime = [];
+                        for (j = 0; j < timedata.length; j += 1) {
+                            classtime.push(timedata[j][0]);
+                        }
+                        classtime = classtime.join(',');
+
+                        // Make an entry in the list
+                        // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
+                        if (!hash[course].hasOwnProperty(classdata[0])) {
+                            // Initial list
+                            hash[course][classdata[0]] = [];
+                        }
+                        // Add this stream's data to the list for the component
+                        hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
                     }
                 }
             }
+        }());
+
+        // Heuristic function
+        function heuristic(a, b) {
+            // Time priority order for class starting at given time
+            var timeorder = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+            // Day priority order (Wed is generally a more desirable day-off)
+                dayorder = ['M', 'T', 'H', 'F', 'W', 'S', 's'],
+            // Variable initialisation for option counting
+                optCount = {},
+                i,
+                key,
+            // Resultant heuristic variable
+                result,
+                fnOrder;
+
+            // Sort by best time
+            function timesort(a, b) {
+                // Get all end times of classes in both stream a and b
+                var timesA = a[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
+                    timesB = b[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
+                // The priority of a class is the lowest priority of it's end times
+                // (NB: any middle will never have a lower priority than an end)
+                    index = function (x) { return timeorder.indexOf(x); },
+                    indexA = Math.max.apply(null, timesA.map(index)),
+                    indexB = Math.max.apply(null, timesB.map(index));
+
+                // Sort based on priority (index in timeorder)
+                return indexA - indexB;
+            }
+
+            // Sort by best days
+            function daysort(a, b) {
+                // Get the days with classes on them for both of streams a and b
+                var daysA = a[0].replace(/[\d\- ]/g, '').split(','),
+                    daysB = b[0].replace(/[\d\- ]/g, '').split(','),
+                // Find the worst day and use this as the sorting priority
+                    index = function (x) { return dayorder.indexOf(x); },
+                    indexA = Math.max.apply(null, daysA.map(index)),
+                    indexB = Math.max.apply(null, daysB.map(index));
+
+                return indexA - indexB;
+            }
+
+            // Sort by non-full classes
+            function nonfull(a, b) {
+                // Sort based on priority (index) and use original array position as a tiebreak
+                return (a[1] === b[1]) ? 0 : ((a[1] === 'O') ? -1 : 1);
+            }
+
+            // Apply the heuristic sorting functions in order
+            result = 0;
+            fnOrder = [nonfull, timesort, daysort];
+            while (result === 0) {
+                // Use the next heuristic function
+                result = (fnOrder.shift())(a, b);
+
+                // No more ordering heuristics
+                if (fnOrder.length === 0) { break; }
+            }
+
+            return result;
         }
-        // Order components based on # of streams for component
-        list.sort(function (a, b) { return a[1] - b[1]; });
-        // Remove stream count info
-        list = list.map(function (x) { return x[0]; });
-    }());
+
+        // Sort hash into a list
+        (function sortHash() {
+            var course, component;
+            for (course in hash) {
+                if (hash.hasOwnProperty(course)) {
+                    for (component in hash[course]) {
+                        if (hash[course].hasOwnProperty(component)) {
+                            list.push([hash[course][component].sort(heuristic), hash[course][component].length]);
+                        }
+                    }
+                }
+            }
+            // Order components based on # of streams for component
+            list.sort(function (a, b) { return a[1] - b[1]; });
+            // Remove stream count info
+            list = list.map(function (x) { return x[0]; });
+        }());
+    });
+
+    return list;
+}
+
+function generate() {
+    'use strict';
+
+    var list = fetchData();
 
     // Checks whether two given time strings clash with each other
     function classClash(a, b) {
@@ -227,11 +236,4 @@ function generate(data) {
     }
 
     console.log(dfs());
-}
-
-function generateTimetable() {
-    'use strict';
-
-    var data = 'courses=' + encodeURI(JSON.stringify(courseList));
-    $.getJSON('data.php', data, generate);
 }
