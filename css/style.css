@@ -139,6 +139,7 @@ footer div.content {
 }
 
 /* table styles */
+/*
 table.table-centered td, table.table-centered th {
     text-align: center;
 }
@@ -149,6 +150,16 @@ table.table-centered td, table.table-centered th {
 
 .table.table-fixed {
     table-layout: fixed;
+}
+*/
+
+/* class (draggable) styles */
+.class-drag {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: lightblue;
 }
 
 /* grid styles */
