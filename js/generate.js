@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, console, courseList */
+/*globals $, console, courseList, createClass, classList */
 
 function fetchData(cb) {
     'use strict';
@@ -234,6 +234,18 @@ function generate() {
             return timetable;
         }
 
-        console.log('dfs:', dfs());
+        var timetable = dfs(), i, stream, text;
+
+        // Remove all current classes
+        for (i = 0; i < classList.length; i += 1) {
+            classList[i].remove();
+        }
+
+        // Add new classes
+        for (i = 0; i < timetable.length; i += 1) {
+            stream = timetable[i];
+            text = stream[3] + ': ' + stream[4];
+            createClass(stream[0], text);
+        }
     });
 }

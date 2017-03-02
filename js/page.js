@@ -9,7 +9,8 @@
 /*jslint browser: true, regexp: true */
 /*global $, jQuery, console */
 
-var courseList = [];
+var courseList = [],
+    classList = [];
 
 (function () {
     "use strict";
@@ -122,6 +123,30 @@ function addCourse(course) {
     div.hide().slideDown(200, function () {
         div.children().fadeIn(200);
     });
+}
+
+function createClass(timestr, text) {
+    'use strict';
+
+    var times = timestr.split(','),
+        time,
+        i,
+        div,
+        id,
+        parent,
+        ends,
+        duration;
+    console.log(timestr, times);
+    for (i = 0; i < times.length; i += 1) {
+        time = times[i];
+        div = $('<div class="class-drag">').append($('<div>').html(text));
+        ends = time.replace(/. /, '').split('-');
+        duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
+        parent = $('#' + time[0] + (+ends[0]));
+        div.appendTo(parent);
+        div.height(parent.outerHeight() * duration);
+        classList.push(div);
+    }
 }
 
 $(document).ready(function () {
