@@ -172,6 +172,17 @@ table.table-centered td, table.table-centered th {
     transform: translateY(-50%);
 }
 
+.class-shadow {
+    display: none; /* default hidden */
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    background-color: rgba(50, 50, 255, 0.8);
+    overflow: hidden;
+    z-index: 9;
+}
+
 /* grid styles */
 .row-container {
     width: 100%;
@@ -197,9 +208,14 @@ table.table-centered td, table.table-centered th {
 .col.body {
     border-top: 1px solid #dddddd;
     border-left: 1px solid #dddddd;
+    padding: 0;
+    overflow: visible;
+    height: 40px;
 }
 
 .col.first {
+    padding-top: 8px;
+    padding-bottom: 8px;
     font-weight: bold;
     border-left: 0;
     border-right: 1px solid #dddddd;

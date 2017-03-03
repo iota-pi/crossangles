@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, console, courseList, createClass, classList */
+/*globals $, console, courseList, createClass, createShadow, classList */
 
 function fetchData(cb) {
     'use strict';
@@ -234,7 +234,7 @@ function generate() {
             return timetable;
         }
 
-        var timetable = dfs(), i, stream, text;
+        var timetable = dfs(), i, j, stream, text;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
@@ -246,6 +246,15 @@ function generate() {
             stream = timetable[i];
             text = stream[3] + ': ' + stream[4];
             createClass(stream[0], text);
+        }
+
+        // Add shadows
+        console.log(list);
+        for (i = 0; i < list.length; i += 1) {
+            for (j = 0; j < list[i].length; j += 1) {
+                // createShadow(timestring, shadow_group)
+                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4]);
+            }
         }
     });
 }

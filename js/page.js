@@ -10,7 +10,8 @@
 /*global $, jQuery, console */
 
 var courseList = [],
-    classList = [];
+    classList = [],
+    shadowList = {};
 
 (function () {
     "use strict";
@@ -132,20 +133,52 @@ function createClass(timestr, text) {
         time,
         i,
         div,
-        id,
         parent,
         ends,
         duration;
-    console.log(timestr, times);
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
-        div = $('<div class="class-drag">').append($('<div>').html(text));
         ends = time.replace(/. /, '').split('-');
         duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
         parent = $('#' + time[0] + (+ends[0]));
+        div = $('<div class="class-drag">').append($('<div>').html(text))
+            .draggable({
+                stack: '.class-drag',
+                scroll: true,
+                containment: parent.parents('.row')
+            });
         div.appendTo(parent);
         div.height(parent.outerHeight() * duration);
         classList.push(div);
+    }
+}
+
+function createShadow(timestr, group) {
+    'use strict';
+
+    var times, time, i, div, parent, ends, duration;
+    console.log(timestr);
+    times = timestr.split(',');
+    for (i = 0; i < times.length; i += 1) {
+        time = times[i];
+        ends = time.replace(/. /, '').split('-');
+        duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
+        parent = $('#' + time[0] + (+ends[0]));
+        div = $('<div class="class-shadow">')
+            .draggable({
+                stack: '.class-shadow',
+                scroll: true,
+                containment: parent.parents('.row')
+            });
+        div.appendTo(parent);
+        div.height(parent.outerHeight() * duration);
+
+        // Add to list of shadows
+        if (shadowList.hasOwnProperty(group)) {
+            shadowList[group].push(div);
+        } else {
+            shadowList[group] = [div];
+        }
     }
 }
 
