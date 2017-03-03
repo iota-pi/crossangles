@@ -164,12 +164,7 @@ function createShadow(timestr, group) {
         ends = time.replace(/. /, '').split('-');
         duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
         parent = $('#' + time[0] + (+ends[0]));
-        div = $('<div class="class-shadow">')
-            .draggable({
-                stack: '.class-shadow',
-                scroll: true,
-                containment: parent.parents('.row')
-            });
+        div = $('<div class="class-shadow">');
         div.appendTo(parent);
         div.height(parent.outerHeight() * duration);
 
@@ -181,10 +176,3 @@ function createShadow(timestr, group) {
         }
     }
 }
-
-$(document).ready(function () {
-    "use strict";
-    
-    // Add noselect styling to checkboxes
-    $('.checkbox-inline').addClass('noselect');
-});
