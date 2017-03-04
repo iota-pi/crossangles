@@ -234,7 +234,7 @@ function generate() {
             return timetable;
         }
 
-        var timetable = dfs(), i, j, stream, text;
+        var timetable = dfs(), i, j, stream, text, done;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
@@ -249,11 +249,14 @@ function generate() {
         }
 
         // Add shadows
-        console.log(list);
+        done = [];
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 // createShadow(timestring, shadow_group)
-                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4]);
+                if (done.indexOf(list[i][j][0] + list[i][j][3] + list[i][j][4]) === -1) {
+                    done.push(list[i][j][0] + list[i][j][3] + list[i][j][4]);
+                    createShadow(list[i][j][0], list[i][j][3] + list[i][j][4]);
+                }
             }
         }
     });

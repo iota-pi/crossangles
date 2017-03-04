@@ -126,6 +126,45 @@ function addCourse(course) {
     });
 }
 
+function startDrag(e, ui) {
+    'use strict';
+
+    var i,
+        el = $(e.target),
+        key = el.text().replace(': ', ''),
+        shadows = $(shadowList[key]).map(function () { return this.toArray(); });
+    shadows.fadeIn(200);
+    el.css({position: 'relative'});
+}
+
+function stopDrag(e, ui) {
+    'use strict';
+
+    // Snap dragged item to nearest visible shadow
+    var least = Infinity,
+        best,
+        diff = [0, 0],
+        drag = $(e.target);
+    $('.class-shadow:visible').each(function () {
+        var offsetA = $(this).offset(),
+            offsetB = drag.offset(),
+            // NB: dist is squared
+            dist = Math.pow(offsetA.left - offsetB.left, 2) + Math.pow(offsetA.top - offsetB.top, 2);
+
+        if (dist < least) {
+            least = dist;
+            best = $(this);
+            diff = [offsetA.left - offsetB.left, offsetA.top - offsetB.top];
+        }
+    });
+    //drag.animate({ top: '+' + diff[1], left: '+' + diff[0] }, 200, function () {
+    drag.detach().appendTo(best.parent()).css({position: 'absolute', left: 0, top: 0});
+    //});
+
+    // Hide visible all shadows
+    $('.class-shadow').fadeOut(200);
+}
+
 function createClass(timestr, text) {
     'use strict';
 
@@ -145,7 +184,12 @@ function createClass(timestr, text) {
             .draggable({
                 stack: '.class-drag',
                 scroll: true,
-                containment: parent.parents('.row')
+                containment: parent.parents('.row'),
+                start: startDrag,
+                stop: stopDrag
+            })
+            .css({
+                position: 'absolute'
             });
         div.appendTo(parent);
         div.height(parent.outerHeight() * duration);
@@ -157,7 +201,6 @@ function createShadow(timestr, group) {
     'use strict';
 
     var times, time, i, div, parent, ends, duration;
-    console.log(timestr);
     times = timestr.split(',');
     for (i = 0; i < times.length; i += 1) {
         time = times[i];

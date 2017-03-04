@@ -155,9 +155,6 @@ table.table-centered td, table.table-centered th {
 
 /* class (draggable) styles */
 .class-drag {
-    position: absolute;
-    top: 0px;
-    left: 0px;
     width: 100%;
     background-color: lightblue;
     line-height: 1;
