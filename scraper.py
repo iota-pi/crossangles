@@ -46,7 +46,8 @@ def main():
         courses.update(dict(cc))
         
         # Get the timetable data
-        timetableRaw = [item for item in getTimetable(html) if not empty(item)]
+        #timetableRaw = [item for item in getTimetable(html) if not empty(item)]
+        timetableRaw = getTimetable(html)
         
         # Work out how many classes correspond to each of the courses
         prev = 0
@@ -146,10 +147,10 @@ def empty(l):
 #
 def splitTimetableData(string):
     # Remove /odd and /even, as well as Comb/w descriptors
-    string = re.sub(r'Comb/w.*', '', string.replace('/odd', '').replace('/even', ''))
+    string = re.sub(r'Comb/w.*', '', string.replace('/odd', '').replace('/even', '')).strip()
 
     # Handle blank strings - just return a 3-tuple of ''s
-    if string.strip() == '':
+    if string == '':
         #return [('', '', '')]
         return [('', '')]
     
@@ -244,8 +245,8 @@ def subday(timestr):
 #
 # substatus(): gives a single-character representation of the status
 #
-def substatus(timestr):
-    return timestr.replace('Open', 'O').replace('Full', 'F').replace('Closed', 'C').replace('Stop', 'S').replace('Tent', 'T').replace('Canc', 'c')
+def substatus(string):
+    return string.replace('Open', 'O').replace('Full', 'F').replace('Closed', 'C').replace('Stop', 'S').replace('Tent', 'T').replace('Canc', 'c')
 
 
 if __name__ == '__main__':
