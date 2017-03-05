@@ -141,10 +141,10 @@ function stopDrag(e, ui) {
     'use strict';
 
     // Snap dragged item to nearest visible shadow
-    var least = Infinity,
-        best,
-        diff = [0, 0],
-        drag = $(e.target);
+    var drag = $(e.target),
+        least = drag.width() / 2 * drag.width() / 2, // initial value = min_range ^ 2
+        best = null,
+        diff = [0, 0];
     $('.class-shadow:visible').each(function () {
         var offsetA = $(this).offset(),
             offsetB = drag.offset(),
@@ -157,9 +157,11 @@ function stopDrag(e, ui) {
             diff = [offsetA.left - offsetB.left, offsetA.top - offsetB.top];
         }
     });
-    //drag.animate({ top: '+' + diff[1], left: '+' + diff[0] }, 200, function () {
-    drag.detach().appendTo(best.parent()).css({position: 'absolute', left: 0, top: 0});
-    //});
+    if (best !== null) {
+        //drag.animate({ top: '+' + diff[1], left: '+' + diff[0] }, 200, function () {
+        drag.detach().appendTo(best.parent()).css({position: 'absolute', left: 0, top: 0});
+        //});
+    }
 
     // Hide visible all shadows
     $('.class-shadow').fadeOut(200);
