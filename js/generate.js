@@ -244,7 +244,7 @@ function generate() {
         // Add new classes
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
-            createClass(stream[0], stream[3], stream[4], courseList.index(stream[3]));
+            createClass(stream[0], stream[3], stream[4], courseList.indexOf(stream[3]));
         }
 
         // Add shadows
@@ -254,7 +254,7 @@ function generate() {
                 // createShadow(timestring, shadow_group)
                 if (done.indexOf(list[i][j][0] + list[i][j][3] + list[i][j][4]) === -1) {
                     done.push(list[i][j][0] + list[i][j][3] + list[i][j][4]);
-                    createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseList.index(list[i][j][3]));
+                    createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseList.indexOf(list[i][j][3]));
                 }
             }
         }
