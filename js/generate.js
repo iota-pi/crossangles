@@ -241,6 +241,9 @@ function generate() {
             classList[i].remove();
         }
 
+        // Remove all shadows
+        $('.class-shadow').remove();
+
         // Add new classes
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
