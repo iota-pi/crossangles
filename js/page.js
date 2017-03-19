@@ -129,22 +129,32 @@ function addCourse(course) {
 function startDrag(e, ui) {
     'use strict';
 
-    var i,
-        el = $(e.target),
-        key = el.text().replace(': ', ''),
-        shadows = $(shadowList[key]).map(function () { return this.toArray(); });
-    shadows.fadeIn(200);
+    var el = $(e.target),
+        key = el.attr('id'),
+    // Select corresponding shadows and fade them in
+        //shadows = $(shadowList[key]).map(function () { return this.toArray(); });
+        shadows = shadowList[key];
+    shadows.fadeIn(100);    // quite a quick fade
+
+    // CSS positioning must be relative while dragging
     el.css({position: 'relative'});
 }
 
 function stopDrag(e, ui) {
     'use strict';
 
+    // Snap element a to element b
+    function snapTo($a, b) {
+        // Detach a, then append it to b, then also set the positioning to be at an offset of (0, 0) from the parent
+        $a.detach().appendTo(b).css({position: 'absolute', left: 0, top: 0});
+    }
+
     // Snap dragged item to nearest visible shadow
     var drag = $(e.target),
         least = drag.width() / 2 * drag.width() / 2, // initial value = min_range ^ 2
         best = null,
-        diff = [0, 0];
+        key,
+        index;
     $('.class-shadow:visible').each(function () {
         var offsetA = $(this).offset(),
             offsetB = drag.offset(),
@@ -154,13 +164,22 @@ function stopDrag(e, ui) {
         if (dist < least) {
             least = dist;
             best = $(this);
-            diff = [offsetA.left - offsetB.left, offsetA.top - offsetB.top];
         }
     });
     if (best !== null) {
-        //drag.animate({ top: '+' + diff[1], left: '+' + diff[0] }, 200, function () {
-        drag.detach().appendTo(best.parent()).css({position: 'absolute', left: 0, top: 0});
-        //});
+        // Find the index of the current class in the stream
+        key = drag.attr('id');
+        index = shadowList[key].index(best);
+
+        // Update all linked classes
+        $('.class-drag[id^="' + key.replace(/\d+$/, '') + '"]').each(function () {
+            var otherClass = $(this),
+            // Find the corresponding shadow
+                shadow = $(shadowList[$(this).attr('id')][index]);
+
+            // Snap this class to it's shadow
+            snapTo(otherClass, shadow.parent());
+        });
     }
 
     // Hide visible all shadows
@@ -176,13 +195,29 @@ function createClass(timestr, text) {
         div,
         parent,
         ends,
-        duration;
+        duration,
+        id,
+        title;
     for (i = 0; i < times.length; i += 1) {
+        // Generate the id for this class
+        id = text.replace(': ', '') + i;
+
+        // Put class title together
+        title = text;
+//        if (times.length > 1) {
+//            title += ' (' + (i + 1) + ')';
+//        }
+
+        // Calculate the duration of the class
         time = times[i];
         ends = time.replace(/. /, '').split('-');
         duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
+
+        // Get the parent element
         parent = $('#' + time[0] + (+ends[0]));
-        div = $('<div class="class-drag">').append($('<div>').html(text))
+
+        // Create the class div
+        div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
             .draggable({
                 stack: '.class-drag',
                 scroll: true,
@@ -195,6 +230,8 @@ function createClass(timestr, text) {
             });
         div.appendTo(parent);
         div.height(parent.outerHeight() * duration);
+
+        // Add this div to the classList (TODO: is this used?)
         classList.push(div);
     }
 }
@@ -214,10 +251,10 @@ function createShadow(timestr, group) {
         div.height(parent.outerHeight() * duration);
 
         // Add to list of shadows
-        if (shadowList.hasOwnProperty(group)) {
-            shadowList[group].push(div);
+        if (shadowList.hasOwnProperty(group + i)) {
+            shadowList[group + i] = shadowList[group + i].add(div);
         } else {
-            shadowList[group] = [div];
+            shadowList[group + i] = div;
         }
     }
 }
