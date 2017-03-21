@@ -149,6 +149,7 @@ function startDrag(e, ui) {
     var el = $(e.target),
         key = el.attr('id'),
         shadows = shadowList[key];
+    console.log(key);
     shadows.fadeIn(100);    // quite a quick fade
 
     // CSS positioning must be relative while dragging
@@ -240,7 +241,6 @@ function createClass(timestr, course, component, courseID) {
                 position: 'absolute',
                 'background-color': 'rgb(' + getColour(courseID) + ')'
             });
-        console.log(courseID, getColour(courseID));
         div.appendTo(parent);
 
         // Fix div height
@@ -253,8 +253,9 @@ function createClass(timestr, course, component, courseID) {
 
 function createShadow(timestr, group, courseID, done) {
     'use strict';
+    console.log(timestr, group);
 
-    var times, time, i, div, parent, ends, duration;
+    var times, time, i, div, parent, ends, duration, skips = 0, key;
     times = timestr.split(',');
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
@@ -269,13 +270,22 @@ function createShadow(timestr, group, courseID, done) {
             div.height(parent.outerHeight() * duration);
 
             // Add to list of shadows
-            if (shadowList.hasOwnProperty(group + i)) {
-                shadowList[group + i] = shadowList[group + i].add(div);
+            key = group + (i - skips);
+            if (shadowList.hasOwnProperty(key)) {
+                shadowList[key] = shadowList[key].add(div);
             } else {
-                shadowList[group + i] = div;
+                shadowList[key] = div;
             }
             done.push(time + group);
+        } else {
+            skips += 1;
         }
-
     }
+}
+
+function clearLists() {
+    'use strict';
+
+    classList = [];
+    shadowList = {};
 }

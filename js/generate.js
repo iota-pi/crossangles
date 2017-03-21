@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, console, courseList, createClass, createShadow, classList */
+/*globals $, console, courseList, createClass, createShadow, classList, clearLists */
 
 function fetchData(cb) {
     'use strict';
@@ -243,6 +243,8 @@ function generate() {
 
         // Remove all shadows
         $('.class-shadow').remove();
+
+        clearLists();
 
         // Add new classes
         for (i = 0; i < timetable.length; i += 1) {
