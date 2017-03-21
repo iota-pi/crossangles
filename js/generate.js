@@ -255,10 +255,7 @@ function generate() {
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 // createShadow(timestring, shadow_group)
-                if (done.indexOf(list[i][j][0] + list[i][j][3] + list[i][j][4]) === -1) {
-                    done.push(list[i][j][0] + list[i][j][3] + list[i][j][4]);
-                    createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseList.indexOf(list[i][j][3]));
-                }
+                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseList.indexOf(list[i][j][3]), done);
             }
         }
     });

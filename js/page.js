@@ -187,7 +187,7 @@ function stopDrag(e, ui) {
         index = shadowList[key].index(best);
 
         // Update all linked classes
-        $('.class-drag[id^="' + key.replace(/\d+$/, '') + '"]').each(function () {
+        $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').each(function () {
             var otherClass = $(this),
             // Find the corresponding shadow
                 shadow = $(shadowList[$(this).attr('id')][index]);
@@ -251,25 +251,31 @@ function createClass(timestr, course, component, courseID) {
     }
 }
 
-function createShadow(timestr, group, courseID) {
+function createShadow(timestr, group, courseID, done) {
     'use strict';
 
     var times, time, i, div, parent, ends, duration;
     times = timestr.split(',');
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
-        ends = time.replace(/. /, '').split('-');
-        duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
-        parent = $('#' + time[0] + (+ends[0]));
-        div = $('<div class="class-shadow">');
-        div.appendTo(parent);
-        div.height(parent.outerHeight() * duration);
 
-        // Add to list of shadows
-        if (shadowList.hasOwnProperty(group + i)) {
-            shadowList[group + i] = shadowList[group + i].add(div);
-        } else {
-            shadowList[group + i] = div;
+        // Check that we haven't already created a shadow for this course, component and time
+        if (done.indexOf(time + group) === -1) {
+            ends = time.replace(/. /, '').split('-');
+            duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
+            parent = $('#' + time[0] + (+ends[0]));
+            div = $('<div class="class-shadow">');
+            div.appendTo(parent);
+            div.height(parent.outerHeight() * duration);
+
+            // Add to list of shadows
+            if (shadowList.hasOwnProperty(group + i)) {
+                shadowList[group + i] = shadowList[group + i].add(div);
+            } else {
+                shadowList[group + i] = div;
+            }
+            done.push(time + group);
         }
+
     }
 }
