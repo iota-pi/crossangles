@@ -126,13 +126,28 @@ function addCourse(course) {
     });
 }
 
+function getColour(index) {
+    'use strict';
+
+	// Colour definitions (format: [highlight, normal]; 'r,g,b')
+	//var colours = [['180,56,148'], ['162,29,33'], ['102,44,145'], ['244,125,35'], ['24,90,169'], ['0,140,72'], ['238,46,47']];
+    var colours = [
+        [160, 29, 33], // crimson
+        [19, 111, 225], // mid blue
+        [0, 140, 72], // green
+        [102, 44, 145], // purple
+        [255, 107, 0], // orange
+        [10, 28, 210], // deep blue
+        [238, 46, 20] // red (slightly pinked)
+    ];
+	return colours[index].join(',');
+}
+
 function startDrag(e, ui) {
     'use strict';
 
     var el = $(e.target),
         key = el.attr('id'),
-    // Select corresponding shadows and fade them in
-        //shadows = $(shadowList[key]).map(function () { return this.toArray(); });
         shadows = shadowList[key];
     shadows.fadeIn(100);    // quite a quick fade
 
@@ -186,35 +201,31 @@ function stopDrag(e, ui) {
     $('.class-shadow').fadeOut(200);
 }
 
-function createClass(timestr, text) {
+function createClass(timestr, course, component, courseID) {
     'use strict';
 
     var times = timestr.split(','),
-        time,
         i,
-        div,
-        parent,
+        id,
+        title,
         ends,
         duration,
-        id,
-        title;
+        parent,
+        div,
+        text = course + ': ' + component;
     for (i = 0; i < times.length; i += 1) {
         // Generate the id for this class
-        id = text.replace(': ', '') + i;
+        id = course + component + i;
 
         // Put class title together
         title = text;
-//        if (times.length > 1) {
-//            title += ' (' + (i + 1) + ')';
-//        }
 
         // Calculate the duration of the class
-        time = times[i];
-        ends = time.replace(/. /, '').split('-');
+        ends = times[i].replace(/. /, '').split('-');
         duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
 
         // Get the parent element
-        parent = $('#' + time[0] + (+ends[0]));
+        parent = $('#' + times[i][0] + (+ends[0]));
 
         // Create the class div
         div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
@@ -226,17 +237,21 @@ function createClass(timestr, text) {
                 stop: stopDrag
             })
             .css({
-                position: 'absolute'
+                position: 'absolute',
+                'background-color': 'rgb(' + getColour(courseID) + ')'
             });
+        console.log(courseID, getColour(courseID));
         div.appendTo(parent);
+
+        // Fix div height
         div.height(parent.outerHeight() * duration);
 
-        // Add this div to the classList (TODO: is this used?)
+        // Add this div to the classList
         classList.push(div);
     }
 }
 
-function createShadow(timestr, group) {
+function createShadow(timestr, group, courseID) {
     'use strict';
 
     var times, time, i, div, parent, ends, duration;

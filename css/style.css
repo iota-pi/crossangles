@@ -156,11 +156,18 @@ table.table-centered td, table.table-centered th {
 /* class (draggable) styles */
 .class-drag {
     width: 100%;
-    background-color: lightblue;
     line-height: 1;
+    color: white;
     overflow: hidden;
     text-align: center;
     z-index: 10;
+    opacity: 0.85;
+    transition-property: opacity;
+    transition-duration: 0.1s;
+}
+
+.class-drag.ui-draggable-dragging {
+	opacity: 0.6;
 }
 
 .class-drag>div {
