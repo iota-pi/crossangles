@@ -202,7 +202,7 @@ function stopDrag(e, ui) {
     $('.class-shadow').fadeOut(200);
 }
 
-function createClass(timestr, course, component, courseID) {
+function createClass(timestr, course, component, courseID, done) {
     'use strict';
 
     var times = timestr.split(','),
@@ -213,47 +213,54 @@ function createClass(timestr, course, component, courseID) {
         duration,
         parent,
         div,
-        text = course + ': ' + component;
+        text = course + ': ' + component,
+        skips = 0;
     for (i = 0; i < times.length; i += 1) {
-        // Generate the id for this class
-        id = course + component + i;
+        // Check that we haven't already created a shadow for this course, component and time
+        if (done.indexOf(times[i] + course + component) === -1) {
+            done.push(times[i] + course + component);
 
-        // Put class title together
-        title = text;
+            // Generate the id for this class
+            id = course + component + (i - skips);
 
-        // Calculate the duration of the class
-        ends = times[i].replace(/. /, '').split('-');
-        duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
+            // Put class title together
+            title = text;
 
-        // Get the parent element
-        parent = $('#' + times[i][0] + (+ends[0]));
+            // Calculate the duration of the class
+            ends = times[i].replace(/. /, '').split('-');
+            duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
 
-        // Create the class div
-        div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
-            .draggable({
-                stack: '.class-drag',
-                scroll: true,
-                containment: parent.parents('.row'),
-                start: startDrag,
-                stop: stopDrag
-            })
-            .css({
-                position: 'absolute',
-                'background-color': 'rgb(' + getColour(courseID) + ')'
-            });
-        div.appendTo(parent);
+            // Get the parent element
+            parent = $('#' + times[i][0] + (+ends[0]));
 
-        // Fix div height
-        div.height(parent.outerHeight() * duration);
+            // Create the class div
+            div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
+                .draggable({
+                    stack: '.class-drag',
+                    scroll: true,
+                    containment: parent.parents('.row'),
+                    start: startDrag,
+                    stop: stopDrag
+                })
+                .css({
+                    position: 'absolute',
+                    'background-color': 'rgb(' + getColour(courseID) + ')'
+                });
+            div.appendTo(parent);
 
-        // Add this div to the classList
-        classList.push(div);
+            // Fix div height
+            div.height(parent.outerHeight() * duration);
+
+            // Add this div to the classList
+            classList.push(div);
+        } else {
+            skips += 1;
+        }
     }
 }
 
 function createShadow(timestr, group, courseID, done) {
     'use strict';
-    console.log(timestr, group);
 
     var times, time, i, div, parent, ends, duration, skips = 0, key;
     times = timestr.split(',');
@@ -262,6 +269,8 @@ function createShadow(timestr, group, courseID, done) {
 
         // Check that we haven't already created a shadow for this course, component and time
         if (done.indexOf(time + group) === -1) {
+            done.push(time + group);
+
             ends = time.replace(/. /, '').split('-');
             duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
             parent = $('#' + time[0] + (+ends[0]));
@@ -276,7 +285,6 @@ function createShadow(timestr, group, courseID, done) {
             } else {
                 shadowList[key] = div;
             }
-            done.push(time + group);
         } else {
             skips += 1;
         }

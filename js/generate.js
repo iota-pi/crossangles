@@ -247,9 +247,10 @@ function generate() {
         clearLists();
 
         // Add new classes
+        done = [];
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
-            createClass(stream[0], stream[3], stream[4], courseList.indexOf(stream[3]));
+            createClass(stream[0], stream[3], stream[4], courseList.indexOf(stream[3]), done);
         }
 
         // Add shadows
