@@ -273,7 +273,9 @@ function createShadow(timestr, group, courseID, done) {
             ends = time.replace(/. /, '').split('-');
             duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
             parent = $('#' + time[0] + (+ends[0]));
-            div = $('<div class="class-shadow">');
+            div = $('<div class="class-shadow">').css({
+                'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
+            });
             div.appendTo(parent);
             div.height(parent.outerHeight() * duration);
 
