@@ -49,7 +49,7 @@ var courseList = [],
                     matches.sort();
 
                     // Add them to initial
-                    initial.concat(matches);
+                    initial = initial.concat(matches);
                 }
 
                 cb(initial.slice(0, 10));
@@ -149,7 +149,6 @@ function startDrag(e, ui) {
     var el = $(e.target),
         key = el.attr('id'),
         shadows = shadowList[key];
-    console.log(key);
     shadows.fadeIn(100);    // quite a quick fade
 
     // CSS positioning must be relative while dragging
