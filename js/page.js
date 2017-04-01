@@ -155,6 +155,7 @@ function startDrag(e, ui) {
     el.css({position: 'relative'});
 }
 
+// End-of-drag callback function
 function stopDrag(e, ui) {
     'use strict';
 
@@ -201,6 +202,15 @@ function stopDrag(e, ui) {
     $('.class-shadow').fadeOut(200);
 }
 
+// Add push functionality to jQuery objects
+$.fn.push = function (selector) {
+    'use strict';
+
+    Array.prototype.push.apply(this, $.makeArray($(selector)));
+    return this;
+};
+
+// Creates a draggable class element
 function createClass(timestr, course, component, courseID, done) {
     'use strict';
 
@@ -281,8 +291,9 @@ function createShadow(timestr, group, courseID, done) {
 
             // Add to list of shadows
             key = group + (i - skips);
+            console.log(time, key);
             if (shadowList.hasOwnProperty(key)) {
-                shadowList[key] = shadowList[key].add(div);
+                shadowList[key] = shadowList[key].push(div);
             } else {
                 shadowList[key] = div;
             }

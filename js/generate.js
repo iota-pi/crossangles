@@ -50,8 +50,12 @@ function fetchData(cb) {
                             // Initial stream list
                             hash[course][classdata[0]] = [];
                         }
+
                         // Add this stream's data to the list for this component
-                        hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
+                        // NB: Skip web streams / classes with no class times allocated
+                        if (classtime.length !== 0) {
+                            hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
+                        }
                     }
                 }
             }
@@ -133,7 +137,7 @@ function fetchData(cb) {
             }
             // Order components based on # of streams for component
             list.sort(function (a, b) { return a[1] - b[1]; });
-            // Remove stream count info
+            // Remove stream-count info
             list = list.map(function (x) { return x[0]; });
         }());
 
@@ -205,8 +209,7 @@ function generate() {
                 }
 
                 // Check if we should backtrack or continue
-                if (index === component.length) {
-                    //// Backtrack
+                if (index === component.length) { // Backtrack
                     // Remove this item from the timetable
                     timetable[i] = 0; // NB: set it first, in case it hasn't been set yet
                     timetable.pop();
@@ -219,8 +222,7 @@ function generate() {
                         console.error('Could not generate timetable! Some clashes could not be resolved.');
                         return null;
                     }
-                } else {
-                    //// Continue
+                } else { // Continue
                     timetable[i] = index;
 
                     // Step forwards
