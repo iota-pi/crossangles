@@ -9,7 +9,7 @@
 /*jslint browser: true, regexp: true */
 /*global $, jQuery, console */
 
-var courseList = [],
+var courseList = ['CBS'],
     classList = [],
     shadowList = {};
 
@@ -131,8 +131,8 @@ function getColour(index) {
 
 	// Colour definitions (format: [highlight, normal]; 'r,g,b')
     var colours = [
-        [160, 29, 33], // crimson
         [19, 111, 225], // mid blue
+        [160, 29, 33], // crimson
         [0, 140, 72], // green
         [102, 44, 145], // purple
         [255, 107, 0], // orange
@@ -221,7 +221,7 @@ function createClass(timestr, course, component, courseID, done) {
         duration,
         parent,
         div,
-        text = course + ': ' + component,
+        text = (course !== 'CBS') ? course + ': ' + component : component,
         skips = 0;
     for (i = 0; i < times.length; i += 1) {
         // Check that we haven't already created a shadow for this course, component and time
@@ -290,7 +290,6 @@ function createShadow(timestr, group, courseID, done) {
 
             // Add to list of shadows
             key = group + (i - skips);
-            console.log(time, key);
             if (shadowList.hasOwnProperty(key)) {
                 shadowList[key] = shadowList[key].push(div);
             } else {
