@@ -35,26 +35,28 @@ function fetchData(cb) {
                     hash[course] = {};
 
                     coursedata = r[course];
-                    for (i = 0; i < coursedata.length; i += 1) {
-                        classdata = coursedata[i];
-                        timedata  = classdata[3];
-                        classtime = [];
-                        for (j = 0; j < timedata.length; j += 1) {
-                            classtime.push(timedata[j][0]);
-                        }
-                        classtime = classtime.join(',');
+                    if (coursedata !== null) {
+                        for (i = 0; i < coursedata.length; i += 1) {
+                            classdata = coursedata[i];
+                            timedata  = classdata[3];
+                            classtime = [];
+                            for (j = 0; j < timedata.length; j += 1) {
+                                classtime.push(timedata[j][0]);
+                            }
+                            classtime = classtime.join(',');
 
-                        // Make an entry in the hash
-                        // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
-                        if (!hash[course].hasOwnProperty(classdata[0])) {
-                            // Initial stream list
-                            hash[course][classdata[0]] = [];
-                        }
+                            // Make an entry in the hash
+                            // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
+                            if (!hash[course].hasOwnProperty(classdata[0])) {
+                                // Initial stream list
+                                hash[course][classdata[0]] = [];
+                            }
 
-                        // Add this stream's data to the list for this component
-                        // NB: Skip web streams / classes with no class times allocated
-                        if (classtime.length !== 0) {
-                            hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
+                            // Add this stream's data to the list for this component
+                            // NB: Skip web streams / classes with no class times allocated
+                            if (classtime.length !== 0) {
+                                hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
+                            }
                         }
                     }
                 }
@@ -123,6 +125,44 @@ function fetchData(cb) {
             return result;
         }
 
+        // Add CBS events to list
+        hash.CBS = {};
+        if ($('#tbt').is(':checked')) {
+            hash.CBS.TBT = [
+                ['T 12', 'O', '0,1', 'CBS', 'The Bible Talks'],
+                ['T 13', 'O', '0,1', 'CBS', 'The Bible Talks'],
+                ['H 12', 'O', '0,1', 'CBS', 'The Bible Talks'],
+                ['H 13', 'O', '0,1', 'CBS', 'The Bible Talks']
+            ];
+        }
+        if ($('#cth').is(':checked')) {
+            hash.CBS.CoreTheo = [
+                ['T 17', 'O', '0,1', 'CBS', 'Core Theology'],
+                ['W 13', 'O', '0,1', 'CBS', 'Core Theology']
+            ];
+        }
+        if ($('#ctr').is(':checked')) {
+            hash.CBS.CoreTrain = [
+                ['T 16', 'O', '0,1', 'CBS', 'Core Training'],
+                ['T 18', 'O', '0,1', 'CBS', 'Core Training'],
+                ['W 12', 'O', '0,1', 'CBS', 'Core Training'],
+                ['W 14', 'O', '0,1', 'CBS', 'Core Training']
+            ];
+        }
+        if ($('#bib').is(':checked')) {
+            hash.CBS.BibleStudy = [
+                ['M 11', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['M 12', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['M 13', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['M 14', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['T 11', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['T 14', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['W 11', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['H 11', 'O', '0,1', 'CBS', 'Bible Study'],
+                ['H 14', 'O', '0,1', 'CBS', 'Bible Study']
+            ];
+        }
+
         // Sort hash into a list
         (function sortHash() {
             var course, component;
@@ -149,6 +189,7 @@ function generate() {
     'use strict';
 
     fetchData(function (list) {
+        console.log(list);
         // Checks whether two given time strings clash with each other
         function classClash(a, b) {
             // If days are different, then there is clearly no clash
@@ -187,6 +228,22 @@ function generate() {
             }
 
             return false;
+        }
+
+        // Timetable scoring function
+        function evalTT(timetable) {
+            // Scores for free days
+            var freeDays = [120, 100, 180, 100, 150],
+            // Scores for times of day
+                pre10 = -20,
+                post5 = -20,
+                post8 = -40,
+            // Score for TBT on same day as class
+                tbtclass = 100,
+            // Score for CORE on same day as class
+                coreclass = 60,
+            // Score for CBS event being within 2 hours of a class on campus
+                close2CBS = 40;
         }
 
         // Do backtracking search
@@ -236,7 +293,7 @@ function generate() {
             return timetable;
         }
 
-        var timetable = dfs(), i, j, stream, done;
+        var timetable = dfs(), i, j, stream, done, courseID;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
@@ -252,15 +309,16 @@ function generate() {
         done = [];
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
-            createClass(stream[0], stream[3], stream[4], courseList.indexOf(stream[3]), done);
+            courseID = courseList.indexOf(stream[3]);
+            createClass(stream[0], stream[3], stream[4], courseID, done);
         }
 
         // Add shadows
         done = [];
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
-                // createShadow(timestring, shadow_group)
-                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseList.indexOf(list[i][j][3]), done);
+                courseID = courseList.indexOf(list[i][j][3]);
+                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseID, done);
             }
         }
     });
