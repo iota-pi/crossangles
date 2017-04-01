@@ -130,7 +130,6 @@ function getColour(index) {
     'use strict';
 
 	// Colour definitions (format: [highlight, normal]; 'r,g,b')
-	//var colours = [['180,56,148'], ['162,29,33'], ['102,44,145'], ['244,125,35'], ['24,90,169'], ['0,140,72'], ['238,46,47']];
     var colours = [
         [160, 29, 33], // crimson
         [19, 111, 225], // mid blue
@@ -140,7 +139,7 @@ function getColour(index) {
         [10, 28, 210], // deep blue
         [238, 46, 20] // red (slightly pinked)
     ];
-	return colours[index].join(',');
+	return colours[index % colours.length].join(',');
 }
 
 function startDrag(e, ui) {
