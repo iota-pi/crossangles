@@ -210,14 +210,13 @@ $.fn.push = function (selector) {
 };
 
 // Creates a draggable class element
-function createClass(timestr, course, component, courseID, done) {
+function createClass(times, course, component, courseID, done) {
     'use strict';
 
-    var times = timestr.split(','),
+    var time,
         i,
         id,
         title,
-        ends,
         duration,
         parent,
         div,
@@ -235,11 +234,11 @@ function createClass(timestr, course, component, courseID, done) {
             title = text;
 
             // Calculate the duration of the class
-            ends = times[i].replace(/. /, '').split('-');
-            duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default duration = 1 hour
+            time = times[i];
+            duration = time[2] - time[1];
 
             // Get the parent element
-            parent = $('#' + times[i][0] + (+ends[0]));
+            parent = $('#' + time[0] + (+time[1]));
 
             // Create the class div
             div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
@@ -267,21 +266,20 @@ function createClass(timestr, course, component, courseID, done) {
     }
 }
 
-function createShadow(timestr, group, courseID, done) {
+function createShadow(times, group, courseID, done) {
     'use strict';
 
-    var times, time, i, div, parent, ends, duration, skips = 0, key;
-    times = timestr.split(',');
+    var time, timestr, i, div, parent, duration, skips = 0, key;
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
+        timestr = time.join('');
 
         // Check that we haven't already created a shadow for this course, component and time
-        if (done.indexOf(time + group) === -1) {
-            done.push(time + group);
+        if (done.indexOf(timestr + group) === -1) {
+            done.push(timestr + group);
 
-            ends = time.replace(/. /, '').split('-');
-            duration = (ends.length > 1) ? ends[1] - ends[0] : 1; // default
-            parent = $('#' + time[0] + (+ends[0]));
+            duration = time[2] - time[1];
+            parent = $('#' + time[0] + (+time[1]));
             div = $('<div class="class-shadow">').css({
                 'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
             });

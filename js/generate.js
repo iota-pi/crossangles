@@ -179,6 +179,26 @@ function fetchData(cb) {
             list.sort(function (a, b) { return a[1] - b[1]; });
             // Remove stream-count info
             list = list.map(function (x) { return x[0]; });
+            // Cast timestr to array
+            list = list.map(function (stream) {
+                return stream.map(function (x) {
+                    var times = x[0].split(','),
+                        array = times.map(function (time) {
+                            // Calculate start and end times
+                            var classTime = time.replace(/[^\d\-.]/g, '').split('-');
+                            if (classTime.length === 1) { classTime[1] = (+classTime[0]) + 1; }
+
+                            // Format: [day, startHour, endHour]
+                            return [time[0], +classTime[0], +classTime[1]];
+                        });
+
+
+                    // Modify first element in given array to be the new time array
+                    x[0] = array;
+
+                    return x;
+                });
+            });
         }());
 
         cb(list);
@@ -188,24 +208,121 @@ function fetchData(cb) {
 function generate() {
     'use strict';
 
+    // Timetable scoring function
+    function evaluateTimetable(timetable) {
+        // Scores for free days
+        var freeScores = {'M': 120, 'T': 100, 'W': 180,  'H': 100, 'F': 150},
+            freeDays = {'M': false, 'T': false, 'W': false, 'H': false, 'F': false},
+        // Scores for times of day
+            pre10 = -20,        // (i.e. startHour <= 9am)
+            post5 = -20,        // (i.e. endHour   >= 5pm)
+            post8 = -40,        // NB: Additional to post5
+        // Score for TBT (double for on same day as a class)
+            tbtClass = 100,
+        // Score for CORE (double for on same day as a class)
+            coreClass = 75,
+        // Score for Bible Study (double for on same day as a class)
+            bibleClass = 100,
+        // Score for CBS event being within 2 hours of a class on campus
+            close2CBS = 50,
+        // Define score variable
+            score = 0;
+
+        // --- Score free days --- //
+        (function () {
+            var days = timetable.map(function (obj) { return obj[0][0]; }),
+                classDays = days.join(''),
+                day;
+            for (day in freeScores) {
+                if (freeScores.hasOwnProperty(day)) {
+                    if (classDays.indexOf(day) === -1) {
+                        score += freeScores[day];
+                        freeDays[day] = true;
+                    }
+                }
+            }
+
+            return score;
+        }());
+
+        // --- Score times of day --- //
+        (function () {
+            var time, i;
+            for (i = 0; i < timetable.length; i += 1) {
+                time = timetable[i][0];
+                if (time[1] < 10) {
+                    score += pre10;
+                }
+                if (time[2] >= 17) {
+                    score += post5;
+                }
+                if (time[2] >= 20) {
+                    score += post8;
+                }
+            }
+            return score;
+        }());
+
+        // --- Score TBT and CORE days --- //
+        (function () {
+            var i,
+                tbtDay,
+                coreThDay,
+                coreTrDay,
+                bibleDay;
+            for (i = 0; i < timetable.length; i += 1) {
+                // Check if this is a Bible Talk
+                if (timetable[i][4] === 'The Bible Talks') {
+                    tbtDay = timetable[i][0][0];
+                }
+
+                if (timetable[i][4] === 'Core Theology') {
+                    coreThDay = timetable[i][0][0];
+                }
+
+                if (timetable[i][4] === 'Core Training') {
+                    coreTrDay = timetable[i][0][0];
+                }
+
+                if (timetable[i][4] === 'Bible Study') {
+                    bibleDay = timetable[i][0][0];
+                }
+            }
+
+            // Add the scores for each event which isn't on a free day
+            if (tbtDay) { score += (1 + !freeDays[tbtDay]) * tbtClass; }
+            if (coreThDay) { score += (1 + !freeDays[coreThDay]) * coreClass; }
+            if (coreTrDay) { score += (1 + !freeDays[coreTrDay]) * coreClass; }
+            if (bibleDay) { score += (1 + !freeDays[bibleDay]) * bibleClass; }
+        }());
+
+        return score;
+    }
+
+    /**
+    * Randomize array element order in-place.
+    * Using Durstenfeld shuffle algorithm.
+    */
+    function shuffleArray(array) {
+        var i, j, temp;
+        for (i = array.length - 1; i > 0; i -= 1) {
+            j = Math.floor(Math.random() * (i + 1));
+            temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+
     fetchData(function (list) {
-        console.log(list);
         // Checks whether two given time strings clash with each other
         function classClash(a, b) {
             // If days are different, then there is clearly no clash
             if (a[0] !== b[0]) { return false; }
 
-            // Get start and end hours of both time strings
-            a = a.replace(/[^\d\-.]/g, '').split('-');
-            b = b.replace(/[^\d\-.]/g, '').split('-');
-
-            // Ensure both have a length of 2
-            if (a.length === 1) { a[1] = a[0]; }
-            if (b.length === 1) { b[1] = b[0]; }
-
             // If the lower of one is bigger than the higher of the other, then there is no overlap
             // NB: if a[0] === a[1], then this is not always true; hence the extra "a[0] > b[0]" condition
-            if ((a[0] >= b[1] && a[0] > b[0]) || (b[0] >= a[1] && b[0] > a[0])) {
+            if (a[1] >= b[2] || b[1] >= a[2]) {
                 return false;
             }
 
@@ -213,12 +330,12 @@ function generate() {
         }
 
         // Checks to see if the given time string clashes with any other time string in the timetable
-        function checkClash(timetable, timestr) {
-            var i, j, k, stream, times, time = timestr.split(',');
+        function checkClash(classList, timetable, time) {
+            var i, j, k, stream, times;
             for (i = 0; i < time.length; i += 1) {
                 for (j = 0; j < timetable.length; j += 1) {
-                    stream = list[j][timetable[j]];
-                    times = stream[0].split(',');
+                    stream = classList[j][timetable[j]];
+                    times = stream[0];
                     for (k = 0; k < times.length; k += 1) {
                         if (classClash(time[i], times[k])) {
                             return true;
@@ -230,43 +347,25 @@ function generate() {
             return false;
         }
 
-        // Timetable scoring function
-        function evalTT(timetable) {
-            // Scores for free days
-            var freeDays = [120, 100, 180, 100, 150],
-            // Scores for times of day
-                pre10 = -20,
-                post5 = -20,
-                post8 = -40,
-            // Score for TBT on same day as class
-                tbtclass = 100,
-            // Score for CORE on same day as class
-                coreclass = 60,
-            // Score for CBS event being within 2 hours of a class on campus
-                close2CBS = 40;
-        }
-
-        // Do backtracking search
-        function dfs() {
+        // Backtracking (depth-first) search
+        function dfs(classList) {
             var timetable = [],
                 i = 0,
                 component,
                 index;
 
-            while (i < list.length) {
-                component = list[i];
+            // Do backtracking search
+            while (i < classList.length) {
+                component = classList[i];
 
                 // Choose the first non-clashing stream
-                index = timetable[i] || 0;
-                while (checkClash(timetable, component[index][0])) {
+                index = (timetable[i] + 1) || 0;
+                while (index < component.length && checkClash(classList, timetable, component[index][0])) {
                     index += 1;
-                    if (index === component.length) {
-                        break;
-                    }
                 }
 
                 // Check if we should backtrack or continue
-                if (index === component.length) { // Backtrack
+                if (index === component.length) {
                     // Remove this item from the timetable
                     timetable[i] = 0; // NB: set it first, in case it hasn't been set yet
                     timetable.pop();
@@ -276,7 +375,6 @@ function generate() {
 
                     // Impossibility Check
                     if (i < 0) {
-                        console.error('Could not generate timetable! Some clashes could not be resolved.');
                         return null;
                     }
                 } else { // Continue
@@ -287,13 +385,53 @@ function generate() {
                 }
             }
 
-            // Transform index numbers into the actual data entries for the corresponding streams
-            timetable = timetable.map(function (x, i) { return list[i][x]; });
-
-            return timetable;
+            return timetable.map(function (x, i) { return classList[i][x]; });
         }
 
-        var timetable = dfs(), i, j, stream, done, courseID;
+        function search(maxTries) {
+            maxTries = (maxTries !== undefined) ? maxTries : 100;
+            var i,
+                j,
+                best = { score: -Infinity, timetable: [] },
+                result,
+                score,
+                shuffledList;
+            for (i = 0; i < maxTries; i += 1) {
+                // Shuffle list
+                shuffledList = list.slice();
+                shuffleArray(shuffledList);
+                for (j = 0; j < shuffledList.length; j += 1) {
+                    shuffleArray(shuffledList[j]);
+                }
+
+                // Call dfs search function
+                result = dfs(shuffledList);
+
+                // Check if there was a problem generating the timetable
+                if (result === null) {
+                    // Serious problem if we couldn't generate any timetable
+                    if (i === 0) {
+                        console.error('Could not generate timetable! Some clashes could not be resolved.');
+                    }
+
+                    break;
+                }
+
+                // Score this timetable
+                score = evaluateTimetable(result);
+
+                // Compare this score to the previous best
+                if (score > best.score) {
+                    best.score = score;
+                    best.timetable = result;
+                }
+            }
+
+            console.log('Generated timetable with score', best.score);
+            return best.timetable;
+        }
+
+        var timetable = search(), i, j, stream, done, courseID;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
