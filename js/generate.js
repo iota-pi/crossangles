@@ -1,6 +1,6 @@
 /* generate.js
  *
- * Steps:
+ * Steps: (note: this header comment is very out-of-date)
  * 1. Make a list of all class time options
  * 2. Sort list based on:
  *    - Prioritise non-full classes (but keep full ones too!)
@@ -63,68 +63,6 @@ function fetchData(cb) {
             }
         }());
 
-        // Heuristic function
-        function heuristic(a, b) {
-            // Time priority order for class starting at given time
-            var timeorder = [12, 13, 14, 11, 15, 16, 10, 17, 18, 19, 20, 9, 21, 22, 23, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-            // Day priority order (Wed is generally a more desirable day-off)
-                dayorder = ['M', 'T', 'H', 'F', 'W', 'S', 's'],
-            // Variable initialisation for option counting
-                optCount = {},
-                i,
-                key,
-            // Resultant heuristic variable
-                result,
-                fnOrder;
-
-            // Sort by best time
-            function timesort(a, b) {
-                // Get all end times of classes in both stream a and b
-                var timesA = a[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
-                    timesB = b[0].replace(/[^\d\-,.]/g, '').split(/[,\-]/).map(function (x) { return Math.ceil(+x); }),
-                // The priority of a class is the lowest priority of it's end times
-                // (NB: any middle will never have a lower priority than an end)
-                    index = function (x) { return timeorder.indexOf(x); },
-                    indexA = Math.max.apply(null, timesA.map(index)),
-                    indexB = Math.max.apply(null, timesB.map(index));
-
-                // Sort based on priority (index in timeorder)
-                return indexA - indexB;
-            }
-
-            // Sort by best days
-            function daysort(a, b) {
-                // Get the days with classes on them for both of streams a and b
-                var daysA = a[0].replace(/[\d\- ]/g, '').split(','),
-                    daysB = b[0].replace(/[\d\- ]/g, '').split(','),
-                // Find the worst day and use this as the sorting priority
-                    index = function (x) { return dayorder.indexOf(x); },
-                    indexA = Math.max.apply(null, daysA.map(index)),
-                    indexB = Math.max.apply(null, daysB.map(index));
-
-                return indexA - indexB;
-            }
-
-            // Sort by non-full classes
-            function nonfull(a, b) {
-                // Sort based on priority (index) and use original array position as a tiebreak
-                return (a[1] === b[1]) ? 0 : ((a[1] === 'O') ? -1 : 1);
-            }
-
-            // Apply the heuristic sorting functions in order
-            result = 0;
-            fnOrder = [nonfull, timesort, daysort];
-            while (result === 0) {
-                // Use the next heuristic function
-                result = (fnOrder.shift())(a, b);
-
-                // No more ordering heuristics
-                if (fnOrder.length === 0) { break; }
-            }
-
-            return result;
-        }
-
         // Add CBS events to list
         hash.CBS = {};
         if ($('#tbt').is(':checked')) {
@@ -170,7 +108,7 @@ function fetchData(cb) {
                 if (hash.hasOwnProperty(course)) {
                     for (component in hash[course]) {
                         if (hash[course].hasOwnProperty(component)) {
-                            list.push([hash[course][component].sort(heuristic), hash[course][component].length]);
+                            list.push([hash[course][component], hash[course][component].length]);
                         }
                     }
                 }
