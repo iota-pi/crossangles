@@ -138,20 +138,6 @@ footer div.content {
     position: absolute; /* don't let the glyphloader take up any space on the page */
 }
 
-/* table styles */
-/*
-table.table-centered td, table.table-centered th {
-    text-align: center;
-}
-
-.table {
-    margin-bottom: 0;
-}
-
-.table.table-fixed {
-    table-layout: fixed;
-}
-*/
 
 /* class (draggable) styles */
 .class-drag {
@@ -236,6 +222,11 @@ table.table-centered td, table.table-centered th {
 }
 
 /* checkboxes */
+.checkbox-container {
+    margin-left: -20px;
+    margin-bottom: 5px;
+}
+
 .checkbox-inline+.checkbox-inline {
 	margin: 0;
 }
