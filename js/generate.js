@@ -389,7 +389,7 @@ function generate() {
         }
 
         function search(maxTries) {
-            maxTries = (maxTries !== undefined) ? maxTries : 100;
+            maxTries = (maxTries !== undefined) ? maxTries : 1000;
             var i,
                 j,
                 best = { score: -Infinity, timetable: [] },
@@ -399,7 +399,6 @@ function generate() {
             for (i = 0; i < maxTries; i += 1) {
                 // Shuffle list
                 shuffledList = list.slice();
-                shuffleArray(shuffledList);
                 for (j = 0; j < shuffledList.length; j += 1) {
                     shuffleArray(shuffledList[j]);
                 }
