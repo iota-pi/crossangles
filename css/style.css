@@ -162,6 +162,7 @@ table.table-centered td, table.table-centered th {
     text-align: center;
     z-index: 10;
     opacity: 0.85;
+    padding: 0 5px;
     transition-property: opacity;
     transition-duration: 0.1s;
 }
@@ -218,11 +219,14 @@ table.table-centered td, table.table-centered th {
 }
 
 .col.first {
-    padding-top: 8px;
-    padding-bottom: 8px;
     font-weight: bold;
     border-left: 0;
     border-right: 1px solid #dddddd;
+}
+.col.first>div {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .col.small {
