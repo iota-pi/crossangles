@@ -209,6 +209,23 @@ $.fn.push = function (selector) {
     return this;
 };
 
+// Returns an array containing all elements in arr where, when cast to a string, there are no duplicates
+function unique(arr) {
+    'use strict';
+
+    var uniqueArr = [],
+        strs = [],
+        i;
+    for (i = 0; i < arr.length; i += 1) {
+        if (strs.indexOf(String(arr[i])) === -1) {
+            uniqueArr.push(arr[i]);
+            strs.push(String(arr[i]));
+        }
+    }
+
+    return uniqueArr;
+}
+
 // Creates a draggable class element
 function createClass(times, course, component, courseID, done) {
     'use strict';
@@ -216,25 +233,22 @@ function createClass(times, course, component, courseID, done) {
     var time,
         i,
         id,
-        title,
         duration,
         parent,
         div,
-        text = (course !== 'CBS') ? course + ': ' + component : component,
+        title = (course !== 'CBS') ? course + ': ' + component : component,
         skips = 0;
     for (i = 0; i < times.length; i += 1) {
+        time = times[i];
         // Check that we haven't already created a shadow for this course, component and time
-        if (done.indexOf(times[i] + course + component) === -1) {
-            done.push(times[i] + course + component);
+        // NB: checking the time is necessary for when there is messy data
+        if (done.indexOf(time.join(',') + course + component) === -1) {
+            done.push(time.join(',') + course + component);
 
             // Generate the id for this class
             id = course + component + (i - skips);
 
-            // Put class title together
-            title = text;
-
             // Calculate the duration of the class
-            time = times[i];
             duration = time[2] - time[1];
 
             // Get the parent element
@@ -269,14 +283,24 @@ function createClass(times, course, component, courseID, done) {
 function createShadow(times, group, courseID, done) {
     'use strict';
 
-    var time, timestr, i, div, parent, duration, skips = 0, key;
+    times = unique(times);
+
+    var time, timestr, i, index, div, parent, duration, key;
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
-        timestr = time.join('');
+        timestr = time.join(',');
+
+        // Put together key to be used for shadowList hash
+        key = group + i;
 
         // Check that we haven't already created a shadow for this course, component and time
-        if (done.indexOf(timestr + group) === -1) {
-            done.push(timestr + group);
+        index = (done[group] !== undefined) ? done[group].indexOf(timestr) : -1;
+        if (index === -1) {
+            if (done.hasOwnProperty(group)) {
+                done[group].push(timestr);
+            } else {
+                done[group] = [timestr];
+            }
 
             duration = time[2] - time[1];
             parent = $('#' + time[0] + (+time[1]));
@@ -285,16 +309,16 @@ function createShadow(times, group, courseID, done) {
             });
             div.appendTo(parent);
             div.height(parent.outerHeight() * duration);
-
-            // Add to list of shadows
-            key = group + (i - skips);
-            if (shadowList.hasOwnProperty(key)) {
-                shadowList[key] = shadowList[key].push(div);
-            } else {
-                shadowList[key] = div;
-            }
         } else {
-            skips += 1;
+            div = $('#' + time[0] + (+time[1])).children('.class-shadow');
+        }
+
+        // Add to shadowList
+        // NB: still do this even if we didn't have to create a new div for it
+        if (shadowList.hasOwnProperty(key)) {
+            shadowList[key] = shadowList[key].push(div);
+        } else {
+            shadowList[key] = div;
         }
     }
 }

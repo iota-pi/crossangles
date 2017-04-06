@@ -253,6 +253,7 @@ function generate() {
     }
 
     fetchData(function (list) {
+        console.log(list);
         // Checks whether two given time strings clash with each other
         function classClash(a, b) {
             // If days are different, then there is clearly no clash
@@ -389,7 +390,7 @@ function generate() {
         }
 
         // Add shadows
-        done = [];
+        done = {};
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j][3]);
