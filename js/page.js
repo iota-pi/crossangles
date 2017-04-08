@@ -285,7 +285,8 @@ function createShadow(times, group, courseID, done) {
 
     times = unique(times);
 
-    var time, timestr, i, index, div, parent, duration, key;
+    var time, timestr, i, j, index, div, parent, duration, key;
+
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
         timestr = time.join(',');
@@ -303,14 +304,24 @@ function createShadow(times, group, courseID, done) {
             }
 
             duration = time[2] - time[1];
-            parent = $('#' + time[0] + (+time[1]));
+            // TODO: handle half-hours
+            parent = $('#' + time[0] + time[1]);
             div = $('<div class="class-shadow">').css({
                 'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
             });
             div.appendTo(parent);
             div.height(parent.outerHeight() * duration);
         } else {
-            div = $('#' + time[0] + (+time[1])).children('.class-shadow');
+            div = undefined;
+            for (j = 0; j < shadowList[key].length; j += 1) {
+                if ($(shadowList[key][j]).parent().attr('id') === time[0] + time[1]) {
+                    div = $(shadowList[key][j]);
+                    break;
+                }
+            }
+            if (div === undefined) {
+                console.error('DIV disappeared in the middle of a function call!');
+            }
         }
 
         // Add to shadowList
