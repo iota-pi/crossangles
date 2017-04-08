@@ -204,6 +204,10 @@ footer div.content {
     height: 40px;
 }
 
+col.body.half {
+    height: 20px;
+}
+
 .col.first {
     font-weight: bold;
     border-left: 0;
