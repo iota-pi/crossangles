@@ -152,17 +152,17 @@ function generate() {
         var freeScores = {'M': 120, 'T': 100, 'W': 180,  'H': 100, 'F': 150},
             freeDays = {'M': false, 'T': false, 'W': false, 'H': false, 'F': false},
         // Scores for times of day
-            pre10 = -20,        // (i.e. startHour <= 9am)
-            post5 = -20,        // (i.e. endHour   >= 5pm)
-            post8 = -40,        // NB: Additional to post5
+            pre10 = -30,        // (i.e. startHour <= 9am)
+            post5 = -30,        // (i.e. endHour    > 5pm)
+            post7 = -50,        // NB: Additional to post5
         // Score for TBT (double for on same day as a class)
-            tbtClass = 100,
+            tbtClass = 150,
         // Score for CORE (double for on same day as a class)
-            coreClass = 75,
+            coreClass = 100,
         // Score for Bible Study (double for on same day as a class)
-            bibleClass = 100,
-        // Score for CBS event being within 2 hours of a class on campus
-            close2CBS = 50,
+            bibleClass = 150,
+        // Score for CBS event being immediately before or after another class on campus
+            close2CBS = 100,
         // Define score variable
             score = 0;
 
@@ -191,11 +191,11 @@ function generate() {
                 if (time[1] < 10) {
                     score += pre10;
                 }
-                if (time[2] >= 17) {
+                if (time[2] > 17) {
                     score += post5;
                 }
-                if (time[2] >= 20) {
-                    score += post8;
+                if (time[2] > 19) {
+                    score += post7;
                 }
             }
             return score;
@@ -232,6 +232,34 @@ function generate() {
             if (coreThDay) { score += (1 + !freeDays[coreThDay]) * coreClass; }
             if (coreTrDay) { score += (1 + !freeDays[coreTrDay]) * coreClass; }
             if (bibleDay) { score += (1 + !freeDays[bibleDay]) * bibleClass; }
+        }());
+
+        // --- Score CBS event timing --- //
+        (function () {
+            var i,
+                j,
+                cbsTime,
+                uniTime;
+            for (i = 0; i < timetable.length; i += 1) {
+                // Check if this is a CBS event
+                if (timetable[i][3] === 'CBS') {
+                    cbsTime = timetable[i][0];
+                    for (j = 0; j < timetable.length; j += 1) {
+                        // Check if this is a uni class
+                        if (timetable[j][3] !== 'CBS') {
+                            uniTime = timetable[j][0];
+                            // Check days match up
+                            if (cbsTime[0] === uniTime[1]) {
+                                // Check ending/starting time overlap
+                                if (cbsTime[1] === uniTime[2] || cbsTime[2] === uniTime[1]) {
+                                    score += close2CBS;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }());
 
         return score;
