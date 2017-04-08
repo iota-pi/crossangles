@@ -190,8 +190,6 @@ footer div.content {
 }
 
 .col.body, .col.head {
-    padding-top: 8px;
-    padding-bottom: 8px;
     line-height: 1.846;
     text-align: center;
 }
@@ -201,11 +199,11 @@ footer div.content {
     border-left: 1px solid #dddddd;
     padding: 0;
     overflow: visible;
-    height: 40px;
+    height: 20px;
 }
 
-col.body.half {
-    height: 20px;
+.col.body.half {
+    border-top: 0;
 }
 
 .col.first {
@@ -215,14 +213,13 @@ col.body.half {
 }
 .col.first>div {
     position: relative;
-    top: 50%;
+    top: 100%;
     transform: translateY(-50%);
 }
 
 .col.small {
     font-size: 0.9em;
     font-weight: normal;
-    padding: 8px 0;
 }
 
 /* checkboxes */

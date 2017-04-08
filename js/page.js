@@ -252,7 +252,7 @@ function createClass(times, course, component, courseID, done) {
             duration = time[2] - time[1];
 
             // Get the parent element
-            parent = $('#' + time[0] + (+time[1]));
+            parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
 
             // Create the class div
             div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
@@ -270,7 +270,7 @@ function createClass(times, course, component, courseID, done) {
             div.appendTo(parent);
 
             // Fix div height
-            div.height(parent.outerHeight() * duration);
+            div.height(parent.outerHeight() * duration * 2);
 
             // Add this div to the classList
             classList.push(div);
@@ -304,17 +304,16 @@ function createShadow(times, group, courseID, done) {
             }
 
             duration = time[2] - time[1];
-            // TODO: handle half-hours
-            parent = $('#' + time[0] + time[1]);
+            parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
             div = $('<div class="class-shadow">').css({
                 'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
             });
             div.appendTo(parent);
-            div.height(parent.outerHeight() * duration);
+            div.height(parent.outerHeight() * duration * 2);
         } else {
             div = undefined;
             for (j = 0; j < shadowList[key].length; j += 1) {
-                if ($(shadowList[key][j]).parent().attr('id') === time[0] + time[1]) {
+                if ($(shadowList[key][j]).parent().attr('id') === (time[0] + time[1]).replace('.5', '_30')) {
                     div = $(shadowList[key][j]);
                     break;
                 }

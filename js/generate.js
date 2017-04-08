@@ -253,7 +253,6 @@ function generate() {
     }
 
     fetchData(function (list) {
-        console.log(list);
         // Checks whether two given time strings clash with each other
         function classClash(a, b) {
             // If days are different, then there is clearly no clash
@@ -365,7 +364,6 @@ function generate() {
                 }
             }
 
-            console.log('Generated timetable with score', best.score);
             return best.timetable;
         }
 
