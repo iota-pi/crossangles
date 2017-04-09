@@ -180,6 +180,7 @@ footer div.content {
     min-width: 510px;
     padding: 0 15px;
     background-color: white;
+    cursor: default;
 }
 
 .col.head {
