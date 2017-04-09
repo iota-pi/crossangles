@@ -268,7 +268,6 @@ function generate() {
     /**
     * Randomize array element order in-place.
     * Using Durstenfeld shuffle algorithm.
-    */
     function shuffleArray(array) {
         var i, j, temp;
         for (i = array.length - 1; i > 0; i -= 1) {
@@ -279,6 +278,7 @@ function generate() {
         }
         return array;
     }
+    */
 
     fetchData(function (list) {
         // Checks whether two given time strings clash with each other
@@ -296,11 +296,11 @@ function generate() {
         }
 
         // Checks to see if the given time string clashes with any other time string in the timetable
-        function checkClash(classList, timetable, time) {
+        function checkClash(list, timetable, time) {
             var i, j, k, stream, times;
             for (i = 0; i < time.length; i += 1) {
                 for (j = 0; j < timetable.length; j += 1) {
-                    stream = classList[j][timetable[j]];
+                    stream = list[j][timetable[j]];
                     times = stream[0];
                     for (k = 0; k < times.length; k += 1) {
                         if (classClash(time[i], times[k])) {
@@ -313,89 +313,91 @@ function generate() {
             return false;
         }
 
-        // Backtracking (depth-first) search
-        function dfs(classList) {
+        function dfs(list, maxClash) {
             var timetable = [],
+                ttFull,
+                score,
+                best = {timetable: null, score: null},
                 i = 0,
                 component,
-                index;
+                classIndex,
+                time,
+                clashes = 0;
 
-            // Do backtracking search
-            while (i < classList.length) {
-                component = classList[i];
-
-                // Choose the first non-clashing stream
-                index = (timetable[i] + 1) || 0;
-                while (index < component.length && checkClash(classList, timetable, component[index][0])) {
-                    index += 1;
-                }
-
-                // Check if we should backtrack or continue
-                if (index === component.length) {
-                    // Remove this item from the timetable
-                    timetable[i] = 0; // NB: set it first, in case it hasn't been set yet
+            function rollback() {
+                // Remove this item from timetable (if it has already been set)
+                if (i < timetable.length) {
                     timetable.pop();
+                }
 
-                    // Step backwards
-                    i -= 1;
-
-                    // Impossibility Check
-                    if (i < 0) {
-                        return null;
+                // Roll back
+                i -= 1;
+                if (i < 0) {
+                    if (best.timetable === null) {
+                        console.error('No timetable could be generated');
+                        console.error('Try again with more clash hours');
                     }
-                } else { // Continue
-                    timetable[i] = index;
+                    return false;
+                }
 
-                    // Step forwards
+                return true;
+            }
+
+            function mapTimetable() {
+                return timetable.map(function (x, i) { return list[i][x]; });
+            }
+
+            while (i < list.length) {
+                component = list[i];
+
+                // Find a class for this component which doesn't clash
+                // NB: in the case of rollback to this component, start checking for clashes from the current value; otherwise start at 0
+                classIndex = timetable[i] || 0;
+                while (classIndex < component.length) {
+                    time = component[classIndex][0];
+                    if (checkClash(list, timetable, time)) {
+                        classIndex += 1;
+                    } else {
+                        break;
+                    }
+                }
+
+                if (classIndex < component.length) {
+                    // Set this class in the timetable
+                    timetable[i] = classIndex;
+
+                    // Step forward
                     i += 1;
-                }
-            }
 
-            return timetable.map(function (x, i) { return classList[i][x]; });
-        }
+                    // Check if we've finished creating a valid timetable
+                    if (i === list.length) {
+                        // Score this timetable
+                        ttFull = mapTimetable();
+                        score = evaluateTimetable(ttFull);
 
-        function search(maxTries) {
-            maxTries = (maxTries !== undefined) ? maxTries : 1000;
-            var i,
-                j,
-                best = { score: -Infinity, timetable: [] },
-                result,
-                score,
-                shuffledList;
-            for (i = 0; i < maxTries; i += 1) {
-                // Shuffle list
-                shuffledList = list.slice();
-                for (j = 0; j < shuffledList.length; j += 1) {
-                    shuffleArray(shuffledList[j]);
-                }
+                        // Update record of best timetable
+                        if (score > best.score) {
+                            best.timetable = ttFull;
+                            best.score = score;
+                        }
 
-                // Call dfs search function
-                result = dfs(shuffledList);
-
-                // Check if there was a problem generating the timetable
-                if (result === null) {
-                    // Serious problem if we couldn't generate any timetable
-                    if (i === 0) {
-                        console.error('Could not generate timetable! Some clashes could not be resolved.');
+                        // Try to find another one
+                        rollback();
                     }
-
-                    break;
-                }
-
-                // Score this timetable
-                score = evaluateTimetable(result);
-
-                // Compare this score to the previous best
-                if (score > best.score) {
-                    best.score = score;
-                    best.timetable = result;
+                } else {
+                    // --- Component couldn't be satisfied --- //
+                    if (!rollback()) {
+                        // Stop, no more timetables to generate
+                        break;
+                    }
                 }
             }
 
+            // Change timetable from holding indexes to holding the actual data
             return best.timetable;
         }
 
-        var timetable = search(), i, j, stream, done, courseID;
+        var timetable = dfs(list, 0), i, j, stream, done, courseID;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
