@@ -139,6 +139,44 @@ function fetchData(cb) {
             });
         }());
 
+        // Remove extra classes with the same course, component and time
+        // NB: this gives a huge speed improvement for backtracking search
+        (function removeDuplicates() {
+            var results, i, j, component, current, time, comparison;
+            // Loop through each course component
+            for (i = 0; i < list.length; i += 1) {
+                component = list[i];
+                results = {};
+
+                // Loop through each class in the component
+                for (j = 0; j < component.length; j += 1) {
+                    current = component[j];
+                    time = current[0];
+
+                    // Update best class for this time
+                    if (results.hasOwnProperty(time)) {
+                        comparison = results[time];
+
+                        if (current[1] === 'O' && comparison[1] !== 'O') {                          // Compare statuses
+                            results[current[0]] = current;
+                        } else if (current[2].split(',')[0] > comparison[2].split(',')[0]) {        // Compare enrollments
+                            results[current[0]] = current;
+                        }
+                    } else {
+                        results[current[0]] = current;
+                    }
+                }
+
+                // Overwrite list with this information
+                list[i] = [];
+                for (time in results) {
+                    if (results.hasOwnProperty(time)) {
+                        list[i].push(results[time]);
+                    }
+                }
+            }
+        }());
+
         cb(list);
     });
 }
