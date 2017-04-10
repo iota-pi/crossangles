@@ -16,6 +16,79 @@
 /*jslint regexp: true */
 /*globals $, console, courseList, createClass, createShadow, classList, clearLists */
 
+
+function scoreTime(start, end) {
+    'use strict';
+
+    var score = 4 - Math.abs(14.5 - (start + end) / 2);
+    score *= Math.abs(score);
+    score *= (end - start);
+
+    return score;
+}
+
+function evaluateTimetable(timetable) {
+    'use strict';
+
+    var score = 0,
+        i,
+        j,
+        times,
+        time,
+        cbsDays = { M: false, T: false, W: false, H: false, F: false },
+        uniDays = { M: false, T: false, W: false, H: false, F: false },
+        cbsTimes = [],
+        day,
+        duration,
+    // Score for free days
+        freeScores = { M: 120, T: 100, W: 180,  H: 100, F: 150 },
+    // Scores for CBS events
+        tbtClass = 150,
+        coreClass = 100,
+        bibleClass = 150,
+    // Score for CBS event being immediately before or after another class on campus
+        close2CBS = 100;
+
+    for (i = 0; i < timetable.length; i += 1) {
+        times = timetable[i][0];
+
+        for (j = 0; j < times.length; j += 1) {
+            time = times[j];
+
+            // Update CBS / Uni days
+            if (timetable[i][3] === 'CBS') {
+                cbsDays[time[0]] = true;
+                cbsTimes.push(time);
+            } else {
+                uniDays[time[0]] = true;
+            }
+
+            // Score time of day
+            score += scoreTime(time[1], time[2]);
+        }
+
+        // Score CBS events
+        if (timetable[i][4] === 'The Bible Talks') {
+            score += tbtClass;
+        } else if (timetable[i][4] === 'Core Theology' || timetable[i][4] === 'Core Training') {
+            score += coreClass;
+        } else if (timetable[i][4] === 'Bible Study') {
+            score += bibleClass;
+        }
+    }
+
+    for (day in uniDays) {
+        if (uniDays.hasOwnProperty(day)) {
+            // Score free days
+            if (uniDays[day] === false && cbsDays[day] === false) {
+                score += freeScores[day];
+            }
+        }
+    }
+
+    return score;
+}
+
 function fetchData(cb) {
     'use strict';
 
@@ -185,6 +258,7 @@ function generate() {
     'use strict';
 
     // Timetable scoring function
+    /*
     function evaluateTimetable(timetable) {
         // Scores for free days
         var freeScores = {'M': 120, 'T': 100, 'W': 180,  'H': 100, 'F': 150},
@@ -206,9 +280,15 @@ function generate() {
 
         // --- Score free days --- //
         (function () {
-            var days = timetable.map(function (obj) { return obj[0][0]; }),
-                classDays = days.join(''),
-                day;
+            var days = [], //timetable.map(function (obj) { return obj[0][0]; }),
+                classDays = '', //days.join(''),
+                day,
+                i;
+
+            for (i = 0; i < timetable.length; i += 1) {
+                classDays += timetable[i][0][0];
+            }
+
             for (day in freeScores) {
                 if (freeScores.hasOwnProperty(day)) {
                     if (classDays.indexOf(day) === -1) {
@@ -301,20 +381,6 @@ function generate() {
         }());
 
         return score;
-    }
-
-    /**
-    * Randomize array element order in-place.
-    * Using Durstenfeld shuffle algorithm.
-    function shuffleArray(array) {
-        var i, j, temp;
-        for (i = array.length - 1; i > 0; i -= 1) {
-            j = Math.floor(Math.random() * (i + 1));
-            temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-        return array;
     }
     */
 
