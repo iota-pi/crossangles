@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, console, courseList, createClass, createShadow, classList, clearLists */
+/*globals $, console, document, courseList, createClass, createShadow, classList, clearLists */
 
 
 function scoreTime(start, end) {
@@ -257,251 +257,192 @@ function fetchData(cb) {
 function generate() {
     'use strict';
 
-    // Timetable scoring function
-    /*
-    function evaluateTimetable(timetable) {
-        // Scores for free days
-        var freeScores = {'M': 120, 'T': 100, 'W': 180,  'H': 100, 'F': 150},
-            freeDays = {'M': false, 'T': false, 'W': false, 'H': false, 'F': false},
-        // Scores for times of day
-            pre10 = -30,        // (i.e. startHour <= 9am)
-            post5 = -30,        // (i.e. endHour    > 5pm)
-            post7 = -50,        // NB: Additional to post5
-        // Score for TBT (double for on same day as a class)
-            tbtClass = 150,
-        // Score for CORE (double for on same day as a class)
-            coreClass = 100,
-        // Score for Bible Study (double for on same day as a class)
-            bibleClass = 150,
-        // Score for CBS event being immediately before or after another class on campus
-            close2CBS = 100,
-        // Define score variable
-            score = 0;
+    // Checks whether two given time strings clash with each other
+    function classClash(a, b) {
+        // If days are different, then there is clearly no clash
+        if (a[0] !== b[0]) { return false; }
 
-        // --- Score free days --- //
-        (function () {
-            var days = [], //timetable.map(function (obj) { return obj[0][0]; }),
-                classDays = '', //days.join(''),
-                day,
-                i;
+        // If the lower of one is bigger than the higher of the other, then there is no overlap
+        // NB: if a[0] === a[1], then this is not always true; hence the extra "a[0] > b[0]" condition
+        if (a[1] >= b[2] || b[1] >= a[2]) {
+            return false;
+        }
 
-            for (i = 0; i < timetable.length; i += 1) {
-                classDays += timetable[i][0][0];
-            }
-
-            for (day in freeScores) {
-                if (freeScores.hasOwnProperty(day)) {
-                    if (classDays.indexOf(day) === -1) {
-                        score += freeScores[day];
-                        freeDays[day] = true;
-                    }
-                }
-            }
-
-            return score;
-        }());
-
-        // --- Score times of day --- //
-        (function () {
-            var time, i;
-            for (i = 0; i < timetable.length; i += 1) {
-                time = timetable[i][0];
-                if (time[1] < 10) {
-                    score += pre10;
-                }
-                if (time[2] > 17) {
-                    score += post5;
-                }
-                if (time[2] > 19) {
-                    score += post7;
-                }
-            }
-            return score;
-        }());
-
-        // --- Score TBT and CORE days --- //
-        (function () {
-            var i,
-                tbtDay,
-                coreThDay,
-                coreTrDay,
-                bibleDay;
-            for (i = 0; i < timetable.length; i += 1) {
-                // Check if this is a Bible Talk
-                if (timetable[i][4] === 'The Bible Talks') {
-                    tbtDay = timetable[i][0][0];
-                }
-
-                if (timetable[i][4] === 'Core Theology') {
-                    coreThDay = timetable[i][0][0];
-                }
-
-                if (timetable[i][4] === 'Core Training') {
-                    coreTrDay = timetable[i][0][0];
-                }
-
-                if (timetable[i][4] === 'Bible Study') {
-                    bibleDay = timetable[i][0][0];
-                }
-            }
-
-            // Add the scores for each event which isn't on a free day
-            if (tbtDay) { score += (1 + !freeDays[tbtDay]) * tbtClass; }
-            if (coreThDay) { score += (1 + !freeDays[coreThDay]) * coreClass; }
-            if (coreTrDay) { score += (1 + !freeDays[coreTrDay]) * coreClass; }
-            if (bibleDay) { score += (1 + !freeDays[bibleDay]) * bibleClass; }
-        }());
-
-        // --- Score CBS event timing --- //
-        (function () {
-            var i,
-                j,
-                cbsTime,
-                uniTime;
-            for (i = 0; i < timetable.length; i += 1) {
-                // Check if this is a CBS event
-                if (timetable[i][3] === 'CBS') {
-                    cbsTime = timetable[i][0];
-                    for (j = 0; j < timetable.length; j += 1) {
-                        // Check if this is a uni class
-                        if (timetable[j][3] !== 'CBS') {
-                            uniTime = timetable[j][0];
-                            // Check days match up
-                            if (cbsTime[0] === uniTime[1]) {
-                                // Check ending/starting time overlap
-                                if (cbsTime[1] === uniTime[2] || cbsTime[2] === uniTime[1]) {
-                                    score += close2CBS;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }());
-
-        return score;
+        return true;
     }
-    */
 
-    fetchData(function (list) {
-        // Checks whether two given time strings clash with each other
-        function classClash(a, b) {
-            // If days are different, then there is clearly no clash
-            if (a[0] !== b[0]) { return false; }
+    // Checks to see if the given time string clashes with any other time string in the timetable
+    function checkClash(list, timetable, time) {
+        var i, j, k, stream, times;
+        for (i = 0; i < time.length; i += 1) {
+            for (j = 0; j < timetable.length; j += 1) {
+                stream = list[j][timetable[j]];
+                times = stream[0];
+                for (k = 0; k < times.length; k += 1) {
+                    if (classClash(time[i], times[k])) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-            // If the lower of one is bigger than the higher of the other, then there is no overlap
-            // NB: if a[0] === a[1], then this is not always true; hence the extra "a[0] > b[0]" condition
-            if (a[1] >= b[2] || b[1] >= a[2]) {
+        return false;
+    }
+
+    /*
+    function dfs(list, maxClash) {
+        var timetable = [],
+            ttFull,
+            score,
+            best = {timetable: null, score: null},
+            i = 0,
+            component,
+            classIndex,
+            time,
+            clashes = 0;
+
+        function rollback() {
+            // Remove this item from timetable (if it has already been set)
+            if (i < timetable.length) {
+                timetable.pop();
+            }
+
+            // Roll back
+            i -= 1;
+            if (i < 0) {
+                if (best.timetable === null) {
+                    console.error('No timetable could be generated');
+                    console.error('Try again with more clash hours');
+                }
                 return false;
             }
 
             return true;
         }
 
-        // Checks to see if the given time string clashes with any other time string in the timetable
-        function checkClash(list, timetable, time) {
-            var i, j, k, stream, times;
-            for (i = 0; i < time.length; i += 1) {
-                for (j = 0; j < timetable.length; j += 1) {
-                    stream = list[j][timetable[j]];
-                    times = stream[0];
-                    for (k = 0; k < times.length; k += 1) {
-                        if (classClash(time[i], times[k])) {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
+        function mapTimetable() {
+            return timetable.map(function (x, i) { return list[i][x]; });
         }
 
-        function dfs(list, maxClash) {
-            var timetable = [],
-                ttFull,
-                score,
-                best = {timetable: null, score: null},
-                i = 0,
-                component,
-                classIndex,
-                time,
-                clashes = 0;
+        while (i < list.length) {
+            component = list[i];
 
-            function rollback() {
-                // Remove this item from timetable (if it has already been set)
-                if (i < timetable.length) {
-                    timetable.pop();
-                }
-
-                // Roll back
-                i -= 1;
-                if (i < 0) {
-                    if (best.timetable === null) {
-                        console.error('No timetable could be generated');
-                        console.error('Try again with more clash hours');
-                    }
-                    return false;
-                }
-
-                return true;
-            }
-
-            function mapTimetable() {
-                return timetable.map(function (x, i) { return list[i][x]; });
-            }
-
-            while (i < list.length) {
-                component = list[i];
-
-                // Find a class for this component which doesn't clash
-                // NB: in the case of rollback to this component, start checking for clashes from the current value; otherwise start at 0
-                classIndex = timetable[i] || 0;
-                while (classIndex < component.length) {
-                    time = component[classIndex][0];
-                    if (checkClash(list, timetable, time)) {
-                        classIndex += 1;
-                    } else {
-                        break;
-                    }
-                }
-
-                if (classIndex < component.length) {
-                    // Set this class in the timetable
-                    timetable[i] = classIndex;
-
-                    // Step forward
-                    i += 1;
-
-                    // Check if we've finished creating a valid timetable
-                    if (i === list.length) {
-                        // Score this timetable
-                        ttFull = mapTimetable();
-                        score = evaluateTimetable(ttFull);
-
-                        // Update record of best timetable
-                        if (score > best.score) {
-                            best.timetable = ttFull;
-                            best.score = score;
-                        }
-
-                        // Try to find another one
-                        rollback();
-                    }
+            // Find a class for this component which doesn't clash
+            // NB: in the case of rollback to this component, start checking for clashes from the current value; otherwise start at 0
+            classIndex = timetable[i] || 0;
+            while (classIndex < component.length) {
+                time = component[classIndex][0];
+                if (checkClash(list, timetable, time)) {
+                    classIndex += 1;
                 } else {
-                    // --- Component couldn't be satisfied --- //
-                    if (!rollback()) {
-                        // Stop, no more timetables to generate
-                        break;
-                    }
+                    break;
                 }
             }
 
-            // Change timetable from holding indexes to holding the actual data
-            return best.timetable;
+            if (classIndex < component.length) {
+                // Set this class in the timetable
+                timetable[i] = classIndex;
+
+                // Step forward
+                i += 1;
+
+                // Check if we've finished creating a valid timetable
+                if (i === list.length) {
+                    // Score this timetable
+                    ttFull = mapTimetable();
+                    score = evaluateTimetable(ttFull);
+
+                    // Update record of best timetable
+                    if (score > best.score) {
+                        best.timetable = ttFull;
+                        best.score = score;
+                    }
+
+                    // Try to find another one
+                    rollback();
+                }
+            } else {
+                // --- Component couldn't be satisfied --- //
+                if (!rollback()) {
+                    // Stop, no more timetables to generate
+                    break;
+                }
+            }
         }
 
-        var timetable = dfs(list, 0), i, j, stream, done, courseID;
+        // Change timetable from holding indexes to holding the actual data
+        return best.timetable;
+    }
+    */
+
+    function search(list, maxclash) {
+        var table = [],
+            indexList,
+            i;
+        function dfs(indexList, level) {
+            if (level === undefined) { level = 0; }
+
+            var len = indexList.length - level,
+                temp = { timetable: null, score: null },
+                best = { timetable: null, score: null },
+                results = [],
+                reduced,
+                i,
+                j;
+            console.log(level, len);
+
+            // Check if we've already hashed this
+            if (len < table.length) {
+                if (table.hasOwnProperty(indexList)) {
+                    return table[len][indexList];
+                }
+            } else {
+                table[len] = {};
+            }
+
+            if (len === 1) {
+                // Base case: optimal timetable is just the single class
+                temp.timetable = [indexList[level]];
+                temp.score = evaluateTimetable(temp.timetable);
+                results = [temp];
+            } else {
+                // Continue recursion
+                reduced = dfs(indexList, level + 1);
+                console.log(reduced, level + 1);
+
+                for (i = 0; i < reduced.length; i += 1) {
+                    for (j = 0; j < indexList[level].length; j += 1) {
+                        temp.timetable = indexList[level][j] + reduced[i].timetable;
+                        temp.score = evaluateTimetable(temp.timetable);
+
+                        if (temp.score > best.score) {
+                            best.timetable = temp.timetable;
+                            best.score = temp.score;
+                        }
+                    }
+
+                    results.push($.extend({}, best));
+                }
+            }
+
+            console.log(table);
+            table[len][indexList] = results;
+            return results;
+        }
+
+        indexList = [];
+        function toIndex(x, i) { return i; }
+        for (i = 0; i < list.length; i += 1) {
+            indexList[i] = list[i].map(toIndex);
+        }
+
+        dfs(indexList);
+
+        return [];
+    }
+
+    fetchData(function makeTimetable(list) {
+        var timetable = search(list, 0), i, j, stream, done, courseID;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
