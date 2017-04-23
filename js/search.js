@@ -3,6 +3,8 @@
  * Defines search algorithm to use for finding best timetable as well as evaluation function for timetables
  */
 
+/*globals console */
+
 function scoreTime(start, end) {
     'use strict';
 
@@ -13,12 +15,32 @@ function scoreTime(start, end) {
     return score;
 }
 
-function evaluateTimetable(timetable) {
+// Checks whether two given time strings clash with each other
+// TODO: switch clash counting from # of clashing classes to # of clash hours
+function classClash(a, b) {
     'use strict';
 
-    var score = 0,
+    // If days are different, then there is clearly no clash
+    if (a[0] !== b[0]) { return false; }
+
+    // Iff the start of one is later than the end of the other, then there is no overlap
+    if (a[1] >= b[2] || b[1] >= a[2]) {
+        return false;
+    }
+
+    return true;
+}
+
+function evaluateTimetable(indexTimetable, streams) {
+    'use strict';
+
+    if (indexTimetable === null) { return null; }
+    var timetable = indexTimetable.map(function (x, i) { return streams[i][x]; }),
+        score = 0,
         i,
         j,
+        k,
+        l,
         times,
         time,
         cbsDays = { M: false, T: false, W: false, H: false, F: false },
@@ -26,14 +48,16 @@ function evaluateTimetable(timetable) {
         cbsTimes = [],
         day,
         duration,
-    // Score for free days
+    // Scores for free days
         freeScores = { M: 120, T: 100, W: 180,  H: 100, F: 150 },
     // Scores for CBS events
         tbtClass = 150,
         coreClass = 100,
         bibleClass = 150,
     // Score for CBS event being immediately before or after another class on campus
-        close2CBS = 100;
+        close2CBS = 100,
+    // Score for clashes
+        clash = -500;
 
     for (i = 0; i < timetable.length; i += 1) {
         times = timetable[i][0];
@@ -51,6 +75,15 @@ function evaluateTimetable(timetable) {
 
             // Score time of day
             score += scoreTime(time[1], time[2]);
+
+            // Score clashes
+            for (k = i; k < timetable.length; k += 1) {
+                for (l = 0; l < timetable[k][0].length; l += 1) {
+                    if (classClash(time, timetable[k][0][l])) {
+                        score += clash;
+                    }
+                }
+            }
         }
 
         // Score CBS events
@@ -79,21 +112,7 @@ function search(list, maxClash) {
     'use strict';
 
     // Checks whether two given time strings clash with each other
-    function classClash(a, b) {
-        // If days are different, then there is clearly no clash
-        if (a[0] !== b[0]) { return false; }
-
-        // Iff the start of one is later than the end of the other, then there is no overlap
-        if (a[1] >= b[2] || b[1] >= a[2]) {
-            return false;
-        }
-
-        return true;
-    }
-
-    // Checks whether two given time strings clash with each other
-    // Inherited variables: maxClash
-    function checkClashes(streams, timetable, newTime) {
+    function countClashes(streams, timetable, newTime) {
         var i, j, k, stream, times, count = 0;
         for (i = 0; i < newTime.length; i += 1) {
             for (j = 0; j < timetable.length; j += 1) {
@@ -103,23 +122,24 @@ function search(list, maxClash) {
                     if (classClash(newTime[i], times[k])) {
                         count += 1;
                         if (count > maxClash) {
-                            return true;
+                            return count;
                         }
                     }
                 }
             }
         }
 
-        return false;
+        return count;
     }
 
     // Chooses a class which doesn't cause too many clashes
+    // Inherited variables: maxClash
     function pickClass(streams, i, timetable) {
         var classNo = timetable[i] || 0,        // If we have rolled back to this point, continue from where we were up to
             stream = streams[i];
 
         // Keep looking for a class while there is a clash
-        while (classNo < stream.length && checkClashes(streams, timetable, stream[classNo])) {
+        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo]) > maxClash) {
             classNo += 1;
         }
 
@@ -183,6 +203,7 @@ function search(list, maxClash) {
         return array;
     }
 
+    // Mutates a parent solution to produce a child solution
     function mutate(parent) {
         var child = { classes: [], timetable: null, score: null },
             i,
@@ -197,7 +218,7 @@ function search(list, maxClash) {
             child.timetable = dfs(child.classes, parent.timetable, j);
         }
 
-        child.score = evaluateTimetable(child.timetable);
+        child.score = evaluateTimetable(child.timetable, child.classes);
 
         return child;
     }
