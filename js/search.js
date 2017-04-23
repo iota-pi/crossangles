@@ -222,4 +222,77 @@ function search(list, maxClash) {
 
         return child;
     }
+
+    function parentSort(a, b) {
+        return b.score - a.score;
+    }
+
+    // Evolves given list of parents
+    function evolve(parents, maxParents, maxIter, biasTop) {
+        maxIter = maxIter || 100;
+        maxParents = maxParents || 10;
+        biasTop = biasTop || 1;
+
+        var i,
+            index,
+            parent,
+            child;
+
+        for (i = 0; i < maxIter; i += 1) {
+            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted sort
+            parent = parents[index];
+            child = mutate(parent);
+            parents.push(child);
+
+            // Re-sort and cull parents every 10 iterations
+            if (i % 10 === 9) {
+                // Sort parents array by descending sort
+                parents.sort(parentSort);
+
+                // Cull parents list
+                while (parents.length > maxParents) {
+                    parentSort.pop();
+                }
+            }
+        }
+
+        // Return the best timetable
+        return parents[0];
+    }
+
+    // This function creates a set of random starting parents
+    // Inherited variables: list
+    function abiogenesis(numParents) {
+        var parents = [],
+            parent,
+            i,
+            j;
+
+        for (i = 0; i < numParents; i += 1) {
+            // Initialise new, blank parent
+            parent = { classes: [], timetable: null, score: null };
+
+            // Initialise this parents classes to be in a random order within their streams
+            // NB: streams stay in the same order
+            for (j = 0; j < list.length; j += 1) {
+                parent.classes.push(shuffleArray(list[j]));
+            }
+
+            // Find first valid timetable and score it
+            parent.timetable = dfs(parent.classes);
+            parent.score = evaluateTimetable(parent.timetable, parent.classes);
+
+            // Check for no possible timetables
+            if (parent.timetable === null) { console.error('No timetables could be generated!'); return null; }
+
+            parents.push(parent);
+        }
+
+        return parents.sort(parentSort);
+    }
+
+    var parents = abiogenesis(5),
+        best = evolve(parents);
+
+    return best.timetable;
 }
