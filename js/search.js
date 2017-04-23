@@ -3,113 +3,24 @@
  * Defines search algorithm to use for finding best timetable as well as evaluation function for timetables
  */
 
-/*globals console */
-
-function scoreTime(start, end) {
-    'use strict';
-
-    var score = 4 - Math.abs(14.5 - (start + end) / 2);
-    score *= Math.abs(score);
-    score *= (end - start);
-
-    return score;
-}
-
-// Checks whether two given time strings clash with each other
-// TODO: switch clash counting from # of clashing classes to # of clash hours
-function classClash(a, b) {
-    'use strict';
-
-    // If days are different, then there is clearly no clash
-    if (a[0] !== b[0]) { return false; }
-
-    // Iff the start of one is later than the end of the other, then there is no overlap
-    if (a[1] >= b[2] || b[1] >= a[2]) {
-        return false;
-    }
-
-    return true;
-}
-
-function evaluateTimetable(indexTimetable, streams) {
-    'use strict';
-
-    if (indexTimetable === null) { return null; }
-    var timetable = indexTimetable.map(function (x, i) { return streams[i][x]; }),
-        score = 0,
-        i,
-        j,
-        k,
-        l,
-        times,
-        time,
-        cbsDays = { M: false, T: false, W: false, H: false, F: false },
-        uniDays = { M: false, T: false, W: false, H: false, F: false },
-        cbsTimes = [],
-        day,
-        duration,
-    // Scores for free days
-        freeScores = { M: 120, T: 100, W: 180,  H: 100, F: 150 },
-    // Scores for CBS events
-        tbtClass = 150,
-        coreClass = 100,
-        bibleClass = 150,
-    // Score for CBS event being immediately before or after another class on campus
-        close2CBS = 100,
-    // Score for clashes
-        clash = -500;
-
-    for (i = 0; i < timetable.length; i += 1) {
-        times = timetable[i][0];
-
-        for (j = 0; j < times.length; j += 1) {
-            time = times[j];
-
-            // Update CBS / Uni days
-            if (timetable[i][3] === 'CBS') {
-                cbsDays[time[0]] = true;
-                cbsTimes.push(time);
-            } else {
-                uniDays[time[0]] = true;
-            }
-
-            // Score time of day
-            score += scoreTime(time[1], time[2]);
-
-            // Score clashes
-            for (k = i; k < timetable.length; k += 1) {
-                for (l = 0; l < timetable[k][0].length; l += 1) {
-                    if (classClash(time, timetable[k][0][l])) {
-                        score += clash;
-                    }
-                }
-            }
-        }
-
-        // Score CBS events
-        if (timetable[i][4] === 'The Bible Talks') {
-            score += tbtClass;
-        } else if (timetable[i][4] === 'Core Theology' || timetable[i][4] === 'Core Training') {
-            score += coreClass;
-        } else if (timetable[i][4] === 'Bible Study') {
-            score += bibleClass;
-        }
-    }
-
-    for (day in uniDays) {
-        if (uniDays.hasOwnProperty(day)) {
-            // Score free days
-            if (uniDays[day] === false && cbsDays[day] === false) {
-                score += freeScores[day];
-            }
-        }
-    }
-
-    return score;
-}
+/*globals console, scoreTimetable */
 
 function search(list, maxClash) {
     'use strict';
+
+    // Checks whether two given time strings clash with each other
+    // TODO: switch clash counting from # of clashing classes to # of clash hours
+    function classClash(a, b) {
+        // If days are different, then there is clearly no clash
+        if (a[0] !== b[0]) { return false; }
+
+        // Iff the start of one is later than the end of the other, then there is no overlap
+        if (a[1] >= b[2] || b[1] >= a[2]) {
+            return false;
+        }
+
+        return true;
+    }
 
     // Checks whether two given time strings clash with each other
     function countClashes(streams, timetable, newTime) {
@@ -135,11 +46,11 @@ function search(list, maxClash) {
     // Chooses a class which doesn't cause too many clashes
     // Inherited variables: maxClash
     function pickClass(streams, i, timetable) {
-        var classNo = timetable[i] || 0,        // If we have rolled back to this point, continue from where we were up to
+        var classNo = (timetable[i] + 1) || 0,        // If we have rolled back to this point, continue from where we were up to
             stream = streams[i];
 
         // Keep looking for a class while there is a clash
-        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo]) > maxClash) {
+        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo][0]) > maxClash) {
             classNo += 1;
         }
 
@@ -158,13 +69,20 @@ function search(list, maxClash) {
             classNo,
             timetable = init_timetable || [];
 
+        // If we started with init_index and init_timetable, clear all timetable elements after init_index
+        if (init_index !== undefined) {
+            while (timetable.length > init_index) {
+                timetable.pop();
+            }
+        }
+
         while (i < streams.length) {
             stream = streams[i];
 
             // Pick first class for this steam that doesn't have a clash
             classNo = pickClass(streams, i, timetable);
 
-            // Roll back if all classes in stream cause a clash
+            // Roll back if all streams in stream cause a clash
             if (classNo === null) {
                 // Remove this item from timetable (if it has already been set)
                 if (i < timetable.length) {
@@ -191,7 +109,7 @@ function search(list, maxClash) {
         return timetable;
     }
 
-    // Randomize array element order in-place (using Durstenfeld shuffle algorithm)
+    // Randomly shuffle array element order (using Durstenfeld shuffle algorithm)
     function shuffleArray(array) {
         var i, j, temp;
         for (i = array.length - 1; i > 0; i -= 1) {
@@ -205,24 +123,26 @@ function search(list, maxClash) {
 
     // Mutates a parent solution to produce a child solution
     function mutate(parent) {
-        var child = { classes: [], timetable: null, score: null },
+        var child = { streams: [], timetable: null, score: null },
             i,
             j;
-        for (i = 0; i < parent.classes.length; i += 1) {
-            child.classes.push(parent.classes[i]);
+        for (i = 0; i < parent.streams.length; i += 1) {
+            child.streams.push(parent.streams[i]);
         }
 
         while (child.timetable === null) {
-            j = Math.floor(Math.random() * parent.length);
-            child.classes[j] = shuffleArray(child.classes[j]);
-            child.timetable = dfs(child.classes, parent.timetable, j);
+            j = Math.floor(Math.random() * child.streams.length);
+            child.streams[j] = shuffleArray(child.streams[j]);
+            child.timetable = dfs(child.streams, parent.timetable, j);
         }
 
-        child.score = evaluateTimetable(child.timetable, child.classes);
+        // Calculate a score for this new timetable
+        child.score = scoreTimetable(child.timetable, child.streams);
 
         return child;
     }
 
+    // Sort comparison function for sorting parent list in descending order of score
     function parentSort(a, b) {
         return b.score - a.score;
     }
@@ -249,9 +169,9 @@ function search(list, maxClash) {
                 // Sort parents array by descending sort
                 parents.sort(parentSort);
 
-                // Cull parents list
+                // Cull parents list by removing worst-scoring timetables
                 while (parents.length > maxParents) {
-                    parentSort.pop();
+                    parents.pop();
                 }
             }
         }
@@ -270,17 +190,17 @@ function search(list, maxClash) {
 
         for (i = 0; i < numParents; i += 1) {
             // Initialise new, blank parent
-            parent = { classes: [], timetable: null, score: null };
+            parent = { streams: [], timetable: null, score: null };
 
-            // Initialise this parents classes to be in a random order within their streams
+            // Initialise this parents streams to be in a random order within their streams
             // NB: streams stay in the same order
             for (j = 0; j < list.length; j += 1) {
-                parent.classes.push(shuffleArray(list[j]));
+                parent.streams.push(shuffleArray(list[j]));
             }
 
             // Find first valid timetable and score it
-            parent.timetable = dfs(parent.classes);
-            parent.score = evaluateTimetable(parent.timetable, parent.classes);
+            parent.timetable = dfs(parent.streams);
+            parent.score = scoreTimetable(parent.timetable, parent.streams);
 
             // Check for no possible timetables
             if (parent.timetable === null) { console.error('No timetables could be generated!'); return null; }
@@ -291,8 +211,11 @@ function search(list, maxClash) {
         return parents.sort(parentSort);
     }
 
-    var parents = abiogenesis(5),
+    var parents = abiogenesis(1),
         best = evolve(parents);
 
-    return best.timetable;
+    console.log(best.score);
+
+    // Return actual stream elements rather than only indexes
+    return best.timetable.map(function (x, i) { return best.streams[i][x]; });
 }
