@@ -211,7 +211,7 @@ function search(list, maxClash) {
         return parents.sort(parentSort);
     }
 
-    var parents = abiogenesis(1),
+    var parents = abiogenesis(10),
         best = evolve(parents);
 
     console.log(best.score);

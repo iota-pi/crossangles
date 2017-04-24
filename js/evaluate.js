@@ -2,6 +2,8 @@
  * Defines evaluation functions for scoring timetable
  */
 
+/*globals console */
+
 function timetableToArray(timetableData, streams) {
     'use strict';
 
@@ -48,6 +50,7 @@ function scoreFreeDays(timetable) {
         }
     }
 
+    //console.log('scoreFreeDays() =', score);
     return score;
 }
 
@@ -60,13 +63,16 @@ function scoreClashes(timetable) {
 
     for (i = 0; i < timetable.length; i += 1) {
         for (j = 0; j < timetable[i].length; j += 1) {
-            // There is a clash is there is more than one element in each half-hour slot
-            if (timetable[i][j].length > 1) {
-                score += clashScore;
+            if (timetable[i][j] !== undefined) {
+                // There is a clash is there is more than one element in each half-hour slot
+                if (timetable[i][j].length > 1) {
+                    score += clashScore;
+                }
             }
         }
     }
 
+    //console.log('scoreClashes() =', score);
     return score;
 }
 
@@ -82,14 +88,52 @@ function scoreClassTime(start, end) {
     return Math.min(scoreStart, scoreEnd, 0);
 }
 
-function scoreTimes(timetable) {
+function scoreTimes(timetableData) {
     'use strict';
     var score = 0,
         i,
+        j,
+        times;
+
+    for (i = 0; i < timetableData.length; i += 1) {
+        times = timetableData[i][0];
+        for (j = 0; j < times.length; j += 1) {
+            score += scoreClassTime(times[j][1], times[j][2]);
+        }
+    }
+
+    //console.log('scoreTimes() =', score);
+    return score;
+}
+
+function scoreProximity(timetable) {
+    'use strict';
+
+    // NB: the way that this scoring is done, since CBS events are 2 half-hours long,
+    // they will each automatically be given 2*adjacentScore points from this function
+    var adjacentScore = 50,
+        score = 0,
+        i,
         j;
 
+    for (i = 0; i < timetable.length; i += 1) {
+        for (j = 0; j < timetable[i].length; j += 1) {
+            if (timetable[i][j] !== undefined) {
+                if (timetable[i][j].indexOf('CBS') !== -1) {
+                    // Check previous half hour
+                    if (timetable[i][j - 1] !== undefined) {
+                        score += adjacentScore;
+                    }
+                    // Check next half hour
+                    if (timetable[i][j + 1] !== undefined) {
+                        score += adjacentScore;
+                    }
+                }
+            }
+        }
+    }
 
-
+    console.log('scoreProximity() =', score);
     return score;
 }
 
@@ -101,9 +145,14 @@ function scoreTimetable(indexTimetable, streams) {
         timetable = timetableToArray(timetableData, streams),
         score = 0;
 
+    console.log(timetable);
+
     score += scoreFreeDays(timetable);
     score += scoreClashes(timetable);
     score += scoreTimes(timetableData);
+    score += scoreProximity(timetableData);
+
+    return score;
 }
 
 /*
