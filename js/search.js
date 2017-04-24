@@ -109,7 +109,7 @@ function search(list, maxClash) {
         return timetable;
     }
 
-    // Randomly shuffle array element order (using Durstenfeld shuffle algorithm)
+    // Randomly shuffle array element order (in place!) (using Durstenfeld shuffle algorithm)
     function shuffleArray(array) {
         var i, j, temp;
         for (i = array.length - 1; i > 0; i -= 1) {
@@ -127,12 +127,12 @@ function search(list, maxClash) {
             i,
             j;
         for (i = 0; i < parent.streams.length; i += 1) {
-            child.streams.push(parent.streams[i]);
+            child.streams.push(parent.streams[i].slice());
         }
 
         while (child.timetable === null) {
             j = Math.floor(Math.random() * child.streams.length);
-            child.streams[j] = shuffleArray(child.streams[j]);
+            shuffleArray(child.streams[j]);
             child.timetable = dfs(child.streams, parent.timetable, j);
         }
 
@@ -151,7 +151,7 @@ function search(list, maxClash) {
     function evolve(parents, maxParents, maxIter, biasTop) {
         maxIter = maxIter || 100;
         maxParents = maxParents || 10;
-        biasTop = biasTop || 1;
+        biasTop = biasTop || 5;
 
         var i,
             index,
@@ -211,7 +211,7 @@ function search(list, maxClash) {
         return parents.sort(parentSort);
     }
 
-    var parents = abiogenesis(10),
+    var parents = abiogenesis(5),
         best = evolve(parents);
 
     console.log(best.score);

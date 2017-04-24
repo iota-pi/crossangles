@@ -23,7 +23,7 @@ function timetableToArray(timetableData, streams) {
             time = times[j];
             day = day_of_week.indexOf(time[0]);
             for (hour = time[1]; hour < time[2]; hour += 0.5) {
-                // Initialise array element if required to blank array (this array will hold course codes for each component in this space)
+                // Initialise array element (if required) to blank array (this array will hold course codes for each component in this space)
                 if (timetable[day][hour * 2] === undefined) {
                     timetable[day][hour * 2] = [];
                 }
@@ -50,11 +50,10 @@ function scoreFreeDays(timetable) {
         }
     }
 
-    //console.log('scoreFreeDays() =', score);
     return score;
 }
 
-function scoreClashes(timetable) {
+function scoreClashes(timetable, timetableData) {
     'use strict';
     var clashScore = -500, // per half hour
         score = 0,
@@ -72,7 +71,9 @@ function scoreClashes(timetable) {
         }
     }
 
-    //console.log('scoreClashes() =', score);
+    if (score !== 0) {
+        console.log(timetable, timetableData);
+    }
     return score;
 }
 
@@ -102,7 +103,6 @@ function scoreTimes(timetableData) {
         }
     }
 
-    //console.log('scoreTimes() =', score);
     return score;
 }
 
@@ -133,7 +133,6 @@ function scoreProximity(timetable) {
         }
     }
 
-    console.log('scoreProximity() =', score);
     return score;
 }
 
@@ -145,12 +144,10 @@ function scoreTimetable(indexTimetable, streams) {
         timetable = timetableToArray(timetableData, streams),
         score = 0;
 
-    console.log(timetable);
-
     score += scoreFreeDays(timetable);
-    score += scoreClashes(timetable);
+    score += scoreClashes(timetable, timetableData);
     score += scoreTimes(timetableData);
-    score += scoreProximity(timetableData);
+    score += scoreProximity(timetable);
 
     return score;
 }
