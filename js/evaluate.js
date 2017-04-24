@@ -2,21 +2,10 @@
  * Defines evaluation functions for scoring timetable
  */
 
-function scoreTime(start, end) {
+function timetableToArray(timetableData, streams) {
     'use strict';
 
-    var score = 4 - Math.abs(14.5 - (start + end) / 2);
-    score *= Math.abs(score);
-    score *= (end - start);
-
-    return score;
-}
-
-function timetableToArray(indexTimetable, streams) {
-    'use strict';
-
-    var timetableData = indexTimetable.map(function (x, i) { return streams[i][x]; }),
-        timetable = [[], [], [], [], []],
+    var timetable = [[], [], [], [], []],
         day_of_week = ['M', 'T', 'W', 'H', 'F'],
         i,
         j,
@@ -48,25 +37,73 @@ function timetableToArray(indexTimetable, streams) {
 
 function scoreFreeDays(timetable) {
     'use strict';
-    var freeDayScores = { M: 120, T: 100, W: 180,  H: 100, F: 150 },
+    var freeDayScores = [120, 100, 180,  100, 150],
+        score = 0,
         i;
 
     for (i = 0; i < timetable.length; i += 1) {
         // This day is free (no classes) if the length of the array is 0
         if (timetable[i].length === 0) {
-
+            score += freeDayScores[i];
         }
     }
+
+    return score;
+}
+
+function scoreClashes(timetable) {
+    'use strict';
+    var clashScore = -500, // per half hour
+        score = 0,
+        i,
+        j;
+
+    for (i = 0; i < timetable.length; i += 1) {
+        for (j = 0; j < timetable[i].length; j += 1) {
+            // There is a clash is there is more than one element in each half-hour slot
+            if (timetable[i][j].length > 1) {
+                score += clashScore;
+            }
+        }
+    }
+
+    return score;
+}
+
+function scoreClassTime(start, end) {
+    'use strict';
+
+    // Scoring function is: -((x-14)^2 + 9)
+    // All positive scores are ignored, hence from 11am-5pm, there is no differentiation
+    var scoreStart = -((start - 14) * (start - 14) + 9),
+        scoreEnd = -((end - 14) * (end - 14) + 9);
+
+    // Return the worst of the start and end time score, capped at 0
+    return Math.min(scoreStart, scoreEnd, 0);
+}
+
+function scoreTimes(timetable) {
+    'use strict';
+    var score = 0,
+        i,
+        j;
+
+
+
+    return score;
 }
 
 function scoreTimetable(indexTimetable, streams) {
     'use strict';
     if (indexTimetable === null) { return null; }
 
-    var timetable = timetableToArray(indexTimetable, streams),
+    var timetableData = indexTimetable.map(function (x, i) { return streams[i][x]; }),
+        timetable = timetableToArray(timetableData, streams),
         score = 0;
 
     score += scoreFreeDays(timetable);
+    score += scoreClashes(timetable);
+    score += scoreTimes(timetableData);
 }
 
 /*
