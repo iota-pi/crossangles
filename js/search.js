@@ -9,20 +9,16 @@ function search(list, maxClash) {
     'use strict';
 
     // Checks whether two given time strings clash with each other
-    // TODO: switch clash counting from # of clashing classes to # of clash hours
     function classClash(a, b) {
         // If days are different, then there is clearly no clash
         if (a[0] !== b[0]) { return false; }
 
-        // Iff the start of one is later than the end of the other, then there is no overlap
-        if (a[1] >= b[2] || b[1] >= a[2]) {
-            return false;
-        }
-
-        return true;
+        // The overlap between two intervals will be the difference (if positive) between the smallest upper-bound and the largest lower-bound
+        return Math.max(0, Math.min(a[2], b[2]) - Math.max(a[1], b[1]));
     }
 
     // Checks whether two given time strings clash with each other
+    // Inherited variables: maxClash
     function countClashes(streams, timetable, newTime) {
         var i, j, k, stream, times, count = 0;
         for (i = 0; i < newTime.length; i += 1) {
@@ -30,12 +26,7 @@ function search(list, maxClash) {
                 stream = streams[j][timetable[j]];
                 times = stream[0];
                 for (k = 0; k < times.length; k += 1) {
-                    if (classClash(newTime[i], times[k])) {
-                        count += 1;
-                        if (count > maxClash) {
-                            return count;
-                        }
-                    }
+                    count += classClash(newTime[i], times[k]);
                 }
             }
         }
@@ -133,7 +124,8 @@ function search(list, maxClash) {
         while (child.timetable === null) {
             j = Math.floor(Math.random() * child.streams.length);
             shuffleArray(child.streams[j]);
-            child.timetable = dfs(child.streams, parent.timetable, j);
+            child.timetable = parent.timetable.slice();
+            child.timetable = dfs(child.streams, child.timetable, j);
         }
 
         // Calculate a score for this new timetable
@@ -214,7 +206,7 @@ function search(list, maxClash) {
     var parents = abiogenesis(5),
         best = evolve(parents);
 
-    console.log(best.score);
+    console.log(best);
 
     // Return actual stream elements rather than only indexes
     return best.timetable.map(function (x, i) { return best.streams[i][x]; });
