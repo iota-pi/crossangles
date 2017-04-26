@@ -148,7 +148,7 @@ function fetchData(cb) {
             });
         }());
 
-        // Remove extra classes with the same course, component and time
+        // Remove extra classes with the same course, component and time, choosing to keep the one with more enrolment positions available
         // NB: this gives a huge speed improvement for backtracking search
         (function removeDuplicates() {
             var results, i, j, component, current, time, comparison;
@@ -168,7 +168,7 @@ function fetchData(cb) {
 
                         if (current[1] === 'O' && comparison[1] !== 'O') {                          // Compare statuses
                             results[current[0]] = current;
-                        } else if (current[2].split(',')[0] > comparison[2].split(',')[0]) {        // Compare enrollments
+                        } else if (current[2].split(',')[0] > comparison[2].split(',')[0]) {        // Compare enrollments, TODO: change to include max cap. differences in considerations
                             results[current[0]] = current;
                         }
                     } else {
@@ -181,6 +181,21 @@ function fetchData(cb) {
                 for (time in results) {
                     if (results.hasOwnProperty(time)) {
                         list[i].push(results[time]);
+                    }
+                }
+            }
+        }());
+
+        // Remove full classes unless they've explicitly been been requested
+        (function removeFullClasses() {
+            if (!$('#fullclasses').is(':checked')) {
+                var i, j, stream;
+                for (i = 0; i < list.length; i += 1) {
+                    stream = list[i];
+                    for (j = 0; j < stream.length; j += 1) {
+                        if (stream[j][1] !== 'O') {
+                            stream.splice(j, 1);
+                        }
                     }
                 }
             }
@@ -214,7 +229,7 @@ function generate(draw) {
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
             courseID = courseList.indexOf(stream[3]);
-            createClass(stream[0], stream[3], stream[4], courseID, done);
+            createClass(stream[0], stream[2], stream[3], stream[4], courseID, done);
         }
 
         // Add shadows

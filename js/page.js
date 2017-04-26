@@ -66,6 +66,15 @@ var courseList = ['CBS'],
         courses = data;
         $(document).ready(function () {
             init();
+
+            $('#showcap').change(function () {
+                var divs = $('.class-capacity');
+                if (document.getElementById('showcap').checked === true) {
+                    divs.show();
+                } else {
+                    divs.hide();
+                }
+            });
         });
     });
 }());
@@ -227,7 +236,7 @@ function unique(arr) {
 }
 
 // Creates a draggable class element
-function createClass(times, course, component, courseID, done) {
+function createClass(times, capacity, course, component, courseID, done) {
     'use strict';
 
     var time,
@@ -236,8 +245,15 @@ function createClass(times, course, component, courseID, done) {
         duration,
         parent,
         div,
-        title = (course !== 'CBS') ? course + ': ' + component : component,
+        title = '<div>' + ((course !== 'CBS') ? course + ': ' + component : component) + '</div>',
         skips = 0;
+
+    if (course !== 'CBS') {
+        capacity = '<div class="class-capacity">' + capacity.replace(',', ' / ') + '</div>';
+    } else {
+        capacity = '';
+    }
+
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
         // Check that we haven't already created a shadow for this course, component and time
@@ -255,7 +271,7 @@ function createClass(times, course, component, courseID, done) {
             parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
 
             // Create the class div
-            div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title))
+            div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title + capacity))
                 .draggable({
                     stack: '.class-drag',
                     scroll: true,
@@ -277,6 +293,11 @@ function createClass(times, course, component, courseID, done) {
         } else {
             skips += 1;
         }
+    }
+
+    // Hide capacity if it shouldn't be showing
+    if (!document.getElementById('showcap').checked) {
+        $('.class-capacity').hide();
     }
 }
 
