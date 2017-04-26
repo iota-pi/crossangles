@@ -124,8 +124,7 @@ function search(list, maxClash) {
         while (child.timetable === null) {
             j = Math.floor(Math.random() * child.streams.length);
             shuffleArray(child.streams[j]);
-            child.timetable = parent.timetable.slice();
-            child.timetable = dfs(child.streams, child.timetable, j);
+            child.timetable = dfs(child.streams, parent.timetable.slice(), j);
         }
 
         // Calculate a score for this new timetable
@@ -141,9 +140,11 @@ function search(list, maxClash) {
 
     // Evolves given list of parents
     function evolve(parents, maxParents, maxIter, biasTop) {
-        maxIter = maxIter || 100;
-        maxParents = maxParents || 10;
-        biasTop = biasTop || 5;
+        if (parents === null) { return null; }
+
+        maxIter = maxIter || 1000;
+        maxParents = maxParents || 50;
+        biasTop = biasTop || 10;
 
         var i,
             index,
@@ -195,7 +196,7 @@ function search(list, maxClash) {
             parent.score = scoreTimetable(parent.timetable, parent.streams);
 
             // Check for no possible timetables
-            if (parent.timetable === null) { console.error('No timetables could be generated!'); return null; }
+            if (parent.timetable === null) { return null; }
 
             parents.push(parent);
         }
@@ -203,10 +204,10 @@ function search(list, maxClash) {
         return parents.sort(parentSort);
     }
 
-    var parents = abiogenesis(5),
+    var parents = abiogenesis(10),
         best = evolve(parents);
 
-    console.log(best);
+    if (best === null) { console.error('No timetables could be generated!'); return null; }
 
     // Return actual stream elements rather than only indexes
     return best.timetable.map(function (x, i) { return best.streams[i][x]; });

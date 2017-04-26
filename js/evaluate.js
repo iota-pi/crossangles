@@ -71,9 +71,6 @@ function scoreClashes(timetable, timetableData) {
         }
     }
 
-    if (score !== 0) {
-        console.log(timetable, timetableData);
-    }
     return score;
 }
 
