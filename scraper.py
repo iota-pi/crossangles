@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #
-# classutil-scraper.py
+# scraper.py
 #
 # This Python script scrapes timetable data from the classutil site ('http://classutil.unsw.edu.au/')
 # and stores it in a JSON format in two files: `courses.json` and `timetable.json`
@@ -14,7 +14,7 @@
 #                  }
 #                    (please note that any unknown values for class_time, weeks or location will be stored as empty strings (''))
 #
-# NB: Approx. bandwidth used while running = 3.5MB
+# NB: Approx. bandwidth used by this script while running = 3.5MB
 #
 # Authors: David Adams
 #

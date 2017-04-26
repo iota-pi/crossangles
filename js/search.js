@@ -56,7 +56,6 @@ function search(list, maxClash) {
     // Perform a depth-first search to try find a valid timetable
     function dfs(streams, init_timetable, init_index) {
         var i = init_index || 0,
-            stream,
             classNo,
             timetable = init_timetable || [];
 
@@ -68,8 +67,6 @@ function search(list, maxClash) {
         }
 
         while (i < streams.length) {
-            stream = streams[i];
-
             // Pick first class for this steam that doesn't have a clash
             classNo = pickClass(streams, i, timetable);
 
@@ -112,6 +109,42 @@ function search(list, maxClash) {
         return array;
     }
 
+    // Sort comparison function for sorting parent list in descending order of score
+    function parentSort(a, b) {
+        return b.score - a.score;
+    }
+
+    // This function creates a set of random starting parents
+    // Inherited variables: list
+    function abiogenesis(numParents) {
+        var parents = [],
+            parent,
+            i,
+            j;
+
+        for (i = 0; i < numParents; i += 1) {
+            // Initialise new, blank parent
+            parent = { streams: [], timetable: null, score: null };
+
+            // Initialise this parents streams to be in a random order within their streams
+            // NB: streams stay in the same order
+            for (j = 0; j < list.length; j += 1) {
+                parent.streams.push(shuffleArray(list[j].slice()));
+            }
+
+            // Find first valid timetable and score it
+            parent.timetable = dfs(parent.streams);
+            parent.score = scoreTimetable(parent.timetable, parent.streams);
+
+            // Check for no possible timetables
+            if (parent.timetable === null) { return null; }
+
+            parents.push(parent);
+        }
+
+        return parents.sort(parentSort);
+    }
+
     // Mutates a parent solution to produce a child solution
     function mutate(parent) {
         var child = { streams: [], timetable: null, score: null },
@@ -131,11 +164,6 @@ function search(list, maxClash) {
         child.score = scoreTimetable(child.timetable, child.streams);
 
         return child;
-    }
-
-    // Sort comparison function for sorting parent list in descending order of score
-    function parentSort(a, b) {
-        return b.score - a.score;
     }
 
     // Evolves given list of parents
@@ -171,37 +199,6 @@ function search(list, maxClash) {
 
         // Return the best timetable
         return parents[0];
-    }
-
-    // This function creates a set of random starting parents
-    // Inherited variables: list
-    function abiogenesis(numParents) {
-        var parents = [],
-            parent,
-            i,
-            j;
-
-        for (i = 0; i < numParents; i += 1) {
-            // Initialise new, blank parent
-            parent = { streams: [], timetable: null, score: null };
-
-            // Initialise this parents streams to be in a random order within their streams
-            // NB: streams stay in the same order
-            for (j = 0; j < list.length; j += 1) {
-                parent.streams.push(shuffleArray(list[j]));
-            }
-
-            // Find first valid timetable and score it
-            parent.timetable = dfs(parent.streams);
-            parent.score = scoreTimetable(parent.timetable, parent.streams);
-
-            // Check for no possible timetables
-            if (parent.timetable === null) { return null; }
-
-            parents.push(parent);
-        }
-
-        return parents.sort(parentSort);
     }
 
     var parents = abiogenesis(10),
