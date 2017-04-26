@@ -77,10 +77,10 @@ function scoreClashes(timetable, timetableData) {
 function scoreClassTime(start, end) {
     'use strict';
 
-    // Scoring function is: -((x-14)^2 + 9)
+    // Scoring function is: -(x-14)^2 + 9
     // All positive scores are ignored, hence from 11am-5pm, there is no differentiation
-    var scoreStart = -((start - 14) * (start - 14) + 9),
-        scoreEnd = -((end - 14) * (end - 14) + 9);
+    var scoreStart = -((start - 14) * (start - 14)) + 9,
+        scoreEnd = -((end - 14) * (end - 14)) + 9;
 
     // Return the worst of the start and end time score, capped at 0
     return Math.min(scoreStart, scoreEnd, 0);
