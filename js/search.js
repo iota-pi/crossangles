@@ -7,6 +7,7 @@
 
 function search(list, maxClash) {
     'use strict';
+    if (maxClash === undefined) { maxClash = 0; }
 
     // Checks whether two given time strings clash with each other
     function classClash(a, b) {
@@ -170,17 +171,19 @@ function search(list, maxClash) {
     function evolve(parents, maxParents, maxIter, biasTop) {
         if (parents === null) { return null; }
 
-        maxIter = maxIter || 1000;
-        maxParents = maxParents || 50;
-        biasTop = biasTop || 10;
+        maxIter = maxIter || 5000;
+        maxParents = maxParents || 20;
+        biasTop = biasTop || 5;
 
         var i,
             index,
             parent,
-            child;
+            child,
+            time = (new Date()).getTime(),
+            maxRunTime = 500;
 
         for (i = 0; i < maxIter; i += 1) {
-            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted sort
+            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted sort? (probably not necessary...)
             parent = parents[index];
             child = mutate(parent);
             parents.push(child);
@@ -194,6 +197,12 @@ function search(list, maxClash) {
                 while (parents.length > maxParents) {
                     parents.pop();
                 }
+
+                // End iterations if function has run for too long
+                if ((new Date()).getTime() - time > maxRunTime) {
+                    console.warn('search(): max execution time reached after ' + i + ' iterations');
+                    break;
+                }
             }
         }
 
@@ -205,6 +214,7 @@ function search(list, maxClash) {
         best = evolve(parents);
 
     if (best === null) { console.error('No timetables could be generated!'); return null; }
+    console.log('Generated timetable with score:', best.score);
 
     // Return actual stream elements rather than only indexes
     return best.timetable.map(function (x, i) { return best.streams[i][x]; });

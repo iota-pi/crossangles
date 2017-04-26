@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, document, courseList, createClass, createShadow, classList, clearLists */
+/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists */
 
 
 function fetchData(cb) {
@@ -30,6 +30,13 @@ function fetchData(cb) {
         (function makeHash() {
             var course, coursedata, classdata, timedata, classtime, i, j;
 
+            // Short utility function to strip duplicate elements from an array (NB: quadratic time, should only be used on short arrays, add a hashtable for linear time)
+            function uniq(arr) {
+                return arr.filter(function (el, pos) {
+                    return arr.indexOf(el) === pos;
+                });
+            }
+
             for (course in r) {
                 // Loop through only properties which are not inherited
                 if (r.hasOwnProperty(course)) {
@@ -44,6 +51,7 @@ function fetchData(cb) {
                             for (j = 0; j < timedata.length; j += 1) {
                                 classtime.push(timedata[j][0]);
                             }
+                            classtime = uniq(classtime);
                             classtime = classtime.join(',');
 
                             // Make an entry in the hash
@@ -182,11 +190,14 @@ function fetchData(cb) {
     });
 }
 
-function generate() {
+function generate(draw) {
     'use strict';
+    if (draw !== false) { draw = true; }
 
     fetchData(function makeTimetable(list) {
         var timetable = search(list, 0), i, j, stream, done, courseID;
+
+        if (!draw) { return; }
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
@@ -215,4 +226,15 @@ function generate() {
             }
         }
     });
+}
+
+function profile() {
+    'use strict';
+
+    var n = 100,
+        i;
+
+    for (i = 0; i < n; i += 1) {
+        generate(false);
+    }
 }
