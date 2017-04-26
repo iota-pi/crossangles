@@ -3,8 +3,13 @@
 
 ## Things to work on
 
-  * Timetable generation (algorithm to be executed clientside, in JS)
-  * Timetable display (using either canvas or SVG probably)
+  * Save timetable as image
+  * Favicon
+  * Clash hours option
+  * Display class location option
+  * Fullscreen timetable view
+  * Custom class/commitment support
+  * Day of week preferences
 
 To view ideas for the project generated at our first planning meeting or add other ideas, see `ideas.txt`
 
