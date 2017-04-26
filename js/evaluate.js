@@ -133,6 +133,31 @@ function scoreProximity(timetable) {
     return score;
 }
 
+function scoreDayLength(timetable) {
+    'use strict';
+
+    var perHalfHour = -5,
+        score = 0,
+        i,
+        j;
+
+    for (i = 0; i < timetable.length; i += 1) {
+        // No need to score empty days
+        if (timetable[i].length > 0) {
+            // Get index of first defined element in this array
+            for (j = 0; j < timetable[i].length; j += 1) {
+                if (timetable[i][j] !== undefined) {
+                    break;
+                }
+            }
+
+            score += perHalfHour * (timetable[i].length - j);
+        }
+    }
+
+    return score;
+}
+
 function scoreTimetable(indexTimetable, streams) {
     'use strict';
     if (indexTimetable === null) { return null; }
@@ -145,6 +170,7 @@ function scoreTimetable(indexTimetable, streams) {
     score += scoreClashes(timetable, timetableData);
     score += scoreTimes(timetableData);
     score += scoreProximity(timetable);
+    score += scoreDayLength(timetable);
 
     return score;
 }
