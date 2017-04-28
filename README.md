@@ -1,10 +1,9 @@
 # CrossAngles
 ... soon to be the best UNSW timetabling program in existance!
 
-## Things to work on
+## Ideas to implement
 
   * Save timetable as image
-  * Favicon
   * Clash hours option
   * Display class location option
   * Fullscreen timetable view
