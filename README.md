@@ -4,6 +4,8 @@
 ## Ideas to implement
 
   * Save timetable as image
+  * Cookies for continuity between page loads
+  * Favicon
   * Clash hours option
   * Display class location option
   * Fullscreen timetable view

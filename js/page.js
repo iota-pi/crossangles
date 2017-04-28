@@ -7,7 +7,7 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true, regexp: true */
-/*global $, jQuery, console */
+/*global $, jQuery, console, html2canvas, download */
 
 var courseList = ['CBS'],
     classList = [],
@@ -134,6 +134,20 @@ function addCourse(course) {
         div.children().fadeIn(200);
     });
 }
+
+function timetableToPNG() {
+    'use strict';
+
+    var el = document.getElementById('timetable');
+    html2canvas(el, {
+        onrendered: function (canvas) {
+            var ctx = canvas.getContext('2d'),
+                png = ctx.toDataURL('image/png');
+            download(png);
+        }
+    });
+}
+
 
 function getColour(index) {
     'use strict';
