@@ -151,7 +151,7 @@ function fetchData(cb) {
         // Remove extra classes with the same course, component and time, choosing to keep the one with more enrolment positions available
         // NB: this gives a huge speed improvement for backtracking search
         (function removeDuplicates() {
-            var results, i, j, component, current, time, comparison;
+            var results, i, j, component, current, time, comparison, a, b;
             // Loop through each course component
             for (i = 0; i < list.length; i += 1) {
                 component = list[i];
@@ -168,8 +168,12 @@ function fetchData(cb) {
 
                         if (current[1] === 'O' && comparison[1] !== 'O') {                          // Compare statuses
                             results[current[0]] = current;
-                        } else if (current[2].split(',')[0] > comparison[2].split(',')[0]) {        // Compare enrollments, TODO: change to include max cap. differences in considerations
-                            results[current[0]] = current;
+                        } else {
+                            a = current[2].split(',');
+                            b = comparison[2].split(',');
+                            if (a[1] - a[0] > b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
+                                results[current[0]] = current;
+                            }
                         }
                     } else {
                         results[current[0]] = current;
@@ -201,6 +205,9 @@ function fetchData(cb) {
             }
         }());
 
+        // Re-sort the list based on the number of streams for each component
+        list.sort(function (a, b) { return a.length - b.length; });
+
         cb(list);
     });
 }
@@ -210,9 +217,11 @@ function generate(draw) {
     if (draw !== false) { draw = true; }
 
     fetchData(function makeTimetable(list) {
+        console.log(list);
         var timetable = search(list, 0), i, j, stream, done, courseID;
 
         if (!draw) { return; }
+        if (timetable === null) { return; }
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
