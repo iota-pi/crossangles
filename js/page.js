@@ -217,6 +217,9 @@ function stopDrag(e, ui) {
 
             // Snap this class to it's shadow
             snapTo(otherClass, shadow.parent());
+
+            // Update the class capacity
+            otherClass.find('.class-capacity').html(shadow.data('capacity'));
         });
     }
 
@@ -265,7 +268,7 @@ function createClass(times, capacity, course, component, courseID, done) {
     if (course !== 'CBS') {
         capacity = '<div class="class-capacity">' + capacity.replace(',', ' / ') + '</div>';
     } else {
-        capacity = '';
+        capacity = '<div class="class-capacity"></div>';
     }
 
     for (i = 0; i < times.length; i += 1) {
@@ -315,8 +318,13 @@ function createClass(times, capacity, course, component, courseID, done) {
     }
 }
 
-function createShadow(times, group, courseID, done) {
+function createShadow(times, group, courseID, capacity, done) {
     'use strict';
+
+    // No capacity for CBS events!
+    if (group.indexOf('CBS') === 0) {
+        capacity = '';
+    }
 
     times = unique(times);
 
@@ -330,36 +338,22 @@ function createShadow(times, group, courseID, done) {
         key = group + i;
 
         // Check that we haven't already created a shadow for this course, component and time
-        index = (done[group] !== undefined) ? done[group].indexOf(timestr) : -1;
-        if (index === -1) {
-            if (done.hasOwnProperty(group)) {
-                done[group].push(timestr);
-            } else {
-                done[group] = [timestr];
-            }
-
-            duration = time[2] - time[1];
-            parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
-            div = $('<div class="class-shadow">').css({
-                'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
-            });
-            div.appendTo(parent);
-            div.height(parent.outerHeight() * duration * 2);
+        if (done.hasOwnProperty(group)) {
+            done[group].push(timestr);
         } else {
-            div = undefined;
-            for (j = 0; j < shadowList[key].length; j += 1) {
-                if ($(shadowList[key][j]).parent().attr('id') === (time[0] + time[1]).replace('.5', '_30')) {
-                    div = $(shadowList[key][j]);
-                    break;
-                }
-            }
-            if (div === undefined) {
-                console.error('DIV disappeared in the middle of a function call!');
-            }
+            done[group] = [timestr];
         }
 
+        duration = time[2] - time[1];
+        parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
+        div = $('<div class="class-shadow">').css({
+            'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
+        });
+        div.data('capacity', capacity.replace(',', ' / '));
+        div.appendTo(parent);
+        div.height(parent.outerHeight() * duration * 2);
+
         // Add to shadowList
-        // NB: still do this even if we didn't have to create a new div for it
         if (shadowList.hasOwnProperty(key)) {
             shadowList[key] = shadowList[key].push(div);
         } else {
