@@ -27,7 +27,7 @@ import re
 
 bytecount = 0
 semcodes = {'sem1': 2, 'sem2': 3, 'summer': 1}
-semester = semcodes['sem1']
+semester = semcodes['sem2']
 
 def main():
     global bytecount
@@ -206,7 +206,7 @@ def loadPage(url):
 # stripComments(): removes all HTML comments from parsed HTML (required for traversing child nodes without error)
 #
 def stripComments(tree):
-    comments = tree.xpath('//comment()')
+    comments = tree.xpath('//table[3]//comment()')
 
     for c in comments:
         p = c.getparent()
