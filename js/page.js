@@ -148,7 +148,7 @@ function timetableToPNG() {
     domtoimage.toPng(el).then(function (png) {
         // Revert timetable properties
         $(el).addClass('scroll-x');
-        $(el).width(width);
+        $(el).css('width', 'auto');
 
         // Download the png image
         download(png, 'timetable-dom.png', 'image/png');
