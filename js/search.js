@@ -188,7 +188,7 @@ function search(list, maxClash) {
             child = mutate(parent);
             parents.push(child);
 
-            // Re-sort and cull parents every 10 iterations
+            // Re-sort and cull parents every 10th iteration
             if (i % 10 === 9) {
                 // Sort parents array by descending sort
                 parents.sort(parentSort);

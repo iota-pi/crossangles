@@ -138,14 +138,23 @@ function addCourse(course) {
 function timetableToPNG() {
     'use strict';
 
-    var el = document.getElementById('timetable');
+    var el = document.getElementById('timetable'),
+        width = $(el).width();
+    // Standardize timetable export size
+    $(el).removeClass('scroll-x');
+    $(el).width(720);
+
     html2canvas(el, {
         onrendered: function (canvas) {
-            var ctx = canvas.getContext('2d'),
-                png = ctx.toDataURL('image/png');
-            download(png);
-        }
+            var png = canvas.toDataURL('image/png');
+            download(png, 'timetable.png', 'image/png');
+        },
+        background: '#fff'
     });
+
+    // Revert timetable properties
+    $(el).addClass('scroll-x');
+    $(el).width(width);
 }
 
 
