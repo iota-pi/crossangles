@@ -7,7 +7,7 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true, regexp: true */
-/*global $, jQuery, console, html2canvas, download */
+/*global $, jQuery, console, domtoimage, download */
 
 var courseList = ['CBS'],
     classList = [],
@@ -67,6 +67,7 @@ var courseList = ['CBS'],
         $(document).ready(function () {
             init();
 
+            // Add event to toggle class capacities
             $('#showcap').change(function () {
                 var divs = $('.class-capacity');
                 if (document.getElementById('showcap').checked === true) {
@@ -144,17 +145,14 @@ function timetableToPNG() {
     $(el).removeClass('scroll-x');
     $(el).width(720);
 
-    html2canvas(el, {
-        onrendered: function (canvas) {
-            var png = canvas.toDataURL('image/png');
-            download(png, 'timetable.png', 'image/png');
-        },
-        background: '#fff'
-    });
+    domtoimage.toPng(el).then(function (png) {
+        // Revert timetable properties
+        $(el).addClass('scroll-x');
+        $(el).width(width);
 
-    // Revert timetable properties
-    $(el).addClass('scroll-x');
-    $(el).width(width);
+        // Download the png image
+        download(png, 'timetable-dom.png', 'image/png');
+    });
 }
 
 
