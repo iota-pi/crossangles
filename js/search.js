@@ -183,7 +183,7 @@ function search(list, maxClash) {
             maxRunTime = 500;
 
         for (i = 0; i < maxIter; i += 1) {
-            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted sort? (probably not necessary...)
+            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted bias? (probably not necessary...)
             parent = parents[index];
             child = mutate(parent);
             parents.push(child);
@@ -214,7 +214,6 @@ function search(list, maxClash) {
         best = evolve(parents);
 
     if (best === null) { console.error('No timetables could be generated!'); return null; }
-    console.log('Generated timetable with score:', best.score);
 
     // Return actual stream elements rather than only indexes
     return best.timetable.map(function (x, i) { return best.streams[i][x]; });
