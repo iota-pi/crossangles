@@ -64,7 +64,7 @@ function fetchData(cb) {
                                     hash[course][classdata[0]] = [];
                                 }
 
-                                hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
+                                hash[course][classdata[0]].push({time: classtime, status: classdata[1], enrols: classdata[2], course: course, component: classdata[0]});
                             }
                         }
                     }
@@ -76,37 +76,37 @@ function fetchData(cb) {
         hash.CBS = {};
         if ($('#tbt').is(':checked')) {
             hash.CBS.TBT = [
-                ['T 12', 'O', '0,1', 'CBS', 'The Bible Talks'],
-                ['T 13', 'O', '0,1', 'CBS', 'The Bible Talks'],
-                ['H 12', 'O', '0,1', 'CBS', 'The Bible Talks'],
-                ['H 13', 'O', '0,1', 'CBS', 'The Bible Talks']
+                {time: 'T 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'},
+                {time: 'T 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'},
+                {time: 'H 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'},
+                {time: 'H 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'}
             ];
         }
         if ($('#cth').is(':checked')) {
             hash.CBS.CoreTheo = [
-                ['T 17', 'O', '0,1', 'CBS', 'Core Theology'],
-                ['W 13', 'O', '0,1', 'CBS', 'Core Theology']
+                {time: 'T 17', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology'},
+                {time: 'W 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology'}
             ];
         }
         if ($('#ctr').is(':checked')) {
             hash.CBS.CoreTrain = [
-                ['T 16', 'O', '0,1', 'CBS', 'Core Training'],
-                ['T 18', 'O', '0,1', 'CBS', 'Core Training'],
-                ['W 12', 'O', '0,1', 'CBS', 'Core Training'],
-                ['W 14', 'O', '0,1', 'CBS', 'Core Training']
+                {time: 'T 16', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'},
+                {time: 'T 18', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'},
+                {time: 'W 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'},
+                {time: 'W 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'}
             ];
         }
         if ($('#bib').is(':checked')) {
             hash.CBS.BibleStudy = [
-                ['M 11', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['M 12', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['M 13', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['M 14', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['T 11', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['T 14', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['W 11', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['H 11', 'O', '0,1', 'CBS', 'Bible Study'],
-                ['H 14', 'O', '0,1', 'CBS', 'Bible Study']
+                {time: 'M 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'M 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'M 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'M 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'T 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'T 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'W 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'H 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
+                {time: 'H 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'}
             ];
         }
 
@@ -129,7 +129,7 @@ function fetchData(cb) {
             // Cast timestr to array
             list = list.map(function (stream) {
                 return stream.map(function (x) {
-                    var times = x[0].split(','),
+                    var times = x.time.split(','),
                         array = times.map(function (time) {
                             // Calculate start and end times
                             var classTime = time.replace(/[^\d\-.]/g, '').split('-');
@@ -141,7 +141,7 @@ function fetchData(cb) {
 
 
                     // Modify first element in given array to be the new time array
-                    x[0] = array;
+                    x.time = array;
 
                     return x;
                 });
@@ -160,23 +160,23 @@ function fetchData(cb) {
                 // Loop through each class in the component
                 for (j = 0; j < component.length; j += 1) {
                     current = component[j];
-                    time = current[0];
+                    time = current.time;
 
                     // Update best class for this time
                     if (results.hasOwnProperty(time)) {
                         comparison = results[time];
 
-                        if (current[1] === 'O' && comparison[1] !== 'O') {                          // Compare statuses
-                            results[current[0]] = current;
+                        if (current.status === 'O' && comparison.status !== 'O') {                          // Compare statuses
+                            results[current.time] = current;
                         } else {
-                            a = current[2].split(',');
-                            b = comparison[2].split(',');
+                            a = current.enrols.split(',');
+                            b = comparison.enrols.split(',');
                             if (a[1] - a[0] < b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
-                                results[current[0]] = current;
+                                results[current.time] = current;
                             }
                         }
                     } else {
-                        results[current[0]] = current;
+                        results[current.time] = current;
                     }
                 }
 
@@ -197,11 +197,11 @@ function fetchData(cb) {
                 stream = list[i];
                 for (j = 0; j < stream.length; j += 1) {
                     if (!$('#fullclasses').is(':checked')) {
-                        if (stream[j][1] !== 'O') {
+                        if (stream[j].status !== 'O') {
                             stream.splice(j, 1);
                         }
                     } else {
-                        if (stream[j][1] !== 'O' || stream[j][1] !== 'F') {
+                        if (stream[j].status !== 'O' || stream[j].status !== 'F') {
                             stream.splice(j, 1);
                         }
                     }
@@ -222,6 +222,7 @@ function generate(draw) {
 
     fetchData(function makeTimetable(list) {
         var timetable = search(list, 0), i, j, stream, done, courseID;
+        console.log(timetable);
 
         if (!draw) { return; }
         if (timetable === null) { return; }
@@ -240,28 +241,17 @@ function generate(draw) {
         done = [];
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
-            courseID = courseList.indexOf(stream[3]);
-            createClass(stream[0], stream[2], stream[3], stream[4], courseID, done);
+            courseID = courseList.indexOf(stream.course);
+            createClass(stream.time, stream.enrols, stream.course, stream.component, courseID, done);
         }
 
         // Add shadows
         done = {};
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
-                courseID = courseList.indexOf(list[i][j][3]);
-                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseID, list[i][j][2], done);
+                courseID = courseList.indexOf(list[i][j].course);
+                createShadow(list[i][j].time, list[i][j].course + list[i][j].component, courseID, list[i][j].enrols, done);
             }
         }
     });
-}
-
-function profile() {
-    'use strict';
-
-    var n = 100,
-        i;
-
-    for (i = 0; i < n; i += 1) {
-        generate(false);
-    }
 }

@@ -25,7 +25,7 @@ function search(list, maxClash) {
         for (i = 0; i < newTime.length; i += 1) {
             for (j = 0; j < timetable.length; j += 1) {
                 stream = streams[j][timetable[j]];
-                times = stream[0];
+                times = stream.time;
                 for (k = 0; k < times.length; k += 1) {
                     count += classClash(newTime[i], times[k]);
                 }
@@ -42,7 +42,7 @@ function search(list, maxClash) {
             stream = streams[i];
 
         // Keep looking for a class while there is a clash
-        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo][0]) > maxClash) {
+        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo].time) > maxClash) {
             classNo += 1;
         }
 
