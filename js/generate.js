@@ -192,12 +192,16 @@ function fetchData(cb) {
 
         // Remove full classes unless they've explicitly been been requested
         (function removeFullClasses() {
-            if (!$('#fullclasses').is(':checked')) {
-                var i, j, stream;
-                for (i = 0; i < list.length; i += 1) {
-                    stream = list[i];
-                    for (j = 0; j < stream.length; j += 1) {
+            var i, j, stream;
+            for (i = 0; i < list.length; i += 1) {
+                stream = list[i];
+                for (j = 0; j < stream.length; j += 1) {
+                    if (!$('#fullclasses').is(':checked')) {
                         if (stream[j][1] !== 'O') {
+                            stream.splice(j, 1);
+                        }
+                    } else {
+                        if (stream[j][1] !== 'O' || stream[j][1] !== 'F') {
                             stream.splice(j, 1);
                         }
                     }
