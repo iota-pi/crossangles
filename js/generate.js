@@ -54,16 +54,16 @@ function fetchData(cb) {
                             classtime = uniq(classtime);
                             classtime = classtime.join(',');
 
-                            // Make an entry in the hash
-                            // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
-                            if (!hash[course].hasOwnProperty(classdata[0])) {
-                                // Initial stream list
-                                hash[course][classdata[0]] = [];
-                            }
-
                             // Add this stream's data to the list for this component
                             // NB: Skip web streams / classes with no class times allocated
                             if (classtime.length !== 0) {
+                                // Make an entry in the hash
+                                // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
+                                if (!hash[course].hasOwnProperty(classdata[0])) {
+                                    // Initial stream list
+                                    hash[course][classdata[0]] = [];
+                                }
+
                                 hash[course][classdata[0]].push([classtime, classdata[1], classdata[2], course, classdata[0]]);
                             }
                         }
@@ -171,7 +171,7 @@ function fetchData(cb) {
                         } else {
                             a = current[2].split(',');
                             b = comparison[2].split(',');
-                            if (a[1] - a[0] > b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
+                            if (a[1] - a[0] < b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
                                 results[current[0]] = current;
                             }
                         }
@@ -217,7 +217,6 @@ function generate(draw) {
     if (draw !== false) { draw = true; }
 
     fetchData(function makeTimetable(list) {
-        console.log(list);
         var timetable = search(list, 0), i, j, stream, done, courseID;
 
         if (!draw) { return; }
@@ -246,7 +245,7 @@ function generate(draw) {
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j][3]);
-                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseID, done);
+                createShadow(list[i][j][0], list[i][j][3] + list[i][j][4], courseID, list[i][j][2], done);
             }
         }
     });
