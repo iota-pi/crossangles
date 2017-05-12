@@ -160,23 +160,25 @@ function fetchData(cb) {
                 // Loop through each class in the component
                 for (j = 0; j < component.length; j += 1) {
                     current = component[j];
-                    time = current.time;
+                    time = current.time.join(',');
 
                     // Update best class for this time
                     if (results.hasOwnProperty(time)) {
                         comparison = results[time];
 
-                        if (current.status === 'O' && comparison.status !== 'O') {                          // Compare statuses
-                            results[current.time] = current;
+                        if (current.status === 'O' && comparison.status !== 'O') {                          // Prioritise open streams
+                            results[time] = current;
+                        } else if (current.status === 'F' && comparison.status !== 'O' && comparison.status !== 'F') { // priorities full streams over others
+                            results[time] = current;
                         } else {
                             a = current.enrols.split(',');
                             b = comparison.enrols.split(',');
                             if (a[1] - a[0] < b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
-                                results[current.time] = current;
+                                results[time] = current;
                             }
                         }
                     } else {
-                        results[current.time] = current;
+                        results[time] = current;
                     }
                 }
 
@@ -195,13 +197,13 @@ function fetchData(cb) {
             var i, j, stream;
             for (i = 0; i < list.length; i += 1) {
                 stream = list[i];
-                for (j = 0; j < stream.length; j += 1) {
+                for (j = stream.length - 1; j >= 0; j -= 1) {
                     if (!$('#fullclasses').is(':checked')) {
                         if (stream[j].status !== 'O') {
                             stream.splice(j, 1);
                         }
                     } else {
-                        if (stream[j].status !== 'O' || stream[j].status !== 'F') {
+                        if (stream[j].status !== 'O' && stream[j].status !== 'F') {
                             stream.splice(j, 1);
                         }
                     }
@@ -222,7 +224,7 @@ function generate(draw) {
 
     fetchData(function makeTimetable(list) {
         var timetable = search(list, 0), i, j, stream, done, courseID;
-        console.log(timetable);
+        console.log(list);
 
         if (!draw) { return; }
         if (timetable === null) { return; }
