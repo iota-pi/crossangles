@@ -139,11 +139,27 @@ function fetchData(cb) {
                             return [time[0], +classTime[0], +classTime[1]];
                         });
 
-
                     // Modify first element in given array to be the new time array
                     x.time = array;
 
                     return x;
+                });
+            });
+        }());
+
+        (function removeBadDays() {
+            list = list.map(function (stream) {
+                return stream.filter(function (x) {
+                    var times = x.time,
+                        days = 'MTWHF',
+                        i;
+                    for (i = 0; i < times.length; i += 1) {
+                        if (days.indexOf(times[i][0]) === -1) {
+                            return false;   // remove any item containing an invalid day in one of its times
+                        }
+                    }
+
+                    return true;
                 });
             });
         }());
