@@ -3,13 +3,13 @@
 
 ## Ideas to implement
 
-  * Cookies for continuity between page loads
   * Favicon
   * Clash hours option
   * Display class location option
   * Fullscreen timetable view
   * Custom class/commitment support
   * Day of week preferences
+  * Analytics?
 
 To view ideas for the project generated at our first planning meeting or add other ideas, see `ideas.txt`
 
