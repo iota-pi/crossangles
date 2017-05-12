@@ -7,12 +7,74 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true, regexp: true */
-/*global $, jQuery, console, domtoimage, download, Cookies, generate */
+/*global $, jQuery, console, domtoimage, download, Cookies, generate, addCourse */
 
-var courseList = ['CBS'],
+var finishedInit = false,
+    courseList = ['CBS'],
     classList = [],
     shadowList = {},
     classLocations = {};
+
+function restoreState(courseHash) {
+    'use strict';
+
+    // Get previously chosen options and courses from cookies
+    var options = Cookies.getJSON('options'),
+        courses = Cookies.getJSON('courses'),
+        i;
+
+    // Restore class locations
+    classLocations = Cookies.getJSON('classLocations');
+
+    if (options !== undefined) {
+        // Restore courses
+        for (i = 0; i < courses.length; i += 1) {
+            if (courses[i] !== 'CBS') { // NB: even though CBS is in courseList, it shouldn't be added in the DOM list of courses
+                addCourse(courses[i] + ' - ' + courseHash[courses[i]]);
+            }
+        }
+
+        // Restore CBS items
+        document.getElementById('tbt').checked = options.cbs.tbt;
+        document.getElementById('bib').checked = options.cbs.bib;
+        document.getElementById('ctr').checked = options.cbs.ctr;
+        document.getElementById('cth').checked = options.cbs.cth;
+
+        // Restore misc other options
+        document.getElementById('showcap').checked = options.showcap;
+        document.getElementById('fullclasses').checked = options.fullclasses;
+
+        // Call generate to recreate previous timetable
+        if (JSON.stringify(classLocations) !== '{}') {
+            generate(true, true);
+        }
+    }
+}
+
+function saveState() {
+    'use strict';
+
+    if (!finishedInit) { return; }
+
+    // Save courses
+    Cookies.set('courses', courseList);
+
+    // Save CBS items
+    var options = { cbs: {} };
+    options.cbs.tbt = document.getElementById('tbt').checked;
+    options.cbs.bib = document.getElementById('bib').checked;
+    options.cbs.ctr = document.getElementById('ctr').checked;
+    options.cbs.cth = document.getElementById('cth').checked;
+
+    // Save misc other options
+    options.showcap = document.getElementById('showcap').checked;
+    options.fullclasses = document.getElementById('fullclasses').checked;
+    Cookies.set('options', options);
+
+    // Save class locations
+    console.log('Setting:', classLocations);
+    Cookies.set('classLocations', classLocations);
+}
 
 /* removeCourse()
  * Removes a course from the selected courses list
@@ -43,6 +105,8 @@ function removeCourse(e) {
             }
         });
     });
+
+    saveState();
 }
 
 /* addCourse()
@@ -68,62 +132,8 @@ function addCourse(course) {
     div.hide().slideDown(200, function () {
         div.children().fadeIn(200);
     });
-}
 
-function restoreState(courseHash) {
-    'use strict';
-
-    var options = Cookies.getJSON('options'),
-        courses = Cookies.getJSON('courses'),
-        i;
-    if (options !== undefined) {
-        // Restore courses
-        for (i = 0; i < courses.length; i += 1) {
-            if (courses[i] !== 'CBS') { // NB: even though CBS is in courseList, it shouldn't be added in the DOM list of courses
-                addCourse(courses[i] + ' - ' + courseHash[courses[i]]);
-            }
-        }
-
-        // Restore CBS items
-        document.getElementById('tbt').checked = options.cbs.tbt;
-        document.getElementById('bib').checked = options.cbs.bib;
-        document.getElementById('ctr').checked = options.cbs.ctr;
-        document.getElementById('cth').checked = options.cbs.cth;
-
-        // Restore misc other options
-        document.getElementById('showcap').checked = options.showcap;
-        document.getElementById('fullclasses').checked = options.fullclasses;
-
-        // Restore class locations
-        classLocations = Cookies.getJSON('classLocations');
-
-        // Call generate to recreate previous timetable
-        if (JSON.stringify(classLocations) !== '{}') {
-            generate(true, true);
-        }
-    }
-}
-
-function saveState() {
-    'use strict';
-
-    // Save courses
-    Cookies.set('courses', courseList);
-
-    // Save CBS items
-    var options = { cbs: {} };
-    options.cbs.tbt = document.getElementById('tbt').checked;
-    options.cbs.bib = document.getElementById('bib').checked;
-    options.cbs.ctr = document.getElementById('ctr').checked;
-    options.cbs.cth = document.getElementById('cth').checked;
-
-    // Save misc other options
-    options.showcap = document.getElementById('showcap').checked;
-    options.fullclasses = document.getElementById('fullclasses').checked;
-    Cookies.set('options', options);
-
-    // Save class locations
-    Cookies.set('classLocations', classLocations);
+    saveState();
 }
 
 function timetableToPNG() {
@@ -477,6 +487,8 @@ function clearLists(pageload) {
             });
 
             restoreState(data);
+
+            finishedInit = true;
         });
     });
 }());
