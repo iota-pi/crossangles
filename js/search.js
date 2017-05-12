@@ -180,7 +180,7 @@ function search(list, maxClash) {
             parent,
             child,
             time = (new Date()).getTime(),
-            maxRunTime = 500;
+            maxRunTime = 500;       // maximum time to run search in ms
 
         for (i = 0; i < maxIter; i += 1) {
             index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted bias? (probably not necessary...)
@@ -210,7 +210,7 @@ function search(list, maxClash) {
         return parents[0];
     }
 
-    var parents = abiogenesis(10),
+    var parents = abiogenesis(50),
         best = evolve(parents);
 
     if (best === null) { console.error('No timetables could be generated!'); return null; }
