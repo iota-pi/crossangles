@@ -15,6 +15,7 @@ body {
 p {
 	margin-bottom: 14px;
 	margin-bottom: 1em;
+    cursor: default;
 }
 
 div.flow {
@@ -66,12 +67,14 @@ footer div.content {
 
 .panel-primary .panel-heading {
     position: relative;
+    cursor: default;
 }
 
 .panel-primary .panel-heading .btn {
     position: absolute;
     top: 50%;
-    right: 30px;
+    right: 14px;
+    right: 1em;
     transform: translateY(-50%);
 
 	border: none;
@@ -83,11 +86,8 @@ footer div.content {
 }
 
 .panel-primary .panel-heading .btn .glyphicon {
-    font-size: 14px;
+    font-size: 16px;
     margin-left: 5px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 /* typeahead styles */

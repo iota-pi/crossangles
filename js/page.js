@@ -57,7 +57,7 @@ function saveState() {
     if (!finishedInit) { return; }
 
     // Save courses
-    Cookies.set('courses', courseList);
+    Cookies.set('courses', courseList, { expires: 7 * 26 }); // 1/2 a year
 
     // Save CBS items
     var options = { cbs: {} };
@@ -69,11 +69,10 @@ function saveState() {
     // Save misc other options
     options.showcap = document.getElementById('showcap').checked;
     options.fullclasses = document.getElementById('fullclasses').checked;
-    Cookies.set('options', options);
+    Cookies.set('options', options, { expires: 7 * 26 });
 
     // Save class locations
-    console.log('Setting:', classLocations);
-    Cookies.set('classLocations', classLocations);
+    Cookies.set('classLocations', classLocations, { expires: 7 * 26 });
 }
 
 /* removeCourse()
