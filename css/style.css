@@ -201,10 +201,6 @@ footer div.content {
 }
 
 /* grid styles */
-#timetable {
-	background-color: white;
-}
-
 .row-container {
     width: 100%;
     min-width: 510px;
