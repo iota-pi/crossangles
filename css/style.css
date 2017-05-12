@@ -64,6 +64,32 @@ footer div.content {
     overflow-x: auto;
 }
 
+.panel-primary .panel-heading {
+    position: relative;
+}
+
+.panel-primary .panel-heading .btn {
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+
+	border: none;
+    line-height: 1;
+    box-shadow: none;
+    padding: 0;
+    float: right;
+    vertical-align: middle;
+}
+
+.panel-primary .panel-heading .btn .glyphicon {
+    font-size: 14px;
+    margin-left: 5px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 /* typeahead styles */
 .typeahead-container {
     position: relative;

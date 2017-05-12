@@ -126,80 +126,6 @@ function saveState() {
     Cookies.set('classLocations', classLocations);
 }
 
-(function () {
-    "use strict";
-    var courses;
-    
-    /* initialise typeahead */
-    function init() {
-        var matcher = function (hash) {
-            return function findMatches(q, cb) {
-                var matches = [],
-                    initial = [],
-                    courses = courseList;
-                q = q.toLowerCase();
-                $.each(hash, function (key, val) {
-                    // Skip any courses which have already been chosen
-                    if (courses.indexOf(key) >= 0) {
-                        return true; // continue
-                    }
-
-                    var str = (key + ' - ' + val),
-                        index = str.toLowerCase().indexOf(q);
-                    if (index > 0) {
-                        matches.push(str);
-                    } else if (index === 0) {
-                        initial.push(str);
-                    }
-                });
-
-                // Sort the found matches
-                initial.sort();
-
-                // Add non-initial matches if there are fewer than 10 initial matches
-                if (initial.length < 10 && matches.length > 0) {
-                    // Sort the other matches
-                    matches.sort();
-
-                    // Add them to initial
-                    initial = initial.concat(matches);
-                }
-
-                cb(initial.slice(0, 10));
-            };
-        };
-        $('.typeahead.coursein').typeahead({
-            name: 'courses',
-            source: matcher(courses)
-        });
-    }
-    
-    // Load course data from courses.json
-    $.getJSON('data/courses.json', function (data) {
-        courses = data;
-        $(document).ready(function () {
-            init();
-
-            // Add event to toggle class capacities
-            $('#showcap').change(function () {
-                var divs = $('.class-capacity');
-                if (document.getElementById('showcap').checked === true) {
-                    divs.show();
-                } else {
-                    divs.hide();
-                }
-            });
-
-            // Add events to save the state when options are changed
-            $('.savedOption').change(function () {
-                saveState();
-            });
-
-            restoreState(data);
-        });
-    });
-}());
-
 function timetableToPNG() {
     'use strict';
 
@@ -475,3 +401,82 @@ function clearLists(pageload) {
     shadowList = {};
     if (pageload !== true) { classLocations = {}; }
 }
+
+(function () {
+    "use strict";
+    var courses;
+
+    /* initialise typeahead */
+    function init() {
+        var matcher = function (hash) {
+            return function findMatches(q, cb) {
+                var matches = [],
+                    initial = [],
+                    courses = courseList;
+                q = q.toLowerCase();
+                $.each(hash, function (key, val) {
+                    // Skip any courses which have already been chosen
+                    if (courses.indexOf(key) >= 0) {
+                        return true; // continue
+                    }
+
+                    var str = (key + ' - ' + val),
+                        index = str.toLowerCase().indexOf(q);
+                    if (index > 0) {
+                        matches.push(str);
+                    } else if (index === 0) {
+                        initial.push(str);
+                    }
+                });
+
+                // Sort the found matches
+                initial.sort();
+
+                // Add non-initial matches if there are fewer than 10 initial matches
+                if (initial.length < 10 && matches.length > 0) {
+                    // Sort the other matches
+                    matches.sort();
+
+                    // Add them to initial
+                    initial = initial.concat(matches);
+                }
+
+                cb(initial.slice(0, 10));
+            };
+        };
+        $('.typeahead.coursein').typeahead({
+            name: 'courses',
+            source: matcher(courses)
+        });
+    }
+
+    // Load course data from courses.json
+    $.getJSON('data/courses.json', function (data) {
+        courses = data;
+        $(document).ready(function () {
+            init();
+
+            // Add event to toggle class capacities
+            $('#showcap').change(function () {
+                var divs = $('.class-capacity');
+                if (document.getElementById('showcap').checked === true) {
+                    divs.show();
+                } else {
+                    divs.hide();
+                }
+            });
+
+            // Add events to save the state when options are changed
+            $('.savedOption').change(function () {
+                saveState();
+            });
+
+            // Add save as image event
+            $('#saveimage').click(function () {
+                timetableToPNG();
+            });
+
+            restoreState(data);
+        });
+    });
+}());
