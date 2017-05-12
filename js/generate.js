@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists */
+/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists, restoreClasses */
 
 
 function fetchData(cb) {
@@ -218,12 +218,14 @@ function fetchData(cb) {
     });
 }
 
-function generate(draw) {
+function generate(draw, pageload) {
     'use strict';
     if (draw !== false) { draw = true; }
+    if (pageload !== true) { pageload = false; }
 
-    fetchData(function makeTimetable(list) {
-        var timetable = search(list, 0), i, j, stream, done, courseID;
+    var maxSearch = +pageload || undefined;
+    function makeTimetable(list) {
+        var timetable = search(list, 0, maxSearch), i, j, stream, done, courseID;
         console.log(list);
 
         if (!draw) { return; }
@@ -237,7 +239,8 @@ function generate(draw) {
         // Remove all shadows
         $('.class-shadow').remove();
 
-        clearLists();
+        // Clear all the lists
+        clearLists(pageload);
 
         // Add new classes
         done = [];
@@ -255,5 +258,12 @@ function generate(draw) {
                 createShadow(list[i][j].time, list[i][j].course + list[i][j].component, courseID, list[i][j].enrols, done);
             }
         }
-    });
+
+        // Restore class positions from previous time (if applicable)
+        if (pageload) {
+            restoreClasses();
+        }
+    }
+
+    fetchData(makeTimetable);
 }

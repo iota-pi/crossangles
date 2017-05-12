@@ -5,7 +5,7 @@
 
 /*globals console, scoreTimetable */
 
-function search(list, maxClash) {
+function search(list, maxClash, searchMax) {
     'use strict';
     if (maxClash === undefined) { maxClash = 0; }
 
@@ -207,11 +207,12 @@ function search(list, maxClash) {
         }
 
         // Return the best timetable
+        parents.sort(parentSort);
         return parents[0];
     }
 
     var parents = abiogenesis(50),
-        best = evolve(parents);
+        best = evolve(parents, undefined, searchMax);
 
     if (best === null) { console.error('No timetables could be generated!'); return null; }
 

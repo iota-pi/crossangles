@@ -11,7 +11,8 @@
 
 var courseList = ['CBS'],
     classList = [],
-    shadowList = {};
+    shadowList = {},
+    classLocations = {};
 
 (function () {
     "use strict";
@@ -151,7 +152,7 @@ function timetableToPNG() {
         $(el).css('width', 'auto');
 
         // Download the png image
-        download(png, 'timetable-dom.png', 'image/png');
+        download(png, 'timetable.png', 'image/png');
     });
 }
 
@@ -220,13 +221,15 @@ function stopDrag(e, ui) {
         $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').each(function () {
             var otherClass = $(this),
             // Find the corresponding shadow
-                shadow = $(shadowList[$(this).attr('id')][index]);
+                shadow = $(shadowList[otherClass.attr('id')][index]);
 
             // Snap this class to it's shadow
             snapTo(otherClass, shadow.parent());
 
             // Update the class capacity
             otherClass.find('.class-capacity').html(shadow.data('capacity'));
+
+            classLocations[otherClass.attr('id')] = shadow.parent().attr('id');
         });
     }
 
@@ -267,6 +270,7 @@ function createClass(times, capacity, course, component, courseID, done) {
         i,
         id,
         duration,
+        parentId,
         parent,
         div,
         title = '<div>' + ((course !== 'CBS') ? course + ': ' + component : component) + '</div>',
@@ -292,7 +296,8 @@ function createClass(times, capacity, course, component, courseID, done) {
             duration = time[2] - time[1];
 
             // Get the parent element
-            parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
+            parentId = (time[0] + time[1]).replace('.5', '_30');
+            parent = $('#' + parentId);
 
             // Create the class div
             div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title + capacity))
@@ -314,6 +319,10 @@ function createClass(times, capacity, course, component, courseID, done) {
 
             // Add this div to the classList
             classList.push(div);
+
+            if (!classLocations.hasOwnProperty(id)) {
+                classLocations[id] = parentId;
+            }
         } else {
             skips += 1;
         }
@@ -369,9 +378,37 @@ function createShadow(times, group, courseID, capacity, done) {
     }
 }
 
-function clearLists() {
+function restoreClasses() {
+    'use strict';
+
+    // Snap element a to element b
+    function snapTo($a, b) {
+        // Detach a, then append it to b, then also set the positioning to be at an offset of (0, 0) from the parent
+        $a.detach().appendTo(b).css({position: 'absolute', left: 0, top: 0});
+    }
+
+    var key, currentClass, shadows, parent, shadow;
+    for (key in classLocations) {
+        if (classLocations.hasOwnProperty(key)) {
+            currentClass = $('[id="' + key + '"]');
+            shadows = shadowList[key];
+            parent = $('#' + classLocations[key]);
+            shadow = parent.find(shadows);
+            console.log(currentClass, shadow);
+
+            // Snap this class to it's shadow
+            snapTo(currentClass, parent);
+
+            // Update the class capacity
+            currentClass.find('.class-capacity').html(shadow.data('capacity'));
+        }
+    }
+}
+
+function clearLists(pageload) {
     'use strict';
 
     classList = [];
     shadowList = {};
+    if (pageload !== true) { classLocations = {}; }
 }
