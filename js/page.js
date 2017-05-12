@@ -7,12 +7,124 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true, regexp: true */
-/*global $, jQuery, console, domtoimage, download */
+/*global $, jQuery, console, domtoimage, download, Cookies, generate */
 
 var courseList = ['CBS'],
     classList = [],
     shadowList = {},
     classLocations = {};
+
+/* removeCourse()
+ * Removes a course from the selected courses list
+ */
+function removeCourse(e) {
+    "use strict";
+
+    var row = $(e.currentTarget).parents('div.row'),
+        parent = row.parent(),
+        div = row.children().first(),
+        course = div.html().replace(/ -.+/, ''),
+        i = courseList.indexOf(course);
+
+    // Remove this course from the list of courses
+    if (i !== -1) {
+        courseList.splice(i, 1);
+    }
+
+    // Fade out and slide up neatly
+    row.children().fadeOut(200, function () {
+        row.children().show().css('visibility', 'hidden');
+        parent.slideUp(200, function () {
+            parent.remove();
+
+            // Put the extra -10px back at bottom of courses element when it's empty
+            if ($('#courses').children().length === 0) {
+                $('#courses').css('margin-bottom', '-10px');
+            }
+        });
+    });
+}
+
+/* addCourse()
+ * Adds the course from course input (typeahead) box to list of courses
+ */
+function addCourse(course) {
+    "use strict";
+
+    courseList.push(course.replace(/ -.*/, ''));
+
+    var holder = $('#courses'),
+        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
+        div = $('<div>').append($('<div class="row">')
+                                .html('<div class="col-10">' + course + '</div>')
+                                .append($('<div class="col-2" style="text-align: right;">').append(icon))
+                               );
+
+    // Add this new item to the course holder and ensure the bottom margin is removed
+    holder.append(div)
+        .css('margin-bottom', 0);
+
+    div.children().hide();
+    div.hide().slideDown(200, function () {
+        div.children().fadeIn(200);
+    });
+}
+
+function restoreState(courseHash) {
+    'use strict';
+
+    var options = Cookies.getJSON('options'),
+        courses = Cookies.getJSON('courses'),
+        i;
+    if (options !== undefined) {
+        // Restore courses
+        for (i = 0; i < courses.length; i += 1) {
+            if (courses[i] !== 'CBS') { // NB: even though CBS is in courseList, it shouldn't be added in the DOM list of courses
+                addCourse(courses[i] + ' - ' + courseHash[courses[i]]);
+            }
+        }
+
+        // Restore CBS items
+        document.getElementById('tbt').checked = options.cbs.tbt;
+        document.getElementById('bib').checked = options.cbs.bib;
+        document.getElementById('ctr').checked = options.cbs.ctr;
+        document.getElementById('cth').checked = options.cbs.cth;
+
+        // Restore misc other options
+        document.getElementById('showcap').checked = options.showcap;
+        document.getElementById('fullclasses').checked = options.fullclasses;
+
+        // Restore class locations
+        classLocations = Cookies.getJSON('classLocations');
+
+        // Call generate to recreate previous timetable
+        if (JSON.stringify(classLocations) !== '{}') {
+            generate(true, true);
+        }
+    }
+}
+
+function saveState() {
+    'use strict';
+
+    // Save courses
+    Cookies.set('courses', courseList);
+
+    // Save CBS items
+    var options = { cbs: {} };
+    options.cbs.tbt = document.getElementById('tbt').checked;
+    options.cbs.bib = document.getElementById('bib').checked;
+    options.cbs.ctr = document.getElementById('ctr').checked;
+    options.cbs.cth = document.getElementById('cth').checked;
+
+    // Save misc other options
+    options.showcap = document.getElementById('showcap').checked;
+    options.fullclasses = document.getElementById('fullclasses').checked;
+    Cookies.set('options', options);
+
+    // Save class locations
+    Cookies.set('classLocations', classLocations);
+}
 
 (function () {
     "use strict";
@@ -77,65 +189,16 @@ var courseList = ['CBS'],
                     divs.hide();
                 }
             });
+
+            // Add events to save the state when options are changed
+            $('.savedOption').change(function () {
+                saveState();
+            });
+
+            restoreState(data);
         });
     });
 }());
-
-/* removeCourse()
- * Removes a course from the selected courses list
- */
-function removeCourse(e) {
-    "use strict";
-
-    var row = $(e.currentTarget).parents('div.row'),
-        parent = row.parent(),
-        div = row.children().first(),
-        course = div.html().replace(/ -.+/, ''),
-        i = courseList.indexOf(course);
-
-    // Remove this course from the list of courses
-    if (i !== -1) {
-        courseList.splice(i, 1);
-    }
-
-    // Fade out and slide up neatly
-    row.children().fadeOut(200, function () {
-        row.children().show().css('visibility', 'hidden');
-        parent.slideUp(200, function () {
-            parent.remove();
-
-            // Put the extra -10px back at bottom of courses element when it's empty
-            if ($('#courses').children().length === 0) {
-                $('#courses').css('margin-bottom', '-10px');
-            }
-        });
-    });
-}
-
-/* addCourse()
- * Adds the course from course input (typeahead) box to list of courses
- */
-function addCourse(course) {
-    "use strict";
-
-    courseList.push(course.replace(/ -.*/, ''));
-
-    var holder = $('#courses'),
-        icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
-        div = $('<div>').append($('<div class="row">')
-                                .html('<div class="col-10">' + course + '</div>')
-                                .append($('<div class="col-2" style="text-align: right;">').append(icon))
-                               );
-
-    // Add this new item to the course holder and ensure the bottom margin is removed
-    holder.append(div)
-        .css('margin-bottom', 0);
-
-    div.children().hide();
-    div.hide().slideDown(200, function () {
-        div.children().fadeIn(200);
-    });
-}
 
 function timetableToPNG() {
     'use strict';
@@ -230,6 +293,7 @@ function stopDrag(e, ui) {
             otherClass.find('.class-capacity').html(shadow.data('capacity'));
 
             classLocations[otherClass.attr('id')] = shadow.parent().attr('id');
+            saveState();
         });
     }
 
@@ -394,7 +458,6 @@ function restoreClasses() {
             shadows = shadowList[key];
             parent = $('#' + classLocations[key]);
             shadow = parent.find(shadows);
-            console.log(currentClass, shadow);
 
             // Snap this class to it's shadow
             snapTo(currentClass, parent);

@@ -14,7 +14,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists, restoreClasses */
+/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists, restoreClasses, saveState */
 
 
 function fetchData(cb) {
@@ -226,7 +226,6 @@ function generate(draw, pageload) {
     var maxSearch = +pageload || undefined;
     function makeTimetable(list) {
         var timetable = search(list, 0, maxSearch), i, j, stream, done, courseID;
-        console.log(list);
 
         if (!draw) { return; }
         if (timetable === null) { return; }
@@ -262,6 +261,8 @@ function generate(draw, pageload) {
         // Restore class positions from previous time (if applicable)
         if (pageload) {
             restoreClasses();
+        } else {
+            saveState();
         }
     }
 
