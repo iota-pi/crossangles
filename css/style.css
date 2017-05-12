@@ -195,9 +195,14 @@ footer div.content {
     top: 0px;
     left: 0px;
     width: 100%;
-    background-color: rgba(50, 50, 255, 0.8);
     overflow: hidden;
     z-index: 9;
+}
+
+.class-drag .class-capacity, .class-drag .class-location {
+    font-size: 10px;
+	font-size: 0.76923;
+    padding-top: 1px;
 }
 
 /* grid styles */
@@ -226,7 +231,7 @@ footer div.content {
     border-left: 1px solid #dddddd;
     padding: 0;
     overflow: visible;
-    height: 20px;
+    height: 25px;
 }
 
 .col.body.half {

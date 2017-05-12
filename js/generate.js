@@ -28,12 +28,12 @@ function fetchData(cb) {
 
         // Turn raw data into a hash
         (function makeHash() {
-            var course, coursedata, classdata, timedata, classtime, i, j;
+            var course, coursedata, classdata, timedata, classtime, locations, i, j;
 
             // Short utility function to strip duplicate elements from an array (NB: quadratic time, should only be used on short arrays, add a hashtable for linear time)
             function uniq(arr) {
                 return arr.filter(function (el, pos) {
-                    return arr.indexOf(el) === pos;
+                    return arr.map(String).indexOf(String(el)) === pos;
                 });
             }
 
@@ -47,11 +47,13 @@ function fetchData(cb) {
                         for (i = 0; i < coursedata.length; i += 1) {
                             classdata = coursedata[i];
                             timedata  = classdata[3];
+                            timedata  = uniq(timedata);
                             classtime = [];
+                            locations = [];
                             for (j = 0; j < timedata.length; j += 1) {
                                 classtime.push(timedata[j][0]);
+                                locations.push(timedata[j][1]);
                             }
-                            classtime = uniq(classtime);
                             classtime = classtime.join(',');
 
                             // Add this stream's data to the list for this component
@@ -64,7 +66,7 @@ function fetchData(cb) {
                                     hash[course][classdata[0]] = [];
                                 }
 
-                                hash[course][classdata[0]].push({time: classtime, status: classdata[1], enrols: classdata[2], course: course, component: classdata[0]});
+                                hash[course][classdata[0]].push({time: classtime, status: classdata[1], enrols: classdata[2], course: course, component: classdata[0], location: locations});
                             }
                         }
                     }
@@ -76,37 +78,37 @@ function fetchData(cb) {
         hash.CBS = {};
         if ($('#tbt').is(':checked')) {
             hash.CBS.TBT = [
-                {time: 'T 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'},
-                {time: 'T 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'},
-                {time: 'H 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'},
-                {time: 'H 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks'}
+                {time: 'T 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Elec Eng 418']},
+                {time: 'T 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Elec Eng 418']},
+                {time: 'H 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Rup Myers Theatre']},
+                {time: 'H 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Rup Myers Theatre']}
             ];
         }
         if ($('#cth').is(':checked')) {
             hash.CBS.CoreTheo = [
-                {time: 'T 17', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology'},
-                {time: 'W 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology'}
+                {time: 'T 17', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['Colombo C']},
+                {time: 'W 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['CLB 4']}
             ];
         }
         if ($('#ctr').is(':checked')) {
             hash.CBS.CoreTrain = [
-                {time: 'T 16', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'},
-                {time: 'T 18', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'},
-                {time: 'W 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'},
-                {time: 'W 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training'}
+                {time: 'T 16', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
+                {time: 'T 18', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
+                {time: 'W 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
+                {time: 'W 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']}
             ];
         }
         if ($('#bib').is(':checked')) {
             hash.CBS.BibleStudy = [
-                {time: 'M 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'M 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'M 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'M 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'T 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'T 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'W 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'H 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'},
-                {time: 'H 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study'}
+                {time: 'M 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'M 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'M 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'M 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'T 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'T 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'W 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'H 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
+                {time: 'H 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']}
             ];
         }
 
@@ -262,7 +264,7 @@ function generate(draw, pageload) {
         for (i = 0; i < timetable.length; i += 1) {
             stream = timetable[i];
             courseID = courseList.indexOf(stream.course);
-            createClass(stream.time, stream.enrols, stream.course, stream.component, courseID, done);
+            createClass(stream, courseID, done);
         }
 
         // Add shadows
@@ -270,7 +272,7 @@ function generate(draw, pageload) {
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j].course);
-                createShadow(list[i][j].time, list[i][j].course + list[i][j].component, courseID, list[i][j].enrols, done);
+                createShadow(list[i][j], courseID, done);
             }
         }
 

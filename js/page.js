@@ -43,6 +43,7 @@ function restoreState(courseHash) {
         // Restore misc other options
         document.getElementById('showcap').checked = options.showcap;
         document.getElementById('fullclasses').checked = options.fullclasses;
+        document.getElementById('showloc').checked = options.showloc;
 
         // Call generate to recreate previous timetable
         if (JSON.stringify(classLocations) !== '{}') {
@@ -69,6 +70,7 @@ function saveState() {
     // Save misc other options
     options.showcap = document.getElementById('showcap').checked;
     options.fullclasses = document.getElementById('fullclasses').checked;
+    options.showloc = document.getElementById('showloc').checked;
     Cookies.set('options', options, { expires: 7 * 26 });
 
     // Save class locations
@@ -245,34 +247,60 @@ $.fn.push = function (selector) {
 };
 
 // Returns an array containing all elements in arr where, when cast to a string, there are no duplicates
-function unique(arr) {
+function unique(arr1, arr2) {
     'use strict';
 
-    var uniqueArr = [],
+    var uniqueArr1 = [],
+        uniqueArr2 = [],
         strs = [],
         i;
-    for (i = 0; i < arr.length; i += 1) {
-        if (strs.indexOf(String(arr[i])) === -1) {
-            uniqueArr.push(arr[i]);
-            strs.push(String(arr[i]));
+    for (i = 0; i < arr1.length; i += 1) {
+        if (strs.indexOf(String(arr1[i])) === -1) {
+            uniqueArr1.push(arr1[i]);
+            strs.push(String(arr1[i]));
+
+            // Add arr2 element to keep in sync
+            if (arr2 !== undefined) {
+                uniqueArr2.push(arr2[i]);
+            }
         }
     }
 
-    return uniqueArr;
+    // Replace passed in arrays with the unique versions
+    for (i = 0; i < uniqueArr1.length; i += 1) {
+        arr1[i] = uniqueArr1[i];
+        if (arr2 !== undefined) {
+            arr2[i] = uniqueArr2[i];
+        }
+    }
+
+    // Remove extra items
+    while (i < arr1.length) {
+        arr1.pop();
+        if (arr2 !== undefined) {
+            arr2.pop();
+        }
+    }
 }
 
 // Creates a draggable class element
-function createClass(times, capacity, course, component, courseID, done) {
+function createClass(stream, courseID, done) {
     'use strict';
 
-    var time,
+    var times = stream.time,
+        capacity = stream.enrols,
+        course = stream.course,
+        component = stream.component,
+        locations = stream.location,
+        time,
+        location,
         i,
         id,
         duration,
         parentId,
         parent,
         div,
-        title = '<div>' + ((course !== 'CBS') ? course + ': ' + component : component) + '</div>',
+        title = '<div style="font-weight: bold">' + ((course !== 'CBS') ? course + ': ' + component : component) + '</div>',
         skips = 0;
 
     if (course !== 'CBS') {
@@ -283,6 +311,8 @@ function createClass(times, capacity, course, component, courseID, done) {
 
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
+        location = '<div class="class-location">' + locations[i] + '</div>';
+
         // Check that we haven't already created a shadow for this course, component and time
         // NB: checking the time is necessary for when there is messy data
         if (done.indexOf(time.join(',') + course + component) === -1) {
@@ -299,7 +329,7 @@ function createClass(times, capacity, course, component, courseID, done) {
             parent = $('#' + parentId);
 
             // Create the class div
-            div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title + capacity))
+            div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title + location + capacity))
                 .draggable({
                     stack: '.class-drag',
                     scroll: true,
@@ -331,23 +361,32 @@ function createClass(times, capacity, course, component, courseID, done) {
     if (!document.getElementById('showcap').checked) {
         $('.class-capacity').hide();
     }
+    if (!document.getElementById('showloc').checked) {
+        $('.class-location').hide();
+    }
 }
 
-function createShadow(times, group, courseID, capacity, done) {
+function createShadow(stream, courseID, done) {
     'use strict';
+
+    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, duration, key;
+    times = stream.time;
+    group = stream.course + stream.component;
+    capacity = stream.enrols;
+    locations = stream.location;
 
     // No capacity for CBS events!
     if (group.indexOf('CBS') === 0) {
         capacity = '';
     }
 
-    times = unique(times);
-
-    var time, timestr, i, j, index, div, parent, duration, key;
+    // Remove any duplicate times that might be hiding in there
+    unique(times, locations);
 
     for (i = 0; i < times.length; i += 1) {
         time = times[i];
         timestr = time.join(',');
+        location = locations[i];
 
         // Put together key to be used for shadowList hash
         key = group + i;
@@ -359,12 +398,14 @@ function createShadow(times, group, courseID, capacity, done) {
             done[group] = [timestr];
         }
 
+        // Create the shadow div
         duration = time[2] - time[1];
         parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
         div = $('<div class="class-shadow">').css({
             'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
         });
         div.data('capacity', capacity.replace(',', ' / '));
+        div.data('location', location.replace(',', ' / '));
         div.appendTo(parent);
         div.height(parent.outerHeight() * duration * 2);
 
@@ -469,6 +510,16 @@ function clearLists(pageload) {
             $('#showcap').change(function () {
                 var divs = $('.class-capacity');
                 if (document.getElementById('showcap').checked === true) {
+                    divs.show();
+                } else {
+                    divs.hide();
+                }
+            });
+
+            // Add event to toggle class capacities
+            $('#showloc').change(function () {
+                var divs = $('.class-location');
+                if (document.getElementById('showloc').checked === true) {
                     divs.show();
                 } else {
                     divs.hide();
