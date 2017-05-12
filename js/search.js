@@ -8,6 +8,7 @@
 function search(list, maxClash, searchMax) {
     'use strict';
     if (maxClash === undefined) { maxClash = 0; }
+    if (list.length === 0) { return []; }
 
     // Checks whether two given time strings clash with each other
     function classClash(a, b) {
