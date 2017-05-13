@@ -1,6 +1,8 @@
 /* search.js
  *
  * Defines search algorithm to use for finding best timetable as well as evaluation function for timetables
+ *
+ * Authors: David
  */
 
 /*globals console, scoreTimetable */

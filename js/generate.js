@@ -2,14 +2,10 @@
  *
  * Steps: (note: this header comment is very out-of-date)
  * 1. Make a list of all class time options
- * 2. Sort list based on:
- *    - Prioritise non-full classes (but keep full ones too!)
- *    - Low # of options first
- *    - Sort based on time
- *    - Sort on some preference of days of week (to try get off days)
- *    - Class duration?
- * 3. Backtracking search
+ * 2. Evolutionary algorithm based on backtracking search to find best timetable (see search.js)
+ * 3. Draws generated timetable
  *
+ * Authors: David
  */
 
 // Stop jslint complaining about regexs

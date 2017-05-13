@@ -1,5 +1,7 @@
 /* evaluate.js
  * Defines evaluation functions for scoring timetable
+ *
+ * Authors: David
  */
 
 /*globals console */
