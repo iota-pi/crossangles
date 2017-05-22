@@ -190,7 +190,7 @@ def splitTimetableData(string):
         location = ''
 
     #return [(time, weeks, location)]
-    return [(subday(time.strip('#')), location)]
+    return [(subday(time), location)]
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL

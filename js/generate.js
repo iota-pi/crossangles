@@ -129,12 +129,13 @@ function fetchData(cb) {
                 return stream.map(function (x) {
                     var times = x.time.split(','),
                         array = times.map(function (time) {
-                            // Calculate start and end times
-                            var classTime = time.replace(/[^\d\-.]/g, '').split('-');
+                            // Calculate start and end times and check if clash approved
+                            var canClash = time.indexOf('#') !== -1,
+                                classTime = time.replace(/[^\d\-.]/g, '').split('-');
                             if (classTime.length === 1) { classTime[1] = (+classTime[0]) + 1; }
 
-                            // Format: [day, startHour, endHour]
-                            return [time[0], +classTime[0], +classTime[1]];
+                            // Format: [day, startHour, endHour, canClash]
+                            return [time[0], +classTime[0], +classTime[1], canClash];
                         });
 
                     // Modify first element in given array to be the new time array
