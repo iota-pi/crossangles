@@ -17,6 +17,9 @@ function search(list, maxClash, searchMax) {
         // If days are different, then there is clearly no clash
         if (a[0] !== b[0]) { return false; }
 
+        // If a clash is permitted for either course, there is no clash to worry about
+        if (a[3] || b[3]) { return false; }
+
         // The overlap between two intervals will be the difference (if positive) between the smallest upper-bound and the largest lower-bound
         return Math.max(0, Math.min(a[2], b[2]) - Math.max(a[1], b[1]));
     }

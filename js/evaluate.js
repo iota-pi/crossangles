@@ -57,7 +57,7 @@ function scoreFreeDays(timetable) {
 
 function scoreClashes(timetable) {
     'use strict';
-    var clashScore = -500, // per half hour
+    var clashScore = -200, // per half hour
         score = 0,
         i,
         j;
@@ -65,9 +65,9 @@ function scoreClashes(timetable) {
     for (i = 0; i < timetable.length; i += 1) {
         for (j = 0; j < timetable[i].length; j += 1) {
             if (timetable[i][j] !== undefined) {
-                // There is a clash is there is more than one element in each half-hour slot
+                // There is a clash whenever there is more than one element in each half-hour slot
                 if (timetable[i][j].length > 1) {
-                    score += clashScore;
+                    score += clashScore * (timetable[i][j].length - 1);
                 }
             }
         }

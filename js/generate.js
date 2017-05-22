@@ -237,10 +237,11 @@ function generate(draw, pageload) {
     'use strict';
     if (draw !== false) { draw = true; }
     if (pageload !== true) { pageload = false; }
+    var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined = use default, otherwise, max iterations for search will be 0 to prevent search
+        maxClash  = +(document.getElementById('canclash').checked) * 100;
 
-    var maxSearch = +pageload || undefined;
     function makeTimetable(list) {
-        var timetable = search(list, 0, maxSearch), i, j, stream, done, courseID;
+        var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID;
 
         if (!draw) { return; }
         if (timetable === null) { return; }

@@ -4,7 +4,7 @@
 ## Ideas to implement
 
   * Favicon
-  * Clash hours option
+  * Better visual feedback for 
   * Fullscreen timetable view?
   * Custom class/commitment support
   * Day of week preferences?

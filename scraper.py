@@ -149,7 +149,7 @@ def splitTimetableData(string):
     # Remove /odd and /even, as well as Comb/w descriptors
     string = re.sub(r'Comb/w.*', '', string.replace('/odd', '').replace('/even', '')).strip()
 
-    # Handle blank strings - just return a 3-tuple of ''s
+    # Handle blank strings - just return a tuple of empty strings
     if string == '':
         #return [('', '', '')]
         return [('', '')]

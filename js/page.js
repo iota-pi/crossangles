@@ -44,6 +44,7 @@ function restoreState(courseHash) {
         document.getElementById('showcap').checked = options.showcap;
         document.getElementById('fullclasses').checked = options.fullclasses;
         document.getElementById('showloc').checked = options.showloc;
+        document.getElementById('canclash').checked = options.canclash;
 
         // Call generate to recreate previous timetable
         if (JSON.stringify(classLocations) !== '{}') {
@@ -71,6 +72,7 @@ function saveState() {
     options.showcap = document.getElementById('showcap').checked;
     options.fullclasses = document.getElementById('fullclasses').checked;
     options.showloc = document.getElementById('showloc').checked;
+    options.canclash = document.getElementById('canclash').checked;
     Cookies.set('options', options, { expires: 7 * 26 });
 
     // Save class locations
@@ -180,9 +182,6 @@ function startDrag(e, ui) {
         key = el.attr('id'),
         shadows = shadowList[key];
     shadows.fadeIn(100);    // quite a quick fade
-
-    // CSS positioning must be relative while dragging
-    el.css({position: 'relative'});
 }
 
 // End-of-drag callback function
@@ -192,7 +191,7 @@ function stopDrag(e, ui) {
     // Snap element a to element b
     function snapTo($a, b) {
         // Detach a, then append it to b, then also set the positioning to be at an offset of (0, 0) from the parent
-        $a.detach().appendTo(b).css({position: 'absolute', left: 0, top: 0});
+        $a.detach().appendTo(b).css({left: 0, top: 0});
     }
 
     // Snap dragged item to nearest visible shadow
