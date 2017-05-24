@@ -4,10 +4,11 @@
 ## Ideas to implement
 
   * Favicon
-  * Better visual feedback for 
-  * Fullscreen timetable view?
+  * Better visual feedback for timetable clashes
+  * Hide unnecessary rows of timetable
   * Custom class/commitment support
-  * Day of week preferences?
+  * Fullscreen timetable view?
+  * Day of week preferences? (I'm thinking they can do that manually by rearranging their timetable)
   * Analytics?
 
 To view ideas for the project generated at our first planning meeting or add other ideas, see `ideas.txt`
