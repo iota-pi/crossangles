@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists, restoreClasses, saveState */
+/*globals $, search, console, window, document, courseList, createClass, createShadow, classList, clearLists, restoreClasses, saveState, hideEmpty */
 
 
 function fetchData(cb) {
@@ -238,7 +238,10 @@ function generate(draw, pageload) {
     if (draw !== false) { draw = true; }
     if (pageload !== true) { pageload = false; }
     var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined = use default, otherwise, max iterations for search will be 0 to prevent search
-        maxClash  = +(document.getElementById('canclash').checked) * 100;
+        maxClash  = +(document.getElementById('canclash').checked) * 100,
+        y,
+        minY = Infinity,
+        maxY = -Infinity;
 
     function makeTimetable(list) {
         var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID;
@@ -270,7 +273,9 @@ function generate(draw, pageload) {
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j].course);
-                createShadow(list[i][j], courseID, done);
+                y = createShadow(list[i][j], courseID, done);
+                minY = Math.min(minY, y);
+                maxY = Math.min(maxY, y);
             }
         }
 
@@ -280,6 +285,8 @@ function generate(draw, pageload) {
         } else {
             saveState();
         }
+
+        hideEmpty(minY, maxY);
     }
 
     fetchData(makeTimetable);

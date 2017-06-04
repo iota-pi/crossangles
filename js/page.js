@@ -159,6 +159,45 @@ function timetableToPNG() {
 }
 
 
+function hasClass(el, aclass) {
+    'use strict';
+
+    var str = ' ' + el.className + ' ';
+    return str.indexOf(' ' + aclass + ' ') !== -1;
+}
+
+function hideEmpty(minY, maxY) {
+    'use strict';
+    var shadows = $('.class-shadow'),
+        timetablebody = $('#timetable').find('.body'),
+        toHide = $();
+
+    // Show all timetable rows initially
+    timetablebody.show();
+
+    // Check max and min and initialise them if they weren't given as parameters
+    minY = minY || Infinity;
+    maxY = maxY || -Infinity;
+    if (minY === Infinity) {
+        // Find max and min Y offsets
+        shadows.each(function (i, shadow) {
+            var y = $(shadow).parent().position().top;
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y + $(shadow).height());
+        });
+    }
+
+    // Hide all cells outside of the max and min Y offsets
+    timetablebody.each(function (i, cell) {
+        var y = $(cell).position().top;
+        if (y < minY || y >= maxY) {
+            toHide = toHide.add(cell);
+        }
+    });
+
+    toHide.hide();
+}
+
 function getColour(index) {
     'use strict';
 
@@ -368,11 +407,13 @@ function createClass(stream, courseID, done) {
 function createShadow(stream, courseID, done) {
     'use strict';
 
-    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, duration, key;
+    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, duration, key, y, minY, maxY, height;
     times = stream.time;
     group = stream.course + stream.component;
     capacity = stream.enrols;
     locations = stream.location;
+    minY = Infinity;
+    maxY = -Infinity;
 
     // No capacity for CBS events!
     if (group.indexOf('CBS') === 0) {
@@ -406,7 +447,8 @@ function createShadow(stream, courseID, done) {
         div.data('capacity', capacity.replace(',', ' / '));
         div.data('location', location.replace(',', ' / '));
         div.appendTo(parent);
-        div.height(parent.outerHeight() * duration * 2);
+        height = parent.outerHeight() * duration * 2;
+        div.height(height);
 
         // Add to shadowList
         if (shadowList.hasOwnProperty(key)) {
@@ -414,7 +456,13 @@ function createShadow(stream, courseID, done) {
         } else {
             shadowList[key] = div;
         }
+
+        y = div.position().top;
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y + height);
     }
+
+    return {min: minY, max: maxY};
 }
 
 function restoreClasses() {

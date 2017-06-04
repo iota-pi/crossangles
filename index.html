@@ -44,7 +44,6 @@
         <nav class="navbar noselect">
             <div class="container-fluid">
                 <div class="navbar-header">
-
                     <span class="navbar-brand blue">CrossAngles</span>
                 </div>
             </div>
@@ -144,7 +143,7 @@
                                 <div class="col head">Thursday</div>
                                 <div class="col head">Friday</div>
                                 <div class="w-100" ng-repeat-start="hour in [8,9,10,11,12,13,14,15,16,17,18,19,20,21]"></div>
-                                <div class="col col-1 body small first"><div>{{ hour | time }}</div></div>
+                                <div class="col col-1 body small first" id="ttrow{{ hour }}"><div>{{ hour | time }}</div></div>
                                 <div class="col body" id="M{{ hour }}"></div>
                                 <div class="col body" id="T{{ hour }}"></div>
                                 <div class="col body" id="W{{ hour }}"></div>
@@ -152,11 +151,11 @@
                                 <div class="col body" id="F{{ hour }}"></div>
                                 <div class="w-100"></div>
                                 <div class="col col-1 body first half"></div>
-                                <div class="col body half" id="M{{ hour + '_30' }}"></div>
-                                <div class="col body half" id="T{{ hour + '_30' }}"></div>
-                                <div class="col body half" id="W{{ hour + '_30' }}"></div>
-                                <div class="col body half" id="H{{ hour + '_30' }}"></div>
-                                <div class="col body half" id="F{{ hour + '_30' }}" ng-repeat-end></div>
+                                <div class="col body half" id="M{{ hour }}_30"></div>
+                                <div class="col body half" id="T{{ hour }}_30"></div>
+                                <div class="col body half" id="W{{ hour }}_30"></div>
+                                <div class="col body half" id="H{{ hour }}_30"></div>
+                                <div class="col body half" id="F{{ hour }}_30" ng-repeat-end></div>
                             </div>
                         </div>
                     </div>
