@@ -176,6 +176,7 @@ function search(list, maxClash, searchMax) {
     // Evolves given list of parents
     function evolve(parents, maxParents, maxIter, biasTop) {
         if (parents === null) { return null; }
+        if (maxIter === 0) { return parents[0]; }
 
         maxIter = maxIter || 5000;
         maxParents = maxParents || 20;
@@ -217,7 +218,8 @@ function search(list, maxClash, searchMax) {
         return parents[0];
     }
 
-    var parents = abiogenesis(50),
+    var initial = (searchMax > 0) ? 50 : 1,
+        parents = abiogenesis(initial),
         best = evolve(parents, undefined, searchMax);
 
     if (best === null) { console.error('No timetables could be generated!'); return null; }
