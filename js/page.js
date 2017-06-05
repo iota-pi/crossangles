@@ -167,6 +167,30 @@ function hasClass(el, aclass) {
     return str.indexOf(' ' + aclass + ' ') !== -1;
 }
 
+function createTable() {
+    'use strict';
+
+    var table = $('#timetable').find('.row'),
+        head = '<div class="col col-1 head first"></div>' +
+               '<div class="col head">Monday</div>' +
+               '<div class="col head">Tuesday</div>' +
+               '<div class="col head">Wednesday</div>' +
+               '<div class="col head">Thursday</div>' +
+               '<div class="col head">Friday</div>',
+        body = '',
+        newline = '<div class="w-100"></div>',
+        startHour = 8,
+        endHour   = 21,
+        bodyFirst = function (hour, half) {
+            half = (half === true) ? 'half' : 'small';
+            return '<div class="col col-1 body first' + half + '" id="ttrow_' + hour + '"><div>' + hour + ':00</div></div>';
+        },
+        bodyNorm = function (hour, day, half) {
+            half = (half === true) ? 'half' : '';
+            return '<div class="col body' + half + '" id="' + day + '_' + hour + '"></div>';
+        };
+}
+
 function hideEmpty(minY, maxY) {
     'use strict';
     var shadows = $('.class-shadow'),
