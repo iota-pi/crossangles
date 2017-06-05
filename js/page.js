@@ -13,7 +13,8 @@ var finishedInit = false,
     courseList = ['CBS'],
     classList = [],
     shadowList = {},
-    classLocations = {};
+    classLocations = {},
+    ttCellHeight = 50;
 
 function restoreState(courseHash) {
     'use strict';
@@ -325,6 +326,26 @@ function unique(arr1, arr2) {
     }
 }
 
+function createClassDiv(title, location, capacity, id, courseID, duration, container) {
+    'use strict';
+    return $('<div>')
+        .html('<div>' + title + location + capacity + '</div>')
+        .draggable({
+            stack: '.class-drag',
+            scroll: true,
+            containment: container,
+            start: startDrag,
+            stop: stopDrag
+        })
+        .css({
+            position: 'absolute',
+            'background-color': 'rgb(' + getColour(courseID) + ')',
+            height: ttCellHeight * duration
+        })
+        .attr('id', id)
+        .addClass('class-drag');
+}
+
 // Creates a draggable class element
 function createClass(stream, courseID, done) {
     'use strict';
@@ -343,7 +364,8 @@ function createClass(stream, courseID, done) {
         parent,
         div,
         title = '<div style="font-weight: bold">' + ((course !== 'CBS') ? course + ': ' + component : component) + '</div>',
-        skips = 0;
+        skips = 0,
+        container = $('#timetable').find('.row');
 
     if (course !== 'CBS') {
         capacity = '<div class="class-capacity">' + capacity.replace(',', ' / ') + '</div>';
@@ -371,22 +393,8 @@ function createClass(stream, courseID, done) {
             parent = $('#' + parentId);
 
             // Create the class div
-            div = $('<div class="class-drag" id="' + id + '">').append($('<div>').html(title + location + capacity))
-                .draggable({
-                    stack: '.class-drag',
-                    scroll: true,
-                    containment: parent.parents('.row'),
-                    start: startDrag,
-                    stop: stopDrag
-                })
-                .css({
-                    position: 'absolute',
-                    'background-color': 'rgb(' + getColour(courseID) + ')'
-                });
+            div = createClassDiv(title, location, capacity, id, courseID, duration, container);
             div.appendTo(parent);
-
-            // Fix div height
-            div.height(parent.outerHeight() * duration * 2);
 
             // Add this div to the classList
             classList.push(div);
@@ -411,7 +419,7 @@ function createClass(stream, courseID, done) {
 function createShadow(stream, courseID, done) {
     'use strict';
 
-    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, duration, key, y, minY, maxY, height;
+    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, duration, key, y, minY, maxY, shadowHeight;
     times = stream.time;
     group = stream.course + stream.component;
     capacity = stream.enrols;
@@ -444,15 +452,15 @@ function createShadow(stream, courseID, done) {
 
         // Create the shadow div
         duration = time[2] - time[1];
+        shadowHeight = ttCellHeight * duration;
         parent = $('#' + (time[0] + '_' + time[1]).replace('.5', '_30'));
-        div = $('<div class="class-shadow">').css({
-            'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
-        });
+        div = $('<div>').css({
+            'background-color': 'rgba(' + getColour(courseID) + ', 0.7)',
+            height: shadowHeight
+        }).addClass('class-shadow');
         div.data('capacity', capacity.replace(',', ' / '));
         div.data('location', location.replace(',', ' / '));
         div.appendTo(parent);
-        height = parent.outerHeight() * duration * 2;
-        div.height(height);
 
         // Add to shadowList
         if (shadowList.hasOwnProperty(key)) {
@@ -463,7 +471,7 @@ function createShadow(stream, courseID, done) {
 
         y = parent.position().top;
         minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y + height);
+        maxY = Math.max(maxY, y + shadowHeight);
     }
 
     return {min: minY, max: maxY};
