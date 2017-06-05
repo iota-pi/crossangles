@@ -173,12 +173,13 @@ function hideEmpty(minY, maxY) {
         toHide = $();
 
     // Show all timetable rows initially
-    timetablebody.show();
+    timetablebody.filter(':hidden').show();
 
     // Check max and min and initialise them if they weren't given as parameters
     minY = minY || Infinity;
     maxY = maxY || -Infinity;
     if (minY === Infinity) {
+        console.log('recalc');
         // Find max and min Y offsets
         shadows.each(function (i, shadow) {
             var y = $(shadow).parent().position().top;
@@ -188,10 +189,13 @@ function hideEmpty(minY, maxY) {
     }
 
     // Hide all cells outside of the max and min Y offsets
-    timetablebody.each(function (i, cell) {
-        var y = $(cell).position().top;
+    timetablebody.filter('[id^="M"]').not('[id$="_30"]').each(function (i, cell) {
+        var y = $(cell).position().top,
+            hour;
         if (y < minY || y >= maxY) {
-            toHide = toHide.add(cell);
+            hour = cell.getAttribute('id').replace(/[^_\d]/g, '');
+            toHide = toHide.add(timetablebody.filter('[id$="' + hour + '"]'));
+            toHide = toHide.add(timetablebody.filter('[id$="' + hour + '_30"]'));
         }
     });
 
@@ -363,7 +367,7 @@ function createClass(stream, courseID, done) {
             duration = time[2] - time[1];
 
             // Get the parent element
-            parentId = (time[0] + time[1]).replace('.5', '_30');
+            parentId = (time[0] + '_' + time[1]).replace('.5', '_30');
             parent = $('#' + parentId);
 
             // Create the class div
@@ -440,7 +444,7 @@ function createShadow(stream, courseID, done) {
 
         // Create the shadow div
         duration = time[2] - time[1];
-        parent = $('#' + (time[0] + time[1]).replace('.5', '_30'));
+        parent = $('#' + (time[0] + '_' + time[1]).replace('.5', '_30'));
         div = $('<div class="class-shadow">').css({
             'background-color': 'rgba(' + getColour(courseID) + ', 0.7)'
         });
@@ -457,7 +461,7 @@ function createShadow(stream, courseID, done) {
             shadowList[key] = div;
         }
 
-        y = div.position().top;
+        y = parent.position().top;
         minY = Math.min(minY, y);
         maxY = Math.max(maxY, y + height);
     }

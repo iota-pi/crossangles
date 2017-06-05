@@ -238,16 +238,16 @@ function generate(draw, pageload) {
     if (draw !== false) { draw = true; }
     if (pageload !== true) { pageload = false; }
     var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined = use default, otherwise, max iterations for search will be 0 to prevent search
-        maxClash  = +(document.getElementById('canclash').checked) * 100,
-        y,
-        minY = Infinity,
-        maxY = -Infinity;
+        maxClash  = +(document.getElementById('canclash').checked) * 100;
 
     function makeTimetable(list) {
-        var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID;
+        var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID, y, minY, maxY;
 
         if (!draw) { return; }
         if (timetable === null) { return; }
+
+        minY = Infinity;
+        maxY = -Infinity;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
@@ -274,8 +274,8 @@ function generate(draw, pageload) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j].course);
                 y = createShadow(list[i][j], courseID, done);
-                minY = Math.min(minY, y);
-                maxY = Math.min(maxY, y);
+                minY = Math.min(minY, y.min);
+                maxY = Math.max(maxY, y.max);
             }
         }
 
@@ -286,6 +286,7 @@ function generate(draw, pageload) {
             saveState();
         }
 
+        console.log(minY, maxY);
         hideEmpty(minY, maxY);
     }
 
