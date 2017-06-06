@@ -286,8 +286,7 @@ function generate(draw, pageload) {
             saveState();
         }
 
-        console.log(minY, maxY);
-        hideEmpty(minY, maxY);
+        hideEmpty(Math.floor(minY), Math.floor(maxY));
     }
 
     fetchData(makeTimetable);

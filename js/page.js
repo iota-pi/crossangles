@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, jQuery, Promise, console, domtoimage, download, Cookies, generate, addCourse */
+/*global $, console, domtoimage, download, Cookies, generate */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -300,7 +300,6 @@ function hideEmpty(minY, maxY) {
     minY = minY || Infinity;
     maxY = maxY || -Infinity;
     if (minY === Infinity) {
-        console.log('recalc');
         // Find max and min Y offsets
         shadows.each(function (i, shadow) {
             var y = $(shadow).parent().position().top;
@@ -539,7 +538,7 @@ function createClass(stream, courseID, done) {
 function createShadow(stream, courseID, done) {
     'use strict';
 
-    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, duration, key, y, minY, maxY, shadowHeight;
+    var times, group, capacity, locations, location, time, timestr, i, j, index, div, parent, parentID, duration, key, y, minY, maxY, shadowHeight;
     times = stream.time;
     group = stream.course + stream.component;
     capacity = stream.enrols;
@@ -573,7 +572,8 @@ function createShadow(stream, courseID, done) {
         // Create the shadow div
         duration = time[2] - time[1];
         shadowHeight = ttCellHeight * duration;
-        parent = $('#' + (time[0] + '_' + time[1]).replace('.5', '_30'));
+        parentID = (time[0] + '_' + time[1]).replace('.5', '_30');
+        parent = $('#' + parentID);
         div = $('<div>').css({
             'background-color': 'rgba(' + getColour(courseID) + ', 0.7)',
             height: shadowHeight
@@ -590,7 +590,7 @@ function createShadow(stream, courseID, done) {
         }
 
         y = parent.position().top;
-        minY = Math.min(minY, y);
+        minY = Math.min(minY, (parentID.indexOf('_30') === -1) ? y : y - ttCellHeight);
         maxY = Math.max(maxY, y + shadowHeight);
     }
 
