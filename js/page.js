@@ -287,14 +287,18 @@ function createTable() {
     table.html(head + newline + body);
 }
 
+function showEmpty() {
+    'use strict';
+
+    // Show all timetable rows initially
+    $('#timetable').find('.body:hidden').show();
+}
+
 function hideEmpty(minY, maxY) {
     'use strict';
     var shadows = $('.class-shadow'),
         timetablebody = $('#timetable').find('.body'),
         toHide = $();
-
-    // Show all timetable rows initially
-    timetablebody.filter(':hidden').show();
 
     // Check max and min and initialise them if they weren't given as parameters
     minY = minY || Infinity;
@@ -344,7 +348,7 @@ function startDrag(e, ui) {
     var el = $(e.target),
         key = el.attr('id'),
         shadows = shadowList[key];
-    shadows.fadeIn(100);    // quite a quick fade
+    shadows.fadeIn(200);
 }
 
 // End-of-drag callback function

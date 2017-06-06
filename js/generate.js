@@ -260,6 +260,9 @@ function generate(draw, pageload) {
         // Clear all the lists
         clearLists(pageload);
 
+        // Show all timetable rows
+        showEmpty();
+
         // Add new classes
         done = [];
         for (i = 0; i < timetable.length; i += 1) {
