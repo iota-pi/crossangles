@@ -5,16 +5,93 @@
  * Authors: David Adams
  */
 
-/* --- JSLint Options --- */
-/*jslint browser: true, regexp: true */
-/*global $, jQuery, console, domtoimage, download, Cookies, generate, addCourse */
+/* --- JSHint Options --- */
+/*jshint browser: true, regexp: true */
+/*global $, jQuery, Promise, console, domtoimage, download, Cookies, generate, addCourse */
 
 var finishedInit = false,
     courseList = ['CBS'],
     classList = [],
     shadowList = {},
     classLocations = {},
-    ttCellHeight = 50;
+    ttCellHeight = 50,
+    waitingScripts = 0,
+    courseData;
+
+function init_typeahead() {
+    'use strict';
+
+    /* initialise typeahead */
+    var matcher = function (hash) {
+        return function findMatches(q, cb) {
+            var matches = [],
+                initial = [],
+                courses = courseList;
+            q = q.toLowerCase();
+            $.each(hash, function (key, val) {
+                // Skip any courses which have already been chosen
+                if (courses.indexOf(key) >= 0) {
+                    return true; // continue
+                }
+
+                var str = (key + ' - ' + val),
+                    index = str.toLowerCase().indexOf(q);
+                if (index > 0) {
+                    matches.push(str);
+                } else if (index === 0) {
+                    initial.push(str);
+                }
+            });
+
+            // Sort the found matches
+            initial.sort();
+
+            // Add non-initial matches if there are fewer than 10 initial matches
+            if (initial.length < 10 && matches.length > 0) {
+                // Sort the other matches
+                matches.sort();
+
+                // Add them to initial
+                initial = initial.concat(matches);
+            }
+
+            cb(initial.slice(0, 10));
+        };
+    };
+
+    // Wait to ensure typeahead has loaded
+    while ($().typeahead === undefined);
+
+    // Initialise typeahead
+    $('.typeahead.coursein').typeahead({
+        name: 'courses',
+        source: matcher(courseData)
+    });
+}
+
+function scriptCount() {
+    'use strict';
+    waitingScripts -= 1;
+}
+
+function scriptsLoaded() {
+    'use strict';
+    return (waitingScripts === 0);
+}
+
+function loadScripts() {
+    'use strict';
+    waitingScripts += 1;
+    $.getScript('js/jquery-ui.min.js', scriptCount);
+    waitingScripts += 1;
+    $.getScript('js/cookie.min.js', scriptCount);
+    waitingScripts += 1;
+    $.getScript('js/dom-to-image.min.js', scriptCount);
+    waitingScripts += 1;
+    $.getScript('js/download.min.js', scriptCount);
+    waitingScripts += 1;
+    $.getScript('js/typeahead.min.js', scriptCount);
+}
 
 function restoreState(courseHash) {
     'use strict';
@@ -183,12 +260,31 @@ function createTable() {
         endHour   = 21,
         bodyFirst = function (hour, half) {
             half = (half === true) ? 'half' : 'small';
-            return '<div class="col col-1 body first' + half + '" id="ttrow_' + hour + '"><div>' + hour + ':00</div></div>';
+            return '<div class="col col-1 body first ' + half + '" id="ttrow_' + hour + '">' + ((half === 'small') ? '<div>' + hour + ':00</div>' : '') + '</div>';
         },
         bodyNorm = function (hour, day, half) {
-            half = (half === true) ? 'half' : '';
+            half = (half === true) ? ' half' : '';
             return '<div class="col body' + half + '" id="' + day + '_' + hour + '"></div>';
-        };
+        },
+        days = ['M', 'T', 'W', 'H', 'F'],
+        i,
+        hour,
+        day,
+        half;
+
+    for (i = 0; i < (endHour - startHour) * 2; i += 1) {
+        hour = startHour + Math.floor(i / 2);
+        half = (i % 2 === 1);
+        body += bodyFirst(hour, half);
+        for (day = 0; day < days.length; day += 1) {
+            body += bodyNorm(hour, days[day], half);
+        }
+        if (i !== (endHour - startHour) * 2 - 1) {
+            body += newline;
+        }
+    }
+
+    table.html(head + newline + body);
 }
 
 function hideEmpty(minY, maxY) {
@@ -537,57 +633,14 @@ function clearLists(pageload) {
 
 (function () {
     "use strict";
-    var courses;
 
-    /* initialise typeahead */
-    function init() {
-        var matcher = function (hash) {
-            return function findMatches(q, cb) {
-                var matches = [],
-                    initial = [],
-                    courses = courseList;
-                q = q.toLowerCase();
-                $.each(hash, function (key, val) {
-                    // Skip any courses which have already been chosen
-                    if (courses.indexOf(key) >= 0) {
-                        return true; // continue
-                    }
-
-                    var str = (key + ' - ' + val),
-                        index = str.toLowerCase().indexOf(q);
-                    if (index > 0) {
-                        matches.push(str);
-                    } else if (index === 0) {
-                        initial.push(str);
-                    }
-                });
-
-                // Sort the found matches
-                initial.sort();
-
-                // Add non-initial matches if there are fewer than 10 initial matches
-                if (initial.length < 10 && matches.length > 0) {
-                    // Sort the other matches
-                    matches.sort();
-
-                    // Add them to initial
-                    initial = initial.concat(matches);
-                }
-
-                cb(initial.slice(0, 10));
-            };
-        };
-        $('.typeahead.coursein').typeahead({
-            name: 'courses',
-            source: matcher(courses)
-        });
-    }
+    loadScripts();
 
     // Load course data from courses.json
     $.getJSON('data/courses.json', function (data) {
-        courses = data;
+        courseData = data;
         $(document).ready(function () {
-            init();
+            init_typeahead();
 
             // Add event to toggle class capacities
             $('#showcap').change(function () {
@@ -619,7 +672,10 @@ function clearLists(pageload) {
                 timetableToPNG();
             });
 
+            createTable();
             restoreState(data);
+
+            //loadScripts();
 
             finishedInit = true;
         });
