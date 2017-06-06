@@ -70,7 +70,7 @@ def main():
         timetable = {}
         for i in range(len(classCounts)):
             count = classCounts[i]
-            timetable[cc[i][0]] = timetableRaw[:count]
+            timetable[cc[i][0]] = [courses[cc[i][0]]] + timetableRaw[:count]
             del timetableRaw[:count]
         
         # Update dict of timetables

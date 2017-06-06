@@ -16,32 +16,35 @@ var finishedInit = false,
     classLocations = {},
     ttCellHeight = 50,
     waitingScripts = 0,
-    courseData;
+    timetableData = {};
 
 function init_typeahead() {
     'use strict';
 
     /* initialise typeahead */
-    var matcher = function (hash) {
+    var matcher = function (courseCodes) {
         return function findMatches(q, cb) {
             var matches = [],
                 initial = [],
-                courses = courseList;
+                courses = courseList,
+                i;
             q = q.toLowerCase();
-            $.each(hash, function (key, val) {
+
+            for (i = 0; i < courseCodes.length; i += 1) {
+                var key = courseCodes[i];
                 // Skip any courses which have already been chosen
                 if (courses.indexOf(key) >= 0) {
-                    return true; // continue
+                    continue;
                 }
 
-                var str = (key + ' - ' + val),
+                var str = (key + ' - ' + timetableData[key][0]),
                     index = str.toLowerCase().indexOf(q);
                 if (index > 0) {
                     matches.push(str);
                 } else if (index === 0) {
                     initial.push(str);
                 }
-            });
+            }
 
             // Sort the found matches
             initial.sort();
@@ -65,7 +68,7 @@ function init_typeahead() {
     // Initialise typeahead
     $('.typeahead.coursein').typeahead({
         name: 'courses',
-        source: matcher(courseData)
+        source: matcher(Object.keys(timetableData))
     });
 }
 
@@ -84,7 +87,7 @@ function restoreState(courseHash) {
         // Restore courses
         for (i = 0; i < courses.length; i += 1) {
             if (courses[i] !== 'CBS') { // NB: even though CBS is in courseList, it shouldn't be added in the DOM list of courses
-                addCourse(courses[i] + ' - ' + courseHash[courses[i]]);
+                addCourse(courses[i] + ' - ' + timetableData[courses[i]][0]);
             }
         }
 
@@ -176,9 +179,9 @@ function addCourse(course) {
 
     var holder = $('#courses'),
         icon = $('<span>').addClass('glyphicon glyphicon-remove-circle remove-icon').attr('aria-hidden', true).click(removeCourse),
-        div = $('<div>').append($('<div class="row">')
+        div = $('<div>').append($('<div>').addClass('row')
                                 .html('<div class="col-10">' + course + '</div>')
-                                .append($('<div class="col-2" style="text-align: right;">').append(icon))
+                                .append($('<div>').addClass('col-2').css('text-align', 'right').append(icon))
                                );
 
     // Add this new item to the course holder and ensure the bottom margin is removed
@@ -619,41 +622,43 @@ function clearLists(pageload) {
 (function () {
     "use strict";
 
+    $(document).ready(function () {
+        // Add event to toggle class capacities
+        $('#showcap').change(function () {
+            var divs = $('.class-capacity');
+            if (document.getElementById('showcap').checked === true) {
+                divs.show();
+            } else {
+                divs.hide();
+            }
+        });
+
+        // Add event to toggle class capacities
+        $('#showloc').change(function () {
+            var divs = $('.class-location');
+            if (document.getElementById('showloc').checked === true) {
+                divs.show();
+            } else {
+                divs.hide();
+            }
+        });
+
+        // Add events to save the state when options are changed
+        $('.savedOption').change(function () {
+            saveState();
+        });
+
+        // Add save as image event
+        $('#saveimage').click(function () {
+            timetableToPNG();
+        });
+    });
+
     // Load course data from courses.json
-    $.getJSON('data/courses.json', function (data) {
-        courseData = data;
+    $.getJSON('data/timetable.json', function (data) {
+        timetableData = data;
         $(document).ready(function () {
             init_typeahead();
-
-            // Add event to toggle class capacities
-            $('#showcap').change(function () {
-                var divs = $('.class-capacity');
-                if (document.getElementById('showcap').checked === true) {
-                    divs.show();
-                } else {
-                    divs.hide();
-                }
-            });
-
-            // Add event to toggle class capacities
-            $('#showloc').change(function () {
-                var divs = $('.class-location');
-                if (document.getElementById('showloc').checked === true) {
-                    divs.show();
-                } else {
-                    divs.hide();
-                }
-            });
-
-            // Add events to save the state when options are changed
-            $('.savedOption').change(function () {
-                saveState();
-            });
-
-            // Add save as image event
-            $('#saveimage').click(function () {
-                timetableToPNG();
-            });
 
             createTable();
             restoreState(data);
