@@ -69,30 +69,6 @@ function init_typeahead() {
     });
 }
 
-function scriptCount() {
-    'use strict';
-    waitingScripts -= 1;
-}
-
-function scriptsLoaded() {
-    'use strict';
-    return (waitingScripts === 0);
-}
-
-function loadScripts() {
-    'use strict';
-    waitingScripts += 1;
-    $.getScript('js/jquery-ui.min.js', scriptCount);
-    waitingScripts += 1;
-    $.getScript('js/cookie.min.js', scriptCount);
-    waitingScripts += 1;
-    $.getScript('js/dom-to-image.min.js', scriptCount);
-    waitingScripts += 1;
-    $.getScript('js/download.min.js', scriptCount);
-    waitingScripts += 1;
-    $.getScript('js/typeahead.min.js', scriptCount);
-}
-
 function restoreState(courseHash) {
     'use strict';
 
@@ -310,6 +286,11 @@ function hideEmpty(minY, maxY) {
             minY = Math.min(minY, y);
             maxY = Math.max(maxY, y + $(shadow).height());
         });
+    }
+
+    // Quit without hiding anything if minY is still Infinity
+    if (minY === Infinity) {
+        return;
     }
 
     // Hide all cells outside of the max and min Y offsets
@@ -638,8 +619,6 @@ function clearLists(pageload) {
 (function () {
     "use strict";
 
-    loadScripts();
-
     // Load course data from courses.json
     $.getJSON('data/courses.json', function (data) {
         courseData = data;
@@ -678,8 +657,6 @@ function clearLists(pageload) {
 
             createTable();
             restoreState(data);
-
-            //loadScripts();
 
             finishedInit = true;
         });
