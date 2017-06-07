@@ -222,7 +222,7 @@ function search(list, maxClash, searchMax) {
         parents = abiogenesis(initial),
         best = evolve(parents, undefined, searchMax);
 
-    if (best === null) { console.error('No timetables could be generated!'); return null; }
+    if (best === null) { return null; }
 
     // Return actual stream elements rather than only indexes
     return best.timetable.map(function (x, i) { return best.streams[i][x]; });

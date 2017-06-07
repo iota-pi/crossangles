@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, timetableData, courseList, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty */
+/*globals $, search, console, window, document, timetableData, courseList, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError */
 
 
 function fetchData(cb) {
@@ -251,7 +251,7 @@ function generate(draw, pageload) {
         var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID, y, minY, maxY;
 
         if (!draw) { return; }
-        if (timetable === null) { return; }
+        if (timetable === null) { pageError('Sorry!', 'We weren\'t able to create a timetable for you. Please try enabling class clashes or try again with different courses.'); return; }
 
         minY = Infinity;
         maxY = -Infinity;

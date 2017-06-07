@@ -238,12 +238,23 @@ function createTable() {
         startHour = 8,
         endHour   = 21,
         bodyFirst = function (hour, half) {
-            half = (half === true) ? 'half' : 'small';
-            return '<div class="col col-1 body first ' + half + '" id="ttrow_' + hour + '">' + ((half === 'small') ? '<div>' + hour + ':00</div>' : '') + '</div>';
+            var halfclass = 'small',
+                hourID = hour;
+            hour += ':00';
+            if (half === true) {
+                hourID += '_30';
+                hour = '';
+                halfclass = 'half';
+            }
+            return '<div class="col col-1 body first ' + halfclass + '" id="ttrow_' + hourID + '">' + (half ? '' : '<div>' + hour.replace('_', ':') + '</div>') + '</div>';
         },
         bodyNorm = function (hour, day, half) {
-            half = (half === true) ? ' half' : '';
-            return '<div class="col body' + half + '" id="' + day + '_' + hour + '"></div>';
+            var halfclass = '';
+            if (half === true) {
+                hour += '_30';
+                halfclass = ' half';
+            }
+            return '<div class="col body' + halfclass + '" id="' + day + '_' + hour + '"></div>';
         },
         days = ['M', 'T', 'W', 'H', 'F'],
         i,
@@ -608,6 +619,18 @@ function restoreClasses() {
             // Update the class capacity
             currentClass.find('.class-capacity').html(shadow.data('capacity'));
         }
+    }
+}
+
+function pageError(title, body) {
+    var alert = $('<div>').addClass('alert alert-warning alert-dismissible fade in').attr('role', 'alert'),
+        close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
+        message = '<strong>' + title + '</strong> ' + body,
+        space = $('#alert-space');
+    alert.html(message).prepend(close);
+    alert.appendTo(space);
+    if (space.children().length > 3) {
+        space.children().first().alert('close');
     }
 }
 
