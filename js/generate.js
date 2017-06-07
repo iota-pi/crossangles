@@ -251,7 +251,7 @@ function generate(draw, pageload) {
         var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID, y, minY, maxY;
 
         if (!draw) { return; }
-        if (timetable === null) { pageError('Sorry!', 'We weren\'t able to create a timetable for you. Please try enabling class clashes or try again with different courses.'); return; }
+        if (timetable === null) { pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again with different courses.'); return; }
 
         minY = Infinity;
         maxY = -Infinity;

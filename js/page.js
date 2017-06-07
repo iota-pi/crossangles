@@ -140,7 +140,7 @@ function saveState() {
  * Removes a course from the selected courses list
  */
 function removeCourse(e) {
-    "use strict";
+    'use strict';
 
     var row = $(e.currentTarget).parents('div.row'),
         parent = row.parent(),
@@ -173,7 +173,7 @@ function removeCourse(e) {
  * Adds the course from course input (typeahead) box to list of courses
  */
 function addCourse(course) {
-    "use strict";
+    'use strict';
 
     courseList.push(course.replace(/ -.*/, ''));
 
@@ -194,6 +194,12 @@ function addCourse(course) {
     });
 
     saveState();
+}
+
+function addCustom() {
+    'use strict';
+
+
 }
 
 function timetableToPNG() {
@@ -328,11 +334,12 @@ function getColour(index) {
     var colours = [
         [19, 111, 225], // mid blue
         [160, 29, 33], // crimson
-        [0, 140, 72], // green
+        [14, 147, 40], // green
         [102, 44, 145], // purple
         [255, 107, 0], // orange
-        [10, 28, 210], // deep blue
-        [238, 46, 20] // red (slightly pinked)
+        [10, 28, 210], // deepblue
+        [238, 46, 20], // red (slightly pinked)
+        [27, 98, 46] // darkgreen
     ];
 	return colours[index % colours.length].join(',');
 }
@@ -622,8 +629,29 @@ function restoreClasses() {
     }
 }
 
+function checkFinish() {
+    var start = document.getElementById('startTime'),
+        end = document.getElementById('endTime'),
+        startTime = start.value.replace(':00 ', ''),
+        endTime = end.value.replace(':00 ', ''),
+        startHour = parseInt(startTime.replace(/\D/g, '')),
+        endHour = parseInt(endTime.replace(/\D/g, '')),
+        button = document.getElementById('addCustom');
+    startTime = startHour + ((startTime.indexOf('PM') !== -1 && startHour !== 12) ? 12 : 0);
+    endTime = endHour + ((endTime.indexOf('PM') !== -1 && endHour !== 12) ? 12 : 0);
+    if (endTime <= startTime) {
+        end.style.color = 'red';
+        button.disabled = true;
+        return false;
+    }
+
+    button.disabled = false;
+    end.style.color = '';
+    return true;
+}
+
 function pageError(title, body) {
-    var alert = $('<div>').addClass('alert alert-warning alert-dismissible fade in').attr('role', 'alert'),
+    var alert = $('<div>').addClass('alert alert-warning alert-dismissible fade show').attr('role', 'alert'),
         close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
         message = '<strong>' + title + '</strong> ' + body,
         space = $('#alert-space');
@@ -674,6 +702,30 @@ function clearLists(pageload) {
         // Add save as image event
         $('#saveimage').click(function () {
             timetableToPNG();
+        });
+
+        // Initialise clockpickers
+        var start = $('#cp_start').clockpicker({
+            placement: 'bottom',
+            align: 'left',
+            'default': 12,
+            donetext: 'Done',
+            twelvehour: true,
+            amOrPm: 'PM',
+            breakHour: 9,
+            afterHourSelect: function () { start.clockpicker('update'); },
+            afterUpdate: function() { checkFinish(); }
+        });
+        var end = $('#cp_end').clockpicker({
+            placement: 'bottom',
+            align: 'left',
+            'default': 12,
+            donetext: 'Done',
+            twelvehour: true,
+            amOrPm: 'PM',
+            breakHour: 10,
+            afterHourSelect: function () { end.clockpicker('update'); },
+            afterUpdate: function() { checkFinish(); }
         });
     });
 

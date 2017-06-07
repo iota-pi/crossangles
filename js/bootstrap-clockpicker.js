@@ -700,10 +700,12 @@
 		raiseCallback(this.options.beforeUpdate);
 
         // Sanity check times
-        if (this.hours % 12 < 9 && this.amOrPm === 'AM') {
-            this.amOrPm = 'PM';
-        } else if (this.hours % 12 >= 9 && this.amOrPm === 'PM') {
-            this.amOrPm = 'AM';
+        if (this.options.breakHour) {
+            if (this.hours % 12 < this.options.breakHour && this.amOrPm === 'AM') {
+                this.amOrPm = 'PM';
+            } else if (this.hours % 12 >= this.options.breakHour && this.amOrPm === 'PM') {
+                this.amOrPm = 'AM';
+            }
         }
 
         // Explicity update AM/PM text on popover
