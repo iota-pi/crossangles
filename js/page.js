@@ -292,11 +292,25 @@ function addCustom() {
     customClasses.push(data);
 
     // Add this to our visible course listing
-    var courseDiv = addCourse(title, true);
-    courseDiv.data('custom', cid);
+    var courseDiv;
 
-    // Set customID to be empty
-    document.getElementById('customID').value = '';
+    // If the button is an 'Edit' button, remove the previous course
+    if (document.getElementById('addcustom').innerHTML === 'Edit') {
+        // Replace course
+        $('#courses').children().filter(function (i, e) { return $(e).data('custom') === cid; }).remove();
+        courseDiv = addCourse(title, true, false);
+
+        // Set button text to "Add"
+        document.getElementById('addcustom').innerHTML = 'Add';
+
+        // Set customID to be empty
+        document.getElementById('customID').value = '';
+    } else {
+        // Add new course
+        courseDiv = addCourse(title, true);
+    }
+
+    courseDiv.data('custom', cid);
 }
 
 function showEdit(e) {
@@ -314,12 +328,20 @@ function showEdit(e) {
         }
     }
 
+    // Retrieve start and end times and the day of the week
     var time = data.time.replace(/.* /, '').split('-'),
         day = data.time.replace(/ .*/, '');
     if (time.length === 1) {
         time[1] = time[0] + 1;
     }
 
+    // Set customID to match
+    document.getElementById('customID').value = course;
+
+    // Change 'Add' button to 'Edit'
+    document.getElementById('addcustom').innerHTML = 'Edit';
+
+    // Update modal fields to match this data
     document.getElementById('customTitle').value = title;
     document.getElementById('customLocation').value = data.location;
     document.getElementById('startTime').value = to12H(time[0]);
@@ -332,6 +354,8 @@ function showEdit(e) {
     });
     $('input[type="radio"][name="customDay"]').parent().removeClass('active'); // may not be needed?
     $('input[type="radio"][name="customDay"]').parent('[data-day="' + day + '"]').addClass('active');
+
+    // Activate 'Add' button if necessary
     checkFields();
 }
 
