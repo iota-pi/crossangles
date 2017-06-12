@@ -15,6 +15,7 @@ var finishedInit = false,
     shadowList = {},
     classLocations = {},
     ttCellHeight = 50,
+    ttHeadHeight = 40,
     waitingScripts = 0,
     timetableData = {},
     customClasses = [];
@@ -92,15 +93,12 @@ function restoreState(courseHash) {
         for (i = 0; i < courses.length; i += 1) {
             if (courses[i] !== 'CBS') { // NB: even though CBS is in courseList, it shouldn't be added in the DOM list of courses
                 if (timetableData.hasOwnProperty(courses[i])) {
-                    addCourse(courses[i] + ' - ' + timetableData[courses[i]][0]);
-                } else {
-                    console.log('unnecessary');
-                    addCourse(courses[i], true);
+                    addCourse(courses[i] + ' - ' + timetableData[courses[i]][0], false, false);
                 }
             }
         }
         for (i = 0; i < customClasses.length; i += 1) {
-            var courseDiv = addCourse(customClasses[i].component, true);
+            var courseDiv = addCourse(customClasses[i].component, true, false);
             courseDiv.data('custom', customClasses[i].course);
         }
 
@@ -123,7 +121,7 @@ function restoreState(courseHash) {
     }
 }
 
-function saveState() {
+function saveState(generated) {
     'use strict';
 
     if (!finishedInit) { return; }
@@ -139,11 +137,15 @@ function saveState() {
     options.cbs.ctr = document.getElementById('ctr').checked;
     options.cbs.cth = document.getElementById('cth').checked;
 
+    // Save generation specific options
+    if (generated === true) {
+        options.fullclasses = document.getElementById('fullclasses').checked;
+        options.canclash = document.getElementById('canclash').checked;
+    }
+
     // Save misc other options
     options.showcap = document.getElementById('showcap').checked;
-    options.fullclasses = document.getElementById('fullclasses').checked;
     options.showloc = document.getElementById('showloc').checked;
-    options.canclash = document.getElementById('canclash').checked;
     Cookies.set('options', options, { expires: 7 * 26 });
 
     // Save class locations
@@ -192,7 +194,7 @@ function removeCourse(e) {
 /* addCourse()
  * Adds the course from course input (typeahead) box to list of courses
  */
-function addCourse(course, custom) {
+function addCourse(course, custom, fade) {
     'use strict';
 
     // Add this course to our list of courses (provided it is not a custom class)
@@ -220,10 +222,12 @@ function addCourse(course, custom) {
     holder.append(div)
         .css('margin-bottom', 0);
 
-    div.children().hide();
-    div.hide().slideDown(200, function () {
-        div.children().fadeIn(200);
-    });
+    if (fade !== false) {
+        div.children().hide();
+        div.hide().slideDown(200, function () {
+            div.children().fadeIn(200);
+        });
+    }
 
     // Save current page state
     saveState();
@@ -303,7 +307,6 @@ function showEdit(e) {
         div = row.parent(),
         course = div.data('custom'),
         data;
-    console.log(course, customClasses);
     for (var i = 0; i < customClasses.length; i += 1) {
         if (customClasses[i].course === course) {
             data = customClasses[i];
@@ -417,13 +420,13 @@ function showEmpty() {
     'use strict';
 
     // Show all timetable rows initially
-    $('#timetable').find('.body:hidden').show();
+    $('#timetable').find('.body').css('display', 'block');
 }
 
 function hideEmpty(minY, maxY) {
     'use strict';
-    var shadows = $('.class-shadow'),
-        timetablebody = $('#timetable').find('.body'),
+    var timetablebody = $('#timetable').find('.body'),
+        shadows = timetablebody.find('.class-shadow'),
         toHide = $();
 
     // Check max and min and initialise them if they weren't given as parameters
@@ -445,7 +448,7 @@ function hideEmpty(minY, maxY) {
 
     // Hide all cells outside of the max and min Y offsets
     timetablebody.filter('[id^="M"]').not('[id$="_30"]').each(function (i, cell) {
-        var y = $(cell).position().top,
+        var y = ttHeadHeight + ttCellHeight * (cell.id.replace(/\D_/, '').replace('_30', '.5')),
             hour;
         if (y < minY || y >= maxY) {
             hour = cell.getAttribute('id').replace(/[^_\d]/g, '');
@@ -703,7 +706,7 @@ function createShadow(stream, courseID) {
             shadowHeight = ttCellHeight * duration,
             parentID = (time[0] + '_' + time[1]).replace('.5', '_30'),
             parent = $('#' + parentID),
-            y = parent.position().top,
+            y = ttHeadHeight + time[1] * ttCellHeight,
             div;
 
         // Create the shadow div
@@ -847,30 +850,6 @@ function clearLists(pageload) {
         $('[data-toggle="tooltip"]').tooltip({
             container: 'body'
         });
-
-        // Initialise clockpickers
-        var start = $('#cp_start').clockpicker({
-            placement: 'bottom',
-            align: 'left',
-            'default': 12,
-            donetext: 'Done',
-            twelvehour: true,
-            amOrPm: 'PM',
-            breakHour: 9,
-            afterHourSelect: function () { start.clockpicker('update'); },
-            afterUpdate: function() { checkFields(); }
-        });
-        var end = $('#cp_end').clockpicker({
-            placement: 'bottom',
-            align: 'left',
-            'default': 12,
-            donetext: 'Done',
-            twelvehour: true,
-            amOrPm: 'PM',
-            breakHour: 10,
-            afterHourSelect: function () { end.clockpicker('update'); },
-            afterUpdate: function() { checkFields(); }
-        });
     });
 
     // Load course data from courses.json
@@ -881,6 +860,32 @@ function clearLists(pageload) {
 
             createTable();
             restoreState(data);
+
+            // Initialise clockpickers
+            setTimeout(function () {
+                var start = $('#cp_start').clockpicker({
+                    placement: 'bottom',
+                    align: 'left',
+                    'default': 12,
+                    donetext: 'Done',
+                    twelvehour: true,
+                    amOrPm: 'PM',
+                    breakHour: 9,
+                    afterHourSelect: function () { start.clockpicker('update'); },
+                    afterUpdate: function() { checkFields(); }
+                });
+                var end = $('#cp_end').clockpicker({
+                    placement: 'bottom',
+                    align: 'left',
+                    'default': 12,
+                    donetext: 'Done',
+                    twelvehour: true,
+                    amOrPm: 'PM',
+                    breakHour: 10,
+                    afterHourSelect: function () { end.clockpicker('update'); },
+                    afterUpdate: function() { checkFields(); }
+                });
+            }, 1);
 
             finishedInit = true;
         });

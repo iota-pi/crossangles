@@ -81,8 +81,8 @@ def main():
     
     with open('data/courses.json', 'w') as f:
         json.dump(courses, f, separators=(',',':'))
-    with open('data/timetable.json', 'w') as f:
-        json.dump(timetables, f, separators=(',',':'))
+    #with open('data/timetable.json', 'w') as f:
+    #    json.dump(timetables, f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')

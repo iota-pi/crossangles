@@ -304,7 +304,7 @@ function generate(draw, pageload) {
         if (pageload) {
             restoreClasses();
         } else {
-            saveState();
+            saveState(true); // save state information (including generation-specific details)
         }
 
         hideEmpty(Math.floor(minY), Math.floor(maxY));
