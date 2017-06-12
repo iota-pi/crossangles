@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, timetableData, courseList, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError */
+/*globals $, search, console, window, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError */
 
 
 function fetchData(cb) {
@@ -25,7 +25,7 @@ function fetchData(cb) {
         data = {},
         i;
     for (i = 0; i < courseList.length; i += 1) {
-        if (courseList[i] !== 'CBS') {
+        if (courseList[i] !== 'CBS' && timetableData.hasOwnProperty(courseList[i])) {
             data[courseList[i]] = timetableData[courseList[i]].slice(1);
         }
     }
@@ -114,6 +114,18 @@ function fetchData(cb) {
             {time: 'H 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
             {time: 'H 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']}
         ];
+    }
+
+    // Add custom events
+    for (i = 0; i < customClasses.length; i += 1) {
+        var obj = {};
+        for (var prop in customClasses[i]) {
+            if (customClasses[i].hasOwnProperty(prop)) {
+                obj[prop] = customClasses[i][prop];
+            }
+        }
+        hash[obj.course] = {};
+        hash[obj.course][obj.component] = [obj];
     }
 
     // Sort hash into a list
@@ -279,11 +291,10 @@ function generate(draw, pageload) {
         }
 
         // Add shadows
-        done = {};
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j].course);
-                y = createShadow(list[i][j], courseID, done);
+                y = createShadow(list[i][j], courseID);
                 minY = Math.min(minY, y.min);
                 maxY = Math.max(maxY, y.max);
             }

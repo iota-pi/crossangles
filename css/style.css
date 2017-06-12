@@ -157,15 +157,18 @@ footer div.content {
     margin-top: -1px;
 }
 
-.glyphicon.glyphicon-remove-circle {
+.glyphicon-clickable {
 	font-size: 20px;
     vertical-align: top;
     color: #2196f3;
+    cursor: pointer;
+    padding-left: 7px;
+    padding-left: 0.5rem;
 }
-.glyphicon.glyphicon-remove-circle:hover {
+.glyphicon-clickable:hover {
     color: #147fd4;
 }
-.glyphicon.glyphicon-remove-circle:active {
+.glyphicon-clickable:active {
     color: #0060aa;
 }
 
