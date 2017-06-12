@@ -299,12 +299,6 @@ function addCustom() {
         // Replace course
         $('#courses').children().filter(function (i, e) { return $(e).data('custom') === cid; }).remove();
         courseDiv = addCourse(title, true, false);
-
-        // Set button text to "Add"
-        document.getElementById('addcustom').innerHTML = 'Add';
-
-        // Set customID to be empty
-        document.getElementById('customID').value = '';
     } else {
         // Add new course
         courseDiv = addCourse(title, true);
@@ -863,6 +857,15 @@ function clearLists(pageload) {
         // Add save as image event
         $('#addcustom').click(function () {
             addCustom();
+        });
+
+        // Always fix up customID and edit/add button in modal when closed
+        $('#customClass').on('hidden.bs.modal', function () {
+            // Set button text to "Add"
+            document.getElementById('addcustom').innerHTML = 'Add';
+
+            // Set customID to be empty
+            document.getElementById('customID').value = '';
         });
 
         // Add save as image event
