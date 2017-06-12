@@ -175,7 +175,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -186,23 +185,28 @@
                     <div class="panel-body">
                         <div class="checkbox-container">
                             <div class="checkbox-inline">
-                                <label><input type="checkbox" class="savedOption" id="showcap">Show approximate class enrolments</label>
-                            </div>
-                            <div class="checkbox-inline">
-                                <label><input type="checkbox" class="savedOption" id="fullclasses">Include full classes*</label>
-                            </div>
-                        </div>
-                        <div class="checkbox-container">
-                            <div class="checkbox-inline">
                                 <label><input type="checkbox" class="savedOption" id="showloc">Show class locations</label>
                             </div>
+                            <div class="checkbox-inline">
+                                <label><input type="checkbox" class="savedOption" id="showcap">Show approximate class enrolments</label>
+                            </div>
                         </div>
                         <div class="checkbox-container">
                             <div class="checkbox-inline">
-                                <label><input type="checkbox" class="savedOption" id="canclash">Allow class clashes</label>
+                                <label>
+                                    <input type="checkbox" id="fullclasses">
+                                    Include full classes
+                                    <span data-toggle="tooltip" title="Requires new timetable generation"><sup>*</sup></span>
+                                </label>
+                            </div>
+                            <div class="checkbox-inline">
+                                <label>
+                                    <input type="checkbox" id="canclash">
+                                    Allow class clashes
+                                    <span data-toggle="tooltip" title="Requires new timetable generation"><sup>*</sup></span>
+                                </label>
                             </div>
                         </div>
-
                         <div>
                             <input type="button" class="btn" value="Create Timetable" onclick="generate();" />
                         </div>

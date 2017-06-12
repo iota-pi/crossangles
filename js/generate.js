@@ -227,7 +227,8 @@ function fetchData(cb) {
         }
     }());
 
-    // Remove full classes unless they've explicitly been been requested
+    //// Remove full classes unless they've explicitly been been requested
+    // Remove closed, "stopped", tentative, etc. classes (anything but "open" or "full")
     (function removeFullClasses() {
         var i, j, stream;
         for (i = 0; i < list.length; i += 1) {
