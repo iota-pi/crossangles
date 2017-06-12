@@ -517,17 +517,18 @@ function stopDrag(e, ui) {
 
         // Update all linked classes
         $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').each(function () {
-            var otherClass = $(this),
+            var matchingClass = $(this),
             // Find the corresponding shadow
-                shadow = $(shadowList[otherClass.attr('id')][index]);
+                shadow = $(shadowList[matchingClass.attr('id')][index]);
 
             // Snap this class to it's shadow
-            snapTo(otherClass, shadow.parent());
+            snapTo(matchingClass, shadow.parent());
 
             // Update the class capacity
-            otherClass.find('.class-capacity').html(shadow.data('capacity'));
+            matchingClass.find('.class-capacity').html(shadow.data('capacity'));
+            matchingClass.find('.class-location').html(shadow.data('location'));
 
-            classLocations[otherClass.attr('id')] = shadow.parent().attr('id');
+            classLocations[matchingClass.attr('id')] = shadow.parent().attr('id');
             saveState();
         });
     }
