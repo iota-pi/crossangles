@@ -10,17 +10,13 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, clearWarning */
+/*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, clearWarning */
 
 
 function fetchData(cb) {
     'use strict';
 
-    //query = 'courses=' + encodeURI(JSON.stringify(courseList)),
     var list = [],
-    // TODO: use timetableData
-    //$.getJSON('data.php', query, function (r) {
-        // format: r = {code: [[class_type, status, enrolments, [[class_time, class_locations], ...]], ...]}
         hash = {},
         data = {},
         i;
@@ -227,8 +223,7 @@ function fetchData(cb) {
         }
     }());
 
-    //// Remove full classes unless they've explicitly been been requested
-    // Remove closed, "stopped", tentative, etc. classes (anything but "open" or "full")
+    // Remove full classes unless they've explicitly been been requested
     (function removeFullClasses() {
         var i, j, stream;
         for (i = 0; i < list.length; i += 1) {

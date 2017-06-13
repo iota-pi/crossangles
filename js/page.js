@@ -896,6 +896,9 @@ function clearLists(pageload) {
             document.getElementById('customID').value = '';
         });
 
+        // Show beta warning -- TEMP
+        $('#betawarning').modal('show');
+
         // Add save as image event
         $('.clockpicker input[type="text"]').change(function () {
             checkFields();
