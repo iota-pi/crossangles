@@ -237,13 +237,13 @@ footer div.content {
 /* grid styles */
 #timetable {
     overflow-y: hidden;
+    background-color: white;
 }
 
 .row-container {
     width: 100%;
     min-width: 510px;
     padding: 0 15px;
-    background-color: white;
     cursor: default;
 }
 
@@ -390,6 +390,10 @@ input[type="radio"].grey:checked::after {
 }
 input[type="radio"].grey::after {
     border-color: rgba(128, 128, 128, 0.65);
+}
+
+#generateWarning {
+	color: #ff9800;
 }
 
 /* misc styles */

@@ -18,7 +18,8 @@ var finishedInit = false,
     ttHeadHeight = 40,
     waitingScripts = 0,
     timetableData = {},
-    customClasses = [];
+    customClasses = [],
+    optionMemory = {};
 
 function init_typeahead() {
     'use strict';
@@ -478,6 +479,28 @@ function hideEmpty(minY, maxY) {
     toHide.hide();
 }
 
+function clearWarning() {
+    var warning = document.getElementById('generateWarning');
+
+    // update optionsMemory
+    optionMemory.fullclasses = document.getElementById('fullclasses').checked;
+    optionMemory.canclash = document.getElementById('canclash').checked;
+
+    updateWarning(); // since we just updated our optionsMemory variable, this will remove the warning
+}
+
+function updateWarning() {
+    var warning = document.getElementById('generateWarning');
+
+    if (document.getElementById('fullclasses').checked !== optionMemory.fullclasses || document.getElementById('canclash').checked !== optionMemory.canclash) {
+        warning.innerHTML = 'Some options have not yet taken effect. Please generate a new timetable to include these options.';
+        warning.style.display = 'block';
+    } else {
+        warning.innerHTML = '';
+        warning.style.display = 'none';
+    }
+}
+
 function getColour(index) {
     'use strict';
 
@@ -847,6 +870,11 @@ function clearLists(pageload) {
         // Add events to save the state when options are changed
         $('.savedOption').change(function () {
             saveState();
+        });
+
+        // Add generateOption handler
+        $('.generateOption').change(function () {
+            updateWarning();
         });
 
         // Add save as image event

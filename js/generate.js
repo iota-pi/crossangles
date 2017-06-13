@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, console, window, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError */
+/*globals $, search, console, window, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, clearWarning */
 
 
 function fetchData(cb) {
@@ -257,6 +257,10 @@ function generate(draw, pageload) {
     'use strict';
     if (draw !== false) { draw = true; }
     if (pageload !== true) { pageload = false; }
+
+    if (draw === true) { $('#timetable').addClass('loading'); }
+    clearWarning();
+
     var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined = use default, otherwise, max iterations for search will be 0 to prevent search
         maxClash  = +(document.getElementById('canclash').checked) * 100;
 
@@ -264,7 +268,11 @@ function generate(draw, pageload) {
         var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID, y, minY, maxY;
 
         if (!draw) { return; }
-        if (timetable === null) { pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again with different courses.'); return; }
+        if (timetable === null) {
+            pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again with different courses.');
+            $('#timetable').removeClass('loading');
+            return;
+        }
 
         minY = Infinity;
         maxY = -Infinity;
@@ -309,6 +317,8 @@ function generate(draw, pageload) {
         }
 
         hideEmpty(Math.floor(minY), Math.floor(maxY));
+
+        $('#timetable').removeClass('loading');
     }
 
     fetchData(makeTimetable);
