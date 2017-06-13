@@ -204,17 +204,17 @@ function addCourse(course, custom, fade) {
 
     // Create DOM structure for course display list
     var holder = $('#courses'),
-        remove = $('<span>').addClass('glyphicon glyphicon-remove-circle glyphicon-clickable remove-icon ').attr('aria-hidden', true).attr('data-toggle', 'tooltip').attr('title', 'Remove').click(removeCourse),
+        remove = $('<span>').addClass('glyphicon glyphicon-remove-circle glyphicon-clickable remove-icon').attr('aria-hidden', true).attr('data-toggle', 'tooltip').attr('title', 'Remove').click(removeCourse),
         edit = $('<span>').attr('data-toggle', 'tooltip').attr('title', 'Edit').append(
                $('<span>').addClass('glyphicon glyphicon-edit glyphicon-clickable edit-icon')
                           .attr('aria-hidden', true)
                           .attr('data-toggle', 'modal')
                           .attr('data-target', '#customClass')
                           .click(showEdit)),
-        rightCol = $('<div>').addClass('col-2').css('text-align', 'right').append(remove),
-        bothIcons = (custom !== true) ? rightCol : rightCol.prepend(edit),
+        rightCol = $('<div>').addClass('col-4 col-sm-2 button-col').css('text-align', 'right').append($('<div class="vert-holder">').append(remove)),
+        bothIcons = (custom !== true) ? rightCol : rightCol.prepend($('<div class="vert-holder">').append(edit)),
         row = $('<div>').addClass('row')
-                                .html('<div class="col-10">' + course + '</div>')
+                                .html('<div class="col-8 col-sm-10">' + course + '</div>')
                                 .append(rightCol),
         div = $('<div>').append(row).data('custom', false);
 

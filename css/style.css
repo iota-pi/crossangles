@@ -157,13 +157,29 @@ footer div.content {
     margin-top: -1px;
 }
 
+.vert-holder {
+    display: inline-block;
+    height: 100%;
+    position: relative;
+    padding-right: 14px;
+    padding-right: 1em;
+    padding-left: 14px;
+    padding-left: 1em;
+}
+
+.button-col {
+    padding-left: 0;
+    min-width: 70px;
+}
+
 .glyphicon-clickable {
 	font-size: 20px;
-    vertical-align: top;
     color: #2196f3;
     cursor: pointer;
-    padding-left: 7px;
-    padding-left: 0.5rem;
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 .glyphicon-clickable:hover {
     color: #147fd4;
