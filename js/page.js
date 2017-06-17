@@ -445,38 +445,18 @@ function showEmpty() {
 function hideEmpty(minY, maxY) {
     'use strict';
     var timetablebody = $('#timetable').find('.body'),
-        shadows = timetablebody.find('.class-shadow'),
-        toHide = $();
-
-    // Check max and min and initialise them if they weren't given as parameters
-    minY = minY || Infinity;
-    maxY = maxY || -Infinity;
-    if (minY === Infinity) {
-        // Find max and min Y offsets
-        shadows.each(function (i, shadow) {
-            var y = $(shadow).parent().position().top;
-            minY = Math.min(minY, y);
-            maxY = Math.max(maxY, y + $(shadow).height());
-        });
-    }
-
-    // Quit without hiding anything if minY is still Infinity
-    if (minY === Infinity) {
-        return;
-    }
+        shadows = timetablebody.find('.class-shadow');
 
     // Hide all cells outside of the max and min Y offsets
-    timetablebody.filter('[id^="M"]').not('[id$="_30"]').each(function (i, cell) {
-        var y = ttHeadHeight + ttCellHeight * (cell.id.replace(/\D_/, '').replace('_30', '.5')),
-            hour;
-        if (y < minY || y >= maxY) {
-            hour = cell.getAttribute('id').replace(/[^_\d]/g, '');
-            toHide = toHide.add(timetablebody.filter('[id$="' + hour + '"]'));
-            toHide = toHide.add(timetablebody.filter('[id$="' + hour + '_30"]'));
+    var i;
+    for (i = 0; i < timetablebody.length; i += 1) {
+        var cell = timetablebody[i],
+            y = ttHeadHeight + ttCellHeight * (+cell.id.replace(/\D+_/, '').replace('_30', '') + 1);
+        // NB: this Y value is actually the Y value for the hour after, so as to prevent rows from being hidden if a class starts on the halfhour
+        if (y < minY || y > maxY) {
+            cell.style.display = 'none';
         }
-    });
-
-    toHide.hide();
+    }
 }
 
 function clearWarning() {
@@ -628,22 +608,20 @@ function unique(arr1, arr2) {
 
 function createClassDiv(title, location, capacity, id, colour, duration, container) {
     'use strict';
-    return $('<div>')
-        .html('<div>' + title + location + capacity + '</div>')
-        .draggable({
+    var $div = $('<div>').attr('id', id).addClass('class-drag').draggable({
             stack: '.class-drag',
             scroll: true,
             containment: container,
             start: startDrag,
             stop: stopDrag
-        })
-        .css({
-            position: 'absolute',
-            'background-color': 'rgb(' + colour + ')',
-            height: ttCellHeight * duration
-        })
-        .attr('id', id)
-        .addClass('class-drag');
+        }),
+        div = $div[0];
+    div.innerHTML = '<div>' + title + location + capacity + '</div>';
+    div.style.position = 'absolute';
+    div.style.backgroundColor = 'rgb(' + colour + ')';
+    div.style.height = (ttCellHeight * duration) + 'px';
+
+    return $div;
 }
 
 // Creates a draggable class element
@@ -751,10 +729,9 @@ function createShadow(stream, courseID) {
             div;
 
         // Create the shadow div
-        div = $('<div>').css({
-            'background-color': 'rgba(' + colour + ', 0.7)',
-            height: shadowHeight
-        }).addClass('class-shadow');
+        div = $('<div class="class-shadow">');
+        div[0].style.backgroundColor = 'rgba(' + colour + ', 0.7)';
+        div[0].style.height = shadowHeight + 'px';
         div.data('capacity', capacity.replace(',', ' / '));
         div.data('location', location.replace(',', ' / '));
         div.appendTo(parent);
@@ -785,7 +762,7 @@ function restoreClasses() {
     var key, currentClass, shadows, parent, shadow;
     for (key in classLocations) {
         if (classLocations.hasOwnProperty(key)) {
-            currentClass = $('[id="' + key + '"]');
+            currentClass = $('[id="' + key + '"]'); // don't replace with ('#' + key), it won't work!
             shadows = shadowList[key];
             parent = $('#' + classLocations[key]);
             shadow = parent.find(shadows);
@@ -897,7 +874,7 @@ function clearLists(pageload) {
         });
 
         // Show beta warning -- TEMP
-        $('#betawarning').modal('show');
+        //$('#betawarning').modal('show');
 
         // Add save as image event
         $('.clockpicker input[type="text"]').change(function () {
