@@ -32,12 +32,13 @@ footer {
 	background-color: #303030;
 	text-align: center;
     width: 100%;
-    position: absolute;
-    bottom: 0;
+    max-height: 70px;
 }
+
 footer p {
     margin: 0;
 }
+
 footer div.content {
     padding: 10px;
 }

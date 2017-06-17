@@ -20,14 +20,18 @@
 #
 
 from lxml import html, etree
+import datetime
 import requests
 import json
 import time
 import re
 
+SEMESTER = 'S2'
+YEAR = 2017
+
 bytecount = 0
-semcodes = {'sem1': 2, 'sem2': 3, 'summer': 1}
-semester = semcodes['sem2']
+semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
+semester = semcodes[SEMESTER]
 
 def main():
     global bytecount
@@ -79,8 +83,11 @@ def main():
         # Some progress output
         print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
     
-    with open('data/courses.json', 'w') as f:
-        json.dump(courses, f, separators=(',',':'))
+    update_date = datetime.date.today().strftime('%d/%m/%Y')
+    update_time = datetime.datetime.now().strftime('%H:%M')
+
+    with open('data/timetable.json', 'w') as f:
+        json.dump([timetables, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
     #with open('data/timetable.json', 'w') as f:
     #    json.dump(timetables, f, separators=(',',':'))
     

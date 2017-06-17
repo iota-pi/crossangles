@@ -18,6 +18,7 @@ var finishedInit = false,
     ttHeadHeight = 40,
     waitingScripts = 0,
     timetableData = {},
+    metadata = {},
     customClasses = [],
     optionMemory = {};
 
@@ -889,14 +890,20 @@ function clearLists(pageload) {
 
     // Load course data from courses.json
     $.getJSON('data/timetable.json', function (data) {
-        timetableData = data;
+        timetableData = data[0];
+        metadata = data[1];
+
         $(document).ready(function () {
+            document.getElementById('meta-sem').innerHTML = metadata.sem;
+            document.getElementById('meta-year').innerHTML = metadata.year;
+            document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
+
             init_typeahead();
 
             createTable();
             restoreState(data);
 
-            // Initialise clockpickers
+            // Initialise clockpickers (asynchronously)
             setTimeout(function () {
                 var start = $('#cp_start').clockpicker({
                     placement: 'bottom',
