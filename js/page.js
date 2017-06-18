@@ -140,10 +140,8 @@ function saveState(generated) {
     options.cbs.cth = document.getElementById('cth').checked;
 
     // Save generation specific options
-    if (generated === true) {
-        options.fullclasses = document.getElementById('fullclasses').checked;
-        options.canclash = document.getElementById('canclash').checked;
-    }
+    options.fullclasses = optionMemory.fullclasses;
+    options.canclash = optionMemory.canclash;
 
     // Save misc other options
     options.showcap = document.getElementById('showcap').checked;
@@ -277,10 +275,11 @@ function addCustom() {
         start = to24H(document.getElementById('startTime').value),
         end = to24H(document.getElementById('endTime').value),
         day = $('input[type="radio"][name="customDay"]').parent('.active').data('day'),
-        time = day + ' ' + start + ((end - start === 1) ? '-' + end : ''),
+        time = day + ' ' + start + ((end - start !== 1) ? '-' + end : ''),
         cid = document.getElementById('customID').value || uniqueID(),
         colour = getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked'), ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, ''),
         data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
+    console.log(start, end);
 
     // Remove this course from customClasses list if it already exists
     for (var i = 0; i < customClasses.length; i += 1) {
@@ -554,12 +553,12 @@ function stopDrag(e, ui) {
             matchingClass.find('.class-location').html(shadow.data('location'));
 
             classLocations[matchingClass.attr('id')] = shadow.parent().attr('id');
-            saveState();
         });
     }
 
     // Hide visible all shadows
     $('.class-shadow').fadeOut(200);
+    saveState();
 }
 
 // Add push functionality to jQuery objects
@@ -825,6 +824,8 @@ function clearLists(pageload) {
     "use strict";
 
     $(document).ready(function () {
+        createTable();
+
         // Add event to toggle class capacities
         $('#showcap').change(function () {
             var divs = $('.class-capacity:parent');
@@ -874,9 +875,6 @@ function clearLists(pageload) {
             document.getElementById('customID').value = '';
         });
 
-        // Show beta warning -- TEMP
-        //$('#betawarning').modal('show');
-
         // Add save as image event
         $('.clockpicker input[type="text"]').change(function () {
             checkFields();
@@ -894,14 +892,26 @@ function clearLists(pageload) {
         metadata = data[1];
 
         $(document).ready(function () {
+            var previousVisit;
             document.getElementById('meta-sem').innerHTML = metadata.sem;
             document.getElementById('meta-year').innerHTML = metadata.year;
             document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
 
             init_typeahead();
 
-            createTable();
-            restoreState(data);
+            // Check if this user has visited the page before
+            previousVisit = Cookies.getJSON('prevVisit') || false;
+            if (previousVisit === false) {
+                // Show help page on first visit
+                var visitorID = getRandomInt();
+                Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
+                $('#helppanel').modal('show');
+            } else {
+                // Restore previous state on later visits
+                previousVisit[1] += 1;
+                Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
+                restoreState(data);
+            }
 
             // Initialise clockpickers (asynchronously)
             setTimeout(function () {

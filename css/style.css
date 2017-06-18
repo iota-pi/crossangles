@@ -26,6 +26,14 @@ span.blue {
     color: #2196f3;
 }
 
+img.modal-img {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    object-fit: scale-down;
+    object-position: center;
+}
+
 /* footer styles */
 footer {
 	color: white;
@@ -207,6 +215,7 @@ footer div.content {
     padding: 0 5px;
     transition-property: opacity;
     transition-duration: 0.1s;
+    cursor: pointer;
 }
 
 .class-drag.ui-draggable-dragging {
