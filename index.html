@@ -46,116 +46,6 @@
             </div>
         </nav>
 
-        <div class="modal fade" id="helppanel" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><img src="favicon.png" width="24" height="24" />CrossAngles</h5>
-                    </div>
-                    <div class="modal-body">
-                        <h5>Welcome!</h5>
-                        <p class="small">
-                            This tool is currently in private beta. We ask you to not distribute this link. When this tool is publicly released, it will be hosted at another location.
-                        </p>
-                        <p>
-                            To use this tool, first select the courses you would like to enrol in for next semester.
-                            <img src="img/courses.png" class="modal-img" />
-                        </p>
-                        <p>
-                            Then, generate a timetable and drag the classes around to suit you best!
-                            <img src="img/drag.png" class="modal-img" />
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="customClass" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalLabel">Custom commitment</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid" style="padding: 0px;">
-                            <input type="hidden" id="customID" />
-                            <input type="text" class="form-control" placeholder="Title" id="customTitle" />
-                            <p></p>
-                            <input type="text" class="form-control" placeholder="Location (optional)" id="customLocation" />
-                            <p></p>
-                            <div class="row-container" style="min-width: initial;">
-                                <div class="row" data-toggle="buttons">
-                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="M">
-                                        <input type="radio" name="customDay" data-day="M" autocomplete="off" />Monday
-                                    </div>
-                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="T">
-                                        <input type="radio" name="customDay" data-day="T" autocomplete="off" />Tuesday
-                                    </div>
-                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="W">
-                                        <input type="radio" name="customDay" data-day="W" autocomplete="off" />Wednesday
-                                    </div>
-                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="H">
-                                        <input type="radio" name="customDay" data-day="H" autocomplete="off" />Thursday
-                                    </div>
-                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="F">
-                                        <input type="radio" name="customDay" data-day="F" autocomplete="off" />Friday
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="input-group clockpicker" id="cp_start">
-                                        <span class="input-group-addon">Start</span>
-                                        <input type="text" class="form-control" id="startTime" readonly>
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-time"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="input-group clockpicker" id="cp_end">
-                                        <span class="input-group-addon">Finish</span>
-                                        <input type="text" class="form-control" id="endTime" readonly>
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-time"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p></p>
-                            <div class="input-group">
-                                <span class="input-group-addon">Colour</span>
-                                <div class="flow">
-                                    <input type="radio" name="customColour" checked class="crimson" />
-                                    <input type="radio" name="customColour" class="red" />
-                                    <input type="radio" name="customColour" class="orange" />
-                                </div>
-                                <div class="flow">
-                                    <input type="radio" name="customColour" class="green" />
-                                    <input type="radio" name="customColour" class="darkgreen" />
-                                    <input type="radio" name="customColour" class="midblue" />
-                                </div>
-                                <div class="flow">
-                                    <input type="radio" name="customColour" class="deepblue" />
-                                    <input type="radio" name="customColour" class="purple" />
-                                    <input type="radio" name="customColour" class="grey" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="addcustom" class="btn btn-primary" data-dismiss="modal" disabled>Add</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="container noselect">
             <div class="panel-group">
                 <div class="panel panel-primary">
@@ -273,6 +163,116 @@
                 </div>
             </div>
         </footer>
+
+        <div class="modal fade" id="customClass" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Custom commitment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid" style="padding: 0px;">
+                            <input type="hidden" id="customID" />
+                            <input type="text" class="form-control" placeholder="Title" id="customTitle" />
+                            <p></p>
+                            <input type="text" class="form-control" placeholder="Location (optional)" id="customLocation" />
+                            <p></p>
+                            <div class="row-container" style="min-width: initial;">
+                                <div class="row" data-toggle="buttons">
+                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="M">
+                                        <input type="radio" name="customDay" data-day="M" autocomplete="off" />Monday
+                                    </div>
+                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="T">
+                                        <input type="radio" name="customDay" data-day="T" autocomplete="off" />Tuesday
+                                    </div>
+                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="W">
+                                        <input type="radio" name="customDay" data-day="W" autocomplete="off" />Wednesday
+                                    </div>
+                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="H">
+                                        <input type="radio" name="customDay" data-day="H" autocomplete="off" />Thursday
+                                    </div>
+                                    <div class="col-xs-12 col-md btn btn-secondary" data-day="F">
+                                        <input type="radio" name="customDay" data-day="F" autocomplete="off" />Friday
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="input-group clockpicker" id="cp_start">
+                                        <span class="input-group-addon">Start</span>
+                                        <input type="text" class="form-control" id="startTime" readonly>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="input-group clockpicker" id="cp_end">
+                                        <span class="input-group-addon">Finish</span>
+                                        <input type="text" class="form-control" id="endTime" readonly>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-time"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p></p>
+                            <div class="input-group">
+                                <span class="input-group-addon">Colour</span>
+                                <div class="flow">
+                                    <input type="radio" name="customColour" checked class="crimson" />
+                                    <input type="radio" name="customColour" class="red" />
+                                    <input type="radio" name="customColour" class="orange" />
+                                </div>
+                                <div class="flow">
+                                    <input type="radio" name="customColour" class="green" />
+                                    <input type="radio" name="customColour" class="darkgreen" />
+                                    <input type="radio" name="customColour" class="midblue" />
+                                </div>
+                                <div class="flow">
+                                    <input type="radio" name="customColour" class="deepblue" />
+                                    <input type="radio" name="customColour" class="purple" />
+                                    <input type="radio" name="customColour" class="grey" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="addcustom" class="btn btn-primary" data-dismiss="modal" disabled>Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="helppanel" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><img src="favicon.png" width="24" height="24" />CrossAngles</h5>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Welcome!</h5>
+                        <p class="small">
+                            This tool is currently in private beta. We ask you to not distribute this link. When this tool is publicly released, it will be hosted at another location.
+                        </p>
+                        <p>
+                            To use this tool, first select the courses you would like to enrol in for next semester.
+                            <img src="img/courses.png" class="modal-img" />
+                        </p>
+                        <p>
+                            Then, generate a timetable and drag the classes around to suit you best!
+                            <img src="img/drag.png" class="modal-img" />
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Got it!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <noscript id="deferred-styles">
             <link rel="stylesheet" href="css/tether.min.css" type="text/css" />
