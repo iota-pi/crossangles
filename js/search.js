@@ -1,18 +1,24 @@
 /* search.js
  *
  * Defines search algorithm to use for finding best timetable as well as evaluation function for timetables
+ *
+ * Authors: David
  */
 
 /*globals console, scoreTimetable */
 
-function search(list, maxClash) {
+function search(list, maxClash, searchMax) {
     'use strict';
     if (maxClash === undefined) { maxClash = 0; }
+    if (list.length === 0) { return []; }
 
     // Checks whether two given time strings clash with each other
     function classClash(a, b) {
         // If days are different, then there is clearly no clash
         if (a[0] !== b[0]) { return false; }
+
+        // If a clash is permitted for either course, there is no clash to worry about
+        if (a[3] || b[3]) { return false; }
 
         // The overlap between two intervals will be the difference (if positive) between the smallest upper-bound and the largest lower-bound
         return Math.max(0, Math.min(a[2], b[2]) - Math.max(a[1], b[1]));
@@ -25,7 +31,7 @@ function search(list, maxClash) {
         for (i = 0; i < newTime.length; i += 1) {
             for (j = 0; j < timetable.length; j += 1) {
                 stream = streams[j][timetable[j]];
-                times = stream[0];
+                times = stream.time;
                 for (k = 0; k < times.length; k += 1) {
                     count += classClash(newTime[i], times[k]);
                 }
@@ -42,7 +48,7 @@ function search(list, maxClash) {
             stream = streams[i];
 
         // Keep looking for a class while there is a clash
-        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo][0]) > maxClash) {
+        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo].time) > maxClash) {
             classNo += 1;
         }
 
@@ -170,6 +176,7 @@ function search(list, maxClash) {
     // Evolves given list of parents
     function evolve(parents, maxParents, maxIter, biasTop) {
         if (parents === null) { return null; }
+        if (maxIter === 0) { return parents[0]; }
 
         maxIter = maxIter || 5000;
         maxParents = maxParents || 20;
@@ -180,15 +187,15 @@ function search(list, maxClash) {
             parent,
             child,
             time = (new Date()).getTime(),
-            maxRunTime = 500;
+            maxRunTime = 500;       // maximum time to run search in ms
 
         for (i = 0; i < maxIter; i += 1) {
-            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted sort? (probably not necessary...)
+            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted bias? (probably not necessary...)
             parent = parents[index];
             child = mutate(parent);
             parents.push(child);
 
-            // Re-sort and cull parents every 10 iterations
+            // Re-sort and cull parents every 10th iteration
             if (i % 10 === 9) {
                 // Sort parents array by descending sort
                 parents.sort(parentSort);
@@ -207,14 +214,15 @@ function search(list, maxClash) {
         }
 
         // Return the best timetable
+        parents.sort(parentSort);
         return parents[0];
     }
 
-    var parents = abiogenesis(10),
-        best = evolve(parents);
+    var initial = (searchMax > 0) ? 50 : 1,
+        parents = abiogenesis(initial),
+        best = evolve(parents, undefined, searchMax);
 
-    if (best === null) { console.error('No timetables could be generated!'); return null; }
-    console.log('Generated timetable with score:', best.score);
+    if (best === null) { return null; }
 
     // Return actual stream elements rather than only indexes
     return best.timetable.map(function (x, i) { return best.streams[i][x]; });

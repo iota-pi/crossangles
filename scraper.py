@@ -20,14 +20,18 @@
 #
 
 from lxml import html, etree
+import datetime
 import requests
 import json
 import time
 import re
 
+SEMESTER = 'S2'
+YEAR = 2017
+
 bytecount = 0
-semcodes = {'sem1': 2, 'sem2': 3, 'summer': 1}
-semester = semcodes['sem1']
+semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
+semester = semcodes[SEMESTER]
 
 def main():
     global bytecount
@@ -70,7 +74,7 @@ def main():
         timetable = {}
         for i in range(len(classCounts)):
             count = classCounts[i]
-            timetable[cc[i][0]] = timetableRaw[:count]
+            timetable[cc[i][0]] = [courses[cc[i][0]]] + timetableRaw[:count]
             del timetableRaw[:count]
         
         # Update dict of timetables
@@ -79,10 +83,13 @@ def main():
         # Some progress output
         print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
     
-    with open('data/courses.json', 'w') as f:
-        json.dump(courses, f, separators=(',',':'))
+    update_date = datetime.date.today().strftime('%d/%m/%Y')
+    update_time = datetime.datetime.now().strftime('%H:%M')
+
     with open('data/timetable.json', 'w') as f:
-        json.dump(timetables, f, separators=(',',':'))
+        json.dump([timetables, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
+    #with open('data/timetable.json', 'w') as f:
+    #    json.dump(timetables, f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')
@@ -149,7 +156,7 @@ def splitTimetableData(string):
     # Remove /odd and /even, as well as Comb/w descriptors
     string = re.sub(r'Comb/w.*', '', string.replace('/odd', '').replace('/even', '')).strip()
 
-    # Handle blank strings - just return a 3-tuple of ''s
+    # Handle blank strings - just return a tuple of empty strings
     if string == '':
         #return [('', '', '')]
         return [('', '')]
@@ -190,7 +197,7 @@ def splitTimetableData(string):
         location = ''
 
     #return [(time, weeks, location)]
-    return [(subday(time.strip('#')), location)]
+    return [(subday(time), location)]
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
@@ -206,7 +213,7 @@ def loadPage(url):
 # stripComments(): removes all HTML comments from parsed HTML (required for traversing child nodes without error)
 #
 def stripComments(tree):
-    comments = tree.xpath('//comment()')
+    comments = tree.xpath('//table[3]//comment()')
 
     for c in comments:
         p = c.getparent()

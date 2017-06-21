@@ -1,5 +1,7 @@
 /* evaluate.js
  * Defines evaluation functions for scoring timetable
+ *
+ * Authors: David
  */
 
 /*globals console */
@@ -18,7 +20,7 @@ function timetableToArray(timetableData, streams) {
 
     // Convert to timetable array
     for (i = 0; i < timetableData.length; i += 1) {
-        times = timetableData[i][0];
+        times = timetableData[i].time;
         for (j = 0; j < times.length; j += 1) {
             time = times[j];
             day = day_of_week.indexOf(time[0]);
@@ -29,7 +31,7 @@ function timetableToArray(timetableData, streams) {
                 }
 
                 // Append this course code to any previous course codes in this half-hour slot
-                timetable[day][hour * 2].push(timetableData[i][3]); // element 3 is course code
+                timetable[day][hour * 2].push(timetableData[i].course);
             }
         }
     }
@@ -53,9 +55,9 @@ function scoreFreeDays(timetable) {
     return score;
 }
 
-function scoreClashes(timetable, timetableData) {
+function scoreClashes(timetable) {
     'use strict';
-    var clashScore = -500, // per half hour
+    var clashScore = -200, // per half hour
         score = 0,
         i,
         j;
@@ -63,9 +65,9 @@ function scoreClashes(timetable, timetableData) {
     for (i = 0; i < timetable.length; i += 1) {
         for (j = 0; j < timetable[i].length; j += 1) {
             if (timetable[i][j] !== undefined) {
-                // There is a clash is there is more than one element in each half-hour slot
+                // There is a clash whenever there is more than one element in each half-hour slot
                 if (timetable[i][j].length > 1) {
-                    score += clashScore;
+                    score += clashScore * (timetable[i][j].length - 1);
                 }
             }
         }
@@ -94,7 +96,7 @@ function scoreTimes(timetableData) {
         times;
 
     for (i = 0; i < timetableData.length; i += 1) {
-        times = timetableData[i][0];
+        times = timetableData[i].time;
         for (j = 0; j < times.length; j += 1) {
             score += scoreClassTime(times[j][1], times[j][2]);
         }
@@ -167,7 +169,7 @@ function scoreTimetable(indexTimetable, streams) {
         score = 0;
 
     score += scoreFreeDays(timetable);
-    score += scoreClashes(timetable, timetableData);
+    score += scoreClashes(timetable);
     score += scoreTimes(timetableData);
     score += scoreProximity(timetable);
     score += scoreDayLength(timetable);
