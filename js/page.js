@@ -914,30 +914,28 @@ function clearLists(pageload) {
             }
 
             // Initialise clockpickers (asynchronously)
-            setTimeout(function () {
-                var start = $('#cp_start').clockpicker({
-                    placement: 'bottom',
-                    align: 'left',
-                    'default': 12,
-                    donetext: 'Done',
-                    twelvehour: true,
-                    amOrPm: 'PM',
-                    breakHour: 9,
-                    afterHourSelect: function () { start.clockpicker('update'); },
-                    afterUpdate: function() { checkFields(); }
-                });
-                var end = $('#cp_end').clockpicker({
-                    placement: 'bottom',
-                    align: 'left',
-                    'default': 12,
-                    donetext: 'Done',
-                    twelvehour: true,
-                    amOrPm: 'PM',
-                    breakHour: 10,
-                    afterHourSelect: function () { end.clockpicker('update'); },
-                    afterUpdate: function() { checkFields(); }
-                });
-            }, 1);
+            var start = $('#cp_start').clockpicker({
+                placement: 'bottom',
+                align: 'left',
+                'default': 12,
+                donetext: 'Done',
+                twelvehour: true,
+                amOrPm: 'PM',
+                breakHour: 9,
+                afterHourSelect: function () { start.clockpicker('update'); },
+                afterUpdate: function() { checkFields(); }
+            });
+            var end = $('#cp_end').clockpicker({
+                placement: 'bottom',
+                align: 'left',
+                'default': 12,
+                donetext: 'Done',
+                twelvehour: true,
+                amOrPm: 'PM',
+                breakHour: 10,
+                afterHourSelect: function () { end.clockpicker('update'); },
+                afterUpdate: function() { checkFields(); }
+            });
 
             finishedInit = true;
         });
