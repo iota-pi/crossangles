@@ -785,6 +785,11 @@ function checkFields() {
         title = document.getElementById('customTitle'),
         button = document.getElementById('addcustom');
 
+    if (endTime === undefined) {
+        endTime = to12H(startTime + 1);
+        end.value = endTime;
+    }
+
     if (startTime === undefined || endTime === undefined || day === undefined) {
         return false;
     }

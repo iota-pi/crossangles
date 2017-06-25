@@ -3,7 +3,8 @@
 
 ## Ideas to implement
 
-  * Favicon
+  * Better favicon
+  * Prettier "create timetable" button
   * Fullscreen timetable view?
 
 To view ideas for the project generated at our first planning meeting or add other ideas, see `ideas.txt`
