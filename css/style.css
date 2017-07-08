@@ -160,35 +160,38 @@ footer div.content {
 }
 
 #courses>div {
+    display: flex;
+    align-items: center;
     padding: 10px;
     border-top: 1px solid #dddddd;
+}
+#courses>div:last-child {
     border-bottom: 1px solid #dddddd;
-    margin-top: -1px;
 }
 
-.vert-holder {
-    display: inline-block;
-    height: 100%;
-    position: relative;
-    padding-right: 14px;
-    padding-right: 1em;
-    padding-left: 14px;
-    padding-left: 1em;
+#courses>div>div:first-child {
+    margin-right: auto;
+}
+#courses>div>div:last-child {
+    align-self: flex-end;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: flex;
+    align-items: center;
+}
+#courses .glyphicon {
+    margin: auto;
+    padding-left: 5px;
 }
 
 .button-col {
     padding-left: 0;
-    min-width: 70px;
 }
 
 .glyphicon-clickable {
 	font-size: 20px;
     color: #2196f3;
     cursor: pointer;
-
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
 }
 .glyphicon-clickable:hover {
     color: #147fd4;
@@ -200,6 +203,10 @@ footer div.content {
 #glyphloader {
     visibility: hidden; /* stop it from being visible, but force the icon to load still */
     position: absolute; /* don't let the glyphloader take up any space on the page */
+}
+
+.glyphicon {
+    position: static;
 }
 
 
@@ -299,16 +306,16 @@ footer div.content {
 
 /* checkbox styles */
 .checkbox-container {
-    margin-left: -20px;
-    margin-bottom: 5px;
+    margin-left: -15px;
 }
 
 .checkbox-inline+.checkbox-inline {
 	margin: 0;
+    padding-left: 15px;
 }
 
 .checkbox-inline label {
-	min-width: 150px;
+	min-width: 145px;
 }
 
 /* radio button styles */
