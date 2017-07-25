@@ -158,7 +158,7 @@ function saveState(generated) {
 function removeCourse(e) {
     'use strict';
 
-    var row = $(e.currentTarget).parents('div.row'),
+    var row = $(e.currentTarget).parents('div').last().parent(),
         parent = row.parent(),
         div = row.children().first(),
         course = div.html().replace(/ -.+/, '');
