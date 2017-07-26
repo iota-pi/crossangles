@@ -110,7 +110,7 @@ function scoreProximity(timetable) {
 
     // NB: the way that this scoring is done, since CBS events are 2 half-hours long,
     // they will each automatically be given 2*adjacentScore points from this function
-    var adjacentScore = 50,
+    var adjacentScore = 25,
         score = 0,
         i,
         j,
@@ -164,7 +164,7 @@ function scoreDayLength(timetable) {
 }
 
 function scoreArvoTeaGap(timetable) {
-    var arvoTeaScore = 20,
+    var arvoTeaScore = 30,
         i,
         j,
         k;
