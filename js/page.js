@@ -277,7 +277,6 @@ function addCustom() {
         cid = document.getElementById('customID').value || uniqueID(),
         colour = getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked'), ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, ''),
         data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
-    console.log(start, end);
 
     // Remove this course from customClasses list if it already exists
     for (var i = 0; i < customClasses.length; i += 1) {
@@ -324,7 +323,7 @@ function showEdit(e) {
     var time = data.time.replace(/.* /, '').split('-'),
         day = data.time.replace(/ .*/, '');
     if (time.length === 1) {
-        time[1] = time[0] + 1;
+        time[1] = +time[0] + 1;
     }
 
     // Set customID to match
@@ -782,23 +781,34 @@ function checkFields() {
         title = document.getElementById('customTitle'),
         button = document.getElementById('addcustom');
 
-    if (endTime === undefined) {
+    // If start time has just been set, but no end time yet, initialise end time to startTime + 1 hour
+    if (endTime === undefined && startTime !== undefined) {
         endTime = to12H(startTime + 1);
         end.value = endTime;
     }
 
-    if (startTime === undefined || endTime === undefined || day === undefined) {
+    // Make sure both a start and end time has been chosen
+    if (startTime === undefined || endTime === undefined) {
         return false;
     }
 
+    // Make end-time be red if it is before (or the same time as) the start time
     if (endTime <= startTime) {
         end.style.color = 'red';
         button.disabled = true;
         return false;
+    } else {
+        button.disabled = false;
+        end.style.color = '';
     }
 
-    button.disabled = false;
-    end.style.color = '';
+    // Make sure day is set
+    // NB: should be done after colour setting
+    if (day === undefined) {
+        return false;
+    }
+
+    // No problems found
     return true;
 }
 
