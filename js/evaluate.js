@@ -31,7 +31,7 @@ function timetableToArray(timetableData, streams) {
                 }
 
                 // Append this course code to any previous course codes in this half-hour slot
-                timetable[day][hour * 2].push(timetableData[i].course);
+                timetable[day][hour * 2].push(timetableData[i].course + '|' + timetableData[i].component);
             }
         }
     }
@@ -113,19 +113,22 @@ function scoreProximity(timetable) {
     var adjacentScore = 50,
         score = 0,
         i,
-        j;
+        j,
+        k;
 
     for (i = 0; i < timetable.length; i += 1) {
         for (j = 0; j < timetable[i].length; j += 1) {
             if (timetable[i][j] !== undefined) {
-                if (timetable[i][j].indexOf('CBS') !== -1) {
-                    // Check previous half hour
-                    if (timetable[i][j - 1] !== undefined) {
-                        score += adjacentScore;
-                    }
-                    // Check next half hour
-                    if (timetable[i][j + 1] !== undefined) {
-                        score += adjacentScore;
+                for (k = 0; k < timetable[i][j].length; k += 1) {
+                    if (timetable[i][j][k].indexOf('CBS') !== -1) {
+                        // Check previous half hour
+                        if (timetable[i][j - 1] !== undefined) {
+                            score += adjacentScore;
+                        }
+                        // Check next half hour
+                        if (timetable[i][j + 1] !== undefined) {
+                            score += adjacentScore;
+                        }
                     }
                 }
             }
@@ -160,6 +163,30 @@ function scoreDayLength(timetable) {
     return score;
 }
 
+function scoreArvoTeaGap(timetable) {
+    var arvoTeaScore = 20,
+        i,
+        j,
+        k;
+
+    for (i = 0; i < timetable.length; i += 1) {
+        for (j = 0; j < timetable[i].length; j += 1) {
+            if (timetable[i][j] !== undefined) {
+                for (k = 0; k < timetable[i][j].length; k += 1) {
+                    if (timetable[i][j][k].indexOf('CBS') !== -1 && timetable[i][j][k].indexOf('The Bible Talks') !== -1) {
+                        // Check start of next hour
+                        if (timetable[i][j + 2] === undefined) {
+                            return arvoTeaScore;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
 function scoreTimetable(indexTimetable, streams) {
     'use strict';
     if (indexTimetable === null) { return null; }
@@ -173,6 +200,7 @@ function scoreTimetable(indexTimetable, streams) {
     score += scoreTimes(timetableData);
     score += scoreProximity(timetable);
     score += scoreDayLength(timetable);
+    score += scoreArvoTeaGap(timetable);
 
     return score;
 }
