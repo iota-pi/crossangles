@@ -178,8 +178,8 @@ function search(list, maxClash, searchMax) {
         if (parents === null) { return null; }
         if (maxIter === 0) { return parents[0]; }
 
-        maxIter = maxIter || 5000;
-        maxParents = maxParents || 20;
+        maxIter = maxIter || 8000;
+        maxParents = maxParents || 40;
         biasTop = biasTop || 5;
 
         var i,
@@ -215,6 +215,7 @@ function search(list, maxClash, searchMax) {
 
         // Return the best timetable
         parents.sort(parentSort);
+        //console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - time, 'ms');
         return parents[0];
     }
 
