@@ -158,15 +158,14 @@ function saveState(generated) {
 function removeCourse(e) {
     'use strict';
 
-    var row = $(e.currentTarget).parents('div').last().parent(),
-        parent = row.parent(),
+    var row = $(e.currentTarget).parents('.course'),
         div = row.children().first(),
         course = div.html().replace(/ -.+/, '');
 
     // Remove this course from the list of courses
-    if (parent.data('custom') !== false) {
+    if (row.data('custom') !== false) {
         for (var i = 0; i < customClasses.length; i += 1) {
-            if (customClasses[i].course === parent.data('custom')) {
+            if (customClasses[i].course === row.data('custom')) {
                 customClasses.splice(i, 1);
                 break;
             }
@@ -178,8 +177,8 @@ function removeCourse(e) {
     // Fade out and slide up neatly
     row.children().fadeOut(200, function () {
         row.children().show().css('visibility', 'hidden');
-        parent.slideUp(200, function () {
-            parent.remove();
+        row.slideUp(200, function () {
+            row.remove();
 
             // Put the extra -10px back at bottom of courses element when it's empty
             if ($('#courses').children().length === 0) {
@@ -213,7 +212,7 @@ function addCourse(course, custom, fade) {
                           .click(showEdit),
         rightCol = $('<div>').append(remove),
         bothIcons = (custom !== true) ? rightCol : rightCol.prepend(edit),
-        div = $('<div>').html('<div>' + course + '</div>')
+        div = $('<div class="course">').html('<div>' + course + '</div>')
                         .append(bothIcons)
                         .data('custom', false);
 
@@ -310,10 +309,9 @@ function addCustom() {
 function showEdit(e) {
     'use strict';
 
-    var row = $(e.target).parents('.row'),
+    var row = $(e.target).parents('.course'),
         title = row.children().first().html(),
-        div = row.parent(),
-        course = div.data('custom'),
+        course = row.data('custom'),
         data;
     for (var i = 0; i < customClasses.length; i += 1) {
         if (customClasses[i].course === course) {
