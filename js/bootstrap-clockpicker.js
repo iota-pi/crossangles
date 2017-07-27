@@ -6,7 +6,8 @@
  * Modified by David Adams, Jan 2017
  */
 
-// jslint ignore: start
+/*jshint browser:true */
+/*globals console */
 
 ;(function(){
 	var $ = window.jQuery,
@@ -60,10 +61,10 @@
 	}
 
 	// Clock size
-	var dialRadius = 90,
-		outerRadius = 70,
+	var dialRadius = 120,
+		outerRadius = 100,
 		// innerRadius = 80 on 12 hour clock
-		innerRadius = 44,
+		innerRadius = 74,
 		tickRadius = 13,
 		diameter = dialRadius * 2,
 		duration = transitionSupported ? 350 : 1;
@@ -120,7 +121,7 @@
 		this.spanHours = popover.find('.clockpicker-span-hours');
 		this.spanMinutes = popover.find('.clockpicker-span-minutes');
 		this.spanAmPm = popover.find('.clockpicker-span-am-pm');
-		this.amOrPm = options['amOrPm'] || 'PM';
+		this.amOrPm = options.amOrPm || 'PM';
 
         // Make clock face smaller
         plate.width(diameter);
@@ -196,16 +197,16 @@
 
 		// Hours view
 		if (options.twelvehour) {
-			for (i = 1; i < 13; i += 1) {
+			for (i = 1; i <= 24; i += 1) {
 				tick = tickTpl.clone();
-				radian = i / 6 * Math.PI;
+				radian = i / 12 * Math.PI;
 				radius = outerRadius;
 				tick.css('font-size', '120%');
 				tick.css({
 					left: dialRadius + Math.sin(radian) * radius - tickRadius,
 					top: dialRadius - Math.cos(radian) * radius - tickRadius
 				});
-				tick.html(i === 0 ? '00' : i);
+				tick.html(i % 2 === 0 ? i/2 : '');
 				hoursView.append(tick);
 				tick.on(mousedownEvent, mousedown);
 			}
@@ -377,7 +378,7 @@
 		fromnow: 0,          // set default time to * milliseconds from now (using with default = 'now')
 		placement: 'bottom', // clock popover placement
 		align: 'left',       // popover arrow align
-		donetext: '完成',    // done button text
+		donetext: 'Done',    // done button text
 		autoclose: false,    // auto close when minute is selected
 		twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
 		vibrate: true        // vibrate the device when dragging clock hand
@@ -464,19 +465,21 @@
 		}
 
 		// Get the time
-		var value = ((this.input.prop('value') || this.options['default'] || '') + '').split(':');
-		if (value[0] === 'now') {
-			var now = new Date(+ new Date() + this.options.fromnow);
-			value = [
-				now.getHours(),
-				now.getMinutes()
-			];
-		}
-		this.hours = + value[0] || 0;
-		this.minutes = + value[1] || 0;
-		this.spanHours.html(leadingZero(this.hours));
-		this.spanMinutes.html(leadingZero(this.minutes));
-        this.spanAmPm.html(' ' + this.amOrPm);
+        if (this.hours === undefined) {
+            var value = ((this.input.prop('value') || this.options['default'] || '') + '').split(':');
+            if (value[0] === 'now') {
+                var now = new Date(+ new Date() + this.options.fromnow);
+                value = [
+                    now.getHours(),
+                    now.getMinutes()
+                ];
+            }
+            this.hours = + value[0] || 0;
+            this.minutes = + value[1] || 0;
+            this.spanHours.html(leadingZero(this.hours));
+            this.spanMinutes.html(leadingZero(this.minutes));
+            this.spanAmPm.html(' ' + this.amOrPm);
+        }
 
 		// Toggle to hours view
 		this.toggleView('hours');
@@ -559,7 +562,7 @@
 	// Reset clock hand
 	ClockPicker.prototype.resetClock = function(delay){
 		var view = this.currentView,
-			value = this[view],
+			value = this.hours + this.minutes / 60,
 			isHours = view === 'hours',
 			unit = Math.PI / (isHours ? 6 : 30),
 			radian = value * unit,
@@ -582,7 +585,8 @@
 	ClockPicker.prototype.setHand = function(x, y, roundBy5, dragging){
 		var radian = Math.atan2(x, - y),
 			isHours = this.currentView === 'hours',
-			unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
+            isHalfHours = true,
+			unit = Math.PI / (isHalfHours && isHours ? 12 : (isHours || roundBy5 ? 6 : 30)),
 			z = Math.sqrt(x * x + y * y),
 			options = this.options,
 			inner = isHours && z < (outerRadius + innerRadius) / 2,
@@ -604,11 +608,15 @@
 		// Get the round radian
 		radian = value * unit;
 
+        if (isHalfHours) {
+            value /= 2;
+        }
+
 		// Correct the hours or minutes
 		if (options.twelvehour) {
 			if (isHours) {
-				if (value === 0) {
-					value = 12;
+				if (value < 1) {
+					value += 12;
 				}
 			} else {
 				if (roundBy5) {
@@ -647,8 +655,15 @@
 			}
 		}
 
-		this[this.currentView] = value;
-		this[isHours ? 'spanHours' : 'spanMinutes'].html(leadingZero(value));
+        if (isHalfHours) {
+            this.hours = Math.floor(value);
+            this.spanHours.html(this.hours);
+            this.minutes = value % 1 > 0 ? 30 : 0;
+            this.spanMinutes.html(leadingZero(this.minutes));
+        } else {
+            this[this.currentView] = value;
+            this[isHours ? 'spanHours' : 'spanMinutes'].html(leadingZero(value));
+        }
         this.update();
 
 		// If svg is not supported, just add an active class to the tick
@@ -701,9 +716,9 @@
 
         // Sanity check times
         if (this.options.breakHour) {
-            if (this.hours % 12 < this.options.breakHour && this.amOrPm === 'AM') {
+            if (this.hours % 12 + this.minutes / 60 < this.options.breakHour && this.amOrPm === 'AM') {
                 this.amOrPm = 'PM';
-            } else if (this.hours % 12 >= this.options.breakHour && this.amOrPm === 'PM') {
+            } else if (this.hours % 12 + this.minutes / 60 >= this.options.breakHour && this.amOrPm === 'PM') {
                 this.amOrPm = 'AM';
             }
         }
@@ -726,7 +741,7 @@
 		}
 
 		raiseCallback(this.options.afterUpdate);
-    }
+    };
 
 	// Remove clockpicker from input
 	ClockPicker.prototype.remove = function() {

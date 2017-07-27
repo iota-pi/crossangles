@@ -236,15 +236,17 @@ function addCourse(course, custom, fade) {
 function to24H(time) {
     if (time === undefined || time.length === 0) { return undefined; }
 
-    var hour = parseInt(time.replace(/\D.*/, '')) % 12;
-    return hour + ((time.indexOf('PM') !== -1) ? 12 : 0);
+    var hour = parseInt(time.replace(/\D.*/, '')) % 12,
+        halfHour = parseInt(time.replace(/\d+:/, '').replace(/ .M/, '')) !== 0;
+    return hour + ((time.indexOf('PM') !== -1) ? 12 : 0) + (halfHour ? 0.5 : 0);
 }
 
 function to12H(hour_24) {
     if (hour_24 === undefined || hour_24 === '') { return undefined; }
 
-    var hour = (hour_24 % 12 === 0) ? 12 : hour_24 % 12,
-        time = ((hour < 10) ? '0' + hour : hour) + ':00 ' + ((hour_24 >= 12) ? 'PM' : 'AM');
+    var hour = Math.floor((hour_24 % 12 === 0) ? 12 : hour_24 % 12),
+        minutes = (hour_24 % 1 === 0) ? '00' : '30',
+        time = ((hour < 10) ? '0' + hour : hour) + ':' + minutes + ' ' + ((hour_24 >= 12) ? 'PM' : 'AM');
     return time;
 }
 
@@ -775,10 +777,10 @@ function restoreClasses() {
 function checkFields() {
     var start = document.getElementById('startTime'),
         end = document.getElementById('endTime'),
-        startTime = to24H(start.value.replace(':00 ', '')),
-        endTime = to24H(end.value.replace(':00 ', '')),
+        startTime = to24H(start.value),
+        endTime = to24H(end.value),
         day = $('input[type="radio"][name="customDay"]').parent('.active').data('day'),
-        title = document.getElementById('customTitle'),
+        title = document.getElementById('customTitle').value,
         button = document.getElementById('addcustom');
 
     // If start time has just been set, but no end time yet, initialise end time to startTime + 1 hour
@@ -789,6 +791,7 @@ function checkFields() {
 
     // Make sure both a start and end time has been chosen
     if (startTime === undefined || endTime === undefined) {
+        button.disabled = true;
         return false;
     }
 
@@ -798,17 +801,18 @@ function checkFields() {
         button.disabled = true;
         return false;
     } else {
-        button.disabled = false;
         end.style.color = '';
     }
 
     // Make sure day is set
     // NB: should be done after colour setting
-    if (day === undefined) {
+    if (day === undefined || title === undefined || title === '') {
+        button.disabled = true;
         return false;
     }
 
     // No problems found
+    button.disabled = false;
     return true;
 }
 
@@ -899,10 +903,9 @@ function clearLists(pageload) {
             document.getElementById('customID').value = '';
         });
 
-        // Add save as image event
-        $('.clockpicker input[type="text"]').change(function () {
-            checkFields();
-        });
+        // Check if all fields are valid in custom modal
+        $('#customClass input').change(function () { checkFields(); });
+        $('#customClass input[type="text"]').keyup(function () { checkFields(); });
 
         // Initialise tooltips
         $('[data-toggle="tooltip"]').tooltip({
@@ -942,18 +945,16 @@ function clearLists(pageload) {
                 placement: 'bottom',
                 align: 'left',
                 'default': 12,
-                donetext: 'Done',
                 twelvehour: true,
                 amOrPm: 'PM',
                 breakHour: 9,
-                afterHourSelect: function () { start.clockpicker('update'); },
+                afterHourSelect: function () { /*start.clockpicker('update');*/ },
                 afterUpdate: function() { checkFields(); }
             });
             var end = $('#cp_end').clockpicker({
                 placement: 'bottom',
                 align: 'left',
                 'default': 12,
-                donetext: 'Done',
                 twelvehour: true,
                 amOrPm: 'PM',
                 breakHour: 10,
