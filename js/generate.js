@@ -12,8 +12,6 @@
 /*jslint regexp: true */
 /*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning */
 
-var shownDragNotice = false;
-
 function fetchData(cb) {
     'use strict';
 
@@ -313,12 +311,6 @@ function generate(draw, pageload) {
         }
 
         hideEmpty(Math.floor(minY), Math.floor(maxY));
-
-        // Remind users that they can drag classes around
-        if (!shownDragNotice) {
-            pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
-            shownDragNotice = true;
-        }
 
         $('#timetable').removeClass('loading');
     }

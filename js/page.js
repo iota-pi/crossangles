@@ -933,6 +933,9 @@ function clearLists(pageload) {
                 var visitorID = getRandomInt();
                 Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
                 $('#helppanel').modal('show');
+
+                // Remind users that they can drag classes around
+                pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
             } else {
                 // Restore previous state on later visits
                 previousVisit[1] += 1;
