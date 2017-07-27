@@ -939,6 +939,11 @@ function clearLists(pageload) {
             } else {
                 // Restore previous state on later visits
                 previousVisit[1] += 1;
+
+                if (previousVisit[1] % 3 === 0) {
+                    pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
+                }
+
                 Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
                 restoreState(data);
             }
