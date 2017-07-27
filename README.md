@@ -5,6 +5,7 @@
 
   * Better favicon
   * Prettier "create timetable" button
+  * Read CBS data from external file
   * Fullscreen timetable view?
 
 To view ideas for the project generated at our first planning meeting or add other ideas, see `ideas.txt`
