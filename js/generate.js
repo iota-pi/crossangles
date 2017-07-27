@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning */
+/*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
 
 function fetchData(cb) {
     'use strict';
@@ -76,39 +76,16 @@ function fetchData(cb) {
     // Add CBS events to list
     hash.CBS = {};
     if ($('#tbt').is(':checked')) {
-        hash.CBS.TBT = [
-            {time: 'T 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Elec Eng 418']},
-            {time: 'T 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Elec Eng 418']},
-            {time: 'H 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Rup Myers Theatre']},
-            {time: 'H 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Rup Myers Theatre']}
-        ];
+        hash.CBS.TBT = CBS.TBT;
     }
     if ($('#cth').is(':checked')) {
-        hash.CBS.CoreTheo = [
-            {time: 'T 17', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['Colombo C']},
-            {time: 'W 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['CLB 4']}
-        ];
+        hash.CBS.CoreTheo = CBS.CoreTheo;
     }
     if ($('#ctr').is(':checked')) {
-        hash.CBS.CoreTrain = [
-            {time: 'T 16', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
-            {time: 'T 18', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
-            {time: 'W 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
-            {time: 'W 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']}
-        ];
+        hash.CBS.CoreTrain = CBS.CoreTrain;
     }
     if ($('#bib').is(':checked')) {
-        hash.CBS.BibleStudy = [
-            {time: 'M 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'M 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'M 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'M 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'T 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'T 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'W 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'H 11', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']},
-            {time: 'H 14', status: 'O', enrols: '0,1', course: 'CBS', component: 'Bible Study', location: ['Quad Sundial']}
-        ];
+        hash.CBS.BibleStudy = CBS.BibleStudy;
     }
 
     // Add custom events
