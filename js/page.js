@@ -824,6 +824,18 @@ function pageError(title, body) {
     }
 }
 
+function pageNotice(title, body) {
+    var alert = $('<div>').addClass('alert alert-success alert-dismissible fade show').attr('role', 'alert'),
+        close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
+        message = '<strong>' + title + '</strong> ' + body,
+        space = $('#alert-space');
+    alert.html(message).prepend(close);
+    alert.appendTo(space);
+    if (space.children().length > 3) {
+        space.children().first().alert('close');
+    }
+}
+
 function clearLists(pageload) {
     'use strict';
 

@@ -10,8 +10,9 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, clearWarning */
+/*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning */
 
+var shownDragNotice = false;
 
 function fetchData(cb) {
     'use strict';
@@ -264,7 +265,7 @@ function generate(draw, pageload) {
 
         if (!draw) { return; }
         if (timetable === null) {
-            pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again with different courses.');
+            pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again with different courses, or including full classes.');
             $('#timetable').removeClass('loading');
             return;
         }
@@ -312,6 +313,12 @@ function generate(draw, pageload) {
         }
 
         hideEmpty(Math.floor(minY), Math.floor(maxY));
+
+        // Remind users that they can drag classes around
+        if (!shownDragNotice) {
+            pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
+            shownDragNotice = true;
+        }
 
         $('#timetable').removeClass('loading');
     }
