@@ -442,16 +442,14 @@ function showEmpty() {
 
 function hideEmpty(minY, maxY) {
     'use strict';
-    var timetablebody = $('#timetable').find('.body'),
-        shadows = timetablebody.find('.class-shadow');
+    var timetablebody = $('#timetable').find('.body');
 
     // Hide all cells outside of the max and min Y offsets
     var i;
     for (i = 0; i < timetablebody.length; i += 1) {
         var cell = timetablebody[i],
-            y = ttHeadHeight + ttCellHeight * (+cell.id.replace(/\D+_/, '').replace('_30', '') + 1);
-        // NB: this Y value is actually the Y value for the hour after, so as to prevent rows from being hidden if a class starts on the halfhour
-        if (y < minY || y > maxY) {
+            y = ttHeadHeight + ttCellHeight * (+cell.id.replace(/\D+_/, '').replace('_30', ''));
+        if (y < minY || y >= maxY) {
             cell.style.display = 'none';
         }
     }
@@ -741,7 +739,7 @@ function createShadow(stream, courseID) {
             shadowList[key] = div;
         }
 
-        minY = Math.min(minY, (parentID.indexOf('_30') === -1) ? y : y - ttCellHeight);
+        minY = Math.min(minY, (parentID.indexOf('_30') === -1) ? y : y - ttCellHeight / 2);
         maxY = Math.max(maxY, y + shadowHeight);
     }
 
