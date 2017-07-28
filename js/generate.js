@@ -76,16 +76,16 @@ function fetchData(cb) {
     // Add CBS events to list
     hash.CBS = {};
     if ($('#tbt').is(':checked')) {
-        hash.CBS.TBT = CBS.TBT;
+        hash.CBS.TBT = JSON.parse(JSON.stringify(CBS.TBT));
     }
     if ($('#cth').is(':checked')) {
-        hash.CBS.CoreTheo = CBS.CoreTheo;
+        hash.CBS.CoreTheo = JSON.parse(JSON.stringify(CBS.CoreTheo));
     }
     if ($('#ctr').is(':checked')) {
-        hash.CBS.CoreTrain = CBS.CoreTrain;
+        hash.CBS.CoreTrain = JSON.parse(JSON.stringify(CBS.CoreTrain));
     }
     if ($('#bib').is(':checked')) {
-        hash.CBS.BibleStudy = CBS.BibleStudy;
+        hash.CBS.BibleStudy = JSON.parse(JSON.stringify(CBS.BibleStudy));
     }
 
     // Add custom events
