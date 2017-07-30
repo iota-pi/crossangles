@@ -34,7 +34,7 @@ img.modal-img {
     object-position: center;
 }
 
-input:focus {
+input:focus, button:focus {
     outline: none;
 }
 
@@ -115,6 +115,14 @@ footer div.content {
         right: 14px;
         right: 1rem;
     }
+}
+
+/* modal styles */
+.modal .close {
+    padding: 0 0.5rem;
+    position: absolute;
+    right: 1rem;
+    vertical-align: middle;
 }
 
 /* typeahead styles */
