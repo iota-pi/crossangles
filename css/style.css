@@ -34,6 +34,10 @@ img.modal-img {
     object-position: center;
 }
 
+input:focus {
+    outline: none;
+}
+
 /* footer styles */
 footer {
 	color: white;
@@ -97,26 +101,13 @@ footer div.content {
     position: relative;
 }
 
-.close { /* alert and modal */
-    outline: none;
-	border: none;
-    line-height: 1;
-    box-shadow: none;
-    padding: 0;
-    float: right;
-    vertical-align: middle;
-}
-
-.alert > .close > span {
-    position: relative;
-    top: -3px;
-}
-
-.alert > .close {
+.alert>.close {
+    padding: 0 0.5rem;
     position: absolute;
     top: 50%;
-    right: 0;
+    right: 0.5rem;
     transform: translateY(-50%);
+    vertical-align: middle;
 }
 
 @media (min-width: 576px) {
