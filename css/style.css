@@ -216,11 +216,6 @@ footer div.content {
     color: #0060aa;
 }
 
-#glyphloader {
-    visibility: hidden; /* stop it from being visible, but force the icon to load still */
-    position: absolute; /* don't let the glyphloader take up any space on the page */
-}
-
 .glyphicon {
     position: static;
 }
@@ -358,6 +353,9 @@ footer div.content {
 
 .checkbox-inline label {
 	min-width: 145px;
+}
+.checkbox-inline label.longer {
+	min-width: 160px;
 }
 
 /* radio button styles */
