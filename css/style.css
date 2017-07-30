@@ -79,19 +79,12 @@ footer div.content {
     cursor: default;
 }
 
-.panel-primary .panel-heading .btn, .alert > .close {
+.panel-primary .panel-heading .btn {
     position: absolute;
     top: 50%;
     right: 14px;
     right: 1em;
     transform: translateY(-50%);
-
-	border: none;
-    line-height: 1;
-    box-shadow: none;
-    padding: 0;
-    float: right;
-    vertical-align: middle;
 }
 
 .panel-primary .panel-heading .btn .glyphicon {
@@ -104,9 +97,33 @@ footer div.content {
     position: relative;
 }
 
+.close { /* alert and modal */
+    outline: none;
+	border: none;
+    line-height: 1;
+    box-shadow: none;
+    padding: 0;
+    float: right;
+    vertical-align: middle;
+}
+
 .alert > .close > span {
     position: relative;
     top: -3px;
+}
+
+.alert > .close {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+@media (min-width: 576px) {
+    .alert > .close {
+        right: 14px;
+        right: 1rem;
+    }
 }
 
 /* typeahead styles */
@@ -350,7 +367,7 @@ footer div.content {
     margin-left: -15px;
 }
 
-.checkbox-inline+.checkbox-inline {
+.checkbox-inline.checkbox-inline {
 	margin: 0;
     padding-left: 15px;
 }
@@ -360,6 +377,10 @@ footer div.content {
 }
 
 /* radio button styles */
+#radiocolours input[type="radio"] {
+    padding-right: 3px;
+}
+
 input[type="radio"].midblue::before {
     background-color: rgba(19, 111, 225, 0.85);
 }
