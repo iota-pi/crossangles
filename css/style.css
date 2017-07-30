@@ -248,39 +248,24 @@ footer div.content {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
+    z-index: 10;
 }
 
-.class-drag.link-bottom::after {
-    content: '';
-    display: block;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 10px;
-    background: repeating-linear-gradient(
-        -45deg,
-        rgba(0, 0, 0, 0.3),
-        rgba(0, 0, 0, 0.3) 10px,
-        transparent 10px,
-        transparent 20px
-    );
-}
-
-.class-drag.link-top::before {
+.class-drag.locked::before {
     content: '';
     display: block;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 10px;
+    bottom: 0;
+    z-index: 1;
     background: repeating-linear-gradient(
         -45deg,
-        transparent,
-        transparent 10px,
-        rgba(0, 0, 0, 0.3) 10px,
-        rgba(0, 0, 0, 0.3) 20px
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.1) 8.8388px,
+        transparent 8.8388px,
+        transparent 17.6777px
     );
 }
 

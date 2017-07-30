@@ -501,6 +501,9 @@ function startDrag(e, ui) {
         key = el.attr('id'),
         shadows = shadowList[key];
     shadows.fadeIn(200);
+
+    // Mark locked classes
+    $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').addClass('locked');
 }
 
 // End-of-drag callback function
@@ -536,7 +539,7 @@ function stopDrag(e, ui) {
         index = shadowList[key].index(best);
 
         // Update all linked classes
-        $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').each(function () {
+        $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').removeClass('locked').each(function () {
             var matchingClass = $(this),
             // Find the corresponding shadow
                 shadow = $(shadowList[matchingClass.attr('id')][index]);
