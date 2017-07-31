@@ -849,6 +849,34 @@ function clearLists(pageload) {
     if (pageload !== true) { classLocations = {}; }
 }
 
+function checkVisible(elm, full) {
+    var rect = elm.getBoundingClientRect(),
+        viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+    if (full) {
+        return !(rect.top < 0 || rect.bottom >= viewHeight);
+    }
+    return !(rect.bottom < 0 || rect.top >= viewHeight);
+}
+
+function moveClockPicker(cp) {
+
+    var popover = $('.popover.clockpicker-popover')[cp[0].id === 'cp_start' ? 0 : 1],
+        bb = popover.getBoundingClientRect(),
+        viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight),
+        diff = bb.bottom - viewHeight;
+    // Move clockpicker up if it's below the bottom of the screen
+    console.log(popover, diff);
+    if (diff > 0) {
+        console.log(popover.style.top);
+        popover.style.top = +popover.style.top.replace('px', '') - diff + 'px';
+
+        // Hide arrow unless whole of clockpicker is visible
+        $(popover).find('.arrow').hide();
+    } else {
+        $(popover).find('.arrow').show();
+    }
+}
+
 (function () {
     "use strict";
 
@@ -957,7 +985,7 @@ function clearLists(pageload) {
                 twelvehour: true,
                 amOrPm: 'PM',
                 breakHour: 9,
-                afterHourSelect: function () { /*start.clockpicker('update');*/ },
+                afterShow: function () { moveClockPicker(start); },
                 afterUpdate: function() { checkFields(); }
             });
             var end = $('#cp_end').clockpicker({
@@ -967,7 +995,7 @@ function clearLists(pageload) {
                 twelvehour: true,
                 amOrPm: 'PM',
                 breakHour: 10,
-                afterHourSelect: function () { end.clockpicker('update'); },
+                afterShow: function () { moveClockPicker(end); },
                 afterUpdate: function() { checkFields(); }
             });
 
