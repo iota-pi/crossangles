@@ -673,6 +673,9 @@ function createClass(stream, courseID, done) {
 
             // Create the class div
             div = createClassDiv(title, location, capacity, id, colour, duration, container);
+            if (capacity === '') {
+                div.addClass('nocapacity');
+            }
             div.appendTo(parent);
 
             // Add this div to the classList

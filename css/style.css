@@ -292,8 +292,11 @@ footer div.content {
 
 .class-drag .class-capacity, .class-drag .class-location {
     font-size: 10px;
-	font-size: 0.76923;
     padding-top: 1px;
+}
+
+.class-drag.nocapacity .class-capacity, .class-drag.nocapacity .class-location {
+    padding-top: 3px;
 }
 
 /* grid styles */
