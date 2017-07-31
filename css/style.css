@@ -125,6 +125,10 @@ footer div.content {
     vertical-align: middle;
 }
 
+.modal .input-group-addon:first-child {
+    min-width: 70px;
+}
+
 /* typeahead styles */
 .typeahead-container {
     position: relative;
@@ -163,11 +167,12 @@ footer div.content {
 	padding: 3px 15px;
     background-color: white;
     cursor: default;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .dd-item.focus {
 	background-color: #59b4ff;
-	/*background-color: #cccccc;
-    background-color: rgba(0, 0, 0, 0.15);*/
 }
 
 /* courses */
@@ -187,6 +192,9 @@ footer div.content {
 
 #courses>div>div:first-child {
     margin-right: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 #courses>div>div:last-child {
     align-self: flex-end;
