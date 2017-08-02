@@ -369,6 +369,11 @@ footer div.content {
 	min-width: 160px;
 }
 
+/* mozilla checkbox fix */
+input[type="checkbox"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
+    -moz-appearance: none;
+}
+
 /* radio button styles */
 #radiocolours input[type="radio"] {
     padding-right: 3px;
