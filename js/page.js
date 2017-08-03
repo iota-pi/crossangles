@@ -22,6 +22,9 @@ var finishedInit = false,
     customClasses = [],
     optionMemory = {};
 
+/* init_typeahead()
+ * Initialises the linked input and dropdown list used for entering courses
+ */
 function init_typeahead() {
     'use strict';
 
@@ -76,6 +79,10 @@ function init_typeahead() {
     });
 }
 
+/* restoreState()
+ * Restores the page to a previously saved state (i.e. by calling saveState)
+ * Mostly used during page load
+ */
 function restoreState(courseHash) {
     'use strict';
 
@@ -123,6 +130,9 @@ function restoreState(courseHash) {
     }
 }
 
+/* saveState()
+ * Uses cookies to store chosen courses, options, and class locations
+ */
 function saveState(generated) {
     'use strict';
 
@@ -150,6 +160,36 @@ function saveState(generated) {
 
     // Save class locations
     Cookies.set('classLocations', classLocations, { expires: 7 * 26 });
+}
+
+/* restoreClasses()
+ * Restore classes to their previous locations
+ * Called after generate() on a page load if there is previous class location data
+ */
+function restoreClasses() {
+    'use strict';
+
+    // Snap element a to element b
+    function snapTo($a, b) {
+        // Detach a, then append it to b, then also set the positioning to be at an offset of (0, 0) from the parent
+        $a.detach().appendTo(b).css({position: 'absolute', left: 0, top: 0});
+    }
+
+    var key, currentClass, shadows, parent, shadow;
+    for (key in classLocations) {
+        if (classLocations.hasOwnProperty(key)) {
+            currentClass = $('[id="' + key + '"]'); // don't replace with ('#' + key), it won't work!
+            shadows = shadowList[key];
+            parent = $('#' + classLocations[key]);
+            shadow = parent.find(shadows);
+
+            // Snap this class to it's shadow
+            snapTo(currentClass, parent);
+
+            // Update the class capacity
+            currentClass.find('.class-capacity').html(shadow.data('capacity'));
+        }
+    }
 }
 
 /* removeCourse()
@@ -233,6 +273,9 @@ function addCourse(course, custom, fade) {
     return div;
 }
 
+/* to24H()
+ * Turns a time string in the format of '11:00 AM' into a number in the range of 0..23.5
+ */
 function to24H(time) {
     if (time === undefined || time.length === 0) { return undefined; }
 
@@ -241,6 +284,9 @@ function to24H(time) {
     return hour + ((time.indexOf('PM') !== -1) ? 12 : 0) + (halfHour ? 0.5 : 0);
 }
 
+/* to12H()
+ * Turns a number in the range of 0..23.5 into a time string in the format of '11:00 AM'
+ */
 function to12H(hour_24) {
     if (hour_24 === undefined || hour_24 === '') { return undefined; }
 
@@ -250,12 +296,19 @@ function to12H(hour_24) {
     return time;
 }
 
+/* getRandomInt()
+ * Gets a ... random int!
+ */
 function getRandomInt(min, max) {
     min = Math.ceil(min || 0);
     max = Math.floor(max || 1e6);
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+/* uniqueID()
+ * Generates a unique ID for a custom course
+ * Unique IDs are an integer in range 0..1e6
+ */
 function uniqueID() {
     var id = 'custom' + getRandomInt() + '_',
         i;
@@ -267,6 +320,9 @@ function uniqueID() {
     return id;
 }
 
+/* addCustom()
+ * Adds a custom course using data taken from the respective modal form
+ */
 function addCustom() {
     'use strict';
 
@@ -307,6 +363,9 @@ function addCustom() {
     courseDiv.data('custom', cid);
 }
 
+/* showEdit()
+ * Displays modal for editing custom classes
+ */
 function showEdit(e) {
     'use strict';
 
@@ -319,6 +378,9 @@ function showEdit(e) {
             data = customClasses[i];
             break;
         }
+    }
+    if (data === undefined) {
+        pageError('Oops!', 'The list of your courses has become a bit confused. Please try reloading the page, or adding your courses again.');
     }
 
     // Retrieve start and end times and the day of the week
@@ -352,6 +414,55 @@ function showEdit(e) {
     checkFields();
 }
 
+/* checkFields()
+ * Checks if all the fields in the custom class modal are validly filled in
+ */
+function checkFields() {
+    var start = document.getElementById('startTime'),
+        end = document.getElementById('endTime'),
+        startTime = to24H(start.value),
+        endTime = to24H(end.value),
+        day = $('input[type="radio"][name="customDay"]').parent('.active').data('day'),
+        title = document.getElementById('customTitle').value,
+        button = document.getElementById('addcustom');
+
+    // If start time has just been set, but no end time yet, initialise end time to startTime + 1 hour
+    if (endTime === undefined && startTime !== undefined) {
+        endTime = to12H(startTime + 1);
+        end.value = endTime;
+    }
+
+    // Make sure both a start and end time has been chosen
+    if (startTime === undefined || endTime === undefined) {
+        button.disabled = true;
+        return false;
+    }
+
+    // Make end-time be red if it is before (or the same time as) the start time
+    if (endTime <= startTime) {
+        end.style.color = 'red';
+        button.disabled = true;
+        return false;
+    } else {
+        end.style.color = '';
+    }
+
+    // Make sure day is set
+    // NB: should be done after colour setting
+    if (day === undefined || title === undefined || title === '') {
+        button.disabled = true;
+        return false;
+    }
+
+    // No problems found
+    button.disabled = false;
+    return true;
+}
+
+/* timetableToPNG()
+ * Turns timetable DOM into a PNG and downloads it
+ * NB: no IE or Safari support!
+ */
 function timetableToPNG() {
     'use strict';
 
@@ -371,7 +482,9 @@ function timetableToPNG() {
     });
 }
 
-
+/* hasClass()
+ * Checks if given DOM element has a particular class applied to it
+ */
 function hasClass(el, aclass) {
     'use strict';
 
@@ -379,6 +492,9 @@ function hasClass(el, aclass) {
     return str.indexOf(' ' + aclass + ' ') !== -1;
 }
 
+/* createTable()
+ * Creates the many <div>s in the timetable
+ */
 function createTable() {
     'use strict';
 
@@ -418,6 +534,7 @@ function createTable() {
         day,
         half;
 
+    // Build up an HTML string containing all of the component <div>s
     for (i = 0; i < (endHour - startHour) * 2; i += 1) {
         hour = startHour + Math.floor(i / 2);
         half = (i % 2 === 1);
@@ -430,9 +547,13 @@ function createTable() {
         }
     }
 
+    // Fill the timetable element with these <div>s
     table.html(head + newline + body);
 }
 
+/* showEmpty()
+ * Makes all rows in the timetable visible
+ */
 function showEmpty() {
     'use strict';
 
@@ -440,6 +561,9 @@ function showEmpty() {
     $('#timetable').find('.body').css('display', 'block');
 }
 
+/* hideEmpty()
+ * Hides any rows in the timetable which have no possible classes in them
+ */
 function hideEmpty(minY, maxY) {
     'use strict';
     var timetablebody = $('#timetable').find('.body');
@@ -455,6 +579,10 @@ function hideEmpty(minY, maxY) {
     }
 }
 
+/* clearWarning()
+ * Called in preparation for timetable generation
+ * Stores option status as of the beginning of timetable generation and hides the warning message about not yet active options
+ */
 function clearWarning() {
     var warning = document.getElementById('generateWarning');
 
@@ -465,6 +593,9 @@ function clearWarning() {
     updateWarning(); // since we just updated our optionsMemory variable, this will remove the warning
 }
 
+/* updateWarning()
+ * Shows or hides the warning about not yet active options depending on if they have been changed since last generation or not
+ */
 function updateWarning() {
     var warning = document.getElementById('generateWarning');
 
@@ -477,6 +608,10 @@ function updateWarning() {
     }
 }
 
+/* getColour()
+ * Returns a colour for a class
+ * There are only 7 colours, after colour #7, they will loop around
+ */
 function getColour(index) {
     'use strict';
 
@@ -494,6 +629,10 @@ function getColour(index) {
 	return colours[index % colours.length].join(',');
 }
 
+/* startDrag()
+ * Handler for when a class starts being dragged around
+ * Shows shadows for the relevant course, and displays the class and other linked classes as 'locked' (i.e. stripy)
+ */
 function startDrag(e, ui) {
     'use strict';
 
@@ -506,7 +645,10 @@ function startDrag(e, ui) {
     $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').addClass('locked');
 }
 
-// End-of-drag callback function
+/* startDrag()
+ * Handler for when a class stops being dragged around
+ * Snap to nearest shadow (if there is one near enough), hide shadows, update data fields such as class capacity/location, etc.
+ */
 function stopDrag(e, ui) {
     'use strict';
 
@@ -551,6 +693,7 @@ function stopDrag(e, ui) {
             matchingClass.find('.class-capacity').html(shadow.data('capacity'));
             matchingClass.find('.class-location').html(shadow.data('location'));
 
+            // Store class location (used when calling saveState)
             classLocations[matchingClass.attr('id')] = shadow.parent().attr('id');
         });
     }
@@ -568,7 +711,12 @@ $.fn.push = function (selector) {
     return this;
 };
 
-// Returns an array containing all elements in arr where, when cast to a string, there are no duplicates
+/* unique()
+ * Modifies given array to remove all elements where, when cast to a string, there are no duplicates
+ * A second array can be provided, and it shall have corresponding elements removed.
+ * e.g. unique([0,1,2,1], [1,1,5,2]) -> [0,1,2], [1,1,5]
+ * NB: it doesn't matter what values the second array contains
+ */
 function unique(arr1, arr2) {
     'use strict';
 
@@ -605,6 +753,9 @@ function unique(arr1, arr2) {
     }
 }
 
+/* createClassDiv()
+ * Creates the DOM for the draggable <div> for a class
+ */
 function createClassDiv(title, location, capacity, id, colour, duration, container) {
     'use strict';
     var $div = $('<div>').attr('id', id).addClass('class-drag').draggable({
@@ -623,7 +774,9 @@ function createClassDiv(title, location, capacity, id, colour, duration, contain
     return $div;
 }
 
-// Creates a draggable class element
+/* createClass()
+ * Creates the draggable div for a class
+ */
 function createClass(stream, courseID, done) {
     'use strict';
 
@@ -698,6 +851,9 @@ function createClass(stream, courseID, done) {
     }
 }
 
+/* createShadow()
+ * Creates shadows for course streams
+ */
 function createShadow(stream, courseID) {
     'use strict';
 
@@ -752,74 +908,10 @@ function createShadow(stream, courseID) {
     return {min: minY, max: maxY};
 }
 
-function restoreClasses() {
-    'use strict';
-
-    // Snap element a to element b
-    function snapTo($a, b) {
-        // Detach a, then append it to b, then also set the positioning to be at an offset of (0, 0) from the parent
-        $a.detach().appendTo(b).css({position: 'absolute', left: 0, top: 0});
-    }
-
-    var key, currentClass, shadows, parent, shadow;
-    for (key in classLocations) {
-        if (classLocations.hasOwnProperty(key)) {
-            currentClass = $('[id="' + key + '"]'); // don't replace with ('#' + key), it won't work!
-            shadows = shadowList[key];
-            parent = $('#' + classLocations[key]);
-            shadow = parent.find(shadows);
-
-            // Snap this class to it's shadow
-            snapTo(currentClass, parent);
-
-            // Update the class capacity
-            currentClass.find('.class-capacity').html(shadow.data('capacity'));
-        }
-    }
-}
-
-function checkFields() {
-    var start = document.getElementById('startTime'),
-        end = document.getElementById('endTime'),
-        startTime = to24H(start.value),
-        endTime = to24H(end.value),
-        day = $('input[type="radio"][name="customDay"]').parent('.active').data('day'),
-        title = document.getElementById('customTitle').value,
-        button = document.getElementById('addcustom');
-
-    // If start time has just been set, but no end time yet, initialise end time to startTime + 1 hour
-    if (endTime === undefined && startTime !== undefined) {
-        endTime = to12H(startTime + 1);
-        end.value = endTime;
-    }
-
-    // Make sure both a start and end time has been chosen
-    if (startTime === undefined || endTime === undefined) {
-        button.disabled = true;
-        return false;
-    }
-
-    // Make end-time be red if it is before (or the same time as) the start time
-    if (endTime <= startTime) {
-        end.style.color = 'red';
-        button.disabled = true;
-        return false;
-    } else {
-        end.style.color = '';
-    }
-
-    // Make sure day is set
-    // NB: should be done after colour setting
-    if (day === undefined || title === undefined || title === '') {
-        button.disabled = true;
-        return false;
-    }
-
-    // No problems found
-    button.disabled = false;
-    return true;
-}
-
+/* pageError()
+ * Displays an error on the page (visible to user)
+ * Display is just above timetable. Limit of 3 messages in the alert space
+ */
 function pageError(title, body) {
     var alert = $('<div>').addClass('alert alert-warning alert-dismissible fade show').attr('role', 'alert'),
         close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
@@ -832,6 +924,10 @@ function pageError(title, body) {
     }
 }
 
+/* pageNotice()
+ * Displays a notice (green) on the page
+ * Display is just above timetable
+ */
 function pageNotice(title, body) {
     var alert = $('<div>').addClass('alert alert-success alert-dismissible fade show').attr('role', 'alert'),
         close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
@@ -844,6 +940,9 @@ function pageNotice(title, body) {
     }
 }
 
+/* clearLists()
+ * Clears lists of classes and shadows
+ */
 function clearLists(pageload) {
     'use strict';
 
@@ -852,6 +951,10 @@ function clearLists(pageload) {
     if (pageload !== true) { classLocations = {}; }
 }
 
+/* checkVisible()
+ * Checks if the given DOM element is visible (optionally, if it is fully visible)
+ * Used by moveClockPicker
+ */
 function checkVisible(elm, full) {
     var rect = elm.getBoundingClientRect(),
         viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
@@ -861,6 +964,11 @@ function checkVisible(elm, full) {
     return !(rect.bottom < 0 || rect.top >= viewHeight);
 }
 
+
+/* checkVisible()
+ * Checks if the clockpicker is fully visible (and moves it such that it is)
+ * Without this, on mobile devices, the clock face is only partially visible
+ */
 function moveClockPicker(cp) {
 
     var popover = $('.popover.clockpicker-popover')[cp[0].id === 'cp_start' ? 0 : 1],
@@ -956,6 +1064,7 @@ function moveClockPicker(cp) {
             document.getElementById('meta-year').innerHTML = metadata.year;
             document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
 
+            // Initialise typeahead (linked text and dropdown list)
             init_typeahead();
 
             // Check if this user has visited the page before
@@ -980,7 +1089,8 @@ function moveClockPicker(cp) {
                 restoreState(data);
             }
 
-            // Initialise clockpickers (asynchronously)
+            // Initialise clockpickers
+            // TODO: move this to when modal is first displayed
             var start = $('#cp_start').clockpicker({
                 placement: 'bottom',
                 align: 'left',
