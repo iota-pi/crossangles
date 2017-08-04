@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, console, domtoimage, download, Cookies, generate */
+/*global $, console, domtoimage, download, Cookies, generate, objectFitImages */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -1051,6 +1051,9 @@ function moveClockPicker(cp) {
         $('[data-toggle="tooltip"]').tooltip({
             container: 'body'
         });
+
+        // Initialise IE/Edge object-fit polyfill
+        objectFitImages();
     });
 
     // Load course data from courses.json

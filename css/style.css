@@ -30,8 +30,8 @@ img.modal-img {
     width: 100%;
     max-height: 200px;
     object-fit: contain;
-    object-fit: scale-down;
     object-position: center;
+    font-family: 'object-fit: contain; object-position: center;';
 }
 
 input:focus, button:focus {
@@ -181,7 +181,11 @@ footer div.content {
 }
 
 #courses>div {
+    display: -ms-flex;
+    display: -webkit-flex;
     display: flex;
+    -ms-align-items: center;
+    -webkit-align-items: center;
     align-items: center;
     padding: 10px;
     border-top: 1px solid #dddddd;
@@ -197,10 +201,16 @@ footer div.content {
     text-overflow: ellipsis;
 }
 #courses>div>div:last-child {
+    -ms-align-self: flex-end;
+    -webkit-align-self: flex-end;
     align-self: flex-end;
     margin-top: auto;
     margin-bottom: auto;
+    display: -ms-flex;
+    display: -webkit-flex;
     display: flex;
+    -ms-align-items: center;
+    -webkit-align-items: center;
     align-items: center;
 }
 #courses .glyphicon {
