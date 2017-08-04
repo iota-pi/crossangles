@@ -472,14 +472,34 @@ function timetableToPNG() {
     $(el).removeClass('scroll-x');
     $(el).width(720);
 
-    domtoimage.toPng(el).then(function (png) {
-        // Revert timetable properties
-        $(el).addClass('scroll-x');
-        $(el).css('width', 'auto');
+    var topng;
+    //jshint ignore:start
+    // Safari 3.0+ "[object HTMLElementConstructor]"
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+    var isIE = /*@cc_on!@*/false || !!document.documentMode; // IE 6-11
+    var isEdge = !isIE && !!window.StyleMedia;
+    topng = !isSafari && !isEdge && !isIE;
+    //jshint ignore:end
 
-        // Download the png image
-        download(png, 'timetable.png', 'image/png');
-    });
+    if (topng) {
+        domtoimage.toPng(el).then(function (png) {
+            // Revert timetable properties
+            $(el).addClass('scroll-x');
+            $(el).css('width', 'auto');
+
+            // Download the png image
+            download(png, 'timetable.png', 'image/png');
+        });
+    } else {
+        domtoimage.toSvg(el).then(function (svg) {
+            // Revert timetable properties
+            $(el).addClass('scroll-x');
+            $(el).css('width', 'auto');
+
+            // Download the svg image
+            download(svg, 'timetable.svg', 'image/svg+xml');
+        });
+    }
 }
 
 /* hasClass()
