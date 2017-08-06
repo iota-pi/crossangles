@@ -701,7 +701,7 @@ function stopDrag(e, ui) {
         index = shadowList[key].index(best);
 
         // Update all linked classes
-        $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').removeClass('locked').each(function () {
+        $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').each(function () {
             var matchingClass = $(this),
             // Find the corresponding shadow
                 shadow = $(shadowList[matchingClass.attr('id')][index]);
@@ -720,6 +720,11 @@ function stopDrag(e, ui) {
 
     // Hide visible all shadows
     $('.class-shadow').fadeOut(200);
+
+    // Remove locked effect
+    $('.class-drag.locked').removeClass('locked');
+
+    // Save new state
     saveState();
 }
 
