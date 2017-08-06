@@ -96,6 +96,14 @@ footer div.content {
     margin-left: 5px;
 }
 
+.panel-primary .panel-heading .btn.disabled, .panel-primary .panel-heading .btn.disabled:hover {
+    color: rgb(93, 93, 93);
+}
+
+#noTimetableDownload {
+    display: none;
+}
+
 /* alert styles */
 .alert {
     position: relative;

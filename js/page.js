@@ -459,6 +459,19 @@ function checkFields() {
     return true;
 }
 
+/* canSaveTimetable()
+ * Returns whether timetableToPNG can be run in this browser
+ */
+function canSaveTimetable() {
+    //jshint ignore:start
+    // Safari 3.0+ "[object HTMLElementConstructor]"
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
+    var isIE = /*@cc_on!@*/false || !!document.documentMode; // IE 6-11
+    var isEdge = !isIE && !!window.StyleMedia;
+    return false && !isSafari && !isEdge && !isIE;
+    //jshint ignore:end
+}
+
 /* timetableToPNG()
  * Turns timetable DOM into a PNG and downloads it
  * NB: no IE or Safari support!
@@ -472,14 +485,7 @@ function timetableToPNG() {
     $(el).removeClass('scroll-x');
     $(el).width(720);
 
-    var topng;
-    //jshint ignore:start
-    // Safari 3.0+ "[object HTMLElementConstructor]"
-    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification));
-    var isIE = /*@cc_on!@*/false || !!document.documentMode; // IE 6-11
-    var isEdge = !isIE && !!window.StyleMedia;
-    topng = !isSafari && !isEdge && !isIE;
-    //jshint ignore:end
+    var topng = canSaveTimetable();
 
     if (topng) {
         domtoimage.toPng(el).then(function (png) {
@@ -1049,12 +1055,17 @@ function moveClockPicker(cp) {
             updateWarning();
         });
 
-        // Add save as image event
-        $('#saveimage').click(function () {
-            timetableToPNG();
-        });
+        if (canSaveTimetable()) {
+            // Add save as image event
+            $('#saveimage').click(function () {
+                timetableToPNG();
+            });
+        } else {
+            document.getElementById('saveimage').style.display = 'none';
+            document.getElementById('noTimetableDownload').style.display = 'block';
+        }
 
-        // Add save as image event
+        // Add custom class onclick event
         $('#addcustom').click(function () {
             addCustom();
         });
