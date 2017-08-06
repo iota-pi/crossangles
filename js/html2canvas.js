@@ -978,6 +978,7 @@ Color.prototype.isColor = true;
 
 // JSON.stringify([].slice.call($$('.named-color-table tr'), 1).map(function(row) { return [row.childNodes[3].textContent, row.childNodes[5].textContent.trim().split(",").map(Number)] }).reduce(function(data, row) {data[row[0]] = row[1]; return data}, {}))
 var colors = {
+    /*
     "aliceblue": [240, 248, 255],
     "antiquewhite": [250, 235, 215],
     "aqua": [0, 255, 255],
@@ -1122,10 +1123,13 @@ var colors = {
     "turquoise": [64, 224, 208],
     "violet": [238, 130, 238],
     "wheat": [245, 222, 179],
+    */
     "white": [255, 255, 255],
+    /*
     "whitesmoke": [245, 245, 245],
     "yellow": [255, 255, 0],
     "yellowgreen": [154, 205, 50]
+    */
 };
 
 
