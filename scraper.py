@@ -20,7 +20,7 @@
 #
 
 from lxml import html, etree
-import requests
+import requests, grequests
 import json
 import time
 import re
@@ -29,7 +29,6 @@ import os
 SEMESTER = 'S2'
 YEAR = 2017
 
-bytecount = 0
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
 semester = semcodes[SEMESTER]
 
@@ -40,23 +39,24 @@ def main():
     timetables = {}
     
     faculties = getPages()
-    for faculty in faculties:
-        html = loadPage('http://classutil.unsw.edu.au/' + faculty)
+    for faculty, page in faculties.items():
+        #page = loadPage('http://classutil.unsw.edu.au/' + faculty)
+        page = stripComments(html.fromstring(page))
         
         # Get course codes (and names)
-        cc = getCourses(html)
+        cc = getCourses(page)
         
         # Update dict of courses
         courses.update(dict(cc))
         
         # Get the timetable data
-        #timetableRaw = [item for item in getTimetable(html) if not empty(item)]
-        timetableRaw = getTimetable(html)
+        #timetableRaw = [item for item in getTimetable(page) if not empty(item)]
+        timetableRaw = getTimetable(page)
         
         # Work out how many classes correspond to each of the courses
         prev = 0
         classCounts = []
-        table = html.xpath('//table[3]')[0]
+        table = page.xpath('//table[3]')[0]
         for child in table:
             # NB: child here is a <tr> element, the course dividers have <td> children with class="cucourse"
             if child[0].get('class') == 'cucourse':
@@ -81,21 +81,21 @@ def main():
         timetables.update(timetable)
         
         # Some progress output
-        print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
+        #print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
     
 
     # Record time of update
     now = time.time()
     os.environ['TZ'] = 'Australia/Sydney' # Force Sydney timezone
-    update_date = time.localtime(now).strftime('%d/%m/%Y')
-    update_time = time.localtime(now).strftime('%H:%M')
+    update_date = time.strftime('%d/%m/%Y', time.localtime(now))
+    update_time = time.strftime('%H:%M', time.localtime(now))
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
         json.dump([timetables, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
     
     print()
-    print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')
+    print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
     
 
 #
@@ -105,7 +105,10 @@ def getPages():
     global semester
     tree = loadPage('http://classutil.unsw.edu.au/')
     links = tree.xpath('//td[' + str(semester) + '][@class="data"]/a[contains(@href,".html")]/@href')
-    return links
+    reqs = (grequests.get('http://classutil.unsw.edu.au/' + urlend) for urlend in links)
+    pages = grequests.map(reqs)
+    faculties = { links[i].split('_')[0]: pages[i].content for i in range(len(pages)) }
+    return faculties
 
 #
 # getCourses(): scrapes the course codes and names from the page with the given tree structure
@@ -230,7 +233,7 @@ def stripComments(tree):
 def getURL(url):
     global bytecount
     response = requests.get(url)
-    bytecount += len(response.content)
+    #bytecount += len(response.content)
     return response
 
 #
