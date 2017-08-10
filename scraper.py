@@ -25,6 +25,7 @@ import requests
 import json
 import time
 import re
+import os
 
 SEMESTER = 'S2'
 YEAR = 2017
@@ -83,13 +84,16 @@ def main():
         # Some progress output
         print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
     
-    update_date = datetime.date.today().strftime('%d/%m/%Y')
-    update_time = datetime.datetime.now().strftime('%H:%M')
 
+    # Record time of update
+    now = datetime.datetime.now()
+    os.environ['TZ'] = 'Australia/Sydney' # Force Sydney timezone
+    update_date = now.strftime('%d/%m/%Y')
+    update_time = now.strftime('%H:%M')
+
+    # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
         json.dump([timetables, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
-    #with open('data/timetable.json', 'w') as f:
-    #    json.dump(timetables, f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(bytecount) + ' bytes downloaded in total)')
