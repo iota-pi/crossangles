@@ -87,8 +87,8 @@ def main():
     # Record time of update
     now = time.time()
     os.environ['TZ'] = 'Australia/Sydney' # Force Sydney timezone
-    update_date = now.localtime().strftime('%d/%m/%Y')
-    update_time = now.localtime().strftime('%H:%M')
+    update_date = time.localtime(now).strftime('%d/%m/%Y')
+    update_time = time.localtime(now).strftime('%H:%M')
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
