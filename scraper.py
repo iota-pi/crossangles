@@ -20,7 +20,6 @@
 #
 
 from lxml import html, etree
-import datetime
 import requests
 import json
 import time
@@ -86,10 +85,10 @@ def main():
     
 
     # Record time of update
-    now = datetime.datetime.now()
+    now = time.time()
     os.environ['TZ'] = 'Australia/Sydney' # Force Sydney timezone
-    update_date = now.strftime('%d/%m/%Y')
-    update_time = now.strftime('%H:%M')
+    update_date = now.localtime().strftime('%d/%m/%Y')
+    update_time = now.localtime().strftime('%H:%M')
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
