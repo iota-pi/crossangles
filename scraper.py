@@ -28,6 +28,7 @@ import os
 
 SEMESTER = 'S2'
 YEAR = 2017
+DOWNLOAD = False
 
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
 semester = semcodes[SEMESTER]
@@ -74,14 +75,22 @@ def main():
         timetable = {}
         for i in range(len(classCounts)):
             count = classCounts[i]
-            timetable[cc[i][0]] = [courses[cc[i][0]]] + timetableRaw[:count]
+            courseCode = cc[i][0]
+            facultyCode = courseCode[:4]
+            courseNumbers = courseCode[4:]
+
+            # Initialise this element of the timetable
+            if facultyCode not in timetable:
+                timetable[facultyCode] = {}
+
+            timetable[facultyCode][courseNumbers] = [courses[courseCode]] + timetableRaw[:count]
             del timetableRaw[:count]
         
         # Update dict of timetables
         timetables.update(timetable)
         
         # Some progress output
-        #print('Completed faculty', faculty.split('_')[0], '(' + str(bytecount) + ' bytes downloaded in total)')
+        print('Completed faculty', faculty.split('_')[0])
     
 
     # Record time of update
@@ -103,11 +112,25 @@ def main():
 #
 def getPages():
     global semester
+
+    if DOWNLOAD == False:
+        try:
+            with open('data/htmlcache.json') as f:
+                faculties = json.load(f)
+                print('loaded faculties from file')
+                return faculties
+        except:
+            pass
+
+    print('Downloading faculty data')
     tree = loadPage('http://classutil.unsw.edu.au/')
     links = tree.xpath('//td[' + str(semester) + '][@class="data"]/a[contains(@href,".html")]/@href')
     reqs = (grequests.get('http://classutil.unsw.edu.au/' + urlend) for urlend in links)
     pages = grequests.map(reqs)
     faculties = { links[i].split('_')[0]: pages[i].content for i in range(len(pages)) }
+    with open('data/html.json', 'w') as f:
+        json.dump(faculties, f)
+
     return faculties
 
 #
@@ -137,19 +160,25 @@ def getTimetable(tree):
     capacity  = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[6]/text()')
     timetable = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[8]')
     # Get all the text from each of the elements with timetable data
-    timetable = map(lambda e: etree.XPath("string()")(e), timetable)
+    timetable = list(map(lambda e: etree.XPath("string()")(e), timetable))
     
     # Clean statuses
-    status = map(lambda x: substatus(x.strip('*')), status)
+    status = list(map(lambda x: substatus(x.strip('*')), status))
 
     # Clean up capacity strings
-    capacity = map(lambda x: x.replace('/', ',').split()[0], capacity)
+    capacity = list(map(lambda x: x.split()[0].split('/'), capacity))
+    capacityLow = list(int(x[0]) for x in capacity)
+    capacityHigh = list(int(x[1]) for x in capacity)
+
 
     data = []
-    for timestring in timetable:
-        data.append(splitTimetableData(timestring))
+    for i in range(len(timetable)):
+        timestring = timetable[i]
+        timetableData = splitTimetableData(timestring)
+        if timetableData is not None:
+            data.append([component[i], status[i], capacityLow[i], capacityHigh[i], timetableData])
     
-    return list(zip(component, status, capacity, data))
+    return data
 
 def empty(l):
     return len(l[3][0][0]) == 0
@@ -164,8 +193,7 @@ def splitTimetableData(string):
 
     # Handle blank strings - just return a tuple of empty strings
     if string == '':
-        #return [('', '', '')]
-        return [('', '')]
+        return None
     
     # Split up the parts of a string detailing multiple class times for one stream
     if '; ' in string:
@@ -181,7 +209,7 @@ def splitTimetableData(string):
         return list(zip(time, location))
     
     # Get first half of timetable string containing day of week and time of day info
-    time = string.split('(', maxsplit=1)[0].strip()
+    time = string.split('(', maxsplit=1)[0].strip().replace('09', '9')
     
     # Keep only the text within the brackets
     if '(' in string:
@@ -253,13 +281,13 @@ def expandRanges(string):
 # subday(): gives a single-character representation of the day (also replace ":30" with ".5")
 #
 def subday(timestr):
-    return timestr.replace('Mon', 'M').replace('Tue', 'T').replace('Wed', 'W').replace('Thu', 'H').replace('Fri', 'F').replace('Sat', 'S').replace('Sun', 's').replace(':30', '.5')
+    return timestr.replace('Mon ', 'M').replace('Tue ', 'T').replace('Wed ', 'W').replace('Thu ', 'H').replace('Fri ', 'F').replace('Sat ', 'S').replace('Sun ', 's').replace(':30', '.5')
 
 #
 # substatus(): gives a single-character representation of the status
 #
 def substatus(string):
-    return string.replace('Open', 'O').replace('Full', 'F').replace('Closed', 'C').replace('Stop', 'S').replace('Tent', 'T').replace('Canc', 'c')
+    return int(string.replace('Open', '0').replace('Full', '1').replace('Closed', '2').replace('Stop', '3').replace('Tent', '4').replace('Canc', '5'))
 
 
 if __name__ == '__main__':

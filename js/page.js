@@ -1094,7 +1094,16 @@ function moveClockPicker(cp) {
 
     // Load course data from courses.json
     $.getJSON('data/timetable.json', function (data) {
-        timetableData = data[0];
+        var faculty, course;
+        for (faculty in data[0]) {
+            if (data[0].hasOwnProperty(faculty)) {
+                for (course in data[0][faculty]) {
+                    if (data[0][faculty].hasOwnProperty(course)) {
+                        timetableData[faculty + course] = data[0][faculty][course];
+                    }
+                }
+            }
+        }
         metadata = data[1];
 
         $(document).ready(function () {

@@ -45,7 +45,7 @@ function fetchData(cb) {
                 if (coursedata !== null) {
                     for (i = 0; i < coursedata.length; i += 1) {
                         classdata = coursedata[i];
-                        timedata  = classdata[3];
+                        timedata  = classdata[4];
                         timedata  = uniq(timedata);
                         classtime = [];
                         locations = [];
@@ -65,7 +65,10 @@ function fetchData(cb) {
                                 hash[course][classdata[0]] = [];
                             }
 
-                            hash[course][classdata[0]].push({time: classtime, status: classdata[1], enrols: classdata[2], course: course, component: classdata[0], location: locations});
+                            // Change status integer into a letter with more meaning
+                            var classstatus = ['O', 'F', 'C', 'S', 'T', 'c'][classdata[1]];
+
+                            hash[course][classdata[0]].push({time: classtime, status: classstatus, enrols: classdata[2] + ',' + classdata[3], course: course, component: classdata[0], location: locations});
                         }
                     }
                 }
