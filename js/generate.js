@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, components, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
+/*globals $, search, document, timetableData, components_index, locations_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
 
 function fetchData(cb) {
     'use strict';
@@ -27,7 +27,7 @@ function fetchData(cb) {
 
     // Turn raw data into a hash
     (function makeHash() {
-        var course, courseData, classData, timeData, classTime, locations, i, j;
+        var course, courseData, classData, classTime, locations, i, j;
 
         for (course in data) {
             // Loop through only properties which are not inherited
@@ -38,14 +38,13 @@ function fetchData(cb) {
                 if (courseData !== null) {
                     for (i = 0; i < courseData.length; i += 1) {
                         classData = courseData[i];
-                        timeData  = classData[4];
                         classTime = [];
                         locations = [];
-                        for (j = 0; j < timeData.length; j += 2) {
+                        for (j = 4; j < classData.length; j += 2) {
                             // Construct a list of unique times (and corresponding locations)
-                            if (classTime.indexOf(timeData[j]) === -1) {
-                                classTime.push(timeData[j]);
-                                locations.push(timeData[j + 1]);
+                            if (classTime.indexOf(classData[j]) === -1) {
+                                classTime.push(classData[j]);
+                                locations.push(locations_index[classData[j + 1]]); // also de-index locations
                             }
                         }
                         classTime = classTime.join(',');
@@ -64,7 +63,7 @@ function fetchData(cb) {
                             var classStatus = ['O', 'F', 'C', 'S', 'T', 'c'][classData[1]];
 
                             // Change component index to three-letter abbreviation
-                            var classComponent = components[classData[0]];
+                            var classComponent = components_index[classData[0]];
 
                             hash[course][classData[0]].push({time: classTime, status: classStatus, enrols: classData[2] + ',' + classData[3], course: course, component: classComponent, location: locations});
                         }

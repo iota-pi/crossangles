@@ -18,7 +18,8 @@ var finishedInit = false,
     ttHeadHeight = 40,
     waitingScripts = 0,
     timetableData = {},
-    components = {},
+    components_index = {},
+    locations_index = {},
     metadata = {},
     customClasses = [],
     optionMemory = {};
@@ -1113,8 +1114,9 @@ function moveClockPicker(cp) {
                 }
             }
         }
-        components = data[1];
-        metadata = data[2];
+        components_index = data[1];
+        locations_index = data[2];
+        metadata = data[3];
 
         $(document).ready(function () {
             var previousVisit;

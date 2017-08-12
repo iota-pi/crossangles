@@ -20,6 +20,7 @@
 #
 
 from lxml import html, etree
+from collections import defaultdict
 import requests, grequests
 import json
 import time
@@ -29,12 +30,25 @@ import os
 SEMESTER = 'S2'
 YEAR = 2017
 DOWNLOAD = False
-COMPONENTS = ['LEC', 'TUT', 'TU1', 'TU2', 'LAB', 'OTH', 'TLB', 'WEB', 'LE1', 'LE2', 'LA1', 'LA2', 'DST', 'CLN', 'STD', 'WRK', 'FLD', 'SEM', 'HON', 'IND', 'THE', 'PRJ']
+try:
+    with open('data/components.json') as f:
+        COMPONENTS = json.load(f)
+except:
+    COMPONENTS = ''
+try:
+    with open('data/locations.json') as f:
+        LOCATIONS = json.load(f)
+except:
+    LOCATIONS =  ''
+NEW_COMPONENTS = defaultdict(int)
+NEW_LOCATIONS = defaultdict(int)
 
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
 semester = semcodes[SEMESTER]
 
 def main():
+    global NEW_COMPONENTS, NEW_LOCATIONS
+
     courses = {}
     timetables = {}
     
@@ -103,10 +117,20 @@ def main():
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
-        json.dump([timetables, COMPONENTS, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
+        json.dump([timetables, COMPONENTS, LOCATIONS, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
+
+    # Update components and locations cache
+    NEW_COMPONENTS = sorted(NEW_COMPONENTS.items(), key=lambda x: x[1], reverse=True)
+    NEW_COMPONENTS = list(map(lambda x: x[0], NEW_COMPONENTS))
+    with open('data/components.json', 'w') as f:
+        json.dump(NEW_COMPONENTS, f)
+    NEW_LOCATIONS = sorted(NEW_LOCATIONS.items(), key=lambda x: x[1], reverse=True)
+    NEW_LOCATIONS = list(map(lambda x: x[0], NEW_LOCATIONS))
+    with open('data/locations.json', 'w') as f:
+        json.dump(NEW_LOCATIONS, f)
 
 
 #
@@ -167,6 +191,10 @@ def getTimetable(tree):
     capacity  = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[6]/text()')
     timetable = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[8]')
 
+    # Update components hash
+    for c in component:
+        NEW_COMPONENTS[c] += 1
+
     # Replace components with their indexes (for all those with indexes)
     component = list(map(subcomponent, component))
     
@@ -186,7 +214,7 @@ def getTimetable(tree):
         timestring = timetable[i]
         timetableData = splitTimetableData(timestring)
         if len(timetableData) != 0:
-            data.append([component[i], status[i], capacityLow[i], capacityHigh[i], timetableData])
+            data.append([component[i], status[i], capacityLow[i], capacityHigh[i]] + timetableData)
         else:
             data.append([])
     
@@ -224,15 +252,25 @@ def splitTimetableData(string):
         #weeks = expandRanges(weeks)
 
         # Get location if available
-        # NB: take from ', ' to end, but then remove the ', ' using string[2:]
-        location = string[string.find(', '):][2:]
+        # NB: take from ', ' to end
+        if string.find(', ') != -1:
+            location = string[string.find(', '):].strip(', ')
+        elif string[0] != 'w': # if it starts with 'w' it is a week range, not location
+            location = string
+        else:
+            location = ''
 
         # Replace 'See School' locations with an empty string for uniformity
         if location == 'See School':
             location = ''
+
+        NEW_LOCATIONS[location] += 1
     else:
         #weeks = ''
         location = ''
+
+    # Replace components with their indexes (for all those with indexes)
+    location = sublocation(location)
 
     time = subday(time)
     if time is None:
@@ -305,6 +343,16 @@ def subcomponent(c):
         return COMPONENTS.index(c)
     else:
         return c
+
+#
+# sublocation(): replaces locations with an index
+#
+def sublocation(l):
+    if l in LOCATIONS:
+        return LOCATIONS.index(l)
+    else:
+        return l
+
 
 if __name__ == '__main__':
     main()
