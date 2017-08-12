@@ -20,6 +20,7 @@ var finishedInit = false,
     timetableData = {},
     components_index = {},
     locations_index = {},
+    times_index = {},
     metadata = {},
     customClasses = [],
     optionMemory = {};
@@ -1116,7 +1117,8 @@ function moveClockPicker(cp) {
         }
         components_index = data[1];
         locations_index = data[2];
-        metadata = data[3];
+        times_index = data[3];
+        metadata = data[4];
 
         $(document).ready(function () {
             var previousVisit;

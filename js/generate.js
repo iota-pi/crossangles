@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, components_index, locations_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
+/*globals $, search, document, timetableData, components_index, locations_index, times_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
 
 function fetchData(cb) {
     'use strict';
@@ -43,7 +43,7 @@ function fetchData(cb) {
                         for (j = 4; j < classData.length; j += 2) {
                             // Construct a list of unique times (and corresponding locations)
                             if (classTime.indexOf(classData[j]) === -1) {
-                                classTime.push(classData[j]);
+                                classTime.push(times_index[classData[j]]);
                                 locations.push(locations_index[classData[j + 1]]); // also de-index locations
                             }
                         }

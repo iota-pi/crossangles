@@ -30,6 +30,7 @@ import os
 SEMESTER = 'S2'
 YEAR = 2017
 DOWNLOAD = False
+
 try:
     with open('data/components.json') as f:
         COMPONENTS = json.load(f)
@@ -40,14 +41,21 @@ try:
         LOCATIONS = json.load(f)
 except:
     LOCATIONS =  ''
+try:
+    with open('data/times.json') as f:
+        TIMES = json.load(f)
+except:
+    TIMES =  ''
+
 NEW_COMPONENTS = defaultdict(int)
 NEW_LOCATIONS = defaultdict(int)
+NEW_TIMES = defaultdict(int)
 
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
 semester = semcodes[SEMESTER]
 
 def main():
-    global NEW_COMPONENTS, NEW_LOCATIONS
+    global NEW_COMPONENTS, NEW_LOCATIONS, NEW_TIMES
 
     courses = {}
     timetables = {}
@@ -117,7 +125,7 @@ def main():
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
-        json.dump([timetables, COMPONENTS, LOCATIONS, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
+        json.dump([timetables, COMPONENTS, LOCATIONS, TIMES, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
@@ -131,6 +139,10 @@ def main():
     NEW_LOCATIONS = list(map(lambda x: x[0], NEW_LOCATIONS))
     with open('data/locations.json', 'w') as f:
         json.dump(NEW_LOCATIONS, f)
+    NEW_TIMES = sorted(NEW_TIMES.items(), key=lambda x: x[1], reverse=True)
+    NEW_TIMES = list(map(lambda x: x[0], NEW_TIMES))
+    with open('data/times.json', 'w') as f:
+        json.dump(NEW_TIMES, f)
 
 
 #
@@ -275,6 +287,8 @@ def splitTimetableData(string):
     time = subday(time)
     if time is None:
         return []
+    NEW_TIMES[time] += 1
+    time = subtimes(time)
     return [time, location]
 
 #
@@ -352,6 +366,15 @@ def sublocation(l):
         return LOCATIONS.index(l)
     else:
         return l
+
+#
+# subtimes(): replaces locations with an index
+#
+def subtimes(t):
+    if t in TIMES:
+        return TIMES.index(t)
+    else:
+        return t
 
 
 if __name__ == '__main__':
