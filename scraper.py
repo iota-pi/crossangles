@@ -33,6 +33,8 @@ DOWNLOAD = False
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
 semester = semcodes[SEMESTER]
 
+components = {}
+
 def main():
     global bytecount
     
@@ -125,6 +127,11 @@ def getPages():
     print('Downloading faculty data')
     tree = loadPage('http://classutil.unsw.edu.au/')
     links = tree.xpath('//td[' + str(semester) + '][@class="data"]/a[contains(@href,".html")]/@href')
+
+    # Filter ADFA courses (all courses which start with a 'Z')
+    links = [link for link in links if link[0] != 'Z']
+    print(links)
+
     reqs = (grequests.get('http://classutil.unsw.edu.au/' + urlend) for urlend in links)
     pages = grequests.map(reqs)
     faculties = { links[i].split('_')[0]: pages[i].content for i in range(len(pages)) }
@@ -170,6 +177,7 @@ def getTimetable(tree):
     capacityLow = list(int(x[0]) for x in capacity)
     capacityHigh = list(int(x[1]) for x in capacity)
 
+    print(set(component))
 
     data = []
     for i in range(len(timetable)):
