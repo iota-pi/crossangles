@@ -18,6 +18,7 @@ var finishedInit = false,
     ttHeadHeight = 40,
     waitingScripts = 0,
     timetableData = {},
+    components = {},
     metadata = {},
     customClasses = [],
     optionMemory = {};
@@ -1094,17 +1095,26 @@ function moveClockPicker(cp) {
 
     // Load course data from courses.json
     $.getJSON('data/timetable.json', function (data) {
+        function zfill(str, n) {
+            str = '' + str; // Make sure str is actually a string
+            while (str.length < n) {
+                str += '0';
+            }
+            return str;
+        }
+
         var faculty, course;
         for (faculty in data[0]) {
             if (data[0].hasOwnProperty(faculty)) {
                 for (course in data[0][faculty]) {
                     if (data[0][faculty].hasOwnProperty(course)) {
-                        timetableData[faculty + course] = data[0][faculty][course];
+                        timetableData[faculty + zfill(course, 4)] = data[0][faculty][course];
                     }
                 }
             }
         }
-        metadata = data[1];
+        components = data[1];
+        metadata = data[2];
 
         $(document).ready(function () {
             var previousVisit;

@@ -10,7 +10,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
+/*globals $, search, document, timetableData, components, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
 
 function fetchData(cb) {
     'use strict';
@@ -27,48 +27,46 @@ function fetchData(cb) {
 
     // Turn raw data into a hash
     (function makeHash() {
-        var course, coursedata, classdata, timedata, classtime, locations, i, j;
-
-        // Short utility function to strip duplicate elements from an array (NB: quadratic time, should only be used on short arrays, add a hashtable for linear time)
-        function uniq(arr) {
-            return arr.filter(function (el, pos) {
-                return arr.map(String).indexOf(String(el)) === pos;
-            });
-        }
+        var course, courseData, classData, timeData, classTime, locations, i, j;
 
         for (course in data) {
             // Loop through only properties which are not inherited
             if (data.hasOwnProperty(course)) {
                 hash[course] = {};
 
-                coursedata = data[course];
-                if (coursedata !== null) {
-                    for (i = 0; i < coursedata.length; i += 1) {
-                        classdata = coursedata[i];
-                        timedata  = classdata[4];
-                        timedata  = uniq(timedata);
-                        classtime = [];
+                courseData = data[course];
+                if (courseData !== null) {
+                    for (i = 0; i < courseData.length; i += 1) {
+                        classData = courseData[i];
+                        timeData  = classData[4];
+                        classTime = [];
                         locations = [];
-                        for (j = 0; j < timedata.length; j += 1) {
-                            classtime.push(timedata[j][0]);
-                            locations.push(timedata[j][1]);
+                        for (j = 0; j < timeData.length; j += 2) {
+                            // Construct a list of unique times (and corresponding locations)
+                            if (classTime.indexOf(timeData[j]) === -1) {
+                                classTime.push(timeData[j]);
+                                locations.push(timeData[j + 1]);
+                            }
                         }
-                        classtime = classtime.join(',');
+                        classTime = classTime.join(',');
 
                         // Add this stream's data to the list for this component
                         // NB: Skip web streams / classes with no class times allocated
-                        if (classtime.length !== 0) {
+                        if (classTime.length !== 0) {
                             // Make an entry in the hash
                             // Format = { course_code: { component: [class_time, status, enrolments, course_code, component], ... }, ...}
-                            if (!hash[course].hasOwnProperty(classdata[0])) {
+                            if (!hash[course].hasOwnProperty(classData[0])) {
                                 // Initial stream list
-                                hash[course][classdata[0]] = [];
+                                hash[course][classData[0]] = [];
                             }
 
                             // Change status integer into a letter with more meaning
-                            var classstatus = ['O', 'F', 'C', 'S', 'T', 'c'][classdata[1]];
+                            var classStatus = ['O', 'F', 'C', 'S', 'T', 'c'][classData[1]];
 
-                            hash[course][classdata[0]].push({time: classtime, status: classstatus, enrols: classdata[2] + ',' + classdata[3], course: course, component: classdata[0], location: locations});
+                            // Change component index to three-letter abbreviation
+                            var classComponent = components[classData[0]];
+
+                            hash[course][classData[0]].push({time: classTime, status: classStatus, enrols: classData[2] + ',' + classData[3], course: course, component: classComponent, location: locations});
                         }
                     }
                 }

@@ -29,21 +29,17 @@ import os
 SEMESTER = 'S2'
 YEAR = 2017
 DOWNLOAD = False
+COMPONENTS = ['LEC', 'TUT', 'TU1', 'TU2', 'LAB', 'OTH', 'TLB', 'WEB', 'LE1', 'LE2', 'LA1', 'LA2', 'DST', 'CLN', 'STD', 'WRK', 'FLD', 'SEM', 'HON', 'IND', 'THE', 'PRJ']
 
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
 semester = semcodes[SEMESTER]
 
-components = {}
-
 def main():
-    global bytecount
-    
     courses = {}
     timetables = {}
     
     faculties = getPages()
     for faculty, page in faculties.items():
-        #page = loadPage('http://classutil.unsw.edu.au/' + faculty)
         page = stripComments(html.fromstring(page))
         
         # Get course codes (and names)
@@ -53,7 +49,6 @@ def main():
         courses.update(dict(cc))
         
         # Get the timetable data
-        #timetableRaw = [item for item in getTimetable(page) if not empty(item)]
         timetableRaw = getTimetable(page)
         
         # Work out how many classes correspond to each of the courses
@@ -85,14 +80,19 @@ def main():
             if facultyCode not in timetable:
                 timetable[facultyCode] = {}
 
-            timetable[facultyCode][courseNumbers] = [courses[courseCode]] + timetableRaw[:count]
+            courseRawData = timetableRaw[:count]
+            courseData = [courses[courseCode]]
+            if sum(map(len, courseRawData)) != 0:
+                courseData += [item for item in courseRawData if len(item) != 0]
+
+            timetable[facultyCode][courseNumbers] = courseData
             del timetableRaw[:count]
         
         # Update dict of timetables
         timetables.update(timetable)
         
         # Some progress output
-        print('Completed faculty', faculty.split('_')[0])
+        #print('Completed faculty', faculty)
     
 
     # Record time of update
@@ -103,11 +103,11 @@ def main():
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
-        json.dump([timetables, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
+        json.dump([timetables, COMPONENTS, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
     
     print()
     print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
-    
+
 
 #
 # getPages(): finds all the faculty pages for the current semester (NB: currently set by global variable "semester")
@@ -166,8 +166,9 @@ def getTimetable(tree):
     status    = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[5]/text()')
     capacity  = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[6]/text()')
     timetable = tree.xpath('//tr[@class="rowLowlight" or @class="rowHighlight"]/td[8]')
-    # Get all the text from each of the elements with timetable data
-    timetable = list(map(lambda e: etree.XPath("string()")(e), timetable))
+
+    # Replace components with their indexes (for all those with indexes)
+    component = list(map(subcomponent, component))
     
     # Clean statuses
     status = list(map(lambda x: substatus(x.strip('*')), status))
@@ -177,19 +178,19 @@ def getTimetable(tree):
     capacityLow = list(int(x[0]) for x in capacity)
     capacityHigh = list(int(x[1]) for x in capacity)
 
-    print(set(component))
+    # Get all the text from each of the elements with timetable data
+    timetable = list(map(lambda e: etree.XPath("string()")(e), timetable))
 
     data = []
     for i in range(len(timetable)):
         timestring = timetable[i]
         timetableData = splitTimetableData(timestring)
-        if timetableData is not None:
+        if len(timetableData) != 0:
             data.append([component[i], status[i], capacityLow[i], capacityHigh[i], timetableData])
+        else:
+            data.append([])
     
     return data
-
-def empty(l):
-    return len(l[3][0][0]) == 0
 
 #
 # splitTimetableData(): splits up a string of timetable data into an array of [(time, weeks, location), ...]
@@ -201,20 +202,15 @@ def splitTimetableData(string):
 
     # Handle blank strings - just return a tuple of empty strings
     if string == '':
-        return None
+        return []
     
     # Split up the parts of a string detailing multiple class times for one stream
     if '; ' in string:
-        time = []
-        weeks = []
-        location = []
+        output = []
         for x in string.split('; '):
-            a, c = splitTimetableData(x)[0]
-            time.append(a)
-            #weeks.append(b)
-            location.append(c)
+            output += splitTimetableData(x)
         #return list(zip(time, weeks, location))
-        return list(zip(time, location))
+        return output
     
     # Get first half of timetable string containing day of week and time of day info
     time = string.split('(', maxsplit=1)[0].strip().replace('09', '9')
@@ -235,11 +231,13 @@ def splitTimetableData(string):
         if location == 'See School':
             location = ''
     else:
-        weeks = ''
+        #weeks = ''
         location = ''
 
-    #return [(time, weeks, location)]
-    return [(subday(time), location)]
+    time = subday(time)
+    if time is None:
+        return []
+    return [time, location]
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
@@ -273,7 +271,7 @@ def getURL(url):
     return response
 
 #
-# expandRanges(): changes strings of format e.g. "1-4,6,10-12" to "1,2,3,4,6,10,11,12"
+# expandRanges(): changes strings of format e.g. "1-3,6,10-12" to "1,2,3,6,10,11,12"
 #
 def expandRanges(string):
     expanded = []
@@ -289,6 +287,8 @@ def expandRanges(string):
 # subday(): gives a single-character representation of the day (also replace ":30" with ".5")
 #
 def subday(timestr):
+    if timestr[0] == 'S':
+        return None
     return timestr.replace('Mon ', 'M').replace('Tue ', 'T').replace('Wed ', 'W').replace('Thu ', 'H').replace('Fri ', 'F').replace('Sat ', 'S').replace('Sun ', 's').replace(':30', '.5')
 
 #
@@ -297,6 +297,14 @@ def subday(timestr):
 def substatus(string):
     return int(string.replace('Open', '0').replace('Full', '1').replace('Closed', '2').replace('Stop', '3').replace('Tent', '4').replace('Canc', '5'))
 
+#
+# subcomponent(): replaces components with an index
+#
+def subcomponent(c):
+    if c in COMPONENTS:
+        return COMPONENTS.index(c)
+    else:
+        return c
 
 if __name__ == '__main__':
     main()
