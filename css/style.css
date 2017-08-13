@@ -291,8 +291,8 @@ footer div.content {
     z-index: 1;
     background: repeating-linear-gradient(
         -45deg,
-        rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.1) 8.8388px,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 8.8388px,
         transparent 8.8388px,
         transparent 17.6777px
     );
