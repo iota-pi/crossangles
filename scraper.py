@@ -30,6 +30,7 @@ import os
 SEMESTER = 'S2'
 YEAR = 2017
 DOWNLOAD = False
+OPEN_OR_FULL_ONLY = True
 
 try:
     with open('data/components.json') as f:
@@ -155,7 +156,7 @@ def getPages():
         try:
             with open('data/htmlcache.json') as f:
                 faculties = json.load(f)
-                print('loaded faculties from file')
+                print('Loaded faculty data from file')
                 return faculties
         except:
             pass
@@ -166,7 +167,6 @@ def getPages():
 
     # Filter ADFA courses (all courses which start with a 'Z')
     links = [link for link in links if link[0] != 'Z']
-    print(links)
 
     reqs = (grequests.get('http://classutil.unsw.edu.au/' + urlend) for urlend in links)
     pages = grequests.map(reqs)
@@ -225,7 +225,7 @@ def getTimetable(tree):
     for i in range(len(timetable)):
         timestring = timetable[i]
         timetableData = splitTimetableData(timestring)
-        if len(timetableData) != 0:
+        if len(timetableData) != 0 and (not OPEN_OR_FULL_ONLY or status[i] <= 1):
             data.append([component[i], status[i], capacityLow[i], capacityHigh[i]] + timetableData)
         else:
             data.append([])
@@ -253,14 +253,25 @@ def splitTimetableData(string):
         return output
     
     # Get first half of timetable string containing day of week and time of day info
-    time = string.split('(', maxsplit=1)[0].strip().replace('09', '9')
+    time = string.split('(', maxsplit=1)[0].strip().replace('09', '9').replace('08', '8')
+    weeks = ''
+    location = ''
     
     # Keep only the text within the brackets
     if '(' in string:
         string = string[string.find('(') + 1 : string.find(')')]
 
         # Process weeks where class is running
-        #weeks = string.split(' ')[0].strip('w,')
+        weeks = string.split(', ')[0].strip(', ')
+        if weeks[0] == 'w': #confirm that we are actually looking at weeks
+            weeks = weeks.strip('w')
+
+            # Remove any weeks that aren't in the main semester timetable
+            weeks = weeks.replace('< 1', '').strip(',')
+            weeks = weeks.replace('N1', '').strip(',')
+            weeks = weeks.replace('N2', '').strip(',')
+            if weeks == '':
+                weeks = None
         #weeks = expandRanges(weeks)
 
         # Get location if available
@@ -276,19 +287,18 @@ def splitTimetableData(string):
         if location == 'See School':
             location = ''
 
-        NEW_LOCATIONS[location] += 1
-    else:
-        #weeks = ''
-        location = ''
-
-    # Replace components with their indexes (for all those with indexes)
-    location = sublocation(location)
-
     time = subday(time)
-    if time is None:
+    if time is None or weeks is None:
         return []
+
+    # Replace times with their indexes (and update the index)
     NEW_TIMES[time] += 1
     time = subtimes(time)
+
+    # Replace locations with their indexes (and update the index)
+    NEW_LOCATIONS[location] += 1
+    location = sublocation(location)
+
     return [time, location]
 
 #
@@ -339,12 +349,28 @@ def expandRanges(string):
 # subday(): gives a single-character representation of the day (also replace ":30" with ".5")
 #
 def subday(timestr):
-    if timestr[0] == 'S':
+    # Change day TLAs to letters
+    timestr = timestr.replace('Mon ', 'M').replace('Tue ', 'T').replace('Wed ', 'W').replace('Thu ', 'H').replace('Fri ', 'F').replace('Sat ', 'S').replace('Sun ', 's')
+
+    # Use decimal notation for half-hours
+    timestr = timestr.replace(':30', '.5')
+
+    # If more than one day is included, we consider it to be an "intensive" and don't include it
+    if timestr[:2].isalpha():
         return None
-    return timestr.replace('Mon ', 'M').replace('Tue ', 'T').replace('Wed ', 'W').replace('Thu ', 'H').replace('Fri ', 'F').replace('Sat ', 'S').replace('Sun ', 's').replace(':30', '.5')
+
+    # If the class runs on Saturday or Sunday, don't include it
+    if timestr[0].lower() == 's':
+        return None
+
+    # We don't know how to deal with the time "00-00" so, don't bother including it!
+    if '00-00' in timestr:
+        return None
+
+    return timestr
 
 #
-# substatus(): gives a single-character representation of the status
+# substatus(): gives a single-digit representation of the status
 #
 def substatus(string):
     return int(string.replace('Open', '0').replace('Full', '1').replace('Closed', '2').replace('Stop', '3').replace('Tent', '4').replace('Canc', '5'))
