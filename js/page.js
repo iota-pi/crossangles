@@ -1169,7 +1169,7 @@ function moveClockPicker(cp) {
                 'default': 12,
                 twelvehour: true,
                 amOrPm: 'PM',
-                breakHour: 10,
+                breakHour: 9.5,
                 afterShow: function () { moveClockPicker(end); },
                 afterUpdate: function() { checkFields(); }
             });
