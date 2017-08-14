@@ -29,7 +29,7 @@ import os
 
 SEMESTER = 'S2'
 YEAR = 2017
-DOWNLOAD = False
+DOWNLOAD = True
 OPEN_OR_FULL_ONLY = True
 
 try:
