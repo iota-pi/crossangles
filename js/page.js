@@ -1004,11 +1004,20 @@ function checkVisible(elm, full) {
  * Without this, on mobile devices, the clock face is only partially visible
  */
 function moveClockPicker(cp) {
+    // Find correct clockpicker element
+    var popovers = $('.popover.clockpicker-popover'),
+        popover;
+    if (cp[0].id === 'cp_start') {
+        popover = popovers.first()[0];
+    } else {
+        popover = popovers.last()[0];
+    }
 
-    var popover = $('.popover.clockpicker-popover')[cp[0].id === 'cp_start' ? 0 : 1],
-        bb = popover.getBoundingClientRect(),
+    // Do some maths
+    var bb = popover.getBoundingClientRect(),
         viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight),
         diff = bb.bottom - viewHeight;
+
     // Move clockpicker up if it's below the bottom of the screen
     console.log(popover, diff);
     if (diff > 0) {
