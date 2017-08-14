@@ -722,6 +722,11 @@ function stopDrag(e, ui) {
             matchingClass.find('.class-capacity').html(shadow.data('capacity'));
             matchingClass.find('.class-location').html(shadow.data('location'));
 
+            // Update z-index if this class has moved
+            if (classLocations[matchingClass.attr('id')] !== shadow.parent().attr('id')) {
+                matchingClass.css('z-index', drag.css('z-index'));
+            }
+
             // Store class location (used when calling saveState)
             classLocations[matchingClass.attr('id')] = shadow.parent().attr('id');
         });
