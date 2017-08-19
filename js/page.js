@@ -537,7 +537,7 @@ function phantomScreenshot(el, type) {
                 }
             },
             requestSettings: {
-                waitInterval: 0
+                //waitInterval: 0
             },
             outputAsJson: true
         }),
