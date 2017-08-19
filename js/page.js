@@ -587,7 +587,7 @@ function showEmpty() {
     'use strict';
 
     // Show all timetable rows initially
-    $('#timetable').find('.body').css('display', 'block');
+    $('#timetable').find('.body').css('display', null);
 }
 
 /* hideEmpty()
