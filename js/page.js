@@ -1105,15 +1105,10 @@ function moveClockPicker(cp) {
             updateWarning();
         });
 
-        if (canSaveTimetable()) {
-            // Add save as image event
-            $('#saveimage').click(function () {
-                timetableToPNG();
-            });
-        } else {
-            document.getElementById('saveimage').style.display = 'none';
-            document.getElementById('noTimetableDownload').style.display = 'block';
-        }
+        // Add save as image event
+        $('#saveimage').click(function () {
+            timetableToPNG();
+        });
 
         // Add custom class onclick event
         $('#addcustom').click(function () {
