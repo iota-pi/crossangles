@@ -170,7 +170,7 @@ def getPages():
 
     reqs = (grequests.get('http://classutil.unsw.edu.au/' + urlend) for urlend in links)
     pages = grequests.map(reqs)
-    faculties = { links[i].split('_')[0]: pages[i].content for i in range(len(pages)) }
+    faculties = { links[i].split('_')[0]: str(pages[i].content, encoding='utf-8') for i in range(len(pages)) }
     with open('data/html.json', 'w') as f:
         json.dump(faculties, f)
 
