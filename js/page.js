@@ -684,7 +684,8 @@ function stopDrag(e, ui) {
     // Snap element a to element b
     function snapTo($a, b) {
         // Detach a, then append it to b, then also set the positioning to be at an offset of (0, 0) from the parent
-        $a.detach().appendTo(b).css({left: 0, top: 0});
+        // NB: null will make it revert to its default value of 0
+        $a.detach().appendTo(b).css({left: 0, top: 0, position: null});
     }
 
     // Snap dragged item to nearest visible shadow
@@ -808,7 +809,6 @@ function createClassDiv(title, location, capacity, id, colour, duration, contain
     div.innerHTML = '<div>' + title + location + capacity + '</div>';
     div.style.position = 'absolute';
     div.style.backgroundColor = 'rgb(' + colour + ')';
-    div.style.height = (ttCellHeight * duration) + 'px';
 
     return $div;
 }
@@ -928,7 +928,6 @@ function createShadow(stream, courseID) {
         // Create the shadow div
         div = $('<div class="class-shadow">');
         div[0].style.backgroundColor = 'rgba(' + colour + ', 0.7)';
-        div[0].style.height = shadowHeight + 'px';
         div.data('capacity', capacity.replace(',', ' / '));
         div.data('location', location.replace(',', ' / '));
         div.appendTo(parent);
