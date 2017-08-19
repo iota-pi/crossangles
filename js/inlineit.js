@@ -49,7 +49,10 @@ var inlineit = (function () {
 
         // Get HTML string
         var html = '';
-        html += '<html><head><title>CrossAngles Timetable</title><link rel="stylesheet" href="' + window.location.href + 'css/timetable.min.css" type="text/css" /></head><body>';
+        html += '<html><head><title>CrossAngles Timetable</title>' +
+            '<link rel="stylesheet" href="' + window.location.href + 'css/timetable.min.css" type="text/css" />' +
+            '<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">' +
+            '</head><body>';
         html += clone.outerHTML.replace(/^\s*/gm, '');
         html += '</body></html>';
         return html;
@@ -63,7 +66,7 @@ var inlineit = (function () {
         }
 
         // Remove all ids, since they don't change the appearance
-        if (node.id) {
+        if (node.id && node.id !== 'timetable') {
             node.removeAttribute('id');
         }
 

@@ -1,4 +1,11 @@
 
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
 /* class (draggable) styles */
 .class-drag {
     position: absolute;
@@ -75,7 +82,13 @@
 #timetable {
     overflow-y: hidden;
     background-color: white;
+    box-sizing: border-box;
     font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 13px;
+}
+
+#timetable * {
+	box-sizing: inherit;
 }
 
 .row-container {
@@ -139,7 +152,6 @@
 }
 
 .col-1 {
-    position: relative;
     width: 100%;
     min-height: 1px;
     padding-right: 15px;
@@ -147,6 +159,7 @@
 }
 
 .col {
+    position: relative;
     -webkit-flex-basis: 0;
         -ms-flex-preferred-size: 0;
             flex-basis: 0;
