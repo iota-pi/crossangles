@@ -50,16 +50,24 @@ var inlineit = (function () {
         // Get HTML string
         var html = '';
         html += '<html><head><title>CrossAngles Timetable</title><link rel="stylesheet" href="' + window.location.href + 'css/timetable.min.css" type="text/css" /></head><body>';
-        html += clone.outerHTML;
+        html += clone.outerHTML.replace(/^\s*/gm, '');
         html += '</body></html>';
         return html;
     }
 
     function removeHidden(node) {
+        // Remove the node if it is hidden
         if (node.style.display === 'none') {
             node.parentNode.removeChild(node);
             return;
         }
+
+        // Remove all ids, since they don't change the appearance
+        if (node.id) {
+            node.removeAttribute('id');
+        }
+
+        // Call this function recursively on child nodes
         for (var i = node.children.length - 1; i >= 0; i -= 1) {
             removeHidden(node.children[i]);
         }
