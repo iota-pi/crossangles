@@ -513,14 +513,17 @@ function timetableToPNG() {
 
 function phantomScreenshot(el, type) {
     type = type || 'jpeg';
-    var h = $(el).height();
+    var h = $(el).height(),
+        timetableHTML = inlineit.compile(el);
+    console.log(timetableHTML);
+
     $.ajax({
         url: 'https://phantomjscloud.com/api/browser/v2/ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7/',
         method: 'POST',
         cache: false,
         contentType: 'application/json; charset=UTF-8',
         data: JSON.stringify({
-            content: inlineit.compile(el),
+            content: timetableHTML,
             url: 'about:blank',
             renderType: type,
             renderSettings: {
@@ -539,7 +542,6 @@ function phantomScreenshot(el, type) {
             outputAsJson: true
         }),
         success: function (r) {
-            //console.log(r.content);
             download('data:image/' + type + ';base64,' + r.content.data, 'timetable.' + type, 'image/' + type);
         },
         error: function () {
