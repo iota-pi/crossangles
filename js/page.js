@@ -500,14 +500,7 @@ function timetableToPNG() {
             download(png, 'timetable.png', 'image/png');
         });
     } else {
-        domtoimage.toSvg(el).then(function (svg) {
-            // Revert timetable properties
-            $(el).addClass('scroll-x');
-            $(el).css('width', 'auto');
-
-            // Download the svg image
-            download(svg, 'timetable.svg', 'image/svg+xml');
-        });
+        phantomScreenshot(el);
     }
 }
 
@@ -532,12 +525,12 @@ function phantomScreenshot(el, type) {
                     height: h
                 },
                 clipRectangle: {
-                    width: 740,
+                    width: 720,
                     height: h
                 }
             },
             requestSettings: {
-                //waitInterval: 0
+                waitInterval: 0
             },
             outputAsJson: true
         }),
