@@ -535,10 +535,12 @@ function phantomScreenshot(el, type) {
             },
             requestSettings: {
                 waitInterval: 0
-            }
+            },
+            outputAsJson: true
         }),
         success: function (r) {
-            download(r, 'timetable.' + type, 'image/' + type);
+            //console.log(r.content);
+            download('data:image/' + type + ';base64,' + r.content.data, 'timetable.' + type, 'image/' + type);
         },
         error: function () {
             pageError('Sorry,', 'we couldn\'t turn your timetable into an image at this time. Please try again later.');
