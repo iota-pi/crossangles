@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, console, domtoimage, download, Cookies, generate, objectFitImages */
+/*global $, console, domtoimage, download, inlineit, Cookies, generate, objectFitImages */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -482,15 +482,15 @@ function canSaveTimetable() {
 function timetableToPNG() {
     'use strict';
 
-    var el = document.getElementById('timetable'),
-        width = $(el).width();
-    // Standardize timetable export size
-    $(el).removeClass('scroll-x');
-    $(el).width(720);
+    var el = document.getElementById('timetable');
 
     var topng = canSaveTimetable();
 
     if (topng) {
+        // Standardize timetable export size
+        $(el).width(720);
+        $(el).removeClass('scroll-x');
+
         domtoimage.toPng(el).then(function (png) {
             // Revert timetable properties
             $(el).css('width', 'auto');
@@ -509,6 +509,41 @@ function timetableToPNG() {
             download(svg, 'timetable.svg', 'image/svg+xml');
         });
     }
+}
+
+function phantomScreenshot(el, type) {
+    type = type || 'jpeg';
+    var h = $(el).height();
+    $.ajax({
+        url: 'https://phantomjscloud.com/api/browser/v2/ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7/',
+        method: 'POST',
+        cache: false,
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify({
+            content: inlineit.compile(el),
+            url: 'about:blank',
+            renderType: type,
+            renderSettings: {
+                viewport: {
+                    width: 720,
+                    height: h
+                },
+                clipRectangle: {
+                    width: 740,
+                    height: h
+                }
+            },
+            requestSettings: {
+                waitInterval: 0
+            }
+        }),
+        success: function (r) {
+            download(r, 'timetable.' + type, 'image/' + type);
+        },
+        error: function () {
+            pageError('Sorry,', 'we couldn\'t turn your timetable into an image at this time. Please try again later.');
+        }
+    });
 }
 
 /* hasClass()
