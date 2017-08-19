@@ -848,6 +848,7 @@ function createClassDiv(title, location, capacity, id, colour, duration, contain
     div.innerHTML = '<div>' + title + location + capacity + '</div>';
     div.style.position = 'absolute';
     div.style.backgroundColor = 'rgb(' + colour + ')';
+    div.style.height = (ttCellHeight * duration) + 'px';
 
     return $div;
 }
@@ -967,6 +968,7 @@ function createShadow(stream, courseID) {
         // Create the shadow div
         div = $('<div class="class-shadow">');
         div[0].style.backgroundColor = 'rgba(' + colour + ', 0.7)';
+        div[0].style.height = shadowHeight + 'px';
         div.data('capacity', capacity.replace(',', ' / '));
         div.data('location', location.replace(',', ' / '));
         div.appendTo(parent);
