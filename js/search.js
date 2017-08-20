@@ -1,6 +1,13 @@
 /* search.js
  *
- * Defines search algorithm to use for finding best timetable as well as evaluation function for timetables
+ * Defines search algorithm to use for finding a good timetable
+ * The search is done using a simply evolutionary algorithm
+ *   - Initially a set of random valid timetables are created. We call these the parents.
+ *   - From here on, we choose one of the parents and change it slightly to form a child.
+ *   - If this child is better than any of the N-best parents, keep it and kick a parent.
+ *
+ * Generation of children from parents works by remembering the ordering of classes passed into the basic search algorithm (a depth-first search)
+ * Then, when we want to generate a child, we slightly change that ordering, so that the DFS might find a different timetable
  *
  * Authors: David
  */
@@ -11,6 +18,17 @@ function search(list, maxClash, searchMax) {
     'use strict';
     if (maxClash === undefined) { maxClash = 0; }
     if (list.length === 0) { return []; }
+
+    // Checks if two classes have the same time
+    function sameClass(a, b) {
+        for (var i = 0; i < a.length; i += 1) {
+            if (String(a[i].time) !== String(b[i].time)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     // Checks whether two given time strings clash with each other
     function classClash(a, b) {
@@ -116,6 +134,12 @@ function search(list, maxClash, searchMax) {
         return array;
     }
 
+    function mapTimetable(child) {
+        return child.timetable.map(function (classIndex, stream) {
+            return child.streams[stream][classIndex];
+        });
+    }
+
     // Sort comparison function for sorting parent list in descending order of score
     function parentSort(a, b) {
         return b.score - a.score;
@@ -133,7 +157,7 @@ function search(list, maxClash, searchMax) {
             // Initialise new, blank parent
             parent = { streams: [], timetable: null, score: null };
 
-            // Initialise this parents streams to be in a random order within their streams
+            // Initialise this parent's classes to be in a random order within their streams
             // NB: streams stay in the same order
             for (j = 0; j < list.length; j += 1) {
                 parent.streams.push(shuffleArray(list[j].slice()));
@@ -156,15 +180,21 @@ function search(list, maxClash, searchMax) {
     function mutate(parent) {
         var child = { streams: [], timetable: null, score: null },
             i,
-            j;
+            j,
+            minJ = parent.streams.length;
         for (i = 0; i < parent.streams.length; i += 1) {
             child.streams.push(parent.streams[i].slice());
         }
 
-        while (child.timetable === null) {
+        var changes = 1 + Math.floor(Math.random() * 3.5);
+        for (i = 0; i < changes; i += 1) {
             j = Math.floor(Math.random() * child.streams.length);
+            minJ = Math.min(minJ, j);
             shuffleArray(child.streams[j]);
-            child.timetable = dfs(child.streams, parent.timetable.slice(), j);
+        }
+        child.timetable = dfs(child.streams, parent.timetable.slice(), minJ);
+        if (child.timetable === null) {
+            return child;
         }
 
         // Calculate a score for this new timetable
@@ -178,7 +208,7 @@ function search(list, maxClash, searchMax) {
         if (parents === null) { return null; }
         if (maxIter === 0) { return parents[0]; }
 
-        maxIter = maxIter || 8000;
+        maxIter = maxIter || 5000; // recommended default: 5000
         maxParents = maxParents || 40;
         biasTop = biasTop || 5;
 
@@ -189,14 +219,21 @@ function search(list, maxClash, searchMax) {
             time = (new Date()).getTime(),
             maxRunTime = 500;       // maximum time to run search in ms
 
-        for (i = 0; i < maxIter; i += 1) {
-            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length; // TODO: more heavily weighted bias? (probably not necessary...)
+        for (i = 1; i <= maxIter; i += 1) {
+            index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length;
             parent = parents[index];
             child = mutate(parent);
+
+            // If we couldn't generate a child timetable for some reason, move on to the next on
+            if (child.timetable === null) {
+                continue;
+            }
+
+            // Add to parents array
             parents.push(child);
 
             // Re-sort and cull parents every 10th iteration
-            if (i % 10 === 9) {
+            if (i % 10 === 0) {
                 // Sort parents array by descending sort
                 parents.sort(parentSort);
 
@@ -215,7 +252,7 @@ function search(list, maxClash, searchMax) {
 
         // Return the best timetable
         parents.sort(parentSort);
-        //console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - time, 'ms');
+        console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - time, 'ms');
         return parents[0];
     }
 
@@ -226,5 +263,5 @@ function search(list, maxClash, searchMax) {
     if (best === null) { return null; }
 
     // Return actual stream elements rather than only indexes
-    return best.timetable.map(function (x, i) { return best.streams[i][x]; });
+    return mapTimetable(best);
 }
