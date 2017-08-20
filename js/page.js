@@ -505,7 +505,7 @@ function timetableToPNG() {
 }
 
 function phantomScreenshot(el, type) {
-    type = type || 'jpeg';
+    type = type || 'png';
     var h = $(el).height(),
         timetableHTML = inlineit.compile(el);
     console.log(timetableHTML);
