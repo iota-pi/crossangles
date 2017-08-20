@@ -3,14 +3,11 @@ Some potential questions that are not "frequently asked", but are FAQ style anyw
 Why do classes sometimes move when I move another class?
 This has to do with how the timetables for the classes are set up. For example, lecture streams often have two classes, and if you change to a different lecture stream, both lecture times will need to change together.
 
-Why can't I download my timetable as an image?
-Unfortunately, this feature does not work in Internet Explorer, Edge or Safari. This is due to a combination of unimplemented features (for IE/Edge) or overly-stringent security measures (for Safari). If you would like to use this feature, please consider using Chrome or Firefox temporarily.
-
 Can I add commitments that aren't classes?
 Yes. Use the "Add Custom" button in the Course Selection panel.
 
 When is the data updated?
-We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 5 minutes past 5am, 12pm and 8pm. Sometimes it's updated at other times too.
+We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 5 minutes past 5am, 12pm and 6pm. Sometimes it's updated at other times too.
 
 Why don't you include "intensives"?
 Because your timetable would look messy if we did. They only run for one week, so they don't really need to go on your general timetable.
