@@ -9,7 +9,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, components_index, locations_index, times_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, clearWarning, CBS */
+/*globals $, search, document, timetableData, components_index, locations_index, times_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, CBS */
 
 function fetchData(cb) {
     'use strict';
@@ -199,6 +199,7 @@ function fetchData(cb) {
     }());
 
     // Remove full classes unless they've explicitly been been requested
+    /*
     (function removeFullClasses() {
         var i, j, stream;
         for (i = 0; i < list.length; i += 1) {
@@ -216,6 +217,7 @@ function fetchData(cb) {
             }
         }
     }());
+    */
 
     // Re-sort the list based on the number of streams for each component
     list.sort(function (a, b) { return a.length - b.length; });
@@ -229,13 +231,14 @@ function generate(draw, pageload) {
     if (pageload !== true) { pageload = false; }
 
     if (draw === true) { $('#timetable').addClass('loading'); }
-    clearWarning();
 
     var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined (= use default), otherwise, max iterations will be set to 0 to prevent search
-        maxClash  = 0;
+        maxClash  = 0,
+        allowFull = document.getElementById('fullclasses').checked;
 
     function makeTimetable(list) {
-        var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID, y, minY, maxY;
+        var timetable = search(list, maxClash, maxSearch, allowFull);
+        var i, j, stream, done, courseID;
 
         if (!draw) { return; }
         if (timetable === null) {
@@ -243,9 +246,6 @@ function generate(draw, pageload) {
             $('#timetable').removeClass('loading');
             return;
         }
-
-        minY = Infinity;
-        maxY = -Infinity;
 
         // Remove all current classes
         for (i = 0; i < classList.length; i += 1) {
@@ -270,6 +270,9 @@ function generate(draw, pageload) {
         }
 
         // Add shadows
+        var minY = Infinity,
+            maxY = -Infinity,
+            y;
         for (i = 0; i < list.length; i += 1) {
             for (j = 0; j < list[i].length; j += 1) {
                 courseID = courseList.indexOf(list[i][j].course);

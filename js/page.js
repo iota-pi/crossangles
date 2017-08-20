@@ -151,12 +151,10 @@ function saveState(generated) {
     options.cbs.ctr = document.getElementById('ctr').checked;
     options.cbs.cth = document.getElementById('cth').checked;
 
-    // Save generation specific options
-    options.fullclasses = optionMemory.fullclasses;
-
     // Save misc other options
     options.showcap = document.getElementById('showcap').checked;
     options.showloc = document.getElementById('showloc').checked;
+    options.fullclasses = document.getElementById('fullclasses').checked;
     Cookies.set('options', options, { expires: 7 * 26 });
 
     // Save class locations
@@ -638,34 +636,6 @@ function hideEmpty(minY, maxY) {
     }
 }
 
-/* clearWarning()
- * Called in preparation for timetable generation
- * Stores option status as of the beginning of timetable generation and hides the warning message about not yet active options
- */
-function clearWarning() {
-    var warning = document.getElementById('generateWarning');
-
-    // update optionsMemory
-    optionMemory.fullclasses = document.getElementById('fullclasses').checked;
-
-    updateWarning(); // since we just updated our optionsMemory variable, this will remove the warning
-}
-
-/* updateWarning()
- * Shows or hides the warning about not yet active options depending on if they have been changed since last generation or not
- */
-function updateWarning() {
-    var warning = document.getElementById('generateWarning');
-
-    if (document.getElementById('fullclasses').checked !== optionMemory.fullclasses) {
-        warning.innerHTML = 'Some options have not yet taken effect. Please generate a new timetable to include these options.';
-        warning.style.display = 'block';
-    } else {
-        warning.innerHTML = '';
-        warning.style.display = 'none';
-    }
-}
-
 /* getColour()
  * Returns a colour for a class
  * There are only 7 colours, after colour #7, they will loop around
@@ -697,7 +667,12 @@ function startDrag(e, ui) {
     var el = $(e.target),
         key = el.attr('id'),
         shadows = shadowList[key];
-    shadows.fadeIn(200);
+
+    // Show shadows
+    shadows.filter(function () {
+        // Filter out full classes if required
+        return document.getElementById('fullclasses').checked || $(this).data('status') !== 'F';
+    }).fadeIn(200);
 
     // Mark locked classes
     $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').addClass('locked');
@@ -759,6 +734,17 @@ function stopDrag(e, ui) {
 
             // Store class location (used when calling saveState)
             classLocations[matchingClass.attr('id')] = shadow.parent().attr('id');
+
+            // Remove hovering class
+            matchingClass.removeClass('hovering');
+        });
+    } else {
+        key = drag.attr('id');
+        $('.class-drag[id^="' + key.replace(/\d$/, '') + '"]').each(function () {
+            var matchingClass = $(this);
+
+            // Add hovering class since this courses location is not currently valid
+            matchingClass.addClass('hovering');
         });
     }
 
@@ -961,6 +947,7 @@ function createShadow(stream, courseID) {
         div[0].style.height = shadowHeight + 'px';
         div.data('capacity', capacity.replace(',', ' / '));
         div.data('location', location.replace(',', ' / '));
+        div.data('status', stream.status);
         div.appendTo(parent);
 
         // Add to shadowList
@@ -1095,11 +1082,6 @@ function moveClockPicker(cp) {
         // Add events to save the state when options are changed
         $('.savedOption').change(function () {
             saveState();
-        });
-
-        // Add generateOption handler
-        $('.generateOption').change(function () {
-            updateWarning();
         });
 
         // Add save as image event

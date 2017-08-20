@@ -14,10 +14,11 @@
 
 /*globals console, scoreTimetable */
 
-function search(list, maxClash, searchMax) {
+function search(list, maxClash, searchMax, allowFull) {
     'use strict';
     if (maxClash === undefined) { maxClash = 0; }
     if (list.length === 0) { return []; }
+    allowFull = allowFull || false;
 
     // Checks if two classes have the same time
     function sameClass(a, b) {
@@ -60,13 +61,17 @@ function search(list, maxClash, searchMax) {
     }
 
     // Chooses a class which doesn't cause too many clashes
-    // Inherited variables: maxClash
+    // Inherited variables: maxClash, allowFull
     function pickClass(streams, i, timetable) {
         var classNo = (timetable[i] + 1) || 0,        // If we have rolled back to this point, continue from where we were up to
             stream = streams[i];
 
         // Keep looking for a class while there is a clash
-        while (classNo < stream.length && countClashes(streams, timetable, stream[classNo].time) > maxClash) {
+        while (classNo < stream.length &&
+               (countClashes(streams, timetable, stream[classNo].time) > maxClash || // skip clashing classes if we've got too many clashes already
+                (stream[classNo].status === 'F' && !allowFull) // skip full classes if we aren't allowed them
+               )
+              ) {
             classNo += 1;
         }
 
