@@ -28,16 +28,6 @@ OPEN_AND_FULL_ONLY = True
 # Whether to download data fresh or not (should always be True unless testing)
 DOWNLOAD = True
 
-# Load indexes from JSON files and do some other initialisation of variables
-COMPONENTS = loadJSON('data/components.json')
-LOCATIONS = loadJSON('data/locations.json')
-TIMES = loadJSON('data/times.json')
-NEW_COMPONENTS = defaultdict(int)
-NEW_LOCATIONS = defaultdict(int)
-NEW_TIMES = defaultdict(int)
-semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
-SEM_CODE = semcodes[SEMESTER]
-
 #
 # main(): Scrape data, parse it and write it to JSON files
 #
@@ -376,6 +366,17 @@ def loadJSON(fname):
             return json.load(f)
     except:
         return []
+
+
+# Load indexes from JSON files and do some other initialisation of variables
+COMPONENTS = loadJSON('data/components.json')
+LOCATIONS = loadJSON('data/locations.json')
+TIMES = loadJSON('data/times.json')
+NEW_COMPONENTS = defaultdict(int)
+NEW_LOCATIONS = defaultdict(int)
+NEW_TIMES = defaultdict(int)
+semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
+SEM_CODE = semcodes[SEMESTER]
 
 
 if __name__ == '__main__':
