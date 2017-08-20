@@ -28,6 +28,9 @@ OPEN_AND_FULL_ONLY = True
 # Whether to download data fresh or not (should always be True unless testing)
 DOWNLOAD = True
 
+# Whether or not to print output messages
+OUTPUT = False
+
 #
 # main(): Scrape data, parse it and write it to JSON files
 #
@@ -95,17 +98,14 @@ def main():
     
 
     # Record time of update
-    now = time.time()
-    os.environ['TZ'] = 'Australia/Sydney' # Force Sydney timezone
-    update_date = time.strftime('%d/%m/%Y', time.localtime(now))
-    update_time = time.strftime('%H:%M', time.localtime(now))
+    update_date, update_time = getSydneyTime()
 
     # Save timetable data as a JSON file
     with open('data/timetable.json', 'w') as f:
         json.dump([timetables, COMPONENTS, LOCATIONS, TIMES, { 'sem': SEMESTER, 'year': YEAR, 'updated': update_date, 'uptimed': update_time }], f, separators=(',',':'))
     
-    print()
-    print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
+    if OUTPUT:
+        print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
 
     # Update components, locations and times index
     updateIndex('data/components.json', NEW_COMPONENTS)
@@ -121,12 +121,12 @@ def getPages():
         try:
             with open('data/htmlcache.json') as f:
                 faculties = json.load(f)
-                print('Loaded faculty data from file')
+                if OUTPUT: print('Loaded faculty data from file')
                 return faculties
         except:
             pass
 
-    print('Downloading faculty data')
+    if OUTPUT: print('Downloading faculty data')
     tree = loadPage('http://classutil.unsw.edu.au/')
     links = tree.xpath('//td[' + str(SEM_CODE) + '][@class="data"]/a[contains(@href,".html")]/@href')
 
@@ -347,6 +347,17 @@ def subtimes(t):
         return TIMES.index(t)
     else:
         return t
+
+#
+# getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney
+#                  this is particularly useful for when script is being run on a webserver in another location
+#
+def getSydneyTime():
+    now = time.time()
+    os.environ['TZ'] = 'Australia/Sydney' # Force Sydney timezone
+    thedate = time.strftime('%d/%m/%Y', time.localtime(now))
+    thetime = time.strftime('%H:%M', time.localtime(now))
+    return thedate, thetime
 
 #
 # loadPage(): takes a URL and returns an HTML tree from the page data at that URL
