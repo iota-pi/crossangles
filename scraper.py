@@ -3,18 +3,9 @@
 # scraper.py
 #
 # This Python script scrapes timetable data from the classutil site ('http://classutil.unsw.edu.au/')
-# and stores it in a JSON format in two files: `courses.json` and `timetable.json`
+# and stores it in a JSON file (timetable.json)
 #
-# courses.json   : contains a JSON hash with course code as key; course name as value
-# timetable.json : contains a JSON hash with course code as key; course classes & timetable info as value
-#                  format is:
-#                  {
-#                   coursecode: [[component, class_status, capacity, [[class_time, weeks, location], ...]], [...]],
-#                   ...
-#                  }
-#                    (please note that any unknown values for class_time, weeks or location will be stored as empty strings (''))
-#
-# NB: Approx. bandwidth used by this script while running = 3.5MB
+# NB: Approx. bandwidth used by this script while running = 3.3MB
 #
 # Authors: David Adams
 #
@@ -27,34 +18,29 @@ import time
 import re
 import os
 
+# Semester and year to scrape data for
 SEMESTER = 'S2'
 YEAR = 2017
+
+# Whether to only include classes in the data which are either Open, or Full (i.e. remove Cancelled, Tentative, Stopped classes)
+OPEN_AND_FULL_ONLY = True
+
+# Whether to download data fresh or not (should always be True unless testing)
 DOWNLOAD = True
-OPEN_OR_FULL_ONLY = True
 
-try:
-    with open('data/components.json') as f:
-        COMPONENTS = json.load(f)
-except:
-    COMPONENTS = ''
-try:
-    with open('data/locations.json') as f:
-        LOCATIONS = json.load(f)
-except:
-    LOCATIONS =  ''
-try:
-    with open('data/times.json') as f:
-        TIMES = json.load(f)
-except:
-    TIMES =  ''
-
+# Load indexes from JSON files and do some other initialisation of variables
+COMPONENTS = loadJSON('data/components.json')
+LOCATIONS = loadJSON('data/locations.json')
+TIMES = loadJSON('data/times.json')
 NEW_COMPONENTS = defaultdict(int)
 NEW_LOCATIONS = defaultdict(int)
 NEW_TIMES = defaultdict(int)
-
 semcodes = {'S1': 2, 'S2': 3, 'Summer': 1}
-semester = semcodes[SEMESTER]
+SEM_CODE = semcodes[SEMESTER]
 
+#
+# main(): Scrape data, parse it and write it to JSON files
+#
 def main():
     global NEW_COMPONENTS, NEW_LOCATIONS, NEW_TIMES
 
@@ -131,27 +117,16 @@ def main():
     print()
     print('Done.', '(' + str(sum(map(lambda x: len(x[1]), faculties.items()))) + ' bytes downloaded in total)')
 
-    # Update components and locations cache
-    NEW_COMPONENTS = sorted(NEW_COMPONENTS.items(), key=lambda x: x[1], reverse=True)
-    NEW_COMPONENTS = list(map(lambda x: x[0], NEW_COMPONENTS))
-    with open('data/components.json', 'w') as f:
-        json.dump(NEW_COMPONENTS, f)
-    NEW_LOCATIONS = sorted(NEW_LOCATIONS.items(), key=lambda x: x[1], reverse=True)
-    NEW_LOCATIONS = list(map(lambda x: x[0], NEW_LOCATIONS))
-    with open('data/locations.json', 'w') as f:
-        json.dump(NEW_LOCATIONS, f)
-    NEW_TIMES = sorted(NEW_TIMES.items(), key=lambda x: x[1], reverse=True)
-    NEW_TIMES = list(map(lambda x: x[0], NEW_TIMES))
-    with open('data/times.json', 'w') as f:
-        json.dump(NEW_TIMES, f)
+    # Update components, locations and times index
+    updateIndex('data/components.json', NEW_COMPONENTS)
+    updateIndex('data/locations.json', NEW_LOCATIONS)
+    updateIndex('data/times.json', NEW_TIMES)
 
 
 #
-# getPages(): finds all the faculty pages for the current semester (NB: currently set by global variable "semester")
+# getPages(): finds all the faculty pages for the current semester
 #
 def getPages():
-    global semester
-
     if DOWNLOAD == False:
         try:
             with open('data/htmlcache.json') as f:
@@ -163,7 +138,7 @@ def getPages():
 
     print('Downloading faculty data')
     tree = loadPage('http://classutil.unsw.edu.au/')
-    links = tree.xpath('//td[' + str(semester) + '][@class="data"]/a[contains(@href,".html")]/@href')
+    links = tree.xpath('//td[' + str(SEM_CODE) + '][@class="data"]/a[contains(@href,".html")]/@href')
 
     # Filter ADFA courses (all courses which start with a 'Z')
     links = [link for link in links if link[0] != 'Z']
@@ -302,16 +277,6 @@ def splitTimetableData(string):
     return [time, location]
 
 #
-# loadPage(): takes a URL and returns an HTML tree from the page data at that URL
-# NB:         this is synchronous
-#
-def loadPage(url):
-    page = getURL(url)
-    tree = html.fromstring(page.content)
-    tree = stripComments(tree)
-    return tree
-
-#
 # stripComments(): removes all HTML comments from parsed HTML (required for traversing child nodes without error)
 #
 def stripComments(tree):
@@ -322,15 +287,6 @@ def stripComments(tree):
         p.remove(c)
     
     return tree
-
-#
-# getURL(): synchronously gets the contents of the page at the given URL
-#
-def getURL(url):
-    global bytecount
-    response = requests.get(url)
-    #bytecount += len(response.content)
-    return response
 
 #
 # expandRanges(): changes strings of format e.g. "1-3,6,10-12" to "1,2,3,6,10,11,12"
@@ -401,6 +357,25 @@ def subtimes(t):
         return TIMES.index(t)
     else:
         return t
+
+#
+# updateIndex(): updates an index file to be used next time the scraper is run
+#
+def updateIndex(fname, index):
+    index = sorted(index.items(), key=lambda x: x[1], reverse=True)
+    index = list(map(lambda x: x[0], index))
+    with open(fname, 'w') as f:
+        json.dump(index, f)
+
+#
+# loadJSON(): tries to load a JSON file, but doesn't throw an exception if it fails
+#
+def loadJSON(fname):
+    try:
+        with open(fname) as f:
+            return json.load(f)
+    except:
+        return []
 
 
 if __name__ == '__main__':
