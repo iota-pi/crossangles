@@ -1,6 +1,7 @@
 /* typeahead.js
  *
- * JS to do a better job than https://github.com/twitter/typeahead.js
+ * Connected text input and dropdown list.
+ * Similar to https://github.com/twitter/typeahead.js (but better!)
  * 
  * Authors: David Adams
  */
