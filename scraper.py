@@ -190,7 +190,7 @@ def getTimetable(tree):
     for i in range(len(timetable)):
         timestring = timetable[i]
         timetableData = splitTimetableData(timestring)
-        if len(timetableData) != 0 and (not OPEN_OR_FULL_ONLY or status[i] <= 1):
+        if len(timetableData) != 0 and (not OPEN_AND_FULL_ONLY or status[i] <= 1):
             data.append([component[i], status[i], capacityLow[i], capacityHigh[i]] + timetableData)
         else:
             data.append([])
