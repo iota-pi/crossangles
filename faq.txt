@@ -10,7 +10,7 @@ Can I add commitments that aren't classes?
 Yes. Use the "Add Custom" button in the Course Selection panel.
 
 When is the data updated?
-We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 12am, 8am, 2pm and 8pm. Sometimes it's updated at other times too.
+We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 5 minutes past 5am, 12pm and 8pm. Sometimes it's updated at other times too.
 
 Why don't you include "intensives"?
 Because your timetable would look messy if we did. They only run for one week, so they don't really need to go on your general timetable.

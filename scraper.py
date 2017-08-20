@@ -349,6 +349,25 @@ def subtimes(t):
         return t
 
 #
+# loadPage(): takes a URL and returns an HTML tree from the page data at that URL
+# NB:         this is synchronous
+#
+def loadPage(url):
+    page = getURL(url)
+    tree = html.fromstring(page.content)
+    tree = stripComments(tree)
+    return tree
+
+#
+# getURL(): synchronously gets the contents of the page at the given URL
+#
+def getURL(url):
+    global bytecount
+    response = requests.get(url)
+    #bytecount += len(response.content)
+    return response
+
+#
 # updateIndex(): updates an index file to be used next time the scraper is run
 #
 def updateIndex(fname, index):
