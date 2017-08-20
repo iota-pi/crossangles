@@ -124,7 +124,6 @@ function restoreState(courseHash) {
         document.getElementById('showcap').checked = options.showcap;
         document.getElementById('fullclasses').checked = options.fullclasses;
         document.getElementById('showloc').checked = options.showloc;
-        document.getElementById('canclash').checked = options.canclash;
 
         // Call generate to recreate previous timetable
         if (JSON.stringify(classLocations) !== '{}') {
@@ -154,7 +153,6 @@ function saveState(generated) {
 
     // Save generation specific options
     options.fullclasses = optionMemory.fullclasses;
-    options.canclash = optionMemory.canclash;
 
     // Save misc other options
     options.showcap = document.getElementById('showcap').checked;
@@ -649,7 +647,6 @@ function clearWarning() {
 
     // update optionsMemory
     optionMemory.fullclasses = document.getElementById('fullclasses').checked;
-    optionMemory.canclash = document.getElementById('canclash').checked;
 
     updateWarning(); // since we just updated our optionsMemory variable, this will remove the warning
 }
@@ -660,7 +657,7 @@ function clearWarning() {
 function updateWarning() {
     var warning = document.getElementById('generateWarning');
 
-    if (document.getElementById('fullclasses').checked !== optionMemory.fullclasses || document.getElementById('canclash').checked !== optionMemory.canclash) {
+    if (document.getElementById('fullclasses').checked !== optionMemory.fullclasses) {
         warning.innerHTML = 'Some options have not yet taken effect. Please generate a new timetable to include these options.';
         warning.style.display = 'block';
     } else {

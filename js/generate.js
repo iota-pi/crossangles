@@ -231,8 +231,8 @@ function generate(draw, pageload) {
     if (draw === true) { $('#timetable').addClass('loading'); }
     clearWarning();
 
-    var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined = use default, otherwise, max iterations for search will be 0 to prevent search
-        maxClash  = +(document.getElementById('canclash').checked) * 100;
+    var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined (= use default), otherwise, max iterations will be set to 0 to prevent search
+        maxClash  = 0;
 
     function makeTimetable(list) {
         var timetable = search(list, maxClash, maxSearch), i, j, stream, done, courseID, y, minY, maxY;
