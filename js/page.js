@@ -1,6 +1,6 @@
 /* page.js
  *
- * JS file to handle animations, etc.
+ * JS file to handle most page interactions.
  *
  * Authors: David Adams
  */

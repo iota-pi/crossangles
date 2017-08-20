@@ -1,9 +1,8 @@
 /* generate.js
  *
- * Steps: (note: this header comment is very out-of-date)
- * 1. Make a list of all class time options
- * 2. Evolutionary algorithm based on backtracking search to find best timetable (see search.js)
- * 3. Draws generated timetable
+ * Contrary to what the name implies, this file does not perform any of the logic for generating a timetable.
+ * What it does do is parse the data loaded from timetable.json and create the DOM elements (classes and class shadows) as per generated timetable
+ * For the actual generation algorithm, see search.js
  *
  * Authors: David
  */
