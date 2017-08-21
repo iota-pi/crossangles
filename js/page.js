@@ -472,41 +472,28 @@ function canSaveTimetable() {
 }
 
 /* timetableToPNG()
- * Turns timetable DOM into a PNG and downloads it
- * NB: no IE or Safari support!
+ * Turns timetable into a PNG and downloads it
  */
 function timetableToPNG() {
     'use strict';
 
     var el = document.getElementById('timetable');
-
-    var topng = canSaveTimetable();
-
-    if (topng) {
-        // Standardize timetable export size
-        $(el).width(720);
-        $(el).removeClass('scroll-x');
-
-        domtoimage.toPng(el).then(function (png) {
-            // Revert timetable properties
-            $(el).css('width', 'auto');
-            $(el).addClass('scroll-x');
-
-            // Download the png image
-            download(png, 'timetable.png', 'image/png');
-        });
-    } else {
-        phantomScreenshot(el);
-    }
+    phantomScreenshot(el);
 }
 
-function phantomScreenshot(el, type) {
+/* phantomScreenshot()
+ * Uses PhantomJS Cloud to take a screenshot of the timetable.
+ * This service has a free tier which we are using, which should allow thousands of timetables to be drawn each day
+ */
+function phantomScreenshot(el, type, key) {
     type = type || 'png';
+    key = key || 'ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7';
+
     var h = $(el).height(),
         timetableHTML = inlineit.compile(el);
 
     $.ajax({
-        url: 'https://phantomjscloud.com/api/browser/v2/ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7/',
+        url: 'https://phantomjscloud.com/api/browser/v2/' + key + '/',
         method: 'POST',
         cache: false,
         contentType: 'application/json; charset=UTF-8',
@@ -533,7 +520,13 @@ function phantomScreenshot(el, type) {
             download('data:image/' + type + ';base64,' + r.content.data, 'timetable.' + type, 'image/' + type);
         },
         error: function () {
-            pageError('Sorry,', 'we couldn\'t turn your timetable into an image at this time. Please try again later.');
+            if (key !== 'a-demo-key-with-low-quota-per-ip-address') {
+                // Try the demo key (highly unlikely to ever be needed, the main key should handle thousands of requests)
+                phantomScreenshot(el, type, 'a-demo-key-with-low-quota-per-ip-address');
+            } else {
+                // Something is probably wrong with the connection
+                pageError('Sorry,', 'we couldn\'t turn your timetable into an image at this time. Please try again later.');
+            }
         }
     });
 }
