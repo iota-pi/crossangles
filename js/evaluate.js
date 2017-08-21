@@ -4,8 +4,6 @@
  * Authors: David
  */
 
-/*globals console */
-
 function timetableToArray(timetableData, streams) {
     'use strict';
 

@@ -6,7 +6,6 @@
  */
 
 /*jshint browser:true */
-/*globals console */
 
 var inlineit = (function () {
     var relevantProperties = [

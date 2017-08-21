@@ -1058,9 +1058,7 @@ function moveClockPicker(cp) {
         diff = bb.bottom - viewHeight;
 
     // Move clockpicker up if it's below the bottom of the screen
-    console.log(popover, diff);
     if (diff > 0) {
-        console.log(popover.style.top);
         popover.style.top = +popover.style.top.replace('px', '') - diff + 'px';
 
         // Hide arrow unless whole of clockpicker is visible

@@ -8,7 +8,7 @@
 
 /* --- JSLint Options --- */
 /*jslint browser: true*/
-/*global $, jQuery, console, addCourse, setTimeout */
+/*global $, jQuery, addCourse */
 
 (function () {
     "use strict";

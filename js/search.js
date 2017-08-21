@@ -257,7 +257,7 @@ function search(list, maxClash, searchMax, allowFull) {
 
         // Return the best timetable
         parents.sort(parentSort);
-        console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - time, 'ms');
+        //console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - time, 'ms');
         return parents[0];
     }
 
