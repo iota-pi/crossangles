@@ -504,7 +504,6 @@ function phantomScreenshot(el, type) {
     type = type || 'png';
     var h = $(el).height(),
         timetableHTML = inlineit.compile(el);
-    console.log(timetableHTML);
 
     $.ajax({
         url: 'https://phantomjscloud.com/api/browser/v2/ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7/',
