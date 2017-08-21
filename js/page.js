@@ -758,6 +758,31 @@ function stopDrag(e, ui) {
     saveState();
 }
 
+/* checkFullClasses()
+ * Checks every class to see if it should have the hovering class style added or removed from it
+ * (called whenever the state of the fullclasses checkbox is changed)
+ */
+function checkFullClasses() {
+    $('.class-drag').each(function () {
+        if (document.getElementById('fullclasses').checked === false) {
+            var current = $(this),
+                shadows = current.parent().children('.class-shadow').filter(function () {
+                    return $(this).data('status') !== 'F'; // Check the shadow isn't for a full class
+                }).filter(shadowList[this.id]); // Check that the shadow corresponds to this class
+
+            // If we have no valid shadows from this course under us, we are now hovering
+            if (shadows.length === 0) {
+                current.addClass('hovering');
+            }
+        } else {
+            // If we're snapped to our parent div, and we're allowed full classes, then we must not be hovering
+            if (+this.style.top.replace('px', '') === 0 && +this.style.left.replace('px', '') === 0) {
+                $(this).removeClass('hovering');
+            }
+        }
+    });
+}
+
 // Add push functionality to jQuery objects
 $.fn.push = function (selector) {
     'use strict';
@@ -1082,6 +1107,10 @@ function moveClockPicker(cp) {
         // Add events to save the state when options are changed
         $('.savedOption').change(function () {
             saveState();
+        });
+
+        $('#fullclasses').change(function () {
+            checkFullClasses();
         });
 
         // Add save as image event
