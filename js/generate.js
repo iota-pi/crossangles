@@ -9,7 +9,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, components_index, locations_index, times_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, CBS */
+/*globals $, search, document, timetableData, components_index, locations_index, times_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, CBS, console */
 
 function fetchData(cb) {
     'use strict';
@@ -289,7 +289,10 @@ function generate(draw, pageload) {
             saveState(true); // save state information (including generation-specific details)
         }
 
-        hideEmpty(Math.floor(minY), Math.floor(maxY));
+        // Hide empty rows (unless all rows are empty)
+        if (minY !== Infinity) {
+            hideEmpty(Math.floor(minY), Math.floor(maxY));
+        }
 
         $('#timetable').removeClass('loading');
     }
