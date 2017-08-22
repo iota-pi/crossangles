@@ -8,37 +8,6 @@
 /*jshint browser:true */
 
 var inlineit = (function () {
-    var relevantProperties = [
-        'backgroundColor',
-        'position',
-        'top',
-        'bottom',
-        'left',
-        'right',
-        'transform',
-        'fontFamily',
-        'fontSize',
-        'fontWeight',
-        'opacity',
-        'maxWidth',
-        'width',
-        'maxHeight',
-        'height',
-        'lineHeight',
-        'margin',
-        'padding',
-        'display',
-        'overflow',
-        'textAlign',
-        'flexDirection',
-        'flexBasis',
-        'flexFlow',
-        'flexGrow',
-        'flexShrink',
-        'flexWrap',
-        'zIndex'
-    ];
-
     function compileHTML(node) {
         // Create a deep copy of the given node
         var clone = node.cloneNode(true);
