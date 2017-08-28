@@ -6,7 +6,7 @@
 # and stores it in a JSON file (timetable.json)
 #
 # To update this on netlify, there is a hook: https://api.netlify.com/build_hooks/598c439b7960b16acbf4bef9
-# To update it, use a Cron job (e.g. 5,12,20 * * * curl -X POST -d '{}' https://api.netlify.com/build_hooks/598c439b7960b16acbf4bef9)
+# To update it, use a Cron job (e.g. 5 5,12,18 * * * curl -X POST -d '{}' https://api.netlify.com/build_hooks/598c439b7960b16acbf4bef9)
 #
 # NB: Approx. bandwidth used by this script while running = 3.3MB
 #
