@@ -686,7 +686,7 @@ function stopDrag(e, ui) {
 
     // Snap dragged item to nearest visible shadow
     var drag = $(e.target),
-        least = drag.width() / 2 * drag.width() / 2, // initial value = min_range ^ 2
+        least = 50 * 50, // min_range^2
         best = null,
         key,
         index;
