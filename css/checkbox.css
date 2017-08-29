@@ -122,8 +122,16 @@ input[type="radio"]:checked + label::after {
 }
 
 /* radio button styles */
-#radiocolours input[type="radio"] {
-    padding-right: 3px;
+#radio-holder {
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+#radio-holder > input[type="radio"] + label {
+    margin: auto 2px;
 }
 
 input[type="radio"].midblue + label::before {

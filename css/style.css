@@ -133,7 +133,9 @@ footer div.content {
 }
 
 .modal .input-group-addon:first-child {
-    min-width: 70px;
+    min-width: 55px;
+    text-align: left;
+    padding-left: 0;
 }
 
 /* typeahead styles */
