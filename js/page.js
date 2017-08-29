@@ -332,7 +332,7 @@ function addCustom() {
         day = $('input[type="radio"][name="customDay"]').parent('.active').data('day'),
         time = day + ' ' + start + ((end - start !== 1) ? '-' + end : ''),
         cid = document.getElementById('customID').value || uniqueID(),
-        colour = getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked'), ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, ''),
+        colour = getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked + label'), ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, ''),
         data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
 
     // Remove this course from customClasses list if it already exists
