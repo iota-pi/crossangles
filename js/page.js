@@ -400,10 +400,11 @@ function showEdit(e) {
     document.getElementById('customLocation').value = data.location;
     document.getElementById('startTime').value = to12H(time[0]);
     document.getElementById('endTime').value = to12H(time[1]);
-    $('input[type="radio"][name="customColour"]').attr('checked', false).each(function (a, el) {
+    console.log(data.colour);
+    $('input[type="radio"][name="customColour"]').next().each(function (a, el) {
+        $(el).prev()[0].checked = false; // uncheck all radios
         if (getComputedStyle(el, ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, '') === data.colour) {
-            $(el).attr('checked', true);
-            return false;
+            $(el).prev()[0].checked = true; // check this radio
         }
     });
     $('input[type="radio"][name="customDay"]').parent().removeClass('active'); // may not be needed?
