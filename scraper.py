@@ -95,9 +95,6 @@ def main():
         
         # Update dict of timetables
         timetables.update(timetable)
-        
-        # Some progress output
-        #print('Completed faculty', faculty)
     
 
     # Record time of update
