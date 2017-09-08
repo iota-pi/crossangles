@@ -1085,6 +1085,32 @@ function moveClockPicker(cp) {
     $(document).ready(function () {
         createTable();
 
+        // Create copy of list for shadow element
+        document.getElementById('menu-shadow').innerHTML = document.getElementById('ddmenu').innerHTML;
+
+        // Add toggle event for dropdown menu
+        $('#ddmenu-toggle').click(function () {
+            if ($('#ddmenu:visible').length === 0) {
+                $('#ddmenu').slideDown(200);
+                $('#menu-shadow').slideDown(200);
+            } else {
+                $('#ddmenu').slideUp(200);
+                $('#menu-shadow').slideUp(200);
+            }
+        });
+
+        // Add event to hide dropdown menu when an item is clicked
+        $('#ddmenu').click(function () {
+            $('#ddmenu').slideUp(200);
+            $('#menu-shadow').slideUp(200);
+        });
+
+        // Add event to hide dropdown menu when it loses focus
+        $('#maincontainer').click(function () {
+            $('#ddmenu').slideUp(200);
+            $('#menu-shadow').slideUp(200);
+        });
+
         // Add event to toggle class capacities
         $('#showcap').change(function () {
             var divs = $('.class-capacity:parent');
