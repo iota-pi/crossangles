@@ -1,27 +1,4 @@
 /* checkbox styles */
-/*
-.checkbox-container {
-    margin-left: -15px;
-}
-
-.checkbox-inline.checkbox-inline {
-	margin: 0;
-    padding-left: 15px;
-}
-
-.checkbox-inline label {
-	min-width: 145px;
-}
-.checkbox-inline label.longer {
-	min-width: 160px;
-}
-
-/* mozilla checkbox fix *\/
-input[type="checkbox"], .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"] {
-    -moz-appearance: none;
-}
-*/
-
 input[type="checkbox"], input[type="radio"] {
     display: none;
     padding: 0;
@@ -66,6 +43,8 @@ input[type="checkbox"]:checked + label::before {
     border: 2px solid #fff;
     border-top-width: 0;
     border-left-width: 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
     transform: rotate(45deg);
     z-index: 1;
 }

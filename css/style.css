@@ -87,6 +87,8 @@ footer div.content {
     top: 50%;
     right: 14px;
     right: 1em;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 }
 
@@ -113,6 +115,8 @@ footer div.content {
     position: absolute;
     top: 50%;
     right: 0.5rem;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     vertical-align: middle;
 }
