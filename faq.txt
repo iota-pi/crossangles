@@ -1,15 +1,15 @@
 Some potential questions that are not "frequently asked", but are FAQ style anyway:
 
 Why do classes sometimes move when I move another class?
-This has to do with how the timetables for the classes are set up. For example, lecture streams often have two classes, and if you change to a different lecture stream, both lecture times will need to change together.
+This has to do with how some classes are set up in the university system. For example, lecture streams often have two different class times and if you change to a different lecture stream, then both lecture times will need to change together.
 
-Can I add commitments that aren't classes?
+Can I add other things to my timetable that aren't classes?
 Yes. Use the "Add Custom" button in the Course Selection panel.
 
 When is the data updated?
 We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 5 minutes past 5am, 12pm and 6pm. Sometimes it's updated at other times too.
 
-Why don't you include "intensives"?
+Why don't you include 'intensive' classes?
 Because your timetable would look messy if we did. They only run for one week, so they don't really need to go on your general timetable.
 
 Why don't you include weekend classes?
