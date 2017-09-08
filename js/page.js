@@ -379,7 +379,7 @@ function showEdit(e) {
         }
     }
     if (data === undefined) {
-        pageError('Oops!', 'The list of your courses has become a bit confused. Please try reloading the page, or adding your courses again.');
+        pageError('Oops!', 'The list of your courses is a bit confused. Please try reloading the page, or adding your courses again.');
     }
 
     // Retrieve start and end times and the day of the week
