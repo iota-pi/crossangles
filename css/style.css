@@ -37,6 +37,39 @@ input:focus, button:focus {
     outline: none;
 }
 
+/* topbar styles */
+nav.topbar {
+    font-size: 20px;
+    height: 45px;
+    background-color: #0a6ebe;
+    color: white;
+    box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 8px rgba(0,0,0,.3);
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    width: 100%;
+    display: flex; /* todo: prefixes */
+}
+nav.topbar > div.name {
+    margin: auto;
+}
+nav.topbar > div.menu-toggle {
+    display: flex; /* todo: prefixes */
+    width: 45px;
+    transition: background-color 0.2s;
+    background-color: transparent;
+    cursor: pointer;
+}
+nav.topbar > div.menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+nav.topbar > div.menu-toggle > span {
+    margin: auto;
+}
+nav.topbar + div {
+    padding-top: 60px;
+}
+
 /* footer styles */
 footer {
 	color: white;
@@ -150,7 +183,6 @@ footer div.content {
 	border: 1px solid #cccccc;
 	background-color: rgba(255, 255, 255, 0);
 	border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 	-webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
     transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
@@ -166,8 +198,7 @@ footer div.content {
 	border: 1px solid #cccccc;
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 4px;
-	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-	      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	background-clip: padding-box;
 
 }
