@@ -319,6 +319,15 @@ function uniqueID() {
     return id;
 }
 
+/* getRGB()
+ * rbga(r, g, b, a) -> r,g,b
+ */
+function getRGB(col) {
+    var cols = col.replace('rgba(', '').replace(')', '').split(',');
+    cols.pop(); // remove the alpha
+    return cols.join(',').replace(/ /g, '');
+}
+
 /* addCustom()
  * Adds a custom course using data taken from the respective modal form
  */
@@ -332,8 +341,9 @@ function addCustom() {
         day = $('input[type="radio"][name="customDay"]').parent('.active').data('day'),
         time = day + ' ' + start + ((end - start !== 1) ? '-' + end : ''),
         cid = document.getElementById('customID').value || uniqueID(),
-        colour = getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked + label'), ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, ''),
+        colour = getRGB(getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked + label'), ':before').getPropertyValue('background-color')),
         data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
+    console.log(colour);
 
     // Remove this course from customClasses list if it already exists
     for (var i = 0; i < customClasses.length; i += 1) {
@@ -403,7 +413,7 @@ function showEdit(e) {
     console.log(data.colour);
     $('input[type="radio"][name="customColour"]').next().each(function (a, el) {
         $(el).prev()[0].checked = false; // uncheck all radios
-        if (getComputedStyle(el, ':before').getPropertyValue('background-color').replace(/rgba\(|, 0\.85\)/g, '') === data.colour) {
+        if (getRGB(getComputedStyle(el, ':before').getPropertyValue('background-color')) === getRGB(data.colour)) {
             $(el).prev()[0].checked = true; // check this radio
         }
     });
