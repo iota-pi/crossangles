@@ -286,7 +286,7 @@ function generate(draw, pageload) {
         if (pageload) {
             restoreClasses();
         } else {
-            saveState(true); // save state information (including generation-specific details)
+            saveState(); // save state information (including generation-specific details)
         }
 
         // Hide empty rows (unless all rows are empty)

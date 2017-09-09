@@ -23,7 +23,8 @@ var finishedInit = false,
     times_index = {},
     metadata = {},
     customClasses = [],
-    optionMemory = {};
+    optionMemory = {},
+    removeCourseAnim = true;
 
 /* init_typeahead()
  * Initialises the linked input and dropdown list used for entering courses
@@ -82,23 +83,66 @@ function init_typeahead() {
     });
 }
 
+function clearCourses() {
+    removeCourseAnim = false;
+    $('.remove-icon').each(function (i, el) {
+        el.click();
+    });
+    removeCourseAnim = true;
+}
+
 /* restoreState()
  * Restores the page to a previously saved state (i.e. by calling saveState)
+ * Restores from cookies
  * Mostly used during page load
  */
-function restoreState(courseHash) {
+function restoreState() {
     'use strict';
 
     // Get previously chosen options and courses from cookies
-    var options = Cookies.getJSON('options'),
-        courses = Cookies.getJSON('courses') || [],
+    var options   = Cookies.getJSON('options'),
+        courses   = Cookies.getJSON('courses') || [],
+        locations = Cookies.getJSON('classLocations') || {},
+        custom    = Cookies.getJSON('custom') || [],
         i;
 
+    restoreFromData(options, courses, locations, custom);
+}
+
+/* restoreBackup()
+ * Restores the page to a previously backed-up state
+ * Restores from cookies
+ */
+function restoreBackup(data) {
+    'use strict';
+    if (data.length < 4) {
+        pageError('Sorry,', 'that backup file isn\'t in the format we were expecting.');
+        return;
+    }
+    clearCourses();
+
+    // Get previously chosen options and courses from cookies
+    var options   = data[0],
+        courses   = data[1],
+        locations = data[2],
+        custom    = data[3],
+        i;
+
+    restoreFromData(options, courses, locations, custom);
+    saveState(); // Update cookies
+}
+
+/* restoreFromData()
+ * Restores page state based on data passed into it
+ */
+function restoreFromData(options, courses, locations, custom) {
+    var i;
+
     // Restore class locations
-    classLocations = Cookies.getJSON('classLocations') || {};
+    classLocations = locations;
 
     // Restore custom courses
-    customClasses  = Cookies.getJSON('custom') || [];
+    customClasses  = custom;
 
     if (options !== undefined) {
         // Restore courses
@@ -132,20 +176,13 @@ function restoreState(courseHash) {
     }
 }
 
-/* saveState()
- * Uses cookies to store chosen courses, options, and class locations
+/* getOptions()
+ * Returns a dict representing the options and CBS event currently selected
  */
-function saveState(generated) {
-    'use strict';
-
-    if (!finishedInit) { return; }
-
-    // Save courses
-    Cookies.set('courses', courseList, { expires: 7 * 26 }); // 1/2 a year
-    Cookies.set('custom', customClasses, { expires: 7 * 26 }); // 1/2 a year
-
-    // Save CBS items
+function getOptions() {
     var options = { cbs: {} };
+
+    // Save which CBS event are selected
     options.cbs.tbt = document.getElementById('tbt').checked;
     options.cbs.bib = document.getElementById('bib').checked;
     options.cbs.ctr = document.getElementById('ctr').checked;
@@ -155,10 +192,44 @@ function saveState(generated) {
     options.showcap = document.getElementById('showcap').checked;
     options.showloc = document.getElementById('showloc').checked;
     options.fullclasses = document.getElementById('fullclasses').checked;
+
+    return options;
+}
+
+/* saveState()
+ * Uses cookies to store chosen courses, options, and class locations
+ */
+function saveState() {
+    'use strict';
+
+    if (!finishedInit) { return; }
+
+    // Save CBS items
+    var options = getOptions();
     Cookies.set('options', options, { expires: 7 * 26 });
 
     // Save class locations
     Cookies.set('classLocations', classLocations, { expires: 7 * 26 });
+
+    // Save courses
+    Cookies.set('courses', courseList, { expires: 7 * 26 }); // 1/2 a year
+    Cookies.set('custom', customClasses, { expires: 7 * 26 }); // 1/2 a year
+}
+
+/* saveBackup()
+ * Stores chosen courses, options, and class locations in a file as a kind of backup
+ */
+function saveBackup() {
+    'use strict';
+
+    // Save courses
+    var courses = courseList,
+        custom = customClasses,
+        options = getOptions(),
+        locations = classLocations,
+        data = [options, courses, locations, custom];
+
+    download(JSON.stringify(data), 'timetable.json', 'application/json');
 }
 
 /* restoreClasses()
@@ -191,6 +262,19 @@ function restoreClasses() {
     }
 }
 
+/* readBackup()
+ * Reads the given file
+ */
+function readBackup(file) {
+    console.log(file.type);
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        var data = JSON.parse(e.target.result);
+        restoreBackup(data);
+    };
+    reader.readAsText(file);
+}
+
 /* removeCourse()
  * Removes a course from the selected courses list
  */
@@ -213,18 +297,25 @@ function removeCourse(e) {
         courseList.splice(courseList.indexOf(course), 1);
     }
 
-    // Fade out and slide up neatly
-    row.children().fadeOut(200, function () {
-        row.children().show().css('visibility', 'hidden');
-        row.slideUp(200, function () {
-            row.remove();
+    // Function to remove row
+    var doRemove = function () {
+        row.remove();
 
-            // Put the extra -10px back at bottom of courses element when it's empty
-            if ($('#courses').children().length === 0) {
-                $('#courses').css('margin-bottom', '-10px');
-            }
+        // Put the extra -10px back at bottom of courses element when it's empty
+        if ($('#courses').children().length === 0) {
+            $('#courses').css('margin-bottom', '-10px');
+        }
+    };
+
+    // Fade out and slide up neatly
+    if (removeCourseAnim === true) {
+        row.children().fadeOut(200, function () {
+            row.children().show().css('visibility', 'hidden');
+            row.slideUp(200, doRemove);
         });
-    });
+    } else {
+        doRemove();
+    }
 
     saveState();
 }
@@ -256,8 +347,7 @@ function addCourse(course, custom, fade) {
                         .data('custom', false);
 
     // Add this new item to the course holder and ensure the bottom margin is removed
-    holder.append(div)
-        .css('margin-bottom', 0);
+    holder.append(div).css('margin-bottom', 0);
 
     if (fade !== false) {
         div.children().hide();
@@ -1165,6 +1255,22 @@ function hideMenu() {
         $('#saveimage').click(timetableToPNG);
         $('#menu-download').click(timetableToPNG);
 
+        // Add save backup event
+        $('#menu-saveback').click(saveBackup);
+
+        // Add load from backup event
+        $('#menu-loadback').click(function () {
+            // Open file read dialogue
+            document.getElementById('fileinput').click();
+        });
+
+        // When file is selected
+        $('#fileinput').change(function () {
+            var finput = document.getElementById('fileinput');
+            readBackup(finput.files[0]);
+            finput.value = '';
+        });
+
         // Add custom class onclick event
         $('#addcustom').click(addCustom);
 
@@ -1243,7 +1349,7 @@ function hideMenu() {
                 }
 
                 Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
-                restoreState(data);
+                restoreState();
             }
 
             // Initialise clockpickers
