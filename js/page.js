@@ -419,7 +419,7 @@ function showEdit(e) {
     $('input[type="radio"][name="customDay"]').parent().removeClass('active'); // may not be needed?
     $('input[type="radio"][name="customDay"]').parent('[data-day="' + day + '"]').addClass('active');
 
-    // Activate 'Add' button if necessary
+    // Activate 'Edit' button if necessary
     checkFields();
 }
 
