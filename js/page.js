@@ -737,6 +737,15 @@ function getColour(index) {
 
 	// Colour definitions (format: [highlight, normal]; 'r,g,b')
     var colours = [
+        [31, 26, 178], // blue
+        [197, 0, 0],   // red
+        [83, 15, 173], // purple
+        [0, 158, 0],   // green
+        [255, 170, 0], // yellow
+        [255, 73, 0],  // orange
+        [0, 118, 118], // aqua
+        [205, 0, 116], // pink
+        /*
         [19, 111, 225], // mid blue
         [160, 29, 33], // crimson
         [14, 147, 40], // green
@@ -745,6 +754,7 @@ function getColour(index) {
         [10, 28, 210], // deepblue
         [238, 46, 20], // red (slightly pinked)
         [27, 98, 46] // darkgreen
+        */
     ];
 	return colours[index % colours.length].join(',');
 }

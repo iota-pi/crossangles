@@ -41,7 +41,7 @@ input:focus, button:focus {
 nav.topbar {
     font-size: 18px;
     height: 45px;
-    background-color: #003D6B;
+    background-color: #004F8B;
     color: white;
     -webkit-box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 6px rgba(0,0,0,.3);
     box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 6px rgba(0,0,0,.3);
@@ -65,14 +65,14 @@ nav.topbar > div.menu-toggle {
     cursor: pointer;
 }
 nav.topbar > div.menu-toggle:hover {
-    background-color: #004F8B;
+    background-color: #0061AB;
 }
 nav.topbar > div.menu-toggle > span {
     margin: auto;
 }
 .menu {
     display: none;
-    background-color: #004F8B;
+    background-color: #0061AB;
     font-size: 16px;
     position: absolute;
     right: 0;
