@@ -23,15 +23,6 @@
     </head>
 
     <body>
-        <!--
-        <nav class="navbar noselect">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <span class="navbar-brand blue">CrossAngles</span>
-                </div>
-            </div>
-        </nav>-->
-        
         <div class="menu" id="menu-shadow"></div>
         <nav class="topbar noselect">
             <div class="name">CrossAngles</div>
@@ -39,14 +30,17 @@
                 <span>&#9776;</span>
             </div>
             <div class="menu" id="ddmenu">
-                <div class="menu-item">
-                    <span>Hello</span>
+                <div class="menu-item" id="menu-showhelp">
+                    <span><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><span class="icon-text">Show help</span></span>
                 </div>
-                <div class="menu-item">
-                    <span>Good</span>
+                <div class="menu-item" id="menu-download">
+                    <span><span class="glyphicon glyphicon-picture" aria-hidden="true"></span><span class="icon-text">Save timetable as image</span></span>
                 </div>
-                <div class="menu-item">
-                    <span>Bye</span>
+                <div class="menu-item" id="menu-saveback">
+                    <span><span class="glyphicon glyphicon-save" aria-hidden="true"></span><span class="icon-text">Save a backup</span></span>
+                </div>
+                <div class="menu-item" id="menu-loadback">
+                    <span><span class="glyphicon glyphicon-open" aria-hidden="true"></span><span class="icon-text">Load a backup</span></span>
                 </div>
             </div>
         </nav>
@@ -146,7 +140,7 @@
                                 Download<span class="hidden-xs-down"> as image</span>
                             </div>
                             <div class="flow align-middle">
-                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                             </div>
                         </div>
                     </div>

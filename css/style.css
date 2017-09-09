@@ -39,12 +39,12 @@ input:focus, button:focus {
 
 /* topbar styles */
 nav.topbar {
-    font-size: 20px;
+    font-size: 18px;
     height: 45px;
     background-color: #0a6ebe;
     color: white;
-    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 8px rgba(0,0,0,.3);
-    box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 8px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 6px rgba(0,0,0,.3);
+    box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 6px rgba(0,0,0,.3);
     position: fixed;
     top: 0;
     z-index: 1005;
@@ -56,6 +56,7 @@ nav.topbar > div.name {
     margin: auto;
 }
 nav.topbar > div.menu-toggle {
+    font-size: 20px;
     display: -webkit-flex;
     display: flex;
     width: 45px;
@@ -84,12 +85,12 @@ nav.topbar > div.menu-toggle > span {
     top: 45px;
     right: 0;
     z-index: 1004;
-    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 8px rgba(0,0,0,.3);
-    box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 8px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.15), 0 2px 6px rgba(0,0,0,.2);
+    box-shadow: 0 0 4px rgba(0,0,0,.15), 0 2px 6px rgba(0,0,0,.2);
 }
 .menu > .menu-item {
     height: 45px;
-    padding: 0 10px;
+    /*padding: 0 10px;*/
     display: -webkit-flex;
     display: flex;
     transition: background-color 0.2s;
@@ -105,6 +106,10 @@ nav.topbar > div.menu-toggle > span {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.menu > .menu-item > span > span {
+    vertical-align: middle;
+    padding-left: 10px;
+}
 nav.topbar + div {
     padding-top: 65px;
 }
@@ -112,7 +117,7 @@ nav.topbar + div {
 /* footer styles */
 footer {
 	color: white;
-	background-color: #303030;
+	background-color: #282828;
 	text-align: center;
     width: 100%;
     max-height: 70px;
