@@ -24,13 +24,13 @@ input[type="checkbox"] + label::after {
     display: block;
     width: 18px;
     height: 18px;
-    border: 2px solid #666666;
+    border: 2px solid rgb(102, 102, 102);
     transition: 250ms;
 }
 
 input[type="checkbox"]:checked + label::after {
-    background-color: #2196f3;
-    border-color: #2196f3;
+    background-color: rgb(33, 150, 243);
+    border-color: rgb(33, 150, 243);
 }
 
 input[type="checkbox"]:checked + label::before {
@@ -80,14 +80,14 @@ input[type="radio"] + label::before, input[type="radio"] + label::after {
 }
 
 input[type="radio"] + label::before {
-    background-color: #2196f3;
+    background-color: rgb(33, 150, 243);
     -webkit-transform: scale(0);
     -ms-transform: scale(0);
     transform: scale(0);
 }
 
 input[type="radio"] + label::after {
-    border: 2px solid #666666;
+    border: 2px solid rgb(102, 102, 102);
 }
 
 input[type="radio"]:checked + label::before {
@@ -97,7 +97,7 @@ input[type="radio"]:checked + label::before {
 }
 
 input[type="radio"]:checked + label::after {
-    border-color: #2196f3;
+    border-color: rgb(33, 150, 243);
 }
 
 /* radio button styles */

@@ -321,10 +321,11 @@ function uniqueID() {
 
 /* getRGB()
  * rbga(r, g, b, a) -> r,g,b
+ * rgb(r, g, b) -> r,g,b
  */
 function getRGB(col) {
-    var cols = col.replace('rgba(', '').replace(')', '').split(',');
-    cols.pop(); // remove the alpha
+    var cols = col.replace('rgba(', '').replace('rgb(', '').replace(')', '').split(',');
+    if (cols.length > 3) cols.pop(); // remove alpha
     return cols.join(',').replace(/ /g, '');
 }
 
@@ -343,7 +344,6 @@ function addCustom() {
         cid = document.getElementById('customID').value || uniqueID(),
         colour = getRGB(getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked + label'), ':before').getPropertyValue('background-color')),
         data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
-    console.log(colour);
 
     // Remove this course from customClasses list if it already exists
     for (var i = 0; i < customClasses.length; i += 1) {
@@ -410,7 +410,6 @@ function showEdit(e) {
     document.getElementById('customLocation').value = data.location;
     document.getElementById('startTime').value = to12H(time[0]);
     document.getElementById('endTime').value = to12H(time[1]);
-    console.log(data.colour);
     $('input[type="radio"][name="customColour"]').next().each(function (a, el) {
         $(el).prev()[0].checked = false; // uncheck all radios
         if (getRGB(getComputedStyle(el, ':before').getPropertyValue('background-color')) === getRGB(data.colour)) {
@@ -494,7 +493,7 @@ function timetableToPNG() {
 
 /* phantomScreenshot()
  * Uses PhantomJS Cloud to take a screenshot of the timetable.
- * This service has a free tier which we are using, which should allow thousands of timetables to be drawn each day
+ * This service has a free tier which we are using, which should allow thousands of timetables to be drawn each day as a backup we use a key for each users indiviual IP
  */
 function phantomScreenshot(el, type, key) {
     type = type || 'png';
@@ -1079,37 +1078,62 @@ function moveClockPicker(cp) {
     }
 }
 
+/* createMenuShadow()
+ * Create copy of menu items for the menu shadow element
+ * We copy all of the menu items to make sure that when we expand and contract the menu,
+ * the shadow moves with the rest of the menu
+ */
+function createMenuShadow() {
+    // NB: important to remove ids from the elements
+    document.getElementById('menu-shadow').innerHTML = document.getElementById('ddmenu').innerHTML.replace(/ id="[^"]*"/g, '');
+}
+
+/* showMenu()
+ * Shows dropdown menu
+ */
+function showMenu() {
+    // Show main menu
+    $('#ddmenu').slideDown(200);
+
+    // Show shadow
+    $('#menu-shadow').slideDown(200);
+}
+
+/* hideMenu()
+ * Hides dropdown menu
+ */
+function hideMenu() {
+    // Hide main menu
+    $('#ddmenu').slideUp(200);
+
+    // Hide shadow
+    $('#menu-shadow').slideUp(200);
+}
+
 (function () {
     "use strict";
 
     $(document).ready(function () {
         createTable();
 
-        // Create copy of list for shadow element
-        document.getElementById('menu-shadow').innerHTML = document.getElementById('ddmenu').innerHTML;
+        // Create copy of menu items for the menu shadow element
+        createMenuShadow();
 
         // Add toggle event for dropdown menu
         $('#ddmenu-toggle').click(function () {
             if ($('#ddmenu:visible').length === 0) {
-                $('#ddmenu').slideDown(200);
-                $('#menu-shadow').slideDown(200);
+                showMenu();
             } else {
-                $('#ddmenu').slideUp(200);
-                $('#menu-shadow').slideUp(200);
+                hideMenu();
             }
         });
 
         // Add event to hide dropdown menu when an item is clicked
-        $('#ddmenu').click(function () {
-            $('#ddmenu').slideUp(200);
-            $('#menu-shadow').slideUp(200);
-        });
+        $('#ddmenu').click(hideMenu);
 
-        // Add event to hide dropdown menu when it loses focus
-        $('#maincontainer').click(function () {
-            $('#ddmenu').slideUp(200);
-            $('#menu-shadow').slideUp(200);
-        });
+        // Add events to hide dropdown menu when user clicks elsewhere in document
+        $('#maincontainer').mousedown(hideMenu);
+        $('footer.footer').mousedown(hideMenu);
 
         // Add event to toggle class capacities
         $('#showcap').change(function () {
@@ -1132,23 +1156,17 @@ function moveClockPicker(cp) {
         });
 
         // Add events to save the state when options are changed
-        $('.savedOption').change(function () {
-            saveState();
-        });
+        $('.savedOption').change(saveState);
 
-        $('#fullclasses').change(function () {
-            checkFullClasses();
-        });
+        // Check if classes become (un)hovering once we (un)check the full classes option
+        $('#fullclasses').change(checkFullClasses);
 
-        // Add save as image event
-        $('#saveimage').click(function () {
-            timetableToPNG();
-        });
+        // Add save as image events
+        $('#saveimage').click(timetableToPNG);
+        $('#menu-download').click(timetableToPNG);
 
         // Add custom class onclick event
-        $('#addcustom').click(function () {
-            addCustom();
-        });
+        $('#addcustom').click(addCustom);
 
         // Always fix up customID and edit/add button in modal when closed
         $('#customClass').on('hidden.bs.modal', function () {
@@ -1160,8 +1178,8 @@ function moveClockPicker(cp) {
         });
 
         // Check if all fields are valid in custom modal
-        $('#customClass input').change(function () { checkFields(); });
-        $('#customClass input[type="text"]').keyup(function () { checkFields(); });
+        $('#customClass input').change(checkFields);
+        $('#customClass input[type="text"]').keyup(checkFields);
 
         // Initialise tooltips
         $('[data-toggle="tooltip"]').tooltip({
@@ -1238,7 +1256,7 @@ function moveClockPicker(cp) {
                 amOrPm: 'PM',
                 breakHour: 9,
                 afterShow: function () { moveClockPicker(start); },
-                afterUpdate: function() { checkFields(); }
+                afterUpdate: checkFields
             });
             var end = $('#cp_end').clockpicker({
                 placement: 'bottom',
@@ -1248,7 +1266,7 @@ function moveClockPicker(cp) {
                 amOrPm: 'PM',
                 breakHour: 9.5,
                 afterShow: function () { moveClockPicker(end); },
-                afterUpdate: function() { checkFields(); }
+                afterUpdate: checkFields
             });
 
             finishedInit = true;
