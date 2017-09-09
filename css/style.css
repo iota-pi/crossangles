@@ -221,6 +221,18 @@ footer div.content {
     padding-left: 0;
 }
 
+/* faq styles */
+.faq-question, .faq-answer {
+    line-height: 1.5;
+}
+.faq-question {
+    font-weight: bold;
+    margin-bottom: 0.15em;
+}
+.faq-answer {
+    margin-bottom: 1em;
+}
+
 /* typeahead styles */
 .typeahead-container {
     position: relative;
