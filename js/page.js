@@ -115,10 +115,6 @@ function restoreState() {
  */
 function restoreBackup(data) {
     'use strict';
-    if (data.length < 4) {
-        pageError('Sorry,', 'that backup file isn\'t in the format we were expecting.');
-        return;
-    }
     clearCourses();
 
     // Get previously chosen options and courses from cookies
@@ -269,8 +265,12 @@ function readBackup(file) {
     console.log(file.type);
     var reader = new FileReader();
     reader.onload = function (e) {
-        var data = JSON.parse(e.target.result);
-        restoreBackup(data);
+        try {
+            var data = JSON.parse(e.target.result);
+            restoreBackup(data);
+        } catch (err) {
+            pageError('Sorry,', 'that backup file isn\'t in the right format, so we couldn\'t read it.');
+        }
     };
     reader.readAsText(file);
 }
