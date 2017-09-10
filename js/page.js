@@ -745,16 +745,6 @@ function getColour(index) {
         [255, 73, 0],  // orange
         [0, 118, 118], // aqua
         [205, 0, 116], // pink
-        /*
-        [19, 111, 225], // mid blue
-        [160, 29, 33], // crimson
-        [14, 147, 40], // green
-        [102, 44, 145], // purple
-        [255, 107, 0], // orange
-        [10, 28, 210], // deepblue
-        [238, 46, 20], // red (slightly pinked)
-        [27, 98, 46] // darkgreen
-        */
     ];
 	return colours[index % colours.length].join(',');
 }
@@ -1260,6 +1250,10 @@ function hideMenu() {
 
         // Check if classes become (un)hovering once we (un)check the full classes option
         $('#fullclasses').change(checkFullClasses);
+
+        // Add generate timetable events
+        $('#generate').click(generate);
+        $('#menu-generate').click(generate);
 
         // Add save as image events
         $('#saveimage').click(timetableToPNG);

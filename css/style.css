@@ -157,27 +157,41 @@ footer div.content {
 .panel-primary .panel-heading {
     position: relative;
     cursor: default;
+    overflow: hidden;
 }
 
 .panel-primary .panel-heading .btn {
     position: absolute;
-    top: 50%;
-    right: 14px;
-    right: 1em;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
-.panel-primary .panel-heading .btn .glyphicon {
-    font-size: 16px;
-    margin-left: 5px;
+.panel-heading .btn > span {
+    padding-left: 3px;
+    margin: auto 0;
+}
+.btn > span {
+    vertical-align: middle;
+}
+.btn .glyphicon-triangle-right:last-child {
+	position: relative;
+    top: 1px;
 }
 
-.panel-primary .panel-heading .btn.disabled, .panel-primary .panel-heading .btn.disabled:hover {
-    color: rgb(93, 93, 93);
+.panel-primary .panel-heading .btn .glyphicon {
+    font-size: 16px;
+}
+
+.panel-primary .panel-heading .btn:hover {
+    background-color: #0061AB;
+    border-radius: 0;
+    color: white;
 }
 
 #noTimetableDownload {
