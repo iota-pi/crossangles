@@ -5,8 +5,6 @@ The best UNSW timetabling program in existance!
 
   * Better favicon
   * Prettier "create timetable" button
-  * Move create timetable to bar above timetable
-  * Move download as image button to below timetable or just in menu
 
 ## Where we get the data from
 The timetable data is scraped from a UNSW service called [classutil](http://classutil.unsw.edu.au). This service is updated at 5am, 12pm, and 6pm. As such the scraping script (`scraper.py`) is run five minutes after those times (using a Cron job).
