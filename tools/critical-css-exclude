@@ -1,0 +1,13 @@
+\.input-group
+\.form-control
+:hover
+:active
+:visited
+:disabled
+type="radio"
+type=radio
+-moz-
+-webkit-
+-o-
+-ms-
+\.faq-

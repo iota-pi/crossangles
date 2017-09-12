@@ -1,0 +1,21 @@
+margin
+padding
+background-color
+text-align
+position
+ top
+ left
+ right
+ bottom
+box-sizing
+display
+color
+flex
+ width
+ height
+max-width
+max-height
+min-width
+min-height
+opacity
+ transform
