@@ -1,0 +1,12 @@
+{
+  "name": "CrossAngles",
+  "contributors": [
+    {
+      "name": "David Adams"
+    }
+  ],
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-critical": "^0.3.0"
+  }
+}
