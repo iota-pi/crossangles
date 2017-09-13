@@ -3,14 +3,14 @@
 # Assumptions:
 #  - No <style> tags in index.html; otherwise output will be in strange order (use <link>s instead)
 #
-# Install dependencies
+# Install dependencies: (from inside project root directory)
 #  - sudo npm install grunt-cli clean-css-cli html-minifier -g
-#  - npm install grunt-critical --save-dev
+#  - npm install grunt grunt-critical
 #
-
-
-# Get working directory
-wd=`dirname $0`
+# Running:
+#  - Run from project root directory
+#  - './build'
+#
 
 # Run grunt to get critical CSS
 echo -n 'Running grunt... '
@@ -19,7 +19,7 @@ echo 'Done'
 
 
 
-echo -n 'Manipulating critical css... '
+echo -n 'Reducing critical CSS... '
 
 # Find style `critical` styles
 sed '/<style/,/<\/style>/!d' 'dist/index.html' | sed '1d;$d' |\
@@ -47,10 +47,10 @@ sed '/@font-face/,/}/d' |\
 
 # Only keep lines with specific properties, or lines which are only selectors or brackets
 # NB: any line that doesn't start with a space is a selector or bracket
-grep -E '^[^ ]|'"`cat "$wd/critical-css-rules" | tr '\n' '|' | sed 's/|*$//'`" |\
+grep -E '^[^ ]|'"`cat "tools/critical-css-rules" | tr '\n' '|' | sed 's/|*$//'`" |\
 
 # Get rid of uninteresting selectors
-grep -vE "`cat "$wd/critical-css-exclude" | tr '\n' '|' | sed 's/|*$//'`" |\
+grep -vE "`cat "tools/critical-css-exclude" | tr '\n' '|' | sed 's/|*$//'`" |\
 
 tr '\n' '\r' |\
 # Remove empty rules
@@ -63,10 +63,11 @@ tr '\r' '\n' |\
 
 # Remove blank lines again
 sed '/^$/d' >tmp
+echo 'Done'
 
 
 
-echo -n 'Minifying HTML file with critical css... '
+echo -n 'Minifying HTML file with critical CSS... '
 
 # Put back into dist/index.html
 # Put everything up to <style> line
@@ -87,7 +88,7 @@ rm 'dist/index.min.html'
 echo 'Done'
 
 # Copy minified CSS/JS files
-echo -n 'Copying files to dist... '
+echo -n 'Copying files to dist/... '
 cp css/*.min.css dist/css/
 cp js/*.min.js dist/js/
 
@@ -104,5 +105,6 @@ cp favicon.png dist/
 # Copy scraper
 cp favicon.png dist/
 echo 'Done'
-echo 'Build completed'
+echo
+echo 'Build complete'
 
