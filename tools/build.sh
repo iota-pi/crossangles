@@ -64,7 +64,7 @@ echo 'Done'
 
 echo -n 'Reducing critical CSS... '
 
-# Find style `critical` styles
+# Find 'critical' styles
 sed '/<style/,/<\/style>/!d' 'dist/index.html' | sed '1d;$d' |\
 
 # Remove leading whitespace, except for one space to mark properties
