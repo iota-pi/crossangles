@@ -4,5 +4,57 @@
     "background-color": "#f4f4f4",
     "description": "Helps you plan your university timetable for next semester",
     "display": "standalone",
-    "lang": "en-US"
+    "lang": "en-US",
+    "icons": [
+        {
+            "src": "img/favicon-16.png",
+            "type": "image/png",
+            "sizes": "16x16"
+        },
+        {
+            "src": "img/favicon-32.png",
+            "type": "image/png",
+            "sizes": "32x32"
+        },
+        {
+            "src": "img/favicon-48.png",
+            "type": "image/png",
+            "sizes": "48x48"
+        },
+        {
+            "src": "img/favicon-64.png",
+            "type": "image/png",
+            "sizes": "64x64"
+        },
+        {
+            "src": "img/favicon-128.png",
+            "type": "image/png",
+            "sizes": "96x96"
+        },
+        {
+            "src": "img/favicon-128.png",
+            "type": "image/png",
+            "sizes": "128x128"
+        },
+        {
+            "src": "img/favicon-128.png",
+            "type": "image/png",
+            "sizes": "152x152"
+        },
+        {
+            "src": "img/favicon-128.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "img/favicon-256.png",
+            "type": "image/png",
+            "sizes": "256x256"
+        },
+        {
+            "src": "img/favicon-512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ]
 }

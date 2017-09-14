@@ -32,7 +32,7 @@ cp data/timetable.json dist/data/
 
 # Copy fonts and images
 cp -r fonts/ dist/
-cp -r img/ dist/
+cp img/*.png dist/img/
 
 # Copy favicon
 cp favicon.png dist/
