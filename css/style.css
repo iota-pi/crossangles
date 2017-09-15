@@ -235,6 +235,20 @@ footer div.content {
     padding-left: 0;
 }
 
+.modal-title {
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.modal-title > span {
+	margin: auto 0;
+}
+.modal-title > span:first-child {
+    line-height: 1;
+    padding-right: 5px;
+}
+
 /* faq styles */
 .faq-question, .faq-answer {
     line-height: 1.5;
