@@ -44,7 +44,7 @@ echo 'Done'
 
 
 # Concat and minify all CSS
-# NB: have to cat files in the right order
+# NB: have to list files in the right order; use grep to get the same order as included in index.html
 echo -n "Creating 'all.css' and 'all.js'... "
 # CSS
 cat `grep -o 'css/.*\.css' index.html` | cleancss -O2 css/*.min.css -o dist/css/all.css
