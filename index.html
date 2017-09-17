@@ -41,6 +41,9 @@
                 <div class="menu-item" id="menu-showhelp" data-target="#faqpanel" data-toggle="modal">
                     <span><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><span class="icon-text">Show FAQ</span></span>
                 </div>
+                <div class="menu-item" id="menu-showbugs" data-target="#bugpanel" data-toggle="modal">
+                    <span><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span class="icon-text">Report a bug</span></span>
+                </div>
             </div>
         </nav>
 
@@ -55,7 +58,7 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <input class="coursein typeahead" id="coursetypeahead" type="text" placeholder="Enter course code or name" />
+                        <input class="coursein typeahead" id="coursetypeahead" type="text" placeholder="Enter course code or name" autofocus />
                         <div id="courses">
                         </div>
                     </div>
@@ -301,6 +304,50 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="bugpanel" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <span><img src="img/favicon-32.png" width="24" height="24" /></span>
+                            <span>Submit a Bug Report</span>
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <label class="input-group-addon large">Name</label>
+                            <input type="text" id="bug-name" class="form-control" placeholder="Joe Bloggs" />
+                        </div>
+                        <p></p>
+                        <div class="input-group">
+                            <label class="input-group-addon large">Email</label>
+                            <input type="text" id="bug-email" class="form-control" placeholder="your-email@example.com" required />
+                        </div>
+                        <p></p>
+                        <div class="input-group">
+                            <label class="input-group-addon large">Content</label>
+                            <textarea id="bug-body" class="form-control"  placeholder="Description of bug..." rows="4" required></textarea>
+                        </div>
+                        <div class="loader-container">
+                            <div class="loader" id="bug-loader">
+                                <div class="circle c1"></div>
+                                <div class="circle c2"></div>
+                                <div class="circle c3"></div>
+                                <div class="circle c4"></div>
+                                <div class="circle c5"></div>
+                                <div class="circle c6"></div>
+                                <div class="circle c7"></div>
+                                <div class="circle c8"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="send-bug" class="btn btn-primary">Send</button>
                     </div>
                 </div>
             </div>
