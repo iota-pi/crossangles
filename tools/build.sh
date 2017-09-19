@@ -16,6 +16,11 @@
 # Written by David
 #
 
+if [ "$1" = "clean" ]; then
+	rm -r dist/*
+	echo "Cleaned 'dist/'"
+	exit
+fi
 
 echo -n "Copying files to 'dist/'... "
 # Clear dist initially
