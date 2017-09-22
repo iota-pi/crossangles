@@ -23,9 +23,8 @@ touch index.html # makes sure 'dist/*' gets expanded to *something*
 rm -r dist/*
 mkdir dist/css dist/js dist/data dist/img
 
-# Copy minified CSS/JS files
-cp css/*.min.css dist/css/
-cp js/*.min.js dist/js/
+# Copying timetable stylesheet
+cp css/timetable.min.css dist/css/
 
 # Copy timetable data file
 cp data/timetable.json dist/data/
@@ -34,11 +33,12 @@ cp data/timetable.json dist/data/
 cp -r fonts/ dist/
 cp img/*.png dist/img/
 
-# Copy favicon
+# Copy other files
 cp favicon.png dist/
+cp scraper.py dist/
+cp contact.php dist/
+cp manifest.json dist/
 
-# Copy scraper
-cp favicon.png dist/
 echo 'Done'
 
 
@@ -47,10 +47,9 @@ echo 'Done'
 # NB: have to list files in the right order; use grep to get the same order as included in index.html
 echo -n "Creating 'all.css' and 'all.js'... "
 # CSS
-cat `grep -o 'css/.*\.css' index.html` | cleancss -O2 css/*.min.css -o dist/css/all.css
+cat `grep -o '"css/.*\.css"' index.html` | cleancss -O2 css/*.min.css -o css/all.css
 # JS
-cat `grep -o 'js/.*\.js' index.html` |
-uglifyjs -o dist/js/all.js --keep-fnames
+cat `grep -o '"js/.*\.js"' index.html` | uglifyjs -o js/all.js --keep-fnames
 echo 'Done'
 
 

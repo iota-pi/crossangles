@@ -1189,6 +1189,47 @@ function showMenu() {
     $('#menu-shadow').slideDown(200);
 }
 
+/* sendBug
+ * Sends an AJAX request to contact.php to send a bug report
+ */
+function sendBug() {
+    var name  = document.getElementById('bug-name'),
+        email = document.getElementById('bug-email'),
+        body  = document.getElementById('bug-body');
+    $.ajax({
+        url: 'contact.php',
+        method: 'POST',
+        cache: false,
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify({
+            name: name.value,
+            email: email.value,
+            body: body.value
+        }),
+        success: function (r) {
+            var data = JSON.parse(r);
+            if (data.success === true) {
+                body.value = '';
+                var lc = $('#bug-loader');
+                lc.fadeIn(500, function () {
+                    window.setTimeout(function () {
+                        $('#bugpanel').modal('hide');
+                        lc.fadeOut(500);
+                        pageNotice('Thanks!', 'Your bug report has been submitted.');
+                    }, 1000);
+                });
+            } else {
+                pageError('Oops!', 'We couldn\'t submit the bug report at this time. ' + data.error);
+                $('#bugpanel').modal('hide');
+            }
+        },
+        error: function () {
+            pageError('Sorry,', 'we couldn\'t submit the bug report at this time.');
+            $('#bugpanel').modal('hide');
+        }
+    });
+}
+
 /* hideMenu()
  * Hides dropdown menu
  */
@@ -1261,6 +1302,10 @@ function hideMenu() {
 
         // Add save backup event
         $('#menu-saveback').click(saveBackup);
+
+        // Send bug report event
+        $('#send-bug').click(sendBug);
+        $('#bug-loader').hide();
 
         // Add load from backup event
         $('#menu-loadback').click(function () {
