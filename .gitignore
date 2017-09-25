@@ -1,4 +1,4 @@
-/data/htmlcache.json
-/dist
-/.brackets.json
-/node_modules
+data/htmlcache.json
+dist/
+.brackets.json
+node_modules/
