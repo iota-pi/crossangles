@@ -1233,15 +1233,12 @@ function showMenu() {
 /* hideMenu()
  * Hides dropdown menu
  */
-function hideMenu(e) {
-    // Only hide dropdown menu if element that was clicked is not inside the navbar
-    if ($(e.target).parents('nav').length === 0) {
-        // Hide main menu
-        $('#ddmenu').slideUp(200);
+function hideMenu() {
+    // Hide main menu
+    $('#ddmenu').slideUp(200);
 
-        // Hide shadow
-        $('#menu-shadow').slideUp(200);
-    }
+    // Hide shadow
+    $('#menu-shadow').slideUp(200);
 }
 
 (function () {
@@ -1262,11 +1259,15 @@ function hideMenu(e) {
             }
         });
 
-        // Add event to hide dropdown menu when an item is clicked
-        $('#ddmenu').click(hideMenu);
-
         // Add events to hide dropdown menu when user clicks elsewhere in document
-        $('body').mousedown(hideMenu);
+        $('body').mousedown(function (e) {
+            if ($(e.target).parents('#ddmenu').length === 0) {
+                hideMenu();
+            } else {
+                // When menu item is clicked, wait for a little for other events to be handled first
+                window.setTimeout(hideMenu, 50);
+            }
+        });
 
         // Add event to toggle class capacities
         $('#showcap').change(function () {
