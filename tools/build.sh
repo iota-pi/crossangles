@@ -47,9 +47,9 @@ echo 'Done'
 # NB: have to list files in the right order; use grep to get the same order as included in index.html
 echo -n "Creating 'all.css' and 'all.js'... "
 # CSS
-cat `grep -o '"css/.*\.css"' index.html` | cleancss -O2 css/*.min.css -o css/all.css
+cat `grep -o '"css/.*\.css"' index.html | sed 's/"//g'` | cleancss -O2 css/*.min.css -o dist/css/all.css
 # JS
-cat `grep -o '"js/.*\.js"' index.html` | uglifyjs -o js/all.js --keep-fnames
+cat `grep -o '"js/.*\.js"' index.html | sed 's/"//g'` | uglifyjs -o dist/js/all.js --keep-fnames
 echo 'Done'
 
 

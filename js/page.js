@@ -1178,18 +1178,7 @@ function createMenuShadow() {
     document.getElementById('menu-shadow').innerHTML = document.getElementById('ddmenu').innerHTML.replace(/ id="[^"]*"/g, '');
 }
 
-/* showMenu()
- * Shows dropdown menu
- */
-function showMenu() {
-    // Show main menu
-    $('#ddmenu').slideDown(200);
-
-    // Show shadow
-    $('#menu-shadow').slideDown(200);
-}
-
-/* sendBug
+/* sendBug()
  * Sends an AJAX request to contact.php to send a bug report
  */
 function sendBug() {
@@ -1215,30 +1204,44 @@ function sendBug() {
                     window.setTimeout(function () {
                         $('#bugpanel').modal('hide');
                         lc.fadeOut(500);
-                        pageNotice('Thanks!', 'Your bug report has been submitted.');
+                        pageNotice('', 'Thanks for contacting us!');
                     }, 1000);
                 });
             } else {
-                pageError('Oops!', 'We couldn\'t submit the bug report at this time. ' + data.error);
+                pageError('Oops!', 'We couldn\'t send your message at this time. ' + data.error);
                 $('#bugpanel').modal('hide');
             }
         },
         error: function () {
-            pageError('Sorry,', 'we couldn\'t submit the bug report at this time.');
+            pageError('Sorry,', 'We couldn\'t send your message at this time.');
             $('#bugpanel').modal('hide');
         }
     });
 }
 
+/* showMenu()
+ * Shows dropdown menu
+ */
+function showMenu() {
+    // Show main menu
+    $('#ddmenu').slideDown(200);
+
+    // Show shadow
+    $('#menu-shadow').slideDown(200);
+}
+
 /* hideMenu()
  * Hides dropdown menu
  */
-function hideMenu() {
-    // Hide main menu
-    $('#ddmenu').slideUp(200);
+function hideMenu(e) {
+    // Only hide dropdown menu if element that was clicked is not inside the navbar
+    if ($(e.target).parents('nav').length === 0) {
+        // Hide main menu
+        $('#ddmenu').slideUp(200);
 
-    // Hide shadow
-    $('#menu-shadow').slideUp(200);
+        // Hide shadow
+        $('#menu-shadow').slideUp(200);
+    }
 }
 
 (function () {
@@ -1263,8 +1266,7 @@ function hideMenu() {
         $('#ddmenu').click(hideMenu);
 
         // Add events to hide dropdown menu when user clicks elsewhere in document
-        $('#maincontainer').mousedown(hideMenu);
-        $('footer.footer').mousedown(hideMenu);
+        $('body').mousedown(hideMenu);
 
         // Add event to toggle class capacities
         $('#showcap').change(function () {
