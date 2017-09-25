@@ -1,7 +1,8 @@
 {
     "name": "CrossAngles",
     "short_name": "CrossAngles",
-    "background-color": "#f4f4f4",
+    "background_color": "#f4f4f4",
+    "theme_color": "#2196f3",
     "description": "Helps you plan your university timetable for next semester",
     "display": "standalone",
     "lang": "en-US",
