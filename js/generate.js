@@ -198,27 +198,6 @@ function fetchData(cb) {
         }
     }());
 
-    // Remove full classes unless they've explicitly been been requested
-    /*
-    (function removeFullClasses() {
-        var i, j, stream;
-        for (i = 0; i < list.length; i += 1) {
-            stream = list[i];
-            for (j = stream.length - 1; j >= 0; j -= 1) {
-                if (!$('#fullclasses').is(':checked')) {
-                    if (stream[j].status !== 'O') {
-                        stream.splice(j, 1);
-                    }
-                } else {
-                    if (stream[j].status !== 'O' && stream[j].status !== 'F') {
-                        stream.splice(j, 1);
-                    }
-                }
-            }
-        }
-    }());
-    */
-
     // Re-sort the list based on the number of streams for each component
     list.sort(function (a, b) { return a.length - b.length; });
 

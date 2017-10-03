@@ -262,7 +262,6 @@ function restoreClasses() {
  * Reads the given file
  */
 function readBackup(file) {
-    console.log(file.type);
     var reader = new FileReader();
     reader.onload = function (e) {
         try {
