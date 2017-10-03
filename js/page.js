@@ -1178,6 +1178,47 @@ function createMenuShadow() {
     document.getElementById('menu-shadow').innerHTML = document.getElementById('ddmenu').innerHTML.replace(/ id="[^"]*"/g, '');
 }
 
+/* sendBug()
+ * Sends an AJAX request to contact.php to send a bug report
+ */
+function sendBug() {
+    var name  = document.getElementById('bug-name'),
+        email = document.getElementById('bug-email'),
+        body  = document.getElementById('bug-body');
+    $.ajax({
+        url: 'contact.php',
+        method: 'POST',
+        cache: false,
+        contentType: 'application/json; charset=UTF-8',
+        data: JSON.stringify({
+            name: name.value,
+            email: email.value,
+            body: body.value
+        }),
+        success: function (r) {
+            var data = JSON.parse(r);
+            if (data.success === true) {
+                body.value = '';
+                var lc = $('#bug-loader');
+                lc.fadeIn(500, function () {
+                    window.setTimeout(function () {
+                        $('#bugpanel').modal('hide');
+                        lc.fadeOut(500);
+                        pageNotice('', 'Thanks for contacting us!');
+                    }, 1000);
+                });
+            } else {
+                pageError('Oops!', 'We couldn\'t send your message at this time. ' + data.error);
+                $('#bugpanel').modal('hide');
+            }
+        },
+        error: function () {
+            pageError('Sorry,', 'We couldn\'t send your message at this time.');
+            $('#bugpanel').modal('hide');
+        }
+    });
+}
+
 /* showMenu()
  * Shows dropdown menu
  */
@@ -1218,12 +1259,15 @@ function hideMenu() {
             }
         });
 
-        // Add event to hide dropdown menu when an item is clicked
-        $('#ddmenu').click(hideMenu);
-
         // Add events to hide dropdown menu when user clicks elsewhere in document
-        $('#maincontainer').mousedown(hideMenu);
-        $('footer.footer').mousedown(hideMenu);
+        $('body').mousedown(function (e) {
+            if ($(e.target).parents('#ddmenu').length === 0) {
+                hideMenu();
+            } else {
+                // When menu item is clicked, wait for a little for other events to be handled first
+                window.setTimeout(hideMenu, 50);
+            }
+        });
 
         // Add event to toggle class capacities
         $('#showcap').change(function () {
@@ -1261,6 +1305,10 @@ function hideMenu() {
 
         // Add save backup event
         $('#menu-saveback').click(saveBackup);
+
+        // Send bug report event
+        $('#send-bug').click(sendBug);
+        $('#bug-loader').hide();
 
         // Add load from backup event
         $('#menu-loadback').click(function () {

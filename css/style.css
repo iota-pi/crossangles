@@ -235,6 +235,10 @@ footer div.content {
     padding-left: 0;
 }
 
+.modal .input-group-addon.large:first-child {
+    min-width: 70px;
+}
+
 .modal-title {
     display: -ms-flex;
     display: -webkit-flex;
@@ -247,6 +251,14 @@ footer div.content {
 .modal-title > span:first-child {
     line-height: 1;
     padding-right: 5px;
+}
+
+.modal .input-group textarea {
+    width: 100%;
+    resize: vertical;
+}
+#bugpanel .modal-body {
+    padding-bottom: 0px;
 }
 
 /* faq styles */
