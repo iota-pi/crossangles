@@ -23,7 +23,8 @@ class Scraper:
         
         requests = (grequests.get(url) for url in urls)
         pages = grequests.map(requests)
-        
     
-    def removeComments
+    def removeComments(self, *pages):
+        for page in pages:
+            pass
         
