@@ -221,7 +221,7 @@ function generate(draw, pageload) {
 
         if (!draw) { return; }
         if (timetable === null) {
-            pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again with different courses, or including full classes.');
+            pageError('Sorry about that!', 'We weren\'t able to create a timetable for you. Maybe try again including full classes, or with clashes enabled.');
             $('#timetable').removeClass('loading');
             return;
         }
