@@ -1397,7 +1397,7 @@ function hideMenu() {
                 // Restore previous state on later visits
                 previousVisit[1] += 1;
 
-                if (previousVisit[1] % 3 === 0) {
+                if (previousVisit[1] % 5 === 0) {
                     pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
                 }
 
