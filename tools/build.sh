@@ -39,13 +39,16 @@ cp -r fonts/ dist/
 cp img/*.png dist/img/
 
 # Copy other files
-cp favicon.png dist/
+cp favicon.* dist/
 cp scraper.py dist/
 cp contact.php dist/
 cp manifest.json dist/
 
 echo 'Done'
 
+# Get the version and then increment it
+version=$((`cat tools/version` + 1))
+echo $version >tools/version
 
 
 # Concat and minify all CSS
@@ -129,12 +132,14 @@ sed -n '/<\/style>/,$p' 'dist/index.html' >>'dist/index.min.html'
 
 # Replace CSS files with 'all.css'
 grep -v '<link.*rel="stylesheet"' >tmp <dist/index.min.html
-sed -i 's|\(<noscript.*\)|\1<link rel="stylesheet" type="text/css" href="css/all.css">|' tmp
+allstyle="<link rel=\"stylesheet\" type=\"text/css\" href=\"css/all.css?_=$version\">"
+sed -i "s|\(<noscript.*\)|\1$allstyle|" tmp
 mv tmp dist/index.min.html
 
 # Replace JS files with 'all.js'
 grep -v '<script.*src="' >tmp <dist/index.min.html
-sed -i 's|</body>|<script type="text/javascript" src="js/all.js" defer></script></body>|' tmp
+allscript="<script type=\"text/javascript\" src=\"js/all.js?_=$version\" defer></script>"
+sed -i "s|</body>|$allscript</body>|" tmp
 mv tmp dist/index.min.html
 
 # Minify HTML
