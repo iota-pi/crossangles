@@ -212,7 +212,7 @@ function generate(draw, pageload) {
     if (draw === true) { $('#timetable').addClass('loading'); }
 
     var maxSearch = (pageload) ? 0 : undefined, // if pageload is false, value will be undefined (= use default), otherwise, max iterations will be set to 0 to prevent search
-        maxClash  = 0,
+        maxClash  = (document.getElementById('canclash').checked) ? 100 : 0,
         allowFull = document.getElementById('fullclasses').checked;
 
     function makeTimetable(list) {

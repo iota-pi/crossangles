@@ -164,6 +164,7 @@ function restoreFromData(options, courses, locations, custom) {
         document.getElementById('showcap').checked = options.showcap;
         document.getElementById('fullclasses').checked = options.fullclasses;
         document.getElementById('showloc').checked = options.showloc;
+        document.getElementById('canclash').checked = options.canclash;
 
         // Call generate to recreate previous timetable
         if (JSON.stringify(classLocations) !== '{}') {
@@ -188,6 +189,7 @@ function getOptions() {
     options.showcap = document.getElementById('showcap').checked;
     options.showloc = document.getElementById('showloc').checked;
     options.fullclasses = document.getElementById('fullclasses').checked;
+    options.canclash = document.getElementById('canclash').checked;
 
     return options;
 }
