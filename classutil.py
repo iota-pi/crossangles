@@ -232,7 +232,7 @@ def splitTimetableData(string):
             weeks = weeks.replace('< 1', '').strip(',')
             weeks = weeks.replace('N1', '').strip(',')
             weeks = weeks.replace('N2', '').strip(',')
-            if weeks == '':
+            if weeks.strip() == '':
                 weeks = None
         #weeks = expandRanges(weeks)
 
