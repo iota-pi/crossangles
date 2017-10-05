@@ -1,14 +1,14 @@
 
 var CBS = {
     TBT: [
-            {time: 'T 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['RedC G001']},
-            {time: 'T 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['OMB 230']},
-            {time: 'H 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['Quad G44']},
-            {time: 'H 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['CivEng G1']}
+            {time: 'T 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['']},
+            {time: 'T 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['']},
+            {time: 'H 12', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['']},
+            {time: 'H 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'The Bible Talks', location: ['']}
         ],
     CoreTheo: [
-            {time: 'T 17', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['Colombo A']},
-            {time: 'W 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['OMB 229']}
+            {time: 'T 17', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['']},
+            {time: 'W 13', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Theology', location: ['']}
         ],
     CoreTrain: [
             {time: 'T 16', status: 'O', enrols: '0,1', course: 'CBS', component: 'Core Training', location: ['Quad Sundial']},
