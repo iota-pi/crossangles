@@ -2,3 +2,4 @@ data/htmlcache.json
 dist/
 .brackets.json
 node_modules/
+__pycache__
