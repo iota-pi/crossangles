@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, console, domtoimage, download, inlineit, Cookies, generate, objectFitImages */
+/*global $, console, domtoimage, download, inlineit, Cookies, generate, objectFitImages, ga */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -559,6 +559,13 @@ function checkFields() {
     return true;
 }
 
+function generateTimetable() {
+    // Send GA event
+    ga('send', 'event', 'Generate', courseList.length);
+
+    generate();
+}
+
 /* canSaveTimetable()
  * Returns whether timetableToPNG can be run in this browser
  */
@@ -578,6 +585,10 @@ function canSaveTimetable() {
 function timetableToPNG() {
     'use strict';
 
+    // Send GA event
+    ga('send', 'event', 'Screenshot', customClasses.length);
+
+    // Do screenshot
     var el = document.getElementById('timetable');
     phantomScreenshot(el);
 }
@@ -587,6 +598,7 @@ function timetableToPNG() {
  * This service has a free tier which we are using, which should allow thousands of timetables to be drawn each day as a backup we use a key for each users indiviual IP
  */
 function phantomScreenshot(el, type, key) {
+
     type = type || 'png';
     key = key || 'ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7';
 
@@ -1297,8 +1309,8 @@ function hideMenu() {
         $('#fullclasses').change(checkFullClasses);
 
         // Add generate timetable events
-        $('#generate').click(generate);
-        $('#menu-generate').click(generate);
+        $('#generate').click(generateTimetable);
+        $('#menu-generate').click(generateTimetable);
 
         // Add save as image events
         $('#saveimage').click(timetableToPNG);
