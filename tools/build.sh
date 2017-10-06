@@ -26,7 +26,7 @@ echo -n "Copying files to 'dist/'... "
 # Clear dist initially
 touch index.html # makes sure 'dist/*' gets expanded to *something*
 rm -r dist/*
-mkdir dist/css dist/js dist/data dist/img
+mkdir -p dist/css dist/js dist/data dist/img
 
 # Copying timetable stylesheet
 cp css/timetable.min.css dist/css/
