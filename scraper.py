@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 
 from lxml import html, etree
+from collections import defaultdict
 import grequests
+import json
+import re
 
 class Scraper:
     def __init__(self, sem):
@@ -11,49 +14,56 @@ class Scraper:
         self.semID = str(SEM_CODES[self.semester])
 
     def scrape(self):
-        data = {}
+        data = defaultdict(dict)
         for page in self.loadFacultyPages():
-            print(page)
             # Get relevant table
             table = page.xpath('//table[3]')[0]
             faculty = None
             course = None
-            name = None
             for tr in table:
                 # Check if useful part of table has finished
                 # NB: signalled by tr with single child
                 if len(tr) == 1:
                     break
-
+                
                 # Check if this is a course heading
-                if tr[0] == 'cucourse':
+                if tr[0].get('class') == 'cucourse':
                     # Update course info
-                    code = tr[0].text.strip()
+                    code = tr[0].xpath('.//text()')[0].strip()
                     faculty = code[:4]
                     course = code[4:]
-                    data[faculty][course] = [tr[1].text.strip()]
+                    data[faculty][course] = [tr[1].xpath('.//text()')[0].strip()]
                     continue
-
+                
                 # If we haven't started on a course yet
                 if faculty == None:
                     continue
-
+                
                 # Scrape class info
                 component = tr[0].text
-                status = tr[4].text[0] # get first letter
+                status = tr[4].text[0]
+                
+                if status not in ['O', 'F']:
+                    continue
+                status = int(status.replace('O', '0').replace('F', '1'))
+                
                 enrol = tr[5].text.split('/')
                 ttdata = self.parseTimeStr(tr[7].text)
-                print(ttdata)
                 data[faculty][course].append([component, status, *enrol, *ttdata])
+        
+        with open('data/tt.json', 'w') as f:
+            json.dump(data, f, separators=(',', ':'))
     
     def loadFacultyPages(self):
-        page = self.loadPages('http://classutil.unsw.edu.au/')
+        page = self.loadPages('http://classutil.unsw.edu.au/')[0]
         links = page.xpath('//td[' + self.semID + '][@class="data"]/a[contains(@href,".html")]/@href')
-
+        
         # Filter out ADFA courses
         if self.removeADFA:
             links = [link for link in links if link[0] != 'Z']
-
+        
+        links = links[:10] # Testing only!!
+        
         return self.loadPages(*links, prefix='http://classutil.unsw.edu.au/')
     
     def parseTimeStr(self, string):
@@ -68,7 +78,7 @@ class Scraper:
         if '; ' in string:
             output = []
             for x in string.split('; '):
-                output += splitTimetableData(x)
+                output += self.parseTimeStr(x)
             return output
 
         time = self.subtime(string.split('(', maxsplit=1)[0].strip())
@@ -95,7 +105,7 @@ class Scraper:
 
         return [time, location]
 
-    def subtime(self, string):
+    def subtime(self, timestr):
         # If the class runs on Saturday or Sunday, don't include it
         if timestr[0].lower() == 's':
             return None
@@ -144,6 +154,7 @@ class Scraper:
         return pages
     
     def parseHTML(self, pages):
+        trees = []
         for page in pages:
             tree = html.fromstring(page)
 
@@ -155,8 +166,10 @@ class Scraper:
                 p = c.getparent()
                 if p is not None:
                     p.remove(c)
+            
+            trees.append(tree);
 
-            return tree
+        return trees
 
 
 if __name__ == '__main__':

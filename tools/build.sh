@@ -10,8 +10,7 @@
 #  - npm install grunt grunt-critical
 #
 # Running:
-#  - Run from project root directory
-#  - './build'
+#  - Run from project root directory `./build`
 #
 # Written by David
 #
