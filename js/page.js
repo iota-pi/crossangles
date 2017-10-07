@@ -1316,18 +1316,9 @@ function hideMenu() {
         $('#saveimage').click(timetableToPNG);
         $('#menu-download').click(timetableToPNG);
 
-        // Add save backup event
-        $('#menu-saveback').click(saveBackup);
-
         // Send bug report event
         $('#send-bug').click(sendBug);
         $('#bug-loader').hide();
-
-        // Add load from backup event
-        $('#menu-loadback').click(function () {
-            // Open file read dialogue
-            document.getElementById('fileinput').click();
-        });
 
         // When file is selected
         $('#fileinput').change(function () {
