@@ -180,8 +180,6 @@ class Scraper:
         if self.removeADFA:
             links = [link for link in links if link[0] != 'Z']
 
-        links = links[:10] # Testing only!!
-
         return self.loadPages(*links, prefix='http://classutil.unsw.edu.au/')
 
     def loadPages(self, *args, **kwargs):
