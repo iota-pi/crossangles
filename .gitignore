@@ -1,4 +1,5 @@
 data/htmlcache.json
 dist/
+data/
 .brackets.json
 node_modules/

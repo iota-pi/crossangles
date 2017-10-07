@@ -1365,7 +1365,7 @@ function hideMenu() {
     });
 
     // Load course data from courses.json
-    $.getJSON('data/timetable.json', function (data) {
+    $.getJSON('data/tt.json', function (data) {
         function zfill(str, n) {
             str = '' + str; // Make sure str is actually a string
             while (str.length < n) {

@@ -51,7 +51,7 @@ class Scraper:
                     continue
                 status = int(status[0].replace('O', '0').replace('F', '1'))
                 
-                enrol = map(int, tr[5].text.split('/'))
+                enrol = map(int, tr[5].text.split(' ')[0].split('/'))
                 ttdata = self.parseTimeStr(tr[7].text)
                 self.data[faculty][course].append([component, status, *enrol, *ttdata])
         
