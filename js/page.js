@@ -100,11 +100,17 @@ function restoreState() {
     'use strict';
 
     // Get previously chosen options and courses from cookies
-    var options   = Cookies.getJSON('options'),
+    var semester  = Cookies.getJSON('semester'),
+        options   = Cookies.getJSON('options'),
         courses   = Cookies.getJSON('courses') || [],
         locations = Cookies.getJSON('classLocations') || {},
         custom    = Cookies.getJSON('custom') || [],
         i;
+
+    // Don't restore state if last visit was for a previous semester
+    if (semester !== getCurrentSem()) {
+        return;
+    }
 
     restoreFromData(options, courses, locations, custom);
 }
@@ -194,6 +200,10 @@ function getOptions() {
     return options;
 }
 
+function getCurrentSem() {
+    return $('#meta-sem').html() + $('#meta-year').html();
+}
+
 /* saveState()
  * Uses cookies to store chosen courses, options, and class locations
  */
@@ -201,6 +211,8 @@ function saveState() {
     'use strict';
 
     if (!finishedInit) { return; }
+
+    Cookies.set('semester', getCurrentSem(), { expires: 7 * 26 });
 
     // Save CBS items
     var options = getOptions();
