@@ -167,6 +167,7 @@ class Scraper:
             weeks = weeks.replace('< 1', '').strip(',')
             weeks = weeks.replace('N1', '').strip(',')
             weeks = weeks.replace('N2', '').strip(',')
+            weeks = re.sub(r',[, ]*', ',', weeks)
             if weeks.strip() == '':
                 return False
 
