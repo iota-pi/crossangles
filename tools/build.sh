@@ -31,7 +31,7 @@ mkdir dist/css dist/js dist/data dist/img
 cp css/timetable.min.css dist/css/
 
 # Copy timetable data file
-cp data/timetable.json dist/data/
+cp data/*.json dist/data/
 
 # Copy fonts and images
 cp -r fonts/ dist/
