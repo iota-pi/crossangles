@@ -100,17 +100,11 @@ function restoreState() {
     'use strict';
 
     // Get previously chosen options and courses from cookies
-    var semester  = Cookies.getJSON('semester'),
-        options   = Cookies.getJSON('options'),
+    var options   = Cookies.getJSON('options'),
         courses   = Cookies.getJSON('courses') || [],
         locations = Cookies.getJSON('classLocations') || {},
         custom    = Cookies.getJSON('custom') || [],
         i;
-
-    // Don't restore state if last visit was for a previous semester
-    if (semester !== getCurrentSem()) {
-        return;
-    }
 
     restoreFromData(options, courses, locations, custom);
 }
@@ -1390,7 +1384,6 @@ function hideMenu() {
         metadata = data[4];
 
         $(document).ready(function () {
-            var previousVisit;
             document.getElementById('meta-sem').innerHTML = metadata.sem;
             document.getElementById('meta-year').innerHTML = metadata.year;
             document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
@@ -1399,16 +1392,10 @@ function hideMenu() {
             init_typeahead();
 
             // Check if this user has visited the page before
-            previousVisit = Cookies.getJSON('prevVisit') || false;
-            if (previousVisit === false) {
-                // Show help page on first visit
-                var visitorID = getRandomInt();
-                Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
-                $('#helppanel').modal('show');
-
-                // Remind users that they can drag classes around
-                pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
-            } else {
+            // (don't count it if last visit was from a previous semester)
+            var previousVisit = Cookies.getJSON('prevVisit') || false,
+                semester = Cookies.getJSON('semester');
+            if (previousVisit !== false && semester === getCurrentSem()) {
                 // Restore previous state on later visits
                 previousVisit[1] += 1;
 
@@ -1418,6 +1405,16 @@ function hideMenu() {
 
                 Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
                 restoreState();
+            } else {
+                // Give user a visitorID
+                var visitorID = getRandomInt();
+                Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
+
+                // Show help page on first visit
+                $('#helppanel').modal('show');
+
+                // Remind users that they can drag classes around
+                pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
             }
 
             // Initialise clockpickers
