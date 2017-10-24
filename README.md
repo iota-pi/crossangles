@@ -8,7 +8,6 @@ We aim to generate a reasonably good timetable for users, however because everyo
 
 ## Ideas to implement
 
-* Close button in all modals
 * Week based clash detection
 * Multiple times allowed for custom classes
 * Add random query parameter to `tt.json` request
