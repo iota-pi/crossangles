@@ -393,7 +393,7 @@ function to12H(hour_24) {
 }
 
 /* getRandomInt()
- * Gets a ... random int!
+ * Gets a random int!
  */
 function getRandomInt(min, max) {
     min = Math.ceil(min || 0);
@@ -1359,88 +1359,93 @@ function hideMenu() {
     });
 
     // Load course data from courses.json
-    $.getJSON('data/tt.json', function (data) {
-        function zfill(str, n) {
-            str = '' + str; // Make sure str is actually a string
-            while (str.length < n) {
-                str += '0';
+    $.ajax({
+        url: 'data/tt.json',
+        cache: false,
+        dataType: 'json',
+        success: function (data) {
+            function zfill(str, n) {
+                str = '' + str; // Make sure str is actually a string
+                while (str.length < n) {
+                    str += '0';
+                }
+                return str;
             }
-            return str;
-        }
 
-        var faculty, course;
-        for (faculty in data[0]) {
-            if (data[0].hasOwnProperty(faculty)) {
-                for (course in data[0][faculty]) {
-                    if (data[0][faculty].hasOwnProperty(course)) {
-                        timetableData[faculty + zfill(course, 4)] = data[0][faculty][course];
+            var faculty, course;
+            for (faculty in data[0]) {
+                if (data[0].hasOwnProperty(faculty)) {
+                    for (course in data[0][faculty]) {
+                        if (data[0][faculty].hasOwnProperty(course)) {
+                            timetableData[faculty + zfill(course, 4)] = data[0][faculty][course];
+                        }
                     }
                 }
             }
-        }
-        components_index = data[1];
-        locations_index = data[2];
-        times_index = data[3];
-        metadata = data[4];
+            components_index = data[1];
+            locations_index = data[2];
+            times_index = data[3];
+            metadata = data[4];
 
-        $(document).ready(function () {
-            document.getElementById('meta-sem').innerHTML = metadata.sem;
-            document.getElementById('meta-year').innerHTML = metadata.year;
-            document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
+            $(document).ready(function () {
+                document.getElementById('meta-sem').innerHTML = metadata.sem;
+                document.getElementById('meta-year').innerHTML = metadata.year;
+                document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
 
-            // Initialise typeahead (linked text and dropdown list)
-            init_typeahead();
+                // Initialise typeahead (linked text and dropdown list)
+                init_typeahead();
 
-            // Check if this user has visited the page before
-            // (don't count it if last visit was from a previous semester)
-            var previousVisit = Cookies.getJSON('prevVisit') || false,
-                semester = Cookies.getJSON('semester');
-            if (previousVisit !== false && semester === getCurrentSem()) {
-                // Restore previous state on later visits
-                previousVisit[1] += 1;
+                // Check if this user has visited the page before
+                // (don't count it if last visit was from a previous semester)
+                var previousVisit = Cookies.getJSON('prevVisit') || false,
+                    semester = Cookies.getJSON('semester');
+                if (previousVisit !== false && semester === getCurrentSem()) {
+                    // Restore previous state on later visits
+                    previousVisit[1] += 1;
 
-                if (previousVisit[1] % 5 === 0) {
+                    if (previousVisit[1] % 5 === 0) {
+                        pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
+                    }
+
+                    Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
+                    restoreState();
+                } else {
+                    // Give user a visitorID
+                    var visitorID = getRandomInt();
+                    Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
+
+                    // Show help page on first visit
+                    $('#helppanel').modal('show');
+
+                    // Remind users that they can drag classes around
                     pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
                 }
 
-                Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
-                restoreState();
-            } else {
-                // Give user a visitorID
-                var visitorID = getRandomInt();
-                Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
+                // Initialise clockpickers
+                // TODO: move this to when modal is first displayed
+                var start = $('#cp_start').clockpicker({
+                    placement: 'bottom',
+                    align: 'left',
+                    'default': 12,
+                    twelvehour: true,
+                    amOrPm: 'PM',
+                    breakHour: 9,
+                    afterShow: function () { moveClockPicker(start); },
+                    afterUpdate: checkFields
+                });
+                var end = $('#cp_end').clockpicker({
+                    placement: 'bottom',
+                    align: 'left',
+                    'default': 12,
+                    twelvehour: true,
+                    amOrPm: 'PM',
+                    breakHour: 9.5,
+                    afterShow: function () { moveClockPicker(end); },
+                    afterUpdate: checkFields
+                });
 
-                // Show help page on first visit
-                $('#helppanel').modal('show');
-
-                // Remind users that they can drag classes around
-                pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
-            }
-
-            // Initialise clockpickers
-            // TODO: move this to when modal is first displayed
-            var start = $('#cp_start').clockpicker({
-                placement: 'bottom',
-                align: 'left',
-                'default': 12,
-                twelvehour: true,
-                amOrPm: 'PM',
-                breakHour: 9,
-                afterShow: function () { moveClockPicker(start); },
-                afterUpdate: checkFields
+                finishedInit = true;
             });
-            var end = $('#cp_end').clockpicker({
-                placement: 'bottom',
-                align: 'left',
-                'default': 12,
-                twelvehour: true,
-                amOrPm: 'PM',
-                breakHour: 9.5,
-                afterShow: function () { moveClockPicker(end); },
-                afterUpdate: checkFields
-            });
-
-            finishedInit = true;
-        });
+        }
     });
 }());
