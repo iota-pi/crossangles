@@ -3,6 +3,7 @@
 from lxml import html, etree
 from collections import defaultdict
 import grequests
+import string
 import json
 import time
 import os
@@ -11,6 +12,8 @@ import re
 class Scraper:
     def __init__(self, sem, year):
         self.removeADFA = True
+        self.removePGRD = True
+        self.ugrdCourses = set()
         SEM_CODES = { 'S1': 2, 'S2': 3 }
         self.semester = sem
         self.year = year
@@ -19,6 +22,8 @@ class Scraper:
 
     def scrape(self):
         self.data = defaultdict(dict)
+        if self.removePGRD:
+            self.getUGCourses()
         for page in self.loadFacultyPages():
             # Get relevant table
             table = page.xpath('//table[3]')[0]
@@ -34,8 +39,16 @@ class Scraper:
                 if tr[0].get('class') == 'cucourse':
                     # Update course info
                     code = tr[0].xpath('.//text()')[0].strip()
+
+                    # Skip PGRD only courses
+                    if self.removePGRD and code not in self.ugrdCourses:
+                        # Set faculty to None to skip all class data until next course starts
+                        faculty = None
+                        continue
+
                     faculty = code[:4]
                     course = code[4:]
+
                     self.data[faculty][course] = [tr[1].xpath('.//text()')[0].strip()]
                     continue
                 
@@ -79,12 +92,14 @@ class Scraper:
             return []
 
         location = ''
+        weeks = 0
 
         if '(' in string:
             # Keep only the text within the brackets
             string = string[string.find('(') + 1 : string.find(')')]
+            weeks = self.getWeeks(string)
 
-            if not self.validWeeks(string):
+            if weeks is None:
                 return []
 
             if ', ' in string:
@@ -96,7 +111,7 @@ class Scraper:
             if location.lower == 'see school':
                 location = ''
 
-        return [time, location]
+        return [time, location] # todo: add weeks
 
     # Replace components, times and labs with indexes
     def index(self):
@@ -158,7 +173,7 @@ class Scraper:
 
         return timestr
 
-    def validWeeks(self, string):
+    def getWeeks(self, string):
         weeks = string.split(', ')[0].strip(', ')
         if weeks[0] == 'w': #confirm that we are actually looking at weeks
             weeks = weeks.strip('w')
@@ -167,11 +182,34 @@ class Scraper:
             weeks = weeks.replace('< 1', '').strip(',')
             weeks = weeks.replace('N1', '').strip(',')
             weeks = weeks.replace('N2', '').strip(',')
-            weeks = re.sub(r',[, ]*', ',', weeks)
-            if weeks.strip() == '':
-                return False
+            weeks = weeks.replace('N3', '').strip(',')
+            weeks = re.sub(r',[, ]*', ',', weeks).strip()
 
-        return True
+            # If weeks is now empty, then that means that this class only runs outside of the main semester, so return None to not include this class
+            if weeks == '':
+                return None
+
+            weeks = self.toInt(self.expandRanges(weeks))
+            return weeks
+        else:
+            return 0
+
+    def expandRanges(self, weeks):
+        array = []
+
+        for r in weeks.split(','):
+            if '-' in r:
+                a, b = r.split('-')
+                array += list(range(int(a) - 1, int(b)))
+            else:
+                array.append(int(r))
+
+        return array
+
+    def toInt(self, weeksArray):
+        num = sum(map(lambda x: 2**x, weeksArray))
+
+        return num
     
     def loadFacultyPages(self):
         page = self.loadPages('http://classutil.unsw.edu.au/')[0]
@@ -213,6 +251,13 @@ class Scraper:
             trees.append(tree);
 
         return trees
+
+    def getUGCourses(self):
+        handbook = self.loadPages(*string.ascii_uppercase, prefix='http://www.handbook.unsw.edu.au/vbook' + str(self.year) + '/brCoursesByAtoZ.jsp?StudyLevel=Undergraduate&descr=')
+
+        for page in handbook:
+            rows = page.xpath('//div[@id="contentPane"]//table//tr/td[1]/text()')[:-1]
+            self.ugrdCourses.update(rows)
 
     #
     # getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney

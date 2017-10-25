@@ -10,7 +10,7 @@ We aim to generate a reasonably good timetable for users, however because everyo
 
 * Week based clash detection
 * Multiple times allowed for custom classes
-* Remove PG only courses
 * Link course codes to current handbook entry
 * Remove 'full classes' option
 * Remove 'allow clashes' option
+* Move to materialize
