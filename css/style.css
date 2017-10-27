@@ -41,7 +41,7 @@ input:focus, button:focus {
 nav.topbar {
     font-size: 18px;
     height: 45px;
-    background-color: #004F8B;
+    background-color: #0d47a1;
     color: white;
     -webkit-box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 6px rgba(0,0,0,.3);
     box-shadow: 0 0 4px rgba(0,0,0,.15), 0 4px 6px rgba(0,0,0,.3);
@@ -65,14 +65,14 @@ nav.topbar > div.menu-toggle {
     cursor: pointer;
 }
 nav.topbar > div.menu-toggle:hover {
-    background-color: #0061AB;
+    background-color: #1565c0;
 }
 nav.topbar > div.menu-toggle > span {
     margin: auto;
 }
 .menu {
     display: none;
-    background-color: #0061AB;
+    background-color: #1565c0;
     font-size: 16px;
     position: absolute;
     right: 0;
@@ -98,7 +98,7 @@ nav.topbar > div.menu-toggle > span {
     cursor: pointer;
 }
 .menu > .menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: #1976d2;
 }
 .menu > .menu-item > span {
     margin: auto 0;
@@ -380,10 +380,6 @@ footer div.content {
 
 .glyphicon {
     position: static;
-}
-
-#generateWarning {
-	color: #ff9800;
 }
 
 /* misc styles */
