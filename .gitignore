@@ -4,3 +4,4 @@
 /node_modules/
 /tools/version
 /*.tar.gz
+/__pycache__
