@@ -14,6 +14,8 @@ class Scraper:
         self.removeADFA = True
         self.removePGRD = True
         self.ugrdCourses = set()
+        self.weekMax = 2 ** 13 - 1
+        self.classDataItems = len(['time', 'location', 'weeks'])
         SEM_CODES = { 'S1': 2, 'S2': 3 }
         self.semester = sem
         self.year = year
@@ -92,7 +94,7 @@ class Scraper:
             return []
 
         location = ''
-        weeks = 0
+        weeks = self.weekMax
 
         if '(' in string:
             # Keep only the text within the brackets
@@ -111,26 +113,30 @@ class Scraper:
             if location.lower == 'see school':
                 location = ''
 
-        return [time, location] # todo: add weeks
+        return [time, location, weeks]
 
     # Replace components, times and labs with indexes
     def index(self):
         components = defaultdict(int)
         times      = defaultdict(int)
         locations  = defaultdict(int)
+        weeks      = defaultdict(int)
         for faculty in self.data.keys():
             for courseData in self.data[faculty].values():
                 for courseClass in courseData[1:]:
                     components[courseClass[0]] += 1
-                    for time in courseClass[4::2]:
+                    for time in courseClass[4::self.classDataItems]:
                         times[time] += 1
-                    for location in courseClass[5::2]:
+                    for location in courseClass[5::self.classDataItems]:
                         locations[location] += 1
+                    for week in courseClass[6::self.classDataItems]:
+                        weeks[week] += 1
 
         # Sort these hashes into lists in descending order of # of uses
         self.components = self.sortHash(components)
         self.times = self.sortHash(times)
         self.locations = self.sortHash(locations)
+        self.weeks = self.sortHash(weeks)
 
         # Use indexes into these lists in the main data structure
         for faculty in self.data.keys():
@@ -139,13 +145,17 @@ class Scraper:
                     courseClass = courseData[i]
                     self.data[faculty][courseCode][i][0] = self.components.index(courseData[i][0])
 
-                    for j in range(4, len(courseClass), 2):
+                    for j in range(4, len(courseClass), self.classDataItems):
                         time = courseClass[j]
                         self.data[faculty][courseCode][i][j] = self.times.index(time)
 
-                    for j in range(5, len(courseClass), 2):
+                    for j in range(5, len(courseClass), self.classDataItems):
                         location = courseClass[j]
                         self.data[faculty][courseCode][i][j] = self.locations.index(location)
+
+                    for j in range(6, len(courseClass), self.classDataItems):
+                        weeks = courseClass[j]
+                        self.data[faculty][courseCode][i][j] = self.weeks.index(weeks)
 
     def sortHash(self, index):
         index = sorted(index.items(), key=lambda x: x[1], reverse=True)
@@ -192,7 +202,8 @@ class Scraper:
             weeks = self.toInt(self.expandRanges(weeks))
             return weeks
         else:
-            return 0
+            # Assume class runs on every week to be safe
+            return self.weekMax
 
     def expandRanges(self, weeks):
         array = []
@@ -202,7 +213,7 @@ class Scraper:
                 a, b = r.split('-')
                 array += list(range(int(a) - 1, int(b)))
             else:
-                array.append(int(r))
+                array.append(int(r) - 1)
 
         return array
 
@@ -281,7 +292,7 @@ class Scraper:
 
     def saveJSON(self):
         self.getMeta()
-        allData = [self.data, self.components, self.locations, self.times, self.meta]
+        allData = [self.data, self.components, self.locations, self.times, self.weeks, self.meta]
 
         with open('data/tt.json', 'w') as f:
             # Write file with maximum compression

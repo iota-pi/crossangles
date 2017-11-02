@@ -21,6 +21,7 @@ var finishedInit = false,
     components_index = {},
     locations_index = {},
     times_index = {},
+    weeks_index = {},
     metadata = {},
     customClasses = [],
     optionMemory = {},
@@ -1385,7 +1386,8 @@ function hideMenu() {
             components_index = data[1];
             locations_index = data[2];
             times_index = data[3];
-            metadata = data[4];
+            weeks_index = data[4];
+            metadata = data[5];
 
             $(document).ready(function () {
                 document.getElementById('meta-sem').innerHTML = metadata.sem;

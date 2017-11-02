@@ -8,9 +8,7 @@ We aim to generate a reasonably good timetable for users, however because everyo
 
 ## Ideas to implement
 
-* Week based clash detection
 * Multiple times allowed for custom classes
 * Link course codes to current handbook entry
 * Remove 'full classes' option
 * Remove 'allow clashes' option
-* Move to materialize
