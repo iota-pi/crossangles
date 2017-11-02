@@ -1,6 +1,5 @@
 /dist/
 /data/
-/.brackets.json
 /node_modules/
 /tools/version
 /*.tar.gz
