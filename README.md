@@ -12,3 +12,4 @@ We aim to generate a reasonably good timetable for users, however because everyo
 * Link course codes to current handbook entry
 * Remove 'full classes' option
 * Remove 'allow clashes' option
+* Move away from cookies
