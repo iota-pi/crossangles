@@ -173,16 +173,18 @@ function fetchData(cb) {
             component = list[i];
             results = {};
 
-            // Loop through each class in the component
+            // Loop through each stream in the component
             for (j = 0; j < component.length; j += 1) {
                 current = component[j];
-                time = current.time.join(',');
+                time = current.time.map(function (x) { return x.slice(0, -1); }).join(','); // NB: omit the clash permission information for the purposes of hashing
 
                 if (results.hasOwnProperty(time)) {
                     // Update best class for this time
                     comparison = results[time];
 
-                    if (current.status === 'O' && comparison.status !== 'O') {                          // Prioritise open streams
+                    if (current.status === 'O' && comparison.status !== 'O') {   // Prioritise open streams
+                        results[time] = current;
+                    } else if (current.time[3] > comparison.time[3]) {   // Favour a lecture time which permits class clashes
                         results[time] = current;
                     } else {
                         a = current.enrols.split(',');
