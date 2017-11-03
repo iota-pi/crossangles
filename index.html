@@ -38,16 +38,16 @@
             </div>
             <div class="menu" id="ddmenu">
                 <div class="menu-item" id="menu-generate">
-                    <span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span><span class="icon-text">Generate timetable</span></span>
+                    <i class="material-icons">play_arrow</i>Generate timetable
                 </div>
                 <div class="menu-item" id="menu-download">
-                    <span><span class="glyphicon glyphicon-picture" aria-hidden="true"></span><span class="icon-text">Save timetable as image</span></span>
+                    <i class="material-icons">photo_camera</i>Save timetable as image
                 </div>
                 <div class="menu-item" id="menu-showhelp" data-target="#faqpanel" data-toggle="modal">
-                    <span><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><span class="icon-text">Show FAQ</span></span>
+                    <i class="material-icons">help</i>Show FAQ
                 </div>
                 <div class="menu-item" id="menu-showbugs" data-target="#bugpanel" data-toggle="modal">
-                    <span><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span class="icon-text">Contact Us</span></span>
+                    <i class="material-icons">email</i>Contact Us
                 </div>
             </div>
         </nav>
@@ -131,6 +131,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="message warning">
+                    <i class="material-icons">warning</i>
+                    <span><strong>Hello there!</strong> I'd just like to warn you that this feature is currently still being developed</span>
+                    <i class="material-icons close">close</i>
                 </div>
 
                 <div id="alert-space">
@@ -298,11 +304,9 @@
                         
                         <p class="faq-question">Can I add other things to my timetable that aren't classes?</p>
                         <p class="faq-answer">Yes. Use the "Add Custom" button in the Course Selection panel.</p>
-                        
-                        <!--
+
                         <p class="faq-question">When is the data updated?</p>
                         <p class="faq-answer">We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 5 minutes past 5am, 12pm and 6pm. Sometimes it's updated at other times too.</p>
-                        -->
                         
                         <p class="faq-question">Why don't you include 'intensive' classes?</p>
                         <p class="faq-answer">Because your timetable would look messy if we did. They only run for one week, so they don't really need to go on your general timetable.</p>
@@ -371,12 +375,14 @@
         </div>
 
         <noscript id="deferred-styles">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
             <link rel="stylesheet" href="css/tether.min.css" type="text/css" />
             <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
             <link rel="stylesheet" href="css/paper-bs3.min.css" type="text/css" />
             <link rel="stylesheet" href="css/bootstrap-clockpicker.min.css" type="text/css" />
             <link rel="stylesheet" href="css/style.css" type="text/css" />
             <link rel="stylesheet" href="css/checkbox.css" type="text/css" />
+            <link rel="stylesheet" href="css/message.css" type="text/css" />
             <link rel="stylesheet" href="css/timetable.css" type="text/css" />
             <link rel="stylesheet" href="css/loader.css" type="text/css" />
         </noscript>

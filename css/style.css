@@ -93,6 +93,8 @@ nav.topbar > div.menu-toggle > span {
     /*padding: 0 10px;*/
     display: -webkit-flex;
     display: flex;
+    -webkit-align-items: center;
+    align-items: center;
     transition: background-color 0.2s;
     background-color: transparent;
     cursor: pointer;
@@ -101,14 +103,12 @@ nav.topbar > div.menu-toggle > span {
     background-color: #1976d2;
 }
 .menu > .menu-item > span {
-    margin: auto 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.menu > .menu-item > span > span {
-    vertical-align: middle;
-    padding-left: 10px;
+.menu > .menu-item :first-child {
+    padding: 0 10px;
 }
 nav.topbar + div {
     padding-top: 65px;
