@@ -291,7 +291,7 @@ function removeCourse(e) {
 
     var row = $(e.currentTarget).parents('.course'),
         div = row.children().first(),
-        course = div.html().replace(/ -.+/, '');
+        course = div.text().replace(/ .*/, '');
 
     // Remove this course from the list of courses
     if (row.data('custom') !== false) {
@@ -336,7 +336,7 @@ function addCourse(course, custom, fade) {
 
     // Add this course to our list of courses (provided it is not a custom class)
     if (custom !== true) {
-        courseList.push(course.replace(/ -.*/, ''));
+        courseList.push(course.replace(/ .*/, ''));
     }
 
     // Create DOM structure for course display list
@@ -351,9 +351,9 @@ function addCourse(course, custom, fade) {
         rightCol = $('<div>').append(remove),
         bothIcons = (custom !== true) ? rightCol : rightCol.prepend(edit),
         year = metadata.year,
-        courseID = course.replace(/ -.*/, ''),
-        courseTitle = course.replace(/.* - /, ''),
-        div = $('<div class="course">').html('<div><a href="http://www.handbook.unsw.edu.au/undergraduate/courses/' + year + '/'+ courseID + '.html" target="_blank">' + courseID + '</a> - ' + courseTitle + '</div>')
+        courseID = course.replace(/ .*/, ''),
+        courseTitle = course.replace(/.* (-|&mdash;|&ndash;) /, ''),
+        div = $('<div class="course">').html('<div><a class="coursecode" href="http://www.handbook.unsw.edu.au/undergraduate/courses/' + year + '/'+ courseID + '.html" target="_blank">' + courseID + '</a> &mdash; &nbsp; ' + courseTitle + '</div>')
                         .append(bothIcons)
                         .data('custom', false);
 

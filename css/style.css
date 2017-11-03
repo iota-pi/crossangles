@@ -362,6 +362,10 @@ footer div.content {
     -webkit-align-items: center;
     align-items: center;
 }
+#courses .coursecode {
+    display: inline-block;
+    min-width: 70px;
+}
 #courses .glyphicon {
     margin: auto;
     padding-left: 5px;

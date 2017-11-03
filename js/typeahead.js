@@ -72,7 +72,7 @@
                         if (skip) { return true; }
                         
                         // Add this course to the dropdown
-                        str = item.replace(re, '<strong>$1</strong>');
+                        str = item.replace(re, '<strong>$1</strong>').replace('-', '&mdash;');
                         dditem = $('<div class="dd-item"></div>');
                         dditem.html(str);
                         dditem.addClass('noselect');

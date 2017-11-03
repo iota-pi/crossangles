@@ -9,7 +9,6 @@ We aim to generate a reasonably good timetable for users, however because everyo
 ## Ideas to implement
 
 * Multiple times allowed for custom classes
-* Consistent course-code widths
 * Replace (sometimes truncated) course names from classutil with full names (from handbook? == more scraping)
 * Remove 'full classes' option
 * Remove 'allow clashes' option
