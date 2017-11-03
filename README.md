@@ -9,7 +9,6 @@ We aim to generate a reasonably good timetable for users, however because everyo
 ## Ideas to implement
 
 * Multiple times allowed for custom classes
-* Link course codes to current handbook entry
 * Remove 'full classes' option
 * Remove 'allow clashes' option
 * Move away from cookies
