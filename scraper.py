@@ -110,7 +110,7 @@ class Scraper:
                 location = string
 
             # Standardise 'See School' locations to be blank
-            if location.lower == 'see school':
+            if location.lower() == 'see school':
                 location = ''
 
         return [time, location, weeks]
