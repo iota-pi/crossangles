@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, console, domtoimage, download, inlineit, Cookies, generate, objectFitImages, ga */
+/*global $, console, Message, download, inlineit, Cookies, generate, objectFitImages, ga */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -1106,14 +1106,13 @@ function createShadow(stream, courseID) {
  * Display is just above timetable. Limit of 3 messages in the alert space
  */
 function pageError(title, body) {
-    var alert = $('<div>').addClass('alert alert-warning alert-dismissible fade show').attr('role', 'alert'),
-        close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
-        message = '<strong>' + title + '</strong> ' + body,
+    var message = Message(title, body, 'warning'),
         space = $('#alert-space');
-    alert.html(message).prepend(close);
-    alert.appendTo(space);
+    space.append(message.hide().fadeIn());
     if (space.children().length > 3) {
-        space.children().first().alert('close');
+        space.children().first().slideUp(200, function () {
+            $(this).remove();
+        });
     }
 }
 
@@ -1122,14 +1121,13 @@ function pageError(title, body) {
  * Display is just above timetable
  */
 function pageNotice(title, body) {
-    var alert = $('<div>').addClass('alert alert-success alert-dismissible fade show').attr('role', 'alert'),
-        close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
-        message = '<strong>' + title + '</strong> ' + body,
+    var message = Message(title, body, 'info'),
         space = $('#alert-space');
-    alert.html(message).prepend(close);
-    alert.appendTo(space);
+    space.append(message.hide().fadeIn());
     if (space.children().length > 3) {
-        space.children().first().alert('close');
+        space.children().first().slideUp(200, function () {
+            $(this).remove();
+        });
     }
 }
 
