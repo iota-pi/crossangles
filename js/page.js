@@ -350,7 +350,7 @@ function addCourse(course, custom, fade) {
                           .click(showEdit),
         rightCol = $('<div>').append(remove),
         bothIcons = (custom !== true) ? rightCol : rightCol.prepend(edit),
-        year = $('#meta-year').html(),
+        year = metadata.year,
         courseID = course.replace(/ -.*/, ''),
         courseTitle = course.replace(/.* - /, ''),
         div = $('<div class="course">').html('<div><a href="http://www.handbook.unsw.edu.au/undergraduate/courses/' + year + '/'+ courseID + '.html" target="_blank">' + courseID + '</a> - ' + courseTitle + '</div>')
