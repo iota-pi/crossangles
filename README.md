@@ -10,6 +10,7 @@ We aim to generate a reasonably good timetable for users, however because everyo
 
 * Multiple times allowed for custom classes
 * Replace (sometimes truncated) course names from classutil with full names (from handbook? == more scraping)
-* Remove 'full classes' option
 * Remove 'allow clashes' option
 * Move away from cookies
+* Escape html in custom class name/location
+* Make warnings disappear on next timetable generation

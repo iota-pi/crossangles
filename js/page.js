@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, console, Message, download, inlineit, Cookies, generate, objectFitImages, ga */
+/*global $, console, Message, download, inlineit, Cookies, generate, weeks, objectFitImages, ga */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -291,7 +291,7 @@ function removeCourse(e) {
 
     var row = $(e.currentTarget).parents('.course'),
         div = row.children().first(),
-        course = div.text().replace(/ .*/, '');
+        course = div.children('.coursecode').text();
 
     // Remove this course from the list of courses
     if (row.data('custom') !== false) {
@@ -353,7 +353,8 @@ function addCourse(course, custom, fade) {
         year = metadata.year,
         courseID = course.replace(/ .*/, ''),
         courseTitle = course.replace(/.* (-|&mdash;|&ndash;) /, ''),
-        div = $('<div class="course">').html('<div><a class="coursecode" href="http://www.handbook.unsw.edu.au/undergraduate/courses/' + year + '/'+ courseID + '.html" target="_blank">' + courseID + '</a> &mdash; &nbsp; ' + courseTitle + '</div>')
+        html = (custom !== true) ? '<a class="coursecode" href="http://www.handbook.unsw.edu.au/undergraduate/courses/' + year + '/'+ courseID + '.html" target="_blank">' + courseID + '</a> &mdash; &nbsp; ' + courseTitle : course,
+        div = $('<div class="course">').html('<div>' + html + '</div>')
                         .append(bothIcons)
                         .data('custom', false);
 
@@ -444,7 +445,7 @@ function addCustom() {
         time = day + ' ' + start + ((end - start !== 1) ? '-' + end : ''),
         cid = document.getElementById('customID').value || uniqueID(),
         colour = getRGB(getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked + label'), ':before').getPropertyValue('background-color')),
-        data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
+        data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour, weeks: weeks(1, 13) };
 
     // Remove this course from customClasses list if it already exists
     for (var i = 0; i < customClasses.length; i += 1) {
