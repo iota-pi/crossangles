@@ -165,9 +165,12 @@ function fetchData(cb) {
     }());
 
     // Remove extra classes with the same course, component and time, choosing to keep the one with more enrolment positions available and merge their weeks
-    // NB: this gives a huge speed improvement for backtracking search
+    // (this can give a huge speed improvement for backtracking search)
     (function removeDuplicates() {
-        var results, i, j, component, current, time, comparison, a, b;
+        var results, i, j, component, current, time, comparison;
+        var sum = function (a, b) { return a + b; },
+            getClash = function (x) { return x[3]; },
+            getLocation = function (x) { return x !== ''; };
         // Loop through each course component
         for (i = 0; i < list.length; i += 1) {
             component = list[i];
@@ -184,18 +187,29 @@ function fetchData(cb) {
 
                     if (current.status === 'O' && comparison.status !== 'O') {   // Prioritise open streams
                         results[time] = current;
-                    } else if (current.time[3] > comparison.time[3]) {   // Favour a lecture time which permits class clashes
+                        continue;
+                    } else if (current.status !== 'O' && comparison.status === 'O') {
+                        continue;
+                    }
+
+                    if (current.time.map(getClash).reduce(sum) > comparison.time.map(getClash).reduce(sum)) {   // Favour a lecture time which permits class clashes
                         results[time] = current;
-                    } else {
-                        a = current.enrols.split(',');
-                        b = comparison.enrols.split(',');
-                        if (a[1] - a[0] < b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
-                            results[time] = current;
-                        } else if (a[0] == b[0] && a[1] == b[1]) {
-                            // In the case that enrolments are also identical, just merge the weeks that this class runs
-                            // (some classes annoyingly list two identical classes with different running weeks, for no purpose)
-                            results[time].weeks |= current.weeks;
-                        }
+                        continue;
+                    } else if (current.time.map(getClash).reduce(sum) < comparison.time.map(getClash).reduce(sum)) {
+                        continue;
+                    }
+
+                    if (current.location.map(getLocation).reduce(sum) > comparison.location.map(getLocation).reduce(sum)) { // Favour classes with locations listed
+                        results[time] = current;
+                        continue;
+                    } else if (current.location.map(getLocation).reduce(sum) < comparison.location.map(getLocation).reduce(sum)) {
+                        continue;
+                    }
+
+                    var a = current.enrols.split(',').map(function (x) { return +x; }),
+                        b = comparison.enrols.split(',').map(function (x) { return +x; });
+                    if (a[1] - a[0] > b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
+                        results[time] = current;
                     }
                 } else {
                     // Set this class as the best one for this time
