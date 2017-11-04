@@ -20,19 +20,8 @@ function search(list, maxClash, searchMax, allowFull) {
     if (list.length === 0) { return []; }
     allowFull = allowFull || false;
 
-    // Checks if two classes have the same time
-    function sameClass(a, b) {
-        for (var i = 0; i < a.length; i += 1) {
-            if (String(a[i].time) !== String(b[i].time)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     // Checks whether two given time strings clash with each other
-    function classClash(a, b) {
+    function classClash(a, b, weekA, weekB) {
         // If days are different, then there is clearly no clash
         if (a[0] !== b[0]) { return false; }
 
@@ -40,19 +29,24 @@ function search(list, maxClash, searchMax, allowFull) {
         if (a[3] || b[3]) { return false; }
 
         // The overlap between two intervals will be the difference (if positive) between the smallest upper-bound and the largest lower-bound
-        return Math.max(0, Math.min(a[2], b[2]) - Math.max(a[1], b[1]));
+        if (weekA & weekB !== 0) {
+             return Math.max(0, Math.min(a[2], b[2]) - Math.max(a[1], b[1]));
+        }
+
+        return 0;
     }
 
     // Checks whether two given time strings clash with each other
     // Inherited variables: maxClash
-    function countClashes(streams, timetable, newTime) {
-        var i, j, k, stream, times, count = 0;
+    function countClashes(streams, timetable, newTime, newWeeks) {
+        var i, j, k, stream, times, weeks, count = 0;
         for (i = 0; i < newTime.length; i += 1) {
             for (j = 0; j < timetable.length; j += 1) {
                 stream = streams[j][timetable[j]];
                 times = stream.time;
+                weeks = stream.weeks;
                 for (k = 0; k < times.length; k += 1) {
-                    count += classClash(newTime[i], times[k]);
+                    count += classClash(newTime[i], times[k], newWeeks[i], stream.weeks[k]);
                 }
             }
         }
@@ -68,7 +62,7 @@ function search(list, maxClash, searchMax, allowFull) {
 
         // Keep looking for a class while there is a clash
         while (classNo < stream.length &&
-               (countClashes(streams, timetable, stream[classNo].time) > maxClash || // skip clashing classes if we've got too many clashes already
+               (countClashes(streams, timetable, stream[classNo].time, stream[classNo].weeks) > maxClash || // skip clashing classes if we've got too many clashes already
                 (stream[classNo].status === 'F' && !allowFull) // skip full classes if we aren't allowed them
                )
               ) {

@@ -10,8 +10,7 @@
 #  - npm install grunt grunt-critical
 #
 # Running:
-#  - Run from project root directory
-#  - './build'
+#  - Run from project root directory `./build`
 #
 # Written by David
 #
@@ -20,6 +19,12 @@ if [ "$1" = "clean" ]; then
 	rm -r dist/*
 	echo "Cleaned 'dist/'"
 	exit
+fi
+
+if [ "$1" = "scrape" ]; then
+    echo -n 'Scraping data... '
+    python3 scraper.py
+    echo 'Done'
 fi
 
 echo -n "Copying files to 'dist/'... "
@@ -32,7 +37,7 @@ mkdir -p dist/css dist/js dist/data dist/img
 cp css/timetable.min.css dist/css/
 
 # Copy timetable data file
-cp data/timetable.json dist/data/
+cp data/*.json dist/data/
 
 # Copy fonts and images
 cp -r fonts/ dist/
@@ -50,14 +55,13 @@ echo 'Done'
 version=$((`cat tools/version` + 1))
 echo $version >tools/version
 
-
 # Concat and minify all CSS
 # NB: have to list files in the right order; use grep to get the same order as included in index.html
 echo -n "Creating 'all.css' and 'all.js'... "
 # CSS
-cat `grep -o '"css/.*\.css"' index.html | sed 's/"//g'` | cleancss -O2 css/*.min.css -o dist/css/all.css
+cat `grep -o '"css/.*\.css"' index.html | sed 's/"//g'` | cleancss -O2 css/*.min.css -o dist/css/all.css 2>/dev/null
 # JS
-cat `grep -o '"js/.*\.js"' index.html | sed 's/"//g'` | uglifyjs -o dist/js/all.js --keep-fnames
+cat `grep -o '"js/.*\.js"' index.html | sed 's/"//g'` | uglifyjs -o dist/js/all.js --keep-fnames 2>/dev/null
 echo 'Done'
 
 
@@ -117,7 +121,7 @@ echo 'Done'
 
 
 
-echo -n 'Minifying HTML file with critical CSS... '
+echo -n 'Building and minifying HTML... '
 
 # Put back into dist/index.html
 # Put everything up to <style> line
@@ -148,6 +152,12 @@ rm 'dist/index.min.html'
 echo 'Done'
 
 
+# TODO: gzip
+echo -n 'Compressing distribution folder... '
+cd dist
+tar -zcvf '../dist.tar.gz' * >/dev/null
+cd ..
+echo 'Done'
 
 # All finished!
 echo

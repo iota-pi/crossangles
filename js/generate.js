@@ -9,7 +9,7 @@
 
 // Stop jslint complaining about regexs
 /*jslint regexp: true */
-/*globals $, search, document, timetableData, components_index, locations_index, times_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, CBS, console */
+/*globals $, search, document, timetableData, components_index, locations_index, times_index, weeks_index, courseList, customClasses, createClass, createShadow, classList, clearLists, restoreClasses, saveState, showEmpty, hideEmpty, pageError, pageNotice, CBS, console */
 
 function fetchData(cb) {
     'use strict';
@@ -26,7 +26,7 @@ function fetchData(cb) {
 
     // Turn raw data into a hash
     (function makeHash() {
-        var course, courseData, classData, classTime, locations, i, j;
+        var course, courseData, classData, classTime, locations, weeks, i, j;
 
         for (course in data) {
             // Loop through only properties which are not inherited
@@ -39,11 +39,13 @@ function fetchData(cb) {
                         classData = courseData[i];
                         classTime = [];
                         locations = [];
-                        for (j = 4; j < classData.length; j += 2) {
+                        weeks     = [];
+                        for (j = 4; j < classData.length; j += 3) {
                             // Construct a list of unique times (and corresponding locations)
                             if (classTime.indexOf(classData[j]) === -1) {
                                 classTime.push(times_index[classData[j]]);
                                 locations.push(locations_index[classData[j + 1]]); // also de-index locations
+                                weeks.push(weeks_index[classData[j + 2]]); // also de-index locations
                             }
                         }
                         classTime = classTime.join(',');
@@ -64,7 +66,15 @@ function fetchData(cb) {
                             // Change component index to three-letter abbreviation
                             var classComponent = components_index[classData[0]];
 
-                            hash[course][classData[0]].push({time: classTime, status: classStatus, enrols: classData[2] + ',' + classData[3], course: course, component: classComponent, location: locations});
+                            hash[course][classData[0]].push({
+                                time: classTime,
+                                status: classStatus,
+                                enrols: classData[2] + ',' + classData[3],
+                                course: course,
+                                component: classComponent,
+                                location: locations,
+                                weeks: weeks
+                            });
                         }
                     }
                 }
@@ -154,36 +164,55 @@ function fetchData(cb) {
         });
     }());
 
-    // Remove extra classes with the same course, component and time, choosing to keep the one with more enrolment positions available
-    // NB: this gives a huge speed improvement for backtracking search
+    // Remove extra classes with the same course, component and time, choosing to keep the one with more enrolment positions available and merge their weeks
+    // (this can give a huge speed improvement for backtracking search)
     (function removeDuplicates() {
-        var results, i, j, component, current, time, comparison, a, b;
+        var results, i, j, component, current, time, comparison;
+        var sum = function (a, b) { return a + b; },
+            getClash = function (x) { return x[3]; },
+            getLocation = function (x) { return x !== ''; };
         // Loop through each course component
         for (i = 0; i < list.length; i += 1) {
             component = list[i];
             results = {};
 
-            // Loop through each class in the component
+            // Loop through each stream in the component
             for (j = 0; j < component.length; j += 1) {
                 current = component[j];
-                time = current.time.join(',');
+                time = current.time.map(function (x) { return x.slice(0, -1); }).join(','); // NB: omit the clash permission information for the purposes of hashing
 
-                // Update best class for this time
                 if (results.hasOwnProperty(time)) {
+                    // Update best class for this time
                     comparison = results[time];
 
-                    if (current.status === 'O' && comparison.status !== 'O') {                          // Prioritise open streams
+                    if (current.status === 'O' && comparison.status !== 'O') {   // Prioritise open streams
                         results[time] = current;
-                    } else if (current.status === 'F' && comparison.status !== 'O' && comparison.status !== 'F') { // priorities full streams over others
+                        continue;
+                    } else if (current.status !== 'O' && comparison.status === 'O') {
+                        continue;
+                    }
+
+                    if (current.time.map(getClash).reduce(sum) > comparison.time.map(getClash).reduce(sum)) {   // Favour a lecture time which permits class clashes
                         results[time] = current;
-                    } else {
-                        a = current.enrols.split(',');
-                        b = comparison.enrols.split(',');
-                        if (a[1] - a[0] < b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
-                            results[time] = current;
-                        }
+                        continue;
+                    } else if (current.time.map(getClash).reduce(sum) < comparison.time.map(getClash).reduce(sum)) {
+                        continue;
+                    }
+
+                    if (current.location.map(getLocation).reduce(sum) > comparison.location.map(getLocation).reduce(sum)) { // Favour classes with locations listed
+                        results[time] = current;
+                        continue;
+                    } else if (current.location.map(getLocation).reduce(sum) < comparison.location.map(getLocation).reduce(sum)) {
+                        continue;
+                    }
+
+                    var a = current.enrols.split(',').map(function (x) { return +x; }),
+                        b = comparison.enrols.split(',').map(function (x) { return +x; });
+                    if (a[1] - a[0] > b[1] - b[0]) {        // Compare enrollments, choose the one with more space remaining
+                        results[time] = current;
                     }
                 } else {
+                    // Set this class as the best one for this time
                     results[time] = current;
                 }
             }

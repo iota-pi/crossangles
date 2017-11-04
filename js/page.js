@@ -7,7 +7,7 @@
 
 /* --- JSHint Options --- */
 /*jshint browser: true, regexp: true */
-/*global $, console, domtoimage, download, inlineit, Cookies, generate, objectFitImages */
+/*global $, console, Message, download, inlineit, Cookies, generate, weeks, objectFitImages, ga */
 
 var finishedInit = false,
     courseList = ['CBS'],
@@ -21,6 +21,7 @@ var finishedInit = false,
     components_index = {},
     locations_index = {},
     times_index = {},
+    weeks_index = {},
     metadata = {},
     customClasses = [],
     optionMemory = {},
@@ -194,6 +195,10 @@ function getOptions() {
     return options;
 }
 
+function getCurrentSem() {
+    return metadata.sem + metadata.year;
+}
+
 /* saveState()
  * Uses cookies to store chosen courses, options, and class locations
  */
@@ -201,6 +206,8 @@ function saveState() {
     'use strict';
 
     if (!finishedInit) { return; }
+
+    Cookies.set('semester', getCurrentSem(), { expires: 7 * 26 });
 
     // Save CBS items
     var options = getOptions();
@@ -284,7 +291,7 @@ function removeCourse(e) {
 
     var row = $(e.currentTarget).parents('.course'),
         div = row.children().first(),
-        course = div.html().replace(/ -.+/, '');
+        course = div.children('.coursecode').text();
 
     // Remove this course from the list of courses
     if (row.data('custom') !== false) {
@@ -329,7 +336,7 @@ function addCourse(course, custom, fade) {
 
     // Add this course to our list of courses (provided it is not a custom class)
     if (custom !== true) {
-        courseList.push(course.replace(/ -.*/, ''));
+        courseList.push(course.replace(/ .*/, ''));
     }
 
     // Create DOM structure for course display list
@@ -343,7 +350,11 @@ function addCourse(course, custom, fade) {
                           .click(showEdit),
         rightCol = $('<div>').append(remove),
         bothIcons = (custom !== true) ? rightCol : rightCol.prepend(edit),
-        div = $('<div class="course">').html('<div>' + course + '</div>')
+        year = metadata.year,
+        courseID = course.replace(/ .*/, ''),
+        courseTitle = course.replace(/.* (-|&mdash;|&ndash;) /, ''),
+        html = (custom !== true) ? '<a class="coursecode" href="http://www.handbook.unsw.edu.au/undergraduate/courses/' + year + '/'+ courseID + '.html" target="_blank">' + courseID + '</a> &mdash; &nbsp; ' + courseTitle : course,
+        div = $('<div class="course">').html('<div>' + html + '</div>')
                         .append(bothIcons)
                         .data('custom', false);
 
@@ -387,7 +398,7 @@ function to12H(hour_24) {
 }
 
 /* getRandomInt()
- * Gets a ... random int!
+ * Gets a random int!
  */
 function getRandomInt(min, max) {
     min = Math.ceil(min || 0);
@@ -434,7 +445,7 @@ function addCustom() {
         time = day + ' ' + start + ((end - start !== 1) ? '-' + end : ''),
         cid = document.getElementById('customID').value || uniqueID(),
         colour = getRGB(getComputedStyle(document.querySelector('input[type="radio"][name="customColour"]:checked + label'), ':before').getPropertyValue('background-color')),
-        data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour };
+        data = { time: time, status: 'O', enrols: '0,1', course: cid, component: title, location: [location], colour: colour, weeks: weeks(1, 13) };
 
     // Remove this course from customClasses list if it already exists
     for (var i = 0; i < customClasses.length; i += 1) {
@@ -559,6 +570,13 @@ function checkFields() {
     return true;
 }
 
+function generateTimetable() {
+    // Send GA event
+    ga('send', 'event', 'Generate', courseList.length);
+
+    generate();
+}
+
 /* canSaveTimetable()
  * Returns whether timetableToPNG can be run in this browser
  */
@@ -578,6 +596,10 @@ function canSaveTimetable() {
 function timetableToPNG() {
     'use strict';
 
+    // Send GA event
+    ga('send', 'event', 'Screenshot', customClasses.length);
+
+    // Do screenshot
     var el = document.getElementById('timetable');
     phantomScreenshot(el);
 }
@@ -587,6 +609,7 @@ function timetableToPNG() {
  * This service has a free tier which we are using, which should allow thousands of timetables to be drawn each day as a backup we use a key for each users indiviual IP
  */
 function phantomScreenshot(el, type, key) {
+
     type = type || 'png';
     key = key || 'ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7';
 
@@ -1087,14 +1110,13 @@ function createShadow(stream, courseID) {
  * Display is just above timetable. Limit of 3 messages in the alert space
  */
 function pageError(title, body) {
-    var alert = $('<div>').addClass('alert alert-warning alert-dismissible fade show').attr('role', 'alert'),
-        close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
-        message = '<strong>' + title + '</strong> ' + body,
+    var message = Message(title, body, 'warning'),
         space = $('#alert-space');
-    alert.html(message).prepend(close);
-    alert.appendTo(space);
+    space.append(message.hide().fadeIn());
     if (space.children().length > 3) {
-        space.children().first().alert('close');
+        space.children().first().slideUp(200, function () {
+            $(this).remove();
+        });
     }
 }
 
@@ -1103,14 +1125,13 @@ function pageError(title, body) {
  * Display is just above timetable
  */
 function pageNotice(title, body) {
-    var alert = $('<div>').addClass('alert alert-success alert-dismissible fade show').attr('role', 'alert'),
-        close = $('<button type="button" data-dismiss="alert" aria-label="Close">').addClass('close').html('<span aria-hidden="true">&times;</span>'),
-        message = '<strong>' + title + '</strong> ' + body,
+    var message = Message(title, body, 'info'),
         space = $('#alert-space');
-    alert.html(message).prepend(close);
-    alert.appendTo(space);
+    space.append(message.hide().fadeIn());
     if (space.children().length > 3) {
-        space.children().first().alert('close');
+        space.children().first().slideUp(200, function () {
+            $(this).remove();
+        });
     }
 }
 
@@ -1297,25 +1318,16 @@ function hideMenu() {
         $('#fullclasses').change(checkFullClasses);
 
         // Add generate timetable events
-        $('#generate').click(generate);
-        $('#menu-generate').click(generate);
+        $('#generate').click(generateTimetable);
+        $('#menu-generate').click(generateTimetable);
 
         // Add save as image events
         $('#saveimage').click(timetableToPNG);
         $('#menu-download').click(timetableToPNG);
 
-        // Add save backup event
-        $('#menu-saveback').click(saveBackup);
-
         // Send bug report event
         $('#send-bug').click(sendBug);
         $('#bug-loader').hide();
-
-        // Add load from backup event
-        $('#menu-loadback').click(function () {
-            // Open file read dialogue
-            document.getElementById('fileinput').click();
-        });
 
         // When file is selected
         $('#fileinput').change(function () {
@@ -1350,85 +1362,94 @@ function hideMenu() {
     });
 
     // Load course data from courses.json
-    $.getJSON('data/timetable.json', function (data) {
-        function zfill(str, n) {
-            str = '' + str; // Make sure str is actually a string
-            while (str.length < n) {
-                str += '0';
+    $.ajax({
+        url: 'data/tt.json',
+        cache: false,
+        dataType: 'json',
+        success: function (data) {
+            function zfill(str, n) {
+                str = '' + str; // Make sure str is actually a string
+                while (str.length < n) {
+                    str += '0';
+                }
+                return str;
             }
-            return str;
-        }
 
-        var faculty, course;
-        for (faculty in data[0]) {
-            if (data[0].hasOwnProperty(faculty)) {
-                for (course in data[0][faculty]) {
-                    if (data[0][faculty].hasOwnProperty(course)) {
-                        timetableData[faculty + zfill(course, 4)] = data[0][faculty][course];
+            var faculty, course;
+            for (faculty in data[0]) {
+                if (data[0].hasOwnProperty(faculty)) {
+                    for (course in data[0][faculty]) {
+                        if (data[0][faculty].hasOwnProperty(course)) {
+                            timetableData[faculty + zfill(course, 4)] = data[0][faculty][course];
+                        }
                     }
                 }
             }
-        }
-        components_index = data[1];
-        locations_index = data[2];
-        times_index = data[3];
-        metadata = data[4];
+            components_index = data[1];
+            locations_index = data[2];
+            times_index = data[3];
+            weeks_index = data[4];
+            metadata = data[5];
 
-        $(document).ready(function () {
-            var previousVisit;
-            document.getElementById('meta-sem').innerHTML = metadata.sem;
-            document.getElementById('meta-year').innerHTML = metadata.year;
-            document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
+            $(document).ready(function () {
+                document.getElementById('meta-sem').innerHTML = metadata.sem;
+                document.getElementById('meta-year').innerHTML = metadata.year;
+                document.getElementById('meta-update').innerHTML = metadata.updated + ' at ' + metadata.uptimed;
 
-            // Initialise typeahead (linked text and dropdown list)
-            init_typeahead();
+                // Initialise typeahead (linked text and dropdown list)
+                init_typeahead();
 
-            // Check if this user has visited the page before
-            previousVisit = Cookies.getJSON('prevVisit') || false;
-            if (previousVisit === false) {
-                // Show help page on first visit
-                var visitorID = getRandomInt();
-                Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
-                $('#helppanel').modal('show');
+                // Check if this user has visited the page before
+                // (don't count it if last visit was from a previous semester)
+                var previousVisit = Cookies.getJSON('prevVisit') || false,
+                    semester = Cookies.getJSON('semester');
+                if (previousVisit !== false && semester === getCurrentSem()) {
+                    // Restore previous state on later visits
+                    previousVisit[1] += 1;
 
-                // Remind users that they can drag classes around
-                pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
-            } else {
-                // Restore previous state on later visits
-                previousVisit[1] += 1;
+                    if (previousVisit[1] % 5 === 0) {
+                        pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
+                    }
 
-                if (previousVisit[1] % 5 === 0) {
+                    Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
+                    restoreState();
+                } else {
+                    // Give user a visitorID
+                    var visitorID = getRandomInt();
+                    Cookies.set('prevVisit', [visitorID, 1], { expires: 7 * 26 });
+
+                    // Show help page on first visit
+                    $('#helppanel').modal('show');
+
+                    // Remind users that they can drag classes around
                     pageNotice('Did you know?', 'You can move classes around in the timetable below to suit you better!');
                 }
 
-                Cookies.set('prevVisit', previousVisit, { expires: 7 * 26 });
-                restoreState();
-            }
+                // Initialise clockpickers
+                // TODO: move this to when modal is first displayed
+                var start = $('#cp_start').clockpicker({
+                    placement: 'bottom',
+                    align: 'left',
+                    'default': 12,
+                    twelvehour: true,
+                    amOrPm: 'PM',
+                    breakHour: 9,
+                    afterShow: function () { moveClockPicker(start); },
+                    afterUpdate: checkFields
+                });
+                var end = $('#cp_end').clockpicker({
+                    placement: 'bottom',
+                    align: 'left',
+                    'default': 12,
+                    twelvehour: true,
+                    amOrPm: 'PM',
+                    breakHour: 9.5,
+                    afterShow: function () { moveClockPicker(end); },
+                    afterUpdate: checkFields
+                });
 
-            // Initialise clockpickers
-            // TODO: move this to when modal is first displayed
-            var start = $('#cp_start').clockpicker({
-                placement: 'bottom',
-                align: 'left',
-                'default': 12,
-                twelvehour: true,
-                amOrPm: 'PM',
-                breakHour: 9,
-                afterShow: function () { moveClockPicker(start); },
-                afterUpdate: checkFields
+                finishedInit = true;
             });
-            var end = $('#cp_end').clockpicker({
-                placement: 'bottom',
-                align: 'left',
-                'default': 12,
-                twelvehour: true,
-                amOrPm: 'PM',
-                breakHour: 9.5,
-                afterShow: function () { moveClockPicker(end); },
-                afterUpdate: checkFields
-            });
-
-            finishedInit = true;
-        });
+        }
     });
 }());

@@ -93,22 +93,22 @@ nav.topbar > div.menu-toggle > span {
     /*padding: 0 10px;*/
     display: -webkit-flex;
     display: flex;
+    -webkit-align-items: center;
+    align-items: center;
     transition: background-color 0.2s;
     background-color: transparent;
     cursor: pointer;
 }
 .menu > .menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: #1976d2;
 }
 .menu > .menu-item > span {
-    margin: auto 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.menu > .menu-item > span > span {
-    vertical-align: middle;
-    padding-left: 10px;
+.menu > .menu-item :first-child {
+    padding: 0 10px;
 }
 nav.topbar + div {
     padding-top: 65px;
@@ -160,37 +160,33 @@ footer div.content {
     overflow: hidden;
 }
 
-.panel-primary .panel-heading .btn {
+.panel-heading .btn {
     position: absolute;
     top: 0;
     right: 0;
     padding: 0 1em;
+    border-radius: 0;
     height: 100%;
-    display: -webkit-flex;
-    display: flex;
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
-.panel-heading .btn > span {
-    padding-left: 3px;
-    margin: auto 0;
-}
-.btn > span {
-    vertical-align: middle;
-}
-.btn .glyphicon-triangle-right:last-child {
-	position: relative;
-    top: 1px;
+.btn {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
 }
 
-.panel-primary .panel-heading .btn .glyphicon {
-    font-size: 16px;
+.btn > .material-icons:last-child {
+    padding-left: 14px;
+}
+.panel-heading .btn > .material-icons:last-child {
+    padding-left: 8px;
 }
 
 .panel-primary .panel-heading .btn:hover {
     background-color: #0061AB;
-    border-radius: 0;
     color: white;
 }
 
@@ -198,7 +194,15 @@ footer div.content {
     display: none;
 }
 
+.horzontal-centre {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
 /* alert styles */
+/*
 .alert {
     position: relative;
 }
@@ -220,6 +224,7 @@ footer div.content {
         right: 1rem;
     }
 }
+*/
 
 /* modal styles */
 .modal .close {
@@ -357,6 +362,10 @@ footer div.content {
     -webkit-align-items: center;
     align-items: center;
 }
+#courses .coursecode {
+    display: inline-block;
+    min-width: 70px;
+}
 #courses .glyphicon {
     margin: auto;
     padding-left: 5px;
@@ -380,10 +389,6 @@ footer div.content {
 
 .glyphicon {
     position: static;
-}
-
-#generateWarning {
-	color: #ff9800;
 }
 
 /* misc styles */

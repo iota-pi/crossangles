@@ -38,22 +38,16 @@
             </div>
             <div class="menu" id="ddmenu">
                 <div class="menu-item" id="menu-generate">
-                    <span><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span><span class="icon-text">Generate timetable</span></span>
+                    <i class="material-icons">play_arrow</i>Generate timetable
                 </div>
                 <div class="menu-item" id="menu-download">
-                    <span><span class="glyphicon glyphicon-picture" aria-hidden="true"></span><span class="icon-text">Save timetable as image</span></span>
-                </div>
-                <div class="menu-item" id="menu-saveback">
-                    <span><span class="glyphicon glyphicon-save" aria-hidden="true"></span><span class="icon-text">Save a backup</span></span>
-                </div>
-                <div class="menu-item" id="menu-loadback">
-                    <span><span class="glyphicon glyphicon-open" aria-hidden="true"></span><span class="icon-text">Load a backup</span></span>
+                    <i class="material-icons">photo_camera</i>Save timetable as image
                 </div>
                 <div class="menu-item" id="menu-showhelp" data-target="#faqpanel" data-toggle="modal">
-                    <span><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span><span class="icon-text">Show FAQ</span></span>
+                    <i class="material-icons">help</i>Show FAQ
                 </div>
                 <div class="menu-item" id="menu-showbugs" data-target="#bugpanel" data-toggle="modal">
-                    <span><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span class="icon-text">Contact Us</span></span>
+                    <i class="material-icons">email</i>Contact Us
                 </div>
             </div>
         </nav>
@@ -64,8 +58,7 @@
                     <div class="panel-heading">
                         Course Selection
                         <div class="btn heading-btn" data-target="#customClass" data-toggle="modal">
-                            <span><span class="hidden-xs-down">Add </span>custom&nbsp;</span>
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            <span><span class="hidden-xs-down">Add </span>custom </span><i class="material-icons">add</i>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -146,8 +139,7 @@
                     <div class="panel-heading">
                         Timetable
                         <div class="btn heading-btn" id="generate">
-                            <span>Generate <span class="hidden-xs-down"> Timetable</span></span>
-                            <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
+                            <span>Generate<span class="hidden-xs-down"> Timetable</span> </span><i class="material-icons">play_arrow</i>
                         </div>
                     </div>
                     <div class="panel-body nopadding scroll-x" id="timetable">
@@ -158,10 +150,9 @@
                     </div>
                 </div>
 
-                <div style="margin: 0 auto 15px; text-align: center;">
+                <div class="horzontal-centre">
                     <div class="btn btn-primary" id="saveimage">
-                        Download<span class="hidden-xs-down"> as image</span>&nbsp;
-                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                        <span>Download as image </span><i class="material-icons">photo_camera</i>
                     </div>
                 </div>
             </div>
@@ -176,10 +167,6 @@
                 </div>
             </div>
         </footer>
-
-        <div class="hidden">
-            <input type="file" id="fileinput">
-        </div>
 
         <div class="modal fade" id="customClass" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -268,6 +255,9 @@
                             <span><img src="img/favicon-32.png" width="24" height="24" /></span>
                             <span>CrossAngles</span>
                         </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <h5>Welcome!</h5>
@@ -295,6 +285,9 @@
                             <span><img src="img/favicon-32.png" width="24" height="24" /></span>
                             <span>CrossAngles FAQ</span>
                         </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <p class="faq-question">Why do classes sometimes move when I move another class?</p>
@@ -302,7 +295,7 @@
                         
                         <p class="faq-question">Can I add other things to my timetable that aren't classes?</p>
                         <p class="faq-answer">Yes. Use the "Add Custom" button in the Course Selection panel.</p>
-                        
+
                         <p class="faq-question">When is the data updated?</p>
                         <p class="faq-answer">We try to keep it as up-to-date as possible, particularly during enrolments. Usually, it is updated at 5 minutes past 5am, 12pm and 6pm. Sometimes it's updated at other times too.</p>
                         
@@ -333,6 +326,9 @@
                             <span><img src="img/favicon-32.png" width="24" height="24" /></span>
                             <span>Contact Us</span>
                         </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div class="input-group">
@@ -347,7 +343,7 @@
                         <p></p>
                         <div class="input-group">
                             <label class="input-group-addon large">Content</label>
-                            <textarea id="bug-body" class="form-control"  placeholder="Description of bug..." rows="4" required></textarea>
+                            <textarea id="bug-body" class="form-control" placeholder="What you would like to tell us..." rows="4" required></textarea>
                         </div>
                         <div class="loader-container" id="bug-loader">
                             <div class="loader">
@@ -370,14 +366,16 @@
         </div>
 
         <noscript id="deferred-styles">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
             <link rel="stylesheet" href="css/tether.min.css" type="text/css" />
             <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
             <link rel="stylesheet" href="css/paper-bs3.min.css" type="text/css" />
             <link rel="stylesheet" href="css/bootstrap-clockpicker.min.css" type="text/css" />
-            <link rel="stylesheet" href="css/style.min.css" type="text/css" />
-            <link rel="stylesheet" href="css/checkbox.min.css" type="text/css" />
-            <link rel="stylesheet" href="css/timetable.min.css" type="text/css" />
-            <link rel="stylesheet" href="css/loader.min.css" type="text/css" />
+            <link rel="stylesheet" href="css/style.css" type="text/css" />
+            <link rel="stylesheet" href="css/checkbox.css" type="text/css" />
+            <link rel="stylesheet" href="css/message.css" type="text/css" />
+            <link rel="stylesheet" href="css/timetable.css" type="text/css" />
+            <link rel="stylesheet" href="css/loader.css" type="text/css" />
         </noscript>
         <script>
             // load deferred stylesheets
@@ -401,10 +399,11 @@
         <script type="text/javascript" src="js/jquery-3.2.1.min.js" defer></script>
         <script type="text/javascript" src="js/tether.min.js" defer></script>
         <script type="text/javascript" src="js/bootstrap.min.js" defer></script>
-        <script type="text/javascript" src="js/typeahead.min.js" defer></script>
         <script type="text/javascript" src="js/jquery-ui.min.js" defer></script>
         <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js" defer></script>
         <script type="text/javascript" src="js/cookie.min.js" defer></script>
+        <script type="text/javascript" src="js/typeahead.js" defer></script>
+        <script type="text/javascript" src="js/message.js" defer></script>
         <script type="text/javascript" src="js/evaluate.js" defer></script>
         <script type="text/javascript" src="js/search.js" defer></script>
         <script type="text/javascript" src="js/CBS.js" defer></script>
