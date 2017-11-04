@@ -196,7 +196,7 @@ function getOptions() {
 }
 
 function getCurrentSem() {
-    return $('#meta-sem').html() + $('#meta-year').html();
+    return metadata.sem + metadata.year;
 }
 
 /* saveState()
