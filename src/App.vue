@@ -1,0 +1,64 @@
+<template>
+  <v-app>
+    <v-toolbar
+      app
+    >
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-spacer></v-spacer>
+      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+    <v-navigation-drawer
+      v-model="drawer"
+      enable-resize-watcher
+      temporary
+      fixed
+      app
+    >
+      <v-list>
+        <v-list-tile
+          value="true"
+          v-for="(item, i) in items"
+          :key="i"
+        >
+          <v-list-tile-action>
+            <v-icon v-html="item.icon"></v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-content>
+      <v-container fluid>
+        <course-selection />
+      </v-container>
+    </v-content>
+    <v-footer app>
+      <span>Data updated: blah blah blah</span>
+    </v-footer>
+  </v-app>
+</template>
+
+<script>
+import courseSelection from './components/CourseSelection'
+
+export default {
+  data () {
+    return {
+      drawer: false,
+      items: [{
+        icon: 'bubble_chart',
+        title: 'Inspire'
+      }],
+      title: 'CrossAngles'
+    }
+  },
+  name: 'App',
+  components: {
+    courseSelection
+  }
+}
+</script>
