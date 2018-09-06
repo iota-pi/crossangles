@@ -2,9 +2,10 @@
   <v-app>
     <v-toolbar
       app
+      dark
+      color="primary"
     >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-spacer></v-spacer>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
@@ -37,7 +38,9 @@
       </v-container>
     </v-content>
     <v-footer app>
-      <span>Data updated: blah blah blah</span>
+      <v-container fluid class="py-0">
+        <span>Data updated: blah blah blah</span>
+      </v-container>
     </v-footer>
   </v-app>
 </template>
