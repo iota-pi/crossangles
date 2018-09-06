@@ -54,7 +54,15 @@ export default {
       drawer: false,
       items: [{
         icon: 'bubble_chart',
-        title: 'Inspire'
+        title: 'Save as Image'
+      },
+      {
+        icon: 'bubble_chart',
+        title: 'Reset Page'
+      },
+      {
+        icon: 'bubble_chart',
+        title: 'Save a Backup'
       }],
       title: 'CrossAngles'
     }
