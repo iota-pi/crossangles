@@ -1,13 +1,111 @@
 <template>
-  <v-layout row wrap>
-    <v-autocomplete
-      multiple
-      :items=""
-    >
+  <v-autocomplete
+    v-model="chosen"
+    label="Enter courses you would like to do"
+    multiple
+    :filter="filter"
+    :search-input.sync="searchText"
+    :items="courseData"
+    item-value="code"
+    return-object
+    hide-selected
+    no-data-text="No matching courses found"
+    color="secondary"
+  >
+    <template slot="selection" slot-scope="data">
+    </template>
+    <template slot="item" slot-scope="data">
+      <v-list-tile-content>
+        <v-list-tile-title>
+          <span v-html="highlight(data.item.code)"></span>
 
-    </v-autocomplete>
-  </v-layout>
+          <span class="faded">
+            — <span v-html="highlight(data.item.title)"></span>
+          </span>
+        </v-list-tile-title>
+      </v-list-tile-content>
+    </template>
+  </v-autocomplete>
 </template>
 
+<script>
+  function escapeRegExp (string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  }
+
+  export default {
+    data () {
+      return {
+        chosen: [],
+        searchText: null
+      }
+    },
+    computed: {
+      courseData () {
+        let data = Object.values(this.$store.state.courseData)
+
+        data.sort((a, b) => {
+          let aCode = a.code.toLowerCase()
+          let bCode = b.code.toLowerCase()
+          let search = (this.searchText || '').toLowerCase()
+
+          let alphaOrder = (aCode > bCode) - (aCode < bCode)
+
+          if (search) {
+            let matchesA = aCode.indexOf(search) === 0
+            let matchesB = bCode.indexOf(search) === 0
+
+            return (matchesB - matchesA) || alphaOrder
+          }
+
+          return alphaOrder
+        })
+
+        return data
+      }
+    },
+    methods: {
+      filter (course, queryText, itemText) {
+        if (course.code.toLowerCase().indexOf(queryText.toLowerCase()) !== -1) {
+          return true
+        }
+        if (course.title.toLowerCase().indexOf(queryText.toLowerCase()) !== -1) {
+          return true
+        }
+
+        return false
+      },
+      highlight (haystack, needle) {
+        needle = needle || this.searchText
+
+        if (needle) {
+          haystack = haystack.replace(/</gi, '&lt;').replace(/>/gi, '&gt;')
+          let re = new RegExp(escapeRegExp(needle), 'gi')
+          return haystack.replace(re, '<em class="highlight">$&</em>')
+        }
+
+        return haystack
+      }
+    },
+    mounted () {
+      this.$store.dispatch('loadData')
+    }
+  }
+</script>
+
+<style scoped>
+  .faded {
+    opacity: 0.7;
+  }
+</style>
+
 <style>
+  em.highlight {
+    font-weight: 500 !important;
+    text-decoration: none;
+    font-style: normal;
+  }
+  em.highlight.faded {
+    opacity: 0.9;
+  }
 </style>
