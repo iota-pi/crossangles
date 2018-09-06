@@ -14,8 +14,10 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
-    "vuetify": "^1.0.0",
-    "vue": "^2.5.2"
+    "axios": "^0.18.0",
+    "vue": "^2.5.2",
+    "vuetify": "^1.2.3",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.5",
