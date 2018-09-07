@@ -37,6 +37,7 @@
         <course-selection />
         <course-display />
         <cbs-events />
+        <options />
       </v-container>
     </v-content>
     <v-footer app>
@@ -51,6 +52,7 @@
 import courseSelection from './components/CourseSelection'
 import courseDisplay from './components/CourseDisplay'
 import cbsEvents from './components/CBSEvents'
+import options from './components/Options'
 
 export default {
   data () {
@@ -78,7 +80,8 @@ export default {
   components: {
     courseSelection,
     courseDisplay,
-    cbsEvents
+    cbsEvents,
+    options
   }
 }
 </script>

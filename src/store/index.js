@@ -27,7 +27,8 @@ export default {
   state: {
     courseData: {},
     courses: [],
-    events: []
+    events: [],
+    options: []
   },
   mutations: {
     courseData (state, data) {
@@ -56,6 +57,9 @@ export default {
     },
     events (state, data) {
       state.events = data
+    },
+    options (state, data) {
+      state.options = data
     }
   },
   actions: {
