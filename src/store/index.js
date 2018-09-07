@@ -25,7 +25,8 @@ function parseTimetable (data, timetableRaw) {
 
 export default {
   state: {
-    courseData: {}
+    courseData: {},
+    courses: []
   },
   mutations: {
     courseData (state, data) {
@@ -48,6 +49,9 @@ export default {
       }
 
       state.courseData = courses
+    },
+    courses (state, data) {
+      state.courses = data
     }
   },
   actions: {

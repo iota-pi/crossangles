@@ -35,6 +35,7 @@
     <v-content>
       <v-container fluid>
         <course-selection />
+        <course-display />
       </v-container>
     </v-content>
     <v-footer app>
@@ -47,6 +48,7 @@
 
 <script>
 import courseSelection from './components/CourseSelection'
+import courseDisplay from './components/CourseDisplay'
 
 export default {
   data () {
@@ -72,7 +74,8 @@ export default {
   },
   name: 'App',
   components: {
-    courseSelection
+    courseSelection,
+    courseDisplay
   }
 }
 </script>
