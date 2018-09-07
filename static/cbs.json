@@ -1,0 +1,45 @@
+[
+  {
+    "title": "The Bible Talks",
+    "location": null,
+    "times": [
+      "T12",
+      "T13",
+      "H12",
+      "H13"
+    ]
+  },
+  {
+    "title": "Bible Studies",
+    "location": null,
+    "times": [
+      "M11",
+      "M12",
+      "M13",
+      "M14",
+      "T11",
+      "T14",
+      "W11",
+      "H11",
+      "H14"
+    ]
+  },
+  {
+    "title": "Core Theology",
+    "location": null,
+    "times": [
+      "T17",
+      "W13"
+    ]
+  },
+  {
+    "title": "Core Training",
+    "location": null,
+    "times": [
+      "T16",
+      "T18",
+      "W12",
+      "W14"
+    ]
+  }
+]
