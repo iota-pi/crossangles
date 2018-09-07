@@ -67,6 +67,9 @@ export default {
       title: 'CrossAngles'
     }
   },
+  mounted () {
+    this.$store.dispatch('loadData')
+  },
   name: 'App',
   components: {
     courseSelection

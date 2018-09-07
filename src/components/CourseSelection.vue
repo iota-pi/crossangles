@@ -87,8 +87,10 @@
         return haystack
       }
     },
-    mounted () {
-      this.$store.dispatch('loadData')
+    watch: {
+      chosen () {
+        this.$store.commit('courses', this.chosen)
+      }
     }
   }
 </script>
