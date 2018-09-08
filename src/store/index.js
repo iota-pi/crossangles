@@ -2,13 +2,6 @@ import axios from 'axios'
 
 const dataURL = '/static/tt.json'
 
-function zfill (str, n) {
-  while (str.length < n) {
-    str += '0'
-  }
-  return str
-}
-
 function parseTimetable (data, timetableRaw) {
   let timetable = []
 
@@ -36,7 +29,7 @@ export default {
 
       for (let subj of Object.keys(data[0])) {
         for (let nums of Object.keys(data[0][subj])) {
-          let code = subj + zfill(nums, 4)
+          let code = subj + nums
           let title = data[0][subj][nums][0]
           let info = data[0][subj][nums].slice(1)
           courses[code] = {
