@@ -1,5 +1,7 @@
 <template>
-  <div class="timetable pt-4 noselect">
+  <div
+    class="timetable noselect"
+  >
     <div class="tt-row header">
       <div class="tt-col"></div>
       <div class="tt-col">Monday</div>
@@ -11,7 +13,13 @@
     <div class="tt-row" v-for="hour in hours" :key="'tthour' + hour">
       <div class="tt-col">{{ hour }}:00</div>
       <div class="tt-col">
-        <session v-if="hour == 10">
+        <session
+          v-if="hour == 10"
+          :mouse="mouse"
+          :lastZ="lastZ"
+          :boundary="boundary"
+          @drag="inc => lastZ += inc"
+        >
         </session>
       </div>
       <div class="tt-col"></div>
@@ -36,7 +44,9 @@
     data () {
       return {
         startHour: 8,
-        endHour: 16
+        endHour: 16,
+        lastZ: 10,
+        boundary: null
       }
     },
     computed: {
@@ -45,13 +55,31 @@
         return blank.fill(0).map((_, i) => zfill('' + (i + this.startHour), 2))
       }
     },
+    mounted () {
+      this.boundary = {
+        x: this.$el.offsetLeft,
+        y: this.$el.offsetTop,
+        w: this.$el.offsetWidth,
+        h: this.$el.offsetHeight
+      }
+    },
     components: {
       session
+    },
+    props: {
+      mouse: {
+        type: Array,
+        required: true
+      }
     }
   }
 </script>
 
 <style scoped>
+  .timetable {
+    position: relative;
+  }
+
   .tt-row {
     display: flex;
     height: 50px;

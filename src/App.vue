@@ -33,12 +33,12 @@
     </v-navigation-drawer>
 
     <v-content>
-      <v-container fluid>
+      <v-container fluid @mousemove="move">
         <course-selection />
         <course-display />
         <cbs-events />
         <options />
-        <timetable />
+        <timetable class="mt-4" :mouse="mouse" />
       </v-container>
     </v-content>
     <v-footer app>
@@ -60,6 +60,7 @@ export default {
   data () {
     return {
       drawer: false,
+      mouse: [0, 0],
       items: [{
         icon: 'bubble_chart',
         title: 'Save as Image'
@@ -73,6 +74,11 @@ export default {
         title: 'Save a Backup'
       }],
       title: 'CrossAngles'
+    }
+  },
+  methods: {
+    move (e) {
+      this.mouse = [e.clientX, e.clientY]
     }
   },
   mounted () {

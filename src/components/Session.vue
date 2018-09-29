@@ -1,8 +1,9 @@
 <template>
   <div
-    class="session"
+    class="session" :class="{ dragging: dragging }"
     @mousedown="drag"
     @mouseup="drop"
+    :style="{ left: position[0] + 'px', top: position[1] + 'px', 'z-index': lastZ, 'cursor': 'drag' + (dragging ? 'ging' : '') }"
   >
     <div class="title">
       {{ title }}
@@ -11,29 +12,90 @@
 </template>
 
 <script>
+  const Z_INTERVAL = 0.001
+
   export default {
     data () {
       return {
-        dragging: false
+        dragging: false,
+        startMouse: [0, 0],
+        currentPosition: [0, 0],
+        basePosition: {}
       }
     },
     computed: {
       title () {
         return 'Test Title'
+      },
+      position () {
+        if (this.dragging) {
+          let x = this.currentPosition[0] + (this.mouse[0] - this.startMouse[0])
+          let y = this.currentPosition[1] + (this.mouse[1] - this.startMouse[1])
+          let bound = this.relativeLimits
+          console.log(this.basePosition, x, y, bound)
+
+          if (x < bound.x) {
+            x = bound.x
+          }
+          if (x > bound.x + bound.w) {
+            x = bound.x + bound.w
+          }
+          if (y < bound.y) {
+            y = bound.y
+          }
+          if (y > bound.y + bound.h) {
+            y = bound.y + bound.h
+          }
+
+          console.log(x, y)
+          return [x, y]
+        } else {
+          return this.currentPosition
+        }
+      },
+      relativeLimits () {
+        return {
+          x: -this.basePosition.x,
+          y: -this.basePosition.y,
+          w: this.boundary.w - this.basePosition.w,
+          h: this.boundary.h - this.basePosition.h
+        }
       }
     },
     methods: {
       drag (e) {
-        console.log('drag', e)
+        this.startMouse = this.mouse.slice()
+        this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
         this.dragging = true
+        this.$emit('drag', Z_INTERVAL)
       },
       drop (e) {
-        console.log('drop', e)
+        this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
         this.dragging = false
+        this.$emit('drop')
+      }
+    },
+    mounted () {
+      this.basePosition = {
+        x: this.$el.offsetParent.offsetLeft,
+        y: this.$el.offsetParent.offsetTop,
+        w: this.$el.offsetWidth,
+        h: this.$el.offsetHeight
       }
     },
     props: {
-
+      mouse: {
+        type: Array,
+        required: true
+      },
+      lastZ: {
+        type: Number,
+        required: true
+      },
+      boundary: {
+        type: Object,
+        default: null
+      }
     }
   }
 </script>
