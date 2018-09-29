@@ -3,7 +3,12 @@
     class="session" :class="{ dragging: dragging }"
     @mousedown="drag"
     @mouseup="drop"
-    :style="{ left: position[0] + 'px', top: position[1] + 'px', 'z-index': lastZ, 'cursor': 'drag' + (dragging ? 'ging' : '') }"
+    :style="{
+      height: (basePosition.h * session.duration - 1) + 'px',
+      left: position[0] + 'px',
+      top: position[1] + 'px',
+      'z-index': Math.min(zIndex, lastZ)
+    }"
   >
     <div class="title">
       {{ title }}
@@ -12,15 +17,14 @@
 </template>
 
 <script>
-  const Z_INTERVAL = 0.001
-
   export default {
     data () {
       return {
         dragging: false,
         startMouse: [0, 0],
         currentPosition: [0, 0],
-        basePosition: {}
+        basePosition: {},
+        zIndex: 1
       }
     },
     computed: {
@@ -32,7 +36,6 @@
           let x = this.currentPosition[0] + (this.mouse[0] - this.startMouse[0])
           let y = this.currentPosition[1] + (this.mouse[1] - this.startMouse[1])
           let bound = this.relativeLimits
-          console.log(this.basePosition, x, y, bound)
 
           if (x < bound.x) {
             x = bound.x
@@ -47,7 +50,6 @@
             y = bound.y + bound.h
           }
 
-          console.log(x, y)
           return [x, y]
         } else {
           return this.currentPosition
@@ -67,7 +69,8 @@
         this.startMouse = this.mouse.slice()
         this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
         this.dragging = true
-        this.$emit('drag', Z_INTERVAL)
+        this.zIndex = this.lastZ + 1
+        this.$emit('drag')
       },
       drop (e) {
         this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
@@ -80,7 +83,7 @@
         x: this.$el.offsetParent.offsetLeft,
         y: this.$el.offsetParent.offsetTop,
         w: this.$el.offsetWidth,
-        h: this.$el.offsetHeight
+        h: this.$el.offsetParent.offsetHeight
       }
     },
     props: {
@@ -95,6 +98,10 @@
       boundary: {
         type: Object,
         default: null
+      },
+      session: {
+        type: Object,
+        default: 1
       }
     }
   }

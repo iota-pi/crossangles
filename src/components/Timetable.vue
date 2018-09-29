@@ -18,7 +18,8 @@
           :mouse="mouse"
           :lastZ="lastZ"
           :boundary="boundary"
-          @drag="inc => lastZ += inc"
+          :session="{ duration: 2 }"
+          @drag="lastZ += 1"
         >
         </session>
       </div>
