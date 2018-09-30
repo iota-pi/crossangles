@@ -5,6 +5,7 @@
     @mouseup="drop"
     :style="{
       height: (basePosition.h * session.duration - 1) + 'px',
+      'background-color': color,
       left: position[0] + 'px',
       top: position[1] + 'px',
       'z-index': Math.min(zIndex, lastZ)
@@ -102,6 +103,10 @@
       session: {
         type: Object,
         default: 1
+      },
+      color: {
+        type: String,
+        default: '#ff00ff'
       }
     }
   }
@@ -116,7 +121,6 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: #ff00ff;
     color: white;
     cursor: grab;
   }
