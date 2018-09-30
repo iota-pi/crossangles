@@ -2,18 +2,51 @@ import axios from 'axios'
 
 const dataURL = '/static/tt.json'
 
+function parseClasses (data, classData) {
+  let result = []
+
+  for (let i = 0; i < classData.length; i += 3) {
+    let comp = classData[i]
+    result.push({
+      component: data[1][comp[0]],
+      status: !comp[1],
+      enrols: [comp[2], comp[3]],
+      timetable: parseTimetable(data, comp.slice(4))
+    })
+  }
+
+  return result
+}
+
 function parseTimetable (data, timetableRaw) {
   let timetable = []
 
   for (let i = 0; i < timetableRaw.length; i += 3) {
     timetable.push({
-      time: data[3][timetableRaw[i]],
       location: data[2][timetableRaw[i + 1]],
+      time: parseTimeString(data[3][timetableRaw[i]]),
       weeks: data[4][timetableRaw[i + 2]]
     })
   }
 
   return timetable
+}
+
+function parseTimeString (time) {
+  let day = time.substr(0, 1)
+  let canClash = /#$/.test(time)
+  let hours = time.substr(1).replace('#', '').split('-').map(x => parseInt(x))
+  if (hours.length === 1) {
+    hours.push(hours[0] + 1)
+  }
+  let [ start, end ] = hours
+
+  return {
+    day,
+    start,
+    end,
+    canClash
+  }
 }
 
 export default {
@@ -35,10 +68,7 @@ export default {
           courses[code] = {
             code,
             title,
-            component: data[1][info[0]],
-            status: !info[1],
-            enrols: [info[2], info[3]],
-            timetable: parseTimetable(data, info.slice(4))
+            classes: parseClasses(data, info)
           }
         }
       }
