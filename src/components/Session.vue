@@ -4,7 +4,7 @@
     @mousedown="drag"
     @mouseup="drop"
     :style="{
-      height: (basePosition.h * session.duration - 1) + 'px',
+      height: basePosition.h + 'px',
       'background-color': color,
       left: position[0] + 'px',
       top: position[1] + 'px',
@@ -60,8 +60,8 @@
         return {
           x: -this.basePosition.x,
           y: -this.basePosition.y,
-          w: this.boundary.w - this.basePosition.w,
-          h: this.boundary.h - this.basePosition.h
+          w: this.boundary.w - this.basePosition.w - 1,
+          h: this.boundary.h - (this.basePosition.h + 1) - 1
         }
       }
     },
@@ -71,20 +71,30 @@
         this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
         this.dragging = true
         this.zIndex = this.lastZ + 1
-        this.$emit('drag')
+        this.$emit('drag', {
+          session: this.session,
+          el: this.$el
+        })
       },
       drop (e) {
         this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
         this.dragging = false
-        this.$emit('drop')
+        this.$emit('drop', {
+          session: this.session,
+          el: this.$el,
+          position: {
+            x: this.basePosition.x + this.currentPosition[0],
+            y: this.basePosition.y + this.currentPosition[1]
+          }
+        })
       }
     },
     mounted () {
       this.basePosition = {
         x: this.$el.offsetParent.offsetLeft,
         y: this.$el.offsetParent.offsetTop,
-        w: this.$el.offsetWidth,
-        h: this.$el.offsetParent.offsetHeight
+        w: this.$el.offsetParent.offsetWidth,
+        h: this.$el.offsetParent.offsetHeight * this.session.duration - 1
       }
     },
     props: {

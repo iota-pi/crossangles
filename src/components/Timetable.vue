@@ -1,6 +1,7 @@
 <template>
   <div
     class="timetable noselect"
+    ref="timetable"
   >
     <div class="tt-row header">
       <div class="tt-col"></div>
@@ -18,10 +19,18 @@
           :mouse="mouse"
           :lastZ="lastZ"
           :boundary="boundary"
-          :session="{ duration: 2 }"
-          @drag="lastZ += 1"
+          :session="testSession"
+          @drag="startDrag"
+          @drop="stopDrag"
         >
         </session>
+        <dropzone
+          v-if="hour == 11 && dragged === testSession"
+          :session="testSession"
+          :dragged="dragged"
+          :lastZ="lastZ"
+        >
+        </dropzone>
       </div>
       <div class="tt-col"></div>
       <div class="tt-col"></div>
@@ -33,6 +42,7 @@
 
 <script>
   import session from './Session'
+  import dropzone from './DropZone'
 
   function zfill (str, n, right) {
     while (str.length < n) {
@@ -47,13 +57,59 @@
         startHour: 8,
         endHour: 16,
         lastZ: 10,
-        boundary: null
+        boundary: null,
+        dragged: null,
+        testSession: { duration: 2 }
       }
     },
     computed: {
       hours () {
         let blank = new Array(this.endHour - this.startHour)
         return blank.fill(0).map((_, i) => zfill('' + (i + this.startHour), 2))
+      }
+    },
+    methods: {
+      startDrag (e) {
+        this.lastZ += 1
+        this.dragged = e.session
+      },
+      stopDrag (e) {
+        // Find the nearest dropzone
+        let timetable = this.$refs.timetable
+        let drag = e.position
+        let dropzones = timetable.querySelectorAll('.dropzone')
+        let best = Infinity
+        let nearest = null
+        for (let dropzone of dropzones) {
+          // Find this dropzone's position
+          let drop = {
+            x: dropzone.offsetParent.offsetLeft,
+            y: dropzone.offsetParent.offsetTop,
+            h: dropzone.offsetParent.offsetHeight
+          }
+
+          // Find distance between the dragged element and this dropzone
+          let dist = {
+            x: drag.x - drop.x,
+            y: drag.y - drop.y
+          }
+
+          let sqSum = dist.x * dist.x + dist.y * dist.y
+          if (sqSum < drop.h * drop.h && sqSum < best) {
+            best = sqSum
+            nearest = drop
+          }
+        }
+
+        // Snap to position if near enough
+        if (nearest !== null) {
+          // Move the session
+          // TODO
+          console.log('snap')
+        }
+
+        // Drag released
+        this.dragged = null
       }
     },
     mounted () {
@@ -65,7 +121,8 @@
       }
     },
     components: {
-      session
+      session,
+      dropzone
     },
     props: {
       mouse: {
