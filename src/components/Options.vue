@@ -3,7 +3,7 @@
     <v-flex xs12 sm4 v-for="option in allOptions" :key="option.title">
       <v-checkbox
         v-model="options"
-        :value="option"
+        :value="option.value"
         :label="option.title"
         color="secondary"
         class="mt-2"
@@ -21,20 +21,24 @@
         options: [],
         allOptions: [
           {
-            title: 'Show class locations'
+            title: 'Show class locations',
+            value: { 'locations': true }
           },
           {
-            title: 'Show class enrolments'
+            title: 'Show class enrolments',
+            value: { 'enrolments': true }
           },
           {
-            title: 'Include full classes'
+            title: 'Include full classes',
+            value: { 'allowFull': true }
           }
         ]
       }
     },
     watch: {
       options () {
-        this.$store.commit('options', this.options)
+        let asObject = Object.assign({}, ...this.options)
+        this.$store.commit('options', asObject)
       }
     }
   }
