@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete
     v-model="chosen"
-    label="Enter courses you would like to do"
+    label="Enter your courses"
     multiple
     :filter="filter"
     :search-input.sync="searchText"
