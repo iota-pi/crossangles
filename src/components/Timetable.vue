@@ -43,6 +43,7 @@
 <script>
   import session from './Session'
   import dropzone from './DropZone'
+  import search from './mixins/search'
 
   function zfill (str, n, right) {
     while (str.length < n) {
@@ -66,6 +67,17 @@
       hours () {
         let blank = new Array(this.endHour - this.startHour)
         return blank.fill(0).map((_, i) => zfill('' + (i + this.startHour), 2))
+      },
+      timetable () {
+        return this.$store.state.timetable
+      },
+      anythingChanges () {
+        let c = [
+          this.$store.state.courses,
+          this.$store.state.events,
+          this.$store.state.options
+        ]
+        return c.length + Math.random()
       }
     },
     methods: {
@@ -112,6 +124,40 @@
         this.dragged = null
       }
     },
+    watch: {
+      anythingChanges () {
+        console.log('computing timetable')
+        let components = []
+
+        for (let course of this.$store.state.courses) {
+          let newComponents = course.streams.reduce((acc, stream) => {
+            // Check if this component type has occured before
+            let match = acc.filter(c => c.component === stream.component)[0]
+
+            // Link to this course from within each stream
+            stream.course = course
+
+            if (match) {
+              // If component match is found add this stream to that component
+              match.streams.push(stream)
+            } else {
+              // Otherwise make a new element for this component
+              acc.push({
+                course: course,
+                component: stream.component,
+                streams: [ stream ]
+              })
+            }
+
+            return acc
+          }, [])
+          components = components.concat(newComponents)
+        }
+        console.log(components)
+
+        this.search(components)
+      }
+    },
     mounted () {
       this.boundary = {
         x: this.$el.offsetLeft,
@@ -124,6 +170,7 @@
       session,
       dropzone
     },
+    mixins: [ search ],
     props: {
       mouse: {
         type: Array,
