@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const dataURL = '/static/tt.json'
 
-function parseClasses (data, classData) {
+function parseStreams (data, classData) {
   let result = []
 
   for (let i = 0; i < classData.length; i += 3) {
@@ -69,7 +69,7 @@ export default {
           courses[code] = {
             code,
             title,
-            classes: parseClasses(data, info)
+            streams: parseStreams(data, info)
           }
         }
       }
