@@ -12,9 +12,6 @@
  * Authors: David
  */
 
-function scoreTimetable () {
-  return 0
-}
 import { scoreTimetable } from './score'
 
 // Chooses a class which isn't full
