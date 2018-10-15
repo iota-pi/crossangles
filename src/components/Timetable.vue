@@ -14,9 +14,16 @@
     <div class="tt-row" v-for="hour in hours" :key="'tthour' + hour">
       <div class="tt-col">{{ hour }}:00</div>
       <div class="tt-col" v-for="day in days" :key="'ttcell' + day + hour">
+        <drop-zone
+          v-for="dropzone, i in getDropZones(day, hour)"
+          :key="'dropzone' + i"
+          :dropzone="dropzone"
+          :lastZ="lastZ"
+        >
+      </drop-zone>
         <session
-          v-for="session in getSessions(day, hour)"
-          :key="hour + session.stream.component + session.course.code"
+          v-for="session, i in getSessions(day, hour)"
+          :key="'session' + i"
           :mouse="mouse"
           :lastZ="lastZ"
           :boundary="boundary"
@@ -25,13 +32,6 @@
           @drop="stopDrag"
         >
         </session>
-        <!-- <dropzone
-          v-if="dragged === session"
-          :session="session"
-          :dragged="dragged"
-          :lastZ="lastZ"
-        >
-        </dropzone> -->
       </div>
     </div>
   </div>
@@ -39,8 +39,10 @@
 
 <script>
   import session from './Session'
-  import dropzone from './DropZone'
+  import dropZone from './DropZone'
   import search from './mixins/search'
+
+  const snapDist = 30
 
   function zfill (str, n, right) {
     while (str.length < n) {
@@ -55,7 +57,7 @@
         days: ['M', 'T', 'W', 'H', 'F'],
         lastZ: 10,
         boundary: null,
-        dragged: null
+        dragging: null
       }
     },
     computed: {
@@ -88,13 +90,17 @@
 
         for (let course of this.$store.state.courses) {
           for (let stream of course.streams) {
-            for (let session of stream.timetable) {
+            for (let i of stream.timetable.keys()) {
+              let session = stream.timetable[i]
               dropzones.push({
                 day: session.time.day,
                 start: session.time.start,
                 end: session.time.end,
+                course: course,
                 component: stream.component,
-                course: course
+                stream: stream,
+                session: session,
+                index: i
               })
             }
           }
@@ -114,21 +120,22 @@
     methods: {
       startDrag (e) {
         this.lastZ += 1
-        this.dragged = e.session
+        this.dragging = e.session
       },
       stopDrag (e) {
         // Find the nearest dropzone
         let timetable = this.$refs.timetable
         let drag = e.position
-        let dropzones = timetable.querySelectorAll('.dropzone')
+        let zones = timetable.querySelectorAll('.dropzone')
         let best = Infinity
         let nearest = null
-        for (let dropzone of dropzones) {
+        for (let zone of zones) {
           // Find this dropzone's position
           let drop = {
-            x: dropzone.offsetParent.offsetLeft,
-            y: dropzone.offsetParent.offsetTop,
-            h: dropzone.offsetParent.offsetHeight
+            x: zone.offsetParent.offsetLeft,
+            y: zone.offsetParent.offsetTop,
+            w: zone.offsetParent.offsetWidth,
+            h: zone.offsetParent.offsetHeight
           }
 
           // Find distance between the dragged element and this dropzone
@@ -138,7 +145,7 @@
           }
 
           let sqSum = dist.x * dist.x + dist.y * dist.y
-          if (sqSum < drop.h * drop.h && sqSum < best) {
+          if (sqSum < snapDist * snapDist && sqSum < best) {
             best = sqSum
             nearest = drop
           }
@@ -147,12 +154,24 @@
         // Snap to position if near enough
         if (nearest !== null) {
           // Move the session
-          // TODO
-          console.log('snap')
+          let dayIndex = Math.round(Math.max(nearest.x - 70, 0) / nearest.w)
+          let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / nearest.h)
+          let day = this.days[dayIndex]
+          let hour = this.hours[hourIndex]
+          let dropzone = this.getDropZones(day, hour)[0]
+
+          if (this.dragging === dropzone.session) {
+            // Reset position
+            this.dragging.snap = true
+          } else {
+            // Move to other place in timetable
+            let tt = this.timetable
+            tt.splice(tt.indexOf(this.dragging), 1, dropzone.session)
+          }
         }
 
         // Drag released
-        this.dragged = null
+        this.dragging = null
       },
       getSessions (day, hour) {
         // Get all sessions starting at the given hour
@@ -169,6 +188,40 @@
 
         return matches
       },
+      getDropZones (day, hour) {
+        // Get all dropzones starting at the given hour
+        let matches = []
+
+        // Convert hour to a number
+        hour = +hour
+
+        // Ignore all dropzones if nothing is being dragged currently
+        if (this.dragging) {
+          for (let dropzone of this.dropzones) {
+            // Check that this dropzone is for the right course
+            if (this.dragging.course !== dropzone.course) {
+              continue
+            }
+
+            // Check that this dropzone is for the right component
+            if (this.dragging.stream.component !== dropzone.component) {
+              continue
+            }
+
+            // Check that this dropzone is for the right session
+            if (this.dragging.index !== dropzone.index) {
+              continue
+            }
+
+            // Check that this dropzone matches the given time
+            if (dropzone.day === day && dropzone.start === hour) {
+              matches.push(dropzone)
+            }
+          }
+        }
+
+        return matches
+      },
       updateBoundary () {
         this.boundary = {
           x: this.$el.offsetLeft,
@@ -180,9 +233,8 @@
     },
     watch: {
       anythingChanges () {
-        console.log('computing timetable')
+        // Group streams by component for each course
         let components = []
-
         for (let course of this.$store.state.courses) {
           let newComponents = course.streams.reduce((acc, stream) => {
             // Check if this component type has occured before
@@ -214,16 +266,11 @@
         // Split each stream into individual sessions
         let streams = result.timetable
         let sessions = streams.reduce((acc, stream) => {
-          for (let session of stream.timetable) {
-            session.stream = stream
-            session.course = stream.course
-          }
           return acc.concat(stream.timetable)
         }, [])
 
         // Commit this new timetable to the store
         this.$store.commit('timetable', sessions)
-        console.log(this.dropzones)
       },
       bounds () {
         this.$nextTick(this.updateBoundary)
@@ -234,7 +281,7 @@
     },
     components: {
       session,
-      dropzone
+      dropZone
     },
     mixins: [ search ],
     props: {
@@ -271,6 +318,7 @@
     min-width: 100px;
   }
   .tt-col:first-child {
+    min-width: 70px;
     flex: 0 0 70px;
   }
   .tt-row.header > .tt-col, .tt-col:first-child {

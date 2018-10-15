@@ -31,7 +31,8 @@ function parseTimetable (data, timetableRaw, course, stream) {
       weeks: data[4][timetableRaw[i + 2]],
       course: course,
       stream: stream,
-      index: Math.floor(i / 3)
+      index: Math.floor(i / 3),
+      snap: false
     })
   }
 

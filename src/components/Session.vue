@@ -66,6 +66,9 @@
       },
       mouseHeld () {
         return this.mouse.held
+      },
+      snap () {
+        return this.session.snap
       }
     },
     methods: {
@@ -106,6 +109,13 @@
       mouseHeld () {
         if (this.mouseHeld === false) {
           this.drop()
+        }
+      },
+      snap () {
+        if (this.session.snap) {
+          this.currentPosition.x = 0
+          this.currentPosition.y = 0
+          this.session.snap = false
         }
       }
     },
