@@ -6,12 +6,12 @@
     :style="{
       height: basePosition.h + 'px',
       'background-color': color,
-      left: position[0] + 'px',
-      top: position[1] + 'px',
+      left: position.x + 'px',
+      top: position.y + 'px',
       'z-index': Math.min(zIndex, lastZ)
     }"
   >
-    <div class="title">
+    <div class="course-title">
       {{ title }}
     </div>
   </div>
@@ -22,20 +22,20 @@
     data () {
       return {
         dragging: false,
-        startMouse: [0, 0],
-        currentPosition: [0, 0],
+        startMouse: { x: 0, y: 0 },
+        currentPosition: { x: 0, y: 0 },
         basePosition: {},
         zIndex: 1
       }
     },
     computed: {
       title () {
-        return 'Test Title'
+        return this.session.course.code
       },
       position () {
         if (this.dragging) {
-          let x = this.currentPosition[0] + (this.mouse[0] - this.startMouse[0])
-          let y = this.currentPosition[1] + (this.mouse[1] - this.startMouse[1])
+          let x = this.currentPosition.x + (this.mouse.x - this.startMouse.x)
+          let y = this.currentPosition.y + (this.mouse.y - this.startMouse.y)
           let bound = this.relativeLimits
 
           if (x < bound.x) {
@@ -51,7 +51,7 @@
             y = bound.y + bound.h
           }
 
-          return [x, y]
+          return { x, y }
         } else {
           return this.currentPosition
         }
@@ -63,43 +63,64 @@
           w: this.boundary.w - this.basePosition.w - 1,
           h: this.boundary.h - (this.basePosition.h + 1) - 1
         }
+      },
+      mouseHeld () {
+        return this.mouse.held
       }
     },
     methods: {
       drag (e) {
-        this.startMouse = this.mouse.slice()
-        this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
-        this.dragging = true
-        this.zIndex = this.lastZ + 1
-        this.$emit('drag', {
-          session: this.session,
-          el: this.$el
-        })
+        if (!this.dragging) {
+          this.startMouse = Object.assign({}, this.mouse)
+          this.currentPosition = {
+            x: parseInt(this.$el.style.left),
+            y: parseInt(this.$el.style.top)
+          }
+          this.dragging = true
+          this.zIndex = this.lastZ + 1
+          this.$emit('drag', {
+            session: this.session,
+            el: this.$el
+          })
+        }
       },
       drop (e) {
-        this.currentPosition = [parseInt(this.$el.style.left), parseInt(this.$el.style.top)]
-        this.dragging = false
-        this.$emit('drop', {
-          session: this.session,
-          el: this.$el,
-          position: {
-            x: this.basePosition.x + this.currentPosition[0],
-            y: this.basePosition.y + this.currentPosition[1]
+        if (this.dragging) {
+          this.currentPosition = {
+            x: parseInt(this.$el.style.left),
+            y: parseInt(this.$el.style.top)
           }
-        })
+          this.dragging = false
+          this.$emit('drop', {
+            session: this.session,
+            el: this.$el,
+            position: {
+              x: this.basePosition.x + this.currentPosition.x,
+              y: this.basePosition.y + this.currentPosition.y
+            }
+          })
+        }
+      }
+    },
+    watch: {
+      mouseHeld () {
+        if (this.mouseHeld === false) {
+          this.drop()
+        }
       }
     },
     mounted () {
+      let duration = this.session.time.end - this.session.time.start
       this.basePosition = {
         x: this.$el.offsetParent.offsetLeft,
         y: this.$el.offsetParent.offsetTop,
         w: this.$el.offsetParent.offsetWidth,
-        h: this.$el.offsetParent.offsetHeight * this.session.duration - 1
+        h: this.$el.offsetParent.offsetHeight * duration - 1
       }
     },
     props: {
       mouse: {
-        type: Array,
+        type: Object,
         required: true
       },
       lastZ: {

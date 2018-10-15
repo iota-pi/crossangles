@@ -4,6 +4,9 @@
       app
       dark
       color="primary"
+      @mousemove="mousemove"
+      @mousedown="mousedown"
+      @mouseup="mouseup"
     >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title v-text="title"></v-toolbar-title>
@@ -33,7 +36,11 @@
     </v-navigation-drawer>
 
     <v-content>
-      <v-container fluid @mousemove="move">
+      <v-container fluid
+        @mousemove="mousemove"
+        @mousedown="mousedown"
+        @mouseup="mouseup"
+      >
         <course-selection />
         <course-display />
         <cbs-events />
@@ -60,7 +67,7 @@ export default {
   data () {
     return {
       drawer: false,
-      mouse: [0, 0],
+      mouse: { x: 0, y: 0, held: false },
       items: [{
         icon: 'bubble_chart',
         title: 'Save as Image'
@@ -77,8 +84,15 @@ export default {
     }
   },
   methods: {
-    move (e) {
-      this.mouse = [e.clientX, e.clientY]
+    mousemove (e) {
+      this.mouse.x = e.clientX
+      this.mouse.y = e.clientY
+    },
+    mousedown (e) {
+      this.mouse.held = true
+    },
+    mouseup (e) {
+      this.mouse.held = false
     }
   },
   mounted () {
