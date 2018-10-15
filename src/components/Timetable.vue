@@ -164,9 +164,12 @@
             // Reset position
             this.dragging.snap = true
           } else {
-            // Move to other place in timetable
-            let tt = this.timetable
-            tt.splice(tt.indexOf(this.dragging), 1, dropzone.session)
+            // Move all linked sessions
+            for (let i of dropzone.stream.timetable.keys()) {
+              let from = this.dragging.stream.timetable[i]
+              let to = dropzone.stream.timetable[i]
+              this.timetable.splice(this.timetable.indexOf(from), 1, to)
+            }
           }
         }
 
