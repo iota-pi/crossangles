@@ -237,6 +237,9 @@ export default {
       let parents = abiogenesis(components, numParents, allowFull)
       let best = evolve(parents, undefined, searchMax, allowFull)
 
+      // Convert the timetable indexes to the actual stream objects
+      best.timetable = best.timetable.map((x, i) => best.components[i][x])
+
       return best
     }
   }

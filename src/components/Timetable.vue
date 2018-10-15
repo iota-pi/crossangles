@@ -13,29 +13,26 @@
     </div>
     <div class="tt-row" v-for="hour in hours" :key="'tthour' + hour">
       <div class="tt-col">{{ hour }}:00</div>
-      <div class="tt-col">
+      <div class="tt-col" v-for="day in days" :key="'ttcell' + day + hour">
         <session
-          v-if="hour == 10"
+          v-for="session in getSessions(day, hour)"
+          :key="hour + session.stream.component + session.course.code"
           :mouse="mouse"
           :lastZ="lastZ"
           :boundary="boundary"
-          :session="testSession"
+          :session="session"
           @drag="startDrag"
           @drop="stopDrag"
         >
         </session>
-        <dropzone
-          v-if="hour == 11 && dragged === testSession"
-          :session="testSession"
+        <!-- <dropzone
+          v-if="dragged === session"
+          :session="session"
           :dragged="dragged"
           :lastZ="lastZ"
         >
-        </dropzone>
+        </dropzone> -->
       </div>
-      <div class="tt-col"></div>
-      <div class="tt-col"></div>
-      <div class="tt-col"></div>
-      <div class="tt-col"></div>
     </div>
   </div>
 </template>
@@ -55,21 +52,55 @@
   export default {
     data () {
       return {
-        startHour: 8,
-        endHour: 16,
+        days: ['M', 'T', 'W', 'H', 'F'],
         lastZ: 10,
         boundary: null,
-        dragged: null,
-        testSession: { duration: 2 }
+        dragged: null
       }
     },
     computed: {
+      bounds () {
+        // Find starting and ending points of the timetable
+        let start = 24
+        let end = 0
+        for (let zone of this.dropzones) {
+          start = Math.min(start, zone.start)
+          end = Math.max(end, zone.end)
+        }
+
+        // Default time range in case of an empty timetable
+        if (start === 24 || end === 0) {
+          start = 9
+          end = 17
+        }
+
+        return [ start, end ]
+      },
       hours () {
-        let blank = new Array(this.endHour - this.startHour)
-        return blank.fill(0).map((_, i) => zfill('' + (i + this.startHour), 2))
+        let blank = new Array(this.bounds[1] - this.bounds[0])
+        return blank.fill(0).map((_, i) => zfill('' + (i + this.bounds[0]), 2))
       },
       timetable () {
         return this.$store.state.timetable
+      },
+      dropzones () {
+        let dropzones = []
+
+        for (let course of this.$store.state.courses) {
+          for (let stream of course.streams) {
+            for (let session of stream.timetable) {
+              dropzones.push({
+                day: session.time.day,
+                start: session.time.start,
+                end: session.time.end,
+                component: stream.component,
+                course: course
+              })
+            }
+          }
+        }
+
+        return dropzones
       },
       anythingChanges () {
         let c = [
@@ -122,6 +153,29 @@
 
         // Drag released
         this.dragged = null
+      },
+      getSessions (day, hour) {
+        // Get all sessions starting at the given hour
+        let matches = []
+
+        // Convert hour to a number
+        hour = +hour
+
+        for (let session of this.timetable) {
+          if (session.time.day === day && session.time.start === hour) {
+            matches.push(session)
+          }
+        }
+
+        return matches
+      },
+      updateBoundary () {
+        this.boundary = {
+          x: this.$el.offsetLeft,
+          y: this.$el.offsetTop,
+          w: this.$el.offsetWidth,
+          h: this.$el.offsetHeight
+        }
       }
     },
     watch: {
@@ -153,18 +207,30 @@
           }, [])
           components = components.concat(newComponents)
         }
-        console.log(components)
 
-        this.search(components)
+        // Find the best timetable
+        let result = this.search(components)
+
+        // Split each stream into individual sessions
+        let streams = result.timetable
+        let sessions = streams.reduce((acc, stream) => {
+          for (let session of stream.timetable) {
+            session.stream = stream
+            session.course = stream.course
+          }
+          return acc.concat(stream.timetable)
+        }, [])
+
+        // Commit this new timetable to the store
+        this.$store.commit('timetable', sessions)
+        console.log(this.dropzones)
+      },
+      bounds () {
+        this.$nextTick(this.updateBoundary)
       }
     },
     mounted () {
-      this.boundary = {
-        x: this.$el.offsetLeft,
-        y: this.$el.offsetTop,
-        w: this.$el.offsetWidth,
-        h: this.$el.offsetHeight
-      }
+      this.updateBoundary()
     },
     components: {
       session,
@@ -173,7 +239,7 @@
     mixins: [ search ],
     props: {
       mouse: {
-        type: Array,
+        type: Object,
         required: true
       }
     }

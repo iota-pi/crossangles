@@ -55,7 +55,7 @@ export default {
     courses: [],
     events: [],
     options: {},
-    timetable: {}
+    timetable: []
   },
   mutations: {
     courseData (state, data) {
@@ -84,6 +84,9 @@ export default {
     },
     options (state, data) {
       state.options = data
+    },
+    timetable (state, data) {
+      state.timetable = data
     }
   },
   actions: {
