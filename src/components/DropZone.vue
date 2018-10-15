@@ -2,7 +2,7 @@
   <div
     class="dropzone"
     :style="{
-      height: (basePosition.h * session.duration - 1) + 'px',
+      height: (basePosition.h * duration - 1) + 'px',
       'background-color': color,
       'z-index': lastZ - 1
     }"
@@ -15,6 +15,11 @@
     data () {
       return {
         basePosition: {}
+      }
+    },
+    computed: {
+      duration () {
+        return this.dropzone.end - this.dropzone.start
       }
     },
     mounted () {
@@ -34,7 +39,7 @@
         type: Number,
         required: true
       },
-      session: {
+      dropzone: {
         type: Object,
         required: true
       }
