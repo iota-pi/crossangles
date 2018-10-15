@@ -60,7 +60,7 @@
         return {
           x: -this.basePosition.x,
           y: -this.basePosition.y,
-          w: this.boundary.w - this.basePosition.w - 1,
+          w: this.boundary.w - this.basePosition.w,
           h: this.boundary.h - (this.basePosition.h + 1) - 1
         }
       },
