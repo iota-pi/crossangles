@@ -2,30 +2,36 @@ import axios from 'axios'
 
 const dataURL = '/static/tt.json'
 
-function parseStreams (data, classData) {
+function parseStreams (data, classData, course) {
   let result = []
 
   for (let i = 0; i < classData.length; i += 3) {
     let comp = classData[i]
-    result.push({
+    let stream = {
+      course: course,
       component: data[1][comp[0]],
       status: !comp[1],
       enrols: [comp[2], comp[3]],
-      timetable: parseTimetable(data, comp.slice(4))
-    })
+      timetable: null
+    }
+    stream.timetable = parseTimetable(data, comp.slice(4), course, stream)
+    result.push(stream)
   }
 
   return result
 }
 
-function parseTimetable (data, timetableRaw) {
+function parseTimetable (data, timetableRaw, course, stream) {
   let timetable = []
 
   for (let i = 0; i < timetableRaw.length; i += 3) {
     timetable.push({
       location: data[2][timetableRaw[i + 1]],
       time: parseTimeString(data[3][timetableRaw[i]]),
-      weeks: data[4][timetableRaw[i + 2]]
+      weeks: data[4][timetableRaw[i + 2]],
+      course: course,
+      stream: stream,
+      index: Math.floor(i / 3)
     })
   }
 
@@ -69,8 +75,9 @@ export default {
           courses[code] = {
             code,
             title,
-            streams: parseStreams(data, info)
+            streams: null
           }
+          courses[code].streams = parseStreams(data, info, courses[code])
         }
       }
 
