@@ -4,6 +4,7 @@
 
 ### Considerations for later:
 * Manhattan distance instead of Pythagorean for class snapping?
+* Week-intelligent clash detection
 
 ## Build Setup
 
