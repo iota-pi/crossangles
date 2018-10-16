@@ -11,7 +11,7 @@ import re
 import os
 
 URL = 'https://nss.cse.unsw.edu.au/sitar/classes2018/index.html'
-TERM = 1
+TERM = 2
 YEAR = 2018
 
 class Parser():
@@ -135,7 +135,6 @@ class Parser():
 
 #
 # getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney
-# (this is particularly useful for when script is being run on a webserver in another location)
 #
 def getSydneyTime():
     # Force Sydney timezone
@@ -167,7 +166,7 @@ if __name__ == '__main__':
     data = cleaner.process(courses)
 
     everything = {
-        'data': data,
+        'courses': data,
         'meta': meta
     }
 

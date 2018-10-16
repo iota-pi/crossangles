@@ -31,7 +31,8 @@ class Cleaner():
                     toDelete.append(stream)
                     continue
 
-                existing[(stream['component'], tuple(stream['times']))].append(stream)
+                times = tuple(time[0] for time in stream['times'])
+                existing[(stream['component'], times)].append(stream)
 
             # Remove all marked streams
             # NB: must be done before next filtering
