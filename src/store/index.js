@@ -2,36 +2,36 @@ import axios from 'axios'
 
 const dataURL = '/static/tt.json'
 
-function parseStreams (data, classData, course) {
+function parseStreams (streams, course) {
   let result = []
 
-  for (let i = 0; i < classData.length; i += 3) {
-    let comp = classData[i]
-    let stream = {
+  for (let stream of streams) {
+    let nextStream = {
       course: course,
-      component: data[1][comp[0]],
-      status: !comp[1],
-      enrols: [comp[2], comp[3]],
-      timetable: null
+      component: stream.component,
+      status: stream.status,
+      enrols: stream.enrols.split('/'),
+      times: null
     }
-    stream.timetable = parseTimetable(data, comp.slice(4), course, stream)
-    result.push(stream)
+    nextStream.times = parseTimetable(stream.times, course, nextStream)
+    result.push(nextStream)
   }
 
   return result
 }
 
-function parseTimetable (data, timetableRaw, course, stream) {
+function parseTimetable (times, course, stream) {
   let timetable = []
 
-  for (let i = 0; i < timetableRaw.length; i += 3) {
+  for (let i = 0; i < times.length; i++) {
+    let time = times[i]
     timetable.push({
-      location: data[2][timetableRaw[i + 1]],
-      time: parseTimeString(data[3][timetableRaw[i]]),
-      weeks: data[4][timetableRaw[i + 2]],
       course: course,
       stream: stream,
-      index: Math.floor(i / 3),
+      location: time[1],
+      time: parseTimeString(time[0]),
+      weeks: time[2],
+      index: i,
       snap: false
     })
   }
@@ -68,18 +68,14 @@ export default {
     courseData (state, data) {
       let courses = {}
 
-      for (let subj of Object.keys(data[0])) {
-        for (let nums of Object.keys(data[0][subj])) {
-          let code = subj + nums
-          let title = data[0][subj][nums][0]
-          let info = data[0][subj][nums].slice(1)
-          courses[code] = {
-            code,
-            title,
-            streams: null
-          }
-          courses[code].streams = parseStreams(data, info, courses[code])
+      for (let course of data.courses) {
+        let code = course.code
+        courses[code] = {
+          code: code,
+          title: course.name,
+          streams: null
         }
+        courses[code].streams = parseStreams(course.streams, courses[code])
       }
 
       state.courseData = courses

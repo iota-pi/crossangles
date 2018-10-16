@@ -90,8 +90,8 @@
 
         for (let course of this.$store.state.courses) {
           for (let stream of course.streams) {
-            for (let i of stream.timetable.keys()) {
-              let session = stream.timetable[i]
+            for (let i of stream.times.keys()) {
+              let session = stream.times[i]
               dropzones.push({
                 day: session.time.day,
                 start: session.time.start,
@@ -165,9 +165,9 @@
             this.dragging.snap = true
           } else {
             // Move all linked sessions
-            for (let i of dropzone.stream.timetable.keys()) {
-              let from = this.dragging.stream.timetable[i]
-              let to = dropzone.stream.timetable[i]
+            for (let i of dropzone.stream.times.keys()) {
+              let from = this.dragging.stream.times[i]
+              let to = dropzone.stream.times[i]
               this.timetable.splice(this.timetable.indexOf(from), 1, to)
             }
           }
@@ -269,7 +269,7 @@
         // Split each stream into individual sessions
         let streams = result.timetable
         let sessions = streams.reduce((acc, stream) => {
-          return acc.concat(stream.timetable)
+          return acc.concat(stream.times)
         }, [])
 
         // Commit this new timetable to the store

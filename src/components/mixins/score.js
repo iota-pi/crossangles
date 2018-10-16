@@ -11,7 +11,7 @@ function timetableToArray (timetableData, streams) {
 
   // Convert to timetable array
   for (let stream of timetableData) {
-    for (let session of stream.timetable) {
+    for (let session of stream.times) {
       let time = session.time
       let day = dayOfWeek.indexOf(time.day)
       for (let hour = time.start; hour < time.end; hour += 0.5) {
@@ -85,7 +85,7 @@ function scoreTimes (timetableData) {
   let score = 0
 
   for (let stream of timetableData) {
-    for (let session of stream.timetable) {
+    for (let session of stream.times) {
       score += scoreClassTime(session.time.start, session.time.end)
     }
   }
