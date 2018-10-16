@@ -7,7 +7,6 @@
 * Week-intelligent clash detection
 * Limit course selection/options container width
 * Touch compatibility
-* No auto-update option
 * Make auto-update more respectful
 * Fix dragged sessions showing above navbar/footer
 

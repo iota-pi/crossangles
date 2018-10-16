@@ -31,6 +31,10 @@
           {
             title: 'Include full classes',
             value: { 'allowFull': true }
+          },
+          {
+            title: 'Manually update timetable',
+            value: { 'manual': true }
           }
         ]
       }

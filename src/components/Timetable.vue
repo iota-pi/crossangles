@@ -42,7 +42,7 @@
   import dropZone from './DropZone'
   import search from './mixins/search'
 
-  const snapDist = 30
+  const snapDist = 40
 
   function zfill (str, n, right) {
     while (str.length < n) {
@@ -109,12 +109,10 @@
         return dropzones
       },
       anythingChanges () {
-        let c = [
-          this.$store.state.courses,
-          this.$store.state.events,
-          this.$store.state.options
-        ]
-        return c.length + Math.random()
+        let c = this.$store.state.options.allowFull ? 1 : 0
+        c += 2 * this.$store.state.events.length
+        c += 10 * this.$store.state.courses.length
+        return c
       }
     },
     methods: {
@@ -232,10 +230,8 @@
           w: this.$el.offsetWidth,
           h: this.$el.offsetHeight
         }
-      }
-    },
-    watch: {
-      anythingChanges () {
+      },
+      updateTimetable () {
         // Group streams by component for each course
         let components = []
         for (let course of this.$store.state.courses) {
@@ -274,6 +270,13 @@
 
         // Commit this new timetable to the store
         this.$store.commit('timetable', sessions)
+      }
+    },
+    watch: {
+      anythingChanges () {
+        if (!this.$store.state.options.manual) {
+          this.updateTimetable()
+        }
       },
       bounds () {
         this.$nextTick(this.updateBoundary)
@@ -299,6 +302,7 @@
 <style scoped>
   .timetable {
     position: relative;
+    overflow-x: auto;
   }
 
   .tt-row {
