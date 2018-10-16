@@ -1,6 +1,6 @@
 <template>
   <v-layout row wrap>
-    <v-flex xs12 sm3 v-for="event in allEvents" :key="event.title">
+    <v-flex :xs12="$vuetify.breakpoint.xs" v-for="event in allEvents" :key="event.title">
       <v-checkbox
         v-model="events"
         :value="event"
