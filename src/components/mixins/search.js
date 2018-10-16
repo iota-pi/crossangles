@@ -217,8 +217,7 @@ function evolve (parents, maxParents, maxIter, biasTop, allowFull) {
 
   // Return the best timetable
   parents.sort(parentSort)
-  console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - startTime, 'ms')
-  console.log(parents[0])
+  // console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - startTime, 'ms')
   return parents[0]
 }
 
