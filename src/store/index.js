@@ -10,7 +10,7 @@ function parseStreams (streams, course) {
       course: course,
       component: stream.component,
       status: stream.status,
-      enrols: stream.enrols.split('/'),
+      enrols: stream.enrols,
       times: null
     }
     nextStream.times = parseTimetable(stream.times, course, nextStream)
@@ -73,6 +73,7 @@ export default {
         courses[code] = {
           code: code,
           title: course.name,
+          color: null,
           streams: null
         }
         courses[code].streams = parseStreams(course.streams, courses[code])

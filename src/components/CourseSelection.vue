@@ -29,8 +29,14 @@
 </template>
 
 <script>
+  import colors from './mixins/colors'
+
   function escapeRegExp (string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  }
+
+  function choice (array) {
+    return array[Math.floor(Math.random() * array.length)]
   }
 
   export default {
@@ -89,9 +95,17 @@
     },
     watch: {
       chosen () {
+        let used = this.chosen.map(course => course.color)
+        for (let course of this.chosen) {
+          if (!course.color) {
+            course.color = choice(this.colors.filter(color => !used.includes(color)))
+            break
+          }
+        }
         this.$store.commit('courses', this.chosen)
       }
-    }
+    },
+    mixins: [ colors ]
   }
 </script>
 

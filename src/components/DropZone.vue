@@ -18,6 +18,9 @@
       }
     },
     computed: {
+      color () {
+        return this.dropzone.course.color
+      },
       duration () {
         return this.dropzone.end - this.dropzone.start
       }
@@ -31,10 +34,6 @@
       }
     },
     props: {
-      color: {
-        type: String,
-        default: '#ff00ff'
-      },
       lastZ: {
         type: Number,
         required: true

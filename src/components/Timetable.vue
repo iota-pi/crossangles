@@ -318,7 +318,7 @@
     border-width: 0;
     border-left-width: 1px;
     border-top-width: 1px;
-    min-width: 100px;
+    min-width: 120px;
   }
   .tt-col:first-child {
     min-width: 70px;

@@ -12,7 +12,18 @@
     }"
   >
     <div class="course-title">
-      {{ title }}
+      <strong>{{ session.course.code }}</strong>: {{ session.stream.component }}
+    </div>
+    <div class="detail">
+      <span v-if="$store.state.options.locations">
+        {{ session.location }}
+      </span>
+      <span v-if="$store.state.options.locations && $store.state.options.enrolments">
+        —
+      </span>
+      <span v-if="$store.state.options.enrolments">
+        {{ session.stream.enrols }}
+      </span>
     </div>
   </div>
 </template>
@@ -69,6 +80,9 @@
       },
       snap () {
         return this.session.snap
+      },
+      color () {
+        return this.session.course.color
       }
     },
     methods: {
@@ -127,8 +141,13 @@
         w: this.$el.offsetParent.offsetWidth,
         h: this.$el.offsetParent.offsetHeight * duration - 1
       }
+      console.log(this.session)
     },
     props: {
+      session: {
+        type: Object,
+        required: true
+      },
       mouse: {
         type: Object,
         required: true
@@ -140,14 +159,6 @@
       boundary: {
         type: Object,
         default: null
-      },
-      session: {
-        type: Object,
-        default: 1
-      },
-      color: {
-        type: String,
-        default: '#ff00ff'
       }
     }
   }
@@ -167,5 +178,19 @@
   }
   .session.dragging {
     cursor: grabbing;
+  }
+
+  .course-title {
+    text-align: center;
+    line-height: 1.25;
+  }
+  .course-title.strong {
+    font-weight: 500;
+  }
+
+  .detail {
+    text-align: center;
+    line-height: 1.1;
+    font-size: 80%;
   }
 </style>
