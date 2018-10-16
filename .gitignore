@@ -13,6 +13,9 @@ __pycache__
 /scraper/cache.json
 /scraper/tmp.json
 
+# Data files
+/static/tt.json
+
 # Editor directories and files
 .idea
 *.suo
