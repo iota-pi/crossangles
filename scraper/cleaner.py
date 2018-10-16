@@ -8,7 +8,7 @@ class Cleaner():
         self.weekMax = 2 ** 13 - 1
 
     def process(self, courses):
-        for i, course in enumerate(courses):
+        for course in courses:
             toDelete = []
             existing = defaultdict(list)
             for stream in course['streams']:
@@ -104,7 +104,7 @@ class Cleaner():
             if location.lower() == 'see school':
                 location = ''
 
-        return [time, location, weeks]
+        return [(time, location, weeks)]
 
     def tidyUpTime(self, timestr):
         # If the class runs on Saturday or Sunday, don't include it
