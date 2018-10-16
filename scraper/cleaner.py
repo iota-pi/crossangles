@@ -118,6 +118,9 @@ class Cleaner():
         # Use decimal notation for half-hours
         timestr = timestr.replace(':30', '.5')
 
+        # Remove some extra zeros
+        timestr = timestr.replace('08', '8').replace('09', '9')
+
         # Skip anything with multiple days (usually intensives)
         if timestr[:2].isalpha():
             return None
