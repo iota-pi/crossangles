@@ -146,30 +146,6 @@ function scoreDayLength (timetable) {
   return score
 }
 
-function scoreArvoTeaGap (timetable, timetableData) {
-  // NB: 5 points more than adjacency bonus for having class afterwards
-  const arvoTeaScore = 30
-
-  for (let i = 0; i < timetable.length; i += 1) {
-    for (let j = 0; j < timetable[i].length; j += 1) {
-      if (timetable[i][j] !== undefined) {
-        for (let k = 0; k < timetable[i][j].length; k += 1) {
-          let code = timetable[i][j][k].course.code
-          let component = timetable[i][j][k].component
-          if (code === 'CBS' && component === 'The Bible Talks') {
-            // Check start of next hour
-            if (timetable[i][j + 2] === undefined) {
-              return arvoTeaScore
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return 0
-}
-
 function scoreTimetable (indexTimetable, streams) {
   if (indexTimetable === null) {
     return null
@@ -184,7 +160,6 @@ function scoreTimetable (indexTimetable, streams) {
   score += scoreTimes(timetableData)
   score += scoreProximity(timetable, timetableData)
   score += scoreDayLength(timetable)
-  score += scoreArvoTeaGap(timetable, timetableData)
 
   return score
 }
