@@ -8,6 +8,11 @@ yarn-error.log*
 /test/e2e/reports
 selenium-debug.log
 
+# Python working files
+__pycache__
+/scraper/cache.json
+/scraper/tmp.json
+
 # Editor directories and files
 .idea
 *.suo
