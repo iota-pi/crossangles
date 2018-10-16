@@ -229,7 +229,7 @@ export default {
   methods: {
     search (components, searchMax) {
       if (components.length === 0) {
-        return []
+        return { timetable: [] }
       }
 
       const allowFull = this.$store.state.options.allowFull
