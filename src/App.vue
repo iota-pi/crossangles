@@ -57,54 +57,54 @@
 </template>
 
 <script>
-import courseSelection from './components/CourseSelection'
-import courseDisplay from './components/CourseDisplay'
-import cbsEvents from './components/CBSEvents'
-import options from './components/Options'
-import timetable from './components/Timetable'
+  import courseSelection from './components/CourseSelection'
+  import courseDisplay from './components/CourseDisplay'
+  import cbsEvents from './components/CBSEvents'
+  import options from './components/Options'
+  import timetable from './components/Timetable'
 
-export default {
-  data () {
-    return {
-      drawer: false,
-      mouse: { x: 0, y: 0, held: false },
-      items: [{
-        icon: 'bubble_chart',
-        title: 'Save as Image'
-      },
-      {
-        icon: 'bubble_chart',
-        title: 'Reset Page'
-      },
-      {
-        icon: 'bubble_chart',
-        title: 'Save a Backup'
-      }],
-      title: 'CrossAngles'
-    }
-  },
-  methods: {
-    mousemove (e) {
-      this.mouse.x = e.clientX
-      this.mouse.y = e.clientY
+  export default {
+    data () {
+      return {
+        drawer: false,
+        mouse: { x: 0, y: 0, held: false },
+        items: [{
+          icon: 'bubble_chart',
+          title: 'Save as Image'
+        },
+        {
+          icon: 'bubble_chart',
+          title: 'Reset Page'
+        },
+        {
+          icon: 'bubble_chart',
+          title: 'Save a Backup'
+        }],
+        title: 'CrossAngles'
+      }
     },
-    mousedown (e) {
-      this.mouse.held = true
+    methods: {
+      mousemove (e) {
+        this.mouse.x = e.clientX
+        this.mouse.y = e.clientY
+      },
+      mousedown (e) {
+        this.mouse.held = true
+      },
+      mouseup (e) {
+        this.mouse.held = false
+      }
     },
-    mouseup (e) {
-      this.mouse.held = false
+    mounted () {
+      this.$store.dispatch('loadData')
+    },
+    name: 'App',
+    components: {
+      courseSelection,
+      courseDisplay,
+      cbsEvents,
+      options,
+      timetable
     }
-  },
-  mounted () {
-    this.$store.dispatch('loadData')
-  },
-  name: 'App',
-  components: {
-    courseSelection,
-    courseDisplay,
-    cbsEvents,
-    options,
-    timetable
   }
-}
 </script>
