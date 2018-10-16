@@ -6,21 +6,22 @@ import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import json
+import time
 import re
-
-# TODO: Cleaner class
-# TODO: Get UG courses only
+import os
 
 URL = 'https://nss.cse.unsw.edu.au/sitar/classes2018/index.html'
+TERM = 1
+YEAR = 2018
 
 class Parser():
-    def __init__(self, sem, engine='lxml', windowSize=20, timeout=5, cache=None):
+    def __init__(self, term, engine='lxml', windowSize=20, timeout=5, cache=None):
         self.parser = engine
         self.windowSize = windowSize
         self.timeout = timeout
         self.cacheName = cache
         self.cache = {}
-        self.sem = str(sem)
+        self.term = str(term)
 
         if cache is not None:
             try:
@@ -75,7 +76,7 @@ class Parser():
 
     def getFacultyPages(self, startUrl):
         soup = self.loadPages(startUrl).__next__()
-        links = soup.find_all(href=re.compile('[^Z][A-Z]{3}_[ST]' + self.sem + '.html$'))
+        links = soup.find_all(href=re.compile('[^Z][A-Z]{3}_[ST]' + self.term + '.html$'))
         links = [link.get('href') for link in links]
 
         # Convert to urls and load the pages
@@ -132,11 +133,42 @@ class Parser():
         with open(self.cacheName, 'w') as f:
             json.dump(self.cache, f, separators=(',', ':'))
 
+#
+# getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney
+# (this is particularly useful for when script is being run on a webserver in another location)
+#
+def getSydneyTime():
+    # Force Sydney timezone
+    os.environ['TZ'] = 'Australia/Sydney'
+
+    # Get properly formatted date & time
+    now = time.time()
+    updateDate = time.strftime('%d/%m/%Y', time.localtime(now))
+    updateTime = time.strftime('%H:%M', time.localtime(now))
+
+    return updateDate, updateTime
+
+def getMeta():
+    updateDate, updateTime = getSydneyTime()
+    return {
+        'term': TERM,
+        'year': YEAR,
+        'updateDate': updateDate,
+        'updateTime': updateTime
+    }
+
 if __name__ == '__main__':
-    parser = Parser(sem=1, cache='cache.json')
+    parser = Parser(term=TERM, cache='cache.json')
     courses = parser.scrape(URL)
+    meta = getMeta()
     parser.writeCache()
 
     cleaner = Cleaner()
     data = cleaner.process(courses)
-    cleaner.dump(data, '../static/tt.json')
+
+    everything = {
+        'data': data,
+        'meta': meta
+    }
+
+    cleaner.dump(everything, '../static/tt.json')
