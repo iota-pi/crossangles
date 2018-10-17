@@ -44,7 +44,6 @@
         <v-container class="narrow">
           <course-selection />
           <course-display />
-          <cbs-events />
           <options />
           <timetable class="mt-4" :mouse="mouse" />
         </v-container>
@@ -61,7 +60,6 @@
 <script>
   import courseSelection from './components/CourseSelection'
   import courseDisplay from './components/CourseDisplay'
-  import cbsEvents from './components/CBSEvents'
   import options from './components/Options'
   import timetable from './components/Timetable'
 
@@ -104,7 +102,6 @@
     components: {
       courseSelection,
       courseDisplay,
-      cbsEvents,
       options,
       timetable
     }

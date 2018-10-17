@@ -103,6 +103,14 @@ export default {
       })
       axios.get('/static/cbs.json').then((r) => {
         context.commit('courseData', r.data)
+        if (context.state.courses.length === 0) {
+          context.commit('courses', [context.state.courseData.CBS])
+        }
+        if (context.state.events.length === 0) {
+          let components = context.state.courseData.CBS.streams.map(s => s.component)
+          let events = components.filter((c, i) => components.indexOf(c) === i)
+          context.commit('events', events)
+        }
       })
     }
   }

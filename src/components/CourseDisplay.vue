@@ -3,15 +3,15 @@
     <v-list-tile v-for="course in courses" :key="course.code">
       <v-list-tile-content>
         <v-list-tile-title>
-          {{ course.code }}
+          {{ (course.code !== 'CBS') ? course.code : course.title }}
 
-          <span class="faded">
+          <span class="faded" v-if="course.code !== 'CBS'">
             — {{ course.title }}
           </span>
         </v-list-tile-title>
       </v-list-tile-content>
 
-      <div class="no-spacing">
+      <div class="no-spacing pl-2">
         <swatches
           v-model="course.color"
           :colors="colors"
@@ -24,10 +24,18 @@
       </div>
 
       <v-list-tile-action>
-        <v-btn icon @click="courses.splice(courses.indexOf(course), 1)">
+        <v-btn
+          icon
+          v-if="course.code !== 'CBS'"
+          @click="removeCourse(course)"
+        >
           <v-icon>close</v-icon>
         </v-btn>
       </v-list-tile-action>
+    </v-list-tile>
+
+    <v-list-tile class="flexible-height">
+      <cbs-events />
     </v-list-tile>
   </v-list>
 </template>
@@ -35,6 +43,7 @@
 <script>
   import Swatches from 'vue-swatches'
   import 'vue-swatches/dist/vue-swatches.min.css'
+  import cbsEvents from './CBSEvents'
   import colors from './mixins/colors'
 
   export default {
@@ -48,8 +57,18 @@
         return this.$store.state.courses
       }
     },
+    methods: {
+      removeCourse (course) {
+        // Reset this courses color
+        course.color = null
+
+        // Remove this course
+        this.courses.splice(this.courses.indexOf(course), 1)
+      }
+    },
     components: {
-      Swatches
+      Swatches,
+      cbsEvents
     },
     mixins: [ colors ]
   }
@@ -62,5 +81,11 @@
   .no-spacing {
     line-height: 0.1;
     font-size: 1px;
+  }
+</style>
+
+<style>
+  .flexible-height > .v-list__tile {
+    height: auto;
   }
 </style>
