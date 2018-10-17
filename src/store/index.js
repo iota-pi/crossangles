@@ -63,8 +63,7 @@ export default {
     courseData: {},
     courses: [],
     events: [],
-    options: {},
-    timetable: []
+    options: {}
   },
   mutations: {
     courseData (state, data) {

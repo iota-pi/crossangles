@@ -57,7 +57,8 @@
         days: ['M', 'T', 'W', 'H', 'F'],
         lastZ: 10,
         boundary: null,
-        dragging: null
+        dragging: null,
+        timetable: []
       }
     },
     computed: {
@@ -81,9 +82,6 @@
       hours () {
         let blank = new Array(this.bounds[1] - this.bounds[0])
         return blank.fill(0).map((_, i) => zfill('' + (i + this.bounds[0]), 2))
-      },
-      timetable () {
-        return this.$store.state.timetable
       },
       dropzones () {
         let dropzones = []
@@ -149,9 +147,9 @@
           }
         }
 
-        // Snap to position if near enough
+        // Snap to position
         if (nearest !== null) {
-          // Move the session
+          // Find the corresponding dropzone object for the DOM element we have
           let dayIndex = Math.round(Math.max(nearest.x - 70, 0) / nearest.w)
           let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / nearest.h)
           let day = this.days[dayIndex]
@@ -159,14 +157,15 @@
           let dropzone = this.getDropZones(day, hour)[0]
 
           if (this.dragging === dropzone.session) {
-            // Reset position
+            // Reset this session's position
             this.dragging.snap = true
           } else {
             // Move all linked sessions
             for (let i of dropzone.stream.times.keys()) {
               let from = this.dragging.stream.times[i]
               let to = dropzone.stream.times[i]
-              this.timetable.splice(this.timetable.indexOf(from), 1, to)
+              this.timetable[this.timetable.indexOf(from)] = to
+              // console.log('after move', this.timetable.slice())
             }
           }
         }
@@ -215,9 +214,11 @@
             }
 
             // Check that this dropzone matches the given time
-            if (dropzone.day === day && dropzone.start === hour) {
-              matches.push(dropzone)
+            if (dropzone.day !== day || dropzone.start !== hour) {
+              continue
             }
+
+            matches.push(dropzone)
           }
         }
 
@@ -274,7 +275,7 @@
         }, [])
 
         // Commit this new timetable to the store
-        this.$store.commit('timetable', sessions)
+        this.timetable = sessions
       }
     },
     watch: {
