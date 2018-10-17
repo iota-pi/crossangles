@@ -42,13 +42,31 @@
   export default {
     data () {
       return {
-        chosen: [],
         searchText: null
       }
     },
     computed: {
-      courses () {
-        return this.$store.state.courses
+      chosen: {
+        get () {
+          return this.$store.state.courses
+        },
+        set (newValue) {
+          // Assign a random colour to the new course (if any)
+          let used = newValue.map(course => course.color)
+          for (let course of newValue) {
+            if (!course.color) {
+              course.color = choice(this.colors.filter(c => !used.includes(c)))
+              break
+            }
+          }
+
+          // Ensure CBS course is always last
+          let mainCourses = newValue.filter(c => c.code !== 'CBS')
+          let allCourses = mainCourses.concat(newValue.filter(c => c.code === 'CBS'))
+
+          // Commit to store
+          this.$store.commit('courses', allCourses)
+        }
       },
       courseData () {
         let data = Object.values(this.$store.state.courseData)
@@ -102,30 +120,6 @@
         }
 
         return haystack
-      }
-    },
-    watch: {
-      chosen () {
-        // Add CBS to the 'chosen' courses
-        let courses = this.chosen.concat([this.$store.state.courseData.CBS])
-
-        // Assign a random colour to the new course (if any)
-        let used = courses.map(course => course.color)
-        for (let course of courses) {
-          if (!course.color) {
-            course.color = choice(this.colors.filter(c => !used.includes(c)))
-            break
-          }
-        }
-
-        this.$store.commit('courses', courses)
-      },
-      courses () {
-        // Check we need to update our chosen list (e.g. if a course is removed)
-        // NB: the -1 is to deal with the added CBS course
-        if (this.courses.length - 1 !== this.chosen.length) {
-          this.chosen = this.courses.filter(c => c.code !== 'CBS')
-        }
       }
     },
     mixins: [ colors ]
