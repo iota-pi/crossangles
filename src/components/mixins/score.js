@@ -146,6 +146,12 @@ function scoreDayLength (timetable) {
   return score
 }
 
+function scoreUnchanged (currentTimetable, pastTimetable) {
+  const perClass = 10
+
+  return perClass * 0
+}
+
 function scoreTimetable (indexTimetable, streams) {
   if (indexTimetable === null) {
     return null
@@ -160,6 +166,7 @@ function scoreTimetable (indexTimetable, streams) {
   score += scoreTimes(timetableData)
   score += scoreProximity(timetable, timetableData)
   score += scoreDayLength(timetable)
+  score += scoreUnchanged(timetable, timetable)
 
   return score
 }
