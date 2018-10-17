@@ -22,7 +22,7 @@ function pickClass (components, i, timetable, allowFull) {
 
   // Look for a valid class
   while (streamNo < component.length) {
-    if (component[streamNo].status !== 'F' || allowFull) {
+    if (component[streamNo].status === 1 || allowFull) {
       break
     }
 

@@ -6,7 +6,7 @@
     <drop-zone
       v-for="dropzone in dropzones"
       :key="'d' + dropzone.course.code + dropzone.component + dropzone.day + dropzone.start"
-      v-if="dragging && dragging.stream.component === dropzone.component && dragging.index === dropzone.index"
+      v-if="isVisibleDropzone(dropzone)"
       :dropzone="dropzone"
       :boundary="boundary"
       :lastZ="lastZ"
@@ -177,20 +177,32 @@
         // Drag released
         this.dragging = null
       },
-      getSessions (day, hour) {
-        // Get all sessions starting at the given hour
-        let matches = []
-
-        // Convert hour to a number
-        hour = +hour
-
-        for (let session of this.timetable) {
-          if (session.time.day === day && session.time.start === hour) {
-            matches.push(session)
-          }
+      isVisibleDropzone (dropzone) {
+        if (!this.dragging) {
+          return false
         }
 
-        return matches
+        // Check that this dropzone is for the right course
+        if (this.dragging.course !== dropzone.course) {
+          return false
+        }
+
+        // Check that this dropzone is for the right component
+        if (this.dragging.stream.component !== dropzone.component) {
+          return false
+        }
+
+        // Check that this dropzone is for the right session
+        if (this.dragging.index !== dropzone.index) {
+          return false
+        }
+
+        // Check that this dropzone isn't full, or we're allowed full sessions
+        if (dropzone.stream.status === 0 && !this.$store.state.options.allowFull) {
+          return false
+        }
+
+        return true
       },
       getDropZones (day, hour) {
         // Get all dropzones starting at the given hour
@@ -199,31 +211,17 @@
         // Convert hour to a number
         hour = +hour
 
-        // Ignore all dropzones if nothing is being dragged currently
-        if (this.dragging) {
-          for (let dropzone of this.dropzones) {
-            // Check that this dropzone is for the right course
-            if (this.dragging.course !== dropzone.course) {
-              continue
-            }
-
-            // Check that this dropzone is for the right component
-            if (this.dragging.stream.component !== dropzone.component) {
-              continue
-            }
-
-            // Check that this dropzone is for the right session
-            if (this.dragging.index !== dropzone.index) {
-              continue
-            }
-
-            // Check that this dropzone matches the given time
-            if (dropzone.day !== day || dropzone.start !== hour) {
-              continue
-            }
-
-            matches.push(dropzone)
+        for (let dropzone of this.dropzones) {
+          if (!this.isVisibleDropzone(dropzone)) {
+            continue
           }
+
+          // Check that this dropzone matches the given time
+          if (dropzone.day !== day || dropzone.start !== hour) {
+            continue
+          }
+
+          matches.push(dropzone)
         }
 
         return matches
