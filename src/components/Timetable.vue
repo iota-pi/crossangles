@@ -236,6 +236,11 @@
         let components = []
         for (let course of this.$store.state.courses) {
           let newComponents = course.streams.reduce((acc, stream) => {
+            // Skip any CBS activities which have been deselected
+            if (course.code === 'CBS' && !this.$store.state.events.includes(stream.component)) {
+              return acc
+            }
+
             // Check if this component type has occured before
             let match = acc.filter(c => c.component === stream.component)[0]
 

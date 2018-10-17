@@ -1,4 +1,6 @@
 import axios from 'axios'
+import _colors from '../components/mixins/colors'
+let colors = _colors.data()
 
 const dataURL = '/static/tt.json'
 
@@ -66,14 +68,14 @@ export default {
   },
   mutations: {
     courseData (state, data) {
-      let courses = {}
+      let courses = Object.assign({}, state.courseData)
 
-      for (let course of data.courses) {
+      for (let course of data) {
         let code = course.code
         courses[code] = {
           code: code,
           title: course.name,
-          color: null,
+          color: code !== 'CBS' ? null : colors.CBScolor,
           streams: null
         }
         courses[code].streams = parseStreams(course.streams, courses[code])
@@ -97,6 +99,9 @@ export default {
   actions: {
     loadData (context) {
       axios.get(dataURL).then((r) => {
+        context.commit('courseData', r.data.courses)
+      })
+      axios.get('/static/cbs.json').then((r) => {
         context.commit('courseData', r.data)
       })
     }

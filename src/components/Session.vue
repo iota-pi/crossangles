@@ -12,7 +12,12 @@
     }"
   >
     <div class="course-title">
-      <strong>{{ session.course.code }}</strong>: {{ session.stream.component }}
+      <span v-if="session.course.code !== 'CBS'" class="emphasis">
+        {{ session.course.code }}:
+      </span>
+      <span :class="{ emphasis: session.course.code === 'CBS' }">
+        {{ session.stream.component }}
+      </span>
     </div>
     <div class="detail">
       <span v-if="$store.state.options.locations">
@@ -141,7 +146,6 @@
         w: this.$el.offsetParent.offsetWidth,
         h: this.$el.offsetParent.offsetHeight * duration - 1
       }
-      console.log(this.session)
     },
     props: {
       session: {
@@ -184,7 +188,7 @@
     text-align: center;
     line-height: 1.25;
   }
-  .course-title.strong {
+  .course-title > .emphasis {
     font-weight: 500;
   }
 

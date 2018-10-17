@@ -1,45 +1,118 @@
 [
   {
-    "title": "The Bible Talks",
-    "location": null,
-    "times": [
-      "T12",
-      "T13",
-      "H12",
-      "H13"
-    ]
-  },
-  {
-    "title": "Bible Studies",
-    "location": null,
-    "times": [
-      "M11",
-      "M12",
-      "M13",
-      "M14",
-      "T11",
-      "T14",
-      "W11",
-      "H11",
-      "H14"
-    ]
-  },
-  {
-    "title": "Core Theology",
-    "location": null,
-    "times": [
-      "T17",
-      "W13"
-    ]
-  },
-  {
-    "title": "Core Training",
-    "location": null,
-    "times": [
-      "T16",
-      "T18",
-      "W12",
-      "W14"
+    "code": "CBS",
+    "name": "Campus Bible Study",
+    "streams": [
+      {
+        "component": "The Bible Talks",
+        "status": 1,
+        "times": [[ "T12", null, null ]]
+      },
+      {
+        "component": "The Bible Talks",
+        "status": 1,
+        "times": [[ "T13", null, null ]]
+      },
+      {
+        "component": "The Bible Talks",
+        "status": 1,
+        "times": [[ "H12", null, null ]]
+      },
+      {
+        "component": "The Bible Talks",
+        "status": 1,
+        "times": [[ "H13", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "M11", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "M12", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "M13", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "M14", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "T11", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "T14", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "W11", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "W12", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "W13", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "H11", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "F12", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "F13", null, null ]]
+      },
+      {
+        "component": "Bible Studies",
+        "status": 1,
+        "times": [[ "H14", null, null ]]
+      },
+      {
+        "component": "Core Theology",
+        "status": 1,
+        "times": [[ "T16", null, null ]]
+      },
+      {
+        "component": "Core Theology",
+        "status": 1,
+        "times": [[ "W14", null, null ]]
+      },
+      {
+        "component": "Core Training",
+        "status": 1,
+        "times": [[ "T15", null, null ]]
+      },
+      {
+        "component": "Core Training",
+        "status": 1,
+        "times": [[ "T17", null, null ]]
+      },
+      {
+        "component": "Core Training",
+        "status": 1,
+        "times": [[ "W15", null, null ]]
+      }
     ]
   }
 ]

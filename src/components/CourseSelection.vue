@@ -72,9 +72,17 @@
     },
     methods: {
       filter (course, queryText, itemText) {
+        // Don't show Campus Bible Study as a course
+        if (course.code === 'CBS') {
+          return false
+        }
+
+        // Check for a match in the course code
         if (course.code.toLowerCase().indexOf(queryText.toLowerCase()) !== -1) {
           return true
         }
+
+        // Check for a match in the course name
         if (course.title.toLowerCase().indexOf(queryText.toLowerCase()) !== -1) {
           return true
         }
@@ -95,14 +103,19 @@
     },
     watch: {
       chosen () {
-        let used = this.chosen.map(course => course.color)
-        for (let course of this.chosen) {
+        // Add CBS to the 'chosen' courses
+        let courses = this.chosen.concat([this.$store.state.courseData.CBS])
+
+        // Assign a random colour to the new course (if any)
+        let used = this.chosen.map(course => course.color).concat([this.CBScolor])
+        for (let course of courses) {
           if (!course.color) {
-            course.color = choice(this.colors.filter(color => !used.includes(color)))
+            course.color = choice(this.colors.filter(c => !used.includes(c)))
             break
           }
         }
-        this.$store.commit('courses', this.chosen)
+
+        this.$store.commit('courses', courses)
       }
     },
     mixins: [ colors ]

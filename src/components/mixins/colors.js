@@ -36,7 +36,8 @@ const colorBases = [
 export default {
   data () {
     return {
-      colors: colorBases.map(color => color.hex)
+      colors: colorBases.map(color => color.hex),
+      CBScolor: colorBases[2].hex
     }
   }
 }
