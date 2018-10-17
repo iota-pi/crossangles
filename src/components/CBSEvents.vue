@@ -3,7 +3,7 @@
     <v-flex
       v-for="event in allEvents"
       :key="event.title"
-      :xs12="$vuetify.breakpoint.xs"
+      xs12 sm6
     >
       <v-checkbox
         v-model="events"

@@ -1,6 +1,10 @@
 <template>
   <v-layout row wrap class="pt-3">
-    <v-flex :xs12="$vuetify.breakpoint.xs" v-for="option in allOptions" :key="option.title">
+    <v-flex
+      v-for="option in allOptions"
+      :key="option.title"
+      xs12 sm6
+    >
       <v-checkbox
         v-model="options"
         :value="option.value"
