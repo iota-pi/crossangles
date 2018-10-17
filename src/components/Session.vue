@@ -122,6 +122,15 @@
             }
           })
         }
+      },
+      updateBasePosition () {
+        let duration = this.session.time.end - this.session.time.start
+        this.basePosition = {
+          x: this.$el.offsetParent.offsetLeft,
+          y: this.$el.offsetParent.offsetTop,
+          w: this.$el.offsetParent.offsetWidth,
+          h: this.$el.offsetParent.offsetHeight * duration - 1
+        }
       }
     },
     watch: {
@@ -136,16 +145,13 @@
           this.currentPosition.y = 0
           this.session.snap = false
         }
+      },
+      session () {
+        this.updateBasePosition()
       }
     },
     mounted () {
-      let duration = this.session.time.end - this.session.time.start
-      this.basePosition = {
-        x: this.$el.offsetParent.offsetLeft,
-        y: this.$el.offsetParent.offsetTop,
-        w: this.$el.offsetParent.offsetWidth,
-        h: this.$el.offsetParent.offsetHeight * duration - 1
-      }
+      this.updateBasePosition()
     },
     props: {
       session: {
