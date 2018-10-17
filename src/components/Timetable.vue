@@ -3,6 +3,28 @@
     class="timetable noselect"
     ref="timetable"
   >
+    <drop-zone
+      v-for="dropzone in dropzones"
+      :key="'d' + dropzone.course.code + dropzone.component + dropzone.day + dropzone.start"
+      v-if="dragging && dragging.stream.component === dropzone.component && dragging.index === dropzone.index"
+      :dropzone="dropzone"
+      :boundary="boundary"
+      :lastZ="lastZ"
+      :hours="bounds"
+    >
+    </drop-zone>
+    <session
+      v-for="session in timetable"
+      :key="'s' + session.course.code + session.stream.component + session.time.day + session.time.start"
+      :session="session"
+      :mouse="mouse"
+      :boundary="boundary"
+      :lastZ="lastZ"
+      :hours="bounds"
+      @drag="startDrag"
+      @drop="stopDrag"
+    >
+    </session>
     <div class="tt-row header">
       <div class="tt-col"></div>
       <div class="tt-col">Monday</div>
@@ -14,24 +36,6 @@
     <div class="tt-row" v-for="hour in hours" :key="'tthour' + hour">
       <div class="tt-col">{{ hour }}:00</div>
       <div class="tt-col" v-for="day in days" :key="'ttcell' + day + hour">
-        <drop-zone
-          v-for="dropzone, i in getDropZones(day, hour)"
-          :key="'dropzone' + i"
-          :dropzone="dropzone"
-          :lastZ="lastZ"
-        >
-      </drop-zone>
-        <session
-          v-for="session, i in getSessions(day, hour)"
-          :key="'session' + i"
-          :mouse="mouse"
-          :lastZ="lastZ"
-          :boundary="boundary"
-          :session="session"
-          @drag="startDrag"
-          @drop="stopDrag"
-        >
-        </session>
       </div>
     </div>
   </div>
@@ -98,7 +102,7 @@
                 component: stream.component,
                 stream: stream,
                 session: session,
-                index: i
+                index: session.index
               })
             }
           }
@@ -128,10 +132,10 @@
         for (let zone of zones) {
           // Find this dropzone's position
           let drop = {
-            x: zone.offsetParent.offsetLeft,
-            y: zone.offsetParent.offsetTop,
-            w: zone.offsetParent.offsetWidth,
-            h: zone.offsetParent.offsetHeight
+            x: zone.offsetLeft,
+            y: zone.offsetTop,
+            w: zone.offsetWidth,
+            h: zone.offsetHeight
           }
 
           // Find distance between the dragged element and this dropzone
@@ -151,21 +155,21 @@
         if (nearest !== null) {
           // Find the corresponding dropzone object for the DOM element we have
           let dayIndex = Math.round(Math.max(nearest.x - 70, 0) / nearest.w)
-          let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / nearest.h)
+          let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / 50)
           let day = this.days[dayIndex]
           let hour = this.hours[hourIndex]
           let dropzone = this.getDropZones(day, hour)[0]
 
           if (this.dragging === dropzone.session) {
             // Reset this session's position
-            this.dragging.snap = true
+            this.dragging.snapToggle = !this.dragging.snapToggle
           } else {
             // Move all linked sessions
             for (let i of dropzone.stream.times.keys()) {
               let from = this.dragging.stream.times[i]
               let to = dropzone.stream.times[i]
-              this.timetable[this.timetable.indexOf(from)] = to
-              // console.log('after move', this.timetable.slice())
+              this.timetable.splice(this.timetable.indexOf(from), 1)
+              this.timetable.push(to)
             }
           }
         }

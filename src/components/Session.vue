@@ -4,10 +4,11 @@
     @mousedown="drag"
     @mouseup="drop"
     :style="{
-      height: basePosition.h + 'px',
-      'background-color': color,
+      'background-color': this.session.course.color,
       left: position.x + 'px',
       top: position.y + 'px',
+      width: dimensions.w + 'px',
+      height: dimensions.h + 'px',
       'z-index': Math.min(zIndex, lastZ)
     }"
   >
@@ -40,54 +41,34 @@
         dragging: false,
         startMouse: { x: 0, y: 0 },
         currentPosition: { x: 0, y: 0 },
-        basePosition: {},
+        dimensions: { w: 0, h: 0 },
         zIndex: 1
       }
     },
     computed: {
-      title () {
-        return this.session.course.code
-      },
       position () {
         if (this.dragging) {
           let x = this.currentPosition.x + (this.mouse.x - this.startMouse.x)
           let y = this.currentPosition.y + (this.mouse.y - this.startMouse.y)
-          let bound = this.relativeLimits
 
-          if (x < bound.x) {
-            x = bound.x
-          }
-          if (x > bound.x + bound.w) {
-            x = bound.x + bound.w
-          }
-          if (y < bound.y) {
-            y = bound.y
-          }
-          if (y > bound.y + bound.h) {
-            y = bound.y + bound.h
-          }
+          // Top/Left limits
+          x = Math.max(x, 0)
+          y = Math.max(y, 0)
+
+          // Bottom/Right limits
+          x = Math.min(x, this.boundary.w - this.dimensions.w)
+          y = Math.min(y, this.boundary.h - this.dimensions.h)
 
           return { x, y }
         } else {
           return this.currentPosition
         }
       },
-      relativeLimits () {
-        return {
-          x: -this.basePosition.x,
-          y: -this.basePosition.y,
-          w: this.boundary.w - this.basePosition.w,
-          h: this.boundary.h - (this.basePosition.h + 1) - 1
-        }
-      },
       mouseHeld () {
         return this.mouse.held
       },
-      snap () {
-        return this.session.snap
-      },
-      color () {
-        return this.session.course.color
+      snapToggle () {
+        return this.session.snapToggle
       }
     },
     methods: {
@@ -116,20 +97,22 @@
           this.$emit('drop', {
             session: this.session,
             el: this.$el,
-            position: {
-              x: this.basePosition.x + this.currentPosition.x,
-              y: this.basePosition.y + this.currentPosition.y
-            }
+            position: this.currentPosition
           })
         }
       },
-      updateBasePosition () {
+      update () {
         let duration = this.session.time.end - this.session.time.start
-        this.basePosition = {
-          x: this.$el.offsetParent.offsetLeft,
-          y: this.$el.offsetParent.offsetTop,
-          w: this.$el.offsetParent.offsetWidth,
-          h: this.$el.offsetParent.offsetHeight * duration - 1
+        this.dimensions.w = Math.floor((this.boundary.w - 70) / 5) - 1
+        this.dimensions.h = 50 * duration - 1
+
+        let cellW = (this.boundary.w - 71) / 5
+        let cellH = 50
+        let day = ['M', 'T', 'W', 'H', 'F'].indexOf(this.session.time.day)
+        let hour = this.session.time.start - this.hours[0]
+        this.currentPosition = {
+          x: 71 + cellW * day,
+          y: 51 + cellH * hour
         }
       }
     },
@@ -139,19 +122,15 @@
           this.drop()
         }
       },
-      snap () {
-        if (this.session.snap) {
-          this.currentPosition.x = 0
-          this.currentPosition.y = 0
-          this.session.snap = false
-        }
+      boundary () {
+        this.update()
       },
-      session () {
-        this.updateBasePosition()
+      snapToggle () {
+        this.update()
       }
     },
     mounted () {
-      this.updateBasePosition()
+      this.update()
     },
     props: {
       session: {
@@ -168,7 +147,11 @@
       },
       boundary: {
         type: Object,
-        default: null
+        required: true
+      },
+      hours: {
+        type: Array,
+        required: true
       }
     }
   }

@@ -2,8 +2,11 @@
   <div
     class="dropzone"
     :style="{
-      height: (basePosition.h * duration - 1) + 'px',
-      'background-color': color,
+      'background-color': this.dropzone.course.color,
+      left: position.x + 'px',
+      top: position.y + 'px',
+      width: position.w + 'px',
+      height: position.h + 'px',
       'z-index': lastZ - 1
     }"
   >
@@ -14,24 +17,31 @@
   export default {
     data () {
       return {
-        basePosition: {}
+        position: {}
       }
     },
-    computed: {
-      color () {
-        return this.dropzone.course.color
-      },
-      duration () {
-        return this.dropzone.end - this.dropzone.start
+    methods: {
+      update () {
+        let duration = this.dropzone.end - this.dropzone.start
+        let cellW = (this.boundary.w - 71) / 5
+        let cellH = 50
+        let day = ['M', 'T', 'W', 'H', 'F'].indexOf(this.dropzone.day)
+        let hour = this.dropzone.start - this.hours[0]
+        this.position = {
+          x: 71 + cellW * day,
+          y: 51 + cellH * hour,
+          w: cellW - 1,
+          h: cellH * duration - 1
+        }
+      }
+    },
+    watch: {
+      dropzone () {
+        this.update()
       }
     },
     mounted () {
-      this.basePosition = {
-        x: this.$el.offsetParent.offsetLeft,
-        y: this.$el.offsetParent.offsetTop,
-        w: this.$el.offsetParent.offsetWidth,
-        h: this.$el.offsetParent.offsetHeight
-      }
+      this.update()
     },
     props: {
       lastZ: {
@@ -39,6 +49,14 @@
         required: true
       },
       dropzone: {
+        type: Object,
+        required: true
+      },
+      hours: {
+        type: Array,
+        required: true
+      },
+      boundary: {
         type: Object,
         required: true
       }

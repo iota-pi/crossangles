@@ -34,7 +34,7 @@ function parseTimetable (times, course, stream) {
       time: parseTimeString(time[0]),
       weeks: time[2],
       index: i,
-      snap: false
+      snapToggle: false
     })
   }
 
