@@ -5,10 +5,13 @@
 ### Considerations for later:
 * Manhattan distance instead of Pythagorean for class snapping?
 * Week-intelligent clash detection
-* Limit course selection/options container width
-* Touch compatibility
 * Make auto-update more respectful
 * Fix dragged sessions showing above navbar/footer
+* Mark stream constraints
+* Clash display
+* Save as image
+* Multi-threading for search
+* Update session positions/widths on timetable resize
 
 ## Build Setup
 

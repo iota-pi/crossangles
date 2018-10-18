@@ -2,16 +2,16 @@
   <v-app>
     <div
       @mousemove="mousemove"
+      @touchmove="touchmove"
       @mousedown="mousedown"
+      @touchstart="mousedown"
       @mouseup="mouseup"
+      @touchend="mouseup"
     >
       <v-toolbar
         app
         dark
         color="primary"
-        @mousemove="mousemove"
-        @mousedown="mousedown"
-        @mouseup="mouseup"
       >
         <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         <v-toolbar-title v-text="title"></v-toolbar-title>
@@ -85,14 +85,29 @@
     },
     methods: {
       mousemove (e) {
-        this.mouse.x = e.clientX
-        this.mouse.y = e.clientY
+        this.mouse.x = e.pageX
+        this.mouse.y = e.pageY
       },
       mousedown (e) {
         this.mouse.held = true
       },
       mouseup (e) {
         this.mouse.held = false
+      },
+      touchmove (e) {
+        let touch = e.touches[0]
+
+        // Check if we are dragging an element
+        let timetable = document.getElementById('timetable')
+        for (let session of timetable.querySelectorAll('.session.dragging')) {
+          if (session.contains(touch.target)) {
+            e.preventDefault()
+            break
+          }
+        }
+
+        this.mouse.x = touch.pageX
+        this.mouse.y = touch.pageY
       }
     },
     mounted () {

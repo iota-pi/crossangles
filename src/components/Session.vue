@@ -2,7 +2,9 @@
   <div
     class="session" :class="{ dragging: dragging }"
     @mousedown="drag"
+    @touchstart="drag"
     @mouseup="drop"
+    @touchend="drop"
     :style="{
       'background-color': this.session.course.color,
       left: position.x + 'px',
@@ -77,14 +79,31 @@
     },
     methods: {
       drag (e) {
-        if (!this.dragging) {
+        if (!this.dragging) { // TODO: why is this here?
+          // Update mouse position if this is a touch start event
+          // NB: necessary since global listener won't have triggered yet
+          if (e.touches) {
+            let touch = e.touches[0]
+            this.mouse.x = touch.pageX
+            this.mouse.y = touch.pageY
+          }
+
+          // Record where the mouse is for the start of this event
           this.startMouse = Object.assign({}, this.mouse)
+
+          // Remember starting position for later reference
           this.currentPosition = {
             x: parseInt(this.$el.style.left),
             y: parseInt(this.$el.style.top)
           }
+
+          // Register that this session is now being dragged
           this.dragging = true
+
+          // Update z-index counter
           this.zIndex = this.lastZ + 1
+
+          // Emit a drag event to the timetable
           this.$emit('drag', {
             session: this.session,
             el: this.$el

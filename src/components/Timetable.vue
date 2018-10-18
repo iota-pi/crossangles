@@ -2,6 +2,7 @@
   <div
     class="timetable noselect"
     ref="timetable"
+    id="timetable"
   >
     <drop-zone
       v-for="dropzone in dropzones"
