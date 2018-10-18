@@ -20,16 +20,8 @@
         {{ session.stream.component }}
       </span>
     </div>
-    <div class="detail">
-      <span v-if="$store.state.options.locations">
-        {{ session.location }}
-      </span>
-      <span v-if="$store.state.options.locations && $store.state.options.enrolments">
-        —
-      </span>
-      <span v-if="$store.state.options.enrolments">
-        {{ session.stream.enrols }}
-      </span>
+    <div class="details">
+      {{ details }}
     </div>
   </div>
 </template>
@@ -69,6 +61,18 @@
       },
       snapToggle () {
         return this.session.snapToggle
+      },
+      details () {
+        let location = ''
+        if (this.$store.state.options.locations) {
+          location = this.session.location || ''
+        }
+        let enrols = ''
+        if (this.$store.state.options.enrolments) {
+          enrols = this.session.stream.enrols || ''
+        }
+        let sep = (location && enrols) ? ' — ' : ''
+        return location + sep + enrols
       }
     },
     methods: {
@@ -181,7 +185,7 @@
     font-weight: 500;
   }
 
-  .detail {
+  .details {
     text-align: center;
     line-height: 1.1;
     font-size: 80%;
