@@ -17,6 +17,7 @@ import {
   VToolbar,
   transitions
 } from 'vuetify'
+import { Resize } from 'vuetify/lib/directives'
 import '../node_modules/vuetify/src/stylus/app.styl'
 import App from './App'
 import _store from './store'
@@ -36,9 +37,12 @@ Vue.use(Vuetify, {
     VToolbar,
     transitions
   },
+  directives: {
+    Resize
+  },
   theme: {
-    primary: '#303f9f',
-    secondary: '#1976d2',
+    primary: '#303F9F',
+    secondary: '#1976D2',
     accent: '#82B1FF',
     error: '#FF5252',
     info: '#2196F3',

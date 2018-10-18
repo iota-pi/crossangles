@@ -12,6 +12,7 @@
 * Save as image
 * Multi-threading for search
 * Update session positions/widths on timetable resize
+* Update sidebar menu
 
 ## Build Setup
 

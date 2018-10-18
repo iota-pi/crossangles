@@ -3,6 +3,7 @@
     class="timetable noselect"
     ref="timetable"
     id="timetable"
+    v-resize="updateBoundary"
   >
     <drop-zone
       v-for="dropzone in dropzones"
@@ -206,11 +207,8 @@
         return true
       },
       getDropZones (day, hour) {
-        // Get all dropzones starting at the given hour
+        // Get all currently visible dropzones starting at the given day and hour
         let matches = []
-
-        // Convert hour to a number
-        hour = +hour
 
         for (let dropzone of this.dropzones) {
           if (!this.isVisibleDropzone(dropzone)) {
@@ -218,7 +216,7 @@
           }
 
           // Check that this dropzone matches the given time
-          if (dropzone.day !== day || dropzone.start !== hour) {
+          if (dropzone.day !== day || dropzone.start !== +hour) {
             continue
           }
 
