@@ -13,6 +13,7 @@ import {
   VIcon,
   VList,
   VNavigationDrawer,
+  VSwitch,
   VToolbar,
   transitions
 } from 'vuetify'
@@ -31,6 +32,7 @@ Vue.use(Vuetify, {
     VIcon,
     VList,
     VNavigationDrawer,
+    VSwitch,
     VToolbar,
     transitions
   },

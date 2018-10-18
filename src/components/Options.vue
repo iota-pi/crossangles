@@ -5,7 +5,7 @@
       :key="option.title"
       xs12 sm6
     >
-      <v-checkbox
+      <v-switch
         v-model="options"
         :value="option.value"
         :label="option.title"
@@ -13,7 +13,7 @@
         class="mt-2"
         hide-details
       >
-      </v-checkbox>
+      </v-switch>
     </v-flex>
   </v-layout>
 </template>
