@@ -11,7 +11,7 @@ function timetableToArray (timetableData, streams) {
 
   // Convert to timetable array
   for (let stream of timetableData) {
-    for (let session of stream.times) {
+    for (let session of stream.sessions) {
       let time = session.time
       let day = dayOfWeek.indexOf(time.day)
       for (let hour = time.start; hour < time.end; hour += 0.5) {
@@ -32,7 +32,7 @@ function timetableToArray (timetableData, streams) {
 }
 
 function scoreFreeDays (timetable) {
-  const freeDayScores = [140, 100, 130, 110, 150]
+  const freeDayScores = [190, 150, 180, 160, 200]
   let score = 0
 
   for (let i = 0; i < timetable.length; i += 1) {
@@ -47,7 +47,7 @@ function scoreFreeDays (timetable) {
 
 function scoreClashes (timetable, clashAllowances) {
   // NB: clash scoring is per half-hour
-  const clashScore = -200
+  const clashScore = -300
   let score = 0
 
   for (let i = 0; i < timetable.length; i += 1) {
@@ -85,7 +85,7 @@ function scoreTimes (timetableData) {
   let score = 0
 
   for (let stream of timetableData) {
-    for (let session of stream.times) {
+    for (let session of stream.sessions) {
       score += scoreClassTime(session.time.start, session.time.end)
     }
   }
@@ -146,13 +146,21 @@ function scoreDayLength (timetable) {
   return score
 }
 
-function scoreUnchanged (currentTimetable, pastTimetable) {
-  const perClass = 10
+function scoreUnchanged (timetableData, past) {
+  const perSession = 30
+  let score = 0
 
-  return perClass * 0
+  let currentSessions = timetableData.reduce((a, s) => a.concat(s.sessions), [])
+  for (let session of currentSessions) {
+    if (past.includes(session)) {
+      score += perSession
+    }
+  }
+
+  return score
 }
 
-function scoreTimetable (indexTimetable, streams) {
+function scoreTimetable (indexTimetable, pastTimetable, streams) {
   if (indexTimetable === null) {
     return null
   }
@@ -166,7 +174,7 @@ function scoreTimetable (indexTimetable, streams) {
   score += scoreTimes(timetableData)
   score += scoreProximity(timetable, timetableData)
   score += scoreDayLength(timetable)
-  score += scoreUnchanged(timetable, timetable)
+  score += scoreUnchanged(timetableData, pastTimetable)
 
   return score
 }

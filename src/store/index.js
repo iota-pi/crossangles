@@ -13,9 +13,9 @@ function parseStreams (streams, course) {
       component: stream.component,
       status: stream.status,
       enrols: stream.enrols,
-      times: null
+      sessions: null
     }
-    nextStream.times = parseTimetable(stream.times, course, nextStream)
+    nextStream.sessions = parseTimetable(stream.times, course, nextStream)
     result.push(nextStream)
   }
 

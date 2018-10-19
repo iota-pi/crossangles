@@ -99,7 +99,7 @@ function parentSort (a, b) {
 }
 
 // Create a set of random starting parents
-function abiogenesis (components, numParents, allowFull) {
+function abiogenesis (components, numParents, pastTimetable, allowFull) {
   let parents = []
 
   for (let i = 0; i < numParents; i += 1) {
@@ -118,7 +118,7 @@ function abiogenesis (components, numParents, allowFull) {
 
     // Find first valid timetable and score it
     parent.timetable = dfs(parent.components, allowFull)
-    parent.score = scoreTimetable(parent.timetable, parent.components)
+    parent.score = scoreTimetable(parent.timetable, pastTimetable, parent.components)
 
     // Check for no possible timetables
     if (parent.timetable === null) {
@@ -132,7 +132,7 @@ function abiogenesis (components, numParents, allowFull) {
 }
 
 // Mutates a parent solution to produce a child solution
-function mutate (parent, allowFull) {
+function mutate (parent, pastTimetable, allowFull) {
   let child = {
     components: [],
     timetable: null,
@@ -163,13 +163,13 @@ function mutate (parent, allowFull) {
   }
 
   // Calculate a score for this new timetable
-  child.score = scoreTimetable(child.timetable, child.components)
+  child.score = scoreTimetable(child.timetable, pastTimetable, child.components)
 
   return child
 }
 
 // Evolves given list of parents
-function evolve (parents, maxParents, maxIter, biasTop, allowFull) {
+function evolve (parents, maxParents, maxIter, biasTop, pastTimetable, allowFull) {
   if (parents === null) {
     return null
   }
@@ -182,12 +182,12 @@ function evolve (parents, maxParents, maxIter, biasTop, allowFull) {
   biasTop = biasTop || 5
 
   const startTime = (new Date()).getTime()
-  const maxRunTime = 500 // maximum time to run search in ms
+  const maxRunTime = 1000 // maximum time to run search in ms
 
   for (let i = 1; i <= maxIter; i += 1) {
     let index = Math.floor(Math.random() * (parents.length + biasTop)) % parents.length
     let parent = parents[index]
-    let child = mutate(parent, allowFull)
+    let child = mutate(parent, pastTimetable, allowFull)
 
     // If we couldn't generate a child timetable for some reason, move on to the next one
     if (child.timetable === null) {
@@ -217,7 +217,7 @@ function evolve (parents, maxParents, maxIter, biasTop, allowFull) {
 
   // Return the best timetable
   parents.sort(parentSort)
-  // console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - startTime, 'ms')
+  console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - startTime, 'ms')
   return parents[0]
 }
 
@@ -226,17 +226,18 @@ function evolve (parents, maxParents, maxIter, biasTop, allowFull) {
  */
 export default {
   methods: {
-    search (components, searchMax) {
+    search (components, searchMax, pastTimetable) {
       if (components.length === 0) {
         return { timetable: [] }
       }
 
       const allowFull = this.$store.state.options.allowFull
       const numParents = 50
-      let parents = abiogenesis(components, numParents, allowFull)
-      let best = evolve(parents, undefined, searchMax, allowFull)
+      let parents = abiogenesis(components, numParents, pastTimetable, allowFull)
+      let best = evolve(parents, undefined, searchMax, undefined, pastTimetable, allowFull)
 
       // Convert the timetable indexes to the actual stream objects
+      best.raw = best.timetable
       best.timetable = best.timetable.map((x, i) => best.components[i][x])
 
       return best

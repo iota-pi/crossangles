@@ -68,7 +68,8 @@
         lastZ: 10,
         dimensions: null,
         dragging: null,
-        timetable: []
+        timetable: [],
+        pastTimetable: []
       }
     },
     computed: {
@@ -98,8 +99,8 @@
 
         for (let course of this.$store.state.courses) {
           for (let stream of course.streams) {
-            for (let i of stream.times.keys()) {
-              let session = stream.times[i]
+            for (let i of stream.sessions.keys()) {
+              let session = stream.sessions[i]
               dropzones.push({
                 day: session.time.day,
                 start: session.time.start,
@@ -171,9 +172,9 @@
             this.dragging.snapToggle = !this.dragging.snapToggle
           } else {
             // Move all linked sessions
-            for (let i of dropzone.stream.times.keys()) {
-              let from = this.dragging.stream.times[i]
-              let to = dropzone.stream.times[i]
+            for (let i of dropzone.stream.sessions.keys()) {
+              let from = this.dragging.stream.sessions[i]
+              let to = dropzone.stream.sessions[i]
               this.timetable.splice(this.timetable.indexOf(from), 1)
               this.timetable.push(to)
             }
@@ -269,13 +270,11 @@
         }
 
         // Find the best timetable
-        let result = this.search(components)
+        let result = this.search(components, 5000, this.timetable)
 
         // Split each stream into individual sessions
         let streams = result.timetable
-        let sessions = streams.reduce((acc, stream) => {
-          return acc.concat(stream.times)
-        }, [])
+        let sessions = streams.reduce((acc, s) => acc.concat(s.sessions), [])
 
         // Commit this new timetable to the store
         this.timetable = sessions
