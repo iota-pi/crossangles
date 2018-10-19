@@ -1,6 +1,6 @@
 <template>
-  <v-list v-if="courses.length > 0" class="py-0">
-    <v-list-tile v-for="course in courses" :key="course.code">
+  <v-list v-if="chosen.length > 0" class="py-0">
+    <v-list-tile v-for="course in chosen" :key="course.code">
       <v-list-tile-content>
         <v-list-tile-title>
           {{ (course.code !== 'CBS') ? course.code : course.title }}
@@ -53,17 +53,17 @@
       }
     },
     computed: {
-      courses () {
-        return this.$store.state.courses
+      chosen () {
+        return this.$store.state.chosen
       }
     },
     methods: {
       removeCourse (course) {
-        // Reset this courses color
+        // Reset this course's color
         course.color = null
 
         // Remove this course
-        this.courses.splice(this.courses.indexOf(course), 1)
+        this.chosen.splice(this.chosen.indexOf(course), 1)
       }
     },
     components: {

@@ -30,7 +30,7 @@
         }
       },
       allEvents () {
-        let data = this.$store.state.courseData.CBS
+        let data = this.$store.state.courses.CBS
         if (!data) {
           return []
         } else {

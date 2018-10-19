@@ -5,7 +5,7 @@
     multiple
     :filter="filter"
     :search-input.sync="searchText"
-    :items="courseData"
+    :items="courses"
     item-value="code"
     return-object
     hide-selected
@@ -48,7 +48,7 @@
     computed: {
       chosen: {
         get () {
-          return this.$store.state.courses
+          return this.$store.state.chosen
         },
         set (newValue) {
           // Assign a random colour to the new course (if any)
@@ -61,15 +61,15 @@
           }
 
           // Ensure CBS course is always last
-          let mainCourses = newValue.filter(c => c.code !== 'CBS')
-          let allCourses = mainCourses.concat(newValue.filter(c => c.code === 'CBS'))
+          let courses = newValue.filter(c => c.code !== 'CBS')
+          let allChosen = courses.concat(newValue.filter(c => c.code === 'CBS'))
 
           // Commit to store
-          this.$store.commit('courses', allCourses)
+          this.$store.commit('chosen', allChosen)
         }
       },
-      courseData () {
-        let data = Object.values(this.$store.state.courseData)
+      courses () {
+        let data = Object.values(this.$store.state.courses)
 
         data.sort((a, b) => {
           let aCode = a.code.toLowerCase()

@@ -97,7 +97,7 @@
       dropzones () {
         let dropzones = []
 
-        for (let course of this.$store.state.courses) {
+        for (let course of this.$store.state.chosen) {
           for (let stream of course.streams) {
             for (let i of stream.sessions.keys()) {
               let session = stream.sessions[i]
@@ -120,7 +120,7 @@
       anythingChanges () {
         let c = this.$store.state.options.allowFull ? 1 : 0
         c += 2 * this.$store.state.events.length
-        c += 10 * this.$store.state.courses.length
+        c += 10 * this.$store.state.chosen.length
         return c
       }
     },
@@ -239,7 +239,7 @@
       updateTimetable () {
         // Group streams by component for each course
         let components = []
-        for (let course of this.$store.state.courses) {
+        for (let course of this.$store.state.chosen) {
           let newComponents = course.streams.reduce((acc, stream) => {
             // Skip any CBS activities which have been deselected
             if (course.code === 'CBS' && !this.$store.state.events.includes(stream.component)) {

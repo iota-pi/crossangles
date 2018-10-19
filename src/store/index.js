@@ -59,16 +59,16 @@ function parseTimeString (time) {
 }
 
 export default {
-  strict: process.env.NODE_ENV !== 'production',
+  // strict: process.env.NODE_ENV !== 'production',
   state: {
-    courseData: {},
-    courses: [],
+    courses: {},
+    chosen: [],
     events: [],
     options: {}
   },
   mutations: {
-    courseData (state, data) {
-      let courses = Object.assign({}, state.courseData)
+    courses (state, data) {
+      let courses = Object.assign({}, state.courses)
 
       for (let course of data) {
         let code = course.code
@@ -81,10 +81,10 @@ export default {
         courses[code].streams = parseStreams(course.streams, courses[code])
       }
 
-      state.courseData = courses
+      state.courses = courses
     },
-    courses (state, data) {
-      state.courses = data
+    chosen (state, data) {
+      state.chosen = data
     },
     events (state, data) {
       state.events = data
@@ -96,15 +96,15 @@ export default {
   actions: {
     loadData (context) {
       axios.get(dataURL).then((r) => {
-        context.commit('courseData', r.data.courses)
+        context.commit('courses', r.data.courses)
       })
       axios.get('/static/cbs.json').then((r) => {
-        context.commit('courseData', r.data)
-        if (context.state.courses.length === 0) {
-          context.commit('courses', [context.state.courseData.CBS])
+        context.commit('courses', r.data)
+        if (context.state.chosen.length === 0) {
+          context.commit('chosen', [context.state.courses.CBS])
         }
         if (context.state.events.length === 0) {
-          let components = context.state.courseData.CBS.streams.map(s => s.component)
+          let components = context.state.courses.CBS.streams.map(s => s.component)
           let events = components.filter((c, i) => components.indexOf(c) === i)
           context.commit('events', events)
         }
