@@ -4,26 +4,33 @@
  * Authors: David
  */
 
-function timetableToArray (timetableData, streams) {
+const earliestStart = 8
+
+function timetableToArray (timetableData) {
   let timetable = [ [], [], [], [], [] ]
   let clashAllowances = [ [], [], [], [], [] ]
   const dayOfWeek = ['M', 'T', 'W', 'H', 'F']
 
   // Convert to timetable array
-  for (let stream of timetableData) {
-    for (let session of stream.sessions) {
+  for (let i = 0; i < timetableData.length; i++) {
+    let sessions = timetableData[i].sessions
+    for (let j = 0; j < sessions.length; j++) {
+      let session = sessions[j]
       let time = session.time
+      let canClash = time.canClash
       let day = dayOfWeek.indexOf(time.day)
-      for (let hour = time.start; hour < time.end; hour += 0.5) {
+      let start = (time.start - earliestStart) * 2
+      let end = start + (time.end - time.start) * 2
+      for (let h = start; h < end; h++) {
         // Initialise to blank array if required
-        if (timetable[day][hour * 2] === undefined) {
-          timetable[day][hour * 2] = []
-          clashAllowances[day][hour * 2] = []
+        if (timetable[day][h] === undefined) {
+          timetable[day][h] = [ session ]
+          clashAllowances[day][h] = [ canClash ]
+        } else {
+          // Add this course to the list of courses in this half-hour slot
+          timetable[day][h].push(session)
+          clashAllowances[day][h].push(canClash)
         }
-
-        // Add this course to the list of courses in this half-hour slot
-        timetable[day][hour * 2].push(stream)
-        clashAllowances[day][hour * 2].push(time.canClash)
       }
     }
   }
@@ -62,12 +69,12 @@ function scoreClashes (timetable, clashAllowances) {
             count += 0.5
           }
         }
-        score += clashScore * Math.max(count - 1, 0)
+        score += Math.max(count - 1, 0)
       }
     }
   }
 
-  return score
+  return clashScore * score
 }
 
 function scoreClassTime (start, end) {
@@ -84,44 +91,40 @@ function scoreClassTime (start, end) {
 function scoreTimes (timetableData) {
   let score = 0
 
-  for (let stream of timetableData) {
-    for (let session of stream.sessions) {
-      score += scoreClassTime(session.time.start, session.time.end)
+  for (let i = 0; i < timetableData.length; i++) {
+    for (let j = 0; j < timetableData[i].length; j++) {
+      let time = timetableData[i][j].time
+      score += scoreClassTime(time.start, time.end)
     }
   }
 
   return score
 }
 
+// Give bonus points for CBS events being directly adjacent to other sessions
 function scoreProximity (timetable, timetableData) {
-  // This function gives bonus points for CBS events being near other events/classes
-  // NB: since CBS events are 2 half-hours long they will each automatically be
-  // given (adjacentScore * 2) points from this function
-  // i.e: the first half hour will score the second as adjacent, and vice versa
-
   const adjacentScore = 25
+  const days = ['M', 'T', 'W', 'H', 'F']
   let score = 0
 
-  for (let i = 0; i < timetable.length; i += 1) {
-    for (let j = 0; j < timetable[i].length; j += 1) {
-      if (timetable[i][j] !== undefined) {
-        for (let k = 0; k < timetable[i][j].length; k += 1) {
-          if (timetable[i][j][k].course.code === 'CBS') {
-            // Check previous half hour
-            if (timetable[i][j - 1] !== undefined) {
-              score += adjacentScore
-            }
-            // Check next half hour
-            if (timetable[i][j + 1] !== undefined) {
-              score += adjacentScore
-            }
-          }
-        }
+  for (let i = 0; i < timetableData.length; i++) {
+    if (timetableData[i].course.code === 'CBS') {
+      // NB: assumes CBS events don't have multiple sessions per stream
+      let time = timetableData[i].sessions[0].time
+      let day = days.indexOf(time.day)
+      let before = (time.start - earliestStart) * 2 - 1
+      if (timetable[day][before] !== undefined) {
+        score++
+      }
+
+      let after = (time.end - earliestStart) * 2
+      if (timetable[day][after] !== undefined) {
+        score++
       }
     }
   }
 
-  return score
+  return adjacentScore * score
 }
 
 function scoreDayLength (timetable) {
@@ -132,28 +135,33 @@ function scoreDayLength (timetable) {
     // No need to score empty days
     if (timetable[i].length > 0) {
       // Get index of first defined element in this array
-      let j
-      for (j = 0; j < timetable[i].length; j += 1) {
+      let j = 0
+      for (; j < timetable[i].length; j += 1) {
         if (timetable[i][j] !== undefined) {
           break
         }
       }
 
-      score += perHalfHour * (timetable[i].length - j)
+      score += timetable[i].length - j
     }
   }
 
-  return score
+  return perHalfHour * score
 }
 
 function scoreUnchanged (timetableData, past) {
   const perSession = 30
   let score = 0
 
-  let currentSessions = timetableData.reduce((a, s) => a.concat(s.sessions), [])
-  for (let session of currentSessions) {
-    if (past.includes(session)) {
-      score += perSession
+  for (let i = 0; i < timetableData.length; i++) {
+    let sessions = timetableData[i].sessions
+    for (let j = 0; j < sessions.length; j++) {
+      for (let k = 0; k < past.length; k++) {
+        if (sessions[j] === past[k]) {
+          score += perSession
+          break
+        }
+      }
     }
   }
 
@@ -166,7 +174,7 @@ function scoreTimetable (indexTimetable, pastTimetable, streams) {
   }
 
   let timetableData = indexTimetable.map((x, i) => streams[i][x])
-  let [ timetable, clashAllowances ] = timetableToArray(timetableData, streams)
+  let [ timetable, clashAllowances ] = timetableToArray(timetableData)
   let score = 0
 
   score += scoreFreeDays(timetable)

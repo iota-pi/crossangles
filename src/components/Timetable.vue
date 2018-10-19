@@ -268,6 +268,9 @@
           }, [])
           components = components.concat(newComponents)
         }
+        // Sort components in descending order of complexity
+        // (roll-backs are more likely to occur on less flexible streams)
+        components.sort((a, b) => a.streams.length - b.streams.length)
 
         // Find the best timetable
         let result = this.search(components, 5000, this.timetable)

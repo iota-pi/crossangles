@@ -112,8 +112,8 @@ function abiogenesis (components, numParents, pastTimetable, allowFull) {
 
     // Initialise this parent's streams to a random order within each component
     // NB: components order remains consistent
-    for (let c of components) {
-      parent.components.push(shuffleArray(c.streams.slice()))
+    for (let j = 0; j < components.length; j++) {
+      parent.components.push(shuffleArray(components[j].streams.slice()))
     }
 
     // Find first valid timetable and score it
@@ -139,8 +139,9 @@ function mutate (parent, pastTimetable, allowFull) {
     score: null
   }
 
-  for (let c of parent.components) {
-    child.components.push(c.slice())
+  let components = parent.components
+  for (let i = 0; i < components.length; i++) {
+    child.components.push(components[i].slice())
   }
 
   // `changes` is the number of shuffles to perform
@@ -217,7 +218,7 @@ function evolve (parents, maxParents, maxIter, biasTop, pastTimetable, allowFull
 
   // Return the best timetable
   parents.sort(parentSort)
-  console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - startTime, 'ms')
+  // console.log('Found timetable with score', parents[0].score, 'in', (new Date()).getTime() - startTime, 'ms')
   return parents[0]
 }
 

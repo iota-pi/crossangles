@@ -59,6 +59,7 @@ function parseTimeString (time) {
 }
 
 export default {
+  strict: process.env.NODE_ENV !== 'production',
   state: {
     courseData: {},
     courses: [],
@@ -90,9 +91,6 @@ export default {
     },
     options (state, data) {
       state.options = data
-    },
-    timetable (state, data) {
-      state.timetable = data
     }
   },
   actions: {

@@ -26,26 +26,28 @@
         allOptions: [
           {
             title: 'Show class locations',
-            value: { 'locations': true }
+            value: 'locations'
           },
           {
             title: 'Show class enrolments',
-            value: { 'enrolments': true }
+            value: 'enrolments'
           },
           {
             title: 'Include full classes',
-            value: { 'allowFull': true }
+            value: 'allowFull'
           },
           {
             title: 'Manually update timetable',
-            value: { 'manual': true }
+            value: 'manual'
           }
         ]
       }
     },
     watch: {
       options () {
-        let asObject = Object.assign({}, ...this.options)
+        let asObject = this.options.reduce((a, o) => {
+          return Object.assign(a, { [o]: true })
+        }, {})
         this.$store.commit('options', asObject)
       }
     }
