@@ -1,10 +1,6 @@
 <template>
   <div
-    class="session" :class="{ dragging: dragging }"
-    @mousedown="drag"
-    @touchstart="drag"
-    @mouseup="drop"
-    @touchend="drop"
+    class="session" :class="{ dragging: pointer !== null }"
     :style="{
       'background-color': this.session.course.color,
       left: position.x + 'px',
@@ -32,8 +28,6 @@
   export default {
     data () {
       return {
-        dragging: false,
-        startMouse: { x: 0, y: 0 },
         currentPosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
         zIndex: 1
@@ -41,15 +35,13 @@
     },
     computed: {
       position () {
-        if (this.dragging) {
-          let x = this.currentPosition.x + (this.mouse.x - this.startMouse.x)
-          let y = this.currentPosition.y + (this.mouse.y - this.startMouse.y)
+        if (this.pointer) {
+          let x = this.currentPosition.x + (this.pointer.x - this.pointer.startX)
+          let y = this.currentPosition.y + (this.pointer.y - this.pointer.startY)
 
-          // Top/Left limits
+          // Enforce position limits
           x = Math.max(x, 0)
           y = Math.max(y, 0)
-
-          // Bottom/Right limits
           x = Math.min(x, this.boundary.w - this.dimensions.w)
           y = Math.min(y, this.boundary.h - this.dimensions.h)
 
@@ -58,8 +50,14 @@
           return this.currentPosition
         }
       },
-      mouseHeld () {
-        return this.mouse.held
+      pointer () {
+        for (let p of Object.keys(this.pointers)) {
+          if (this.pointers[p].target === this.$el) {
+            return this.pointers[p]
+          }
+        }
+
+        return null
       },
       snapToggle () {
         return this.session.snapToggle
@@ -78,51 +76,35 @@
       }
     },
     methods: {
-      drag (e) {
-        if (!this.dragging) { // TODO: why is this here?
-          // Update mouse position if this is a touch start event
-          // NB: necessary since global listener won't have triggered yet
-          if (e.touches) {
-            let touch = e.touches[0]
-            this.mouse.x = touch.pageX
-            this.mouse.y = touch.pageY
-          }
-
-          // Record where the mouse is for the start of this event
-          this.startMouse = Object.assign({}, this.mouse)
-
-          // Remember starting position for later reference
-          this.currentPosition = {
-            x: parseInt(this.$el.style.left),
-            y: parseInt(this.$el.style.top)
-          }
-
-          // Register that this session is now being dragged
-          this.dragging = true
-
-          // Update z-index counter
-          this.zIndex = this.lastZ + 1
-
-          // Emit a drag event to the timetable
-          this.$emit('drag', {
-            session: this.session,
-            el: this.$el
-          })
+      drag () {
+        // Remember starting position for later reference
+        this.currentPosition = {
+          x: parseInt(this.$el.style.left),
+          y: parseInt(this.$el.style.top)
         }
+
+        // Update z-index counter
+        this.zIndex = this.lastZ + 1
+
+        // Emit a drag event to the timetable
+        this.$emit('drag', {
+          session: this.session,
+          el: this.$el
+        })
       },
-      drop (e) {
-        if (this.dragging) {
-          this.currentPosition = {
-            x: parseInt(this.$el.style.left),
-            y: parseInt(this.$el.style.top)
-          }
-          this.dragging = false
-          this.$emit('drop', {
-            session: this.session,
-            el: this.$el,
-            position: this.currentPosition
-          })
+      drop () {
+        // Remember ending position
+        this.currentPosition = {
+          x: parseInt(this.$el.style.left),
+          y: parseInt(this.$el.style.top)
         }
+
+        // Emit a drop event to the timetable
+        this.$emit('drop', {
+          session: this.session,
+          el: this.$el,
+          position: this.currentPosition
+        })
       },
       update () {
         let duration = this.session.time.end - this.session.time.start
@@ -140,8 +122,10 @@
       }
     },
     watch: {
-      mouseHeld () {
-        if (this.mouseHeld === false) {
+      pointer () {
+        if (this.pointer) {
+          this.drag()
+        } else {
           this.drop()
         }
       },
@@ -160,7 +144,7 @@
         type: Object,
         required: true
       },
-      mouse: {
+      pointers: {
         type: Object,
         required: true
       },

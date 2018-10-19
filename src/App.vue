@@ -2,7 +2,7 @@
   <v-app>
     <div
       @mousemove="mousemove"
-      @touchmove="touchmove"
+      @touchmove="mousemove"
       @mousedown="mousedown"
       @touchstart="mousedown"
       @mouseup="mouseup"
@@ -45,7 +45,7 @@
           <course-selection />
           <course-display />
           <options />
-          <timetable class="mt-4" :mouse="mouse" />
+          <timetable class="mt-4" :pointers="pointers" />
         </v-container>
       </v-content>
       <v-footer app>
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+  import Vue from 'vue'
+
   import courseSelection from './components/CourseSelection'
   import courseDisplay from './components/CourseDisplay'
   import options from './components/Options'
@@ -68,6 +70,7 @@
       return {
         drawer: false,
         mouse: { x: 0, y: 0, held: false },
+        pointers: {},
         items: [{
           icon: 'bubble_chart',
           title: 'Save as Image'
@@ -84,30 +87,70 @@
       }
     },
     methods: {
-      mousemove (e) {
-        this.mouse.x = e.pageX
-        this.mouse.y = e.pageY
-      },
-      mousedown (e) {
-        this.mouse.held = true
-      },
-      mouseup (e) {
-        this.mouse.held = false
-      },
-      touchmove (e) {
-        let touch = e.touches[0]
-
-        // Check if we are dragging an element
+      getTargetSession (targetNode) {
         let timetable = document.getElementById('timetable')
-        for (let session of timetable.querySelectorAll('.session.dragging')) {
-          if (session.contains(touch.target)) {
-            e.preventDefault()
-            break
+        let sessions = timetable.querySelectorAll('.session')
+
+        for (let session of sessions) {
+          if (session.contains(targetNode)) {
+            return session
           }
         }
 
-        this.mouse.x = touch.pageX
-        this.mouse.y = touch.pageY
+        return null
+      },
+      getPointerID (pointer) {
+        return (pointer.identifier !== undefined) ? pointer.identifier : 'mouse'
+      },
+      mousemove (e) {
+        let pointers = e.changedTouches || [ e ]
+        let dragged = false
+        for (let pointer of pointers) {
+          let id = this.getPointerID(pointer)
+
+          // Update the position of this pointer if we are tracking it
+          let tracker = this.pointers[id]
+          if (tracker) {
+            tracker.x = pointer.pageX
+            tracker.y = pointer.pageY
+            dragged = true
+          }
+        }
+
+        if (dragged && e.touches) {
+          e.preventDefault()
+        }
+      },
+      mousedown (e) {
+        // Block multiple touches
+        if (Object.keys(this.pointers).length > 0) {
+          return
+        }
+
+        let pointers = e.changedTouches || [ e ]
+        for (let pointer of pointers) {
+          let target = this.getTargetSession(pointer.target)
+          if (target !== null) {
+            let id = this.getPointerID(pointer)
+            Vue.set(this.pointers, id, {
+              x: pointer.pageX,
+              y: pointer.pageY,
+              startX: pointer.pageX,
+              startY: pointer.pageY,
+              target: target,
+              id: id
+            })
+          }
+        }
+      },
+      mouseup (e) {
+        let pointers = e.changedTouches || [ e ]
+        for (let pointer of pointers) {
+          let id = this.getPointerID(pointer)
+
+          // Stop tracking this pointer
+          Vue.delete(this.pointers, id)
+        }
       }
     },
     mounted () {
