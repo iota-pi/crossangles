@@ -76,10 +76,21 @@ class Cleaner():
 
         # Split into individual class times
         if '; ' in string:
-            output = []
+            # Split into substrings and parse them individually
+            streams = []
             for subString in string.split('; '):
-                output += self.parseTimeStr(subString)
-            return output
+                streams += self.parseTimeStr(subString)
+
+            # Remove any duplicate times
+            final = {}
+            for stream in streams:
+                if stream[0] not in final:
+                    final[stream[0]] = list(stream)
+                else:
+                    # Join weeks
+                    final[stream[0]][2] |= stream[2]
+
+            return list(map(tuple, final.values()))
 
         time = self.tidyUpTime(string.split('(', maxsplit=1)[0].strip())
         if time == None:
