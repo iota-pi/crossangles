@@ -324,6 +324,7 @@
   .timetable-holder {
     position: relative;
     overflow-x: auto;
+    z-index: 0;
   }
   .timetable {
     position: relative;

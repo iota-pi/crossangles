@@ -5,7 +5,6 @@
 ### Considerations for later:
 * Manhattan distance instead of Pythagorean for class snapping?
 * Week-intelligent clash detection
-* Fix dragged sessions showing above navbar/footer
 * Clash display
 * Save as image
 * Multi-threading for search
