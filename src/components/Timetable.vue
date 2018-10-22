@@ -20,7 +20,7 @@
       </drop-zone>
       <session
         v-for="session in timetable"
-        :key="'s' + session.course.code + session.stream.component + session.time.day + session.time.start"
+        :key="'s' + session.course.code + session.stream.component + session.index"
         :session="session"
         :pointers="pointers"
         :boundary="dimensions"
@@ -171,7 +171,9 @@
 
           if (this.dragging === dropzone.session) {
             // Reset this session's position
-            this.dragging.snapToggle = !this.dragging.snapToggle
+            for (let session of dropzone.stream.sessions) {
+              session.snapToggle = !session.snapToggle
+            }
           } else {
             // Move all linked sessions
             for (let i of dropzone.stream.sessions.keys()) {
