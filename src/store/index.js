@@ -15,14 +15,14 @@ function parseStreams (streams, course) {
       enrols: stream.enrols,
       sessions: null
     }
-    nextStream.sessions = parseTimetable(stream.times, course, nextStream)
+    nextStream.sessions = parseSessions(stream.times, course, nextStream)
     result.push(nextStream)
   }
 
   return result
 }
 
-function parseTimetable (times, course, stream) {
+function parseSessions (times, course, stream) {
   let timetable = []
 
   for (let i = 0; i < times.length; i++) {
