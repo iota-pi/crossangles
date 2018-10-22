@@ -10,7 +10,6 @@
 * Save as image
 * Multi-threading for search
 * Update sidebar menu
-* Drifting class display (when 'include full' is toggled off)
 
 ## Build Setup
 

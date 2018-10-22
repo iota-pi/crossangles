@@ -3,6 +3,7 @@
     class="session"
     :class="{
       dragging: pointer !== null,
+      'elevation-2': !elevated && !this.isSnapped,
       'elevation-8': elevated
     }"
     :style="{
@@ -34,7 +35,8 @@
       return {
         currentPosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
-        zIndex: 1
+        zIndex: 1,
+        isSnapped: null
       }
     },
     computed: {
@@ -44,21 +46,31 @@
           let y = this.currentPosition.y + (this.pointer.y - this.pointer.startY)
 
           // Enforce position limits
-          x = Math.max(x, 0)
-          y = Math.max(y, 0)
-          x = Math.min(x, this.boundary.w - this.dimensions.w)
-          y = Math.min(y, this.boundary.h - this.dimensions.h)
+          if (!this.isSnapped) {
+            x = Math.max(x, 0)
+            y = Math.max(y, 0)
+            x = Math.min(x, this.boundary.w - this.dimensions.w)
+            y = Math.min(y, this.boundary.h - this.dimensions.h)
+          }
 
           return { x, y }
         } else {
-          let position = Object.assign({}, this.currentPosition)
+          let { x, y } = this.currentPosition
 
           // Raise elevated courses a little
           if (this.elevated) {
-            position.y -= 2
+            y -= 3
           }
 
-          return position
+          // Enforce position limits
+          if (!this.isSnapped) {
+            x = Math.max(x, 0)
+            y = Math.max(y, 0)
+            x = Math.min(x, this.boundary.w - this.dimensions.w)
+            y = Math.min(y, this.boundary.h - this.dimensions.h)
+          }
+
+          return { x, y }
         }
       },
       pointer () {
@@ -84,6 +96,9 @@
         }
         let sep = (location && enrols) ? ' — ' : ''
         return location + sep + enrols
+      },
+      allowFull () {
+        return this.$store.state.options.allowFull
       }
     },
     methods: {
@@ -93,6 +108,7 @@
           x: parseInt(this.$el.style.left),
           y: parseInt(this.$el.style.top)
         }
+        this.isSnapped = false
 
         // Update z-index counter
         this.zIndex = this.lastZ + 1
@@ -132,6 +148,7 @@
           x: 71 + cellW * day,
           y: 51 + cellH * hour
         }
+        this.isSnapped = true
       }
     },
     watch: {
@@ -153,6 +170,20 @@
       },
       snapToggle () {
         this.update()
+      },
+      allowFull () {
+        // Dislodge class slightly if this stream becomes unavailable
+        if (this.session.stream.status === 0 && this.allowFull !== true) {
+          if (this.isSnapped) {
+            let dx = Math.floor(Math.random() * 30) - 15
+            let dy = Math.floor(Math.random() * 20) - 10
+            dx = (dx < 0) ? dx - 15 : dx + 16
+            dy = (dy < 0) ? dy - 10 : dy + 11
+
+            this.currentPosition.x += dx
+            this.currentPosition.y += dy
+          }
+        }
       }
     },
     mounted () {
