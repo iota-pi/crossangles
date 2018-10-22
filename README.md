@@ -6,12 +6,10 @@
 * Manhattan distance instead of Pythagorean for class snapping?
 * Week-intelligent clash detection
 * Fix dragged sessions showing above navbar/footer
-* Mark stream constraints
 * Clash display
 * Save as image
 * Multi-threading for search
 * Update sidebar menu
-* Sort timetable by component complexity (no. of streams)
 * Drifting class display (when 'include full' is toggled off)
 
 ## Build Setup

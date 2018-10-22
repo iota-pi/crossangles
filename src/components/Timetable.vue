@@ -26,6 +26,7 @@
         :boundary="dimensions"
         :lastZ="lastZ"
         :hours="bounds"
+        :elevated="dragging && dragging.stream === session.stream"
         @drag="startDrag"
         @drop="stopDrag"
       >

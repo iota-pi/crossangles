@@ -1,6 +1,10 @@
 <template>
   <div
-    class="session" :class="{ dragging: pointer !== null }"
+    class="session"
+    :class="{
+      dragging: pointer !== null,
+      'elevation-8': elevated
+    }"
     :style="{
       'background-color': this.session.course.color,
       left: position.x + 'px',
@@ -47,7 +51,14 @@
 
           return { x, y }
         } else {
-          return this.currentPosition
+          let position = Object.assign({}, this.currentPosition)
+
+          // Raise elevated courses a little
+          if (this.elevated) {
+            position.y -= 2
+          }
+
+          return position
         }
       },
       pointer () {
@@ -159,6 +170,10 @@
       hours: {
         type: Array,
         required: true
+      },
+      elevated: {
+        type: Boolean,
+        default: false
       }
     }
   }
@@ -175,9 +190,12 @@
     flex-direction: column;
     color: white;
     cursor: grab;
+
+    transition: all 0.3s;
   }
   .session.dragging {
     cursor: grabbing;
+    transition: none;
   }
 
   .course-title {
