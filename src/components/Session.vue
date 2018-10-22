@@ -118,10 +118,12 @@
         })
       },
       update () {
+        // Update width/height
         let duration = this.session.time.end - this.session.time.start
         this.dimensions.w = Math.floor((this.boundary.w - 70) / 5) - 1
         this.dimensions.h = 50 * duration - 1
 
+        // Update location
         let cellW = (this.boundary.w - 71) / 5
         let cellH = 50
         let day = ['M', 'T', 'W', 'H', 'F'].indexOf(this.session.time.day)
@@ -140,7 +142,13 @@
           this.drop()
         }
       },
+      session () {
+        this.update()
+      },
       boundary () {
+        this.update()
+      },
+      hours () {
         this.update()
       },
       snapToggle () {
