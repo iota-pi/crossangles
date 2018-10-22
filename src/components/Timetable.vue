@@ -66,7 +66,8 @@
       return {
         days: ['M', 'T', 'W', 'H', 'F'],
         lastZ: 10,
-        dimensions: null,
+        dimensions: {},
+        dimensionsInterval: null,
         dragging: null,
         timetable: [],
         pastTimetable: []
@@ -231,10 +232,8 @@
         return matches
       },
       updateDimensions () {
-        this.dimensions = {
-          w: this.$el.scrollWidth,
-          h: this.$el.scrollHeight
-        }
+        this.dimensions.h = this.$el.scrollHeight
+        this.dimensions.w = this.$el.scrollWidth
       },
       updateTimetable () {
         // Group streams by component for each course
@@ -295,6 +294,14 @@
     },
     mounted () {
       this.updateDimensions()
+
+      // Frequently update dimension measurements
+      this.dimensionsInterval = window.setInterval(this.updateDimensions, 1000)
+    },
+    beforeDestroy () {
+      // Clear interval
+      // NB: currently this component is never destroyed in normal functioning
+      window.clearInterval(this.dimensionsInterval)
     },
     components: {
       session,
