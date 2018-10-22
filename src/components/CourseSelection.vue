@@ -1,9 +1,9 @@
 <template>
   <v-autocomplete
-    v-model="chosen"
-    label="Enter your courses"
-    multiple
-    :filter="filter"
+    v-model="course"
+    label="Select your courses"
+    @input="addCourse"
+    :filter="courseFilter"
     :search-input.sync="searchText"
     :items="courses"
     item-value="code"
@@ -42,34 +42,17 @@
   export default {
     data () {
       return {
+        course: null,
         searchText: null
       }
     },
     computed: {
-      chosen: {
-        get () {
-          return this.$store.state.chosen
-        },
-        set (newValue) {
-          // Assign a random colour to the new course (if any)
-          let used = newValue.map(course => course.color)
-          for (let course of newValue) {
-            if (!course.color) {
-              course.color = choice(this.colors.filter(c => !used.includes(c)))
-              break
-            }
-          }
-
-          // Ensure CBS course is always last
-          let courses = newValue.filter(c => c.code !== 'CBS')
-          let allChosen = courses.concat(newValue.filter(c => c.code === 'CBS'))
-
-          // Commit to store
-          this.$store.commit('chosen', allChosen)
-        }
+      chosen () {
+        return this.$store.state.chosen
       },
       courses () {
         let data = Object.values(this.$store.state.courses)
+        data = data.filter(c => this.courseFilter(c, '', ''))
 
         data.sort((a, b) => {
           let aCode = a.code.toLowerCase()
@@ -92,9 +75,25 @@
       }
     },
     methods: {
-      filter (course, queryText, itemText) {
-        // Don't show Campus Bible Study as a course
-        if (course.code === 'CBS') {
+      addCourse () {
+        // Assign this course an unused color
+        let used = this.$store.state.chosen.map(course => course.color)
+        this.course.color = choice(this.colors.filter(c => !used.includes(c)))
+
+        // Add this course and then sort the list of chosen courses
+        let courses = this.chosen.slice(0, -1)
+        courses.unshift(this.course)
+        courses.sort((a, b) => (a.code > b.code) - (a.code < b.code))
+        courses.push(this.chosen[this.chosen.length - 1])
+
+        this.$store.commit('chosen', courses)
+
+        // Clear current input
+        this.course = null
+      },
+      courseFilter (course, queryText, itemText) {
+        // Don't show courses we've already chosen
+        if (this.chosen.includes(course)) {
           return false
         }
 
