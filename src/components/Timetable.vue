@@ -160,7 +160,7 @@
           }
         }
 
-        // Snap to position
+        // Snap sessions to new position
         if (nearest !== null) {
           // Find the corresponding dropzone object for the DOM element we have
           let dayIndex = Math.round(Math.max(nearest.x - 70, 0) / nearest.w)
@@ -170,12 +170,12 @@
           let dropzone = this.getDropZones(day, hour)[0]
 
           if (this.dragging === dropzone.session) {
-            // Reset this session's position
+            // Snap all sessions in this stream back to their base position
             for (let session of dropzone.stream.sessions) {
               session.snapToggle = !session.snapToggle
             }
           } else {
-            // Move all linked sessions
+            // Move all linked sessions to new stream locations
             for (let i of dropzone.stream.sessions.keys()) {
               let from = this.dragging.stream.sessions[i]
               let to = dropzone.stream.sessions[i]
