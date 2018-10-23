@@ -38,6 +38,9 @@
     watch: {
       dropzone () {
         this.update()
+      },
+      boundary () {
+        this.update()
       }
     },
     mounted () {

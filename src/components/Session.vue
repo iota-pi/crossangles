@@ -36,7 +36,8 @@
         currentPosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
         zIndex: 1,
-        isSnapped: null
+        isSnapped: null,
+        timer: null
       }
     },
     computed: {
@@ -133,11 +134,14 @@
           position: this.currentPosition
         })
       },
-      update () {
-        // Update width/height
+      updateDimensions () {
         let duration = this.session.time.end - this.session.time.start
         this.dimensions.w = Math.floor((this.boundary.w - 70) / 5) - 1
         this.dimensions.h = 50 * duration - 1
+      },
+      update () {
+        // Update width/height
+        this.updateDimensions()
 
         // Update location
         let cellW = (this.boundary.w - 71) / 5
@@ -163,7 +167,20 @@
         this.update()
       },
       boundary () {
-        this.update()
+        // Temporarily disable transition
+        this.$el.style.transition = 'none'
+
+        if (this.isSnapped) {
+          this.update()
+        } else {
+          this.updateDimensions()
+        }
+
+        // Re-enable transition once DOM has been updated
+        if (this.timer) {
+          window.clearTimeout(this.timer)
+        }
+        this.timer = window.setTimeout(() => (this.$el.style.transition = ''), 10)
       },
       hours () {
         this.update()
@@ -230,7 +247,7 @@
     color: white;
     cursor: grab;
 
-    transition: all 0.3s;
+    transition: box-shadow 0.3s, left 0.3s, top 0.3s;
   }
   .session.dragging {
     cursor: grabbing;

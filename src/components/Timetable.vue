@@ -235,8 +235,10 @@
         return matches
       },
       updateDimensions () {
-        this.dimensions.h = this.$el.scrollHeight
-        this.dimensions.w = this.$el.scrollWidth
+        this.dimensions = {
+          w: this.$el.scrollWidth,
+          h: this.$el.scrollHeight
+        }
       },
       updateTimetable () {
         // Group streams by component for each course
