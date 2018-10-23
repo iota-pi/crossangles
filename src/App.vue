@@ -64,8 +64,10 @@
         </v-container>
       </v-content>
       <v-footer app>
-        <v-container fluid class="py-0">
-          <span>Data updated: blah blah blah</span>
+        <v-container class="py-0">
+          <span>Last data update:</span>
+          <span>{{ meta.updateTime }}</span>
+          <span class="faded">({{ meta.updateDate }})</span>
         </v-container>
       </v-footer>
     </div>
@@ -102,6 +104,11 @@
           }
         ],
         title: 'CrossAngles'
+      }
+    },
+    computed: {
+      meta () {
+        return this.$store.state.meta
       }
     },
     methods: {
@@ -185,7 +192,10 @@
 </script>
 
 <style scoped>
- .container.narrow {
-   max-width: 900px;
- }
+  .container.narrow {
+    max-width: 900px;
+  }
+  .faded {
+    opacity: 0.8;
+  }
 </style>

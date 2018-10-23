@@ -62,6 +62,7 @@ export default {
   // strict: process.env.NODE_ENV !== 'production',
   state: {
     courses: {},
+    meta: {},
     chosen: [],
     events: [],
     options: {}
@@ -83,6 +84,9 @@ export default {
 
       state.courses = courses
     },
+    meta (state, data) {
+      state.meta = data
+    },
     chosen (state, data) {
       state.chosen = data
     },
@@ -97,6 +101,7 @@ export default {
     loadData (context) {
       axios.get(dataURL).then((r) => {
         context.commit('courses', r.data.courses)
+        context.commit('meta', r.data.meta)
 
         if (context.state.chosen.length === 0) {
           context.commit('chosen', [context.state.courses.CBS])
