@@ -293,6 +293,9 @@
           this.updateTimetable()
         }
       },
+      updateToggle () {
+        this.updateTimetable()
+      },
       bounds () {
         this.$nextTick(this.updateDimensions)
       }
@@ -317,6 +320,10 @@
       pointers: {
         type: Object,
         required: true
+      },
+      updateToggle: {
+        type: Boolean,
+        default: false
       }
     }
   }

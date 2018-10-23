@@ -45,7 +45,22 @@
           <course-selection />
           <course-display />
           <options />
-          <timetable class="mt-4" :pointers="pointers" />
+          <v-slide-y-transition>
+            <v-layout class="pt-3" v-if="this.$store.state.options.manual">
+              <v-btn
+                block
+                color="secondary"
+                @click="timetableToggle = !timetableToggle"
+              >
+                Generate New Timetable
+              </v-btn>
+          </v-layout>
+        </v-slide-y-transition>
+          <timetable
+            class="mt-4"
+            :pointers="pointers"
+            :updateToggle="timetableToggle"
+          />
         </v-container>
       </v-content>
       <v-footer app>
@@ -71,18 +86,21 @@
         drawer: false,
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
-        items: [{
-          icon: 'bubble_chart',
-          title: 'Save as Image'
-        },
-        {
-          icon: 'bubble_chart',
-          title: 'Reset Page'
-        },
-        {
-          icon: 'bubble_chart',
-          title: 'Save a Backup'
-        }],
+        timetableToggle: false,
+        items: [
+          {
+            icon: 'bubble_chart',
+            title: 'Save as Image'
+          },
+          {
+            icon: 'bubble_chart',
+            title: 'Reset Page'
+          },
+          {
+            icon: 'bubble_chart',
+            title: 'Save a Backup'
+          }
+        ],
         title: 'CrossAngles'
       }
     },
