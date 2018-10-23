@@ -3,7 +3,7 @@
 > The easiest way to plan your UNSW timetable for next semester
 
 ### Considerations for later:
-* Manhattan distance instead of Pythagorean for class snapping?
+* Instructional text
 * Week-intelligent clash detection
 * Clash display
 * Save as image

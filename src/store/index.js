@@ -97,9 +97,7 @@ export default {
     loadData (context) {
       axios.get(dataURL).then((r) => {
         context.commit('courses', r.data.courses)
-      })
-      axios.get('/static/cbs.json').then((r) => {
-        context.commit('courses', r.data)
+
         if (context.state.chosen.length === 0) {
           context.commit('chosen', [context.state.courses.CBS])
         }

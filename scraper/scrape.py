@@ -76,7 +76,7 @@ class Parser():
 
     def getFacultyPages(self, startUrl):
         soup = self.loadPages(startUrl).__next__()
-        links = soup.find_all(href=re.compile('[^Z][A-Z]{3}_[ST]' + self.term + '.html$'))
+        links = soup.find_all(href=re.compile('[A-Y][A-Z]{3}_[ST]' + self.term + '.html$'))
         links = [link.get('href') for link in links]
 
         # Convert to urls and load the pages
@@ -107,27 +107,9 @@ class Parser():
                 yield BeautifulSoup(response, features=self.parser)
 
     def getUGCourses(self):
-        url = 'https://www.handbook.unsw.edu.au/api/es/search'
-
-        if url in self.cache:
-            handbook = json.loads(self.cache[url])
-        else:
-            print('Loading handbook')
-            with open('handbook.json') as f:
-                payload = json.load(f)
-            handbook = requests.post(url, json=payload)
-            text = str(handbook.content, encoding='utf-8')
-            self.cache[url] = text
-            handbook = json.loads(text)
-            print('Done')
-
-        mappingUG = {}
-        for course in handbook['contentlets']:
-            code = course['code']
-            name = course['name']
-            mappingUG[code] = name
-
-        return mappingUG
+        with open('courses.json') as f:
+            courses = json.load(f)
+        return courses
 
     def writeCache(self):
         with open(self.cacheName, 'w') as f:

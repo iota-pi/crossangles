@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 from collections import defaultdict
 import json
@@ -6,6 +7,8 @@ import re
 class Cleaner():
     def __init__(self):
         self.weekMax = 2 ** 13 - 1
+        with open('cbs.json') as f:
+            self.cbs = json.load(f)
 
     def process(self, courses):
         for course in courses:
@@ -62,6 +65,9 @@ class Cleaner():
             # Remove any newly marked streams
             for stream in toDelete:
                 course['streams'].remove(stream)
+
+        # Include Campus Bible Study data
+        courses.append(self.cbs)
 
         return courses
 
