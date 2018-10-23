@@ -3,12 +3,12 @@
 > The easiest way to plan your UNSW timetable for next semester
 
 ### Considerations for later:
-* Instructional text
 * Week-intelligent clash detection
 * Clash display
 * Save as image
 * Multi-threading for search
 * Update sidebar menu
+* Remember state across page loads
 
 ## Build Setup
 

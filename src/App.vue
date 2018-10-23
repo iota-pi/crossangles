@@ -42,6 +42,20 @@
 
       <v-content>
         <v-container class="narrow">
+          <div class="font-weight-light subheading">
+            <p>
+              Welcome to <span class="font-weight-regular">{{ title }}</span>!
+              To get started with planning your timetable for
+              <span class="font-weight-regular">Term {{ meta.term }}, {{ meta.year }}</span>
+              select the courses you've enrolled in below.
+            </p>
+            <p>
+              To make the most out of this tool, don't miss out on personalising your timetable by
+              <span class="font-weight-regular">dragging classes around</span> to suit you better,
+              <span class="font-weight-regular">changing the color</span> for each of your courses,
+              and <span class="font-weight-regular">saving your timetable as an image</span> when you're done.
+            </p>
+          </div>
           <course-selection />
           <course-display />
           <options />
@@ -54,13 +68,31 @@
               >
                 Generate New Timetable
               </v-btn>
-          </v-layout>
-        </v-slide-y-transition>
+            </v-layout>
+          </v-slide-y-transition>
           <timetable
             class="mt-4"
             :pointers="pointers"
             :updateToggle="timetableToggle"
           />
+          <div class="font-weight-light pt-5">
+            <p>
+              This tool is provided free by
+              <span class="font-weight-regular">
+                <a href="https://www.campusbiblestudy.org/">Campus Bible Study</a>
+              </span>
+              a group at UNSW for anyone who is interested in investigating
+              what the Bible has to say.
+              If you've never come before we recommend checking out one of the
+              Bible talks.
+              The talks are intended for both non-Christians and Christians.
+            </p>
+            <p>
+              This tool comes without any gaurantee of data accuracy.
+              The data is updated frequently using
+              <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>
+            </p>
+          </div>
         </v-container>
       </v-content>
       <v-footer app>
