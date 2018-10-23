@@ -95,7 +95,7 @@
           </div>
         </v-container>
       </v-content>
-      <v-footer app>
+      <v-footer>
         <v-container class="py-0">
           <span>Last data update:</span>
           <span>{{ meta.updateTime }}</span>
