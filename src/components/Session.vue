@@ -12,9 +12,17 @@
       top: position.y + 'px',
       width: dimensions.w + 'px',
       height: dimensions.h + 'px',
-      'z-index': Math.min(zIndex, lastZ)
+      'z-index': zIndex
     }"
   >
+    <clash
+      v-if="clashing"
+      :boundary="boundary"
+      :firstHour="hours[0]"
+      :day="session.time.day"
+      :time="session.time.start"
+      :duration="session.time.end - session.time.start"
+    />
     <div class="course-title">
       <span v-if="session.course.code !== 'CBS'" class="emphasis">
         {{ session.course.code }}:
@@ -30,14 +38,15 @@
 </template>
 
 <script>
+  import clash from './Clash'
+
   export default {
     data () {
       return {
         currentPosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
         zIndex: 1,
-        isSnapped: null,
-        timer: null
+        isSnapped: null
       }
     },
     computed: {
@@ -112,7 +121,7 @@
         this.isSnapped = false
 
         // Update z-index counter
-        this.zIndex = this.lastZ + 1
+        this.zIndex = 10
 
         // Emit a drag event to the timetable
         this.$emit('drag', {
@@ -121,6 +130,8 @@
         })
       },
       drop () {
+        this.zIndex = 2
+
         // Remember ending position
         this.currentPosition = {
           x: parseInt(this.$el.style.left),
@@ -167,20 +178,11 @@
         this.update()
       },
       boundary () {
-        // Temporarily disable transition
-        this.$el.style.transition = 'none'
-
         if (this.isSnapped) {
           this.update()
         } else {
           this.updateDimensions()
         }
-
-        // Re-enable transition once DOM has been updated
-        if (this.timer) {
-          window.clearTimeout(this.timer)
-        }
-        this.timer = window.setTimeout(() => (this.$el.style.transition = ''), 10)
       },
       hours () {
         this.update()
@@ -199,12 +201,16 @@
 
             this.currentPosition.x += dx
             this.currentPosition.y += dy
+            this.isSnapped = false
           }
         }
       }
     },
     mounted () {
       this.update()
+    },
+    components: {
+      clash
     },
     props: {
       session: {
@@ -213,10 +219,6 @@
       },
       pointers: {
         type: Object,
-        required: true
-      },
-      lastZ: {
-        type: Number,
         required: true
       },
       boundary: {
@@ -228,6 +230,10 @@
         required: true
       },
       elevated: {
+        type: Boolean,
+        default: false
+      },
+      clashing: {
         type: Boolean,
         default: false
       }
