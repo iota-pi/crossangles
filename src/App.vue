@@ -96,7 +96,7 @@
         </v-container>
       </v-content>
       <v-footer>
-        <v-container class="py-0">
+        <v-container class="py-0 narrow">
           <span>Last data update:</span>
           <span>{{ meta.updateTime }}</span>
           <span class="faded">({{ meta.updateDate }})</span>
