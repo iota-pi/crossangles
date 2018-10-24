@@ -6,8 +6,7 @@
       left: position.x + 'px',
       top: position.y + 'px',
       width: position.w + 'px',
-      height: position.h + 'px',
-      'z-index': lastZ - 1
+      height: position.h + 'px'
     }"
   >
   </div>
@@ -47,10 +46,6 @@
       this.update()
     },
     props: {
-      lastZ: {
-        type: Number,
-        required: true
-      },
       dropzone: {
         type: Object,
         required: true
@@ -69,6 +64,7 @@
 
 <style scoped>
   .dropzone {
+    z-index: 4;
     position: absolute;
     width: 100%;
     height: 100%;

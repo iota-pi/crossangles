@@ -14,23 +14,22 @@
         v-if="isVisibleDropzone(dropzone)"
         :dropzone="dropzone"
         :boundary="dimensions"
-        :lastZ="lastZ"
         :hours="bounds"
-      >
-      </drop-zone>
+      />
       <session
         v-for="session in timetable"
         :key="'s' + session.course.code + session.stream.component + session.index"
         :session="session"
         :pointers="pointers"
         :boundary="dimensions"
-        :lastZ="lastZ"
         :hours="bounds"
         :elevated="dragging && dragging.stream === session.stream"
+        :clashing="clashes.includes(session)"
         @drag="startDrag"
         @drop="stopDrag"
-      >
-      </session>
+      />
+
+      <!-- Draw timetable grid -->
       <div class="tt-row header">
         <div class="tt-col"></div>
         <div class="tt-col">Monday</div>
@@ -66,7 +65,6 @@
     data () {
       return {
         days: ['M', 'T', 'W', 'H', 'F'],
-        lastZ: 10,
         dimensions: {},
         dimensionsInterval: null,
         dragging: null,
@@ -119,6 +117,35 @@
 
         return dropzones
       },
+      clashes () {
+        let clashMap = { M: [], T: [], W: [], H: [], F: [] }
+        for (let session of this.timetable) {
+          if (session.time.canClash) {
+            continue
+          }
+
+          let day = session.time.day
+          for (let i = session.time.start * 2; i < session.time.end * 2; i++) {
+            if (clashMap[day][i]) {
+              clashMap[day][i].push(session)
+            } else {
+              clashMap[day][i] = [ session ]
+            }
+          }
+        }
+
+        let clashes = []
+        for (let day in clashMap) {
+          for (let hour of clashMap[day]) {
+            if (hour && hour.length > 1 && !hour.includes(this.dragging)) {
+              for (let session of hour) {
+                clashes.push(session)
+              }
+            }
+          }
+        }
+        return clashes.filter((s, i) => clashes.indexOf(s) === i)
+      },
       anythingChanges () {
         let c = this.$store.state.options.allowFull ? 1 : 0
         c += 2 * this.$store.state.events.length
@@ -128,8 +155,9 @@
     },
     methods: {
       startDrag (e) {
-        this.lastZ += 1
         this.dragging = e.session
+        this.timetable.splice(this.timetable.indexOf(e.session), 1)
+        this.timetable.push(e.session)
       },
       stopDrag (e) {
         // Find the nearest dropzone
@@ -304,7 +332,9 @@
       this.updateDimensions()
 
       // Frequently update dimension measurements
-      this.dimensionsInterval = window.setInterval(this.updateDimensions, 1000)
+      this.dimensionsInterval = window.setInterval(() => {
+        this.updateDimensions()
+      }, 3000)
     },
     beforeDestroy () {
       // Clear interval
