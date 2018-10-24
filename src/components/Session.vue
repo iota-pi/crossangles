@@ -15,14 +15,16 @@
       'z-index': zIndex
     }"
   >
-    <clash
-      v-if="clashing"
-      :boundary="boundary"
-      :firstHour="hours[0]"
-      :day="session.time.day"
-      :time="session.time.start"
-      :duration="session.time.end - session.time.start"
-    />
+    <v-fade-transition>
+      <clash
+        v-if="clashing"
+        :boundary="boundary"
+        :firstHour="hours[0]"
+        :day="session.time.day"
+        :time="session.time.start"
+        :duration="session.time.end - session.time.start"
+      />
+    </v-fade-transition>
     <div class="course-title">
       <span v-if="session.course.code !== 'CBS'" class="emphasis">
         {{ session.course.code }}:
