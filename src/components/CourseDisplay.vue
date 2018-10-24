@@ -64,6 +64,7 @@
 
         // Remove this course
         this.chosen.splice(this.chosen.indexOf(course), 1)
+        this.$store.commit('chosen', this.chosen)
       }
     },
     components: {
