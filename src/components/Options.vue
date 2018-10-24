@@ -22,7 +22,6 @@
   export default {
     data () {
       return {
-        options: [],
         allOptions: [
           {
             title: 'Show class locations',
@@ -43,12 +42,17 @@
         ]
       }
     },
-    watch: {
-      options () {
-        let asObject = this.options.reduce((a, o) => {
-          return Object.assign(a, { [o]: true })
-        }, {})
-        this.$store.commit('options', asObject)
+    computed: {
+      options: {
+        get () {
+          return Object.keys(this.$store.state.options)
+        },
+        set (newValue) {
+          let asObject = newValue.reduce((a, o) => {
+            return Object.assign(a, { [o]: true })
+          }, {})
+          this.$store.commit('options', asObject)
+        }
       }
     }
   }
