@@ -16,7 +16,7 @@
   .clash-line-start {
     position: absolute;
     background-color: #000;
-    width: 3px;
+    width: 4px;
     top: 0px;
     bottom: 0px;
     left: 0px;
@@ -24,7 +24,7 @@
   .clash-line-end {
     position: absolute;
     background-color: #000;
-    width: 3px;
+    width: 4px;
     top: 0px;
     bottom: 0px;
     right: 0px;
