@@ -4,7 +4,6 @@
 
 ### Considerations for later:
 * Week-intelligent clash detection
-* Clash display
 * Save as image
 * Multi-threading for search
 * Update sidebar menu

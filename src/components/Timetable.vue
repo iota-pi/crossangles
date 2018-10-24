@@ -68,6 +68,7 @@
         dimensions: {},
         dimensionsInterval: null,
         dragging: null,
+        snapped: [],
         timetable: [],
         pastTimetable: []
       }
@@ -120,7 +121,7 @@
       clashes () {
         let clashMap = { M: [], T: [], W: [], H: [], F: [] }
         for (let session of this.timetable) {
-          if (session.time.canClash) {
+          if (session.time.canClash || !this.snapped.includes(session)) {
             continue
           }
 
@@ -158,6 +159,9 @@
         this.dragging = e.session
         this.timetable.splice(this.timetable.indexOf(e.session), 1)
         this.timetable.push(e.session)
+
+        let snappedIndex = this.snapped.indexOf(e.session)
+        if (snappedIndex > 1) this.snapped.splice(snappedIndex, 1)
       },
       stopDrag (e) {
         // Find the nearest dropzone
@@ -201,6 +205,8 @@
             // Snap all sessions in this stream back to their base position
             for (let session of dropzone.stream.sessions) {
               session.snapToggle = !session.snapToggle
+
+              this.snapped.push(session)
             }
           } else {
             // Move all linked sessions to new stream locations
@@ -209,6 +215,8 @@
               let to = dropzone.stream.sessions[i]
               this.timetable.splice(this.timetable.indexOf(from), 1)
               this.timetable.push(to)
+
+              this.snapped.push(to)
             }
           }
         }
@@ -313,6 +321,7 @@
 
         // Commit this new timetable to the store
         this.timetable = sessions
+        this.snapped = sessions.slice()
       }
     },
     watch: {
