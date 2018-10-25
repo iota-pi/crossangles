@@ -19,6 +19,7 @@ import {
 } from 'vuetify'
 import { Resize } from 'vuetify/lib/directives'
 import '../node_modules/vuetify/src/stylus/app.styl'
+
 import App from './App'
 import _store from './store'
 

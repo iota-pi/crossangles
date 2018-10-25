@@ -3,6 +3,7 @@ import _colors from '../components/mixins/colors'
 let colors = _colors.data()
 
 const dataURL = '/static/tt.json'
+const storage = window.localStorage
 
 function parseStreams (streams, course) {
   let result = []
@@ -59,13 +60,14 @@ function parseTimeString (time) {
 }
 
 export default {
-  // strict: process.env.NODE_ENV !== 'production',
   state: {
     courses: {},
     meta: {},
     chosen: [],
     events: [],
-    options: {}
+    options: {},
+    timetable: [],
+    loading: true
   },
   mutations: {
     courses (state, data) {
@@ -89,28 +91,121 @@ export default {
     },
     chosen (state, data) {
       state.chosen = data
+
+      storage.setItem('chosen', JSON.stringify(data.map(c => {
+        return {
+          code: c.code,
+          color: c.color
+        }
+      })))
     },
     events (state, data) {
       state.events = data
+
+      storage.setItem('events', JSON.stringify(data))
     },
     options (state, data) {
       state.options = data
+
+      storage.setItem('options', JSON.stringify(data))
+    },
+    timetable (state, data) {
+      state.timetable = data
+
+      storage.setItem('timetable', JSON.stringify(data.map(session => {
+        return {
+          code: session.course.code,
+          component: session.stream.component,
+          time: session.time,
+          index: session.index
+        }
+      })))
+    },
+    loading (state, data) {
+      state.loading = data
     }
   },
   actions: {
     loadData (context) {
+      let chosen = storage.getItem('chosen')
+      let events = storage.getItem('events')
+      let options = storage.getItem('options')
+      let timetable = storage.getItem('timetable')
+
       axios.get(dataURL).then((r) => {
         context.commit('courses', r.data.courses)
         context.commit('meta', r.data.meta)
 
-        if (context.state.chosen.length === 0) {
+        if (chosen) {
+          // Restore previously chosen courses
+          chosen = JSON.parse(chosen)
+          let restored = []
+          for (let course of chosen) {
+            context.state.courses[course.code].color = course.color
+            restored.push(context.state.courses[course.code])
+          }
+
+          context.commit('chosen', restored)
+        } else {
+          // Default to just CBS chosen
           context.commit('chosen', [context.state.courses.CBS])
         }
-        if (context.state.events.length === 0) {
+
+        if (events) {
+          // Restore previously selected events
+          events = JSON.parse(events)
+          context.commit('events', events)
+        } else {
+          // Default to all CBS events
           let components = context.state.courses.CBS.streams.map(s => s.component)
           let events = components.filter((c, i) => components.indexOf(c) === i)
           context.commit('events', events)
         }
+
+        if (options) {
+          // Restore previously selected options
+          options = JSON.parse(options)
+          context.commit('options', options)
+        } else {
+          // Default to none selected
+          context.commit('options', [])
+        }
+
+        if (timetable) {
+          timetable = JSON.parse(timetable)
+
+          let restored = []
+          for (let item of timetable) {
+            let course = context.state.courses[item.code]
+            let stream = course.streams.filter(s => {
+              if (s.component !== item.component) {
+                return false
+              }
+
+              if (s.sessions[item.index].time.day !== item.time.day) {
+                return false
+              }
+              if (s.sessions[item.index].time.start !== item.time.start) {
+                return false
+              }
+              if (s.sessions[item.index].time.end !== item.time.end) {
+                return false
+              }
+
+              return true
+            })[0]
+            restored.push(stream.sessions[item.index])
+          }
+
+          context.commit('timetable', restored)
+        } else {
+          // Default to empty timetable
+          context.commit('timetable', [])
+        }
+
+        // Disable the loading block on auto timetable updating
+        // NB: this block exists to prevent restored timetable being overwritten
+        window.setTimeout(() => context.commit('loading', false), 100)
       })
     }
   }

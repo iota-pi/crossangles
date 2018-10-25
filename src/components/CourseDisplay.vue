@@ -55,6 +55,9 @@
     computed: {
       chosen () {
         return this.$store.state.chosen
+      },
+      chosenColors () {
+        return this.chosen.map(c => c.color)
       }
     },
     methods: {
@@ -64,6 +67,12 @@
 
         // Remove this course
         this.chosen.splice(this.chosen.indexOf(course), 1)
+        this.$store.commit('chosen', this.chosen)
+      }
+    },
+    watch: {
+      chosenColors () {
+        // Re-commit chosen courses when colour changes
         this.$store.commit('chosen', this.chosen)
       }
     },

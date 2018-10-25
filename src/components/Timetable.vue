@@ -69,11 +69,18 @@
         dimensionsInterval: null,
         dragging: null,
         snapped: [],
-        timetable: [],
         pastTimetable: []
       }
     },
     computed: {
+      timetable: {
+        get () {
+          return this.$store.state.timetable
+        },
+        set (newValue) {
+          return this.$store.commit('timetable', newValue)
+        }
+      },
       bounds () {
         // Find starting and ending points of the timetable
         let start = 24
@@ -217,6 +224,8 @@
               this.timetable.push(to)
 
               this.snapped.push(to)
+
+              this.$store.commit('timetable', this.timetable)
             }
           }
         }
@@ -326,7 +335,7 @@
     },
     watch: {
       anythingChanges () {
-        if (!this.$store.state.options.manual) {
+        if (!this.$store.state.loading && !this.$store.state.options.manual) {
           this.updateTimetable()
         }
       },

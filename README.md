@@ -7,7 +7,6 @@
 * Save as image
 * Multi-threading for search
 * Update sidebar menu
-* Remember state across page loads
 
 ## Build Setup
 
