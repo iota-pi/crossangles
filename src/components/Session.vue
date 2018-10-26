@@ -259,7 +259,7 @@
   }
   .session.dragging {
     cursor: grabbing;
-    transition: none;
+    transition: box-shadow 0.3s;
   }
 
   .course-title {
