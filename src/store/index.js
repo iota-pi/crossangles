@@ -207,6 +207,15 @@ export default {
         // NB: this block exists to prevent restored timetable being overwritten
         window.setTimeout(() => context.commit('loading', false), 100)
       })
+    },
+    reset (context) {
+      const CBS = context.state.courses.CBS
+      let components = CBS.streams.map(s => s.component)
+      let events = components.filter((c, i) => components.indexOf(c) === i)
+      context.commit('chosen', [CBS])
+      context.commit('events', events)
+      context.commit('options', [])
+      context.commit('timetable', [])
     }
   }
 }
