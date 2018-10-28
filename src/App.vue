@@ -29,6 +29,7 @@
             value="true"
             v-for="(item, i) in items"
             :key="i"
+            @click="item.action"
           >
             <v-list-tile-action>
               <v-icon v-html="item.icon"></v-icon>
@@ -56,8 +57,10 @@
               and <span class="font-weight-regular">saving your timetable as an image</span> when you're done.
             </p>
           </div>
+
           <course-selection />
           <course-display />
+
           <options />
           <v-slide-y-transition>
             <v-layout class="pt-3" v-if="this.$store.state.options.manual">
@@ -70,6 +73,7 @@
               </v-btn>
             </v-layout>
           </v-slide-y-transition>
+
           <timetable
             class="mt-4"
             :pointers="pointers"
@@ -95,24 +99,41 @@
           </div>
         </v-container>
       </v-content>
-      <v-footer>
-        <v-container class="py-0 narrow">
-          <span>Last data update:</span>
-          <span>{{ meta.updateTime }}</span>
-          <span class="faded">({{ meta.updateDate }})</span>
+      <v-footer height="auto">
+        <v-container class="py-2 narrow">
+          <v-layout row wrap>
+            <v-flex xs12 sm9 class="py-1">
+              <span>Last data update:</span>
+              <span>{{ meta.updateTime }}</span>
+              <span class="faded">({{ meta.updateDate }})</span>
+            </v-flex>
+
+            <v-flex xs12 sm3 class="py-1 text-sm-right">
+              <a @click="contactDialog = true; contactTitle = null">
+                Get in Contact
+              </a>
+            </v-flex>
+          </v-layout>
         </v-container>
       </v-footer>
     </div>
+    <contact
+      :display="contactDialog"
+      :title="contactTitle || 'Get in Contact'"
+      @hide="contactDialog = false"
+    />
   </v-app>
 </template>
 
 <script>
   import Vue from 'vue'
+  import axios from 'axios'
 
   import courseSelection from './components/CourseSelection'
   import courseDisplay from './components/CourseDisplay'
   import options from './components/Options'
   import timetable from './components/Timetable'
+  import contact from './components/Contact'
 
   export default {
     data () {
@@ -121,6 +142,8 @@
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
         timetableToggle: false,
+        contactDialog: false,
+        contactTitle: null,
         items: [
           {
             icon: 'bubble_chart',
@@ -208,6 +231,28 @@
           // Stop tracking this pointer
           Vue.delete(this.pointers, id)
         }
+      },
+      save () {
+        axios.post('https://' + process.env.DOMAIN + '/timetable/', {
+          width: this.$refs.timetable.scrollWidth,
+          height: this.$refs.timetable.scrollHeight,
+          data: this.$refs.timetable.outerHTML.replace(/\s*/g, '')
+        })
+        this.drawer = false
+      },
+      reset () {
+        this.$store.dispatch('reset')
+        this.drawer = false
+      },
+      report () {
+        this.contactDialog = true
+        this.contactTitle = 'Report a Bug'
+        this.drawer = false
+      },
+      contact () {
+        this.contactDialog = true
+        this.contactTitle = null
+        this.drawer = false
       }
     },
     mounted () {
@@ -218,7 +263,8 @@
       courseSelection,
       courseDisplay,
       options,
-      timetable
+      timetable,
+      contact
     }
   }
 </script>

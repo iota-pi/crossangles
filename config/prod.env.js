@@ -1,3 +1,4 @@
 module.exports = {
-  NODE_ENV: '"production"'
+  NODE_ENV: '"production"',
+  DOMAIN: '"dev.my.campusbiblestudy.org"'
 }
