@@ -27,6 +27,7 @@
         :clashes="getClashingSessions(session)"
         @drag="startDrag"
         @drop="stopDrag"
+        @unSnap="unSnap"
       />
 
       <!-- Draw timetable grid -->
@@ -144,7 +145,9 @@
         this.timetable.push(e.session)
 
         let snappedIndex = this.snapped.indexOf(e.session)
-        if (snappedIndex > 1) this.snapped.splice(snappedIndex, 1)
+        if (snappedIndex !== -1) {
+          this.snapped.splice(snappedIndex, 1)
+        }
       },
       stopDrag (e) {
         // Find the nearest dropzone
@@ -209,6 +212,12 @@
 
         // Drag released
         this.dragging = null
+      },
+      unSnap (e) {
+        let snappedIndex = this.snapped.indexOf(e.session)
+        if (snappedIndex !== -1) {
+          this.snapped.splice(snappedIndex, 1)
+        }
       },
       isVisibleDropzone (dropzone) {
         if (!this.dragging) {
@@ -327,7 +336,11 @@
 
           // Commit this new timetable to the store
           this.timetable = sessions
+
           this.snapped = sessions.slice()
+          for (let session of this.snapped) {
+            session.snapToggle = !session.snapToggle
+          }
         } else {
           // No timetable was able to be made
           if (!this.allowFull) {

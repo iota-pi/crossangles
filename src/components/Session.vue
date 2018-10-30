@@ -202,6 +202,9 @@
             this.currentPosition.x += dx
             this.currentPosition.y += dy
             this.isSnapped = false
+            this.$emit('unSnap', {
+              session: this.session
+            })
           }
         }
       }
