@@ -227,12 +227,16 @@ function evolve (parents, maxParents, maxIter, biasTop, pastTimetable, allowFull
  */
 export default {
   methods: {
-    search (components, searchMax, pastTimetable) {
+    search (components, searchMax, pastTimetable, allowFullOveride) {
       if (components.length === 0) {
         return { timetable: [] }
       }
 
-      const allowFull = this.$store.state.options.allowFull
+      let allowFull = allowFullOveride
+      if (allowFull === undefined) {
+        allowFull = this.$store.state.options.allowFull
+      }
+
       const numParents = 50
       let parents = abiogenesis(components, numParents, pastTimetable, allowFull)
       if (parents === null) {

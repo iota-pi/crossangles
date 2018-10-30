@@ -152,12 +152,14 @@
           }
         }
         return clashes.filter((s, i) => clashes.indexOf(s) === i)
+      allowFull () {
+        return this.$store.state.options.allowFull
       },
-      anythingChanges () {
-        let c = this.$store.state.options.allowFull ? 1 : 0
-        c += 2 * this.$store.state.events.length
-        c += 10 * this.$store.state.chosen.length
-        return c
+      events () {
+        return this.$store.state.events.length
+      },
+      chosen () {
+        return this.$store.state.chosen.length
       },
       loading () {
         return this.$store.state.loading
@@ -287,7 +289,7 @@
           h: this.$el.scrollHeight
         }
       },
-      updateTimetable () {
+      updateTimetable (allowFullOveride) {
         // Group streams by component for each course
         let components = []
         for (let course of this.$store.state.chosen) {
@@ -324,7 +326,7 @@
         components.sort((a, b) => a.streams.length - b.streams.length)
 
         // Find the best timetable
-        let result = this.search(components, 5000, this.timetable)
+        let result = this.search(components, 5000, this.timetable, allowFullOveride)
 
         // Split each stream into individual sessions
         if (result !== null) {
@@ -335,21 +337,37 @@
           this.snapped = sessions.slice()
         } else {
           // No timetable was able to be made
-          // Automatically enable full classes (if not already)
-          if (!this.$store.state.options.allowFull) {
-            this.$store.commit('options', Object.assign(this.$store.state.options, { allowFull: true }))
+          // Automatically enable full classes (if not already enabled, and not just disabled)
+          if (!this.allowFull && (allowFullOveride !== false)) {
+            this.$store.commit('options', Object.assign({}, this.$store.state.options, { allowFull: true }))
 
             // Display a warning message
-            this.$store.commit('alert', 'No valid timetable found, retrying including full classes')
+            this.$store.commit('alert', {
+              message: 'No valid timetable found, retrying including full classes',
+              error: true
+            })
           } else {
             // Display a warning message
-            this.$store.commit('alert', 'Could not create a valid timetable')
+            this.$store.commit('alert', {
+              message: 'Could not create a valid timetable',
+              error: true
+            })
           }
         }
       }
     },
     watch: {
-      anythingChanges () {
+      allowFull () {
+        if (!this.loading && !this.$store.state.options.manual) {
+          this.updateTimetable(this.allowFull)
+        }
+      },
+      events () {
+        if (!this.loading && !this.$store.state.options.manual) {
+          this.updateTimetable()
+        }
+      },
+      chosen () {
         if (!this.loading && !this.$store.state.options.manual) {
           this.updateTimetable()
         }
