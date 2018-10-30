@@ -159,6 +159,9 @@
         c += 2 * this.$store.state.events.length
         c += 10 * this.$store.state.chosen.length
         return c
+      },
+      loading () {
+        return this.$store.state.loading
       }
     },
     methods: {
@@ -335,10 +338,16 @@
     },
     watch: {
       anythingChanges () {
-        if (!this.$store.state.loading && !this.$store.state.options.manual) {
+        if (!this.loading && !this.$store.state.options.manual) {
           this.updateTimetable()
         }
       },
+      loading () {
+        if (!this.loading) {
+          // Update snapped sessions following timetable restore
+          this.snapped = this.timetable.slice()
+        }
+      }
       updateToggle () {
         this.updateTimetable()
       },
