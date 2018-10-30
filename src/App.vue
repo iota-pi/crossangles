@@ -79,6 +79,15 @@
             :pointers="pointers"
             :updateToggle="timetableToggle"
           />
+
+          <v-layout class="font-weight-light pt-4" row>
+            <v-flex class="text-xs-center">
+              <v-btn color="primary" @click="save">
+                Save Timetable as Image
+              </v-btn>
+            </v-flex>
+          </v-layout>
+
           <div class="font-weight-light pt-5">
             <p>
               This tool is provided free by
@@ -127,13 +136,14 @@
 
 <script>
   import Vue from 'vue'
-  import axios from 'axios'
 
   import courseSelection from './components/CourseSelection'
   import courseDisplay from './components/CourseDisplay'
   import options from './components/Options'
   import timetable from './components/Timetable'
   import contact from './components/Contact'
+
+  import image from './components/mixins/image'
 
   export default {
     data () {
@@ -146,16 +156,24 @@
         contactTitle: null,
         items: [
           {
-            icon: 'bubble_chart',
-            title: 'Save as Image'
+            icon: 'photo',
+            title: 'Save as Image',
+            action: this.save
           },
           {
-            icon: 'bubble_chart',
-            title: 'Reset Page'
+            icon: 'refresh',
+            title: 'Reset Page',
+            action: this.reset
           },
           {
-            icon: 'bubble_chart',
-            title: 'Save a Backup'
+            icon: 'bug_report',
+            title: 'Report a Bug',
+            action: this.report
+          },
+          {
+            icon: 'email',
+            title: 'Get in Contact',
+            action: this.contact
           }
         ],
         title: 'CrossAngles'
@@ -233,11 +251,7 @@
         }
       },
       save () {
-        axios.post('https://' + process.env.DOMAIN + '/timetable/', {
-          width: this.$refs.timetable.scrollWidth,
-          height: this.$refs.timetable.scrollHeight,
-          data: this.$refs.timetable.outerHTML.replace(/\s*/g, '')
-        })
+        this.saveTimetable()
         this.drawer = false
       },
       reset () {
@@ -265,7 +279,8 @@
       options,
       timetable,
       contact
-    }
+    },
+    mixins: [ image ]
   }
 </script>
 
