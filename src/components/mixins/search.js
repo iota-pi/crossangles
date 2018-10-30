@@ -49,7 +49,6 @@ function shuffleArray (array) {
 
 // Perform a depth-first search to try find a valid timetable
 function dfs (components, allowFull, initTimetable, initIndex) {
-  let streamNo
   let timetable = initTimetable || []
   let i = initIndex || 0
 
@@ -60,6 +59,7 @@ function dfs (components, allowFull, initTimetable, initIndex) {
     }
   }
 
+  let streamNo
   while (i < components.length) {
     // Pick the next *valid* stream for this component
     // NB: valid stream = not full OR we are allow to choose full classes
@@ -235,6 +235,12 @@ export default {
       const allowFull = this.$store.state.options.allowFull
       const numParents = 50
       let parents = abiogenesis(components, numParents, pastTimetable, allowFull)
+      if (parents === null) {
+        // No possible timetables
+        return null
+      }
+
+      // Evolve from initial solutions to find the best timetable
       let best = evolve(parents, undefined, searchMax, undefined, pastTimetable, allowFull)
 
       // Convert the timetable indexes to the actual stream objects

@@ -67,6 +67,7 @@ export default {
     events: [],
     options: {},
     timetable: [],
+    alert: null,
     loading: true
   },
   mutations: {
@@ -120,6 +121,9 @@ export default {
           index: session.index
         }
       })))
+    },
+    alert (state, data) {
+      state.alert = data
     },
     loading (state, data) {
       state.loading = data

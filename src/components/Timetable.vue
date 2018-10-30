@@ -327,12 +327,25 @@
         let result = this.search(components, 5000, this.timetable)
 
         // Split each stream into individual sessions
-        let streams = result.timetable
-        let sessions = streams.reduce((acc, s) => acc.concat(s.sessions), [])
+        if (result !== null) {
+          let sessions = result.timetable.reduce((acc, s) => acc.concat(s.sessions), [])
 
-        // Commit this new timetable to the store
-        this.timetable = sessions
-        this.snapped = sessions.slice()
+          // Commit this new timetable to the store
+          this.timetable = sessions
+          this.snapped = sessions.slice()
+        } else {
+          // No timetable was able to be made
+          // Automatically enable full classes (if not already)
+          if (!this.$store.state.options.allowFull) {
+            this.$store.commit('options', Object.assign(this.$store.state.options, { allowFull: true }))
+
+            // Display a warning message
+            this.$store.commit('alert', 'No valid timetable found, retrying including full classes')
+          } else {
+            // Display a warning message
+            this.$store.commit('alert', 'Could not create a valid timetable')
+          }
+        }
       }
     },
     watch: {
