@@ -75,7 +75,7 @@
           </v-slide-y-transition>
 
           <timetable
-            class="mt-4"
+            class="mt-5"
             :pointers="pointers"
             :updateToggle="timetableToggle"
           />
