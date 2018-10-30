@@ -58,10 +58,13 @@
         }).then(() => {
           this.$store.commit('alert', {
             message: 'Success. Thanks for getting in contact!',
-            error: false
+            type: 'success'
           })
         }).catch(error => {
-          this.$store.commit(error.response.data.error)
+          this.$store.commit('alert', {
+            message: error.response.data.error,
+            type: 'error'
+          })
         })
         this.$emit('hide')
       }

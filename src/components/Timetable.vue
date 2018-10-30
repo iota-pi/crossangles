@@ -330,20 +330,25 @@
           this.snapped = sessions.slice()
         } else {
           // No timetable was able to be made
-          // Automatically enable full classes (if not already enabled, and not just disabled)
-          if (!this.allowFull && (allowFullOveride !== false)) {
-            this.$store.commit('options', Object.assign({}, this.$store.state.options, { allowFull: true }))
-
-            // Display a warning message
-            this.$store.commit('alert', {
-              message: 'No valid timetable found, retrying including full classes',
-              error: true
-            })
+          if (!this.allowFull) {
+            // Automatically enable full classes (if not already enabled, and not just disabled)
+            if (allowFullOveride !== false) {
+              this.$store.commit('options', Object.assign({}, this.$store.state.options, { allowFull: true }))
+              this.$store.commit('alert', {
+                message: 'No valid timetable found, retrying including full classes',
+                type: 'warning'
+              })
+            } else {
+              this.$store.commit('alert', {
+                message: 'Some classes have been displaced',
+                type: 'warning'
+              })
+            }
           } else {
             // Display a warning message
             this.$store.commit('alert', {
               message: 'Could not create a valid timetable',
-              error: true
+              type: 'error'
             })
           }
         }
@@ -352,7 +357,7 @@
     watch: {
       allowFull () {
         if (!this.loading && !this.$store.state.options.manual) {
-          this.updateTimetable(this.allowFull)
+          this.updateTimetable(this.allowFull || false)
         }
       },
       events () {
