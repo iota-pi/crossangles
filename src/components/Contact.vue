@@ -1,38 +1,26 @@
 <template>
-  <div>
-    <v-dialog v-model="show" :max-width="700">
-      <v-card>
-        <v-card-title class="pb-2">
-          <span class="headline">{{ title }}</span>
-        </v-card-title>
+  <v-dialog v-model="show" :max-width="700">
+    <v-card>
+      <v-card-title class="pb-2">
+        <span class="headline">{{ title }}</span>
+      </v-card-title>
 
-        <v-card-text class="pt-0">
-          <v-text-field v-model="name" label="Your Name" hide-details>
-          </v-text-field>
-          <v-text-field v-model="email" type="email" label="Your Email" hide-details>
-          </v-text-field>
-          <v-textarea v-model="body" label="What would you like us to know?" rows="4" :counter="5000">
-          </v-textarea>
-        </v-card-text>
+      <v-card-text class="pt-0">
+        <v-text-field v-model="name" label="Your Name" hide-details>
+        </v-text-field>
+        <v-text-field v-model="email" type="email" label="Your Email" hide-details>
+        </v-text-field>
+        <v-textarea v-model="body" label="What would you like us to know?" rows="4" :counter="5000">
+        </v-textarea>
+      </v-card-text>
 
-        <v-card-actions>
-          <v-btn block color="primary" @click="submit" :disabled="disabled">
-            Submit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-snackbar v-model="showMessage" :timeout="5000" class="close">
-      {{ resultMessage }}
-      <v-spacer />
-      <v-btn dark flat icon @click="showMessage = false">
-        <v-icon>
-          close
-        </v-icon>
-      </v-btn>
-    </v-snackbar>
-  </div>
+      <v-card-actions>
+        <v-btn block color="primary" @click="submit" :disabled="disabled">
+          Submit
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -43,9 +31,7 @@
       return {
         name: null,
         email: null,
-        body: null,
-        showMessage: false,
-        resultMessage: null
+        body: null
       }
     },
     computed: {
@@ -70,12 +56,12 @@
           email: this.email,
           body: this.body
         }).then(() => {
-          this.showMessage = true
-          this.resultMessage = 'Success. Thanks for getting in contact!'
+          this.$store.commit('alert', {
+            message: 'Success. Thanks for getting in contact!',
+            error: false
+          })
         }).catch(error => {
-          this.showMessage = true
-          console.log(error.response)
-          this.resultMessage = error.response.data.error
+          this.$store.commit(error.response.data.error)
         })
         this.$emit('hide')
       }

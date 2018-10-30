@@ -131,6 +131,7 @@
       :title="contactTitle || 'Get in Contact'"
       @hide="contactDialog = false"
     />
+    <alert />
   </v-app>
 </template>
 
@@ -142,6 +143,7 @@
   import options from './components/Options'
   import timetable from './components/Timetable'
   import contact from './components/Contact'
+  import alert from './components/Alert'
 
   import image from './components/mixins/image'
 
@@ -278,7 +280,8 @@
       courseDisplay,
       options,
       timetable,
-      contact
+      contact,
+      alert
     },
     mixins: [ image ]
   }
