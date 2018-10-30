@@ -221,16 +221,17 @@
             }
           } else {
             // Move all linked sessions to new stream locations
+            let localTimetable = this.timetable.slice()
             for (let i of dropzone.stream.sessions.keys()) {
               let from = this.dragging.stream.sessions[i]
               let to = dropzone.stream.sessions[i]
-              this.timetable.splice(this.timetable.indexOf(from), 1)
-              this.timetable.push(to)
+              localTimetable.splice(localTimetable.indexOf(from), 1)
+              localTimetable.push(to)
 
               this.snapped.push(to)
-
-              this.$store.commit('timetable', this.timetable)
             }
+
+            this.$store.commit('timetable', localTimetable)
           }
         }
 
