@@ -4,7 +4,6 @@
 
 ### Considerations for later:
 * Week-based clash detection
-* Allowed clash display
 * Custom commitments
 * Show which campus the course is on?
 * Multi-threading for search

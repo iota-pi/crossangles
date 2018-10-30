@@ -1,32 +1,42 @@
 <template>
-  <div class="clash-line">
-    <div class="clash-line-start"></div>
-    <div class="clash-line-end"></div>
+  <div class="clash" :class="{ allowed: allowed }">
+    <div class="left"></div>
+    <div class="right"></div>
   </div>
 </template>
 
 <script>
-  export default {}
+  export default {
+    props: {
+      allowed: {
+        type: Boolean,
+        default: false
+      }
+    }
+  }
 </script>
 
 <style scoped>
-  .clash-line {
-    z-index: 3;
-  }
-  .clash-line-start {
-    position: absolute;
-    background-color: #000;
-    width: 4px;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-  }
-  .clash-line-end {
-    position: absolute;
-    background-color: #000;
-    width: 4px;
-    top: 0px;
-    bottom: 0px;
-    right: 0px;
-  }
+.left, .right {
+  width: 5px;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  background-color: #000;
+  border-color: #D32F2F;
+  border-style: solid;
+  border-width: 0px;
+  transition: border-color 0.3s;
+}
+.allowed .left, .allowed .right {
+  border-color: #FFA000;
+}
+.left {
+  left: 0px;
+  border-left-width: 2px;
+}
+.right {
+  right: 0px;
+  border-right-width: 2px;
+}
 </style>
