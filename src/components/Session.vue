@@ -17,12 +17,8 @@
   >
     <v-fade-transition>
       <clash
-        v-if="clashing"
-        :boundary="boundary"
-        :firstHour="hours[0]"
-        :day="session.time.day"
-        :time="session.time.start"
-        :duration="session.time.end - session.time.start"
+        v-if="clashes.length > 1"
+        :allowed="clashes.filter(s => s.time.canClash === false).length <= 1"
       />
     </v-fade-transition>
     <div class="label">
@@ -71,7 +67,8 @@
 
           // Raise elevated courses a little
           if (this.elevated) {
-            y -= 3
+            x -= 2
+            y -= 4
           }
 
           // Enforce position limits
@@ -236,8 +233,8 @@
         type: Boolean,
         default: false
       },
-      clashing: {
-        type: Boolean,
+      clashes: {
+        type: Array,
         default: false
       }
     }
@@ -268,6 +265,11 @@
     line-height: 1.25;
   }
   .session > .label > .em {
+    font-weight: 500;
+  }
+  .blur {
+    color: transparent;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 1);
     font-weight: 500;
   }
 

@@ -24,7 +24,7 @@
         :boundary="dimensions"
         :hours="bounds"
         :elevated="dragging && dragging.stream === session.stream"
-        :clashing="clashes.includes(session)"
+        :clashes="getClashingSessions(session)"
         @drag="startDrag"
         @drop="stopDrag"
       />
@@ -124,34 +124,6 @@
 
         return dropzones
       },
-      clashes () {
-        let clashMap = { M: [], T: [], W: [], H: [], F: [] }
-        for (let session of this.timetable) {
-          if (session.time.canClash || !this.snapped.includes(session)) {
-            continue
-          }
-
-          let day = session.time.day
-          for (let i = session.time.start * 2; i < session.time.end * 2; i++) {
-            if (clashMap[day][i]) {
-              clashMap[day][i].push(session)
-            } else {
-              clashMap[day][i] = [ session ]
-            }
-          }
-        }
-
-        let clashes = []
-        for (let day in clashMap) {
-          for (let hour of clashMap[day]) {
-            if (hour && hour.length > 1 && !hour.includes(this.dragging)) {
-              for (let session of hour) {
-                clashes.push(session)
-              }
-            }
-          }
-        }
-        return clashes.filter((s, i) => clashes.indexOf(s) === i)
       allowFull () {
         return this.$store.state.options.allowFull
       },
@@ -283,6 +255,26 @@
         }
 
         return matches
+      },
+      getClashingSessions (base) {
+        let clashing = []
+        if (this.snapped.includes(base)) {
+          for (let session of this.timetable) {
+            if (!this.snapped.includes(session)) {
+              continue
+            }
+
+            if (session.time.day !== base.time.day) {
+              continue
+            }
+
+            if (session.time.start < base.time.end && session.time.end > base.time.start) {
+              clashing.push(session)
+            }
+          }
+        }
+
+        return clashing
       },
       updateDimensions () {
         this.dimensions = {
