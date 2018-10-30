@@ -25,11 +25,11 @@
         :duration="session.time.end - session.time.start"
       />
     </v-fade-transition>
-    <div class="course-title">
-      <span v-if="session.course.code !== 'CBS'" class="emphasis">
+    <div class="label">
+      <span v-if="session.course.code !== 'CBS'" class="em">
         {{ session.course.code }}:
       </span>
-      <span :class="{ emphasis: session.course.code === 'CBS' }">
+      <span :class="{ em: session.course.code === 'CBS' }">
         {{ session.stream.component }}
       </span>
     </div>
@@ -166,6 +166,7 @@
           y: 51 + cellH * hour
         }
         this.isSnapped = true
+        this.zIndex = 1
       }
     },
     watch: {
@@ -262,11 +263,11 @@
     transition: box-shadow 0.3s;
   }
 
-  .course-title {
+  .session > .label {
     text-align: center;
     line-height: 1.25;
   }
-  .course-title > .emphasis {
+  .session > .label > .em {
     font-weight: 500;
   }
 

@@ -4,7 +4,7 @@
     v-resize="updateDimensions"
   >
     <div
-      class="timetable noselect"
+      class="timetable"
       ref="timetable"
       id="timetable"
     >
@@ -30,18 +30,17 @@
       />
 
       <!-- Draw timetable grid -->
-      <div class="tt-row header">
-        <div class="tt-col"></div>
-        <div class="tt-col">Monday</div>
-        <div class="tt-col">Tuesday</div>
-        <div class="tt-col">Wednesday</div>
-        <div class="tt-col">Thursday</div>
-        <div class="tt-col">Friday</div>
+      <div class="row header">
+        <div></div>
+        <div>Monday</div>
+        <div>Tuesday</div>
+        <div>Wednesday</div>
+        <div>Thursday</div>
+        <div>Friday</div>
       </div>
-      <div class="tt-row" v-for="hour in hours" :key="'tthour' + hour">
-        <div class="tt-col">{{ hour }}:00</div>
-        <div class="tt-col" v-for="day in days" :key="'ttcell' + day + hour">
-        </div>
+      <div class="row" v-for="hour in hours" :key="'tthour' + hour">
+        <div>{{ hour }}:00</div>
+        <div v-for="day in days" :key="'ttcell' + day + hour"></div>
       </div>
     </div>
   </div>
@@ -347,7 +346,7 @@
           // Update snapped sessions following timetable restore
           this.snapped = this.timetable.slice()
         }
-      }
+      },
       updateToggle () {
         this.updateTimetable()
       },
@@ -395,18 +394,26 @@
   .timetable {
     position: relative;
     overflow-x: visible;
+
+    /* prevent selection */
+  	-webkit-touch-callout: none;
+  	-webkit-user-select: none;
+  	-khtml-user-select: none;
+  	-moz-user-select: none;
+  	-ms-user-select: none;
+  	user-select: none;
   }
 
-  .tt-row {
+  .row {
     display: flex;
     height: 50px;
   }
-  .tt-row.header {
+  .row.header {
     font-weight: 500;
     font-size: 120%;
   }
 
-  .tt-col {
+  .row > div {
     position: relative;
     flex: 1 1 100%;
     border-style: solid;
@@ -416,27 +423,19 @@
     border-top-width: 1px;
     min-width: 120px;
   }
-  .tt-col:first-child {
+  .row > div:first-child {
     min-width: 70px;
     flex: 0 0 70px;
   }
-  .tt-row.header > .tt-col, .tt-col:first-child {
+  .row.header > div, .row > div:first-child {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .tt-col:last-child {
+  .row > div:last-child {
     border-right-width: 1px;
   }
-  .tt-row:last-child > .tt-col {
+  .row:last-child > div {
     border-bottom-width: 1px;
-  }
-  .noselect {
-  	-webkit-touch-callout: none;
-  	-webkit-user-select: none;
-  	-khtml-user-select: none;
-  	-moz-user-select: none;
-  	-ms-user-select: none;
-  	user-select: none;
   }
 </style>
