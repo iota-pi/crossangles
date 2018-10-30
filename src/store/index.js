@@ -172,7 +172,7 @@ export default {
           context.commit('options', options)
         } else {
           // Default to none selected
-          context.commit('options', [])
+          context.commit('options', {})
         }
 
         if (timetable) {
@@ -218,7 +218,7 @@ export default {
       let events = components.filter((c, i) => components.indexOf(c) === i)
       context.commit('chosen', [CBS])
       context.commit('events', events)
-      context.commit('options', [])
+      context.commit('options', {})
       context.commit('timetable', [])
     }
   }
