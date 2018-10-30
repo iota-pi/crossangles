@@ -10,9 +10,11 @@ $body = substr(filter_var($data['body'], FILTER_SANITIZE_FULL_SPECIAL_CHARS), 0,
         "\r\n\r\n------\r\nThis is an automated email sent from CrossAngles.\r\n" .
         "Sender name: $name\r\n";
 if (!$email) {
+  http_response_code(400);
   $result['success'] = false;
   $result['error'] = 'Invalid email address!';
 } else if (!$body) {
+  http_response_code(400);
   $result['success'] = false;
   $result['error'] = 'Message should not be empty';
 } else if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -20,6 +22,7 @@ if (!$email) {
   if ($success) {
     $result['success'] = true;
   } else {
+    http_response_code(400);
     $result['success'] = false;
     $result['error'] = 'An error occured';
   }
