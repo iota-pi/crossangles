@@ -32,6 +32,14 @@ export default {
         clone.removeChild(rows[i])
       }
 
+      // Get the height of this cut-down timetable
+      // NB: must temporarily add it to DOM to do so
+      clone.style.position = 'absolute'
+      clone.style.visibility = 'hidden'
+      document.body.appendChild(clone)
+      let height = clone.scrollHeight
+      document.body.removeChild(clone)
+
       // Get HTML string for timetable
       let timetableHTML = clone.outerHTML
       // Remove unused classes
@@ -51,7 +59,7 @@ export default {
 
       axios.post('https://' + process.env.DOMAIN + '/image.php', {
         width: timetable.scrollWidth,
-        height: timetable.scrollHeight,
+        height: height,
         timetable: timetableHTML
       }).then(r => {
         download('data:image/png;base64,' + r.data, 'timetable.png', 'image/png')
