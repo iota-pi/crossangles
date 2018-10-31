@@ -2,7 +2,9 @@
 /* Simple script to send email from contact form
  */
 
-$DOMAIN = 'dev.my.campusbiblestudy.org';
+$DOMAIN = json_decode(file_get_contents('config/domain.json'));
+$KEYS = json_decode(file_get_contents('config/keys.json'));
+$KEY = $KEYS[array_rand($KEYS)];
 
 $data = json_decode(file_get_contents('php://input'), true);
 $width = min($data['width'], 900);
@@ -15,7 +17,7 @@ $html = '<html><head><title>Unit Schedule</title>' .
         substr($data['timetable'], 0, 20000) .
         '</body></html>';
 
-$url = 'https://phantomjscloud.com/api/browser/v2/ak-9tcg0-2mz50-jn8n9-d2y7z-p4jd7/';
+$url = "https://phantomjscloud.com/api/browser/v2/$KEY/";
 $payload = array(
   'url' => 'about:blank',
   'content' => $html,
@@ -36,12 +38,12 @@ $payload = array(
       ),
       // Allow CSS links from my.campusbiblestudy.org and Google fonts
       array(
-        'regex' => 'https://((dev\.)?my\.campusbiblestudy\.org|fonts\.googleapis\.com)/.*\.css.*',
+        'regex' => '^https://((dev\.)?my\.campusbiblestudy\.org|fonts\.googleapis\.com)/.*\.?css.*$',
         'isBlacklisted' => false
       ),
-      // Allow all navigation requests
+      // Allow initial page request
       array(
-        'category' => 'navigationRequest',
+        'regex' => '^https?://localhost/blank$',
         'isBlacklisted' => false
       )
     )
@@ -58,9 +60,10 @@ $payload = array(
   ),
   'backend' => 'chrome'
 );
+$payloadLength = strlen(json_encode($payload));
 $options = array(
   'http' => array(
-    'header' => "Content-Type: application/json\r\nContent-Length: " . strlen(json_encode($payload)) . "\r\n",
+    'header' => "Content-Type: application/json\r\nContent-Length: " . $payloadLength . "\r\n",
     'method' => 'POST',
     'content' => json_encode($payload)
   )
@@ -68,7 +71,6 @@ $options = array(
 
 $context  = stream_context_create($options);
 $result = file_get_contents($url, false, $context);
-$basename = 'timetable.png';
 
 if ($result === false) {
   http_response_code(400);
