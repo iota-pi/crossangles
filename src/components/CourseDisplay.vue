@@ -63,7 +63,7 @@
     methods: {
       removeCourse (course) {
         // Reset this course's color
-        course = Object.assign({}, course, { color: null })
+        course.color = null
 
         // Remove this course
         let chosen = this.chosen.slice()
