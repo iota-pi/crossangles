@@ -63,11 +63,12 @@
     methods: {
       removeCourse (course) {
         // Reset this course's color
-        course.color = null
+        course = Object.assign({}, course, { color: null })
 
         // Remove this course
-        this.chosen.splice(this.chosen.indexOf(course), 1)
-        this.$store.commit('chosen', this.chosen)
+        let chosen = this.chosen.slice()
+        chosen.splice(chosen.indexOf(course), 1)
+        this.$store.commit('chosen', chosen)
       }
     },
     watch: {
