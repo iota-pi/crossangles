@@ -1,8 +1,9 @@
 <template>
   <v-autocomplete
     v-model="course"
-    label="Select your courses"
     @input="addCourse"
+    ref="courseSelect"
+    label="Select your courses"
     :filter="courseFilter"
     :search-input.sync="searchText"
     :items="courses"
@@ -76,20 +77,24 @@
     },
     methods: {
       addCourse () {
-        // Assign this course an unused color
-        let used = this.$store.state.chosen.map(course => course.color)
-        this.course.color = choice(this.colors.filter(c => !used.includes(c)))
+        // Check course has been set (this function is called when field is cleared too)
+        if (this.course) {
+          // Assign this course an unused color
+          let used = this.$store.state.chosen.map(course => course.color)
+          this.course.color = choice(this.colors.filter(c => !used.includes(c)))
 
-        // Add this course and then sort the list of chosen courses
-        let courses = this.chosen.slice(0, -1)
-        courses.push(this.course)
-        courses.sort((a, b) => (a.code > b.code) - (a.code < b.code))
-        courses.push(this.chosen[this.chosen.length - 1])
+          // Add this course and then sort the list of chosen courses
+          let courses = this.chosen.slice(0, -1)
+          courses.push(this.course)
+          courses.sort((a, b) => (a.code > b.code) - (a.code < b.code))
+          courses.push(this.chosen[this.chosen.length - 1])
 
-        this.$store.commit('chosen', courses)
+          this.$store.commit('chosen', courses)
 
-        // Clear current input
-        this.course = null
+          // Clear current input
+          this.$refs.courseSelect.reset()
+          this.$refs.courseSelect.blur()
+        }
       },
       courseFilter (course, queryText, itemText) {
         // Don't show courses we've already chosen
