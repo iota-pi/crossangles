@@ -57,7 +57,7 @@ export default {
       // Remove empty classes
       timetableHTML = timetableHTML.replace(/class="\s*"/g, '')
 
-      axios.post('https://' + process.env.DOMAIN + '/image.php', {
+      axios.post('https://' + process.env.DOMAIN + '/timetable/', {
         width: timetable.scrollWidth,
         height: height,
         timetable: timetableHTML
