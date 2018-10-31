@@ -28,8 +28,8 @@ $payload = array(
     'ignoreImages' => true,       // no need to load any images
     'waitInterval' => 0,
     'webSecurityEnabled' => true,
-    'resourceTimeout' => 5000,    // maximum wait for a resource
-    'maxWait' => 7000,            // maximum wait for the whole page
+    'resourceTimeout' => 3000,    // maximum wait for a resource
+    'maxWait' => 5000,            // maximum wait for the whole page
     'resourceModifier' => array(
       // Blacklist all resources, except for what we explicitly allow later
       array(
