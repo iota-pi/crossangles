@@ -90,20 +90,24 @@
 
           <div class="font-weight-light pt-5">
             <p>
-              This tool is provided free by
+              This tool is provided by
               <span class="font-weight-regular">
                 <a href="https://www.campusbiblestudy.org/">Campus Bible Study</a>
               </span>
-              a group at UNSW for anyone who is interested in investigating
-              what the Bible has to say.
-              If you've never come before we recommend checking out one of the
-              Bible talks.
-              The talks are intended for both non-Christians and Christians.
+              — a group at UNSW for people who are interested in
+              investigating what the Bible has to say.
+              If you've never come before, we recommend checking out the
+              public Bible talks at least once.
+              Whether you're a Christian or you've never picked up a Bible before,
+              we'd love you to come along.
             </p>
             <p>
-              This tool comes without any gaurantee of data accuracy.
-              The data is updated frequently using
-              <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>
+              The data was last updated at {{ meta.updateTime }}
+              <span class="faded">({{ meta.updateDate }})</span>
+              from <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>.
+              This tool comes without any guarantee of data accuracy or completeness.
+              Some possibilities may not be displayed, such as online WEB streams
+              for some courses.
             </p>
           </div>
         </v-container>
