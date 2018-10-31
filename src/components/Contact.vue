@@ -91,9 +91,3 @@
     }
   }
 </script>
-
-<style scoped>
-  .v-snack.close .v-snack__content {
-    padding-right: 8px;
-  }
-</style>
