@@ -39,6 +39,8 @@ export default {
       document.body.appendChild(clone)
       let height = clone.scrollHeight
       document.body.removeChild(clone)
+      clone.style.removeProperty('position')
+      clone.style.removeProperty('visibility')
 
       // Get HTML string for timetable
       let timetableHTML = clone.outerHTML
