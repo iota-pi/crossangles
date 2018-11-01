@@ -12,7 +12,7 @@
       top: position.y + 'px',
       width: dimensions.w + 'px',
       height: dimensions.h + 'px',
-      'z-index': zIndex
+      'z-index': Math.max(zIndex, (elevated || !this.isSnapped) ? 3 : 0)
     }"
   >
     <v-fade-transition>
