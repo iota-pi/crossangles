@@ -270,15 +270,16 @@
   .session > .label > .em {
     font-weight: 500;
   }
-  .blur {
-    color: transparent;
-    text-shadow: 0 0 12px rgba(255, 255, 255, 1);
-    font-weight: 500;
-  }
 
   .details {
     text-align: center;
     line-height: 1.1;
     font-size: 80%;
+  }
+
+  .blur {
+    color: transparent;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 1);
+    font-weight: 500;
   }
 </style>
