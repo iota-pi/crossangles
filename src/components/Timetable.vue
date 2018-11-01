@@ -23,7 +23,7 @@
         :pointers="pointers"
         :boundary="dimensions"
         :hours="bounds"
-        :elevated="dragging && dragging.stream === session.stream"
+        :elevated="isElevated(session)"
         :clashes="getClashingSessions(session)"
         @drag="startDrag"
         @drop="stopDrag"
@@ -141,8 +141,6 @@
     methods: {
       startDrag (e) {
         this.dragging = e.session
-        this.timetable.splice(this.timetable.indexOf(e.session), 1)
-        this.timetable.push(e.session)
 
         let snappedIndex = this.snapped.indexOf(e.session)
         if (snappedIndex !== -1) {
@@ -284,6 +282,25 @@
         }
 
         return clashing
+      },
+      isElevated (session) {
+        if (!this.dragging) {
+          return false
+        }
+
+        if (this.dragging.course.code !== session.course.code) {
+          return false
+        }
+
+        if (this.dragging.stream.component !== session.stream.component) {
+          return false
+        }
+
+        if (this.dragging.index === session.index) {
+          return false
+        }
+
+        return true
       },
       updateDimensions () {
         this.dimensions = {
@@ -479,5 +496,9 @@
   }
   .row:last-child > div {
     border-bottom-width: 1px;
+  }
+
+  .transform-transition {
+    transition: transform 1s;
   }
 </style>
