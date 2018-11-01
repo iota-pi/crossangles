@@ -1,8 +1,5 @@
 <template>
-  <div class="clash" :class="{ allowed: allowed }">
-    <div class="left"></div>
-    <div class="right"></div>
-  </div>
+  <div class="clash" :class="{ allowed: allowed }"></div>
 </template>
 
 <script>
@@ -17,7 +14,8 @@
 </script>
 
 <style scoped>
-.left, .right {
+.clash::before, .clash::after {
+  content: '';
   width: 5px;
   position: absolute;
   top: 0px;
@@ -28,14 +26,14 @@
   border-width: 0px;
   transition: border-color 0.3s;
 }
-.allowed .left, .allowed .right {
+.allowed .clash::before, .allowed .clash::after {
   border-color: #FFA000;
 }
-.left {
+.clash::before {
   left: 0px;
   border-left-width: 2px;
 }
-.right {
+.clash::after {
   right: 0px;
   border-right-width: 2px;
 }

@@ -97,7 +97,8 @@ html, body {
 }
 
 /* Clash Styles */
-.left, .right {
+.clash::before, .clash::after {
+  content: '';
   width: 5px;
   position: absolute;
   top: 0px;
@@ -108,14 +109,14 @@ html, body {
   border-width: 0px;
   transition: border-color 0.3s;
 }
-.allowed .left, .allowed .right {
+.allowed .clash::before, .allowed .clash::after {
   border-color: #FFA000;
 }
-.left {
+.clash::before {
   left: 0px;
   border-left-width: 2px;
 }
-.right {
+.clash::after {
   right: 0px;
   border-right-width: 2px;
 }
