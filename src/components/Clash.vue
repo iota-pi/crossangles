@@ -20,21 +20,21 @@
   position: absolute;
   top: 0px;
   bottom: 0px;
-  background-color: #000;
-  border-color: #D32F2F;
+  background-color: #D32F2F;
+  border-color: #000;
   border-style: solid;
   border-width: 0px;
-  transition: border-color 0.3s;
+  transition: background-color 0.3s;
 }
-.allowed .clash::before, .allowed .clash::after {
-  border-color: #FFA000;
+.allowed.clash::before, .allowed.clash::after {
+  background-color: #FFA000;
 }
 .clash::before {
   left: 0px;
-  border-left-width: 2px;
+  border-right-width: 2px;
 }
 .clash::after {
   right: 0px;
-  border-right-width: 2px;
+  border-left-width: 2px;
 }
 </style>
