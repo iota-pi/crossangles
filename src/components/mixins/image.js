@@ -53,11 +53,11 @@ export default {
       // Remove multiple spaces
       timetableHTML = timetableHTML.replace(/\s+/g, ' ')
       // Remove pointless spaces next to tags
-      timetableHTML = timetableHTML.replace(/> /g, '>')
-      // Remove pointless spaces in CSS (NB: careful to dodge )
+      timetableHTML = timetableHTML.replace(/ ?> ?/g, '>')
+      // Remove pointless spaces in CSS
       timetableHTML = timetableHTML.replace(/; /g, ';').replace(/, /g, ',').replace(/([a-z]:) /g, '$1')
       // Remove empty classes
-      timetableHTML = timetableHTML.replace(/class="\s*"/g, '')
+      timetableHTML = timetableHTML.replace(/(class|style)="\s*"/g, '')
 
       axios.post('https://' + process.env.DOMAIN + '/timetable/', {
         width: timetable.scrollWidth,
