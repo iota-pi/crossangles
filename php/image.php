@@ -10,7 +10,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 $width = min($data['width'], 900);
 $height = min($data['height'], 1200);
 
-$head = file_get_contents('config/head.html');
+$head = file_get_contents('head.html');
 $html = $head . '<body>' .
         substr($data['timetable'], 0, 20000) .
         '</body></html>';
