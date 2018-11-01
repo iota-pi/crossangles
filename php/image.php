@@ -10,10 +10,8 @@ $data = json_decode(file_get_contents('php://input'), true);
 $width = min($data['width'], 900);
 $height = min($data['height'], 1200);
 
-$html = '<html><head><title>Unit Schedule</title>' .
-        '<link href="https://' . $DOMAIN . '/static/css/timetable.css" rel="stylesheet">' .
-        '<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">' .
-        '</head><body>' .
+$head = file_get_contents('config/head.html');
+$html = $head . '<body>' .
         substr($data['timetable'], 0, 20000) .
         '</body></html>';
 
