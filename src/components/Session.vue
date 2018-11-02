@@ -12,7 +12,7 @@
       top: position.y + 'px',
       width: dimensions.w + 'px',
       height: dimensions.h + 'px',
-      'z-index': Math.max(zIndex, (elevated || !this.isSnapped) ? 3 : 0)
+      'z-index': Math.max(zIndex, (elevated || !this.isSnapped) ? 3 : 0) + zModifier
     }"
   >
     <v-fade-transition>
@@ -94,6 +94,13 @@
       snapToggle () {
         return this.session.snapToggle
       },
+      zModifier () {
+        if (this.snapIndex === -1) {
+          return 60
+        }
+
+        return this.snapIndex
+      },
       details () {
         let location = ''
         if (this.$store.state.options.locations) {
@@ -120,7 +127,7 @@
         this.isSnapped = false
 
         // Update z-index counter
-        this.zIndex = 10
+        this.zIndex = 100
 
         // Emit a drag event to the timetable
         this.$emit('drag', {
@@ -234,6 +241,10 @@
       },
       elevated: {
         type: Boolean,
+        default: false
+      },
+      snapIndex: {
+        type: Number,
         default: false
       },
       clashes: {

@@ -25,6 +25,7 @@
         :hours="bounds"
         :elevated="isElevated(session)"
         :clashes="getClashingSessions(session)"
+        :snapIndex="snapped.indexOf(session)"
         @drag="startDrag"
         @drop="stopDrag"
         @unSnap="unSnap"
