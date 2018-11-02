@@ -10,7 +10,7 @@
         :value="event"
         :label="event"
         color="secondary"
-        class="pb-2"
+        class="pt-0 pb-2"
         hide-details
       >
       </v-checkbox>
