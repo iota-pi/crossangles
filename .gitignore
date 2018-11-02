@@ -16,6 +16,12 @@ __pycache__
 # Data files
 /static/tt.json
 
+# PHP config files
+/php/config/
+
+# Temporary, manual test scripts
+/test/manual/
+
 # Editor directories and files
 .idea
 *.suo
