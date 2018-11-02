@@ -85,6 +85,7 @@ export default {
           code: code,
           title: course.name,
           color: code !== 'CBS' ? null : colors.CBScolor,
+          useWeb: false,
           streams: null
         }
         courses[code].streams = parseStreams(course.streams, courses[code])

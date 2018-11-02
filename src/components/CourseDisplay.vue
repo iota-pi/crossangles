@@ -1,42 +1,59 @@
 <template>
   <v-list v-if="chosen.length > 0" class="py-0">
-    <v-list-tile v-for="course in chosen" :key="course.code">
-      <v-list-tile-content>
-        <v-list-tile-title>
-          {{ (course.code !== 'CBS') ? course.code : course.title }}
+    <template v-for="course in chosen">
+      <v-divider />
+      <v-list-tile :key="course.code">
+        <v-list-tile-content>
+          <v-list-tile-title>
+            {{ (course.code !== 'CBS') ? course.code : course.title }}
 
-          <span class="faded" v-if="course.code !== 'CBS'">
-            — {{ course.title }}
-          </span>
-        </v-list-tile-title>
-      </v-list-tile-content>
+            <span class="faded" v-if="course.code !== 'CBS'">
+              — {{ course.title }}
+            </span>
+          </v-list-tile-title>
+        </v-list-tile-content>
 
-      <div class="no-spacing pl-2">
-        <swatches
-          v-model="course.color"
-          :colors="colors"
-          :row-length="4"
-          popover-to="left"
-          shapes="circles"
-          :swatch-size="32"
-          :trigger-style="{ width: '32px', height: '32px' }"
+        <div class="no-spacing pl-2">
+          <swatches
+            v-model="course.color"
+            :colors="colors"
+            :row-length="4"
+            popover-to="left"
+            shapes="circles"
+            :swatch-size="32"
+            :trigger-style="{ width: '32px', height: '32px' }"
+          />
+        </div>
+
+        <v-list-tile-action>
+          <v-btn
+            icon
+            v-if="course.code !== 'CBS'"
+            @click="removeCourse(course)"
+          >
+            <v-icon>close</v-icon>
+          </v-btn>
+        </v-list-tile-action>
+      </v-list-tile>
+
+      <v-list-tile
+        v-if="course.streams.filter(s => s.web).length > 0"
+        class="flexible-height"
+      >
+        <v-checkbox
+          v-model="course.useWeb"
+          label="Enrol in online-only lecture stream"
+          color="secondary"
+          class="pt-0 pb-2"
         />
-      </div>
-
-      <v-list-tile-action>
-        <v-btn
-          icon
-          v-if="course.code !== 'CBS'"
-          @click="removeCourse(course)"
-        >
-          <v-icon>close</v-icon>
-        </v-btn>
-      </v-list-tile-action>
-    </v-list-tile>
+      </v-list-tile>
+    </template>
 
     <v-list-tile class="flexible-height">
       <cbs-events />
     </v-list-tile>
+
+    <v-divider />
   </v-list>
 </template>
 
@@ -64,6 +81,9 @@
       removeCourse (course) {
         // Reset this course's color
         course.color = null
+
+        // Reset WEB stream involvement for this course
+        course.useWeb = false
 
         // Remove this course
         let chosen = this.chosen.slice()
