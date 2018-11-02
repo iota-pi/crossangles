@@ -28,13 +28,24 @@ class Cleaner():
                     toDelete.append(stream)
                     continue
 
-                # Process times
-                stream['times'] = self.parseTimeStr(stream['times'])
-                if len(stream['times']) == 0:
-                    toDelete.append(stream)
-                    continue
+                # Process session times (excluding for WEB streams)
+                if 'WEB' not in stream['section']:
+                    stream['times'] = self.parseTimeStr(stream['times'])
+                    if len(stream['times']) == 0:
+                        toDelete.append(stream)
+                        continue
+                    times = tuple(time[0] for time in stream['times'])
+                else:
+                    # Web streams don't need a time or place
+                    stream['times'] = None
+                    times = None
 
-                times = tuple(time[0] for time in stream['times'])
+                # Process WEB streams
+                if 'WEB' in stream['section']:
+                    # Mark this as stream as a WEB stream
+                    stream['web'] = 1
+                del stream['section']
+
                 existing[(stream['component'], times)].append(stream)
 
             # Remove all marked streams

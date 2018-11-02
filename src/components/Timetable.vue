@@ -107,18 +107,20 @@
 
         for (let course of this.$store.state.chosen) {
           for (let stream of course.streams) {
-            for (let i of stream.sessions.keys()) {
-              let session = stream.sessions[i]
-              dropzones.push({
-                day: session.time.day,
-                start: session.time.start,
-                end: session.time.end,
-                course: course,
-                component: stream.component,
-                stream: stream,
-                session: session,
-                index: session.index
-              })
+            if (stream.web === false) {
+              for (let i of stream.sessions.keys()) {
+                let session = stream.sessions[i]
+                dropzones.push({
+                  day: session.time.day,
+                  start: session.time.start,
+                  end: session.time.end,
+                  course: course,
+                  component: stream.component,
+                  stream: stream,
+                  session: session,
+                  index: session.index
+                })
+              }
             }
           }
         }

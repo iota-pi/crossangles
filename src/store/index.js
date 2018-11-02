@@ -9,15 +9,20 @@ function parseStreams (streams, course) {
   let result = []
 
   for (let stream of streams) {
-    let nextStream = {
+    let newStream = {
       course: course,
       component: stream.component,
+      web: !!stream.web,
       status: stream.status,
       enrols: stream.enrols,
       sessions: null
     }
-    nextStream.sessions = parseSessions(stream.times, course, nextStream)
-    result.push(nextStream)
+
+    // Process sessions (excluding WEB streams, which have none)
+    if (stream.web !== 1) {
+      newStream.sessions = parseSessions(stream.times, course, newStream)
+    }
+    result.push(newStream)
   }
 
   return result
@@ -182,10 +187,17 @@ export default {
           for (let item of timetable) {
             let course = context.state.courses[item.code]
             let stream = course.streams.filter(s => {
+              // Check that this stream is for the right component
               if (s.component !== item.component) {
                 return false
               }
 
+              // Check that this is not a WEB stream
+              if (s.web) {
+                return false
+              }
+
+              // Check for correct day/time
               if (s.sessions[item.index].time.day !== item.time.day) {
                 return false
               }

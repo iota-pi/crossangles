@@ -56,6 +56,7 @@ class Parser():
                     # Handle general course
                     course['streams'].append({
                         'component': cells[0].get_text().strip(),
+                        'section': cells[1].get_text().strip(),
                         'status': cells[4].get_text().strip(),
                         'enrols': cells[5].get_text().strip(),
                         'times': cells[7].get_text().strip()
