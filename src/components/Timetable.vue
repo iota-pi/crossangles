@@ -311,6 +311,11 @@
         }
       },
       updateTimetable (allowFullOveride) {
+        // Block this function if the app is still loading
+        if (this.loading) {
+          return
+        }
+
         // Group streams by component for each course
         let components = []
         for (let course of this.$store.state.chosen) {
@@ -389,28 +394,19 @@
     },
     watch: {
       allowFull () {
-        if (!this.loading && !this.$store.state.options.manual) {
-          this.updateTimetable(this.allowFull || false)
-        }
+        this.updateTimetable(this.allowFull || false)
       },
       events () {
-        if (!this.loading && !this.$store.state.options.manual) {
-          this.updateTimetable()
-        }
+        this.updateTimetable()
       },
       chosen () {
-        if (!this.loading && !this.$store.state.options.manual) {
-          this.updateTimetable()
-        }
+        this.updateTimetable()
       },
       loading () {
         if (!this.loading) {
           // Update snapped sessions following timetable restore
           this.snapped = this.timetable.slice()
         }
-      },
-      updateToggle () {
-        this.updateTimetable()
       },
       bounds () {
         this.$nextTick(this.updateDimensions)
@@ -438,10 +434,6 @@
       pointers: {
         type: Object,
         required: true
-      },
-      updateToggle: {
-        type: Boolean,
-        default: false
       }
     }
   }

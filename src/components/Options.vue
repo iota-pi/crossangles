@@ -36,8 +36,8 @@
             value: 'allowFull'
           },
           {
-            title: 'Manually update timetable',
-            value: 'manual'
+            title: 'Include web streams',
+            value: 'allowWeb'
           }
         ]
       }

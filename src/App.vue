@@ -60,24 +60,11 @@
 
           <course-selection />
           <course-display />
-
           <options />
-          <v-slide-y-transition>
-            <v-layout class="pt-3" v-if="this.$store.state.options.manual">
-              <v-btn
-                block
-                color="secondary"
-                @click="timetableToggle = !timetableToggle"
-              >
-                Generate New Timetable
-              </v-btn>
-            </v-layout>
-          </v-slide-y-transition>
 
           <timetable
             class="mt-5"
             :pointers="pointers"
-            :updateToggle="timetableToggle"
           />
 
           <v-layout class="font-weight-light pt-4" row>
@@ -157,7 +144,6 @@
         drawer: false,
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
-        timetableToggle: false,
         contactDialog: false,
         contactTitle: null,
         items: [
