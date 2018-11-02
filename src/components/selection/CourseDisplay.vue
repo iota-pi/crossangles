@@ -60,8 +60,9 @@
 <script>
   import Swatches from 'vue-swatches'
   import 'vue-swatches/dist/vue-swatches.min.css'
+
   import cbsEvents from './CBSEvents'
-  import colors from './mixins/colors'
+  import colors from '../mixins/colors'
 
   export default {
     data () {

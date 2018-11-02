@@ -51,7 +51,7 @@
 <script>
   import session from './Session'
   import dropZone from './DropZone'
-  import search from './mixins/search'
+  import search from '../mixins/search'
 
   const snapDist = 40
 

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import colors from './mixins/colors'
+  import colors from '../mixins/colors'
 
   function escapeRegExp (string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')

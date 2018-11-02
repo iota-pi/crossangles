@@ -129,10 +129,10 @@
 <script>
   import Vue from 'vue'
 
-  import courseSelection from './components/CourseSelection'
-  import courseDisplay from './components/CourseDisplay'
-  import options from './components/Options'
-  import timetable from './components/Timetable'
+  import courseSelection from './components/selection/CourseSelection'
+  import courseDisplay from './components/selection/CourseDisplay'
+  import options from './components/selection/Options'
+  import timetable from './components/timetable/Timetable'
   import contact from './components/Contact'
   import alert from './components/Alert'
 
