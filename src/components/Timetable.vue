@@ -363,7 +363,8 @@
           if (!this.allowFull) {
             // Automatically enable full classes (if not already enabled, and not just disabled)
             if (allowFullOveride !== false) {
-              this.$store.commit('options', Object.assign({}, this.$store.state.options, { allowFull: true }))
+              let newOptions = Object.assign({}, this.$store.state.options, { allowFull: true })
+              this.$store.commit('options', newOptions)
               this.$store.commit('alert', {
                 message: 'No valid timetable found, retrying including full classes',
                 type: 'warning'
