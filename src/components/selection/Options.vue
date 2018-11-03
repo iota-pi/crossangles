@@ -34,10 +34,6 @@
           {
             title: 'Include full classes',
             value: 'allowFull'
-          },
-          {
-            title: 'Include web streams',
-            value: 'allowWeb'
           }
         ]
       }
