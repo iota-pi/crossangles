@@ -58,14 +58,11 @@
             </p>
           </div>
 
-          <course-selection />
-          <course-display />
-          <options />
+          <course-selection class="mb-3" />
+          <course-display class="mb-3"/>
+          <options class="mb-5" />
 
-          <timetable
-            class="mt-5"
-            :pointers="pointers"
-          />
+          <timetable :pointers="pointers" />
 
           <v-layout class="font-weight-light pt-4" row>
             <v-flex class="text-xs-center">

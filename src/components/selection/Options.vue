@@ -1,5 +1,5 @@
 <template>
-  <v-layout row wrap class="pt-3 px-2">
+  <v-layout row wrap class="px-2">
     <v-flex
       v-for="option in allOptions"
       :key="option.title"

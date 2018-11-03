@@ -10,11 +10,10 @@
     item-value="code"
     return-object
     hide-selected
+    hide-details
     no-data-text="No matching courses found"
     color="secondary"
   >
-    <template slot="selection" slot-scope="data">
-    </template>
     <template slot="item" slot-scope="data">
       <v-list-tile-content>
         <v-list-tile-title>
