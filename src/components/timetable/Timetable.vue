@@ -137,6 +137,9 @@
       chosenCount () {
         return this.$store.state.chosen.length
       },
+      webStreams () {
+        return this.$store.state.chosen.map(course => ({ [course.code]: course.useWeb }))
+      },
       loading () {
         return this.$store.state.loading
       }
@@ -326,6 +329,11 @@
               return acc
             }
 
+            // Skip any web streams when not enabled for this course
+            if (!course.useWeb && stream.web) {
+              return acc
+            }
+
             // Check if this component type has occured before
             let match = acc.filter(c => c.component === stream.component)[0]
 
@@ -348,6 +356,20 @@
           }, [])
           components = components.concat(newComponents)
         }
+
+        // Remove components with a web stream if that stream has been chosen
+        components = components.filter(component => {
+          if (component.course.useWeb) {
+            for (let stream of component.streams) {
+              if (stream.web) {
+                return false
+              }
+            }
+          }
+
+          return true
+        })
+
         // Sort components in descending order of complexity
         // (roll-backs are more likely to occur on less flexible streams)
         components.sort((a, b) => a.streams.length - b.streams.length)
@@ -401,6 +423,9 @@
         this.updateTimetable()
       },
       chosenCount () {
+        this.updateTimetable()
+      },
+      webStreams () {
         this.updateTimetable()
       },
       loading () {
