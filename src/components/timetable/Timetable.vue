@@ -131,10 +131,10 @@
       allowFull () {
         return this.$store.state.options.allowFull
       },
-      events () {
+      eventsCount () {
         return this.$store.state.events.length
       },
-      chosen () {
+      chosenCount () {
         return this.$store.state.chosen.length
       },
       loading () {
@@ -397,10 +397,10 @@
       allowFull () {
         this.updateTimetable(this.allowFull || false)
       },
-      events () {
+      eventsCount () {
         this.updateTimetable()
       },
-      chosen () {
+      chosenCount () {
         this.updateTimetable()
       },
       loading () {
