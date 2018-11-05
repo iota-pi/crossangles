@@ -138,7 +138,7 @@
         return this.$store.state.chosen.length
       },
       webStreams () {
-        return this.$store.state.chosen.map(course => ({ [course.code]: course.useWeb }))
+        return this.$store.state.webStreams
       },
       loading () {
         return this.$store.state.loading
@@ -330,7 +330,7 @@
             }
 
             // Skip any web streams when not enabled for this course
-            if (!course.useWeb && stream.web) {
+            if (!this.webStreams.includes(course.code) && stream.web) {
               return acc
             }
 
@@ -357,9 +357,9 @@
           components = components.concat(newComponents)
         }
 
-        // Remove components with a web stream if that stream has been chosen
+        // Remove components with a web stream if the web stream is chosen
         components = components.filter(component => {
-          if (component.course.useWeb) {
+          if (this.webStreams.includes(component.course.code)) {
             for (let stream of component.streams) {
               if (stream.web) {
                 return false

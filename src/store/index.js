@@ -72,6 +72,7 @@ export default {
     events: [],
     options: {},
     timetable: [],
+    webStreams: [],
     alert: null,
     loading: true
   },
@@ -133,6 +134,10 @@ export default {
     },
     loading (state, data) {
       state.loading = data
+    },
+    webStreams (state, data) {
+      state.webStreams = data
+      storage.setItem('webStreams', JSON.stringify(data))
     }
   },
   actions: {
@@ -233,6 +238,7 @@ export default {
       context.commit('events', events)
       context.commit('options', {})
       context.commit('timetable', [])
+      context.commit('webStreams', [])
     }
   }
 }

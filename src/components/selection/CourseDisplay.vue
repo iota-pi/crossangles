@@ -41,7 +41,8 @@
         class="flexible-height"
       >
         <v-checkbox
-          v-model="course.useWeb"
+          v-model="webStreams"
+          :value="course.code"
           label="Enrol in online-only lecture stream"
           color="secondary"
           class="pt-0 pb-2"
@@ -76,6 +77,14 @@
       },
       chosenColors () {
         return this.chosen.map(c => c.color)
+      },
+      webStreams: {
+        get () {
+          return this.$store.state.webStreams
+        },
+        set (newValue) {
+          this.$store.commit('webStreams', newValue)
+        }
       }
     },
     methods: {
