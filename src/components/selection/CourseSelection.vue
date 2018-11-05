@@ -114,10 +114,10 @@
         return false
       },
       highlight (haystack, needle) {
+        haystack = haystack.replace(/[<>]/gi, '')
         needle = needle || this.searchText
 
         if (needle) {
-          haystack = haystack.replace(/</gi, '&lt;').replace(/>/gi, '&gt;')
           let re = new RegExp(escapeRegExp(needle), 'gi')
           return haystack.replace(re, '<em class="highlight">$&</em>')
         }
