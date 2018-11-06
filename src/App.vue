@@ -51,11 +51,16 @@
               select the courses you've enrolled in below.
             </p>
             <p>
-              To make the most out of this tool, don't miss out on personalising your timetable by
-              <span class="font-weight-regular">dragging classes around</span> to suit you better,
-              <span class="font-weight-regular">changing the color</span> for each of your courses,
+              To make the most out of this tool,
+              don't miss out on personalising your timetable by
+              <span class="font-weight-regular">dragging classes around</span>
+              to suit you better,
+              <span class="font-weight-regular">changing the color</span>
+              for each of your courses,
               <span class="font-weight-regular">adding custom events</span>,
-              and <span class="font-weight-regular">saving your timetable as an image</span> when you're done.
+              and
+              <span class="font-weight-regular">saving your timetable as an image</span>
+              when you're done.
             </p>
           </div>
 
