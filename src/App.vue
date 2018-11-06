@@ -64,8 +64,8 @@
             </p>
           </div>
 
-          <course-selection class="mb-1" />
-          <course-display class="mb-3"/>
+          <course-selection class="mb-1" @custom="customDialog = true" />
+          <course-display class="mb-3" @editCustom="editCustom" />
           <options class="mb-5" />
 
           <timetable :pointers="pointers" />
@@ -118,6 +118,12 @@
         </v-container>
       </v-footer>
     </div>
+    <custom
+      :display="customDialog"
+      :edit="customToEdit"
+      @hide="customDialog = false;
+      customToEdit = null"
+    />
     <contact
       :display="contactDialog"
       :title="contactTitle || 'Get in Contact'"
@@ -133,6 +139,7 @@
   import courseSelection from './components/selection/CourseSelection'
   import courseDisplay from './components/selection/CourseDisplay'
   import options from './components/selection/Options'
+  import custom from './components/selection/Custom'
   import timetable from './components/timetable/Timetable'
   import contact from './components/Contact'
   import alert from './components/Alert'
@@ -147,6 +154,8 @@
         pointers: {},
         contactDialog: false,
         contactTitle: null,
+        customDialog: false,
+        customToEdit: null,
         items: [
           {
             icon: 'photo',
@@ -243,6 +252,10 @@
           Vue.delete(this.pointers, id)
         }
       },
+      editCustom (customCourse) {
+        this.customToEdit = this.$store.state.custom.filter(c => c.id === customCourse.code)[0]
+        this.customDialog = true
+      },
       save () {
         this.saveTimetable()
         this.drawer = false
@@ -271,6 +284,7 @@
       courseDisplay,
       options,
       timetable,
+      custom,
       contact,
       alert
     },

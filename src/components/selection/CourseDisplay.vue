@@ -14,6 +14,16 @@
         </v-list-tile-content>
 
         <div class="no-spacing pl-2">
+          <v-btn
+            icon
+            v-if="course.custom"
+            @click="$emit('editCustom', course)"
+          >
+            <v-icon color="grey darken-2">edit</v-icon>
+          </v-btn>
+        </div>
+
+        <div class="no-spacing pl-2">
           <swatches
             v-model="course.color"
             :colors="colors"
@@ -75,8 +85,14 @@
       chosen () {
         return this.$store.state.chosen
       },
+      custom () {
+        return this.$store.state.custom
+      },
       chosenColors () {
         return this.chosen.map(c => c.color)
+      },
+      customColors () {
+        return this.custom.map(c => c.color)
       },
       webStreams: {
         get () {
@@ -89,8 +105,20 @@
     },
     watch: {
       chosenColors () {
-        // Re-commit chosen courses when colour changes
+        // Re-commit chosen courses when color changes
         this.$store.commit('chosen', this.chosen)
+
+        // Update custom event colors
+        for (let course of this.chosen) {
+          if (course.custom) {
+            let customIndex = this.custom.map(c => c.id).indexOf(course.code)
+            this.custom[customIndex].color = course.color
+          }
+        }
+      },
+      customColors () {
+        // Commit changes to custom colors
+        this.$store.commit('custom', this.custom)
       }
     },
     components: {

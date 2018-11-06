@@ -33,7 +33,7 @@
 
       <div class="title font-weight-regular px-3 hidden-xs-only">OR</div>
 
-      <v-btn block color="primary" @click="custom = true">
+      <v-btn block color="primary" @click="$emit('custom')">
         <span>
           <span class="hidden-sm-and-up">Or</span>
           Add Custom
@@ -41,12 +41,10 @@
         </span>
       </v-btn>
     </v-layout>
-    <custom :display="custom" @hide="custom = false" />
   </div>
 </template>
 
 <script>
-  import custom from './Custom'
   import colors from '../mixins/colors'
 
   function escapeRegExp (string) {
@@ -57,8 +55,7 @@
     data () {
       return {
         course: null,
-        searchText: null,
-        custom: false
+        searchText: null
       }
     },
     computed: {
@@ -130,10 +127,7 @@
         return haystack
       }
     },
-    mixins: [ colors ],
-    components: {
-      custom
-    }
+    mixins: [ colors ]
   }
 </script>
 

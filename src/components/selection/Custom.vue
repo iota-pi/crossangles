@@ -59,7 +59,7 @@
 
       <v-card-actions>
         <v-btn block color="primary" @click="addEvent" :disabled="disabled">
-          Add Event
+          {{ edit ? 'Edit' : 'Add' }} Event
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -171,24 +171,28 @@
       addEvent () {
         let custom = this.$store.state.custom
 
-        let customEvent = {
-          name: this.name,
-          duration: this.duration,
-          options: this.options.slice(0, -1),
-          color: null,
-          id: Math.random()
-        }
-
         if (this.edit) {
-          let index = custom.indexOf(this.edit)
-          custom.splice(index, 1, customEvent)
+          this.edit.name = this.name
+          this.edit.duration = this.duration
+          this.edit.options = this.options.slice(0, -1)
+
+          let oldCourse = this.$store.state.chosen.filter(c => c.code === this.edit.id)[0]
+          this.$store.dispatch('removeCourse', oldCourse)
+          this.$store.dispatch('addCustom', this.edit)
         } else {
+          let customEvent = {
+            name: this.name,
+            duration: this.duration,
+            options: this.options.slice(0, -1),
+            color: null,
+            id: 'custom_' + Math.random()
+          }
           custom.push(customEvent)
+          this.$store.dispatch('addCustom', customEvent)
         }
 
         // Update state
         this.$store.commit('custom', custom)
-        this.$store.dispatch('addCustom', customEvent)
 
         // Hide dialog
         this.$emit('hide')
@@ -207,7 +211,7 @@
         if (this.edit) {
           this.name = this.edit.name
           this.duration = this.edit.duration
-          this.options = this.edit.options
+          this.options = this.edit.options.concat([baseOption()])
         }
       }
     },

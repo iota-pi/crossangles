@@ -88,6 +88,7 @@ export default {
       }
 
       axios.get(dataURL).then((r) => {
+        // TODO: store JSON data before it's parsed (saves this stringify call)
         storage.setItem('courseData', JSON.stringify(r.data))
         processData(context, r.data)
 
@@ -138,11 +139,12 @@ export default {
       context.commit('chosen', context.state.chosen.filter(c => c !== course))
     },
     addCustom (context, custom) {
+      // Convert into the usual course format
       let customCourse = {
-        code: 'custom_' + custom.id,
+        code: custom.id,
         title: custom.name,
         custom: true,
-        color: null,
+        color: custom.color,
         streams: null
       }
       customCourse.streams = custom.options.map(o => {
@@ -173,8 +175,12 @@ export default {
         return stream
       })
 
+      // Add this new, customised course to our list of chosen courses
       context.dispatch('addCourse', customCourse)
+
+      // Save the chosen color
       custom.color = customCourse.color
+      context.commit('custom', context.state.custom)
     }
   }
 }
