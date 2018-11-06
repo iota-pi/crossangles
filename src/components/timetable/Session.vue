@@ -22,10 +22,13 @@
       />
     </v-fade-transition>
     <div class="label">
-      <span v-if="session.course.code !== 'CBS'" class="em">
-        {{ session.course.code }}:
+      <span v-if="session.course.code !== 'CBS' && !session.course.custom">
+        <span class="em">
+          {{ session.course.code }}:
+        </span>
+        {{ session.stream.component }}
       </span>
-      <span :class="{ em: session.course.code === 'CBS' }">
+      <span v-else class="em">
         {{ session.stream.component }}
       </span>
     </div>
@@ -279,7 +282,7 @@
     text-align: center;
     line-height: 1.25;
   }
-  .session > .label > .em {
+  .session > .label .em {
     font-weight: 500;
   }
 

@@ -5,9 +5,9 @@
       <v-list-tile :key="course.code">
         <v-list-tile-content>
           <v-list-tile-title>
-            {{ (course.code !== 'CBS') ? course.code : course.title }}
+            {{ (course.code !== 'CBS' && !course.custom) ? course.code : course.title }}
 
-            <span class="faded" v-if="course.code !== 'CBS'">
+            <span class="faded" v-if="course.code !== 'CBS' && !course.custom">
               — {{ course.title }}
             </span>
           </v-list-tile-title>
@@ -94,6 +94,8 @@
 
         // Reset WEB stream involvement for this course
         this.webStreams.splice(this.webStreams.indexOf(course.code), 1)
+
+        // TODO custom handling
 
         // Remove this course
         let chosen = this.chosen.slice()
