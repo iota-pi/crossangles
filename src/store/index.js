@@ -142,9 +142,9 @@ function parseSessions (times, course, stream) {
 }
 
 function parseTimeString (time) {
-  let day = time.substr(0, 1)
+  let day = time.charAt(0)
   let canClash = /#$/.test(time)
-  let hours = time.substr(1).replace('#', '').split('-').map(x => parseInt(x))
+  let hours = time.substr(1).replace('#', '').split('-').map(x => parseFloat(x))
   if (hours.length === 1) {
     hours.push(hours[0] + 1)
   }

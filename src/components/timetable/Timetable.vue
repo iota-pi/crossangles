@@ -186,9 +186,9 @@
         if (nearest !== null) {
           // Find the corresponding dropzone object for the DOM element we have
           let dayIndex = Math.round(Math.max(nearest.x - 70, 0) / nearest.w)
-          let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / 50)
+          let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / 50 * 2) / 2
           let day = this.days[dayIndex]
-          let hour = this.hours[hourIndex]
+          let hour = (+this.hours[0]) + hourIndex
           let dropzone = this.getDropZones(day, hour)[0]
 
           if (this.dragging === dropzone.session) {
