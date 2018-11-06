@@ -1,34 +1,52 @@
 <template>
-  <v-autocomplete
-    v-model="course"
-    @input="addCourse"
-    ref="courseSelect"
-    label="Select your courses"
-    :filter="courseFilter"
-    :search-input.sync="searchText"
-    :items="courses"
-    item-value="code"
-    return-object
-    hide-selected
-    hide-details
-    no-data-text="No matching courses found"
-    color="secondary"
-  >
-    <template slot="item" slot-scope="data">
-      <v-list-tile-content>
-        <v-list-tile-title>
-          <span v-html="highlight(data.item.code)"></span>
+  <div>
+    <v-layout row wrap align-center>
+      <v-flex xs12 sm8 class="pb-2" :class="{ 'mb-1': $vuetify.breakpoint.smAndUp }">
+        <v-autocomplete
+          v-model="course"
+          @input="addCourse"
+          ref="courseSelect"
+          label="Select your courses"
+          :filter="courseFilter"
+          :search-input.sync="searchText"
+          :items="courses"
+          item-value="code"
+          return-object
+          hide-selected
+          hide-details
+          no-data-text="No matching courses found"
+          color="secondary"
+        >
+          <template slot="item" slot-scope="data">
+            <v-list-tile-content>
+              <v-list-tile-title>
+                <span v-html="highlight(data.item.code)"></span>
 
-          <span class="faded">
-            — <span v-html="highlight(data.item.title)"></span>
-          </span>
-        </v-list-tile-title>
-      </v-list-tile-content>
-    </template>
-  </v-autocomplete>
+                <span class="faded">
+                  — <span v-html="highlight(data.item.title)"></span>
+                </span>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </template>
+        </v-autocomplete>
+      </v-flex>
+
+      <div class="title font-weight-regular px-3 hidden-xs-only">OR</div>
+
+      <v-btn block color="primary" @click="custom = true">
+        <span>
+          <span class="hidden-sm-and-up">Or</span>
+          Add Custom
+          <span class="hidden-sm-only">Event</span>
+        </span>
+      </v-btn>
+    </v-layout>
+    <custom :display="custom" @hide="custom = false" />
+  </div>
 </template>
 
 <script>
+  import custom from './Custom'
   import colors from '../mixins/colors'
 
   function escapeRegExp (string) {
@@ -43,7 +61,8 @@
     data () {
       return {
         course: null,
-        searchText: null
+        searchText: null,
+        custom: false
       }
     },
     computed: {
@@ -125,7 +144,10 @@
         return haystack
       }
     },
-    mixins: [ colors ]
+    mixins: [ colors ],
+    components: {
+      custom
+    }
   }
 </script>
 
