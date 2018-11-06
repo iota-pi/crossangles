@@ -1,4 +1,5 @@
 import axios from 'axios'
+import parseCourses from './parseJSON'
 import _colors from '../components/mixins/colors'
 let colors = _colors.data()
 
@@ -99,63 +100,8 @@ function processData (context, data) {
   }
 }
 
-function parseStreams (streams, course) {
-  let result = []
-
-  for (let stream of streams) {
-    let newStream = {
-      course: course,
-      component: stream.component,
-      web: !!stream.web,
-      status: stream.status,
-      enrols: stream.enrols,
-      sessions: null
-    }
-
-    // Process sessions (excluding WEB streams, which have none)
-    if (stream.web !== 1) {
-      newStream.sessions = parseSessions(stream.times, course, newStream)
-    }
-    result.push(newStream)
-  }
-
-  return result
-}
-
-function parseSessions (times, course, stream) {
-  let timetable = []
-
-  for (let i = 0; i < times.length; i++) {
-    let time = times[i]
-    timetable.push({
-      course: course,
-      stream: stream,
-      location: time[1],
-      time: parseTimeString(time[0]),
-      weeks: time[2],
-      index: i,
-      snapToggle: false
-    })
-  }
-
-  return timetable
-}
-
-function parseTimeString (time) {
-  let day = time.charAt(0)
-  let canClash = /#$/.test(time)
-  let hours = time.substr(1).replace('#', '').split('-').map(x => parseFloat(x))
-  if (hours.length === 1) {
-    hours.push(hours[0] + 1)
-  }
-  let [ start, end ] = hours
-
-  return {
-    day,
-    start,
-    end,
-    canClash
-  }
+function choice (array) {
+  return array[Math.floor(Math.random() * array.length)]
 }
 
 export default {
@@ -172,20 +118,7 @@ export default {
   },
   mutations: {
     courses (state, data) {
-      let courses = {}
-
-      for (let course of data) {
-        let code = course.code
-        courses[code] = {
-          code: code,
-          title: course.name,
-          color: code !== 'CBS' ? null : colors.CBScolor,
-          streams: null
-        }
-        courses[code].streams = parseStreams(course.streams, courses[code])
-      }
-
-      state.courses = courses
+      state.courses = parseCourses(data)
     },
     meta (state, data) {
       state.meta = data
@@ -258,6 +191,20 @@ export default {
       context.commit('options', {})
       context.commit('timetable', [])
       context.commit('webStreams', [])
+    },
+    addCourse (context, course) {
+      // Assign this course an unused color
+      let used = context.state.chosen.map(course => course.color)
+      course.color = choice(colors.colors.filter(c => !used.includes(c)))
+
+      // Add this course and then sort the list of chosen courses
+      const chosen = context.state.chosen
+      let courses = chosen.slice(0, -1)
+      courses.push(course)
+      courses.sort((a, b) => (a.code > b.code) - (a.code < b.code))
+      courses.push(chosen[chosen.length - 1])
+
+      context.commit('chosen', courses)
     }
   }
 }
