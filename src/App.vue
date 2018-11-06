@@ -281,3 +281,10 @@
     opacity: 0.8;
   }
 </style>
+
+<style>
+  /* Fix strange dialog snapping */
+  html.overflow-y-hidden > body {
+    overflow-y: scroll;
+  }
+</style>
