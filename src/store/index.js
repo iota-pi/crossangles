@@ -12,6 +12,7 @@ function processData (context, data) {
   let options = storage.getItem('options')
   let timetable = storage.getItem('timetable')
   let webStreams = storage.getItem('webStreams')
+  let custom = storage.getItem('custom')
 
   context.commit('courses', data.courses)
   context.commit('meta', data.meta)
@@ -21,8 +22,10 @@ function processData (context, data) {
     chosen = JSON.parse(chosen)
     let restored = []
     for (let course of chosen) {
-      context.state.courses[course.code].color = course.color
-      restored.push(context.state.courses[course.code])
+      if (!course.custom) {
+        context.state.courses[course.code].color = course.color
+        restored.push(context.state.courses[course.code])
+      }
     }
 
     context.commit('chosen', restored)
@@ -60,12 +63,28 @@ function processData (context, data) {
     context.commit('webStreams', [])
   }
 
+  if (custom) {
+    // Restore previously selected options
+    custom = JSON.parse(custom)
+    context.commit('custom', custom)
+    for (let c of custom) {
+      context.dispatch('addCustom', c)
+    }
+  } else {
+    // Default to none selected
+    context.commit('custom', [])
+  }
+
   if (timetable) {
     timetable = JSON.parse(timetable)
 
     let restored = []
     for (let item of timetable) {
       let course = context.state.courses[item.code]
+      if (course === undefined) {
+        course = context.state.chosen.filter(c => c.code === item.code)[0]
+      }
+
       let stream = course.streams.filter(s => {
         // Check that this stream is for the right component
         if (s.component !== item.component) {
@@ -113,6 +132,7 @@ export default {
     options: {},
     timetable: [],
     webStreams: [],
+    custom: [],
     alert: null,
     loading: true
   },
@@ -129,9 +149,15 @@ export default {
       storage.setItem('chosen', JSON.stringify(data.map(c => {
         return {
           code: c.code,
-          color: c.color
+          color: c.color,
+          custom: c.custom
         }
       })))
+    },
+    custom (state, data) {
+      state.custom = data
+
+      storage.setItem('custom', JSON.stringify(data))
     },
     events (state, data) {
       state.events = data
@@ -194,8 +220,10 @@ export default {
     },
     addCourse (context, course) {
       // Assign this course an unused color
-      let used = context.state.chosen.map(course => course.color)
-      course.color = choice(colors.colors.filter(c => !used.includes(c)))
+      if (!course.color) {
+        let used = context.state.chosen.map(course => course.color)
+        course.color = choice(colors.colors.filter(c => !used.includes(c)))
+      }
 
       // Add this course and then sort the list of chosen courses
       const chosen = context.state.chosen
@@ -205,6 +233,45 @@ export default {
       courses.push(chosen[chosen.length - 1])
 
       context.commit('chosen', courses)
+    },
+    addCustom (context, custom) {
+      let customCourse = {
+        code: 'custom_' + custom.id,
+        title: custom.name,
+        custom: true,
+        color: null,
+        streams: null
+      }
+      customCourse.streams = custom.options.map(o => {
+        let stream = {
+          course: customCourse,
+          component: custom.name,
+          web: false,
+          status: 1,
+          enrols: null,
+          sessions: null
+        }
+        stream.sessions = [
+          {
+            course: customCourse,
+            stream: stream,
+            location: null,
+            time: {
+              day: o.day,
+              start: o.time,
+              end: o.time + custom.duration,
+              canClash: false
+            },
+            weeks: null,
+            index: 0,
+            snapToggle: false
+          }
+        ]
+        return stream
+      })
+
+      context.dispatch('addCourse', customCourse)
+      custom.color = customCourse.color
     }
   }
 }
