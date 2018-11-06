@@ -122,6 +122,21 @@ export default {
 
       context.commit('chosen', courses)
     },
+    removeCourse (context, course) {
+      // Reset this course's color
+      course.color = null
+
+      // Reset WEB stream involvement for this course
+      context.commit('webStreams', context.state.webStreams.filter(w => w !== course.code))
+
+      if (course.custom) {
+        // Remove from custom courses
+        context.commit('custom', context.state.custom.filter(c => c.id !== course.code))
+      }
+
+      // Remove this course from list of chosen courses
+      context.commit('chosen', context.state.chosen.filter(c => c !== course))
+    },
     addCustom (context, custom) {
       let customCourse = {
         code: 'custom_' + custom.id,

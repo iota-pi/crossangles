@@ -29,7 +29,7 @@
           <v-btn
             icon
             v-if="course.code !== 'CBS'"
-            @click="removeCourse(course)"
+            @click="$store.dispatch('removeCourse', course)"
           >
             <v-icon>close</v-icon>
           </v-btn>
@@ -85,22 +85,6 @@
         set (newValue) {
           this.$store.commit('webStreams', newValue)
         }
-      }
-    },
-    methods: {
-      removeCourse (course) {
-        // Reset this course's color
-        course.color = null
-
-        // Reset WEB stream involvement for this course
-        this.webStreams.splice(this.webStreams.indexOf(course.code), 1)
-
-        // TODO custom handling
-
-        // Remove this course
-        let chosen = this.chosen.slice()
-        chosen.splice(chosen.indexOf(course), 1)
-        this.$store.commit('chosen', chosen)
       }
     },
     watch: {
