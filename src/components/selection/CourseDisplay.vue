@@ -93,7 +93,7 @@
         course.color = null
 
         // Reset WEB stream involvement for this course
-        course.useWeb = false
+        this.webStreams.splice(this.webStreams.indexOf(course.code), 1)
 
         // Remove this course
         let chosen = this.chosen.slice()
