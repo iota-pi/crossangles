@@ -266,6 +266,7 @@
     flex-direction: column;
     color: white;
     cursor: grab;
+    overflow: hidden;
 
     transition: box-shadow 0.3s, left 0.3s, top 0.3s;
   }
