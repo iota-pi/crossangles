@@ -125,13 +125,14 @@
     { text: '9½ hours', duration: 9.5 },
     { text: '10 hours', duration: 10 }
   ]
+  const baseOption = () => ({ day: null, time: null, id: Math.random() })
 
   export default {
     data () {
       return {
         name: null,
         duration: 1,
-        options: [{ day: null, time: null, id: Math.random() }],
+        options: [baseOption()],
         validTimes: validTimes,
         days: days,
         durations: durations
@@ -164,21 +165,60 @@
         // Add an empty one at the end
         let last = this.options[this.options.length - 1]
         if (!last || (last.day && last.time)) {
-          this.options.push({
-            day: null,
-            time: null,
-            id: Math.random()
-          })
+          this.options.push(baseOption())
         }
       },
       addEvent () {
+        let custom = this.$store.state.custom
 
+        let customEvent = {
+          name: this.name,
+          duration: this.duration,
+          options: this.options.slice(0, -1),
+          color: null,
+          id: Math.random()
+        }
+
+        if (this.edit) {
+          let index = custom.indexOf(this.edit)
+          custom.splice(index, 1, customEvent)
+        } else {
+          custom.push(customEvent)
+        }
+
+        // Update state
+        this.$store.commit('custom', custom)
+        this.$store.dispatch('addCustom', customEvent)
+
+        // Hide dialog
+        this.$emit('hide')
+      }
+    },
+    watch: {
+      show () {
+        // Reset dialog when hidden
+        if (!this.show) {
+          this.name = null
+          this.duration = 1
+          this.options = [baseOption()]
+        }
+      },
+      edit () {
+        if (this.edit) {
+          this.name = this.edit.name
+          this.duration = this.edit.duration
+          this.options = this.edit.options
+        }
       }
     },
     props: {
       display: {
         type: Boolean,
         default: false
+      },
+      edit: {
+        type: Object,
+        default: null
       }
     }
   }
