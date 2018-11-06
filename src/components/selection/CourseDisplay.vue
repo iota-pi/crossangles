@@ -43,7 +43,7 @@
         <v-checkbox
           v-model="webStreams"
           :value="course.code"
-          label="Enrol in online-only lecture stream"
+          label="Choose online-only lecture stream"
           color="secondary"
           class="pt-0 pb-2"
         />

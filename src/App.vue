@@ -79,20 +79,18 @@
               <span class="font-weight-regular">
                 <a href="https://www.campusbiblestudy.org/">Campus Bible Study</a>
               </span>
-              — a group at UNSW for people who are interested in
-              investigating what the Bible has to say.
-              If you've never come before, we recommend checking out the
-              public Bible talks at least once.
-              Whether you're a Christian or you've never picked up a Bible before,
-              we'd love you to come along.
+              — a group of people at UNSW who are interested in learning together
+              about Jesus from the Bible.
+              Whether you follow Jesus, or want to find out what He's all about,
+              <span class="font-weight-regular">Campus Bible Study</span>
+              is a great place for you to learn more.
+              If you've never come before, we recommend checking out the Bible talks.
             </p>
             <p>
               The data was last updated at {{ meta.updateTime }}
               <span class="faded">({{ meta.updateDate }})</span>
               from <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>.
               This tool comes without any guarantee of data accuracy or completeness.
-              Some possibilities may not be displayed, such as online WEB streams
-              for some courses.
             </p>
           </div>
         </v-container>
