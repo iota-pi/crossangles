@@ -97,7 +97,7 @@
           end = 17
         }
 
-        return [ start, end ]
+        return [ Math.floor(start), Math.ceil(end) ]
       },
       hours () {
         let blank = new Array(this.bounds[1] - this.bounds[0])
