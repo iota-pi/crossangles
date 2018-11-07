@@ -28,9 +28,16 @@ export default {
       // Remove empty rows from the start and the end
       let rows = clone.querySelectorAll('.row')
       for (let i = 1; i < rows.length; i++) {
-        if (i <= actual.start - display.start || i >= 1 + (actual.end - actual.start)) {
+        if (i <= actual.start - display.start || i >= 1 + (actual.end - display.start)) {
           clone.removeChild(rows[i])
         }
+      }
+
+      // Adjust session offsets from top
+      let sessions = clone.querySelectorAll('.session')
+      for (let session of sessions) {
+        let y = parseFloat(session.style.top)
+        session.style.top = (y - (actual.start - display.start) * 50) + 'px'
       }
 
       // Get the height of this cut-down timetable
