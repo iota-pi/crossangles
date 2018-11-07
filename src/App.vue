@@ -32,10 +32,14 @@
             @click="item.action"
           >
             <v-list-tile-action>
-              <v-icon v-html="item.icon"></v-icon>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title v-text="item.title"></v-list-tile-title>
+              <v-list-tile-title>
+                {{ item.title }}
+              </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -176,6 +180,11 @@
             action: this.reset
           },
           {
+            icon: 'share',
+            title: 'Share on Facebook',
+            action: this.share
+          },
+          {
             icon: 'bug_report',
             title: 'Report a Bug',
             action: this.report
@@ -282,6 +291,11 @@
         this.contactDialog = true
         this.contactTitle = null
         this.drawer = false
+      },
+      share () {
+        const sharingURL = encodeURIComponent(process.env.DOMAIN)
+        const fbURL = 'https://www.facebook.com/sharer/sharer.php?u=' + sharingURL
+        window.open(fbURL, 'FBsharer', 'width=600, height=400, scrollbars=no')
       }
     },
     mounted () {
