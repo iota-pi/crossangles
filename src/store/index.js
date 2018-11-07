@@ -118,7 +118,21 @@ export default {
       const chosen = context.state.chosen
       let courses = chosen.slice(0, -1)
       courses.push(course)
-      courses.sort((a, b) => (a.code > b.code) - (a.code < b.code))
+      courses.sort((a, b) => {
+        if (a.custom - b.custom !== 0) {
+          return a.custom - b.custom
+        }
+
+        if (a.custom && b.custom) {
+          a = a.title.toLowerCase()
+          b = b.title.toLowerCase()
+        } else {
+          a = a.code.toLowerCase()
+          b = b.code.toLowerCase()
+        }
+
+        return (a > b) - (a < b)
+      })
       courses.push(chosen[chosen.length - 1])
 
       context.commit('chosen', courses)
