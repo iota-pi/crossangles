@@ -106,6 +106,7 @@ export default {
       context.commit('options', {})
       context.commit('timetable', [])
       context.commit('webStreams', [])
+      context.commit('custom', [])
     },
     addCourse (context, course) {
       // Assign this course an unused color
