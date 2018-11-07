@@ -55,8 +55,6 @@ export default {
       timetableHTML = timetableHTML.replace(/\s+/g, ' ')
       // Remove pointless spaces next to tags
       timetableHTML = timetableHTML.replace(/ ?> ?/g, '>')
-      // Remove pointless spaces in CSS
-      timetableHTML = timetableHTML.replace(/; /g, ';').replace(/, /g, ',').replace(/([a-z]:) /g, '$1')
       // Remove empty classes
       timetableHTML = timetableHTML.replace(/(class|style)="\s*"/g, '')
 
