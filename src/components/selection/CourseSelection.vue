@@ -1,7 +1,13 @@
 <template>
   <div>
     <v-layout row wrap align-center>
-      <v-flex xs12 sm8 class="pb-2" :class="{ 'mb-1': $vuetify.breakpoint.smAndUp }">
+      <v-flex
+        xs12 sm9
+        class="pb-2"
+        :class="{
+          'mb-1 pr-3': $vuetify.breakpoint.smAndUp
+        }"
+      >
         <v-autocomplete
           v-model="course"
           @input="addCourse"
@@ -31,7 +37,7 @@
         </v-autocomplete>
       </v-flex>
 
-      <div class="title font-weight-regular px-3 hidden-xs-only">OR</div>
+      <div class="title font-weight-regular pr-3 hidden-sm-and-down">OR</div>
 
       <v-btn block color="primary" @click="$emit('custom')">
         <span>
