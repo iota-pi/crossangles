@@ -3,7 +3,7 @@
     <v-flex
       v-for="option in allOptions"
       :key="option.title"
-      xs12 sm6
+      xs12 sm6 md4
     >
       <v-switch
         v-model="options"
