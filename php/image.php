@@ -33,9 +33,9 @@ $payload = array(
         'regex' => '.*',
         'isBlacklisted' => true
       ),
-      // Allow CSS links from my.campusbiblestudy.org and Google fonts
+      // Allow Roboto to load
       array(
-        'regex' => '^https://((dev\.)?my\.campusbiblestudy\.org|fonts\.googleapis\.com)/.*\.?css.*$',
+        'regex' => '^https://fonts\.(googleapis|gstatic)\.com/.*$',
         'isBlacklisted' => false
       ),
       // Allow initial page request
