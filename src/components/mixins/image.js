@@ -3,7 +3,7 @@ const download = require('downloadjs')
 
 export default {
   methods: {
-    saveTimetable () {
+    saveTimetable (cb) {
       let timetable = document.getElementById('timetable')
       let clone = timetable.cloneNode(true)
 
@@ -66,6 +66,8 @@ export default {
         download('data:image/png;base64,' + r.data, 'timetable.png', 'image/png')
       }).catch((e) => {
         console.error(e)
+      }).then(() => {
+        cb()
       })
     }
   }

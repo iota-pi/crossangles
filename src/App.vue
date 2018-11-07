@@ -72,8 +72,15 @@
 
           <v-layout class="font-weight-light pt-4" row>
             <v-flex class="text-xs-center">
-              <v-btn color="primary" @click="save">
-                Save Timetable as Image
+              <v-btn color="primary" @click="save" class="fixed-width">
+                <span v-if="!saving">Save Timetable as Image</span>
+                <v-progress-circular
+                  v-else
+                  color="white"
+                  indeterminate
+                  :size="24"
+                  :width="3"
+                />
               </v-btn>
             </v-flex>
           </v-layout>
@@ -156,6 +163,7 @@
         contactTitle: null,
         customDialog: false,
         customToEdit: null,
+        saving: false,
         items: [
           {
             icon: 'photo',
@@ -257,7 +265,8 @@
         this.customDialog = true
       },
       save () {
-        this.saveTimetable()
+        this.saving = true
+        this.saveTimetable(() => { this.saving = false })
         this.drawer = false
       },
       reset () {
@@ -298,6 +307,9 @@
   }
   .faded {
     opacity: 0.8;
+  }
+  .v-btn.fixed-width {
+    min-width: 250px;
   }
 </style>
 
