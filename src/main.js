@@ -23,6 +23,7 @@ import {
   VTextField,
   VTextarea,
   VToolbar,
+  VTooltip,
   transitions
 } from 'vuetify'
 import { Resize } from 'vuetify/lib/directives'
@@ -52,6 +53,7 @@ Vue.use(Vuetify, {
     VTextField,
     VTextarea,
     VToolbar,
+    VTooltip,
     transitions
   },
   directives: {

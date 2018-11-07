@@ -4,13 +4,33 @@
       <v-divider />
       <v-list-tile :key="course.code">
         <v-list-tile-content>
-          <v-list-tile-title>
-            {{ (course.code !== 'CBS' && !course.custom) ? course.code : course.title }}
+          <v-layout row align-center>
+            <v-list-tile-title>
+              {{ (course.code !== 'CBS' && !course.custom) ? course.code : course.title }}
 
-            <span class="faded" v-if="course.code !== 'CBS' && !course.custom">
-              — {{ course.title }}
-            </span>
-          </v-list-tile-title>
+              <span class="faded" v-if="course.code !== 'CBS' && !course.custom">
+                — {{ course.title }}
+              </span>
+            </v-list-tile-title>
+
+            <v-tooltip
+              v-if="course.code === 'CBS'"
+              right
+              :max-width="450"
+              class="pl-2 pb-1"
+              content-class="body-1"
+            >
+              <v-icon small slot="activator">
+                help
+              </v-icon>
+
+              Campus Bible Study is a group of people at UNSW who are
+              interested in learning together about Jesus from the Bible.
+              Whether you follow Jesus, or want to find out what He's all about,
+              Campus Bible Study is a great place for you to learn more.
+              If you've never come before, we recommend checking out the Bible talks.
+            </v-tooltip>
+          </v-layout>
         </v-list-tile-content>
 
         <div class="no-spacing pl-2">
