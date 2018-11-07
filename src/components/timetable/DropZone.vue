@@ -2,7 +2,7 @@
   <div
     class="dropzone"
     :style="{
-      'background-color': this.dropzone.course.color,
+      'background-color': this.dropzone.course.color + 'AA',
       left: position.x + 'px',
       top: position.y + 'px',
       width: position.w + 'px',
@@ -64,10 +64,9 @@
 
 <style scoped>
   .dropzone {
-    z-index: 4;
+    z-index: 80;
     position: absolute;
     width: 100%;
     height: 100%;
-    opacity: 0.5;
   }
 </style>

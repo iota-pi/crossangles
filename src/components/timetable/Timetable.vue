@@ -8,14 +8,16 @@
       ref="timetable"
       id="timetable"
     >
-      <drop-zone
-        v-for="dropzone in dropzones"
-        :key="'d' + dropzone.course.code + dropzone.component + dropzone.day + dropzone.start"
-        v-if="isVisibleDropzone(dropzone)"
-        :dropzone="dropzone"
-        :boundary="dimensions"
-        :hours="bounds"
-      />
+      <v-fade-transition group>
+        <drop-zone
+          v-for="dropzone in dropzones"
+          :key="'d' + dropzone.course.code + dropzone.component + dropzone.day + dropzone.start"
+          v-if="isVisibleDropzone(dropzone)"
+          :dropzone="dropzone"
+          :boundary="dimensions"
+          :hours="bounds"
+        />
+      </v-fade-transition>
       <session
         v-for="session in timetable"
         :key="'s' + session.course.code + session.stream.component + session.index"
@@ -25,7 +27,7 @@
         :hours="bounds"
         :elevated="isElevated(session)"
         :clashes="getClashingSessions(session)"
-        :snapIndex="snapped.indexOf(session)"
+        :stackIndex="stackOrder.indexOf(session)"
         @drag="startDrag"
         @drop="stopDrag"
         @unSnap="unSnap"
@@ -70,6 +72,7 @@
         dimensionsInterval: null,
         dragging: null,
         snapped: [],
+        stackOrder: [],
         pastTimetable: []
       }
     },
@@ -155,6 +158,15 @@
         if (snappedIndex !== -1) {
           this.snapped.splice(snappedIndex, 1)
         }
+
+        // Move this and linked sessions to the top of the stack
+        for (let session of this.timetable) {
+          if (this.dragging === session || this.isElevated(session)) {
+            let i = this.stackOrder.indexOf(session)
+            this.stackOrder.splice(i, 1)
+            this.stackOrder.push(session)
+          }
+        }
       },
       stopDrag (e) {
         // Find the nearest dropzone
@@ -199,6 +211,9 @@
             for (let session of dropzone.stream.sessions) {
               session.snapToggle = !session.snapToggle
 
+              if (this.snapped.indexOf(session) !== -1) {
+                this.snapped.splice(this.snapped.indexOf(session), 1)
+              }
               this.snapped.push(session)
             }
           } else {
@@ -210,7 +225,14 @@
               localTimetable.splice(localTimetable.indexOf(from), 1)
               localTimetable.push(to)
 
+              if (this.snapped.indexOf(from) !== -1) {
+                this.snapped.splice(this.snapped.indexOf(from), 1)
+              }
               this.snapped.push(to)
+              if (this.stackOrder.indexOf(from) !== -1) {
+                this.stackOrder.splice(this.stackOrder.indexOf(from), 1)
+              }
+              this.stackOrder.push(to)
             }
 
             this.$store.commit('timetable', localTimetable)
@@ -387,10 +409,11 @@
           // Commit this new timetable to the store
           this.timetable = sessions
 
-          this.snapped = sessions.slice()
-          for (let session of this.snapped) {
+          for (let session of sessions) {
             session.snapToggle = !session.snapToggle
           }
+          this.snapped = sessions.slice()
+          this.stackOrder = sessions.slice()
         } else {
           // No timetable was able to be made
           if (!this.allowFull) {
@@ -435,6 +458,7 @@
         if (!this.loading) {
           // Update snapped sessions following timetable restore
           this.snapped = this.timetable.slice()
+          this.stackOrder = this.timetable.slice()
         }
       },
       bounds () {

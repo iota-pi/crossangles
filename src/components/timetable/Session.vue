@@ -3,8 +3,8 @@
     class="session"
     :class="{
       dragging: pointer !== null,
-      'elevation-2': !elevated && !this.isSnapped,
-      'elevation-8': elevated
+      'elevation-3': pointer === null && (elevated || !this.isSnapped),
+      'elevation-8': pointer !== null
     }"
     :style="{
       'background-color': this.session.course.color,
@@ -12,7 +12,7 @@
       top: position.y + 'px',
       width: dimensions.w + 'px',
       height: dimensions.h + 'px',
-      'z-index': Math.max(zIndex, (elevated || !this.isSnapped) ? 3 : 0) + zModifier
+      'z-index': Math.max(zIndex, (elevated || !this.isSnapped) ? 90 : 0) + stackIndex
     }"
   >
     <v-fade-transition>
@@ -46,7 +46,7 @@
       return {
         currentPosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
-        zIndex: 1,
+        zIndex: 2,
         isSnapped: null
       }
     },
@@ -97,13 +97,6 @@
       snapToggle () {
         return this.session.snapToggle
       },
-      zModifier () {
-        if (this.snapIndex === -1) {
-          return 60
-        }
-
-        return this.snapIndex
-      },
       details () {
         let location = ''
         if (this.$store.state.options.locations) {
@@ -139,7 +132,10 @@
         })
       },
       drop () {
-        this.zIndex = 2
+        // Timeout is to fix visual glitch caused by dropzone transition
+        window.setTimeout(() => {
+          this.zIndex = 2
+        }, 300)
 
         // Remember ending position
         this.currentPosition = {
@@ -173,7 +169,11 @@
           y: 51 + cellH * hour
         }
         this.isSnapped = true
-        this.zIndex = 1
+
+        // Timeout is to fix visual glitch caused by dropzone transition
+        window.setTimeout(() => {
+          this.zIndex = 2
+        }, 300)
       }
     },
     watch: {
@@ -246,7 +246,7 @@
         type: Boolean,
         default: false
       },
-      snapIndex: {
+      stackIndex: {
         type: Number,
         default: false
       },
