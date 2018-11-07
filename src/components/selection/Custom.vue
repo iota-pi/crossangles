@@ -4,6 +4,10 @@
       <v-form v-model="valid" ref="form">
         <v-card-title class="pb-2">
           <span class="headline">Custom Event</span>
+          <v-spacer />
+          <v-btn icon flat @click="show = false">
+            <v-icon color="grey darken-2">close</v-icon>
+          </v-btn>
         </v-card-title>
 
         <v-card-text class="pt-0">

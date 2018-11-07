@@ -1,9 +1,13 @@
 <template>
-  <v-dialog v-model="show" :max-width="700">
+  <v-dialog v-model="show" :max-width="700" persistent>
     <v-card>
       <v-form v-model="valid">
         <v-card-title class="pb-2">
           <span class="headline">{{ title }}</span>
+          <v-spacer />
+          <v-btn icon flat @click="show = false">
+            <v-icon color="grey darken-2">close</v-icon>
+          </v-btn>
         </v-card-title>
 
         <v-card-text class="pt-0">
