@@ -1,67 +1,85 @@
 <template>
   <v-dialog v-model="show" :max-width="700">
     <v-card>
-      <v-card-title class="pb-2">
-        <span class="headline">Custom Event</span>
-      </v-card-title>
+      <v-form v-model="valid" ref="form">
+        <v-card-title class="pb-2">
+          <span class="headline">Custom Event</span>
+        </v-card-title>
 
-      <v-card-text class="pt-0">
-        <v-text-field v-model="name" label="Name of event" :counter="40" required autofocus />
+        <v-card-text class="pt-0">
+          <v-text-field
+            v-model="name"
+            ref="nameField"
+            label="Name of event"
+            :counter="40"
+            required
+            browser-autocomplete="off"
+            :rules="[
+              v => !!v || 'Please enter a name for this event',
+              v => !v || v.length <= 40 || 'This event name is too long'
+            ]"
+          />
 
-        <v-select
-          v-model="duration"
-          :items="durations"
-          item-text="text"
-          item-value="duration"
-          label="Duration"
-          prepend-icon="timelapse"
-        />
+          <v-select
+            v-model="duration"
+            :items="durations"
+            item-text="text"
+            item-value="duration"
+            label="Duration"
+            @input="$refs.form.validate()"
+            prepend-icon="timelapse"
+            menu-props="auto"
+          />
 
-        <p class="pt-2">
-          You may enter any number of possible times for this commitment
-          (it will only be included once on your timetable).
-        </p>
+          <p class="pt-2">
+            You may enter any number of possible times for this commitment
+            (it will only be included once on your timetable).
+          </p>
 
-        <div v-for="option, i in options" :key="option.id">
-          <v-layout row wrap align-center>
-            <div class="pr-2">
-              <span class="body-2">Option {{ i + 1 }}</span>
-            </div>
-            <v-spacer />
-            <v-flex xs12 sm5>
-              <v-select
-                v-model="option.day"
-                :items="days"
-                item-text="text"
-                item-value="letter"
-                @input="updateOptions(i)"
-                clearable
-                label="Day"
-                prepend-icon="calendar_today"
-              />
-            </v-flex>
-            <div class="px-2"></div>
-            <v-flex xs12 sm5>
-              <v-select
-                v-model="option.time"
-                :items="validTimes"
-                item-text="text"
-                item-value="time"
-                @input="updateOptions(i)"
-                clearable
-                label="Start time"
-                prepend-icon="access_time"
-              />
-            </v-flex>
-          </v-layout>
-        </div>
-      </v-card-text>
+          <div v-for="option, i in options" :key="option.id">
+            <v-layout row wrap align-center>
+              <div class="pr-2">
+                <span class="body-2">Option {{ i + 1 }}</span>
+              </div>
+              <v-spacer />
+              <v-flex xs12 sm5>
+                <v-select
+                  v-model="option.day"
+                  :items="days"
+                  item-text="text"
+                  item-value="letter"
+                  @input="updateOptions(i)"
+                  clearable
+                  label="Day"
+                  prepend-icon="calendar_today"
+                  menu-props="auto"
+                />
+              </v-flex>
+              <div class="px-2"></div>
+              <v-flex xs12 sm5>
+                <v-select
+                  v-model="option.time"
+                  :items="validTimes"
+                  item-text="text"
+                  item-value="time"
+                  @input="updateOptions(i)"
+                  clearable
+                  label="Start time"
+                  prepend-icon="access_time"
+                  :rules="timeRules"
+                  menu-props="auto"
+                />
+              </v-flex>
+            </v-layout>
+          </div>
+        </v-card-text>
 
-      <v-card-actions>
-        <v-btn block color="primary" @click="addEvent" :disabled="disabled">
-          {{ edit ? 'Edit' : 'Add' }} Event
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-btn block color="primary" @click="addEvent" :disabled="disabled">
+            {{ edit ? 'Edit' : 'Add' }} Event
+          </v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -92,9 +110,7 @@
     { text: '06:30 PM', time: 18.5 },
     { text: '07:00 PM', time: 19.0 },
     { text: '07:30 PM', time: 19.5 },
-    { text: '08:00 PM', time: 20.0 },
-    { text: '08:30 PM', time: 20.5 },
-    { text: '09:00 PM', time: 21.0 }
+    { text: '08:00 PM', time: 20.0 }
   ]
   const days = [
     { text: 'Monday', letter: 'M' },
@@ -135,7 +151,9 @@
         options: [baseOption()],
         validTimes: validTimes,
         days: days,
-        durations: durations
+        durations: durations,
+        valid: false,
+        timeRules: [ v => this.duration + v <= 24 || 'Event cannot run past midnight' ]
       }
     },
     computed: {
@@ -150,7 +168,13 @@
         }
       },
       disabled () {
-        return !this.name || this.options.length <= 1
+        // We must have at least one option
+        // NB: "< 2" is because last one will always be blank
+        if (this.options.length < 2) {
+          return true
+        }
+
+        return !this.valid
       }
     },
     methods: {
@@ -200,8 +224,11 @@
     },
     watch: {
       show () {
-        // Reset dialog when hidden
-        if (!this.show) {
+        if (this.show) {
+          // Automatically focus on first field
+          this.$nextTick(() => this.$refs.nameField.focus())
+        } else {
+          // Reset dialog when hidden
           this.name = null
           this.duration = 1
           this.options = [baseOption()]
