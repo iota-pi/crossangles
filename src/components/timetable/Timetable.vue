@@ -91,6 +91,9 @@
           end = Math.max(end, zone.end)
         }
 
+        // Cap the end of the day at hour 24
+        end = Math.min(end, 24)
+
         // Default time range in case of an empty timetable
         if (start === 24 || end === 0) {
           start = 9
@@ -469,11 +472,13 @@
   .timetable-holder {
     position: relative;
     overflow-x: auto;
+    overflow-y: hidden;
     z-index: 0;
   }
   .timetable {
     position: relative;
     overflow-x: visible;
+    overflow-y: hidden;
 
     /* prevent selection */
   	-webkit-touch-callout: none;
