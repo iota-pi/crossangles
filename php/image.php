@@ -2,7 +2,6 @@
 /* Simple script to send email from contact form
  */
 
-$DOMAIN = json_decode(file_get_contents('config/domain.json'));
 $KEYS = json_decode(file_get_contents('config/keys.json'));
 $KEY = $KEYS[array_rand($KEYS)];
 
