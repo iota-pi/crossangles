@@ -102,7 +102,7 @@
               is a great place for you to learn more.
               If you've never come before, we recommend checking out the Bible talks.
             </p>
-            <p>
+            <p class="pt-3">
               The data was last updated at {{ meta.updateTime }}
               <span class="faded">({{ meta.updateDate }})</span>
               from <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>.
@@ -111,23 +111,6 @@
           </div>
         </v-container>
       </v-content>
-      <v-footer height="auto">
-        <v-container class="py-2 narrow">
-          <v-layout row wrap>
-            <v-flex xs12 sm9 class="py-1">
-              <span>Last data update:</span>
-              <span>{{ meta.updateTime }}</span>
-              <span class="faded">({{ meta.updateDate }})</span>
-            </v-flex>
-
-            <v-flex xs12 sm3 class="py-1 text-sm-right">
-              <a @click="contactDialog = true; contactTitle = null">
-                Get in Contact
-              </a>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-footer>
     </div>
     <custom
       :display="customDialog"
