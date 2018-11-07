@@ -34,9 +34,7 @@ function processData (context, data) {
     context.commit('events', events)
   } else {
     // Default to all CBS events
-    let components = context.state.courses.CBS.streams.map(s => s.component)
-    let events = components.filter((c, i) => components.indexOf(c) === i)
-    context.commit('events', events)
+    context.commit('events', [ 'The Bible Talks' ])
   }
 
   if (options) {

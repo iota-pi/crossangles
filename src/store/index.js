@@ -99,10 +99,8 @@ export default {
     },
     reset (context) {
       const CBS = context.state.courses.CBS
-      let components = CBS.streams.map(s => s.component)
-      let events = components.filter((c, i) => components.indexOf(c) === i)
-      context.commit('chosen', [CBS])
-      context.commit('events', events)
+      context.commit('chosen', [ CBS ])
+      context.commit('events', [ 'The Bible Talks' ])
       context.commit('options', {})
       context.commit('timetable', [])
       context.commit('webStreams', [])
