@@ -1,24 +1,56 @@
 <template>
   <v-dialog v-model="show" :max-width="700">
     <v-card>
-      <v-card-title class="pb-2">
-        <span class="headline">{{ title }}</span>
-      </v-card-title>
+      <v-form v-model="valid">
+        <v-card-title class="pb-2">
+          <span class="headline">{{ title }}</span>
+        </v-card-title>
 
-      <v-card-text class="pt-0">
-        <v-text-field v-model="name" label="Your Name" hide-details>
-        </v-text-field>
-        <v-text-field v-model="email" type="email" label="Your Email" hide-details>
-        </v-text-field>
-        <v-textarea v-model="body" label="What would you like us to know?" rows="4" :counter="5000">
-        </v-textarea>
-      </v-card-text>
+        <v-card-text class="pt-0">
+          <v-text-field
+            ref="nameField"
+            v-model="name"
+            label="Your Name"
+            hide-details
+            prepend-icon="person"
+            required
+            :rules="[
+              v => !!v || 'Please type a message'
+            ]"
+          />
+          <v-text-field
+            v-model="email"
+            type="email"
+            label="Your Email"
+            prepend-icon="email"
+            required
+            :rules="[
+              v => !!v || 'Please enter your email address',
+              v => !v || emailRegex.test(v) || 'This email address doesn\'t look right',
+              v => !v || v.length <= 254 || 'Imagine how painful that would be to type in!'
+            ]"
+            validate-on-blur
+          />
+          <v-textarea
+            v-model="body"
+            label="What would you like us to know?"
+            rows="4"
+            :counter="5000"
+            required
+            :rules="[
+              v => !!v || 'Please type a message',
+              v => !v || v.length <= 6000 || 'Please refrain from sending me essays',
+              v => !v || v.length <= 5000 || 'Please limit your message to 5000 characters'
+            ]"
+          />
+        </v-card-text>
 
-      <v-card-actions>
-        <v-btn block color="primary" @click="submit" :disabled="disabled">
-          Submit
-        </v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-btn block color="primary" @click="submit" :disabled="!valid">
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -31,13 +63,12 @@
       return {
         name: null,
         email: null,
-        body: null
+        body: null,
+        valid: false,
+        emailRegex: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
       }
     },
     computed: {
-      disabled () {
-        return !this.name || !this.email || !this.body || this.body.length > 5000
-      },
       show: {
         get () {
           return this.display
@@ -72,7 +103,9 @@
     watch: {
       show () {
         // Reset all fields when dialog is hidden
-        if (!this.show) {
+        if (this.show) {
+          this.$nextTick(() => this.$refs.nameField.focus())
+        } else {
           this.name = null
           this.email = null
           this.body = null
