@@ -27,11 +27,10 @@ export default {
 
       // Remove empty rows from the start and the end
       let rows = clone.querySelectorAll('.row')
-      for (let i = 1; i <= (display.start - actual.start); i++) {
-        clone.removeChild(rows[i])
-      }
-      for (let i = rows.length - 1; i >= 1 + actual.end - actual.start; i--) {
-        clone.removeChild(rows[i])
+      for (let i = 1; i < rows.length; i++) {
+        if (i <= actual.start - display.start || i >= 1 + (actual.end - actual.start)) {
+          clone.removeChild(rows[i])
+        }
       }
 
       // Get the height of this cut-down timetable
