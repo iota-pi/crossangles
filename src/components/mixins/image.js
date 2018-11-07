@@ -12,9 +12,11 @@ export default {
       let actual = { start: 24, end: 0 }
       for (let course of this.$store.state.chosen) {
         for (let stream of course.streams) {
-          for (let session of stream.sessions) {
-            display.start = Math.min(display.start, session.time.start)
-            display.end = Math.max(display.end, session.time.end)
+          if (stream.web === false) {
+            for (let session of stream.sessions) {
+              display.start = Math.min(display.start, session.time.start)
+              display.end = Math.max(display.end, session.time.end)
+            }
           }
         }
       }
