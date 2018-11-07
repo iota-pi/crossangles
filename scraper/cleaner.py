@@ -44,6 +44,12 @@ class Cleaner():
                 if 'WEB' in stream['section']:
                     # Mark this as stream as a WEB stream
                     stream['web'] = 1
+
+                    # Web streams replace lecture streams
+                    # Some web streams have their component set to 'WEB' too
+                    # which would confuse JS timetable generation algorithm
+                    if stream['component'] == 'WEB':
+                        stream['component'] = 'LEC'
                 del stream['section']
 
                 existing[(stream['component'], times)].append(stream)
