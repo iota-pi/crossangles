@@ -40,7 +40,7 @@
             (it will only be included once on your timetable).
           </p>
 
-          <div v-for="option, i in options" :key="option.id">
+          <div v-for="(option, i) in options" :key="option.id">
             <v-layout row wrap align-center>
               <div class="pr-2">
                 <span class="body-2">Option {{ i + 1 }}</span>
