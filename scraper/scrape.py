@@ -130,8 +130,8 @@ def getSydneyTime():
 def getMeta(year, term):
     updateDate, updateTime = getSydneyTime()
     return {
-        'term': year,
-        'year': term,
+        'term': term,
+        'year': year,
         'updateDate': updateDate,
         'updateTime': updateTime
     }
