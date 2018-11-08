@@ -238,7 +238,7 @@
       CourseDisplay,
       Options,
       Timetable: () => import('./components/timetable/Timetable'),
-      SideMenu: () => import('./components/Menu'),
+      SideMenu: () => import('./components/SideMenu'),
       Custom: () => import('./components/selection/Custom'),
       Contact: () => import('./components/Contact'),
       Alert: () => import('./components/Alert')
