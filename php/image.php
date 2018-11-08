@@ -1,5 +1,6 @@
 <?php
-/* Simple script to send email from contact form
+/* Proxy request to save timetable as image to PhantomJSCloud
+ * This effectively takes a screenshot of the timetable
  */
 
 $KEYS = json_decode(file_get_contents('config/keys.json'));
