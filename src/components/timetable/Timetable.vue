@@ -334,9 +334,10 @@
         return true
       },
       updateDimensions () {
+        let timetable = document.getElementById('timetable')
         this.dimensions = {
-          w: this.$el.scrollWidth,
-          h: this.$el.scrollHeight
+          w: timetable.scrollWidth,
+          h: timetable.scrollHeight
         }
       },
       updateTimetable (allowFullOveride) {
