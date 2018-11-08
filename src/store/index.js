@@ -1,17 +1,22 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+
 import axios from 'axios'
 import parseCourses from './parseJSON'
 import processData from './processData'
 import _colors from '../components/mixins/colors'
 let colors = _colors.data()
 
-const dataURL = '/static/tt.json'
+const dataURL = '/tt.json'
 const storage = window.localStorage
 
 function choice (array) {
   return array[Math.floor(Math.random() * array.length)]
 }
 
-export default {
+Vue.use(Vuex)
+
+export default new Vuex.Store({
   state: {
     courses: {},
     meta: {},
@@ -196,4 +201,4 @@ export default {
       context.commit('custom', context.state.custom)
     }
   }
-}
+})

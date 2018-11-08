@@ -1,31 +1,21 @@
 .DS_Store
-node_modules/
-/dist/
+node_modules
+/dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/test/unit/coverage
-/test/e2e/reports
-selenium-debug.log
-
-# Python working files
-__pycache__
-/scraper/cache.json
-/scraper/tmp.json
-/scraper/.config.json
-
-# Data files
-/static/tt.json
-
-# PHP config files
-/php/config/
-
-# Temporary, manual test scripts
-/test/manual/
 
 # Editor directories and files
 .idea
+.vscode
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+*.sw*

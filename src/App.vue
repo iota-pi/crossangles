@@ -13,37 +13,17 @@
         dark
         color="primary"
       >
-        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+        <v-toolbar-side-icon @click.stop="menu = !menu"></v-toolbar-side-icon>
         <v-toolbar-title v-text="title"></v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
-      <v-navigation-drawer
-        v-model="drawer"
-        enable-resize-watcher
-        temporary
-        fixed
-        app
-      >
-        <v-list>
-          <v-list-tile
-            value="true"
-            v-for="(item, i) in items"
-            :key="i"
-            @click="item.action"
-          >
-            <v-list-tile-action>
-              <v-icon>
-                {{ item.icon }}
-              </v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ item.title }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-      </v-navigation-drawer>
+      <side-menu
+        :display="menu"
+        @hide="menu = false"
+        @save="save"
+        @report="report"
+        @contact="contact"
+      />
 
       <v-content>
         <v-container class="narrow">
@@ -129,21 +109,18 @@
 
 <script>
   import Vue from 'vue'
+  import WebFontLoader from 'webfontloader'
 
-  import courseSelection from './components/selection/CourseSelection'
-  import courseDisplay from './components/selection/CourseDisplay'
-  import options from './components/selection/Options'
-  import custom from './components/selection/Custom'
-  import timetable from './components/timetable/Timetable'
-  import contact from './components/Contact'
-  import alert from './components/Alert'
+  import CourseSelection from './components/selection/CourseSelection'
+  import CourseDisplay from './components/selection/CourseDisplay'
+  import Options from './components/selection/Options'
 
   import image from './components/mixins/image'
 
   export default {
     data () {
       return {
-        drawer: false,
+        menu: false,
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
         contactDialog: false,
@@ -151,33 +128,6 @@
         customDialog: false,
         customToEdit: null,
         saving: false,
-        items: [
-          {
-            icon: 'photo',
-            title: 'Save as Image',
-            action: this.save
-          },
-          {
-            icon: 'refresh',
-            title: 'Reset Page',
-            action: this.reset
-          },
-          {
-            icon: 'share',
-            title: 'Share on Facebook',
-            action: this.share
-          },
-          {
-            icon: 'bug_report',
-            title: 'Report a Bug',
-            action: this.report
-          },
-          {
-            icon: 'email',
-            title: 'Get in Contact',
-            action: this.contact
-          }
-        ],
         title: 'CrossAngles'
       }
     },
@@ -261,10 +211,6 @@
         this.saveTimetable(() => { this.saving = false })
         this.drawer = false
       },
-      reset () {
-        this.$store.dispatch('reset')
-        this.drawer = false
-      },
       report () {
         this.contactDialog = true
         this.contactTitle = 'Report a Bug'
@@ -274,25 +220,28 @@
         this.contactDialog = true
         this.contactTitle = null
         this.drawer = false
-      },
-      share () {
-        const sharingURL = encodeURIComponent(process.env.DOMAIN)
-        const fbURL = 'https://www.facebook.com/sharer/sharer.php?u=' + sharingURL
-        window.open(fbURL, 'FBsharer', 'width=600, height=400, scrollbars=no')
       }
     },
     mounted () {
       this.$store.dispatch('loadData')
+
+      // Load Roboto and Material Icons
+      WebFontLoader.load({
+        google: {
+          families: ['Roboto:300,400,500,700|Material+Icons']
+        }
+      })
     },
     name: 'App',
     components: {
-      courseSelection,
-      courseDisplay,
-      options,
-      timetable,
-      custom,
-      contact,
-      alert
+      CourseSelection,
+      CourseDisplay,
+      Options,
+      Timetable: () => import('./components/timetable/Timetable'),
+      SideMenu: () => import('./components/Menu'),
+      Custom: () => import('./components/selection/Custom'),
+      Contact: () => import('./components/Contact'),
+      Alert: () => import('./components/Alert')
     },
     mixins: [ image ]
   }

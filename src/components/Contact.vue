@@ -86,7 +86,7 @@
     },
     methods: {
       submit () {
-        axios.post('https://' + process.env.DOMAIN + '/contact/', {
+        axios.post('https://' + process.env.VUE_APP_DOMAIN + '/contact/', {
           name: this.name,
           email: this.email,
           body: this.body
