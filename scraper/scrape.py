@@ -10,10 +10,6 @@ import time
 import re
 import os
 
-URL = 'https://nss.cse.unsw.edu.au/sitar/classes2018/index.html'
-TERM = 2
-YEAR = 2018
-
 class Parser():
     def __init__(self, term, engine='lxml', windowSize=20, timeout=5, cache=None):
         self.parser = engine
@@ -23,7 +19,7 @@ class Parser():
         self.cache = {}
         self.term = str(term)
 
-        if cache is not None:
+        if cache:
             try:
                 with open(cache) as f:
                     self.cache = json.load(f)
@@ -113,8 +109,9 @@ class Parser():
         return courses
 
     def writeCache(self):
-        with open(self.cacheName, 'w') as f:
-            json.dump(self.cache, f, separators=(',', ':'))
+        if self.cacheName:
+            with open(self.cacheName, 'w') as f:
+                json.dump(self.cache, f, separators=(',', ':'))
 
 #
 # getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney
@@ -130,19 +127,22 @@ def getSydneyTime():
 
     return updateDate, updateTime
 
-def getMeta():
+def getMeta(year, term):
     updateDate, updateTime = getSydneyTime()
     return {
-        'term': TERM,
-        'year': YEAR,
+        'term': year,
+        'year': term,
         'updateDate': updateDate,
         'updateTime': updateTime
     }
 
 if __name__ == '__main__':
-    parser = Parser(term=TERM, cache='cache.json')
-    courses = parser.scrape(URL)
-    meta = getMeta()
+    with open('.config.json') as f:
+        config = json.load(f)
+
+    parser = Parser(term=config['term'], cache=config['cache'])
+    courses = parser.scrape(config['url'])
+    meta = getMeta(config['year'], config['term'])
     parser.writeCache()
 
     cleaner = Cleaner()
@@ -153,4 +153,4 @@ if __name__ == '__main__':
         'meta': meta
     }
 
-    cleaner.dump(everything, '../static/tt.json')
+    cleaner.dump(everything, config['output'])

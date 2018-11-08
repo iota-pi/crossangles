@@ -12,6 +12,7 @@ selenium-debug.log
 __pycache__
 /scraper/cache.json
 /scraper/tmp.json
+/scraper/.config.json
 
 # Data files
 /static/tt.json
