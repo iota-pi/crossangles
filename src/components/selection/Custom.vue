@@ -185,9 +185,12 @@
       updateOptions (i) {
         // Remove this option if it is now empty
         if (!this.options[i].day && !this.options[i].time) {
-          this.$vuetify.$nextTick(() => {
-            this.options.splice(i, 1)
-          })
+          // Only remove this option if there is still one left
+          if (this.options.length > 1) {
+            this.$vuetify.$nextTick(() => {
+              this.options.splice(i, 1)
+            })
+          }
         }
 
         // Add an empty one at the end
