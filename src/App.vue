@@ -264,4 +264,8 @@
   html.overflow-y-hidden > body {
     overflow-y: scroll;
   }
+  html:not(.wf-active) .material-icons {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
 </style>
