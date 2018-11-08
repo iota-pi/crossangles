@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" :max-width="700" persistent>
     <v-card>
-      <v-form v-model="valid">
+      <v-form v-model="valid" ref="contactForm">
         <v-card-title class="pb-2">
           <span class="headline">{{ title }}</span>
           <v-spacer />
@@ -113,6 +113,7 @@
           this.name = null
           this.email = null
           this.body = null
+          this.$refs.contactForm.reset()
         }
       }
     },
