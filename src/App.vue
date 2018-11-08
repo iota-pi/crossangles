@@ -209,17 +209,17 @@
       save () {
         this.saving = true
         this.saveTimetable(() => { this.saving = false })
-        this.drawer = false
+        this.menu = false
       },
       report () {
         this.contactDialog = true
         this.contactTitle = 'Report a Bug'
-        this.drawer = false
+        this.menu = false
       },
       contact () {
         this.contactDialog = true
         this.contactTitle = null
-        this.drawer = false
+        this.menu = false
       }
     },
     mounted () {
