@@ -137,6 +137,9 @@ def getMeta(year, term):
     }
 
 if __name__ == '__main__':
+    # Ensure script always runs in its own directory
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     with open('.config.json') as f:
         config = json.load(f)
 

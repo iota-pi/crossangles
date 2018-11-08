@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import json
 import requests
 
@@ -18,6 +19,9 @@ def getUGCourses():
     return mappingUG
 
 if __name__ == '__main__':
+    # Ensure script always runs in its own directory
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     print('Loading handbook')
     mapping = getUGCourses()
     print('Writing output file')
