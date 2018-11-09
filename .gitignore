@@ -11,6 +11,18 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Python working files
+__pycache__
+/scraper/cache.json
+/scraper/tmp.json
+/scraper/.config.json
+
+# Data files
+/static/tt.json
+
+# PHP config files
+/php/config/
+
 # Editor directories and files
 .idea
 .vscode
