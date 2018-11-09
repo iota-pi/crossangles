@@ -34,6 +34,11 @@
       return {
         items: [
           {
+            icon: 'event',
+            title: 'Add a Custom Event',
+            action: () => this.$emit('custom')
+          },
+          {
             icon: 'photo',
             title: 'Save as Image',
             action: () => this.$emit('save')

@@ -2,10 +2,9 @@
   <div>
     <v-layout row wrap align-center>
       <v-flex
-        xs12 sm9
         class="pb-2"
         :class="{
-          'mb-1 pr-3': $vuetify.breakpoint.smAndUp
+          'mb-1': $vuetify.breakpoint.smAndUp
         }"
       >
         <v-autocomplete
@@ -37,15 +36,17 @@
         </v-autocomplete>
       </v-flex>
 
-      <div class="title font-weight-regular pr-3 hidden-sm-and-down">OR</div>
+      <v-tooltip left :open-delay="200">
+        <v-btn icon large flat @click="$emit('custom')" slot="activator">
+          <v-icon>
+            event
+          </v-icon>
+        </v-btn>
 
-      <v-btn block color="primary" @click="$emit('custom')">
         <span>
-          <span class="hidden-sm-and-up">Or</span>
-          Add Custom
-          <span class="hidden-sm-only">Event</span>
+          Add a Custom Event
         </span>
-      </v-btn>
+      </v-tooltip>
     </v-layout>
   </div>
 </template>
@@ -103,7 +104,7 @@
           this.$refs.courseSelect.blur()
         }
       },
-      courseFilter (course, queryText, itemText) {
+      courseFilter (course, queryText) {
         // Don't show courses we've already chosen
         if (this.chosen.includes(course)) {
           return false

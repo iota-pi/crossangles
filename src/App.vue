@@ -23,6 +23,7 @@
         @save="save"
         @report="report"
         @contact="contact"
+        @custom="customDialog = true; menu = false"
       />
 
       <v-content>
