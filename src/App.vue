@@ -8,15 +8,7 @@
       @mouseup="mouseup"
       @touchend="mouseup"
     >
-      <v-toolbar
-        app
-        dark
-        color="primary"
-      >
-        <v-toolbar-side-icon @click.stop="menu = !menu"></v-toolbar-side-icon>
-        <v-toolbar-title v-text="title"></v-toolbar-title>
-        <v-spacer></v-spacer>
-      </v-toolbar>
+      <toolbar :title="title" @menu="menu = !menu" />
       <side-menu
         :display="menu"
         @hide="menu = false"
@@ -55,20 +47,7 @@
 
           <timetable :pointers="pointers" />
 
-          <v-layout class="font-weight-light pt-4" row>
-            <v-flex class="text-xs-center">
-              <v-btn color="primary" @click="save" class="fixed-width">
-                <span v-if="!saving">Save Timetable as Image</span>
-                <v-progress-circular
-                  v-else
-                  color="white"
-                  indeterminate
-                  :size="24"
-                  :width="3"
-                />
-              </v-btn>
-            </v-flex>
-          </v-layout>
+          <save-timetable @save="save" :saving="saving" />
 
           <div class="font-weight-light pt-5">
             <p>
@@ -112,16 +91,12 @@
   import Vue from 'vue'
   import WebFontLoader from 'webfontloader'
 
-  import CourseSelection from './components/selection/CourseSelection'
-  import CourseDisplay from './components/selection/CourseDisplay'
-  import Options from './components/selection/Options'
-
   import image from './components/mixins/image'
 
   export default {
     data () {
       return {
-        menu: false,
+        menu: null,
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
         contactDialog: false,
@@ -235,10 +210,12 @@
     },
     name: 'App',
     components: {
-      CourseSelection,
-      CourseDisplay,
-      Options,
+      Toolbar: () => import('./components/Toolbar'),
+      CourseSelection: () => import('./components/selection/CourseSelection'),
+      CourseDisplay: () => import('./components/selection/CourseDisplay'),
+      Options: () => import('./components/selection/Options'),
       Timetable: () => import('./components/timetable/Timetable'),
+      SaveTimetable: () => import('./components/SaveTimetable'),
       SideMenu: () => import('./components/SideMenu'),
       Custom: () => import('./components/selection/Custom'),
       Contact: () => import('./components/Contact'),
@@ -254,9 +231,6 @@
   }
   .faded {
     opacity: 0.8;
-  }
-  .v-btn.fixed-width {
-    min-width: 250px;
   }
 </style>
 
