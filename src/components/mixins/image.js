@@ -72,7 +72,10 @@ export default {
       }).then(r => {
         download('data:image/png;base64,' + r.data, 'timetable.png', 'image/png')
       }).catch((e) => {
-        console.error(e)
+        this.$store.commit('alert', {
+          message: 'Sorry, something went wrong. Please try again later',
+          type: 'error'
+        })
       }).then(() => {
         cb()
       })

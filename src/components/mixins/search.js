@@ -210,7 +210,7 @@ function evolve (parents, maxParents, maxIter, biasTop, pastTimetable, allowFull
 
       // End iterations if function has run for too long
       if ((new Date()).getTime() - startTime > maxRunTime) {
-        console.warn('search(): max execution time reached after ' + i + ' iterations')
+        // console.warn('search(): max execution time reached after ' + i + ' iterations')
         break
       }
     }
