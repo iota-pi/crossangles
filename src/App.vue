@@ -90,7 +90,10 @@
 <script>
   import Vue from 'vue'
   import WebFontLoader from 'webfontloader'
-
+  import Toolbar from './components/Toolbar'
+  import CourseSelection from './components/selection/CourseSelection'
+  import CourseDisplay from './components/selection/CourseDisplay'
+  import Options from './components/selection/Options'
   import image from './components/mixins/image'
 
   export default {
@@ -210,10 +213,10 @@
     },
     name: 'App',
     components: {
-      Toolbar: () => import('./components/Toolbar'),
-      CourseSelection: () => import('./components/selection/CourseSelection'),
-      CourseDisplay: () => import('./components/selection/CourseDisplay'),
-      Options: () => import('./components/selection/Options'),
+      Toolbar,
+      CourseSelection,
+      CourseDisplay,
+      Options,
       Timetable: () => import('./components/timetable/Timetable'),
       SaveTimetable: () => import('./components/SaveTimetable'),
       SideMenu: () => import('./components/SideMenu'),
