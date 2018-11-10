@@ -1,8 +1,9 @@
 <template>
   <v-navigation-drawer
     v-model="visible"
-    enable-resize-watcher
-    temporary
+    disable-resize-watcher
+    state
+    clipped
     fixed
     app
   >
@@ -12,6 +13,7 @@
         v-for="(item, i) in items"
         :key="i"
         @click="item.action"
+        class="no-primary--text"
       >
         <v-list-tile-action>
           <v-icon>
@@ -81,14 +83,13 @@
     methods: {
       reset () {
         this.$store.dispatch('reset')
-        this.drawer = false
-        this.$emit('hide')
+        this.visible = false
       },
       share () {
         const sharingURL = encodeURIComponent(process.env.VUE_APP_DOMAIN)
         const fbURL = 'https://www.facebook.com/sharer/sharer.php?u=' + sharingURL
         window.open(fbURL, 'FBsharer', 'width=600, height=400, scrollbars=no')
-        this.$emit('hide')
+        this.visible = false
       }
     },
     props: {
@@ -99,3 +100,9 @@
     }
   }
 </script>
+
+<style>
+  /* .no-primary--text a.primary--text {
+    color: inherit !important;
+  } */
+</style>

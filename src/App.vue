@@ -96,7 +96,7 @@
   export default {
     data () {
       return {
-        menu: null,
+        menu: false,
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
         contactDialog: false,
