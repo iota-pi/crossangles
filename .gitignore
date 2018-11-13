@@ -17,8 +17,9 @@ __pycache__
 /scraper/tmp.json
 /scraper/.config.json
 
-# Data files
+# Testing files
 /public/tt.json
+/public/.htaccess
 
 # PHP config files
 /php/config/
