@@ -106,17 +106,17 @@
   import 'vue-swatches/dist/vue-swatches.min.css'
 
   import CbsEvents from './CBSEvents'
-  import colors from '../mixins/colors'
+  import colors from '../../store/colors'
 
   export default {
     components: {
       Swatches,
       CbsEvents
     },
-    mixins: [ colors ],
     data () {
       return {
-        color: ''
+        color: '',
+        colors: colors
       }
     },
     computed: {

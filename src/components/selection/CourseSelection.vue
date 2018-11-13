@@ -78,14 +78,11 @@
 </template>
 
 <script>
-  import colors from '../mixins/colors'
-
   function escapeRegExp (string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   }
 
   export default {
-    mixins: [ colors ],
     data () {
       return {
         course: null,

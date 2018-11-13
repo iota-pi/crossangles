@@ -1,5 +1,4 @@
-import _colors from '../components/mixins/colors'
-let colors = _colors.data()
+import { CBScolor } from './colors'
 
 function parseCourses (data) {
   let courses = {}
@@ -11,7 +10,7 @@ function parseCourses (data) {
       code: code,
       title: course.name,
       custom: false,
-      color: code !== 'CBS' ? null : colors.CBScolor,
+      color: code !== 'CBS' ? null : CBScolor,
       streams: null
     }
     courses[code].streams = parseStreams(course.streams, courses[code])

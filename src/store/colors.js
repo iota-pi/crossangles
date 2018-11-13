@@ -32,12 +32,7 @@ const colorBases = [
     vuetify: 'deep-orange darken-2'
   }
 ]
+const colors = colorBases.map(color => color.hex)
+const CBScolor = colors[2]
 
-export default {
-  data () {
-    return {
-      colors: colorBases.map(color => color.hex),
-      CBScolor: colorBases[2].hex
-    }
-  }
-}
+export { colors as default, colors, CBScolor, colorBases }

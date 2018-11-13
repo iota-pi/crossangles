@@ -4,8 +4,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import parseCourses from './parseCourses'
 import processData from './processData'
-import _colors from '../components/mixins/colors'
-let colors = _colors.data()
+import { colors } from './colors'
 
 const dataURL = '/tt.json'
 const storage = window.localStorage
@@ -131,7 +130,7 @@ export default new Vuex.Store({
       // Assign this course an unused color
       if (!course.color) {
         let used = context.state.chosen.map(course => course.color)
-        course.color = choice(colors.colors.filter(c => !used.includes(c)))
+        course.color = choice(colors.filter(c => !used.includes(c)))
       }
 
       // Add this course and then sort the list of chosen courses
