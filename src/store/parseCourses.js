@@ -4,7 +4,8 @@ let colors = _colors.data()
 function parseCourses (data) {
   let courses = {}
 
-  for (let course of data) {
+  for (let i = 0; i < data.length; i++) {
+    let course = data[i]
     let code = course.code
     courses[code] = {
       code: code,
@@ -22,7 +23,8 @@ function parseCourses (data) {
 function parseStreams (streams, course) {
   let result = []
 
-  for (let stream of streams) {
+  for (let i = 0; i < streams.length; i++) {
+    let stream = streams[i]
     let newStream = {
       course: course,
       component: stream.component,

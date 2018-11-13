@@ -34,7 +34,7 @@
         }
       },
       allEvents () {
-        let data = this.$store.state.courses.CBS
+        let data = this.$store.getters.courses.CBS
         if (!data) {
           return []
         } else {

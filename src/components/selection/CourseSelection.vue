@@ -97,7 +97,7 @@
         return this.$store.state.chosen
       },
       courses () {
-        let data = Object.values(this.$store.state.courses)
+        let data = Object.values(this.$store.getters.courses)
         data = data.filter(c => this.courseFilter(c, '', ''))
 
         data.sort((a, b) => {

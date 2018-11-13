@@ -1,6 +1,6 @@
 const storage = window.localStorage
 
-function processData (context, data) {
+function processData (context, data, courses) {
   let chosen = storage.getItem('chosen')
   let events = storage.getItem('events')
   let options = storage.getItem('options')
@@ -8,24 +8,24 @@ function processData (context, data) {
   let webStreams = storage.getItem('webStreams')
   let custom = storage.getItem('custom')
 
-  context.commit('courses', data.courses)
   context.commit('meta', data.meta)
 
   if (chosen) {
     // Restore previously chosen courses
     chosen = JSON.parse(chosen)
     let restored = []
-    for (let course of chosen) {
+    for (let i = 0; i < chosen.length; i++) {
+      let course = chosen[i]
       if (!course.custom) {
-        context.state.courses[course.code].color = course.color
-        restored.push(context.state.courses[course.code])
+        courses[course.code].color = course.color
+        restored.push(courses[course.code])
       }
     }
 
     context.commit('chosen', restored)
   } else {
     // Default to just CBS chosen
-    context.commit('chosen', [context.state.courses.CBS])
+    context.commit('chosen', [courses.CBS])
   }
 
   if (events) {
@@ -59,8 +59,8 @@ function processData (context, data) {
     // Restore previously selected options
     custom = JSON.parse(custom)
     context.commit('custom', custom)
-    for (let c of custom) {
-      context.dispatch('addCustom', c)
+    for (let i = 0; i < custom.length; i++) {
+      context.dispatch('addCustom', custom[i])
     }
   } else {
     // Default to none selected
@@ -71,8 +71,9 @@ function processData (context, data) {
     timetable = JSON.parse(timetable)
 
     let restored = []
-    for (let item of timetable) {
-      let course = context.state.courses[item.code]
+    for (let i = 0; i < timetable.length; i++) {
+      let item = timetable[i]
+      let course = courses[item.code]
       if (course === undefined) {
         course = context.state.chosen.filter(c => c.code === item.code)[0]
       }

@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import axios from 'axios'
-import parseCourses from './parseJSON'
+import parseCourses from './parseCourses'
 import processData from './processData'
 import _colors from '../components/mixins/colors'
 let colors = _colors.data()
 
 const dataURL = '/tt.json'
 const storage = window.localStorage
+
+let courses = null
 
 function choice (array) {
   return array[Math.floor(Math.random() * array.length)]
@@ -30,49 +32,56 @@ export default new Vuex.Store({
     loading: true
   },
   mutations: {
-    courses (state, data) {
-      state.courses = parseCourses(data)
-    },
     meta (state, data) {
       state.meta = data
     },
     chosen (state, data) {
       state.chosen = data
 
-      storage.setItem('chosen', JSON.stringify(data.map(c => {
-        return {
-          code: c.code,
-          color: c.color,
-          custom: c.custom
-        }
-      })))
+      if (!state.loading) {
+        storage.setItem('chosen', JSON.stringify(data.map(c => {
+          return {
+            code: c.code,
+            color: c.color,
+            custom: c.custom
+          }
+        })))
+      }
     },
     custom (state, data) {
       state.custom = data
 
-      storage.setItem('custom', JSON.stringify(data))
+      if (!state.loading) {
+        storage.setItem('custom', JSON.stringify(data))
+      }
     },
     events (state, data) {
       state.events = data
 
-      storage.setItem('events', JSON.stringify(data))
+      if (!state.loading) {
+        storage.setItem('events', JSON.stringify(data))
+      }
     },
     options (state, data) {
       state.options = data
 
-      storage.setItem('options', JSON.stringify(data))
+      if (!state.loading) {
+        storage.setItem('options', JSON.stringify(data))
+      }
     },
     timetable (state, data) {
       state.timetable = data
 
-      storage.setItem('timetable', JSON.stringify(data.map(session => {
-        return {
-          code: session.course.code,
-          component: session.stream.component,
-          time: session.time,
-          index: session.index
-        }
-      })))
+      if (!state.loading) {
+        storage.setItem('timetable', JSON.stringify(data.map(session => {
+          return {
+            code: session.course.code,
+            component: session.stream.component,
+            time: session.time,
+            index: session.index
+          }
+        })))
+      }
     },
     alert (state, data) {
       state.alert = data
@@ -82,28 +91,35 @@ export default new Vuex.Store({
     },
     webStreams (state, data) {
       state.webStreams = data
-      storage.setItem('webStreams', JSON.stringify(data))
+
+      if (!state.loading) {
+        storage.setItem('webStreams', JSON.stringify(data))
+      }
     }
   },
   actions: {
     loadData (context) {
-      let pastData = storage.getItem('courseData')
-      if (pastData) {
-        processData(context, JSON.parse(pastData))
-      }
-
       axios.get(dataURL).then((r) => {
-        // TODO: store JSON data before it's parsed (saves this stringify call)
+        let t = new Date().getTime()
+        // TODO: store JSON data before it's parsed? (saves this stringify call)
         storage.setItem('courseData', JSON.stringify(r.data))
-        processData(context, r.data)
+        console.log('json saving took', new Date().getTime() - t, 'ms')
+        courses = parseCourses(r.data.courses)
+        processData(context, r.data, courses)
 
         // Disable the loading block on auto timetable updating
         // NB: this block exists to prevent restored timetable being overwritten
-        window.setTimeout(() => context.commit('loading', false), 100)
+        window.setTimeout(() => context.commit('loading', false), 25)
+        console.log('data processing took', new Date().getTime() - t, 'ms')
+      }).catch(() => {
+        let pastData = storage.getItem('courseData')
+        if (pastData) {
+          processData(context, JSON.parse(pastData))
+        }
       })
     },
     reset (context) {
-      const CBS = context.state.courses.CBS
+      const CBS = courses.CBS
       context.commit('chosen', [ CBS ])
       context.commit('events', [ 'The Bible Talks' ])
       context.commit('options', {})
@@ -199,6 +215,15 @@ export default new Vuex.Store({
       // Save the chosen color
       custom.color = customCourse.color
       context.commit('custom', context.state.custom)
+    }
+  },
+  getters: {
+    courses (state) {
+      if (state.loading) {
+        return {}
+      } else {
+        return courses
+      }
     }
   }
 })
