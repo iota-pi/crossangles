@@ -2,22 +2,46 @@
   <div
     class="dropzone"
     :style="{
-      'background-color': this.dropzone.course.color + 'A0',
+      'background-color': dropzone.course.color + 'A0',
       left: position.x + 'px',
       top: position.y + 'px',
       width: position.w + 'px',
       height: position.h + 'px'
     }"
-  >
-  </div>
+  />
 </template>
 
 <script>
   export default {
+    props: {
+      dropzone: {
+        type: Object,
+        required: true
+      },
+      hours: {
+        type: Array,
+        required: true
+      },
+      boundary: {
+        type: Object,
+        required: true
+      }
+    },
     data () {
       return {
         position: {}
       }
+    },
+    watch: {
+      dropzone () {
+        this.update()
+      },
+      boundary () {
+        this.update()
+      }
+    },
+    mounted () {
+      this.update()
     },
     methods: {
       update () {
@@ -32,31 +56,6 @@
           w: cellW - 1,
           h: cellH * duration - 1
         }
-      }
-    },
-    watch: {
-      dropzone () {
-        this.update()
-      },
-      boundary () {
-        this.update()
-      }
-    },
-    mounted () {
-      this.update()
-    },
-    props: {
-      dropzone: {
-        type: Object,
-        required: true
-      },
-      hours: {
-        type: Array,
-        required: true
-      },
-      boundary: {
-        type: Object,
-        required: true
       }
     }
   }

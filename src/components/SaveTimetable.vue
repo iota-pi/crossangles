@@ -1,7 +1,14 @@
 <template>
-  <v-layout class="font-weight-light pt-4" row>
+  <v-layout
+    class="font-weight-light pt-4"
+    row
+  >
     <v-flex class="text-xs-center">
-      <v-btn color="primary" @click="$emit('save')" class="fixed-width">
+      <v-btn
+        color="primary"
+        class="fixed-width"
+        @click="$emit('save')"
+      >
         <span v-if="!saving">Save as Image</span>
         <v-progress-circular
           v-else

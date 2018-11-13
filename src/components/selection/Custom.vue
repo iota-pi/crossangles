@@ -1,19 +1,29 @@
 <template>
-  <v-dialog v-model="show" :max-width="700">
+  <v-dialog
+    v-model="show"
+    :max-width="700"
+  >
     <v-card>
-      <v-form v-model="valid" ref="form">
+      <v-form
+        ref="form"
+        v-model="valid"
+      >
         <v-card-title class="pb-2">
           <span class="headline">Custom Event</span>
           <v-spacer />
-          <v-btn icon flat @click="show = false">
+          <v-btn
+            icon
+            flat
+            @click="show = false"
+          >
             <v-icon color="grey darken-2">close</v-icon>
           </v-btn>
         </v-card-title>
 
         <v-card-text class="pt-0">
           <v-text-field
-            v-model="name"
             ref="nameField"
+            v-model="name"
             label="Name of event"
             :counter="40"
             required
@@ -30,9 +40,9 @@
             item-text="text"
             item-value="duration"
             label="Duration"
-            @input="$refs.form.validate()"
             prepend-icon="timelapse"
             menu-props="auto"
+            @input="$refs.form.validate()"
           />
 
           <p class="pt-2">
@@ -40,38 +50,51 @@
             (it will only be included once on your timetable).
           </p>
 
-          <div v-for="(option, i) in options" :key="option.id">
-            <v-layout row wrap align-center>
+          <div
+            v-for="(option, i) in options"
+            :key="option.id"
+          >
+            <v-layout
+              row
+              wrap
+              align-center
+            >
               <div class="pr-2">
                 <span class="body-2">Option {{ i + 1 }}</span>
               </div>
               <v-spacer />
-              <v-flex xs12 sm5>
+              <v-flex
+                xs12
+                sm5
+              >
                 <v-select
                   v-model="option.day"
                   :items="days"
                   item-text="text"
                   item-value="letter"
-                  @input="updateOptions(i)"
                   clearable
                   label="Day"
                   prepend-icon="calendar_today"
                   menu-props="auto"
+                  @input="updateOptions(i)"
                 />
               </v-flex>
-              <div class="px-2"></div>
-              <v-flex xs12 sm5>
+              <div class="px-2" />
+              <v-flex
+                xs12
+                sm5
+              >
                 <v-select
                   v-model="option.time"
                   :items="validTimes"
                   item-text="text"
                   item-value="time"
-                  @input="updateOptions(i)"
                   clearable
                   label="Start time"
                   prepend-icon="access_time"
                   :rules="timeRules"
                   menu-props="auto"
+                  @input="updateOptions(i)"
                 />
               </v-flex>
             </v-layout>
@@ -79,7 +102,12 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn block color="primary" @click="addEvent" :disabled="disabled">
+          <v-btn
+            block
+            color="primary"
+            :disabled="disabled"
+            @click="addEvent"
+          >
             {{ edit ? 'Edit' : 'Add' }} Event
           </v-btn>
         </v-card-actions>
@@ -148,6 +176,16 @@
   const baseOption = () => ({ day: null, time: null, id: Math.random() })
 
   export default {
+    props: {
+      display: {
+        type: Boolean,
+        default: false
+      },
+      edit: {
+        type: Object,
+        default: null
+      }
+    },
     data () {
       return {
         name: null,
@@ -179,6 +217,26 @@
         }
 
         return !this.valid
+      }
+    },
+    watch: {
+      show () {
+        if (this.show) {
+          // Automatically focus on first field
+          this.$nextTick(() => this.$refs.nameField.focus())
+        } else {
+          // Reset dialog when hidden
+          this.name = null
+          this.duration = 1
+          this.options = [baseOption()]
+        }
+      },
+      edit () {
+        if (this.edit) {
+          this.name = this.edit.name
+          this.duration = this.edit.duration
+          this.options = this.edit.options.concat([baseOption()])
+        }
       }
     },
     methods: {
@@ -227,36 +285,6 @@
 
         // Hide dialog
         this.$emit('hide')
-      }
-    },
-    watch: {
-      show () {
-        if (this.show) {
-          // Automatically focus on first field
-          this.$nextTick(() => this.$refs.nameField.focus())
-        } else {
-          // Reset dialog when hidden
-          this.name = null
-          this.duration = 1
-          this.options = [baseOption()]
-        }
-      },
-      edit () {
-        if (this.edit) {
-          this.name = this.edit.name
-          this.duration = this.edit.duration
-          this.options = this.edit.options.concat([baseOption()])
-        }
-      }
-    },
-    props: {
-      display: {
-        type: Boolean,
-        default: false
-      },
-      edit: {
-        type: Object,
-        default: null
       }
     }
   }

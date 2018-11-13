@@ -1,8 +1,17 @@
 <template>
-  <v-snackbar v-model="showMessage" :timeout="timeout" class="close">
+  <v-snackbar
+    v-model="showMessage"
+    :timeout="timeout"
+    class="close"
+  >
     {{ resultMessage }}
     <v-spacer />
-    <v-btn dark flat icon @click="showMessage = false">
+    <v-btn
+      dark
+      flat
+      icon
+      @click="showMessage = false"
+    >
       <v-icon>
         close
       </v-icon>

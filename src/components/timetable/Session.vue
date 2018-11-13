@@ -3,16 +3,16 @@
     class="session"
     :class="{
       dragging: pointer !== null,
-      'elevation-3': pointer === null && (elevated || !this.isSnapped),
+      'elevation-3': pointer === null && (elevated || !isSnapped),
       'elevation-8': pointer !== null
     }"
     :style="{
-      'background-color': this.session.course.color,
+      'background-color': session.course.color,
       left: position.x + 'px',
       top: position.y + 'px',
       width: dimensions.w + 'px',
       height: dimensions.h + 'px',
-      'z-index': Math.max(zIndex, (elevated || !this.isSnapped) ? 90 : 0) + stackIndex
+      'z-index': Math.max(zIndex, (elevated || !isSnapped) ? 90 : 0) + stackIndex
     }"
   >
     <v-fade-transition>
@@ -28,7 +28,10 @@
         </span>
         {{ session.stream.component }}
       </span>
-      <span v-else class="em">
+      <span
+        v-else
+        class="em"
+      >
         {{ session.stream.component }}
       </span>
     </div>
@@ -42,6 +45,39 @@
   import clash from './Clash'
 
   export default {
+    components: {
+      clash
+    },
+    props: {
+      session: {
+        type: Object,
+        required: true
+      },
+      pointers: {
+        type: Object,
+        required: true
+      },
+      boundary: {
+        type: Object,
+        required: true
+      },
+      hours: {
+        type: Array,
+        required: true
+      },
+      elevated: {
+        type: Boolean,
+        default: false
+      },
+      stackIndex: {
+        type: Number,
+        default: 0
+      },
+      clashes: {
+        type: Array,
+        default: null
+      }
+    },
     data () {
       return {
         currentPosition: { x: 0, y: 0 },
@@ -113,6 +149,52 @@
         return this.$store.state.options.allowFull
       }
     },
+    watch: {
+      pointer () {
+        if (this.pointer) {
+          this.drag()
+        } else {
+          this.drop()
+        }
+      },
+      session () {
+        this.update()
+      },
+      boundary () {
+        if (this.isSnapped) {
+          this.update()
+        } else {
+          this.updateDimensions()
+        }
+      },
+      hours () {
+        this.update()
+      },
+      snapToggle () {
+        this.update()
+      },
+      allowFull () {
+        // Dislodge class slightly if this stream becomes unavailable
+        if (this.session.stream.status === 0 && this.allowFull !== true) {
+          if (this.isSnapped) {
+            let dx = Math.floor(Math.random() * 30) - 15
+            let dy = Math.floor(Math.random() * 20) - 10
+            dx = (dx < 0) ? dx - 15 : dx + 16
+            dy = (dy < 0) ? dy - 10 : dy + 11
+
+            this.currentPosition.x += dx
+            this.currentPosition.y += dy
+            this.isSnapped = false
+            this.$emit('unSnap', {
+              session: this.session
+            })
+          }
+        }
+      }
+    },
+    mounted () {
+      this.update()
+    },
     methods: {
       drag () {
         // Remember starting position for later reference
@@ -174,85 +256,6 @@
         window.setTimeout(() => {
           this.zIndex = 2
         }, 300)
-      }
-    },
-    watch: {
-      pointer () {
-        if (this.pointer) {
-          this.drag()
-        } else {
-          this.drop()
-        }
-      },
-      session () {
-        this.update()
-      },
-      boundary () {
-        if (this.isSnapped) {
-          this.update()
-        } else {
-          this.updateDimensions()
-        }
-      },
-      hours () {
-        this.update()
-      },
-      snapToggle () {
-        this.update()
-      },
-      allowFull () {
-        // Dislodge class slightly if this stream becomes unavailable
-        if (this.session.stream.status === 0 && this.allowFull !== true) {
-          if (this.isSnapped) {
-            let dx = Math.floor(Math.random() * 30) - 15
-            let dy = Math.floor(Math.random() * 20) - 10
-            dx = (dx < 0) ? dx - 15 : dx + 16
-            dy = (dy < 0) ? dy - 10 : dy + 11
-
-            this.currentPosition.x += dx
-            this.currentPosition.y += dy
-            this.isSnapped = false
-            this.$emit('unSnap', {
-              session: this.session
-            })
-          }
-        }
-      }
-    },
-    mounted () {
-      this.update()
-    },
-    components: {
-      clash
-    },
-    props: {
-      session: {
-        type: Object,
-        required: true
-      },
-      pointers: {
-        type: Object,
-        required: true
-      },
-      boundary: {
-        type: Object,
-        required: true
-      },
-      hours: {
-        type: Array,
-        required: true
-      },
-      elevated: {
-        type: Boolean,
-        default: false
-      },
-      stackIndex: {
-        type: Number,
-        default: 0
-      },
-      clashes: {
-        type: Array,
-        default: null
       }
     }
   }

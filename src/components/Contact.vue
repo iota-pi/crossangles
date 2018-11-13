@@ -1,11 +1,22 @@
 <template>
-  <v-dialog v-model="show" :max-width="700" persistent>
+  <v-dialog
+    v-model="show"
+    :max-width="700"
+    persistent
+  >
     <v-card>
-      <v-form v-model="valid" ref="contactForm">
+      <v-form
+        ref="contactForm"
+        v-model="valid"
+      >
         <v-card-title class="pb-2">
           <span class="headline">{{ title }}</span>
           <v-spacer />
-          <v-btn icon flat @click="show = false">
+          <v-btn
+            icon
+            flat
+            @click="show = false"
+          >
             <v-icon color="grey darken-2">close</v-icon>
           </v-btn>
         </v-card-title>
@@ -50,7 +61,12 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-btn block color="primary" @click="submit" :disabled="!valid">
+          <v-btn
+            block
+            color="primary"
+            :disabled="!valid"
+            @click="submit"
+          >
             Submit
           </v-btn>
         </v-card-actions>
@@ -63,6 +79,16 @@
   import axios from 'axios'
 
   export default {
+    props: {
+      title: {
+        type: String,
+        default: 'Get in Contact'
+      },
+      display: {
+        type: Boolean,
+        default: false
+      }
+    },
     data () {
       return {
         name: null,
@@ -84,6 +110,19 @@
         }
       }
     },
+    watch: {
+      show () {
+        // Reset all fields when dialog is hidden
+        if (this.show) {
+          this.$nextTick(() => this.$refs.nameField.focus())
+        } else {
+          this.name = null
+          this.email = null
+          this.body = null
+          this.$refs.contactForm.reset()
+        }
+      }
+    },
     methods: {
       submit () {
         axios.post('https://' + process.env.VUE_APP_DOMAIN + '/contact/', {
@@ -102,29 +141,6 @@
           })
         })
         this.$emit('hide')
-      }
-    },
-    watch: {
-      show () {
-        // Reset all fields when dialog is hidden
-        if (this.show) {
-          this.$nextTick(() => this.$refs.nameField.focus())
-        } else {
-          this.name = null
-          this.email = null
-          this.body = null
-          this.$refs.contactForm.reset()
-        }
-      }
-    },
-    props: {
-      title: {
-        type: String,
-        default: 'Get in Contact'
-      },
-      display: {
-        type: Boolean,
-        default: false
       }
     }
   }

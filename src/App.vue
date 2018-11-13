@@ -8,7 +8,10 @@
       @mouseup="mouseup"
       @touchend="mouseup"
     >
-      <toolbar :title="title" @menu="menu = !menu" />
+      <toolbar
+        :title="title"
+        @menu="menu = !menu"
+      />
       <side-menu
         :display="menu"
         @hide="menu = false"
@@ -41,13 +44,22 @@
             </p>
           </div>
 
-          <course-selection class="mb-1" @custom="customDialog = true" />
-          <course-display class="mb-3" @editCustom="editCustom" />
+          <course-selection
+            class="mb-1"
+            @custom="customDialog = true"
+          />
+          <course-display
+            class="mb-3"
+            @editCustom="editCustom"
+          />
           <options class="mb-5" />
 
           <timetable :pointers="pointers" />
 
-          <save-timetable @save="save" :saving="saving" />
+          <save-timetable
+            :saving="saving"
+            @save="save"
+          />
 
           <div class="font-weight-light pt-5">
             <p>
@@ -76,7 +88,7 @@
       :display="customDialog"
       :edit="customToEdit"
       @hide="customDialog = false;
-      customToEdit = null"
+             customToEdit = null"
     />
     <contact
       :display="contactDialog"
@@ -92,11 +104,21 @@
   import WebFontLoader from 'webfontloader'
   import Toolbar from './components/Toolbar'
   import CourseSelection from './components/selection/CourseSelection'
-  import CourseDisplay from './components/selection/CourseDisplay'
-  import Options from './components/selection/Options'
-  import image from './components/mixins/image'
 
   export default {
+    name: 'App',
+    components: {
+      Toolbar,
+      CourseSelection,
+      CourseDisplay: () => import(/* webpackChunkName: "courses" */ './components/selection/CourseDisplay'),
+      Options: () => import(/* webpackChunkName: "options" */ './components/selection/Options'),
+      Timetable: () => import(/* webpackChunkName: "timetable" */ './components/timetable/Timetable'),
+      SaveTimetable: () => import(/* webpackChunkName: "image" */ './components/SaveTimetable'),
+      SideMenu: () => import(/* webpackChunkName: "menu" */ './components/SideMenu'),
+      Custom: () => import(/* webpackChunkName: "custom" */ './components/selection/Custom'),
+      Contact: () => import(/* webpackChunkName: "contact" */ './components/Contact'),
+      Alert: () => import(/* webpackChunkName: "alert" */ './components/Alert')
+    },
     data () {
       return {
         menu: false,
@@ -114,6 +136,16 @@
       meta () {
         return this.$store.state.meta
       }
+    },
+    mounted () {
+      this.$store.dispatch('loadData')
+
+      // Load Roboto and Material Icons
+      WebFontLoader.load({
+        google: {
+          families: ['Roboto:300,400,500,700|Material+Icons']
+        }
+      })
     },
     methods: {
       getTargetSession (targetNode) {
@@ -200,31 +232,7 @@
         this.contactTitle = null
         this.menu = false
       }
-    },
-    mounted () {
-      this.$store.dispatch('loadData')
-
-      // Load Roboto and Material Icons
-      WebFontLoader.load({
-        google: {
-          families: ['Roboto:300,400,500,700|Material+Icons']
-        }
-      })
-    },
-    name: 'App',
-    components: {
-      Toolbar,
-      CourseSelection,
-      CourseDisplay,
-      Options,
-      Timetable: () => import('./components/timetable/Timetable'),
-      SaveTimetable: () => import('./components/SaveTimetable'),
-      SideMenu: () => import('./components/SideMenu'),
-      Custom: () => import('./components/selection/Custom'),
-      Contact: () => import('./components/Contact'),
-      Alert: () => import('./components/Alert')
-    },
-    mixins: [ image ]
+    }
   }
 </script>
 

@@ -1,5 +1,8 @@
 <template>
-  <div class="clash" :class="{ allowed: allowed }"></div>
+  <div
+    class="clash"
+    :class="{ allowed: allowed }"
+  />
 </template>
 
 <script>

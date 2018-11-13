@@ -1,9 +1,14 @@
 <template>
-  <v-layout row wrap>
+  <v-layout
+    row
+    wrap
+  >
     <v-flex
       v-for="event in allEvents"
       :key="event.title"
-      xs12 sm6 md3
+      xs12
+      sm6
+      md3
     >
       <v-checkbox
         v-model="events"
@@ -12,8 +17,7 @@
         color="secondary"
         class="pt-0 pb-2"
         hide-details
-      >
-      </v-checkbox>
+      />
     </v-flex>
   </v-layout>
 </template>

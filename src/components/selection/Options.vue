@@ -1,9 +1,15 @@
 <template>
-  <v-layout row wrap class="px-2">
+  <v-layout
+    row
+    wrap
+    class="px-2"
+  >
     <v-flex
       v-for="option in allOptions"
       :key="option.title"
-      xs12 sm6 md4
+      xs12
+      sm6
+      md4
     >
       <v-switch
         v-model="options"
@@ -12,8 +18,7 @@
         color="secondary"
         class="mt-2"
         hide-details
-      >
-      </v-switch>
+      />
     </v-flex>
   </v-layout>
 </template>

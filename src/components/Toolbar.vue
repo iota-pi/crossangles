@@ -6,9 +6,9 @@
     dark
     color="primary"
   >
-    <v-toolbar-side-icon @click.stop="$emit('menu')"></v-toolbar-side-icon>
-    <v-toolbar-title v-text="title"></v-toolbar-title>
-    <v-spacer></v-spacer>
+    <v-toolbar-side-icon @click.stop="$emit('menu')" />
+    <v-toolbar-title v-text="title" />
+    <v-spacer />
   </v-toolbar>
 </template>
 

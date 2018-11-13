@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-layout row wrap align-center>
+    <v-layout
+      row
+      wrap
+      align-center
+    >
       <v-flex
         class="pb-2"
         :class="{
@@ -8,9 +12,8 @@
         }"
       >
         <v-autocomplete
-          v-model="course"
-          @input="addCourse"
           ref="courseSelect"
+          v-model="course"
           label="Select your courses"
           :filter="courseFilter"
           :search-input.sync="searchText"
@@ -21,14 +24,18 @@
           hide-details
           no-data-text="No matching courses found"
           color="secondary"
+          @input="addCourse"
         >
-          <template slot="item" slot-scope="data">
+          <template
+            slot="item"
+            slot-scope="data"
+          >
             <v-list-tile-content>
               <v-list-tile-title>
-                <span v-html="highlight(data.item.code)"></span>
+                <span v-html="highlight(data.item.code)" />
 
                 <span class="faded">
-                  — <span v-html="highlight(data.item.title)"></span>
+                  — <span v-html="highlight(data.item.title)" />
                 </span>
               </v-list-tile-title>
             </v-list-tile-content>
@@ -36,8 +43,17 @@
         </v-autocomplete>
       </v-flex>
 
-      <v-tooltip left :open-delay="200">
-        <v-btn icon large flat @click="$emit('custom')" slot="activator">
+      <v-tooltip
+        left
+        :open-delay="200"
+      >
+        <v-btn
+          slot="activator"
+          icon
+          large
+          flat
+          @click="$emit('custom')"
+        >
           <v-icon>
             event
           </v-icon>
@@ -59,6 +75,7 @@
   }
 
   export default {
+    mixins: [ colors ],
     data () {
       return {
         course: null,
@@ -133,8 +150,7 @@
 
         return haystack
       }
-    },
-    mixins: [ colors ]
+    }
   }
 </script>
 

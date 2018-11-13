@@ -1,18 +1,17 @@
 <template>
   <div
-    class="timetable-holder"
     v-resize="updateDimensions"
+    class="timetable-holder"
   >
     <div
-      class="timetable"
-      ref="timetable"
       id="timetable"
+      ref="timetable"
+      class="timetable"
     >
       <v-fade-transition group>
         <drop-zone
-          v-for="dropzone in dropzones"
+          v-for="dropzone in visibleDropzones"
           :key="'d' + dropzone.course.code + dropzone.component + dropzone.day + dropzone.start"
-          v-if="isVisibleDropzone(dropzone)"
           :dropzone="dropzone"
           :boundary="dimensions"
           :hours="bounds"
@@ -27,7 +26,7 @@
         :hours="bounds"
         :elevated="isElevated(session)"
         :clashes="getClashingSessions(session)"
-        :stackIndex="stackOrder.indexOf(session)"
+        :stack-index="stackOrder.indexOf(session)"
         @drag="startDrag"
         @drop="stopDrag"
         @unSnap="unSnap"
@@ -35,24 +34,31 @@
 
       <!-- Draw timetable grid -->
       <div class="row header">
-        <div></div>
+        <div />
         <div>Monday</div>
         <div>Tuesday</div>
         <div>Wednesday</div>
         <div>Thursday</div>
         <div>Friday</div>
       </div>
-      <div class="row" v-for="hour in hours" :key="'tthour' + hour">
+      <div
+        v-for="hour in hours"
+        :key="'tthour' + hour"
+        class="row"
+      >
         <div>{{ hour }}:00</div>
-        <div v-for="day in days" :key="'ttcell' + day + hour"></div>
+        <div
+          v-for="day in days"
+          :key="'ttcell' + day + hour"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import session from './Session'
-  import dropZone from './DropZone'
+  import Session from './Session'
+  import DropZone from './DropZone'
   import search from '../mixins/search'
 
   const snapDist = 40
@@ -65,6 +71,17 @@
   }
 
   export default {
+    components: {
+      Session,
+      DropZone
+    },
+    mixins: [ search ],
+    props: {
+      pointers: {
+        type: Object,
+        required: true
+      }
+    },
     data () {
       return {
         days: ['M', 'T', 'W', 'H', 'F'],
@@ -134,6 +151,9 @@
 
         return dropzones
       },
+      visibleDropzones () {
+        return this.dropzones.filter(this.isVisibleDropzone)
+      },
       allowFull () {
         return this.$store.state.options.allowFull
       },
@@ -149,6 +169,43 @@
       loading () {
         return this.$store.state.loading
       }
+    },
+    watch: {
+      allowFull () {
+        this.updateTimetable(this.allowFull || false)
+      },
+      eventsCount () {
+        this.updateTimetable()
+      },
+      chosenCount () {
+        this.updateTimetable()
+      },
+      webStreams () {
+        this.updateTimetable()
+      },
+      loading () {
+        if (!this.loading) {
+          // Update snapped sessions following timetable restore
+          this.snapped = this.timetable.slice()
+          this.stackOrder = this.timetable.slice()
+        }
+      },
+      bounds () {
+        this.$nextTick(this.updateDimensions)
+      }
+    },
+    mounted () {
+      this.updateDimensions()
+
+      // Frequently update dimension measurements
+      this.dimensionsInterval = window.setInterval(() => {
+        this.updateDimensions()
+      }, 3000)
+    },
+    beforeDestroy () {
+      // Clear interval
+      // NB: currently this component is never destroyed in normal functioning
+      window.clearInterval(this.dimensionsInterval)
     },
     methods: {
       startDrag (e) {
@@ -440,54 +497,6 @@
             })
           }
         }
-      }
-    },
-    watch: {
-      allowFull () {
-        this.updateTimetable(this.allowFull || false)
-      },
-      eventsCount () {
-        this.updateTimetable()
-      },
-      chosenCount () {
-        this.updateTimetable()
-      },
-      webStreams () {
-        this.updateTimetable()
-      },
-      loading () {
-        if (!this.loading) {
-          // Update snapped sessions following timetable restore
-          this.snapped = this.timetable.slice()
-          this.stackOrder = this.timetable.slice()
-        }
-      },
-      bounds () {
-        this.$nextTick(this.updateDimensions)
-      }
-    },
-    mounted () {
-      this.updateDimensions()
-
-      // Frequently update dimension measurements
-      this.dimensionsInterval = window.setInterval(() => {
-        this.updateDimensions()
-      }, 3000)
-    },
-    beforeDestroy () {
-      // Clear interval
-      // NB: currently this component is never destroyed in normal functioning
-      window.clearInterval(this.dimensionsInterval)
-    },
-    components: {
-      session,
-      dropZone
-    },
-    mixins: [ search ],
-    props: {
-      pointers: {
-        type: Object,
-        required: true
       }
     }
   }

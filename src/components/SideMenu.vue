@@ -9,11 +9,11 @@
   >
     <v-list>
       <v-list-tile
-        value="true"
         v-for="(item, i) in items"
         :key="i"
-        @click="item.action"
+        value="true"
         class="no-primary--text"
+        @click="item.action"
       >
         <v-list-tile-action>
           <v-icon>
@@ -32,6 +32,12 @@
 
 <script>
   export default {
+    props: {
+      display: {
+        type: Boolean,
+        default: false
+      }
+    },
     data () {
       return {
         items: [
@@ -90,12 +96,6 @@
         const fbURL = 'https://www.facebook.com/sharer/sharer.php?u=' + sharingURL
         window.open(fbURL, 'FBsharer', 'width=600, height=400, scrollbars=no')
         this.visible = false
-      }
-    },
-    props: {
-      display: {
-        type: Boolean,
-        default: false
       }
     }
   }

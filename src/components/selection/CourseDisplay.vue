@@ -1,14 +1,23 @@
 <template>
-  <v-list v-if="chosen.length > 0" class="py-0">
+  <v-list
+    v-if="chosen.length > 0"
+    class="py-0"
+  >
     <template v-for="course in chosen">
-      <v-divider />
+      <v-divider :key="'divider-' + course.code" />
       <v-list-tile :key="course.code">
         <v-list-tile-content>
-          <v-layout row align-center>
+          <v-layout
+            row
+            align-center
+          >
             <v-list-tile-title>
               {{ (course.code !== 'CBS' && !course.custom) ? course.code : course.title }}
 
-              <span class="faded" v-if="course.code !== 'CBS' && !course.custom">
+              <span
+                v-if="course.code !== 'CBS' && !course.custom"
+                class="faded"
+              >
                 — {{ course.title }}
               </span>
             </v-list-tile-title>
@@ -20,7 +29,10 @@
               class="pl-2 pb-1"
               content-class="body-1"
             >
-              <v-icon small slot="activator">
+              <v-icon
+                slot="activator"
+                small
+              >
                 help
               </v-icon>
 
@@ -35,8 +47,8 @@
 
         <div class="no-spacing pl-2">
           <v-btn
-            icon
             v-if="course.custom"
+            icon
             @click="$emit('editCustom', course)"
           >
             <v-icon color="grey darken-2">edit</v-icon>
@@ -57,8 +69,8 @@
 
         <v-list-tile-action>
           <v-btn
-            icon
             v-if="course.code !== 'CBS'"
+            icon
             @click="$store.dispatch('removeCourse', course)"
           >
             <v-icon>close</v-icon>
@@ -68,6 +80,7 @@
 
       <v-list-tile
         v-if="course.streams.filter(s => s.web).length > 0"
+        :key="'extension-' + course.code"
         class="flexible-height"
       >
         <v-checkbox
@@ -92,10 +105,15 @@
   import Swatches from 'vue-swatches'
   import 'vue-swatches/dist/vue-swatches.min.css'
 
-  import cbsEvents from './CBSEvents'
+  import CbsEvents from './CBSEvents'
   import colors from '../mixins/colors'
 
   export default {
+    components: {
+      Swatches,
+      CbsEvents
+    },
+    mixins: [ colors ],
     data () {
       return {
         color: ''
@@ -140,12 +158,7 @@
         // Commit changes to custom colors
         this.$store.commit('custom', this.custom)
       }
-    },
-    components: {
-      Swatches,
-      cbsEvents
-    },
-    mixins: [ colors ]
+    }
   }
 </script>
 
