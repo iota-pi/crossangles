@@ -248,11 +248,11 @@
       },
       stackIndex: {
         type: Number,
-        default: false
+        default: 0
       },
       clashes: {
         type: Array,
-        default: false
+        default: null
       }
     }
   }
