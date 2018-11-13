@@ -34,16 +34,16 @@
               <v-list-tile-title>
                 <span
                   v-for="(part, i) in highlight(data.item.code)"
-                  :key="'part' + i"
+                  :key="'codePart' + i"
                   :class="{ 'highlight': part.em }"
                   v-text="part.text"
                 />
 
-                <span class="faded">—</span>
+                <span class="faded"> — </span>
 
                 <span
                   v-for="(part, i) in highlight(data.item.title)"
-                  :key="'part' + i"
+                  :key="'titlePart' + i"
                   :class="{ 'faded': true, 'highlight': part.em }"
                   v-text="part.text"
                 />
