@@ -32,11 +32,21 @@
           >
             <v-list-tile-content>
               <v-list-tile-title>
-                <span v-html="highlight(data.item.code)" />
+                <span
+                  v-for="(part, i) in highlight(data.item.code)"
+                  :key="'part' + i"
+                  :class="{ 'highlight': part.em }"
+                  v-text="part.text"
+                />
 
-                <span class="faded">
-                  — <span v-html="highlight(data.item.title)" />
-                </span>
+                <span class="faded">—</span>
+
+                <span
+                  v-for="(part, i) in highlight(data.item.title)"
+                  :key="'part' + i"
+                  :class="{ 'faded': true, 'highlight': part.em }"
+                  v-text="part.text"
+                />
               </v-list-tile-title>
             </v-list-tile-content>
           </template>
@@ -144,11 +154,20 @@
         needle = needle || this.searchText
 
         if (needle) {
-          let re = new RegExp(escapeRegExp(needle), 'gi')
-          return haystack.replace(re, '<em class="highlight">$&</em>')
+          let re = new RegExp('(' + escapeRegExp(needle) + ')', 'gi')
+
+          let parts = haystack.split(re).map(x => ({
+            text: x,
+            em: re.test(x)
+          }))
+
+          return parts
         }
 
-        return haystack
+        return [{
+          text: haystack,
+          em: false
+        }]
       }
     }
   }
@@ -161,12 +180,12 @@
 </style>
 
 <style>
-  em.highlight {
+  span.highlight {
     font-weight: 500 !important;
     text-decoration: none;
     font-style: normal;
   }
-  em.highlight.faded {
+  span.highlight.faded {
     opacity: 0.9;
   }
 </style>
