@@ -2,6 +2,7 @@
   <v-dialog
     v-model="show"
     :max-width="700"
+    lazy
   >
     <v-card>
       <v-form

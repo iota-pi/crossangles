@@ -13,6 +13,7 @@
         @menu="menu = !menu"
       />
       <side-menu
+        v-if="!$store.state.loading"
         :display="menu"
         @hide="menu = false"
         @save="save"
@@ -85,12 +86,14 @@
       </v-content>
     </div>
     <custom
+      v-if="!$store.state.loading"
       :display="customDialog"
       :edit="customToEdit"
       @hide="customDialog = false;
              customToEdit = null"
     />
     <contact
+      v-if="!$store.state.loading"
       :display="contactDialog"
       :title="contactTitle || 'Get in Contact'"
       @hide="contactDialog = false"
@@ -103,13 +106,13 @@
   import Vue from 'vue'
   import WebFontLoader from 'webfontloader'
   import Toolbar from './components/Toolbar'
-  import CourseSelection from './components/selection/CourseSelection'
+  // import CourseSelection from './components/selection/CourseSelection'
 
   export default {
     name: 'App',
     components: {
       Toolbar,
-      CourseSelection,
+      CourseSelection: () => import(/* webpackChunkName: "selection" */ './components/selection/CourseSelection'),
       CourseDisplay: () => import(/* webpackChunkName: "courses" */ './components/selection/CourseDisplay'),
       Options: () => import(/* webpackChunkName: "options" */ './components/selection/Options'),
       Timetable: () => import(/* webpackChunkName: "timetable" */ './components/timetable/Timetable'),
@@ -253,5 +256,8 @@
   html:not(.wf-active) .material-icons {
     opacity: 0;
     transition: opacity 0.3s;
+  }
+  html.wf-loading {
+    font-family: sans-serif;
   }
 </style>
