@@ -104,7 +104,8 @@ export default new Vuex.Store({
         storage.setItem('courseData', JSON.stringify(r.data))
         console.log('json saving took', new Date().getTime() - t, 'ms')
         courses = parseCourses(r.data.courses)
-        processData(context, r.data, courses)
+        processData(context, courses)
+        context.commit('meta', r.data.meta)
 
         // Disable the loading block on auto timetable updating
         // NB: this block exists to prevent restored timetable being overwritten
@@ -113,7 +114,10 @@ export default new Vuex.Store({
       }).catch(() => {
         let pastData = storage.getItem('courseData')
         if (pastData) {
-          processData(context, JSON.parse(pastData))
+          let data = JSON.parse(pastData)
+          courses = parseCourses(data.courses)
+          processData(context, courses)
+          context.commit('meta', data.meta)
         }
       })
     },

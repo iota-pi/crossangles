@@ -5,15 +5,15 @@ function parseCourses (data) {
 
   for (let i = 0; i < data.length; i++) {
     let course = data[i]
-    let code = course.code
+    let code = course.c
     courses[code] = {
       code: code,
-      title: course.name,
+      title: course.n,
       custom: false,
       color: code !== 'CBS' ? null : CBScolor,
       streams: null
     }
-    courses[code].streams = parseStreams(course.streams, courses[code])
+    courses[code].streams = parseStreams(course.s, courses[code])
   }
 
   return courses
@@ -26,16 +26,16 @@ function parseStreams (streams, course) {
     let stream = streams[i]
     let newStream = {
       course: course,
-      component: stream.component,
-      web: !!stream.web,
-      status: stream.status,
-      enrols: stream.enrols,
+      component: stream.c,
+      web: !!stream.w,
+      status: stream.s,
+      enrols: stream.e,
       sessions: null
     }
 
     // Process sessions (excluding WEB streams, which have none)
-    if (stream.web !== 1) {
-      newStream.sessions = parseSessions(stream.times, course, newStream)
+    if (stream.w !== 1) {
+      newStream.sessions = parseSessions(stream.t, course, newStream)
     }
     result.push(newStream)
   }
@@ -53,7 +53,6 @@ function parseSessions (times, course, stream) {
       stream: stream,
       location: time[1],
       time: parseTimeString(time[0]),
-      weeks: time[2],
       index: i,
       snapToggle: false
     })

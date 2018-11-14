@@ -43,7 +43,7 @@ class Cleaner():
                 # Process WEB streams
                 if 'WEB' in stream['section']:
                     # Mark this as stream as a WEB stream
-                    stream['web'] = 1
+                    stream['w'] = 1
 
                     # Web streams replace lecture streams
                     # Some web streams have their component set to 'WEB' too
@@ -86,6 +86,32 @@ class Cleaner():
         # Include Campus Bible Study data
         courses.append(self.cbs)
 
+        # Abbreviate stream keys
+        for course in courses:
+            course['c'] = course['code']
+            del course['code']
+            course['n'] = course['name']
+            del course['name']
+            course['s'] = course['streams']
+            del course['streams']
+
+            for stream in course['s']:
+                if 'component' in stream:
+                    stream['c'] = stream['component']
+                    del stream['component']
+                if 'enrols' in stream:
+                    stream['e'] = stream['enrols']
+                    del stream['enrols']
+                if 'status' in stream:
+                    stream['s'] = stream['status']
+                    del stream['status']
+                if 'times' in stream:
+                    stream['t'] = stream['times']
+                    del stream['times']
+                if 'web' in stream:
+                    stream['w'] = stream['web']
+                    del stream['web']
+
         return courses
 
     def parseTimeStr(self, string):
@@ -109,9 +135,9 @@ class Cleaner():
             for stream in streams:
                 if stream[0] not in final:
                     final[stream[0]] = list(stream)
-                else:
+                # else:
                     # Join weeks
-                    final[stream[0]][2] |= stream[2]
+                    # final[stream[0]][2] |= stream[2]
 
             return list(map(tuple, final.values()))
 
@@ -120,15 +146,15 @@ class Cleaner():
             return []
 
         location = ''
-        weeks = self.weekMax
+        # weeks = self.weekMax
 
         if '(' in string:
             # Keep only the text within the brackets
             string = string[string.find('(') + 1 : string.find(')')]
-            weeks = self.getWeeks(string)
+            # weeks = self.getWeeks(string)
 
-            if weeks is None:
-                return []
+            # if weeks is None:
+                # return []
 
             if ', ' in string:
                 location = string[string.find(', '):].strip(', ')
@@ -139,7 +165,7 @@ class Cleaner():
             if location.lower() == 'see school':
                 location = ''
 
-        return [(time, location, weeks)]
+        return [(time, location)]
 
     def tidyUpTime(self, timestr):
         # If the class runs on Saturday or Sunday, don't include it

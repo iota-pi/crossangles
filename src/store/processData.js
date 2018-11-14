@@ -1,14 +1,12 @@
 const storage = window.localStorage
 
-function processData (context, data, courses) {
+function processData (context, courses) {
   let chosen = storage.getItem('chosen')
   let events = storage.getItem('events')
   let options = storage.getItem('options')
   let timetable = storage.getItem('timetable')
   let webStreams = storage.getItem('webStreams')
   let custom = storage.getItem('custom')
-
-  context.commit('meta', data.meta)
 
   if (chosen) {
     // Restore previously chosen courses
