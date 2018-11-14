@@ -3,17 +3,18 @@ import { CBScolor } from './colors'
 function parseCourses (data) {
   let courses = {}
 
-  for (let i = 0; i < data.length; i++) {
-    let course = data[i]
-    let code = course.c
-    courses[code] = {
+  for (let i = 0, l = data.length; i < l; i++) {
+    let _course = data[i]
+    let code = _course.c
+    let course = {
       code: code,
-      title: course.n,
+      title: _course.n,
       custom: false,
       color: code !== 'CBS' ? null : CBScolor,
       streams: null
     }
-    courses[code].streams = parseStreams(course.s, courses[code])
+    course.streams = parseStreams(_course.s, course)
+    courses[code] = course
   }
 
   return courses
@@ -22,7 +23,7 @@ function parseCourses (data) {
 function parseStreams (streams, course) {
   let result = []
 
-  for (let i = 0; i < streams.length; i++) {
+  for (let i = 0, l = streams.length; i < l; i++) {
     let stream = streams[i]
     let newStream = {
       course: course,
@@ -37,7 +38,7 @@ function parseStreams (streams, course) {
     if (stream.w !== 1) {
       newStream.sessions = parseSessions(stream.t, course, newStream)
     }
-    result.push(newStream)
+    result[i] = newStream
   }
 
   return result
@@ -46,36 +47,29 @@ function parseStreams (streams, course) {
 function parseSessions (times, course, stream) {
   let timetable = []
 
-  for (let i = 0; i < times.length; i++) {
-    let time = times[i]
-    timetable.push({
+  for (let i = 0, l = times.length; i < l; i++) {
+    let time = times[i][0]
+    let day = time.charAt(0)
+    let canClash = time.charAt(time.length - 1) === '#'
+    let hours = time.substr(1, time.length - 1 - canClash).split('-')
+    hours = hours.map(x => parseFloat(x))
+
+    timetable[i] = {
       course: course,
       stream: stream,
-      location: time[1],
-      time: parseTimeString(time[0]),
+      location: times[i][1],
+      time: {
+        day: day,
+        start: hours[0],
+        end: hours[1] || (hours[0] + 1),
+        canClash: canClash
+      },
       index: i,
       snapToggle: false
-    })
+    }
   }
 
   return timetable
-}
-
-function parseTimeString (time) {
-  let day = time.charAt(0)
-  let canClash = /#$/.test(time)
-  let hours = time.substr(1).replace('#', '').split('-').map(x => parseFloat(x))
-  if (hours.length === 1) {
-    hours.push(hours[0] + 1)
-  }
-  let [ start, end ] = hours
-
-  return {
-    day,
-    start,
-    end,
-    canClash
-  }
 }
 
 export default parseCourses
