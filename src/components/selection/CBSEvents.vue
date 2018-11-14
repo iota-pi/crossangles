@@ -2,6 +2,7 @@
   <v-layout
     row
     wrap
+    class="pb-1"
   >
     <v-flex
       v-for="event in allEvents"
@@ -15,7 +16,7 @@
         :value="event"
         :label="event"
         color="secondary"
-        class="pt-0 pb-2"
+        class="pt-0 mt-2 mb-1"
         hide-details
       />
     </v-flex>

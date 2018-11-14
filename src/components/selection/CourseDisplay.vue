@@ -88,7 +88,8 @@
           :value="course.code"
           label="Choose online-only lecture stream"
           color="secondary"
-          class="pt-0 pb-2"
+          class="mt-0 py-2"
+          hide-details
         />
       </v-list-tile>
     </template>
