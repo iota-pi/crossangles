@@ -105,13 +105,11 @@
 <script>
   import Vue from 'vue'
   import WebFontLoader from 'webfontloader'
-  import Toolbar from './components/Toolbar'
-  // import CourseSelection from './components/selection/CourseSelection'
 
   export default {
     name: 'App',
     components: {
-      Toolbar,
+      Toolbar: () => import(/* webpackChunkName: "toolbar" */ './components/Toolbar'),
       CourseSelection: () => import(/* webpackChunkName: "selection" */ './components/selection/CourseSelection'),
       CourseDisplay: () => import(/* webpackChunkName: "courses" */ './components/selection/CourseDisplay'),
       Options: () => import(/* webpackChunkName: "options" */ './components/selection/Options'),
