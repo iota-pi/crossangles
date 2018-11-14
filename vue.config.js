@@ -5,7 +5,10 @@ module.exports = {
     name: 'CrossAngles',
     themeColor: '#303F9F',
     msTileColor: '#2d89ef',
-    appleMobileWebAppCapable: 'yes'
+    appleMobileWebAppCapable: 'yes',
+    workboxOptions: {
+      exclude: [/\.map$/, /^manifest.*\.js(?:on)?$/, /tt\.json$/]
+    }
   },
 
   lintOnSave: undefined
