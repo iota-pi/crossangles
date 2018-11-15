@@ -23,7 +23,7 @@ function processData (context, courses) {
     context.commit('chosen', restored)
   } else {
     // Default to just CBS chosen
-    context.commit('chosen', [courses.CBS])
+    context.commit('chosen', [ courses.CBS ])
   }
 
   if (events) {
