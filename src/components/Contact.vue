@@ -3,6 +3,7 @@
     v-model="show"
     :max-width="700"
     persistent
+    lazy
   >
     <v-card>
       <v-form
