@@ -99,18 +99,15 @@ export default new Vuex.Store({
   actions: {
     loadData (context) {
       axios.get(dataURL).then((r) => {
-        let t = new Date().getTime()
         // TODO: store JSON data before it's parsed? (saves this stringify call)
         storage.setItem('courseData', JSON.stringify(r.data))
-        console.log('json saving took', new Date().getTime() - t, 'ms')
         courses = parseCourses(r.data.courses)
         processData(context, courses)
         context.commit('meta', r.data.meta)
 
         // Disable the loading block on auto timetable updating
         // NB: this block exists to prevent restored timetable being overwritten
-        window.setTimeout(() => context.commit('loading', false), 25)
-        console.log('data processing took', new Date().getTime() - t, 'ms')
+        window.setTimeout(() => context.commit('loading', false), 10)
       }).catch(() => {
         let pastData = storage.getItem('courseData')
         if (pastData) {

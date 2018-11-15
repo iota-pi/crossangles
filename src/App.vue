@@ -8,6 +8,20 @@
       @mouseup="mouseup"
       @touchend="mouseup"
     >
+      <v-fade-transition>
+        <div
+          v-if="$store.state.loading"
+          class="loading-overlay"
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            :size="40"
+            :width="4"
+          />
+        </div>
+      </v-fade-transition>
+
       <toolbar
         :title="title"
         @menu="menu = !menu"
@@ -22,83 +36,102 @@
         @custom="customDialog = true; menu = false"
       />
 
-      <v-content>
-        <v-container class="narrow">
-          <div class="font-weight-light subheading">
-            <p>
-              Welcome to <span class="font-weight-regular">{{ title }}</span>!
-              To get started with planning your timetable for
-              <span class="font-weight-regular">Term {{ meta.term }}, {{ meta.year }}</span>
-              select the courses you've enrolled in below.
-            </p>
-            <p>
-              To make the most out of this tool,
-              don't miss out on personalising your timetable by
-              <span class="font-weight-regular">dragging classes around</span>
-              to suit you better,
-              <span class="font-weight-regular">changing the color</span>
-              for each of your courses,
-              <span class="font-weight-regular">adding custom events</span>,
-              and
-              <span class="font-weight-regular">saving your timetable as an image</span>
-              when you're done.
-            </p>
-          </div>
-
-          <course-selection
-            class="mb-1"
-            @custom="customDialog = true"
+      <v-fade-transition>
+        <div
+          v-if="$store.state.loading"
+          class="loading-overlay"
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            :size="40"
+            :width="4"
           />
-          <course-display
-            class="mb-3"
-            @editCustom="editCustom"
-          />
-          <options class="mb-5" />
+        </div>
+      </v-fade-transition>
 
-          <timetable :pointers="pointers" />
+      <v-content app>
+        <v-fade-transition>
+          <v-container
+            v-show="!$store.state.loading"
+            class="narrow"
+          >
+            <div class="font-weight-light subheading">
+              <p>
+                Welcome to <span class="font-weight-regular">{{ title }}</span>!
+                To get started with planning your timetable for
+                <span class="font-weight-regular">Term {{ meta.term }}, {{ meta.year }}</span>
+                select the courses you've enrolled in below.
+              </p>
+              <p>
+                To make the most out of this tool,
+                don't miss out on personalising your timetable by
+                <span class="font-weight-regular">dragging classes around</span>
+                to suit you better,
+                <span class="font-weight-regular">changing the color</span>
+                for each of your courses,
+                <span class="font-weight-regular">adding custom events</span>,
+                and
+                <span class="font-weight-regular">saving your timetable as an image</span>
+                when you're done.
+              </p>
+            </div>
 
-          <save-timetable
-            :saving="saving"
-            @save="save"
-          />
+            <course-selection
+              class="mb-1"
+              @custom="customDialog = true"
+            />
+            <course-display
+              class="mb-3"
+              @editCustom="editCustom"
+            />
+            <options class="mb-5" />
 
-          <div class="font-weight-light pt-5">
-            <p>
-              This tool is provided by
-              <span class="font-weight-regular">
-                <a href="https://www.campusbiblestudy.org/">Campus Bible Study</a>
-              </span>
-              — a group of people at UNSW who are interested in learning together
-              about Jesus from the Bible.
-              Whether you follow Jesus, or want to find out what He's all about,
-              <span class="font-weight-regular">Campus Bible Study</span>
-              is a great place for you to learn more.
-              If you've never come before, we recommend checking out the Bible talks.
-            </p>
-            <p class="pt-3">
-              The data was last updated at {{ meta.updateTime }}
-              <span class="faded">({{ meta.updateDate }})</span>
-              from <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>.
-              This tool comes without any guarantee of data accuracy or completeness.
-            </p>
-          </div>
-        </v-container>
+            <timetable :pointers="pointers" />
+
+            <save-timetable
+              :saving="saving"
+              @save="save"
+            />
+
+            <div class="font-weight-light pt-5">
+              <p>
+                This tool is provided by
+                <span class="font-weight-regular">
+                  <a href="https://www.campusbiblestudy.org/">Campus Bible Study</a>
+                </span>
+                — a group of people at UNSW who are interested in learning together
+                about Jesus from the Bible.
+                Whether you follow Jesus, or want to find out what He's all about,
+                <span class="font-weight-regular">Campus Bible Study</span>
+                is a great place for you to learn more.
+                If you've never come before, we recommend checking out the Bible talks.
+              </p>
+              <p class="pt-3">
+                The data was last updated at {{ meta.updateTime }}
+                <span class="faded">({{ meta.updateDate }})</span>
+                from <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>.
+                This tool comes without any guarantee of data accuracy or completeness.
+              </p>
+            </div>
+          </v-container>
+        </v-fade-transition>
       </v-content>
+      <custom
+        v-if="!$store.state.loading"
+        :display="customDialog"
+        :edit="customToEdit"
+        @hide="customDialog = false;
+               customToEdit = null"
+      />
+      <contact
+        v-if="!$store.state.loading"
+        :display="contactDialog"
+        :title="contactTitle || 'Get in Contact'"
+        @hide="contactDialog = false"
+      />
+      <alert v-if="!$store.state.loading" />
     </div>
-    <custom
-      v-if="!$store.state.loading"
-      :display="customDialog"
-      :edit="customToEdit"
-      @hide="customDialog = false;
-             customToEdit = null"
-    />
-    <contact
-      v-if="!$store.state.loading"
-      :display="contactDialog"
-      :title="contactTitle || 'Get in Contact'"
-      @hide="contactDialog = false"
-    />
-    <alert v-if="!$store.state.loading" />
   </v-app>
 </template>
 

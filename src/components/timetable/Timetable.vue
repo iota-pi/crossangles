@@ -19,6 +19,7 @@
       </v-fade-transition>
       <session
         v-for="session in timetable"
+        v-show="visible"
         :key="'s' + session.course.code + session.stream.component + session.index"
         :session="session"
         :pointers="pointers"
@@ -84,9 +85,9 @@
     },
     data () {
       return {
+        visible: false,
         days: ['M', 'T', 'W', 'H', 'F'],
         dimensions: {},
-        dimensionsInterval: null,
         dragging: null,
         snapped: [],
         stackOrder: [],
@@ -198,14 +199,20 @@
       this.updateDimensions()
 
       // Frequently update dimension measurements
-      this.dimensionsInterval = window.setInterval(() => {
-        this.updateDimensions()
-      }, 3000)
-    },
-    beforeDestroy () {
-      // Clear interval
-      // NB: currently this component is never destroyed in normal functioning
-      window.clearInterval(this.dimensionsInterval)
+      // (reduce frequency after first successful measurement)
+      let initialInterval = window.setInterval(() => {
+        if (this.updateDimensions()) {
+          // Clear short interval
+          window.clearInterval(initialInterval)
+
+          // Display timetable
+          this.visible = true
+
+          window.setInterval(() => {
+            this.updateDimensions()
+          }, 2000)
+        }
+      }, 50)
     },
     methods: {
       startDrag (e) {
@@ -396,6 +403,8 @@
           w: timetable.scrollWidth,
           h: timetable.scrollHeight
         }
+
+        return !!this.dimensions.w
       },
       updateTimetable (allowFullOveride) {
         // Block this function if the app is still loading
