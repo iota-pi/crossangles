@@ -138,6 +138,7 @@
 <script>
   import Vue from 'vue'
   import WebFontLoader from 'webfontloader'
+  import image from './components/mixins/image'
 
   export default {
     name: 'App',
@@ -153,6 +154,7 @@
       Contact: () => import(/* webpackChunkName: "contact" */ './components/Contact'),
       Alert: () => import(/* webpackChunkName: "alert" */ './components/Alert')
     },
+    mixins: [ image ],
     data () {
       return {
         menu: false,
@@ -253,7 +255,7 @@
       },
       save () {
         this.saving = true
-        this.saveTimetable(() => { this.saving = false })
+        this.saveAsImage(() => { this.saving = false })
         this.menu = false
       },
       report () {
@@ -277,6 +279,18 @@
   .faded {
     opacity: 0.8;
   }
+  .loading-overlay {
+    background-color: rgba(0, 0, 0, 0.04);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
 </style>
 
 <style>
@@ -288,7 +302,7 @@
     opacity: 0;
     transition: opacity 0.3s;
   }
-  html.wf-loading {
-    font-family: sans-serif;
+  html:not(.wf-active) {
+    font-family: sans-serif !important;
   }
 </style>
