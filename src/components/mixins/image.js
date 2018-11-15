@@ -25,6 +25,12 @@ export default {
         actual.end = Math.max(actual.end, session.time.end)
       }
 
+      // If timetable is empty, don't remove any rows
+      if (actual.start >= display.end) {
+        actual.start = display.start
+        actual.end = display.end
+      }
+
       // Remove empty rows from the start and the end
       let rows = clone.querySelectorAll('.row')
       for (let i = 1; i < rows.length; i++) {
