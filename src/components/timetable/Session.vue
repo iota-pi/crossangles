@@ -2,6 +2,7 @@
   <div
     class="session"
     :class="{
+      new: isNew,
       dragging: pointer !== null,
       'elevation-3': pointer === null && (elevated || !isSnapped),
       'elevation-8': pointer !== null
@@ -92,7 +93,8 @@
         currentPosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
         zIndex: 2,
-        isSnapped: null
+        isSnapped: null,
+        isNew: true
       }
     },
     computed: {
@@ -203,6 +205,7 @@
     },
     mounted () {
       this.update()
+      this.$nextTick(() => this.isNew = false)
     },
     methods: {
       drag () {
@@ -288,12 +291,17 @@
     color: white;
     cursor: grab;
     overflow: hidden;
+    opacity: 1;
 
     transition: box-shadow 0.3s, left 0.3s, top 0.3s;
   }
   .session.dragging {
     cursor: grabbing;
     transition: box-shadow 0.3s;
+  }
+  .session.new {
+    transition: opacity 0.3s;
+    opacity: 0;
   }
 
   .session > .label {
