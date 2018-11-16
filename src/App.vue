@@ -272,21 +272,23 @@
         })
       },
       save () {
-        this.saving = true
-        this.menu = false
+        if (!this.saving) {
+          this.saving = true
+          this.menu = false
 
-        this.saveAsImage((success) => {
-          this.saving = false
+          this.saveAsImage((success) => {
+            this.saving = false
 
-          window.dataLayer.push({
-            event: 'save_image',
-            action: 'Result',
-            courses: this.$store.state.chosen.map(c => c.custom ? c.title : c.code).join(','),
-            events: this.$store.state.events.join(','),
-            options: Object.keys(this.$store.state.options).join(','),
-            value: +success
+            window.dataLayer.push({
+              event: 'save_image',
+              action: 'Result',
+              courses: this.$store.state.chosen.map(c => c.custom ? c.title : c.code).join(','),
+              events: this.$store.state.events.join(','),
+              options: Object.keys(this.$store.state.options).join(','),
+              value: +success
+            })
           })
-        })
+        }
       },
       report () {
         this.contactDialog = true
