@@ -336,7 +336,10 @@
         }
 
         // Check that this dropzone is for the right session
-        if (this.dragging.index !== dropzone.index) {
+        // NB: but always show alternative stream even when number of sessions
+        //     per stream doesn't match
+        let [ i1, i2 ] = [ this.dragging.index, dropzone.index ]
+        if (i1 !== i2 && !(i1 > i2 && i2 === dropzone.stream.sessions.length - 1)) {
           return false
         }
 
