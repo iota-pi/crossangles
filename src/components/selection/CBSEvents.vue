@@ -7,10 +7,10 @@
     <v-flex
       v-for="event in allEvents"
       :key="event.title"
-      @click.stop="chosenEvent(event)"
       xs12
       sm6
       md3
+      @click.stop="chosenEvent(event)"
     >
       <v-checkbox
         v-model="events"

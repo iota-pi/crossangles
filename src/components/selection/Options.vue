@@ -7,10 +7,10 @@
     <v-flex
       v-for="option in allOptions"
       :key="option.title"
-      @click.stop="chosenOption(option.value)"
       xs12
       sm6
       md4
+      @click.stop="chosenOption(option.value)"
     >
       <v-switch
         v-model="options"

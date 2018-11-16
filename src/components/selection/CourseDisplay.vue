@@ -58,14 +58,14 @@
         <div class="no-spacing pl-2">
           <swatches
             v-model="course.color"
-            @open="changeColor"
-            @input="changeColor"
             :colors="colors"
             :row-length="4"
             popover-to="left"
             shapes="circles"
             :swatch-size="32"
             :trigger-style="{ width: '32px', height: '32px' }"
+            @open="changeColor"
+            @input="changeColor"
           />
         </div>
 
