@@ -74,10 +74,19 @@ export default {
       axios.post('https://' + process.env.VUE_APP_DOMAIN + '/timetable/', {
         width: timetable.scrollWidth,
         height: height,
-        timetable: timetableHTML,
+        html: timetableHTML,
         courses: this.$store.state.chosen.map(c => c.custom ? c.title : c.code),
         events: this.$store.state.events,
-        options: Object.keys(this.$store.state.options)
+        options: Object.keys(this.$store.state.options),
+        timetable: this.$store.state.timetable.map(s => ({
+          course: s.course.custom ? s.course.title : s.course.code,
+          component: s.stream.component,
+          index: s.index,
+          day: s.time.day,
+          start: s.time.start,
+          end: s.time.end,
+          location: s.location
+        }))
       }).then(r => {
         download('data:image/png;base64,' + r.data, 'timetable.png', 'image/png')
 

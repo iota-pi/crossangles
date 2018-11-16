@@ -12,7 +12,7 @@ $height = min($data['height'], 1200);
 
 $head = file_get_contents('head.html');
 $html = $head . '<body>' .
-        substr($data['timetable'], 0, 20000) .
+        substr($data['html'], 0, 20000) .
         '</body></html>';
 
 $url = "https://phantomjscloud.com/api/browser/v2/$KEY/";
@@ -69,11 +69,27 @@ $options = array(
 
 $context  = stream_context_create($options);
 $result = file_get_contents($url, false, $context);
+$success = $result !== false;
 
-if ($result === false) {
-  http_response_code(400);
-} else {
+if ($success) {
   echo base64_encode($result);
+} else {
+  http_response_code(400);
+}
+
+$logging = json_decode(file_get_contents('config/log.json'), true);
+if ($logging['log'] === true) {
+  $date = date('Y-m-d H:i:s');
+  $name = 'timetable~' . $date . '.json';
+  $entry = array(
+    'date' => $date,
+    'courses' => $data['courses'],
+    'events' => $data['events'],
+    'options' => $data['options'],
+    'timetable' => $data['timetable'],
+    'success' => $success
+  );
+  file_put_contents($logging['log_dir'] . $name, json_encode($entry), FILE_APPEND | LOCK_EX);
 }
 
 ?>
