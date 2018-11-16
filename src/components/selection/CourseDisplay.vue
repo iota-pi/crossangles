@@ -58,6 +58,8 @@
         <div class="no-spacing pl-2">
           <swatches
             v-model="course.color"
+            @open="changeColor"
+            @input="changeColor"
             :colors="colors"
             :row-length="4"
             popover-to="left"
@@ -71,7 +73,7 @@
           <v-btn
             v-if="course.code !== 'CBS'"
             icon
-            @click="$store.dispatch('removeCourse', course)"
+            @click="removeCourse(course)"
           >
             <v-icon>close</v-icon>
           </v-btn>
@@ -83,14 +85,16 @@
         :key="'extension-' + course.code"
         class="flexible-height"
       >
-        <v-checkbox
-          v-model="webStreams"
-          :value="course.code"
-          label="Choose online-only lecture stream"
-          color="secondary"
-          class="mt-0 py-2"
-          hide-details
-        />
+        <v-list-tile-content @click="webHook(course)">
+          <v-checkbox
+            v-model="webStreams"
+            :value="course.code"
+            label="Choose online-only lecture stream"
+            color="secondary"
+            class="mt-0 py-2"
+            hide-details
+          />
+        </v-list-tile-content>
       </v-list-tile>
     </template>
 
@@ -158,6 +162,29 @@
       customColors () {
         // Commit changes to custom colors
         this.$store.commit('custom', this.custom)
+      }
+    },
+    methods: {
+      removeCourse (course) {
+        this.$store.dispatch('removeCourse', course)
+
+        window.dataLayer.push({
+          event: 'remove_course',
+          label: course.code
+        })
+      },
+      changeColor (newColor) {
+        window.dataLayer.push({
+          event: 'change_color',
+          color: newColor || 'Opened'
+        })
+      },
+      webHook (course) {
+        window.dataLayer.push({
+          event: 'choose_web',
+          action: (this.webStreams.includes(course.code) ? 'S' : 'Des') + 'elect Web Stream',
+          label: course.code
+        })
       }
     }
   }

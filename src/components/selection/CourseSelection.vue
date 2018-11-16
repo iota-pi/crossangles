@@ -122,6 +122,11 @@
         // Check course has been set (this function is called when field is cleared too)
         if (this.course) {
           this.$store.dispatch('addCourse', this.course)
+          window.dataLayer.push({
+            event: 'add_course',
+            label: this.course.code,
+            color: this.course.color
+          })
 
           // Clear current input
           this.$refs.courseSelect.reset()

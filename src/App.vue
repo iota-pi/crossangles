@@ -33,7 +33,7 @@
         @save="save"
         @report="report"
         @contact="contact"
-        @custom="customDialog = true; menu = false"
+        @custom="editCustom(null)"
       />
 
       <v-fade-transition>
@@ -79,7 +79,7 @@
 
             <course-selection
               class="mb-1"
-              @custom="customDialog = true"
+              @custom="editCustom(null)"
             />
             <course-display
               class="mb-3"
@@ -174,7 +174,11 @@
       }
     },
     mounted () {
+      // Load course data
       this.$store.dispatch('loadData')
+
+      // Ensure dataLayer is initialised
+      window.dataLayer = window.dataLayer || []
 
       // Load Roboto and Material Icons
       WebFontLoader.load({
@@ -250,23 +254,59 @@
         }
       },
       editCustom (customCourse) {
-        this.customToEdit = this.$store.state.custom.filter(c => c.id === customCourse.code)[0]
+        // Set custom course to edit
+        if (customCourse) {
+          this.customToEdit = this.$store.state.custom.filter(c => c.id === customCourse.code)[0]
+        }
+
+        // Hide the side menu
+        this.menu = false
+
+        // Show the dialog
         this.customDialog = true
+
+        // Push this event to the dataLayer
+        window.dataLayer.push({
+          event: 'show_custom',
+          label: customCourse ? 'Show Edit Custom' : 'Show Add Custom'
+        })
       },
       save () {
         this.saving = true
-        this.saveAsImage(() => { this.saving = false })
         this.menu = false
+
+        this.saveAsImage((success) => {
+          this.saving = false
+
+          window.dataLayer.push({
+            event: 'save_image',
+            action: 'Result',
+            courses: this.$store.state.chosen.map(c => c.custom ? c.title : c.code).join(','),
+            events: this.$store.state.events.join(','),
+            options: Object.keys(this.$store.state.options).join(','),
+            value: +success
+          })
+        })
       },
       report () {
         this.contactDialog = true
         this.contactTitle = 'Report a Bug'
         this.menu = false
+
+        window.dataLayer.push({
+          event: 'side_menu',
+          label: 'Bug Report'
+        })
       },
       contact () {
         this.contactDialog = true
         this.contactTitle = null
         this.menu = false
+
+        window.dataLayer.push({
+          event: 'side_menu',
+          label: 'Contact'
+        })
       }
     }
   }

@@ -44,6 +44,15 @@
 <script>
   import clash from './Clash'
 
+  function pushEvent (action, session) {
+    // Emit event to dataLayer
+    window.dataLayer.push({
+      event: 'timetable',
+      action: action,
+      label: session.course.code + '/' + session.stream.component + ':' + session.index
+    })
+  }
+
   export default {
     components: {
       clash
@@ -212,6 +221,9 @@
           session: this.session,
           el: this.$el
         })
+
+        // Emit event to dataLayer
+        pushEvent('Dragged', this.session)
       },
       drop () {
         // Timeout is to fix visual glitch caused by dropzone transition
@@ -231,6 +243,9 @@
           el: this.$el,
           position: this.currentPosition
         })
+
+        // Emit event to dataLayer
+        pushEvent('Dropped', this.session)
       },
       updateDimensions () {
         let duration = this.session.time.end - this.session.time.start

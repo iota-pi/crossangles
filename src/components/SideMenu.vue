@@ -82,6 +82,11 @@
         set (newValue) {
           if (!newValue) {
             this.$emit('hide')
+          } else {
+            window.dataLayer.push({
+              event: 'side_menu',
+              label: 'Show Menu'
+            })
           }
         }
       }
@@ -90,12 +95,22 @@
       reset () {
         this.$store.dispatch('reset')
         this.visible = false
+
+        window.dataLayer.push({
+          event: 'side_menu',
+          label: 'Reset'
+        })
       },
       share () {
         const sharingURL = encodeURIComponent(process.env.VUE_APP_DOMAIN)
         const fbURL = 'https://www.facebook.com/sharer/sharer.php?u=' + sharingURL
         window.open(fbURL, 'FBsharer', 'width=600, height=400, scrollbars=no')
         this.visible = false
+
+        window.dataLayer.push({
+          event: 'side_menu',
+          label: 'Share'
+        })
       }
     }
   }

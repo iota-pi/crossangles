@@ -269,6 +269,12 @@
           let oldCourse = this.$store.state.chosen.filter(c => c.code === this.edit.id)[0]
           this.$store.dispatch('removeCourse', oldCourse)
           this.$store.dispatch('addCustom', this.edit)
+
+          window.dataLayer.push({
+            event: 'add_custom',
+            label: 'Edit Custom',
+            options: this.edit.options.length
+          })
         } else {
           let customEvent = {
             name: this.name,
@@ -279,6 +285,12 @@
           }
           custom.push(customEvent)
           this.$store.dispatch('addCustom', customEvent)
+
+          window.dataLayer.push({
+            event: 'add_custom',
+            label: 'Add Custom',
+            options: customEvent.options.length
+          })
         }
 
         // Update state

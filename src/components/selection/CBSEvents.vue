@@ -7,6 +7,7 @@
     <v-flex
       v-for="event in allEvents"
       :key="event.title"
+      @click.stop="chosenEvent(event)"
       xs12
       sm6
       md3
@@ -44,6 +45,15 @@
           let unique = components.filter((c, i) => components.indexOf(c) === i)
           return unique
         }
+      }
+    },
+    methods: {
+      chosenEvent (eventName) {
+        window.dataLayer.push({
+          event: 'cbs_event',
+          action: 'CBS Event ' + (this.events.includes(eventName) ? 'Added' : 'Removed'),
+          label: eventName
+        })
       }
     }
   }

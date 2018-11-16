@@ -74,16 +74,21 @@ export default {
       axios.post('https://' + process.env.VUE_APP_DOMAIN + '/timetable/', {
         width: timetable.scrollWidth,
         height: height,
-        timetable: timetableHTML
+        timetable: timetableHTML,
+        courses: this.$store.state.chosen.map(c => c.custom ? c.title : c.code),
+        events: this.$store.state.events,
+        options: Object.keys(this.$store.state.options)
       }).then(r => {
         download('data:image/png;base64,' + r.data, 'timetable.png', 'image/png')
+
+        cb(true)
       }).catch(() => {
         this.$store.commit('alert', {
           message: 'Sorry, something went wrong. Please try again later',
           type: 'error'
         })
-      }).then(() => {
-        cb()
+
+        cb(false)
       })
     }
   }

@@ -7,6 +7,7 @@
     <v-flex
       v-for="option in allOptions"
       :key="option.title"
+      @click.stop="chosenOption(option.value)"
       xs12
       sm6
       md4
@@ -54,6 +55,15 @@
           }, {})
           this.$store.commit('options', asObject)
         }
+      }
+    },
+    methods: {
+      chosenOption (option) {
+        window.dataLayer.push({
+          event: 'option_selection',
+          action: 'Option ' + (this.options.includes(option) ? 'Added' : 'Removed'),
+          label: option
+        })
       }
     }
   }
