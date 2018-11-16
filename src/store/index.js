@@ -114,8 +114,8 @@ export default new Vuex.Store({
         let pastData = storage.getItem('courseData')
         if (pastData) {
           let data = JSON.parse(pastData)
-          courses = parseCourses(data.courses, data.meta)
-          processData(context, courses)
+          courses = parseCourses(data.courses)
+          processData(context, courses, data.meta)
           context.commit('meta', data.meta)
         }
       })
