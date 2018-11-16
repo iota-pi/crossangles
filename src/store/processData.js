@@ -94,6 +94,11 @@ function processData (context, courses, meta) {
           return false
         }
 
+        // Check this stream has a corresponding item
+        if (s.sessions.length <= item.index) {
+          return false
+        }
+
         // Check for correct day/time
         if (s.sessions[item.index].time.day !== item.time.day) {
           return false
