@@ -76,8 +76,8 @@ export default {
         height: height,
         html: timetableHTML,
         courses: this.$store.state.chosen.map(c => c.custom ? c.title : c.code),
-        events: this.$store.state.events,
-        options: Object.keys(this.$store.state.options),
+        events: this.$store.state.events.sort(),
+        options: Object.keys(this.$store.state.options).sort(),
         timetable: this.$store.state.timetable.map(s => ({
           course: s.course.custom ? s.course.title : s.course.code,
           component: s.stream.component,
