@@ -281,21 +281,29 @@
               this.snapped.push(session)
             }
           } else {
-            // Move all linked sessions to new stream locations
             let localTimetable = this.timetable.slice()
-            for (let i of dropzone.stream.sessions.keys()) {
+
+            // Remove all sessions from previous stream
+            for (let i = 0; i < this.dragging.stream.sessions.length; i++) {
               let from = this.dragging.stream.sessions[i]
-              let to = dropzone.stream.sessions[i]
-              localTimetable.splice(localTimetable.indexOf(from), 1)
-              localTimetable.push(to)
+              if (localTimetable.indexOf(from) !== -1) {
+                localTimetable.splice(localTimetable.indexOf(from), 1)
+              }
 
               if (this.snapped.indexOf(from) !== -1) {
                 this.snapped.splice(this.snapped.indexOf(from), 1)
               }
-              this.snapped.push(to)
+
               if (this.stackOrder.indexOf(from) !== -1) {
                 this.stackOrder.splice(this.stackOrder.indexOf(from), 1)
               }
+            }
+
+            // Add all sessions to new stream
+            for (let i = 0; i < dropzone.stream.sessions.length; i++) {
+              let to = dropzone.stream.sessions[i]
+              localTimetable.push(to)
+              this.snapped.push(to)
               this.stackOrder.push(to)
             }
 
