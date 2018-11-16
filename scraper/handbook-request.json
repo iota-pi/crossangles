@@ -7,7 +7,7 @@
           "must": [{
             "query_string": {
               "fields": ["*study_level_value*"],
-              "query": "*ugrd*"
+              "query": "*grd*"
             }
           }, {
             "query_string": {

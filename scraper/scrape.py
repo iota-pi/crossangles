@@ -58,16 +58,14 @@ class Parser():
                         'times': cells[7].get_text().strip()
                     })
 
-        # Remove all PG courses and use full course names
+            # Append the last course
+            courses.append(course)
+
+        # Use full course names for courses (where we have them)
         mappingUG = self.getUGCourses()
-        postgrad = []
         for course in courses:
-            if course['code'] not in mappingUG:
-                postgrad.append(course)
-            else:
+            if course['code'] in mappingUG:
                 course['name'] = mappingUG[course['code']]
-        for course in postgrad:
-            courses.remove(course)
 
         return courses
 
