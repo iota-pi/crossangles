@@ -151,15 +151,15 @@ class Cleaner():
             return []
 
         location = ''
-        # weeks = self.weekMax
+        weeks = ''
 
         if '(' in string:
             # Keep only the text within the brackets
             string = string[string.find('(') + 1 : string.find(')')]
-            # weeks = self.getWeeks(string)
+            weeks = self.getWeeks(string)
 
-            # if weeks is None:
-                # return []
+            if weeks is None:
+                return []
 
             if ', ' in string:
                 location = string[string.find(', '):].strip(', ')
@@ -170,14 +170,14 @@ class Cleaner():
             if location.lower() == 'see school':
                 location = ''
 
-        return [(time, location)]
+        return [(time, location, weeks)]
 
     def tidyUpTime(self, timestr):
         # If the class runs on Saturday or Sunday, don't include it
         if timestr[0].lower() == 's':
             return None
 
-        # Change day TLAs to letters
+        # Change day TLAs to single letters
         timestr = timestr.replace('Mon ', 'M').replace('Tue ', 'T')
         timestr = timestr.replace('Wed ', 'W').replace('Thu ', 'H').replace('Fri ', 'F')
 
@@ -199,40 +199,40 @@ class Cleaner():
 
     def getWeeks(self, string):
         weeks = string.split(', ')[0].strip(', ')
-        if weeks[0] == 'w': #confirm that we are actually looking at weeks
+        if weeks[0] == 'w': # Confirm that we are actually looking at weeks
             weeks = weeks.strip('w')
 
             # Remove any weeks that aren't in the main semester timetable
             weeks = weeks.replace('< 1', '')
+            weeks = weeks.replace('11', '')
             weeks = re.sub(r'-?N[0-9]+', '', weeks)
             weeks = re.sub(r',[, ]*', ',', weeks).strip(', ')
 
-            # If weeks is now empty, then that means that this class only runs outside of the main semester, so return None to not include this class
+            # If weeks is now empty, then this class runs entirely outside of
+            # the main term weeks; return None so as to not include this class
             if weeks == '':
                 return None
 
-            weeks = self.toInt(self.expandRanges(weeks))
             return weeks
         else:
-            # Assume class runs on every week to be safe
-            return self.weekMax
+            return ''
 
-    def expandRanges(self, weeks):
-        array = []
-
-        for r in weeks.split(','):
-            if '-' in r:
-                a, b = r.split('-')
-                array += list(range(int(a) - 1, int(b)))
-            else:
-                array.append(int(r) - 1)
-
-        return array
-
-    def toInt(self, weeksArray):
-        num = sum(map(lambda x: 2**x, weeksArray))
-
-        return num
+    # def expandRanges(self, weeks):
+    #     array = []
+    #
+    #     for r in weeks.split(','):
+    #         if '-' in r:
+    #             a, b = r.split('-')
+    #             array += list(range(int(a) - 1, int(b)))
+    #         else:
+    #             array.append(int(r) - 1)
+    #
+    #     return array
+    #
+    # def toInt(self, weeksArray):
+    #     num = sum(map(lambda x: 2**x, weeksArray))
+    #
+    #     return num
 
     def dump(self, data, fname):
         with open(fname, 'w') as f:
