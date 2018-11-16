@@ -115,7 +115,22 @@
         })
 
         return data
+      },
+      loading () {
+        return this.$store.state.loading
       }
+    },
+    watch: {
+      loading () {
+        if (!this.loading) {
+          window.setTimeout(() => this.$refs.courseSelect.focus(), 100)
+        }
+      }
+    },
+    mounted () {
+      // NB: This is needed as well as the above loading watcher in case this
+      // mounts after data has loaded and been processed
+      this.$nextTick(() => this.$refs.courseSelect.focus())
     },
     methods: {
       addCourse () {
