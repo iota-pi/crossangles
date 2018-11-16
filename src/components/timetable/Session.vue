@@ -36,8 +36,8 @@
         {{ session.stream.component }}
       </span>
     </div>
-    <div class="details">
-      {{ details }}
+    <div class="details" v-for="detail in details">
+      {{ detail }}
     </div>
   </div>
 </template>
@@ -145,16 +145,27 @@
         return this.session.snapToggle
       },
       details () {
-        let location = ''
-        if (this.$store.state.options.locations) {
-          location = this.session.location || ''
+        let details = []
+        if (this.$store.state.options.locations && this.session.location) {
+          details.push(this.session.location)
         }
-        let enrols = ''
-        if (this.$store.state.options.enrolments) {
-          enrols = this.session.stream.enrols || ''
+        if (this.$store.state.options.enrolments && this.session.stream.enrols) {
+          details.push(this.session.stream.enrols)
         }
-        let sep = (location && enrols) ? ' — ' : ''
-        return location + sep + enrols
+        if (this.$store.state.options.weeks && this.session.weeks) {
+          details.push('w' + this.session.weeks)
+        }
+
+        let newLine = null
+        if (details.length === 3) {
+          newLine = details.pop()
+        }
+
+        let result = [ details.join(' — ') ]
+        if (newLine) {
+          result.push(newLine)
+        }
+        return result
       },
       allowFull () {
         return this.$store.state.options.allowFull

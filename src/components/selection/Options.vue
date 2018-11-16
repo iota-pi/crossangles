@@ -9,7 +9,7 @@
       :key="option.title"
       xs12
       sm6
-      md4
+      md3
       @click.stop="chosenOption(option.value)"
     >
       <v-switch
@@ -30,12 +30,16 @@
       return {
         allOptions: [
           {
-            title: 'Show class locations',
+            title: 'Show locations',
             value: 'locations'
           },
           {
-            title: 'Show class enrolments',
+            title: 'Show enrolments',
             value: 'enrolments'
+          },
+          {
+            title: 'Show weeks',
+            value: 'weeks'
           },
           {
             title: 'Include full classes',

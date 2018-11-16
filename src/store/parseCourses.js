@@ -57,13 +57,14 @@ function parseSessions (times, course, stream) {
     timetable[i] = {
       course: course,
       stream: stream,
-      location: times[i][1],
       time: {
         day: day,
         start: hours[0],
         end: hours[1] || (hours[0] + 1),
         canClash: canClash
       },
+      location: times[i][1],
+      weeks: times[i][2],
       index: i,
       snapToggle: false
     }
