@@ -104,7 +104,9 @@ export default new Vuex.Store({
         // TODO: store JSON data before it's parsed? (saves this stringify call)
         storage.setItem('courseData', JSON.stringify(r.data))
         courses = parseCourses(r.data.courses)
-        processData(context, courses, r.data.meta)
+        try {
+          processData(context, courses, r.data.meta)
+        } catch (e) { console.error(e) }
         context.commit('meta', r.data.meta)
 
         // Disable the loading block on auto timetable updating
@@ -115,7 +117,9 @@ export default new Vuex.Store({
         if (pastData) {
           let data = JSON.parse(pastData)
           courses = parseCourses(data.courses)
-          processData(context, courses, data.meta)
+          try {
+            processData(context, courses, data.meta)
+          } catch (e) { console.error(e) }
           context.commit('meta', data.meta)
         }
       })
