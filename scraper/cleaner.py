@@ -15,6 +15,11 @@ class Cleaner():
             toDelete = []
             existing = defaultdict(list)
             for stream in course['streams']:
+                # Skip course enrolment streams
+                if stream['component'] == 'CRS':
+                    toDelete.append(stream)
+                    continue
+
                 # Process status
                 stream['status'] = stream['status'].strip('*')
                 if stream['status'] not in ['Open', 'Full']:
