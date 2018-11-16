@@ -33,6 +33,8 @@ export default new Vuex.Store({
   mutations: {
     meta (state, data) {
       state.meta = data
+
+      storage.setItem('meta', JSON.stringify(data))
     },
     chosen (state, data) {
       state.chosen = data
@@ -102,7 +104,7 @@ export default new Vuex.Store({
         // TODO: store JSON data before it's parsed? (saves this stringify call)
         storage.setItem('courseData', JSON.stringify(r.data))
         courses = parseCourses(r.data.courses)
-        processData(context, courses)
+        processData(context, courses, r.data.meta)
         context.commit('meta', r.data.meta)
 
         // Disable the loading block on auto timetable updating
@@ -112,7 +114,7 @@ export default new Vuex.Store({
         let pastData = storage.getItem('courseData')
         if (pastData) {
           let data = JSON.parse(pastData)
-          courses = parseCourses(data.courses)
+          courses = parseCourses(data.courses, data.meta)
           processData(context, courses)
           context.commit('meta', data.meta)
         }

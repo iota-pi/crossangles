@@ -1,6 +1,6 @@
 const storage = window.localStorage
 
-function processData (context, courses) {
+function processData (context, courses, meta) {
   let chosen = storage.getItem('chosen')
   let events = storage.getItem('events')
   let options = storage.getItem('options')
@@ -8,7 +8,14 @@ function processData (context, courses) {
   let webStreams = storage.getItem('webStreams')
   let custom = storage.getItem('custom')
 
-  if (chosen) {
+  let metaMatch = false
+  let oldMeta = storage.getItem('meta')
+  if (oldMeta) {
+    oldMeta = JSON.parse(oldMeta)
+    metaMatch = (oldMeta.year === meta.year) && (oldMeta.term === meta.term)
+  }
+
+  if (chosen && metaMatch) {
     // Restore previously chosen courses
     chosen = JSON.parse(chosen)
     let restored = []
@@ -44,7 +51,7 @@ function processData (context, courses) {
     context.commit('options', {})
   }
 
-  if (webStreams) {
+  if (webStreams && metaMatch) {
     // Restore previously selected options
     webStreams = JSON.parse(webStreams)
     context.commit('webStreams', webStreams)
@@ -53,7 +60,7 @@ function processData (context, courses) {
     context.commit('webStreams', [])
   }
 
-  if (custom) {
+  if (custom && metaMatch) {
     // Restore previously selected options
     custom = JSON.parse(custom)
     context.commit('custom', custom)
@@ -65,7 +72,7 @@ function processData (context, courses) {
     context.commit('custom', [])
   }
 
-  if (timetable) {
+  if (timetable && metaMatch) {
     timetable = JSON.parse(timetable)
 
     let restored = []
