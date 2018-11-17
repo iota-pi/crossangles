@@ -2,7 +2,7 @@
   <v-dialog
     v-model="show"
     :max-width="700"
-    persistent
+    :persistent="!!name || !!email || !!body"
     lazy
   >
     <v-card>
