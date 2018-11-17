@@ -34,24 +34,29 @@
       />
 
       <!-- Draw timetable grid -->
-      <div class="row header">
-        <div />
-        <div>Monday</div>
-        <div>Tuesday</div>
-        <div>Wednesday</div>
-        <div>Thursday</div>
-        <div>Friday</div>
-      </div>
       <div
-        v-for="hour in hours"
-        :key="'tthour' + hour"
-        class="row"
+        id="timetable-grid"
+        class="grid"
       >
-        <div>{{ hour }}:00</div>
+        <div class="row header">
+          <div />
+          <div>Monday</div>
+          <div>Tuesday</div>
+          <div>Wednesday</div>
+          <div>Thursday</div>
+          <div>Friday</div>
+        </div>
         <div
-          v-for="day in days"
-          :key="'ttcell' + day + hour"
-        />
+          v-for="hour in hours"
+          :key="'tthour' + hour"
+          class="row"
+        >
+          <div>{{ hour }}:00</div>
+          <div
+            v-for="day in days"
+            :key="'ttcell' + day + hour"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -409,13 +414,15 @@
         return true
       },
       updateDimensions () {
-        let timetable = document.getElementById('timetable')
+        let timetable = document.getElementById('timetable-grid')
+
+        // Get width/height of cloned element
         this.dimensions = {
           w: timetable.scrollWidth,
           h: timetable.scrollHeight
         }
 
-        return !!this.dimensions.w
+        return !!timetable.scrollWidth
       },
       updateTimetable (allowFullOveride) {
         // Block this function if the app is still loading
