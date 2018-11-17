@@ -302,7 +302,6 @@
     color: white;
     cursor: grab;
     overflow: hidden;
-    opacity: 1;
 
     transition: box-shadow 0.3s, left 0.3s, top 0.3s;
   }
@@ -311,8 +310,7 @@
     transition: box-shadow 0.3s;
   }
   .session.new {
-    transition: opacity 0.3s;
-    opacity: 0;
+    transition: none;
   }
 
   .session > .label {
