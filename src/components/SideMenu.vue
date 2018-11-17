@@ -42,6 +42,11 @@
       return {
         items: [
           {
+            icon: 'help',
+            title: 'About CrossAngles',
+            action: () => this.$emit('about')
+          },
+          {
             icon: 'event',
             title: 'Add a Custom Event',
             action: () => this.$emit('custom')

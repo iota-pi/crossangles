@@ -30,6 +30,7 @@
         v-if="!$store.state.loading"
         :display="menu"
         @hide="menu = false"
+        @about="about"
         @save="save"
         @report="report"
         @contact="contact"
@@ -98,7 +99,10 @@
               <p>
                 This tool is provided by
                 <span class="font-weight-regular">
-                  <a href="https://www.campusbiblestudy.org/">Campus Bible Study</a>
+                  <a
+                    href="https://www.campusbiblestudy.org/"
+                    target="_blank"
+                  >Campus Bible Study</a>
                 </span>
                 — a group of people at UNSW who are interested in learning together
                 about Jesus from the Bible.
@@ -110,8 +114,19 @@
               <p class="pt-3">
                 The data was last updated at {{ meta.updateTime }}
                 <span class="faded">({{ meta.updateDate }})</span>
-                from <a href="http://classutil.unsw.edu.au">classutil.unsw.edu.au</a>.
+                from
+                <a
+                  href="http://classutil.unsw.edu.au"
+                  target="_blank"
+                >classutil.unsw.edu.au</a>.
                 This tool comes without any guarantee of data accuracy or completeness.
+                We also collect anonymous information about how people tend to use
+                this tool to help us improve it. If you have any questions or suggestions,
+                please
+                <a
+                  class="underlined"
+                  @click="contact"
+                >contact us</a>.
               </p>
             </div>
           </v-container>
@@ -129,6 +144,12 @@
         :display="contactDialog"
         :title="contactTitle || 'Get in Contact'"
         @hide="contactDialog = false"
+      />
+      <about
+        v-if="!$store.state.loading"
+        :display="aboutDialog"
+        @hide="aboutDialog = false"
+        @contact="contact()"
       />
       <alert v-if="!$store.state.loading" />
     </div>
@@ -152,11 +173,13 @@
       SideMenu: () => import(/* webpackChunkName: "menu" */ './components/SideMenu'),
       Custom: () => import(/* webpackChunkName: "custom" */ './components/selection/Custom'),
       Contact: () => import(/* webpackChunkName: "contact" */ './components/Contact'),
-      Alert: () => import(/* webpackChunkName: "alert" */ './components/Alert')
+      Alert: () => import(/* webpackChunkName: "alert" */ './components/Alert'),
+      About: () => import(/* webpackChunkName: "about" */ './components/About')
     },
     mixins: [ image ],
     data () {
       return {
+        title: 'CrossAngles',
         menu: false,
         mouse: { x: 0, y: 0, held: false },
         pointers: {},
@@ -164,8 +187,8 @@
         contactTitle: null,
         customDialog: false,
         customToEdit: null,
-        saving: false,
-        title: 'CrossAngles'
+        aboutDialog: false,
+        saving: false
       }
     },
     computed: {
@@ -301,13 +324,26 @@
         })
       },
       contact () {
+        // Display contact form
         this.contactDialog = true
         this.contactTitle = null
+
+        // Hide menu and about dialogs (if showing)
         this.menu = false
+        this.aboutDialog = false
 
         window.dataLayer.push({
           event: 'side_menu',
           label: 'Contact'
+        })
+      },
+      about () {
+        this.aboutDialog = true
+        this.menu = false
+
+        window.dataLayer.push({
+          event: 'side_menu',
+          label: 'About'
         })
       }
     }
@@ -332,6 +368,9 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
+  }
+  a.underlined {
+    text-decoration: underline;
   }
 </style>
 
