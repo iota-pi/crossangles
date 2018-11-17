@@ -263,7 +263,7 @@
       },
       updateDimensions () {
         let duration = this.session.time.end - this.session.time.start
-        this.dimensions.w = Math.floor((this.boundary.w - 70) / 5) - 1
+        this.dimensions.w = Math.floor((this.boundary.w - 60) / 5) - 1
         this.dimensions.h = 50 * duration - 1
       },
       update () {
@@ -271,13 +271,13 @@
         this.updateDimensions()
 
         // Update location
-        let cellW = (this.boundary.w - 71) / 5
+        let cellW = (this.boundary.w - (60 + 1)) / 5
         let cellH = 50
         let day = ['M', 'T', 'W', 'H', 'F'].indexOf(this.session.time.day)
         let hour = this.session.time.start - this.hours[0]
         this.currentPosition = {
-          x: 71 + cellW * day,
-          y: 51 + cellH * hour
+          x: 60 + 1 + cellW * day,
+          y: 50 + 1 + cellH * hour
         }
         this.isSnapped = true
 

@@ -46,13 +46,13 @@
     methods: {
       update () {
         let duration = this.dropzone.end - this.dropzone.start
-        let cellW = (this.boundary.w - 71) / 5
+        let cellW = (this.boundary.w - (60 + 1)) / 5
         let cellH = 50
         let day = ['M', 'T', 'W', 'H', 'F'].indexOf(this.dropzone.day)
         let hour = this.dropzone.start - this.hours[0]
         this.position = {
-          x: 71 + cellW * day,
-          y: 51 + cellH * hour,
+          x: 60 + 1 + cellW * day,
+          y: 50 + 1 + cellH * hour,
           w: cellW - 1,
           h: cellH * duration - 1
         }

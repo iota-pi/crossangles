@@ -264,7 +264,7 @@
         // Snap sessions to new position
         if (nearest !== null) {
           // Find the corresponding dropzone object for the DOM element we have
-          let dayIndex = Math.round(Math.max(nearest.x - 70, 0) / nearest.w)
+          let dayIndex = Math.round(Math.max(nearest.x - 60, 0) / nearest.w)
           let hourIndex = Math.round(Math.max(nearest.y - 50, 0) / 50 * 2) / 2
           let day = this.days[dayIndex]
           let hour = (+this.hours[0]) + hourIndex
@@ -563,8 +563,8 @@
     min-width: 120px;
   }
   .row > div:first-child {
-    min-width: 70px;
-    flex: 0 0 70px;
+    min-width: 60px;
+    flex: 0 0 60px;
   }
   .row.header > div, .row > div:first-child {
     display: flex;
