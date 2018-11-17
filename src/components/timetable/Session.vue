@@ -36,7 +36,11 @@
         {{ session.stream.component }}
       </span>
     </div>
-    <div class="details" v-for="detail in details">
+    <div
+      v-for="(detail, i) in details"
+      :key="'detail' + i"
+      class="details"
+    >
       {{ detail }}
     </div>
   </div>
