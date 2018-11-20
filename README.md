@@ -1,21 +1,20 @@
-# crossangles
+# CrossAngles
+
+This is the official repository for CrossAngles, a timetabling assistant for UNSW students.
+
+## Contributing
+If you wish to contribute you are very welcome to fork this repository and submit pull requests, but please refrain from publishing it or any derivatives without written permission.
 
 ## Project setup
 ```
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
+# Compiles and hot-reloads for development
 npm run serve
-```
 
-### Compiles and minifies for production
-```
+# Compiles and minifies for production
 npm run build
-```
 
-### Lints and fixes files
-```
+# Lints and fixes files
 npm run lint
 ```
