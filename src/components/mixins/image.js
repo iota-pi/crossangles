@@ -32,10 +32,11 @@ export default {
       }
 
       // Remove empty rows from the start and the end
-      let rows = clone.querySelectorAll('.row')
+      let grid = clone.lastChild
+      let rows = grid.querySelectorAll('.row')
       for (let i = 1; i < rows.length; i++) {
         if (i <= actual.start - display.start || i >= 1 + (actual.end - display.start)) {
-          clone.removeChild(rows[i])
+          grid.removeChild(rows[i])
         }
       }
 
