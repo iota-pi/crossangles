@@ -3,7 +3,7 @@
 This is the official repository for CrossAngles, a timetabling assistant for UNSW students.
 
 ## Contributing
-If you wish to contribute you are very welcome to fork this repository and submit pull requests, but please refrain from publishing it or any derivatives without written permission.
+If you wish to contribute you are very welcome to fork this repository and submit pull requests, but please refrain from distributing it or any derivatives.
 
 ## Project setup
 ```
