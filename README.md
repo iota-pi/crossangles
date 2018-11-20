@@ -6,7 +6,7 @@ This is the official repository for CrossAngles, a timetabling assistant for UNS
 If you wish to contribute you are very welcome to fork this repository and submit pull requests, but please refrain from distributing it or any derivatives.
 
 ## Project setup
-```
+``` bash
 npm install
 
 # Compiles and hot-reloads for development
