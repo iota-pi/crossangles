@@ -12,17 +12,17 @@ yarn-debug.log*
 yarn-error.log*
 
 # Python working files
-__pycache__
+/scraper/__pycache__
 /scraper/cache.json
 /scraper/tmp.json
 /scraper/.config.json
 
 # Testing files
 /public/tt.json
-/public/.htaccess
+/public/.*
 
-# PHP config files
-/php/config/
+# PHP files
+/php/
 
 # Editor directories and files
 .idea
