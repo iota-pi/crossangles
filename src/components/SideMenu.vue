@@ -13,6 +13,8 @@
         :key="i"
         value="true"
         class="no-primary--text"
+        :href="item.href"
+        target="_blank"
         @click="item.action"
       >
         <v-list-tile-action>
@@ -69,7 +71,11 @@
           {
             icon: 'bug_report',
             title: 'Report a Bug',
-            action: () => this.$emit('report')
+            href: process.env.VUE_APP_GITHUB + '/issues',
+            action: () => window.dataLayer.push({
+              event: 'side_menu',
+              label: 'Bug Report'
+            })
           },
           {
             icon: 'email',

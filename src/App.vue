@@ -32,7 +32,6 @@
         @hide="menu = false"
         @about="about"
         @save="save"
-        @report="report"
         @contact="contact"
         @custom="editCustom(null)"
       />
@@ -312,16 +311,6 @@
             })
           })
         }
-      },
-      report () {
-        this.contactDialog = true
-        this.contactTitle = 'Report a Bug'
-        this.menu = false
-
-        window.dataLayer.push({
-          event: 'side_menu',
-          label: 'Bug Report'
-        })
       },
       contact () {
         // Display contact form
