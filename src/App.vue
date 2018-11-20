@@ -141,7 +141,7 @@
       <contact
         v-if="!$store.state.loading"
         :display="contactDialog"
-        :title="contactTitle || 'Get in Contact'"
+        title="Get in Contact"
         @hide="contactDialog = false"
       />
       <about
@@ -180,10 +180,8 @@
       return {
         title: 'CrossAngles',
         menu: false,
-        mouse: { x: 0, y: 0, held: false },
         pointers: {},
         contactDialog: false,
-        contactTitle: null,
         customDialog: false,
         customToEdit: null,
         aboutDialog: false,
@@ -315,7 +313,6 @@
       contact () {
         // Display contact form
         this.contactDialog = true
-        this.contactTitle = null
 
         // Hide menu and about dialogs (if showing)
         this.menu = false
