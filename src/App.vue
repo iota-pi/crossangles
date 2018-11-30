@@ -57,7 +57,7 @@
           >
             <div class="font-weight-light subheading">
               <p>
-                Welcome to <span class="font-weight-regular">CrossAngles</span>!
+                Welcome to CrossAngles!
                 To get started with planning your timetable for
                 <span class="font-weight-regular">Term {{ meta.term }}, {{ meta.year }}</span>
                 select the courses you've enrolled in below.
@@ -110,17 +110,14 @@
             <div class="font-weight-light pt-5">
               <p>
                 This tool is provided by
-                <span class="font-weight-regular">
-                  <a
-                    href="https://www.campusbiblestudy.org/"
-                    target="_blank"
-                  >Campus Bible Study</a>
-                </span>
+                <a
+                  href="https://www.campusbiblestudy.org/"
+                  target="_blank"
+                >Campus Bible Study</a>
                 — a group of people at UNSW who are interested in learning together
                 about Jesus from the Bible.
                 Whether you follow Jesus, or want to find out what He's all about,
-                <span class="font-weight-regular">Campus Bible Study</span>
-                is a great place for you to learn more.
+                Campus Bible Study is a great place for you to learn more.
                 If you've never come before, we recommend checking out the Bible talks.
               </p>
               <p class="pt-3">
@@ -133,8 +130,7 @@
                   href="http://classutil.unsw.edu.au"
                   target="_blank"
                 >classutil.unsw.edu.au</a>.
-                CrossAngles comes without any guarantees of
-                data accuracy and completeness, or of optimality.
+                CrossAngles comes without any guarantee of data accuracy or of optimality.
                 We also collect anonymous information about how people tend to use
                 this tool to help us make improvements.
                 If you have any questions or suggestions, please

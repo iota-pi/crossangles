@@ -20,32 +20,31 @@
       <v-card-text class="pt-0">
         <p>
           CrossAngles is provided by
-          <span class="font-weight-regular">
-            <a
-              href="https://www.campusbiblestudy.org/"
-              target="_blank"
-            >Campus Bible Study</a>
-          </span>
+          <a
+            href="https://www.campusbiblestudy.org/"
+            target="_blank"
+          >Campus Bible Study</a>
           — a group of people at UNSW who are interested in learning together
           about Jesus from the Bible.
           Whether you follow Jesus, or want to find out what He's all about,
-          <span class="font-weight-regular">Campus Bible Study</span>
-          is a great place for you to learn more.
+          Campus Bible Study is a great place for you to learn more.
           If you've never come before, we recommend checking out the Bible talks.
         </p>
 
         <p class="mb-0">
-          The data was last updated at {{ meta.updateTime }}
-          <span class="faded">({{ meta.updateDate }})</span>
+          The data was last updated at
+          <span class="font-weight-regular">
+            {{ meta.updateTime }} ({{ meta.updateDate }})
+          </span>
           from
           <a
             href="http://classutil.unsw.edu.au"
             target="_blank"
           >classutil.unsw.edu.au</a>.
-          This tool comes without any guarantee of data accuracy or completeness.
-          We also collect anonymous information about how people's use
-          of this tool to help us improve it. If you have any questions or suggestions,
-          please
+          CrossAngles comes without any guarantee of data accuracy or of optimality.
+          We also collect anonymous information about how people tend to use
+          this tool to help us make improvements.
+          If you have any questions or suggestions, please
           <a
             class="underlined"
             @click="$emit('contact')"
@@ -94,9 +93,6 @@
 </script>
 
 <style scoped>
-  .faded {
-    opacity: 0.8;
-  }
   a.underlined {
     text-decoration: underline;
   }
