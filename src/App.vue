@@ -111,17 +111,20 @@
                 If you've never come before, we recommend checking out the Bible talks.
               </p>
               <p class="pt-3">
-                The data was last updated at {{ meta.updateTime }}
-                <span class="faded">({{ meta.updateDate }})</span>
+                The data was last updated at
+                <span class="font-weight-regular">
+                  {{ meta.updateTime }} ({{ meta.updateDate }})
+                </span>
                 from
                 <a
                   href="http://classutil.unsw.edu.au"
                   target="_blank"
                 >classutil.unsw.edu.au</a>.
-                This tool comes without any guarantee of data accuracy or completeness.
+                CrossAngles comes without any guarantees of
+                data accuracy and completeness, or of optimality.
                 We also collect anonymous information about how people tend to use
-                this tool to help us improve it. If you have any questions or suggestions,
-                please
+                this tool to help us make improvements.
+                If you have any questions or suggestions, please
                 <a
                   class="underlined"
                   @click="contact"
@@ -339,9 +342,6 @@
 <style scoped>
   .container.narrow {
     max-width: 900px;
-  }
-  .faded {
-    opacity: 0.8;
   }
   .loading-overlay {
     background-color: rgba(0, 0, 0, 0.04);
