@@ -89,10 +89,24 @@
 
             <timetable :pointers="pointers" />
 
-            <save-timetable
-              :saving="saving"
-              @save="save"
-            />
+            <div class="text-xs-center pt-4">
+              <div>
+                <save-timetable
+                  :saving="saving"
+                  @save="save"
+                />
+              </div>
+
+              <div class="pt-2">
+                <a
+                  v-if="$store.state.events.length > 0 && meta.term === 1"
+                  href="https://campusbiblestudy.ccbchurch.com/goto/forms/513/responses/new"
+                  target="_blank"
+                >
+                  Sign Up for Campus Bible Study
+                </a>
+              </div>
+            </div>
 
             <div class="font-weight-light pt-5">
               <p>
