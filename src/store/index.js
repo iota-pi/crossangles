@@ -6,7 +6,7 @@ import parseCourses from './parseCourses'
 import processData from './processData'
 import { colors } from './colors'
 
-const dataURL = '/tt.json'
+const dataURL = process.env.VUE_APP_DATAURI
 const storage = window.localStorage
 
 let courses = null
