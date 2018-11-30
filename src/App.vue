@@ -23,7 +23,6 @@
       </v-fade-transition>
 
       <toolbar
-        :title="title"
         @menu="menu = !menu"
       />
       <side-menu
@@ -58,7 +57,7 @@
           >
             <div class="font-weight-light subheading">
               <p>
-                Welcome to <span class="font-weight-regular">{{ title }}</span>!
+                Welcome to <span class="font-weight-regular">CrossAngles</span>!
                 To get started with planning your timetable for
                 <span class="font-weight-regular">Term {{ meta.term }}, {{ meta.year }}</span>
                 select the courses you've enrolled in below.
@@ -195,7 +194,6 @@
     mixins: [ image ],
     data () {
       return {
-        title: 'CrossAngles',
         menu: false,
         pointers: {},
         contactDialog: false,
