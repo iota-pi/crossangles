@@ -51,7 +51,9 @@
             icon
             @click="$emit('editCustom', course)"
           >
-            <v-icon color="grey darken-2">edit</v-icon>
+            <v-icon color="grey darken-2">
+              edit
+            </v-icon>
           </v-btn>
         </div>
 

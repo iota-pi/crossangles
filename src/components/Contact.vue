@@ -18,7 +18,9 @@
             flat
             @click="show = false"
           >
-            <v-icon color="grey darken-2">close</v-icon>
+            <v-icon color="grey darken-2">
+              close
+            </v-icon>
           </v-btn>
         </v-card-title>
 
