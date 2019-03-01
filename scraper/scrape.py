@@ -10,20 +10,21 @@ import time
 import re
 import os
 
+
 class Parser():
-    def __init__(self, term, engine='lxml', windowSize=20, timeout=5, cache=None):
+    def __init__(self, term, engine='lxml', window=20, timeout=5, cache=None):
         self.parser = engine
-        self.windowSize = windowSize
+        self.windowSize = window
         self.timeout = timeout
         self.cacheName = cache
         self.cache = {}
         self.term = str(term)
 
-        if cache:
+        if cache is not None:
             try:
                 with open(cache) as f:
                     self.cache = json.load(f)
-            except FileNotFoundError:
+            except (FileNotFoundError, TypeError):
                 pass
 
     def scrape(self, startUrl):
@@ -71,7 +72,8 @@ class Parser():
 
     def getFacultyPages(self, startUrl):
         soup = self.loadPages(startUrl).__next__()
-        links = soup.find_all(href=re.compile('[A-Y][A-Z]{3}_[ST]' + self.term + '.html$'))
+        regex = re.compile('[A-Y][A-Z]{3}_[ST]' + self.term + '.html$')
+        links = soup.find_all(href=regex)
         links = [link.get('href') for link in links]
 
         # Convert to urls and load the pages
@@ -111,6 +113,7 @@ class Parser():
             with open(self.cacheName, 'w') as f:
                 json.dump(self.cache, f, separators=(',', ':'))
 
+
 #
 # getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney
 #
@@ -125,6 +128,7 @@ def getSydneyTime():
 
     return updateDate, updateTime
 
+
 def getMeta(year, term):
     updateDate, updateTime = getSydneyTime()
     return {
@@ -133,6 +137,7 @@ def getMeta(year, term):
         'updateDate': updateDate,
         'updateTime': updateTime
     }
+
 
 if __name__ == '__main__':
     # Ensure script always runs in its own directory
