@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import json
 import time
+import sys
 import re
 import os
 
@@ -139,6 +140,14 @@ def getMeta(year, term):
     }
 
 
+def scrapeTerm(term, config):
+    parser = Parser(term=term, cache=config['cache'])
+    courses = parser.scrape(config['url'])
+    parser.writeCache()
+
+    return courses
+
+
 if __name__ == '__main__':
     # Ensure script always runs in its own directory
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -146,15 +155,31 @@ if __name__ == '__main__':
     with open('.config.json') as f:
         config = json.load(f)
 
-    parser = Parser(term=config['term'], cache=config['cache'])
-    courses = parser.scrape(config['url'])
-    meta = getMeta(config['year'], config['term'])
-    parser.writeCache()
-
+    # Create the Cleaner object
     cleaner = Cleaner()
-    data = cleaner.process(courses)
 
-    cleaner.dump(
-        {'courses': data, 'meta': meta},
-        config['output']
-    )
+    # Scrape each term until one has enough data
+    data = None
+    currentTerm = None
+    for term in config['terms']:
+        courses = scrapeTerm(term, config)
+
+        # Clean up the data
+        courses = cleaner.process(courses)
+
+        # Try to find a Term with at least 20% of the data present
+        if cleaner.measure(courses) >= 0.2:
+            data = courses
+            currentTerm = term
+            break
+
+    if data is not None:
+        # Get meta data
+        meta = getMeta(config['year'], currentTerm)
+
+        # Save scraped data
+        with open(config['output'], 'w') as f:
+            json.dump({'courses': data, 'meta': meta}, f, separators=(',', ':'))
+    else:
+        # Leave data unchanged if no such Term exists
+        sys.stderr.write('No Term with enough data found\n')
