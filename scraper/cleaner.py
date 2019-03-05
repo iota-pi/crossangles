@@ -45,18 +45,18 @@ class Cleaner():
         if stream['component'] == 'CRS':
             return None
 
-        # Process status
+        # Clean up status
         stream['status'] = stream['status'].strip('*')
         if stream['status'] not in ['Open', 'Full']:
             return None
         stream['status'] = 1 if stream['status'] == 'Open' else 0
 
-        # Process enrolments
+        # Clean up enrolments
         stream['enrols'] = stream['enrols'].strip().split()[0]
         if stream['enrols'][-2:] == '/0':
             return None
 
-        # Process session times (excluding for WEB streams)
+        # Clean up session times (excluding for WEB streams)
         if 'WEB' not in stream['section']:
             stream['times'] = self.parseTimeStr(stream['times'])
             if len(stream['times']) == 0:
@@ -72,7 +72,7 @@ class Cleaner():
             # Mark this as stream as a WEB stream
             stream['w'] = 1
 
-            # Web streams replace lecture streams
+            # Web streams are equivalent to lecture streams
             # NB: Some web streams have their component set to 'WEB' too
             # which would confuse JS timetable generation algorithm
             if stream['component'] == 'WEB':
