@@ -7,7 +7,6 @@ import re
 
 class Cleaner():
     def __init__(self):
-        self.weekMax = 2 ** 13 - 1
         with open('cbs.json') as f:
             self.cbs = json.load(f)
 
@@ -225,7 +224,3 @@ class Cleaner():
                         del stream[key]
 
         return data
-
-    def dump(self, data, fname):
-        with open(fname, 'w') as f:
-            json.dump(data, f, separators=(',', ':'))
