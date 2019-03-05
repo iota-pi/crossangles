@@ -12,7 +12,7 @@ import os
 
 
 class Parser():
-    def __init__(self, term, engine='lxml', window=20, timeout=5, cache=None):
+    def __init__(self, term, engine='lxml', window=20, timeout=20, cache=None):
         self.parser = engine
         self.windowSize = window
         self.timeout = timeout
