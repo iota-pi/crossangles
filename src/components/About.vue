@@ -32,6 +32,24 @@
           If you've never come before, we recommend checking out the Bible talks.
         </p>
 
+        <p>
+          CrossAngles aims to provide a simple way for students to create their
+          timetable for UNSW. However, it is not an official part of the UNSW
+          enrolment system, and planning your timetable here does not mean that
+          you have enrolled for the Term yet.
+        </p>
+
+        <p>
+          CrossAngles is similar to
+          <a
+            href="https://tdransfield.net/utilities/bojangles"
+            target="_blank"
+          >Bojangles</a>
+          (and the older Rectangles and Octangles), but provides a greater
+          degree of customisation, support for mobile devices, and support for
+          trimesters (aka. UNSW3+).
+        </p>
+
         <p class="mb-0">
           The data was last updated at
           <span class="font-weight-regular">
