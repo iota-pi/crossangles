@@ -4,6 +4,7 @@ import os
 import json
 import requests
 
+
 def getUGCourses():
     with open('handbook-request.json') as f:
         payload = json.load(f)
@@ -17,6 +18,7 @@ def getUGCourses():
         mappingUG[code] = name
 
     return mappingUG
+
 
 if __name__ == '__main__':
     # Ensure script always runs in its own directory
