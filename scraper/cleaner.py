@@ -214,8 +214,9 @@ class Cleaner():
         streamKeys = ['component', 'enrols', 'status', 'times', 'web']
         for course in data:
             for key in courseKeys:
-                course[key[0]] = course[key]
-                del course[key]
+                if key in course:
+                    course[key[0]] = course[key]
+                    del course[key]
 
             for stream in course['s']:
                 for key in streamKeys:
