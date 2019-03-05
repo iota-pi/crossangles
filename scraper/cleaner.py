@@ -40,6 +40,9 @@ class Cleaner():
 
         return courses
 
+    def measure(self, courses):
+        return sum(len(course['s']) > 0 for course in courses) / len(courses)
+
     def cleanStream(self, stream):
         # Skip course enrolment streams
         if stream['component'] == 'CRS':
