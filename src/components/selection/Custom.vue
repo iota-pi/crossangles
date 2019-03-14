@@ -198,7 +198,7 @@
         days: days,
         durations: durations,
         valid: false,
-        timeRules: [ v => this.duration + v <= 24 || 'Event cannot run past midnight' ]
+        timeRules: [ v => !v || this.duration + v <= 24 || 'Event cannot run past midnight' ]
       }
     },
     computed: {
