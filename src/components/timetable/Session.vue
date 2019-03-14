@@ -22,10 +22,11 @@
         :allowed="clashes.filter(s => s.time.canClash === false).length <= 1"
       />
     </v-fade-transition>
+
     <div class="label">
       <span v-if="session.course.code !== 'CBS' && !session.course.custom">
         <span class="em">
-          {{ session.course.code }}:
+          {{ session.course.code }}
         </span>
         {{ session.stream.component }}
       </span>
@@ -36,10 +37,12 @@
         {{ session.stream.component }}
       </span>
     </div>
+
     <div
       v-for="(detail, i) in details"
       :key="'detail' + i"
       class="details"
+      :class="{ 'more-space': duration > 1 }"
     >
       {{ detail }}
     </div>
@@ -148,7 +151,16 @@
       snapToggle () {
         return this.session.snapToggle
       },
+      duration () {
+        return this.session.time.end - this.session.time.start
+      },
       details () {
+        // Don't show details on classes shorter than 1 hour
+        if (this.duration < 1) {
+          return []
+        }
+
+        // Add location/enrolment details
         let details = []
         if (this.$store.state.options.locations && this.session.location) {
           details.push(this.session.location)
@@ -156,19 +168,16 @@
         if (this.$store.state.options.enrolments && this.session.stream.enrols) {
           details.push(this.session.stream.enrols)
         }
-        if (this.$store.state.options.weeks && this.session.weeks) {
-          details.push('w' + this.session.weeks)
-        }
 
-        let newLine = null
-        if (details.length === 3) {
-          newLine = details.pop()
-        }
-
+        // Join location and enrolments with an em-dash if both are present
         let result = [ details.join(' — ') ]
-        if (newLine) {
-          result.push(newLine)
+
+        // Add weeks details
+        if (this.$store.state.options.weeks && this.session.weeks) {
+          let prettyWeeks = this.session.weeks.replace(',', ', ').replace('-', '–')
+          result.push('Weeks: ' + prettyWeeks)
         }
+
         return result
       },
       allowFull () {
@@ -266,9 +275,8 @@
         pushEvent('Dropped', this.session)
       },
       updateDimensions () {
-        let duration = this.session.time.end - this.session.time.start
         this.dimensions.w = Math.floor((this.boundary.w - 60) / 5) - 1
-        this.dimensions.h = 50 * duration - 1
+        this.dimensions.h = 50 * this.duration - 1
       },
       update () {
         // Update width/height
@@ -320,6 +328,8 @@
   .session > .label {
     text-align: center;
     line-height: 1.25;
+    font-weight: 300;
+    font-size: 105%;
   }
   .session > .label .em {
     font-weight: 500;
@@ -327,8 +337,13 @@
 
   .details {
     text-align: center;
-    line-height: 1.1;
-    font-size: 80%;
+    line-height: 1.15;
+    font-size: 82%;
+    font-weight: 300;
+  }
+
+  .details.more-space {
+    line-height: 1.2;
   }
 
   .blur {
