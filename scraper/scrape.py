@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-from cleaner import Cleaner
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import requests
 from urllib.parse import urljoin
 from bs4 import BeautifulSoup
+import requests
 import json
 import time
 import sys
 import re
 import os
+
+from cleaner import cleanStream, removeDuplicates, abbreviateKeys
 
 
 class Parser():
@@ -21,6 +22,7 @@ class Parser():
         self.cache = {}
         self.term = str(term)
 
+        # Load the cache file (if it is required, and if it exists)
         if cache is not None:
             try:
                 with open(cache) as f:
@@ -29,45 +31,52 @@ class Parser():
                 pass
 
     def scrape(self, startUrl):
+        # Extract course information from each faculty page
         courses = []
         for soup in self.getFacultyPages(startUrl):
             rows = soup.select('table')[2].find_all('tr', recursive=False)[1:]
-            course = None
-            for row in rows:
-                cells = row.find_all('td', recursive=False)
+            courses += self.parseRows(rows)
 
-                if len(cells) == 1:
-                    # A row with a single cell marks the end of the table
-                    break
-                elif len(cells) == 2:
-                    # Store previous course
-                    if course is not None:
-                        courses.append(course)
+        # Remove all duplicate streams
+        courses = removeDuplicates(courses)
 
-                    # Start a new course
-                    course = {
-                        'code': cells[0].get_text().strip(),
-                        'name': cells[1].get_text().strip(),
-                        'streams': []
-                    }
-                else:
-                    # Handle general course
-                    course['streams'].append({
-                        'component': cells[0].get_text().strip(),
-                        'section': cells[1].get_text().strip(),
-                        'status': cells[4].get_text().strip(),
-                        'enrols': cells[5].get_text().strip(),
-                        'times': cells[7].get_text().strip()
-                    })
+        # Use full course names for courses
+        courses = self.getFullNames(courses)
 
-            # Append the last course
-            courses.append(course)
+        return courses
 
-        # Use full course names for courses (where we have them)
-        mappingUG = self.getUGCourses()
-        for course in courses:
-            if course['code'] in mappingUG:
-                course['name'] = mappingUG[course['code']]
+    def parseRows(self, rows):
+        courses = []
+
+        # Extract course data from each row
+        for row in rows:
+            # Find all cells in this row
+            cells = row.find_all('td', recursive=False)
+
+            # A row with a single cell marks the end of the table
+            if len(cells) == 1:
+                # Append the last course and finish iteration
+                break
+            # A row with 2 cells marks the start of a new course
+            elif len(cells) == 2:
+                # Start a new course
+                courses.append({
+                    'code': cells[0].get_text().strip(),
+                    'name': cells[1].get_text().strip(),
+                    'streams': []
+                })
+            # Every other row contains standard course data
+            else:
+                stream = cleanStream({
+                    'component': cells[0].get_text().strip(),
+                    'section': cells[1].get_text().strip(),
+                    'status': cells[4].get_text().strip(),
+                    'enrols': cells[5].get_text().strip(),
+                    'times': cells[7].get_text().strip()
+                })
+
+                if stream is not None:
+                    courses[-1]['streams'].append(stream)
 
         return courses
 
@@ -104,20 +113,28 @@ class Parser():
                 response = future.result()
                 yield BeautifulSoup(response, features=self.parser)
 
-    def getUGCourses(self):
+    def getFullNames(self, courses):
+        # Load course code -> full name mapping
         with open('courses.json') as f:
-            courses = json.load(f)
+            mappingUG = json.load(f)
+
+        # Use each course's full name
+        mappingUG = self.getUGCourses()
+        for course in courses:
+            if course['code'] in mappingUG:
+                course['name'] = mappingUG[course['code']]
+
         return courses
 
     def writeCache(self):
         if self.cacheName:
+            # Write a cache of all loaded pages to speed up next run
+            # NB: for testing purposes only
             with open(self.cacheName, 'w') as f:
                 json.dump(self.cache, f, separators=(',', ':'))
 
 
-#
-# getSydneyTime(): returns the date (dd/mm/yy) and time (hh:mm) in Sydney
-#
+# Returns the date (dd/mm/yy) and time (hh:mm) in Sydney
 def getSydneyTime():
     # Force Sydney timezone
     os.environ['TZ'] = 'Australia/Sydney'
@@ -155,25 +172,27 @@ if __name__ == '__main__':
     with open('.config.json') as f:
         config = json.load(f)
 
-    # Create the Cleaner object
-    cleaner = Cleaner()
-
     # Scrape each term until one has enough data
     data = None
     currentTerm = None
     for term in config['terms']:
         courses = scrapeTerm(term, config)
 
-        # Clean up the data
-        courses = cleaner.process(courses)
-
-        # Try to find a Term with at least 20% of the data present
-        if cleaner.measure(courses) >= 0.2:
+        # Try to find a Term with at least 20% of courses having stream data
+        if sum(len(course['streams']) > 0 for course in courses) / len(courses) >= 0.2:
             data = courses
             currentTerm = term
             break
 
     if data is not None:
+        # Include Campus Bible Study event data
+        with open('cbs.json') as f:
+            data.append(json.load(f))
+
+        # Abbreviate the keys used in the course and stream JSON objects
+        # TODO: this shouldn't be necessary with Brotli/gzip
+        abbreviateKeys(data)
+
         # Get meta data
         meta = getMeta(config['year'], currentTerm)
 
