@@ -248,13 +248,21 @@
         if (!this.options[i].day && !this.options[i].time) {
           // Only remove this option if there is still one left
           if (this.options.length > 1) {
+            // Do this on next tick to avoid focus error
             this.$vuetify.$nextTick(() => {
               this.options.splice(i, 1)
+
+              // Add a new empty option at the end
+              this.addOption()
             })
           }
+        } else {
+          // Add a new empty option at the end
+          this.addOption()
         }
-
-        // Add an empty one at the end
+      },
+      addOption () {
+        // Add an empty option as the last option
         let last = this.options[this.options.length - 1]
         if (!last || (last.day && last.time)) {
           this.options.push(baseOption())
