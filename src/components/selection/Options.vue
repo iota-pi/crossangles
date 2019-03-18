@@ -34,12 +34,12 @@
             value: 'locations'
           },
           {
-            title: 'Show enrolments',
-            value: 'enrolments'
-          },
-          {
             title: 'Show weeks',
             value: 'weeks'
+          },
+          {
+            title: 'Show enrolments',
+            value: 'enrolments'
           },
           {
             title: 'Include full classes',
