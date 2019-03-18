@@ -14,7 +14,7 @@ yarn-error.log*
 # Python working files
 /scraper/__pycache__
 /scraper/cache.json
-/scraper/tmp.json
+/scraper/courses.json
 /scraper/.config.json
 
 # Testing files
