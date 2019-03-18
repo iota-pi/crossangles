@@ -98,8 +98,8 @@
 
               <div class="pt-2">
                 <a
-                  v-if="$store.state.events.length > 0 && meta.term === 1"
-                  href="https://campusbiblestudy.ccbchurch.com/goto/forms/513/responses/new"
+                  v-if="$store.state.events.length > 0 && meta.signup"
+                  :href="meta.signup"
                   target="_blank"
                 >
                   Sign Up for Campus Bible Study

@@ -156,13 +156,14 @@ def getSydneyTime():
     return updateDate, updateTime
 
 
-def getMeta(year, term):
+def getMeta(year, term, signup):
     updateDate, updateTime = getSydneyTime()
     return {
         'term': term,
         'year': year,
         'updateDate': updateDate,
-        'updateTime': updateTime
+        'updateTime': updateTime,
+        'signup': signup
     }
 
 
@@ -203,7 +204,7 @@ if __name__ == '__main__':
         abbreviateKeys(data)
 
         # Get meta data
-        meta = getMeta(config['year'], currentTerm)
+        meta = getMeta(config['year'], currentTerm, config['signup'])
 
         # Save scraped data
         with open(config['output'], 'w') as f:
