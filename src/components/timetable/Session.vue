@@ -174,7 +174,7 @@
 
         // Add weeks details
         if (this.$store.state.options.weeks && this.session.weeks) {
-          let prettyWeeks = this.session.weeks.replace(',', ', ').replace('-', '–')
+          let prettyWeeks = this.session.weeks.replace(/,/g, ', ').replace(/-/g, '–')
           result.push('Weeks: ' + prettyWeeks)
         }
 
