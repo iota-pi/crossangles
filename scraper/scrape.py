@@ -118,13 +118,22 @@ class Parser():
         with open('courses.json') as f:
             mappingUG = json.load(f)
 
+        # Get course full names
+        mappingUG = self.getCourseNames()
+
         # Use each course's full name
-        mappingUG = self.getUGCourses()
         for course in courses:
             if course['code'] in mappingUG:
                 course['name'] = mappingUG[course['code']]
 
         return courses
+
+    def getCourseNames(self):
+        try:
+            with open('courses.json') as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
 
     def writeCache(self):
         if self.cacheName:
