@@ -85,15 +85,18 @@
       <v-list-tile
         v-if="course.streams.filter(s => s.web).length > 0"
         :key="'extension-' + course.code"
-        class="flexible-height"
+        class="flexible-height mt-minus-1"
       >
-        <v-list-tile-content @click="webHook(course)">
+        <v-list-tile-content
+          class="visible-overflow"
+          @click="webHook(course)"
+        >
           <v-checkbox
             v-model="webStreams"
             :value="course.code"
             label="Choose online-only lecture stream"
             color="secondary"
-            class="mt-0 py-2"
+            class="mt-0 pt-0 pb-2"
             hide-details
           />
         </v-list-tile-content>
@@ -199,6 +202,12 @@
   .no-spacing {
     line-height: 0.1;
     font-size: 1px;
+  }
+  .visible-overflow {
+    overflow: visible;
+  }
+  .mt-minus-1 {
+    margin-top: -4px;
   }
 </style>
 
