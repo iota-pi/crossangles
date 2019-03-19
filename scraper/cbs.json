@@ -15,12 +15,12 @@
     {
       "component": "The Bible Talks",
       "status": 1,
-      "times": [[ "H12", null, null ]]
+      "times": [[ "W12", null, null ]]
     },
     {
       "component": "The Bible Talks",
       "status": 1,
-      "times": [[ "H13", null, null ]]
+      "times": [[ "H12", null, null ]]
     },
     {
       "component": "Bible Study",
@@ -60,11 +60,6 @@
     {
       "component": "Bible Study",
       "status": 1,
-      "times": [[ "W12", null, null ]]
-    },
-    {
-      "component": "Bible Study",
-      "status": 1,
       "times": [[ "W13", null, null ]]
     },
     {
@@ -75,17 +70,12 @@
     {
       "component": "Bible Study",
       "status": 1,
-      "times": [[ "F12", null, null ]]
+      "times": [[ "H13", null, null ]]
     },
     {
       "component": "Bible Study",
       "status": 1,
       "times": [[ "F13", null, null ]]
-    },
-    {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "H14", null, null ]]
     },
     {
       "component": "Core Theology",
@@ -111,6 +101,11 @@
       "component": "Core Training",
       "status": 1,
       "times": [[ "W15", null, null ]]
+    },
+    {
+      "component": "Core Training",
+      "status": 1,
+      "times": [[ "H14", null, null ]]
     }
   ]
 }
