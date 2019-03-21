@@ -75,6 +75,11 @@
     {
       "component": "Bible Study",
       "status": 1,
+      "times": [[ "F12", null, null ]]
+    },
+    {
+      "component": "Bible Study",
+      "status": 1,
       "times": [[ "F13", null, null ]]
     },
     {
