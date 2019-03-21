@@ -62,18 +62,6 @@
                 <span class="font-weight-regular">Term {{ meta.term }}, {{ meta.year }}</span>
                 select the courses you've enrolled in below.
               </p>
-              <p>
-                To make the most out of this tool,
-                don't miss out on personalising your timetable by
-                <span class="font-weight-regular">dragging classes around</span>
-                to suit you better,
-                <span class="font-weight-regular">changing the color</span>
-                for each of your courses,
-                <span class="font-weight-regular">adding custom events</span>,
-                and
-                <span class="font-weight-regular">saving your timetable as an image</span>
-                when you're done.
-              </p>
             </div>
 
             <course-selection
@@ -119,6 +107,20 @@
                 Campus Bible Study is a great place for you to learn more.
                 If you've never come before, we recommend checking out the Bible talks.
               </p>
+
+              <p>
+                To make the most out of this tool,
+                don't miss out on personalising your timetable by:
+                <span class="font-weight-regular">dragging classes around</span>
+                to suit you better,
+                <span class="font-weight-regular">changing the color</span>
+                for each of your courses,
+                <span class="font-weight-regular">adding custom events</span>,
+                and
+                <span class="font-weight-regular">saving your timetable as an image</span>
+                when you're done.
+              </p>
+
               <p class="pt-3">
                 The data was last updated at
                 <span class="font-weight-regular">
