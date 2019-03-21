@@ -12,14 +12,28 @@
             align-center
           >
             <v-list-tile-title>
-              {{ (course.code !== 'CBS' && !course.custom) ? course.code : course.title }}
+              <div v-if="course.code !== 'CBS' && !course.custom">
+                <a
+                  :href="courseLink(course.code)"
+                  target="_blank"
+                  class="no-decoration v-center"
+                >
+                  <span>{{ course.code }}</span>
 
-              <span
-                v-if="course.code !== 'CBS' && !course.custom"
-                class="faded"
-              >
-                — {{ course.title }}
-              </span>
+                  <span class="font-weight-light ml-1">—</span>
+                  <span class="font-weight-light ml-1">{{ course.title }}</span>
+
+                  <v-icon
+                    small
+                    class="ml-1 faded"
+                  >
+                    open_in_new
+                  </v-icon>
+                </a>
+              </div>
+              <div v-else>
+                {{ course.title }}
+              </div>
             </v-list-tile-title>
 
             <v-tooltip
@@ -190,6 +204,9 @@
           action: (this.webStreams.includes(course.code) ? 'S' : 'Des') + 'elect Web Stream',
           label: course.code
         })
+      },
+      courseLink (courseCode) {
+        return process.env.VUE_APP_HANDBOOK + courseCode.toLowerCase()
       }
     }
   }
@@ -198,6 +215,10 @@
 <style scoped>
   .faded {
     opacity: 0.7;
+  }
+  .no-decoration {
+    text-decoration: none;
+    color: inherit;
   }
   .no-spacing {
     line-height: 0.1;
@@ -208,6 +229,10 @@
   }
   .mt-minus-1 {
     margin-top: -4px;
+  }
+  .v-center {
+    display: flex;
+    align-items: center;
   }
 </style>
 
