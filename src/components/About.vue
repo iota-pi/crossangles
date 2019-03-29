@@ -25,7 +25,8 @@
           <a
             href="https://www.campusbiblestudy.org/"
             target="_blank"
-          >Campus Bible Study</a>—a group of people at UNSW who are
+          >Campus Bible Study</a>
+          — a group of people at UNSW who are
           interested in learning together about Jesus from the Bible.
           Whether you follow Jesus, or want to find out what He's all about,
           Campus Bible Study is a great place for you to learn more.
