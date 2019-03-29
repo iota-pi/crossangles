@@ -6,15 +6,20 @@ function parseCourses (data) {
   for (let i = 0, l = data.length; i < l; i++) {
     let _course = data[i]
     let code = _course.c
+    let term = _course.t || ''
     let course = {
-      code: code,
+      code,
+      term,
+      key: code + term,
       title: _course.n,
       custom: false,
       color: code !== 'CBS' ? null : CBScolor,
       streams: null
     }
     course.streams = parseStreams(_course.s, course)
-    courses[code] = course
+
+    const key = code + term
+    courses[key] = course
   }
 
   return courses

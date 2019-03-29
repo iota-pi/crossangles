@@ -22,8 +22,13 @@ function processData (context, courses, meta) {
     for (let i = 0; i < chosen.length; i++) {
       let course = chosen[i]
       if (!course.custom) {
-        courses[course.code].color = course.color
-        restored.push(courses[course.code])
+        // NB: course.code is for backwards compatability with older stored data
+        const key = course.key || course.code
+
+        if (courses[key]) {
+          courses[key].color = course.color
+          restored.push(courses[key])
+        }
       }
     }
 
@@ -78,9 +83,13 @@ function processData (context, courses, meta) {
     let restored = []
     for (let i = 0; i < timetable.length; i++) {
       let item = timetable[i]
-      let course = courses[item.code]
+
+      // Get actual course object from its key
+      // NB: item.code is for backwards compatability with older stored data
+      let key = item.key || item.code
+      let course = courses[key]
       if (course === undefined) {
-        course = context.state.chosen.filter(c => c.code === item.code)[0]
+        course = context.state.chosen.filter(c => c.key === key)[0]
       }
 
       let stream = course.streams.filter(s => {

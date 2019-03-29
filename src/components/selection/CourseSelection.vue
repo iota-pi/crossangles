@@ -18,7 +18,7 @@
           :filter="courseFilter"
           :search-input.sync="searchText"
           :items="courses"
-          item-value="code"
+          item-value="key"
           return-object
           hide-selected
           hide-details
@@ -48,6 +48,12 @@
                   :class="{ 'highlight': part.em }"
                   v-text="part.text"
                 />
+
+                <span
+                  v-if="data.item.term"
+                >
+                  ({{ data.item.term }})
+                </span>
               </v-list-tile-title>
             </v-list-tile-content>
           </template>
@@ -96,7 +102,7 @@
       },
       courses () {
         let data = Object.values(this.$store.getters.courses)
-        data = data.filter(c => this.courseFilter(c, '', ''))
+        data = data.filter(c => this.courseFilter(c, ''))
 
         data.sort((a, b) => {
           let aCode = a.code.toLowerCase()
@@ -140,7 +146,7 @@
           this.$store.dispatch('addCourse', this.course)
           window.dataLayer.push({
             event: 'add_course',
-            label: this.course.code,
+            label: this.course.key,
             color: this.course.color
           })
 

@@ -288,7 +288,7 @@
       editCustom (customCourse) {
         // Set custom course to edit
         if (customCourse) {
-          this.customToEdit = this.$store.state.custom.filter(c => c.id === customCourse.code)[0]
+          this.customToEdit = this.$store.state.custom.filter(c => c.id === customCourse.key)[0]
         }
 
         // Hide the side menu

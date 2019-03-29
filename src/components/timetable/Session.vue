@@ -24,7 +24,7 @@
     </v-fade-transition>
 
     <div class="label">
-      <span v-if="session.course.code !== 'CBS' && !session.course.custom">
+      <span v-if="session.course.key !== 'CBS' && !session.course.custom">
         <span class="em">
           {{ session.course.code }}
         </span>
@@ -57,7 +57,7 @@
     window.dataLayer.push({
       event: 'timetable',
       action: action,
-      label: session.course.code + '/' + session.stream.component + ':' + session.index
+      label: session.course.key + '/' + session.stream.component + ':' + session.index
     })
   }
 
@@ -175,6 +175,12 @@
         // Add weeks details
         if (this.$store.state.options.weeks && this.session.weeks) {
           let prettyWeeks = this.session.weeks.replace(/,/g, ', ').replace(/-/g, '–')
+
+          // Add term details (if anything other than T2)
+          if (this.session.course.term) {
+            prettyWeeks += ` (${this.session.course.term})`
+          }
+
           result.push('Weeks: ' + prettyWeeks)
         }
 

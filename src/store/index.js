@@ -9,8 +9,6 @@ import { colors } from './colors'
 const dataURL = process.env.VUE_APP_DATAURI
 const storage = window.localStorage
 
-let courses = null
-
 function choice (array) {
   return array[Math.floor(Math.random() * array.length)]
 }
@@ -31,6 +29,9 @@ export default new Vuex.Store({
     loading: true
   },
   mutations: {
+    courses (state, data) {
+      state.courses = data
+    },
     meta (state, data) {
       state.meta = data
 
@@ -43,6 +44,7 @@ export default new Vuex.Store({
         storage.setItem('chosen', JSON.stringify(data.map(c => {
           return {
             code: c.code,
+            key: c.key,
             color: c.color,
             custom: c.custom
           }
@@ -77,6 +79,7 @@ export default new Vuex.Store({
         storage.setItem('timetable', JSON.stringify(data.map(session => {
           return {
             code: session.course.code,
+            key: session.course.key,
             component: session.stream.component,
             time: session.time,
             index: session.index
@@ -101,32 +104,39 @@ export default new Vuex.Store({
   actions: {
     loadData (context) {
       axios.get(dataURL).then((r) => {
-        // TODO: store JSON data before it's parsed? (saves this stringify call)
+        // Store data for use next time (if viewed offline)
         storage.setItem('courseData', JSON.stringify(r.data))
-        courses = parseCourses(r.data.courses)
-        try {
-          processData(context, courses, r.data.meta)
-        } catch (e) { console.error(e) }
+
+        // Commit to loaded data to store
+        context.commit('courses', parseCourses(r.data.courses))
         context.commit('meta', r.data.meta)
 
-        // Disable the loading block on auto timetable updating
+        // Process loaded data
+        try {
+          processData(context, context.state.courses, r.data.meta)
+        } catch (e) { console.error(e) }
+
+        // After having loaded, disable the block on auto timetable updating
         // NB: this block exists to prevent restored timetable being overwritten
         window.setTimeout(() => context.commit('loading', false), 10)
       }).catch(() => {
         let pastData = storage.getItem('courseData')
         if (pastData) {
           let data = JSON.parse(pastData)
-          courses = parseCourses(data.courses)
-          try {
-            processData(context, courses, data.meta)
-          } catch (e) { console.error(e) }
+
+          // Commit to loaded data to store
+          context.commit('courses', parseCourses(data.courses))
           context.commit('meta', data.meta)
+
+          // Process loaded data
+          try {
+            processData(context, context.state.courses, data.meta)
+          } catch (e) { console.error(e) }
         }
       })
     },
     reset (context) {
-      const CBS = courses.CBS
-      context.commit('chosen', [ CBS ])
+      context.commit('chosen', [ context.state.courses.CBS ])
       context.commit('events', [ 'The Bible Talks' ])
       context.commit('options', {})
       context.commit('timetable', [])
@@ -142,9 +152,9 @@ export default new Vuex.Store({
 
       // Add this course and then sort the list of chosen courses
       const chosen = context.state.chosen
-      let courses = chosen.slice(0, -1)
-      courses.push(course)
-      courses.sort((a, b) => {
+      let chosenCourses = chosen.slice(0, -1)
+      chosenCourses.push(course)
+      chosenCourses.sort((a, b) => {
         if (a.custom - b.custom !== 0) {
           return a.custom - b.custom
         }
@@ -159,20 +169,20 @@ export default new Vuex.Store({
 
         return (a > b) - (a < b)
       })
-      courses.push(chosen[chosen.length - 1])
+      chosenCourses.push(chosen[chosen.length - 1])
 
-      context.commit('chosen', courses)
+      context.commit('chosen', chosenCourses)
     },
     removeCourse (context, course) {
       // Reset this course's color
       course.color = null
 
       // Reset WEB stream involvement for this course
-      context.commit('webStreams', context.state.webStreams.filter(w => w !== course.code))
+      context.commit('webStreams', context.state.webStreams.filter(w => w !== course.key))
 
       if (course.custom) {
         // Remove from custom courses
-        context.commit('custom', context.state.custom.filter(c => c.id !== course.code))
+        context.commit('custom', context.state.custom.filter(c => c.id !== course.key))
       }
 
       // Remove this course from list of chosen courses
@@ -182,6 +192,7 @@ export default new Vuex.Store({
       // Convert into the usual course format
       let customCourse = {
         code: custom.id,
+        key: custom.id,
         title: custom.name,
         custom: true,
         color: custom.color,
@@ -228,7 +239,7 @@ export default new Vuex.Store({
       if (state.loading) {
         return {}
       } else {
-        return courses
+        return state.courses
       }
     }
   }

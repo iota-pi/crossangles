@@ -276,7 +276,7 @@
           this.edit.duration = this.duration
           this.edit.options = this.options.slice(0, -1)
 
-          let oldCourse = this.$store.state.chosen.filter(c => c.code === this.edit.id)[0]
+          let oldCourse = this.$store.state.chosen.filter(c => c.key === this.edit.id)[0]
           this.$store.dispatch('removeCourse', oldCourse)
           this.$store.dispatch('addCustom', this.edit)
 

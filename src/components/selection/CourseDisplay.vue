@@ -4,15 +4,15 @@
     class="py-0"
   >
     <template v-for="course in chosen">
-      <v-divider :key="'divider-' + course.code" />
-      <v-list-tile :key="course.code">
+      <v-divider :key="'divider-' + course.key" />
+      <v-list-tile :key="course.key">
         <v-list-tile-content>
           <v-layout
             row
             align-center
           >
             <v-list-tile-title>
-              <div v-if="course.code !== 'CBS' && !course.custom">
+              <div v-if="course.key !== 'CBS' && !course.custom">
                 <a
                   :href="courseLink(course.code)"
                   target="_blank"
@@ -20,8 +20,15 @@
                 >
                   <span>{{ course.code }}</span>
 
-                  <span class="font-weight-light ml-1">—</span>
-                  <span class="font-weight-light ml-1">{{ course.title }}</span>
+                  <span class="font-weight-light mx-1">—</span>
+                  <span class="font-weight-light">{{ course.title }}</span>
+
+                  <span
+                    v-if="course.term"
+                    class="ml-1"
+                  >
+                    ({{ course.term }})
+                  </span>
 
                   <v-icon
                     small
@@ -37,7 +44,7 @@
             </v-list-tile-title>
 
             <v-tooltip
-              v-if="course.code === 'CBS'"
+              v-if="course.key === 'CBS'"
               right
               :max-width="450"
               class="pl-2 pb-1"
@@ -87,7 +94,7 @@
 
         <v-list-tile-action>
           <v-btn
-            v-if="course.code !== 'CBS'"
+            v-if="course.key !== 'CBS'"
             icon
             @click="removeCourse(course)"
           >
@@ -98,7 +105,7 @@
 
       <v-list-tile
         v-if="course.streams.filter(s => s.web).length > 0"
-        :key="'extension-' + course.code"
+        :key="'extension-' + course.key"
         class="flexible-height mt-minus-1"
       >
         <v-list-tile-content
@@ -107,7 +114,7 @@
         >
           <v-checkbox
             v-model="webStreams"
-            :value="course.code"
+            :value="course.key"
             label="Choose online-only lecture stream"
             color="secondary"
             class="mt-0 pt-0 pb-2"
@@ -173,7 +180,7 @@
         // Update custom event colors
         for (let course of this.chosen) {
           if (course.custom) {
-            let customIndex = this.custom.map(c => c.id).indexOf(course.code)
+            let customIndex = this.custom.map(c => c.id).indexOf(course.key)
             this.custom[customIndex].color = course.color
           }
         }
@@ -189,7 +196,7 @@
 
         window.dataLayer.push({
           event: 'remove_course',
-          label: course.code
+          label: course.key
         })
       },
       changeColor (newColor) {
@@ -201,8 +208,8 @@
       webHook (course) {
         window.dataLayer.push({
           event: 'choose_web',
-          action: (this.webStreams.includes(course.code) ? 'S' : 'Des') + 'elect Web Stream',
-          label: course.code
+          action: (this.webStreams.includes(course.key) ? 'S' : 'Des') + 'elect Web Stream',
+          label: course.key
         })
       },
       courseLink (courseCode) {

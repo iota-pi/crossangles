@@ -108,7 +108,7 @@ function scoreProximity (timetable, timetableData) {
   let score = 0
 
   for (let i = 0; i < timetableData.length; i++) {
-    if (timetableData[i].course.code === 'CBS') {
+    if (timetableData[i].course.key === 'CBS') {
       // NB: assumes CBS events don't have multiple sessions per stream
       let time = timetableData[i].sessions[0].time
       let day = days.indexOf(time.day)

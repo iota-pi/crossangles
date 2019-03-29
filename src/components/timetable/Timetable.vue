@@ -11,7 +11,7 @@
       <v-fade-transition group>
         <drop-zone
           v-for="dropzone in visibleDropzones"
-          :key="'d' + dropzone.course.code + dropzone.component + dropzone.day + dropzone.start"
+          :key="'d' + dropzone.course.key + dropzone.component + dropzone.day + dropzone.start"
           :dropzone="dropzone"
           :boundary="dimensions"
           :hours="bounds"
@@ -20,7 +20,7 @@
       <session
         v-for="session in timetable"
         v-show="visible"
-        :key="'s' + session.course.code + session.stream.component + session.index"
+        :key="'s' + session.course.key + session.stream.component + session.index"
         :session="session"
         :pointers="pointers"
         :boundary="dimensions"
@@ -399,7 +399,7 @@
           return false
         }
 
-        if (this.dragging.course.code !== session.course.code) {
+        if (this.dragging.course.key !== session.course.key) {
           return false
         }
 
@@ -435,12 +435,12 @@
         for (let course of this.$store.state.chosen) {
           let newComponents = course.streams.reduce((acc, stream) => {
             // Skip any CBS activities which have been deselected
-            if (course.code === 'CBS' && !this.$store.state.events.includes(stream.component)) {
+            if (course.key === 'CBS' && !this.$store.state.events.includes(stream.component)) {
               return acc
             }
 
             // Skip any web streams when not enabled for this course
-            if (!this.webStreams.includes(course.code) && stream.web) {
+            if (!this.webStreams.includes(course.key) && stream.web) {
               return acc
             }
 
@@ -469,7 +469,7 @@
 
         // Remove components with a web stream if the web stream is chosen
         components = components.filter(component => {
-          if (this.webStreams.includes(component.course.code)) {
+          if (this.webStreams.includes(component.course.key)) {
             for (let stream of component.streams) {
               if (stream.web) {
                 return false
