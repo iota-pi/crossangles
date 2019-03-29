@@ -14,6 +14,14 @@ from cleaner import cleanStream, removeDuplicates, abbreviateKeys
 
 
 class Parser():
+    parser = None
+    windowSize = None
+    timeout = None
+    cacheName = None
+    cache = None
+    term = None
+    nameMapping = None
+
     def __init__(self, term, engine='lxml', window=20, timeout=20, cache=None):
         self.parser = engine
         self.windowSize = window
@@ -30,6 +38,9 @@ class Parser():
             except (FileNotFoundError, TypeError):
                 pass
 
+        # Load course code -> full name mapping
+        self.nameMapping = self.getCourseNames()
+
     def scrape(self, startUrl):
         # Extract course information from each faculty page
         courses = []
@@ -37,11 +48,20 @@ class Parser():
             rows = soup.select('table')[2].find_all('tr', recursive=False)[1:]
             courses += self.parseRows(rows)
 
+        # Add disambiguation information
+        for course in courses:
+            # Get disambiguation (from abridged (default) course name)
+            termMatch = re.search(r' \(([A-Z][A-Z0-9]{2})\)', course['name'])
+
+            # Use full course name
+            course['name'] = self.getFullName(course)
+
+            if termMatch is not None:
+                if termMatch.group(0) not in course['name']:
+                    course['term'] = termMatch.group(1)
+
         # Remove all duplicate streams
         courses = removeDuplicates(courses)
-
-        # Use full course names for courses
-        courses = self.getFullNames(courses)
 
         return courses
 
@@ -113,20 +133,13 @@ class Parser():
                 response = future.result()
                 yield BeautifulSoup(response, features=self.parser)
 
-    def getFullNames(self, courses):
-        # Load course code -> full name mapping
-        with open('courses.json') as f:
-            mappingUG = json.load(f)
+    def getFullName(self, course):
+        # Use the full name for this course
+        if course['code'] in self.nameMapping:
+            return self.nameMapping[course['code']]
 
-        # Get course full names
-        mappingUG = self.getCourseNames()
-
-        # Use each course's full name
-        for course in courses:
-            if course['code'] in mappingUG:
-                course['name'] = mappingUG[course['code']]
-
-        return courses
+        # If no full name is found, fall back to the abridged name
+        return course['name']
 
     def getCourseNames(self):
         try:

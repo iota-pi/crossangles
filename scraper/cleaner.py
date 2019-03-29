@@ -88,7 +88,7 @@ def removeDuplicates(courses):
 
 
 def abbreviateKeys(data):
-    courseKeys = ['code', 'name', 'streams']
+    courseKeys = ['code', 'name', 'streams', 'term']
     streamKeys = ['component', 'enrols', 'status', 'times', 'web']
     for course in data:
         for key in courseKeys:
