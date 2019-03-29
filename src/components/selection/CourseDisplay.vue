@@ -106,7 +106,7 @@
       <v-list-tile
         v-if="course.streams.filter(s => s.web).length > 0"
         :key="'extension-' + course.key"
-        class="flexible-height mt-minus-1"
+        class="flexible-height mt-minus-4"
       >
         <v-list-tile-content
           class="visible-overflow"
@@ -124,7 +124,7 @@
       </v-list-tile>
     </template>
 
-    <v-list-tile class="flexible-height">
+    <v-list-tile class="flexible-height mt-minus-12">
       <cbs-events />
     </v-list-tile>
 
@@ -234,8 +234,11 @@
   .visible-overflow {
     overflow: visible;
   }
-  .mt-minus-1 {
+  .mt-minus-4 {
     margin-top: -4px;
+  }
+  .mt-minus-12 {
+    margin-top: -12px;
   }
   .v-center {
     display: flex;
