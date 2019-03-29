@@ -164,6 +164,7 @@
         @contact="contact()"
       />
       <alert v-if="!$store.state.loading" />
+      <refresh-content />
     </div>
   </v-app>
 </template>
@@ -186,7 +187,8 @@
       Custom: () => import(/* webpackChunkName: "custom" */ './components/selection/Custom'),
       Contact: () => import(/* webpackChunkName: "contact" */ './components/Contact'),
       Alert: () => import(/* webpackChunkName: "alert" */ './components/Alert'),
-      About: () => import(/* webpackChunkName: "about" */ './components/About')
+      About: () => import(/* webpackChunkName: "about" */ './components/About'),
+      RefreshContent: () => import(/* webpackChunkName: "refresh" */ './components/RefreshContent')
     },
     mixins: [ image ],
     data () {

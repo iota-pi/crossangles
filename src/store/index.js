@@ -26,7 +26,9 @@ export default new Vuex.Store({
     webStreams: [],
     custom: [],
     alert: null,
-    loading: true
+    loading: true,
+    updateAvailable: false,
+    serviceWorker: null
   },
   mutations: {
     courses (state, data) {
@@ -87,18 +89,24 @@ export default new Vuex.Store({
         })))
       }
     },
-    alert (state, data) {
-      state.alert = data
-    },
-    loading (state, data) {
-      state.loading = data
-    },
     webStreams (state, data) {
       state.webStreams = data
 
       if (!state.loading) {
         storage.setItem('webStreams', JSON.stringify(data))
       }
+    },
+    alert (state, data) {
+      state.alert = data
+    },
+    loading (state, data) {
+      state.loading = data
+    },
+    updateAvailable (state, data) {
+      state.updateAvailable = data
+    },
+    serviceWorker (state, data) {
+      state.serviceWorker = data
     }
   },
   actions: {
