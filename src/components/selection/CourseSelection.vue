@@ -39,12 +39,13 @@
                   v-text="part.text"
                 />
 
-                <span class="faded"> — </span>
+                <span class="font-weight-light mx-1">—</span>
 
                 <span
                   v-for="(part, i) in highlight(data.item.title)"
                   :key="'titlePart' + i"
-                  :class="{ 'faded': true, 'highlight': part.em }"
+                  class="font-weight-light"
+                  :class="{ 'highlight': part.em }"
                   v-text="part.text"
                 />
               </v-list-tile-title>
