@@ -43,7 +43,7 @@
     },
     methods: {
       refreshPage () {
-        this.$store.state.serviceWorker.unregister().then((success) => {
+        this.$store.state.serviceWorker.unregister().then(() => {
           window.location.reload()
         })
         this.showMessage = false
