@@ -9,25 +9,24 @@ import time
 import sys
 import re
 import os
+from typing import Optional, Union, Dict, List, Tuple, Iterator
+from Course import Course
 
-from cleaner import cleanStream, removeDuplicates, abbreviateKeys
 
-
-class Parser():
-    parser = None
-    windowSize = None
-    timeout = None
-    cacheName = None
-    cache = None
-    term = None
-    nameMapping = None
-
-    def __init__(self, term, engine='lxml', window=20, timeout=20, cache=None):
+class Parser:
+    def __init__(
+                self,
+                term: int,
+                engine: str = 'lxml',
+                window: int = 20,
+                timeout: int = 20,
+                cache: Optional[str] = None
+            ) -> None:
         self.parser = engine
         self.windowSize = window
         self.timeout = timeout
         self.cacheName = cache
-        self.cache = {}
+        self.cache: Dict[str, str] = {}
         self.term = str(term)
 
         # Load the cache file (if it is required, and if it exists)
@@ -38,34 +37,20 @@ class Parser():
             except (FileNotFoundError, TypeError):
                 pass
 
-        # Load course code -> full name mapping
-        self.nameMapping = self.getCourseNames()
-
-    def scrape(self, startUrl):
+    def scrape(self, startUrl: str) -> List[Course]:
         # Extract course information from each faculty page
-        courses = []
+        courses: List[Course] = []
         for soup in self.getFacultyPages(startUrl):
             rows = soup.select('table')[2].find_all('tr', recursive=False)[1:]
             courses += self.parseRows(rows)
 
-        # Add disambiguation information
-        for course in courses:
-            # Get disambiguation (from abridged (default) course name)
-            termMatch = re.search(r' \(([A-Z][A-Z0-9]{2})\)', course['name'])
-
-            # Use full course name
-            course['name'] = self.getFullName(course)
-
-            if termMatch is not None:
-                if termMatch.group(0) not in course['name']:
-                    course['term'] = termMatch.group(1)
-
         # Remove all duplicate streams
-        courses = removeDuplicates(courses)
+        for course in courses:
+            course.remove_duplicates()
 
         return courses
 
-    def parseRows(self, rows):
+    def parseRows(self, rows) -> List[Course]:
         courses = []
 
         # Extract course data from each row
@@ -73,80 +58,61 @@ class Parser():
             # Find all cells in this row
             cells = row.find_all('td', recursive=False)
 
-            # A row with a single cell marks the end of the table
             if len(cells) == 1:
-                # Append the last course and finish iteration
+                # A row with a single cell marks the end of the table
                 break
-            # A row with 2 cells marks the start of a new course
             elif len(cells) == 2:
-                # Start a new course
-                courses.append({
-                    'code': cells[0].get_text().strip(),
-                    'name': cells[1].get_text().strip(),
-                    'streams': []
-                })
-            # Every other row contains standard course data
+                # A row with 2 cells marks the start of a new course
+                courses.append(Course(
+                    code=cells[0].get_text().strip(),
+                    name=cells[1].get_text().strip(),
+                    streams=[]
+                ))
             else:
-                stream = cleanStream({
-                    'component': cells[0].get_text().strip(),
-                    'section': cells[1].get_text().strip(),
-                    'status': cells[4].get_text().strip(),
-                    'enrols': cells[5].get_text().strip(),
-                    'times': cells[7].get_text().strip()
-                })
-
-                if stream is not None:
-                    courses[-1]['streams'].append(stream)
+                # Every other row contains standard stream data
+                courses[-1].add_stream(
+                    component=cells[0].get_text().strip(),
+                    section=cells[1].get_text().strip(),
+                    status=cells[4].get_text().strip(),
+                    enrols=cells[5].get_text().strip(),
+                    times=cells[7].get_text().strip()
+                )
 
         return courses
 
-    def getFacultyPages(self, startUrl):
-        soup = self.loadPages(startUrl).__next__()
+    def getFacultyPages(self, start_url: str) -> Iterator[BeautifulSoup]:
+        soup = self.loadPages(start_url).__next__()
         regex = re.compile('[A-Y][A-Z]{3}_[ST]' + self.term + '.html$')
         links = soup.find_all(href=regex)
         links = [link.get('href') for link in links]
 
         # Convert to urls and load the pages
-        urls = [urljoin(startUrl, link) for link in links]
+        urls = [urljoin(start_url, link) for link in links]
         soups = self.loadPages(*urls)
 
         return soups
 
-    def loadHTML(self, url, timeout=None):
+    def loadHTML(self, url: str, timeout: Optional[int] = None) -> str:
+        # Return cached response (if response is in cache)
         if self.cache and url in self.cache:
             return self.cache[url]
 
-        html = requests.get(url, timeout=timeout).content
+        html = str(requests.get(url, timeout=timeout).content, encoding='utf-8')
 
-        self.cache[url] = str(html, encoding='utf-8')
-
+        # Cache then return HTML
+        self.cache[url] = html
         return html
 
-    def loadPages(self, *urls, prefix='', postfix=''):
+    def loadPages(self, *urls: str, prefix='', postfix='') -> Iterator[BeautifulSoup]:
         with ThreadPoolExecutor(max_workers=self.windowSize) as executor:
             tasks = (executor.submit(
                 self.loadHTML,
-                prefix + url + postfix,
+                ''.join((prefix, url, postfix)),
                 timeout=self.timeout
             ) for url in urls)
             for future in as_completed(tasks):
                 response = future.result()
                 yield BeautifulSoup(response, features=self.parser)
-
-    def getFullName(self, course):
-        # Use the full name for this course
-        if course['code'] in self.nameMapping:
-            return self.nameMapping[course['code']]
-
-        # If no full name is found, fall back to the abridged name
-        return course['name']
-
-    def getCourseNames(self):
-        try:
-            with open('courses.json') as f:
-                return json.load(f)
-        except FileNotFoundError:
-            return {}
 
     def writeCache(self):
         if self.cacheName:
@@ -157,7 +123,7 @@ class Parser():
 
 
 # Returns the date (dd/mm/yy) and time (hh:mm) in Sydney
-def getSydneyTime():
+def getSydneyTime() -> Tuple[str, str]:
     # Force Sydney timezone
     os.environ['TZ'] = 'Australia/Sydney'
 
@@ -169,7 +135,7 @@ def getSydneyTime():
     return updateDate, updateTime
 
 
-def getMeta(year, term, signup):
+def getMeta(year: int, term: int, signup: str) -> Dict[str, Union[int, str]]:
     updateDate, updateTime = getSydneyTime()
     return {
         'term': term,
@@ -180,9 +146,9 @@ def getMeta(year, term, signup):
     }
 
 
-def scrapeTerm(term, config):
-    parser = Parser(term=term, cache=config['cache'])
-    courses = parser.scrape(config['url'])
+def scrapeTerm(term: int, cache: str, url: str) -> List[Course]:
+    parser = Parser(term=term, cache=cache)
+    courses = parser.scrape(url)
     parser.writeCache()
 
     return courses
@@ -197,13 +163,13 @@ if __name__ == '__main__':
 
     # Scrape each term until one has enough data
     data = None
-    currentTerm = None
+    currentTerm = -1
     for term in config['terms']:
-        courses = scrapeTerm(term, config)
+        courses = scrapeTerm(term, config['cache'], config['url'])
 
         # Try to find a Term with at least 20% of courses having stream data
-        if sum(len(course['streams']) > 0 for course in courses) / len(courses) >= 0.2:
-            data = courses
+        if sum(len(course.streams) > 0 for course in courses) / len(courses) >= 0.2:
+            data = [course.to_dict() for course in courses]
             currentTerm = term
             break
 
@@ -211,10 +177,6 @@ if __name__ == '__main__':
         # Include Campus Bible Study event data
         with open('cbs.json') as f:
             data.append(json.load(f))
-
-        # Abbreviate the keys used in the course and stream JSON objects
-        # TODO: this shouldn't be necessary with Brotli/gzip
-        abbreviateKeys(data)
 
         # Get meta data
         meta = getMeta(config['year'], currentTerm, config['signup'])
@@ -224,4 +186,4 @@ if __name__ == '__main__':
             json.dump({'courses': data, 'meta': meta}, f, separators=(',', ':'))
     else:
         # Leave data unchanged if no such Term exists
-        sys.stderr.write('No Term with enough data found\n')
+        sys.stderr.write('No Term with enough data found. Tried {}\n'.format(config["terms"]))

@@ -1,116 +1,116 @@
 {
-  "code": "CBS",
-  "name": "Campus Bible Study",
-  "streams": [
+  "c": "CBS",
+  "n": "Campus Bible Study",
+  "s": [
     {
-      "component": "The Bible Talks",
-      "status": 1,
-      "times": [[ "T12", null, null ]]
+      "c": "The Bible Talks",
+      "s": 1,
+      "t": [[ "T12", null, null ]]
     },
     {
-      "component": "The Bible Talks",
-      "status": 1,
-      "times": [[ "T13", null, null ]]
+      "c": "The Bible Talks",
+      "s": 1,
+      "t": [[ "T13", null, null ]]
     },
     {
-      "component": "The Bible Talks",
-      "status": 1,
-      "times": [[ "W12", null, null ]]
+      "c": "The Bible Talks",
+      "s": 1,
+      "t": [[ "W12", null, null ]]
     },
     {
-      "component": "The Bible Talks",
-      "status": 1,
-      "times": [[ "H12", null, null ]]
+      "c": "The Bible Talks",
+      "s": 1,
+      "t": [[ "H12", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "M11", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "M11", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "M12", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "M12", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "M13", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "M13", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "M14", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "M14", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "T11", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "T11", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "T14", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "T14", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "W11", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "W11", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "W13", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "W13", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "H11", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "H11", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "H13", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "H13", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "F12", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "F12", null, null ]]
     },
     {
-      "component": "Bible Study",
-      "status": 1,
-      "times": [[ "F13", null, null ]]
+      "c": "Bible Study",
+      "s": 1,
+      "t": [[ "F13", null, null ]]
     },
     {
-      "component": "Core Theology",
-      "status": 1,
-      "times": [[ "T16", null, null ]]
+      "c": "Core Theology",
+      "s": 1,
+      "t": [[ "T16", null, null ]]
     },
     {
-      "component": "Core Theology",
-      "status": 1,
-      "times": [[ "W14", null, null ]]
+      "c": "Core Theology",
+      "s": 1,
+      "t": [[ "W14", null, null ]]
     },
     {
-      "component": "Core Training",
-      "status": 1,
-      "times": [[ "T15", null, null ]]
+      "c": "Core Training",
+      "s": 1,
+      "t": [[ "T15", null, null ]]
     },
     {
-      "component": "Core Training",
-      "status": 1,
-      "times": [[ "T17", null, null ]]
+      "c": "Core Training",
+      "s": 1,
+      "t": [[ "T17", null, null ]]
     },
     {
-      "component": "Core Training",
-      "status": 1,
-      "times": [[ "W15", null, null ]]
+      "c": "Core Training",
+      "s": 1,
+      "t": [[ "W15", null, null ]]
     },
     {
-      "component": "Core Training",
-      "status": 1,
-      "times": [[ "H14", null, null ]]
+      "c": "Core Training",
+      "s": 1,
+      "t": [[ "H14", null, null ]]
     }
   ]
 }

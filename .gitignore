@@ -16,6 +16,7 @@ yarn-error.log*
 /scraper/cache.json
 /scraper/courses.json
 /scraper/.config.json
+/scraper/json-compare.[tj]s
 
 # Testing files
 /public/tt.json
@@ -33,3 +34,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+.mypy_cache
+/pylama.ini
