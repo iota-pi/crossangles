@@ -47,7 +47,7 @@
               v-if="course.key === 'CBS'"
               right
               :max-width="450"
-              class="pl-2 pb-1"
+              class="pl-2 pb-1 default-cursor"
               content-class="body-1"
             >
               <v-icon
@@ -243,6 +243,9 @@
   .v-center {
     display: flex;
     align-items: center;
+  }
+  .default-cursor {
+    cursor: default;
   }
 </style>
 
