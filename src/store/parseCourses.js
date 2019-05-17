@@ -26,6 +26,10 @@ function parseCourses (data) {
 }
 
 function parseStreams (streams, course) {
+  if (streams === null || streams === undefined) {
+    return []
+  }
+
   let result = []
 
   for (let i = 0, l = streams.length; i < l; i++) {
@@ -50,6 +54,10 @@ function parseStreams (streams, course) {
 }
 
 function parseSessions (times, course, stream) {
+  if (times === null || times === undefined) {
+    return []
+  }
+
   let timetable = []
 
   for (let i = 0, l = times.length; i < l; i++) {
