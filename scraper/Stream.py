@@ -139,32 +139,24 @@ def tidyUpTime(time_str: str) -> Optional[str]:
     return time_str
 
 
+# Extract information about which weeks a class runs in from the time string
+# returns: None         for no week data, skip this time slot
+# returns: empty string for no week data, but don't skip
 def getWeeks(week_string: str) -> Optional[str]:
     weeks = week_string.split(', ')[0].strip(', ')
 
     if weeks == '':
-        return weeks
+        return ''
 
-    # Week data always begins with a 'w', so don't continue with anything else
+    # Week data always begins with a 'w'
     if weeks[0] != 'w':
         return ''
 
     # Remove the 'w' now
     weeks = weeks.lstrip('w')
 
-    # # Replace ranges that extend outside the semester with the final week of semester ()
-    # weeks = re.sub(r'(?<!10)-N[0-9]+', '-10', weeks)
-
-    # Remove any weeks that aren't in the main semester timetable
-    weeks = weeks.replace('< 1', '')
-    # weeks = re.sub(r'-?N[0-9]+', '', weeks)
-    # weeks = re.sub(r'(?<!-)N[0-9]+', '', weeks)
-
-    # Remove excess commas and spaces
-    weeks = re.sub(r',[, ]*', ',', weeks).strip(', ')
-
-    # Don't include classes that only run in week 11
-    if weeks == '11':
+    # Don't include classes that only run outside of standard semester weeks
+    if re.fullmatch(r'((11|N[0-9]|< ?1)[, ]*)*', weeks):
         return None
 
     # If weeks is now empty, then this class runs entirely outside of
