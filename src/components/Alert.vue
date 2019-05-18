@@ -39,6 +39,11 @@
         if (this.resultMessage) {
           this.showMessage = true
         }
+      },
+      showMessage () {
+        if (!this.showMessage) {
+          this.$store.commit('alert', null);
+        }
       }
     }
   }
