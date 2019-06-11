@@ -1,6 +1,6 @@
 # CrossAngles
 
-This is the official repository for CrossAngles, a timetabling assistant for UNSW students.
+This is the official repository for CrossAngles, an unofficial timetabler for UNSW students.
 
 ## Contributing
 If you wish to contribute you are very welcome to fork this repository and submit pull requests, but please refrain from distributing it or any derivatives.
