@@ -101,7 +101,7 @@
     },
     data () {
       return {
-        currentPosition: { x: 0, y: 0 },
+        currentBasePosition: { x: 0, y: 0 },
         dimensions: { w: 0, h: 0 },
         zIndex: 2,
         isSnapped: null,
@@ -111,8 +111,8 @@
     computed: {
       position () {
         if (this.pointer) {
-          let x = this.currentPosition.x + (this.pointer.x - this.pointer.startX)
-          let y = this.currentPosition.y + (this.pointer.y - this.pointer.startY)
+          let x = this.currentBasePosition.x + (this.pointer.x - this.pointer.startX)
+          let y = this.currentBasePosition.y + (this.pointer.y - this.pointer.startY)
 
           // Enforce position limits
           if (!this.isSnapped) {
@@ -124,7 +124,7 @@
 
           return { x, y }
         } else {
-          let { x, y } = this.currentPosition
+          let { x, y } = this.currentBasePosition
 
           // Raise elevated courses a little
           if (this.elevated) {
@@ -232,8 +232,8 @@
             dx = (dx < 0) ? dx - 15 : dx + 16
             dy = (dy < 0) ? dy - 10 : dy + 11
 
-            this.currentPosition.x += dx
-            this.currentPosition.y += dy
+            this.currentBasePosition.x += dx
+            this.currentBasePosition.y += dy
             this.isSnapped = false
             this.$emit('unSnap', {
               session: this.session
@@ -247,13 +247,18 @@
       this.$nextTick(() => this.isNew = false)
     },
     methods: {
+      updateCurrentBasePosition () {
+        this.currentBasePosition = {
+          x: parseFloat(this.$el.style.left),
+          y: parseFloat(this.$el.style.top)
+        }
+
+        return this.currentBasePosition
+      },
       drag () {
         // Remember starting position for later reference
-        this.currentPosition = {
-          x: parseInt(this.$el.style.left),
-          y: parseInt(this.$el.style.top)
-        }
         this.isSnapped = false
+        this.updateCurrentBasePosition()
 
         // Update z-index counter
         this.zIndex = 100
@@ -274,16 +279,13 @@
         }, 300)
 
         // Remember ending position
-        this.currentPosition = {
-          x: parseInt(this.$el.style.left),
-          y: parseInt(this.$el.style.top)
-        }
+        this.updateCurrentBasePosition()
 
         // Emit a drop event to the timetable
         this.$emit('drop', {
           session: this.session,
           el: this.$el,
-          position: this.currentPosition
+          position: this.currentBasePosition
         })
 
         // Emit event to dataLayer
@@ -302,7 +304,7 @@
         let cellH = 50
         let day = ['M', 'T', 'W', 'H', 'F'].indexOf(this.session.time.day)
         let hour = this.session.time.start - this.hours[0]
-        this.currentPosition = {
+        this.currentBasePosition = {
           x: 60 + 1 + cellW * day,
           y: 50 + 1 + cellH * hour
         }
