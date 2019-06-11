@@ -25,7 +25,10 @@
 
     <div class="session-text">
       <transition-group name="list-transition">
-        <div class="label list-transition-item" key="session-title">
+        <div
+          key="session-title"
+          class="label list-transition-item"
+        >
           <span v-if="session.course.key !== 'CBS' && !session.course.custom">
             <span class="em">
               {{ session.course.code }}
