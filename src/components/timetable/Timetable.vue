@@ -8,7 +8,7 @@
       ref="timetable"
       class="timetable"
     >
-      <v-fade-transition group>
+      <transition-group name="fade">
         <drop-zone
           v-for="dropzone in visibleDropzones"
           :key="'d' + dropzone.course.key + dropzone.component + dropzone.day + dropzone.start"
@@ -16,7 +16,7 @@
           :boundary="dimensions"
           :hours="bounds"
         />
-      </v-fade-transition>
+      </transition-group>
       <session
         v-for="session in timetable"
         v-show="visible"
@@ -585,7 +585,10 @@
     border-bottom-width: 1px;
   }
 
-  .transform-transition {
-    transition: transform 1s;
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
   }
 </style>

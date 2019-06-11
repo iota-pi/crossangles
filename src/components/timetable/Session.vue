@@ -23,28 +23,32 @@
       />
     </v-fade-transition>
 
-    <div class="label">
-      <span v-if="session.course.key !== 'CBS' && !session.course.custom">
-        <span class="em">
-          {{ session.course.code }}
-        </span>
-        {{ session.stream.component }}
-      </span>
-      <span
-        v-else
-        class="em"
-      >
-        {{ session.stream.component }}
-      </span>
-    </div>
+    <div class="session-text">
+      <transition-group name="list-transition">
+        <div class="label list-transition-item" key="session-title">
+          <span v-if="session.course.key !== 'CBS' && !session.course.custom">
+            <span class="em">
+              {{ session.course.code }}
+            </span>
+            {{ session.stream.component }}
+          </span>
+          <span
+            v-else
+            class="em"
+          >
+            {{ session.stream.component }}
+          </span>
+        </div>
 
-    <div
-      v-for="(detail, i) in details"
-      :key="'detail' + i"
-      class="details"
-      :class="{ 'more-space': duration > 1 }"
-    >
-      {{ detail }}
+        <div
+          v-for="(detail, i) in details"
+          :key="'detail' + i"
+          class="details list-transition-item"
+          :class="{ 'more-space': duration > 1 }"
+        >
+          {{ detail }}
+        </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -157,6 +161,11 @@
       details () {
         // Don't show details on classes shorter than 1 hour
         if (this.duration < 1) {
+          return []
+        }
+
+        // Don't show details for non-snapped classes
+        if (!this.isSnapped) {
           return []
         }
 
@@ -331,21 +340,23 @@
     transition: none;
   }
 
-  .session > .label {
+  .session-text {
+    position: relative;
     text-align: center;
-    line-height: 1.25;
     font-weight: 300;
+  }
+
+  .session-text .label {
+    line-height: 1.25;
     font-size: 105%;
   }
-  .session > .label .em {
+  .session-text .label .em {
     font-weight: 500;
   }
 
   .details {
-    text-align: center;
     line-height: 1.15;
     font-size: 82%;
-    font-weight: 300;
   }
 
   .details.more-space {
@@ -356,5 +367,18 @@
     color: transparent;
     text-shadow: 0 0 12px rgba(255, 255, 255, 1);
     font-weight: 500;
+  }
+</style>
+
+<style>
+  .list-transition-item {
+    transition: all 0.3s;
+    width: 100%;
+  }
+  .list-transition-enter, .list-transition-leave-to {
+    opacity: 0;
+  }
+  .list-transition-leave-active {
+    position: absolute;
   }
 </style>
