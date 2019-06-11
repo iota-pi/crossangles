@@ -23,7 +23,7 @@
           @click="item.action"
         >
           <v-list-tile-action>
-            <v-icon>
+            <v-icon color="primary">
               {{ item.icon }}
             </v-icon>
           </v-list-tile-action>
@@ -143,7 +143,7 @@
 </script>
 
 <style>
-  /* .no-primary--text a.primary--text {
+  .no-primary--text a.primary--text {
     color: inherit !important;
-  } */
+  }
 </style>
