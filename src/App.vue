@@ -84,13 +84,18 @@
                 />
               </div>
 
-              <div class="pt-2">
+              <div class="pt-3">
                 <a
                   v-if="$store.state.events.length > 0 && meta.signup"
+                  class="inherit-color no-underline"
                   :href="meta.signup"
                   target="_blank"
                 >
                   Sign Up for Campus Bible Study
+
+                  <v-icon small>
+                    open_in_new
+                  </v-icon>
                 </a>
               </div>
             </div>
@@ -368,6 +373,12 @@
   }
   a.underlined {
     text-decoration: underline;
+  }
+  a.no-underline {
+    text-decoration: none;
+  }
+  a.inherit-color {
+    color: inherit;
   }
 </style>
 

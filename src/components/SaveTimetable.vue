@@ -1,5 +1,8 @@
 <template>
   <v-btn
+    outline
+    round
+    large
     color="primary"
     class="fixed-width"
     @click="$emit('save')"
