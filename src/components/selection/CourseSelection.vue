@@ -69,6 +69,7 @@
           icon
           large
           flat
+          color="primary"
           @click="$emit('custom')"
         >
           <v-icon>
