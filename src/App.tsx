@@ -17,10 +17,16 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from './containers/AppBar';
 import { ThunkDispatch } from 'redux-thunk';
 import { fetchData } from './actions/fetch';
-import Typography from '@material-ui/core/Typography';
+import CourseSelection from './containers/CourseSelection';
 
 const styles = (theme: Theme) => createStyles({
-
+  main: {
+    padding: theme.spacing(2),
+  },
+  appBarSpacer: {
+    ...theme.mixins.toolbar,
+    marginBottom: theme.spacing(2),
+  },
 });
 
 export interface OwnProps extends WithStyles<typeof styles> {
@@ -46,16 +52,13 @@ class App extends Component<Props, State> {
   }
 
   render () {
-    console.log();
+    const classes = this.props.classes;
     return (
       <ThemeProvider theme={theme}>
         <div>
           <CssBaseline/>
           <AppBar/>
-
-          <Typography>
-            Welcome! {this.props.meta && this.props.meta.term}
-          </Typography>
+          <div className={classes.appBarSpacer} />
 
         </div>
       </ThemeProvider>
