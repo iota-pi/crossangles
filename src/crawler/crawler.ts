@@ -2,18 +2,20 @@ process.env.APIFY_LOCAL_STORAGE_DIR = './apify_storage';
 process.env.APIFY_LOG_LEVEL = 'WARNING';
 
 import * as Apify from 'apify';
-import Course from '../state/Course';
-import { Meta } from '../state';
+import Course, { CourseData } from '../state/Course';
+import { Meta, Stream } from '../state';
 import { writeFileSync } from 'fs';
 
-const DATA_FILE = './public/data2.json'
+const CBS_DATA: CourseData = require('./cbs.json');
+const OUTPUT_DATA_FILE = './public/data2.json';
+const CLASSUTIL_BASE = 'http://classutil.unsw.edu.au';
 
 
 const crawl = async (term: number) => {
   const findFacultyPages = async () => {
     const links: string[] = [];
     const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
-    await crawlPages(['http://classutil.unsw.edu.au'], async ({ $ }) => {
+    await crawlPages([CLASSUTIL_BASE], async ({ $ }) => {
       const matchingLinks = $('a').filter((i: number, e: any) => linkRegex.test($(e).attr('href')));
       links.push(...matchingLinks.map((i: number, e: any): string => $(e).attr('href')));
     });
@@ -22,7 +24,7 @@ const crawl = async (term: number) => {
 
   const crawlFacultyPages = async (pages: string[]) => {
     const courses: Course[] = [];
-    const urls = pages.map(page => 'http://classutil.unsw.edu.au/' + page);
+    const urls = pages.map(page => `${CLASSUTIL_BASE}/${page}`);
     await crawlPages(urls, async ({ $ }) => {
       // Get all rows of the table (except for the first which is the header)
       const rows = $($('table').get(2)).find('tr').slice(1);
@@ -56,6 +58,12 @@ const crawl = async (term: number) => {
       course.removeDuplicates();
     }
 
+    // Add CBS "course" data
+    courses.push(new Course({
+      ...CBS_DATA,
+      streams: CBS_DATA.streams.map(s => new Stream(s)),
+    }));
+
     // Sort courses for consistency
     courses.sort((a, b) => a.code.localeCompare(b.code));
 
@@ -83,7 +91,7 @@ const crawl = async (term: number) => {
   const meta = generateMetaData();
   const data = JSON.stringify({ courses, meta });
 
-  writeFileSync(DATA_FILE, data, 'utf-8');
+  writeFileSync(OUTPUT_DATA_FILE, data, 'utf-8');
 }
 
 const crawlPages = async (urls: string[], handler: (result: any) => any) => {
@@ -98,6 +106,8 @@ const crawlPages = async (urls: string[], handler: (result: any) => any) => {
   });
   await crawler.run();
 }
+
+// TODO crawl multiple terms (in reverse order) to find most recent term with enough data
 
 crawl(2).then(() => {
   console.log('done!!');

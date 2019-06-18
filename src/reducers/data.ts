@@ -1,9 +1,8 @@
 import { SET_COURSE_DATA, SET_META_DATA, CoursesAction } from '../actions/fetch';
 import { AnyAction } from 'redux';
 import { Meta, baseCourses, baseMeta } from '../state';
-import { Course } from "../state/Course";
 import { TOGGLE_WEB_STREAM, CourseAction } from '../actions/selection';
-import Stream from '../state/Stream';
+import { Course, Stream } from '../state';
 
 export function courses (state = baseCourses, action: CourseAction | CoursesAction): Course[] {
   switch (action.type) {

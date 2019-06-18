@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import {
   ADD_COURSE,
   REMOVE_COURSE,
@@ -8,7 +9,6 @@ import {
   TOGGLE_OPTION,
   ToggleOptionAction
 } from '../actions/selection';
-import { AnyAction } from 'redux';
 import {
   baseChosen,
   baseCustom,
@@ -17,8 +17,12 @@ import {
   CustomCourse,
   CBSEvent,
   Options,
+  baseAdditional,
 } from '../state';
-import { Course } from "../state/Course";
+import { SET_COURSE_DATA, CoursesAction } from '../actions/fetch';
+import { Course, Stream } from '../state';
+
+const CBS_CODE = 'CBS';
 
 export function chosen (state = baseChosen, action: AnyAction): Course[] {
   switch (action.type) {
@@ -51,6 +55,18 @@ export function custom (state = baseCustom, action: AnyAction): CustomCourse[] {
         ...state.slice(0, i),
         ...state.slice(i + 1),
       ]
+  }
+
+  return state;
+};
+
+export function additional (state = baseAdditional, action: CoursesAction): Course[] {
+  switch (action.type) {
+    case SET_COURSE_DATA:
+      return action.courses.filter(c => c.code === CBS_CODE).map(c => new Course({
+        ...c,
+        streams: c.streams.map(s => new Stream(s)),
+      }));
   }
 
   return state;

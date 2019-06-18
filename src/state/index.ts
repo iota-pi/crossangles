@@ -1,9 +1,12 @@
-import { Course } from "./Course";
+import Course from "./Course";
+import Stream from "./Stream";
+export { Course, Stream };
 
 export interface RootState {
   courses: Course[];
   meta: Meta;
   chosen: Course[];
+  additional: Course[];
   events: CBSEvent[];
   options: Options;
   custom: CustomCourse[];
@@ -37,6 +40,7 @@ export const baseMeta: Meta = {
   signup: '',
 }
 export const baseChosen: Course[] = [];
+export const baseAdditional: Course[] = [];
 export const baseEvents: CBSEvent[] = ['The Bible Talks'];
 export const baseOptions: Options = {
   showEnrolments: false,
@@ -50,6 +54,7 @@ export const baseState: RootState = {
   courses: baseCourses,
   meta: baseMeta,
   chosen: baseChosen,
+  additional: baseAdditional,
   events: baseEvents,
   options: baseOptions,
   custom: baseCustom,

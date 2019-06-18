@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -40,8 +51,11 @@ process.env.APIFY_LOCAL_STORAGE_DIR = './apify_storage';
 process.env.APIFY_LOG_LEVEL = 'WARNING';
 var Apify = require("apify");
 var Course_1 = require("../state/Course");
+var state_1 = require("../state");
 var fs_1 = require("fs");
-var DATA_FILE = './public/data2.json';
+var CBS_DATA = require('./cbs.json');
+var OUTPUT_DATA_FILE = './public/data2.json';
+var CLASSUTIL_BASE = 'http://classutil.unsw.edu.au';
 var crawl = function (term) { return __awaiter(_this, void 0, void 0, function () {
     var findFacultyPages, crawlFacultyPages, generateMetaData, facultyPages, courses, meta, data;
     var _this = this;
@@ -56,7 +70,7 @@ var crawl = function (term) { return __awaiter(_this, void 0, void 0, function (
                             case 0:
                                 links = [];
                                 linkRegex = new RegExp("[A-Y][A-Z]{3}_[ST]" + term + ".html$");
-                                return [4 /*yield*/, crawlPages(['http://classutil.unsw.edu.au'], function (_a) {
+                                return [4 /*yield*/, crawlPages([CLASSUTIL_BASE], function (_a) {
                                         var $ = _a.$;
                                         return __awaiter(_this, void 0, void 0, function () {
                                             var matchingLinks;
@@ -80,7 +94,7 @@ var crawl = function (term) { return __awaiter(_this, void 0, void 0, function (
                         switch (_a.label) {
                             case 0:
                                 courses = [];
-                                urls = pages.map(function (page) { return 'http://classutil.unsw.edu.au/' + page; });
+                                urls = pages.map(function (page) { return CLASSUTIL_BASE + "/" + page; });
                                 return [4 /*yield*/, crawlPages(urls, function (_a) {
                                         var $ = _a.$;
                                         return __awaiter(_this, void 0, void 0, function () {
@@ -122,6 +136,8 @@ var crawl = function (term) { return __awaiter(_this, void 0, void 0, function (
                                     course = courses_1[_i];
                                     course.removeDuplicates();
                                 }
+                                // Add CBS "course" data
+                                courses.push(new Course_1["default"](__assign({}, CBS_DATA, { streams: CBS_DATA.streams.map(function (s) { return new state_1.Stream(s); }) })));
                                 // Sort courses for consistency
                                 courses.sort(function (a, b) { return a.code.localeCompare(b.code); });
                                 return [2 /*return*/, courses];
@@ -153,7 +169,7 @@ var crawl = function (term) { return __awaiter(_this, void 0, void 0, function (
                 courses = _a.sent();
                 meta = generateMetaData();
                 data = JSON.stringify({ courses: courses, meta: meta });
-                fs_1.writeFileSync(DATA_FILE, data, 'utf-8');
+                fs_1.writeFileSync(OUTPUT_DATA_FILE, data, 'utf-8');
                 return [2 /*return*/];
         }
     });
@@ -180,6 +196,7 @@ var crawlPages = function (urls, handler) { return __awaiter(_this, void 0, void
         }
     });
 }); };
+// TODO crawl multiple terms (in reverse order) to find most recent term with enough data
 crawl(2).then(function () {
     console.log('done!!');
 })["catch"](function (e) {
