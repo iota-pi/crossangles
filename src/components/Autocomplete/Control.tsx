@@ -1,8 +1,6 @@
 import React, { Component, HTMLAttributes } from 'react';
-
-// Components
+import { Course } from '../../state';
 import TextField, { BaseTextFieldProps } from '@material-ui/core/TextField';
-import Course from '../../state/Course';
 import { ControlProps } from 'react-select/lib/components/Control';
 
 export interface Props extends ControlProps<Course> {

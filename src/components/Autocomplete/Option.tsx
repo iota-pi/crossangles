@@ -1,10 +1,10 @@
 import React, { Component, KeyboardEvent } from 'react';
+import { Course } from '../../state';
 
 // Components
 import Typography from '@material-ui/core/Typography';
 import HighlightedText from "./HighlightedText";
 import MenuItem from '@material-ui/core/MenuItem';
-import Course from '../../state/Course';
 import { OptionProps } from 'react-select/lib/components/Option';
 import { NoticeProps } from 'react-select/lib/components/Menu';
 
@@ -62,7 +62,6 @@ export class Option extends Component<Props> {
   }
 
   handleClick = () => {
-    console.log('handleClick')
     this.props.selectProps.OptionProps.onLoadMoreItems();
   }
 

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Select from 'react-select';
-import Course from '../../state/Course';
+import { Course } from '../../state';
 
 // Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -61,6 +61,7 @@ export interface Props extends WithStyles<typeof styles> {
   separator?: string,
   courses: Course[];
   chosen: Course[];
+  additional: Course[];
   chooseCourse: (course: Course | null | undefined) => void;
 }
 
@@ -194,19 +195,15 @@ class Autocomplete extends PureComponent<Props, State> {
   }
 
   private optionFilter = (course: Course, search: string): boolean => {
-    if (this.props.chosen.includes(course)) {
+    // Pre: search is lowercase
+
+    // Don't include already chosen courses
+    if (this.props.chosen.includes(course) || this.props.additional.includes(course)) {
       return false;
     }
 
-    if (course.code.toLowerCase().includes(search)) {
-      return true;
-    }
-
-    if (course.name.toLowerCase().includes(search)) {
-      return true;
-    }
-
-    return false;
+    // Include any courses which match the search in either their code or name
+    return course.code.toLowerCase().includes(search) || course.name.toLowerCase().includes(search);
   }
 
   private optionSort = (a: Course, b: Course): number => {
