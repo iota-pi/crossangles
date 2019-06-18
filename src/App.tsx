@@ -17,6 +17,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from './containers/AppBar';
 import { ThunkDispatch } from 'redux-thunk';
 import { fetchData } from './actions/fetch';
+import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 
 const styles = (theme: Theme) => createStyles({
@@ -60,6 +61,9 @@ class App extends Component<Props, State> {
           <AppBar/>
           <div className={classes.appBarSpacer} />
 
+          <Container>
+            <CourseSelection />
+          </Container>
         </div>
       </ThemeProvider>
     );
