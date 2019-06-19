@@ -1,5 +1,5 @@
 import { Stream, RawStreamData } from './Stream';
-const CourseNames = require('../crawler/courses.json');
+const CourseNames = require('../../src/assets/courses.json');
 
 export interface RawCourseData {
   code: string;
