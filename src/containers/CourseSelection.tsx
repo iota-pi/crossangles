@@ -41,8 +41,7 @@ export interface DispatchProps {
 
 export type Props = OwnProps & StateProps & DispatchProps;
 
-export interface State {
-}
+export interface State {}
 
 class CourseSelection extends Component<Props, State> {
   state = {
@@ -83,9 +82,11 @@ class CourseSelection extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
+  const chosenSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
+
   return {
     courses: Array.from(state.courses.values()),
-    chosen: state.chosen.map(cid => isSet(state.courses.get(cid))),
+    chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(chosenSort),
     additional: state.additional.map(cid => isSet(state.courses.get(cid))),
     events: state.events,
     options: state.options,
