@@ -1,5 +1,4 @@
-import { SET_COURSE_DATA, SET_META_DATA, CoursesAction } from '../actions/fetch';
-import { AnyAction } from 'redux';
+import { SET_COURSE_DATA, SET_META_DATA, CoursesAction, MetaAction } from '../actions/fetch';
 import { Meta, baseCourses, baseMeta, CourseId } from '../state';
 import { TOGGLE_WEB_STREAM, CourseAction } from '../actions/selection';
 import { Course } from '../state';
@@ -20,7 +19,7 @@ export function courses (state = baseCourses, action: CourseAction | CoursesActi
   return state;
 };
 
-export function meta (state = baseMeta, action: AnyAction): Meta {
+export function meta (state = baseMeta, action: MetaAction): Meta {
   if (action.type === SET_META_DATA) {
     return action.meta
   }
