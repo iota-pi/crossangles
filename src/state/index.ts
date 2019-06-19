@@ -20,7 +20,12 @@ export interface Options {
   includeFull: boolean;
 }
 export type OptionName = keyof Options;
-export const OptionList: OptionName[] = ['showEnrolments', 'showLocations', 'showWeeks', 'includeFull'];
+export const OptionList = new Map<OptionName, string>([
+  ['showEnrolments', 'Show Enrolments'],
+  ['showLocations', 'Show Locations'],
+  ['showWeeks', 'Show Weeks'],
+  ['includeFull', 'Include full classes'],
+]);
 
 export type CustomCourse = Course;
 

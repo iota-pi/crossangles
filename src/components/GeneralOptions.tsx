@@ -19,6 +19,9 @@ const styles = (theme: Theme) => createStyles({
   secondaryText: {
     color: theme.palette.text.secondary,
   },
+  selectTrack: {
+    opacity: 0.6 * 0.38,
+  },
 });
 
 export interface Props extends WithStyles<typeof styles> {
@@ -32,7 +35,7 @@ class GeneralOptions extends PureComponent<Props> {
 
     return (
       <Grid container spacing={0} className={classes.root}>
-        {OptionList.map(optionName => (
+        {Array.from(OptionList.entries()).map(([optionName, label]) => (
           <Grid item xs={12} sm={6} md={3} key={optionName}>
             <FormControlLabel
               control={
@@ -40,10 +43,13 @@ class GeneralOptions extends PureComponent<Props> {
                   checked={this.props.options[optionName]}
                   onChange={() => this.props.onToggleOption(optionName)}
                   value={optionName}
+                  classes={{
+                    track: classes.selectTrack,
+                  }}
                 />
               }
               className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
-              label={optionName}
+              label={label}
             />
           </Grid>
         ))}
