@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
-import reducer from './reducers';
+import { store, persistor } from './configureStore';
 import { Provider } from 'react-redux';
-
-const store = createStore(reducer, applyMiddleware(thunk));
+import { PersistGate } from 'redux-persist/integration/react';
+import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <PersistGate persistor={persistor} loading={null}>    {/* TODO: add pretty loading element */}
+      <App />
+    </PersistGate>
   </Provider>,
   document.getElementById('root')
 );
