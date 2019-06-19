@@ -57,6 +57,7 @@ class CourseSelection extends Component<Props, State> {
           chosen={this.props.chosen}
           additional={this.props.additional}
           chooseCourse={this.props.chooseCourse}
+          maxItems={20}
         />
 
         <div className={classes.spaceAbove}>
