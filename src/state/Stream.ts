@@ -65,6 +65,16 @@ export class Stream {
 
     return new Stream({ component, enrols, times, full, web });
   }
+
+  get data (): StreamData {
+    return {
+      component: this.component,
+      enrols: this.enrols,
+      times: this.times,
+      full: this.full,
+      web: this.web,
+    }
+  }
 }
 
 export default Stream;

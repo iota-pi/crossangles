@@ -1,4 +1,4 @@
-import { Stream, RawStreamData } from './Stream';
+import { Stream, RawStreamData, StreamData } from './Stream';
 const CourseNames = require('../../src/assets/courses.json');
 
 export const CBS_CODE = 'CBS';
@@ -13,7 +13,7 @@ export interface RawCourseData {
 export interface CourseData {
   code: string;
   name: string;
-  streams: Stream[];
+  streams: StreamData[];
   term?: string | null;
   useWebStream?: boolean;
 }
@@ -28,7 +28,7 @@ export class Course {
   constructor(courseData: CourseData) {
     this.code = courseData.code;
     this.name = courseData.name;
-    this.streams = courseData.streams;
+    this.streams = courseData.streams.map(s => new Stream(s));
     this.term = courseData.term || null;
     this.useWebStream = courseData.useWebStream || false;
   }
@@ -47,7 +47,7 @@ export class Course {
     return {
       code: this.code,
       name: this.name,
-      streams: this.streams,
+      streams: this.streams.map(s => s.data),
       term: this.term,
       useWebStream: this.useWebStream,
     }

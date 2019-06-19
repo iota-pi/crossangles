@@ -59,10 +59,7 @@ const crawl = async (term: number) => {
     }
 
     // Add CBS "course" data
-    courses.push(new Course({
-      ...CBS_DATA,
-      streams: CBS_DATA.streams.map(s => new Stream(s)),
-    }));
+    courses.push(new Course(CBS_DATA));
 
     // Sort courses for consistency
     courses.sort((a, b) => a.code.localeCompare(b.code));
