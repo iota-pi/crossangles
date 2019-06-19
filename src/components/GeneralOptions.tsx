@@ -9,7 +9,6 @@ import { Grid, FormControlLabel, Switch } from '@material-ui/core';
 
 const styles = (theme: Theme) => createStyles({
   root: {
-    marginTop: theme.spacing(1),
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(3),
   },
