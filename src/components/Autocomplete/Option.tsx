@@ -12,13 +12,20 @@ export type Props = OptionProps<Course>
 
 export class Option extends Component<Props> {
   render () {
-    const text = (this.props.children || '').toString()
+    const text: string[] = [
+      this.props.data.code,
+      this.props.data.name,
+      this.props.data.term,
+    ]
+    const separator = this.props.selectProps.OptionProps.separator;
 
     // Update event handlers for disabled items
     const innerProps = Object.assign({}, this.props.innerProps);
     if (this.props.isDisabled) {
       innerProps.onClick = this.handleClick;
     }
+
+    const classes = this.props.selectProps.classes;
 
     return (
       <MenuItem
@@ -29,11 +36,24 @@ export class Option extends Component<Props> {
         {...innerProps}
       >
         {!this.props.isDisabled ? (
-          <HighlightedText
-            text={text}
-            search={this.props.selectProps.OptionProps.search}
-            classes={this.props.selectProps.classes}
-          />
+          <React.Fragment>
+            <HighlightedText
+              text={text[0]}
+              search={this.props.selectProps.OptionProps.search}
+              classes={classes}
+            />
+            <span className={classes.lightText}>
+              <span className={classes.preserveWhitespace}>{separator}</span>
+              <HighlightedText
+                text={text[1]}
+                search={this.props.selectProps.OptionProps.search}
+                classes={classes}
+              />
+            </span>
+            {text[2] ? (
+              <span className={classes.preserveWhitespace}> ({text[2]})</span>
+            ) : null}
+          </React.Fragment>
         ) : (
           <Typography color="textSecondary">
             {text}

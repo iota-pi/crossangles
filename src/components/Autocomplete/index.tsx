@@ -45,8 +45,17 @@ const styles = (theme: Theme) => createStyles({
     left: 0,
     right: 0,
   },
+  preserveWhitespace: {
+    whiteSpace: 'pre',
+  },
   part: {
     whiteSpace: 'pre',
+  },
+  lightText: {
+    fontWeight: 300,
+    '& $highlight': {
+      fontWeight: 400,
+    },
   },
   highlight: {
     fontWeight: 500,
@@ -111,8 +120,6 @@ class Autocomplete extends PureComponent<Props, State> {
         onMenuClose={this.handleMenuClose}
         options={this.options}
         filterOption={() => true}
-        getOptionLabel={course => course.code + (course.name ? separator + course.name : '')}
-        getOptionValue={course => course.code}
         value={null}
         label={null}
         placeholder={''}
@@ -124,7 +131,8 @@ class Autocomplete extends PureComponent<Props, State> {
         }}
         OptionProps={{
           search: this.state.search,
-          onLoadMoreItems: this.handleLoadMoreItems
+          onLoadMoreItems: this.handleLoadMoreItems,
+          separator,
         }}
         DropdownIndicatorProps={{
           open: this.state.menuOpen,

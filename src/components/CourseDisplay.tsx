@@ -25,6 +25,9 @@ const styles = (theme: Theme) => createStyles({
   lightText: {
     fontWeight: 300,
   },
+  termText: {
+    fontWeight: 400,
+  },
 });
 
 export interface Props extends WithStyles<typeof styles> {
@@ -52,6 +55,9 @@ class CourseDisplay extends PureComponent<Props> {
                   <ListItemText>
                     <span>{course.code}</span>
                     <span className={classes.lightText}> — {course.name}</span>
+                    {course.term ? (
+                      <span className={classes.termText}> ({course.term})</span>
+                    ) : null}
                   </ListItemText>
 
                   <ListItemIcon
