@@ -1,5 +1,5 @@
 import { Stream, RawStreamData, StreamData } from './Stream';
-const CourseNames = require('../../src/assets/courses.json');
+const CourseNames: { [code: string]: string } = require('../../src/assets/courses.json');
 
 export const CBS_CODE = 'CBS';
 
@@ -35,11 +35,14 @@ export class Course {
 
   static from (data: RawCourseData) {
     const code = data.code.trim();
+    const term = (/ \(([A-Z][A-Z0-9]{2})\)/.exec(data.name) || [])[1];
+    const fullName = CourseNames[code];
+    const name = fullName || data.name.trim().replace(new RegExp(`\\s*\\(${term}\\)$`), '');
     return new Course({
-      code: code,
-      name: (CourseNames[code]) || data.name.trim(),
+      code,
+      name,
       streams: [],
-      term: (/ \(([A-Z][A-Z0-9]{2})\)/.exec(data.name) || [])[1],
+      term,
     });
   }
 

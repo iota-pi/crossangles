@@ -6,7 +6,7 @@ import Course, { CourseData } from '../state/Course';
 import { Meta, Stream } from '../state';
 import { writeFileSync } from 'fs';
 
-const CBS_DATA: CourseData = require('../../src/assets/courses.json');
+const CBS_DATA: CourseData = require('../../src/assets/cbs.json');
 const OUTPUT_DATA_FILE = './public/data2.json';
 const CLASSUTIL_BASE = 'http://classutil.unsw.edu.au';
 
