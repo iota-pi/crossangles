@@ -1,6 +1,10 @@
 import { Stream, RawStreamData } from './Stream';
 const CourseNames = require('../../src/assets/courses.json');
 
+export const CBS_CODE = 'CBS';
+
+export type CourseId = string;
+
 export interface RawCourseData {
   code: string;
   name: string;
@@ -10,7 +14,7 @@ export interface CourseData {
   code: string;
   name: string;
   streams: Stream[];
-  term?: string;
+  term?: string | null;
   useWebStream?: boolean;
 }
 
@@ -18,14 +22,14 @@ export class Course {
   code: string;
   name: string;
   streams: Stream[];
-  term?: string;
-  useWebStream?: boolean;
+  term: string | null;
+  useWebStream: boolean;
 
   constructor(courseData: CourseData) {
     this.code = courseData.code;
     this.name = courseData.name;
     this.streams = courseData.streams;
-    this.term = courseData.term || undefined;
+    this.term = courseData.term || null;
     this.useWebStream = courseData.useWebStream || false;
   }
 
@@ -39,6 +43,20 @@ export class Course {
     });
   }
 
+  get data (): CourseData {
+    return {
+      code: this.code,
+      name: this.name,
+      streams: this.streams,
+      term: this.term,
+      useWebStream: this.useWebStream,
+    }
+  }
+
+  get id (): CourseId {
+    return this.code + (this.term || '');
+  }
+
   addStream (data: RawStreamData) {
     const stream = Stream.from(data);
     if (stream !== null) {
@@ -47,8 +65,10 @@ export class Course {
   }
 
   updateWith (data: Partial<CourseData>) {
-    const newObject = Object.create(this);
-    return Object.assign(newObject, data);
+    return new Course({
+      ...this.data,
+      ...data,
+    });
   }
 
   removeDuplicates () {
@@ -68,6 +88,10 @@ export class Course {
         }
       }
     }
+  }
+
+  get hasWebStream () {
+    return this.streams.filter(stream => stream.web).length > 0;
   }
 }
 

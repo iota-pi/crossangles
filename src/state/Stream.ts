@@ -1,4 +1,4 @@
-import { parseTimeStr } from "./util";
+import { parseTimeStr, ClassTime } from "./util";
 
 export interface RawStreamData {
   component: string,
@@ -16,18 +16,12 @@ export interface StreamData {
   web?: boolean;
 }
 
-export interface ClassTime {
-  time: string,
-  location?: string,
-  weeks?: string,
-}
-
 export class Stream {
   component: string;
   enrols: [number, number];
   times: ClassTime[] | null;
   full: boolean;
-  web?: boolean;
+  web: boolean;
 
   constructor(streamData: StreamData) {
     this.component = streamData.component;

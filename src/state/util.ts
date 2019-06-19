@@ -1,4 +1,8 @@
-import { ClassTime } from "./Stream";
+export interface ClassTime {
+  time: string,
+  location?: string,
+  weeks?: string,
+}
 
 export const parseTimeStr = (timeString: string): ClassTime[] | null => {
 

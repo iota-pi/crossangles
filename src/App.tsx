@@ -76,7 +76,7 @@ class App extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   return {
-    courses: state.courses,
+    courses: Array.from(state.courses.values()),
     meta: state.meta,
   }
 }

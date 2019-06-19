@@ -1,25 +1,23 @@
 import { SET_COURSE_DATA, SET_META_DATA, CoursesAction } from '../actions/fetch';
 import { AnyAction } from 'redux';
-import { Meta, baseCourses, baseMeta } from '../state';
+import { Meta, baseCourses, baseMeta, CourseId } from '../state';
 import { TOGGLE_WEB_STREAM, CourseAction } from '../actions/selection';
 import { Course, Stream } from '../state';
 
-export function courses (state = baseCourses, action: CourseAction | CoursesAction): Course[] {
+export function courses (state = baseCourses, action: CourseAction | CoursesAction): Map<CourseId, Course> {
   switch (action.type) {
     case SET_COURSE_DATA:
-      return action.courses.map(courseData => new Course({
+      const courses: Course[] = action.courses.map(courseData => new Course({
         ...courseData,
         streams: courseData.streams.map(streamData => new Stream(streamData)),
       }));
+      return new Map(courses.map(course => [course.id, course]));
     case TOGGLE_WEB_STREAM:
-      const index = state.indexOf(action.course);
-      return [
-        ...state.slice(0, index),
-        state[index].updateWith({
-          useWebStream: !state[index].useWebStream,
-        }),
-        ...state.slice(index + 1),
-      ]
+      const newMap = new Map(state);
+      return newMap.set(action.course.id, new Course({
+        ...action.course.data,
+        useWebStream: !action.course.useWebStream,
+      }));
   }
 
   return state;

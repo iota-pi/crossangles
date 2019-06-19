@@ -1,5 +1,4 @@
-import { CBSEvent, Options, CustomCourse } from "../state";
-import { Course } from "../state/Course";
+import { CBSEvent, Options, CustomCourse, Course, OptionName } from "../state";
 import { Action } from "redux";
 
 // Chosen courses
@@ -56,23 +55,15 @@ export function removeCustom (custom: CustomCourse): CustomAction {
 }
 
 // Events
-export const ADD_EVENT = 'ADD_EVENT';
-export const REMOVE_EVENT = 'REMOVE_EVENT';
+export const TOGGLE_EVENT = 'TOGGLE_EVENT';
 export interface EventAction extends Action {
-  type: typeof ADD_EVENT | typeof REMOVE_EVENT;
+  type: typeof TOGGLE_EVENT;
   event: CBSEvent;
 }
 
-export function addEvent (event: CBSEvent): EventAction {
+export function toggleEvent (event: CBSEvent): EventAction {
   return {
-    type: ADD_EVENT,
-    event,
-  }
-}
-
-export function removeEvent (event: CBSEvent): EventAction {
-  return {
-    type: REMOVE_EVENT,
+    type: TOGGLE_EVENT,
     event,
   }
 }
@@ -85,7 +76,7 @@ export interface ToggleOptionAction extends Action {
   option: keyof Options;
 }
 
-export function addOption (option: keyof Options): ToggleOptionAction {
+export function toggleOption (option: OptionName): ToggleOptionAction {
   return {
     type: TOGGLE_OPTION,
     option: option,

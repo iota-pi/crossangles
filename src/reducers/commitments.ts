@@ -4,12 +4,14 @@ import {
   REMOVE_COURSE,
   ADD_CUSTOM,
   REMOVE_CUSTOM,
-  ADD_EVENT,
-  REMOVE_EVENT,
+  TOGGLE_EVENT,
   TOGGLE_OPTION,
-  ToggleOptionAction
+  ToggleOptionAction,
+  EventAction,
+  CourseAction,
 } from '../actions/selection';
 import {
+  Course,
   baseChosen,
   baseCustom,
   baseEvents,
@@ -20,23 +22,21 @@ import {
   baseAdditional,
 } from '../state';
 import { SET_COURSE_DATA, CoursesAction } from '../actions/fetch';
-import { Course, Stream } from '../state';
+import { CBS_CODE, CourseId } from '../state/Course';
 
-const CBS_CODE = 'CBS';
-
-export function chosen (state = baseChosen, action: AnyAction): Course[] {
+export function chosen (state = baseChosen, action: CourseAction): CourseId[] {
   switch (action.type) {
     case ADD_COURSE:
       return [
         ...state,
-        action.course,
-      ]
+        action.course.id,
+      ];
     case REMOVE_COURSE:
-      const i = state.indexOf(action.course);
+      const i = state.indexOf(action.course.id);
       return [
         ...state.slice(0, i),
         ...state.slice(i + 1),
-      ]
+      ];
   }
 
   return state;
@@ -48,43 +48,42 @@ export function custom (state = baseCustom, action: AnyAction): CustomCourse[] {
       return [
         ...state,
         action.custom,
-      ]
+      ];
     case REMOVE_CUSTOM:
       const i = state.indexOf(action.custom);
       return [
         ...state.slice(0, i),
         ...state.slice(i + 1),
-      ]
+      ];
   }
 
   return state;
 };
 
-export function additional (state = baseAdditional, action: CoursesAction): Course[] {
+export function additional (state = baseAdditional, action: CoursesAction): CourseId[] {
   switch (action.type) {
     case SET_COURSE_DATA:
-      return action.courses.filter(c => c.code === CBS_CODE).map(c => new Course({
-        ...c,
-        streams: c.streams.map(s => new Stream(s)),
-      }));
+      return action.courses.filter(c => c.code === CBS_CODE).map(c => (new Course(c)).id);
   }
 
   return state;
 };
 
-export function events (state = baseEvents, action: AnyAction): CBSEvent[] {
+export function events (state = baseEvents, action: EventAction): CBSEvent[] {
   switch (action.type) {
-    case ADD_EVENT:
-      return [
-        ...state,
-        action.event,
-      ]
-    case REMOVE_EVENT:
-      const i = state.indexOf(action.event);
-      return [
-        ...state.slice(0, i),
-        ...state.slice(i + 1),
-      ]
+    case TOGGLE_EVENT:
+      if (!state.includes(action.event)) {
+        return [
+          ...state,
+          action.event,
+        ];
+      } else {
+        const i = state.indexOf(action.event);
+        return [
+          ...state.slice(0, i),
+          ...state.slice(i + 1),
+        ];
+      }
   }
 
   return state;
@@ -96,7 +95,7 @@ export function options (state = baseOptions, action: ToggleOptionAction): Optio
       return {
         ...state,
         [action.option]: !state[action.option],
-      }
+      };
   }
 
   return state;

@@ -1,16 +1,6 @@
-import Course from "./Course";
-import Stream from "./Stream";
-export { Course, Stream };
-
-export interface RootState {
-  courses: Course[];
-  meta: Meta;
-  chosen: Course[];
-  additional: Course[];
-  events: CBSEvent[];
-  options: Options;
-  custom: CustomCourse[];
-}
+import { Course, CourseId } from "./Course";
+export * from "./Course";
+export * from "./Stream";
 
 export interface Meta {
   term: number;
@@ -21,6 +11,7 @@ export interface Meta {
 }
 
 export type CBSEvent = 'The Bible Talks' | 'Bible Study' | 'Core Theology' | 'Core Training';
+export const CBSEventList: CBSEvent[] = ['The Bible Talks', 'Bible Study', 'Core Theology', 'Core Training'];
 
 export interface Options {
   showEnrolments: boolean;
@@ -28,10 +19,12 @@ export interface Options {
   showWeeks: boolean;
   includeFull: boolean;
 }
+export type OptionName = keyof Options;
+export const OptionList: OptionName[] = ['showEnrolments', 'showLocations', 'showWeeks', 'includeFull'];
 
 export type CustomCourse = Course;
 
-export const baseCourses: Course[] = [];
+export const baseCourses = new Map<CourseId, Course>();
 export const baseMeta: Meta = {
   term: 1,
   year: 1960,
@@ -39,8 +32,8 @@ export const baseMeta: Meta = {
   updateTime: '',
   signup: '',
 }
-export const baseChosen: Course[] = [];
-export const baseAdditional: Course[] = [];
+export const baseChosen: CourseId[] = [];
+export const baseAdditional: CourseId[] = [];
 export const baseEvents: CBSEvent[] = ['The Bible Talks'];
 export const baseOptions: Options = {
   showEnrolments: false,
@@ -49,6 +42,16 @@ export const baseOptions: Options = {
   includeFull: false,
 };
 export const baseCustom: CustomCourse[] = [];
+
+export interface RootState {
+  courses: Map<CourseId, Course>;
+  meta: Meta;
+  chosen: CourseId[];
+  additional: CourseId[];
+  events: CBSEvent[];
+  options: Options;
+  custom: CustomCourse[];
+}
 
 export const baseState: RootState = {
   courses: baseCourses,

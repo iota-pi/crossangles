@@ -28,7 +28,7 @@ const styles = (theme: Theme) => createStyles({
     alignItems: 'center',
     overflow: 'hidden',
     lineHeight: '20px',
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(0.5),
   },
   dropDown: {
     transition: 'all 0.3s',
@@ -62,7 +62,7 @@ export interface Props extends WithStyles<typeof styles> {
   courses: Course[];
   chosen: Course[];
   additional: Course[];
-  chooseCourse: (course: Course | null | undefined) => void;
+  chooseCourse: (course: Course) => void;
 }
 
 export interface State {
