@@ -5,7 +5,7 @@ export const theme = createMuiTheme({
   palette: {
     primary: indigo,
     secondary: {
-      main: '#2979ff',
+      main: '#1976D2',
     },
   },
   typography: {},
