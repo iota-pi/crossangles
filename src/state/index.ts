@@ -1,4 +1,5 @@
 import { Course, CourseId } from "./Course";
+import Stream, { Session } from "./Stream";
 export * from "./Course";
 export * from "./Stream";
 
@@ -29,6 +30,10 @@ export const OptionList = new Map<OptionName, string>([
 
 export type CustomCourse = Course;
 
+export type Timetable = Session[];
+
+
+// Initial values
 export const baseCourses = new Map<CourseId, Course>();
 export const baseMeta: Meta = {
   term: 1,
@@ -47,6 +52,7 @@ export const baseOptions: Options = {
   includeFull: false,
 };
 export const baseCustom: CustomCourse[] = [];
+export const baseTimetable: Timetable = [];
 
 export interface RootState {
   courses: Map<CourseId, Course>;
@@ -56,6 +62,7 @@ export interface RootState {
   events: CBSEvent[];
   options: Options;
   custom: CustomCourse[];
+  timetable: Timetable;
 }
 
 export const baseState: RootState = {
@@ -66,4 +73,5 @@ export const baseState: RootState = {
   events: baseEvents,
   options: baseOptions,
   custom: baseCustom,
+  timetable: baseTimetable,
 }
