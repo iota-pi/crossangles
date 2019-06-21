@@ -2,10 +2,10 @@ export interface ClassTime {
   time: string,
   location?: string,
   weeks?: string,
+  canClash?: boolean,
 }
 
 export const parseTimeStr = (timeString: string): ClassTime[] | null => {
-
   // Basic string sanitisation
   timeString = timeString.replace(/\/odd|\/even|Comb\/w.*/g, '').trim();
 
@@ -37,10 +37,11 @@ export const parseTimeStr = (timeString: string): ClassTime[] | null => {
 const _parseDataStr = (data: string): ClassTime[] => {
   const openBracketIndex = data.indexOf('(');
   if (openBracketIndex !== -1) {
-    const time = tidyUpTime(data.slice(0, openBracketIndex).trim());
-    if (time === null) {
+    const tidiedTime = tidyUpTime(data.slice(0, openBracketIndex).trim());
+    if (tidiedTime === null) {
       return [];
     }
+    const [time, canClash] = tidiedTime;
 
     const otherDetails = data.slice(openBracketIndex, data.indexOf(')'));
     const weeks = getWeeks(otherDetails);
@@ -61,15 +62,21 @@ const _parseDataStr = (data: string): ClassTime[] => {
     return [{
       time,
       weeks: weeks || undefined,
-      location: location || undefined
+      location: location || undefined,
+      canClash,
     }];
   } else {
-    const time = tidyUpTime(data);
-    return time !== null ? [{ time }] : [];
+    const tidiedTime = tidyUpTime(data);
+    if (tidiedTime !== null) {
+      const [ time, canClash ] = tidiedTime;
+      return [{ time, canClash }];
+    } else {
+      return [];
+    }
   }
 }
 
-const tidyUpTime = (time: string) => {
+const tidyUpTime = (time: string): [string, boolean | undefined] | null => {
   if (time === '' || time === '00-00') {
     return null;
   }
@@ -90,7 +97,10 @@ const tidyUpTime = (time: string) => {
     return null;
   }
 
-  return time;
+  const canClash = time.endsWith('#') ? true : undefined;
+  time = time.replace(/#$/, '');
+
+  return [time, canClash];
 }
 
 const getWeeks = (weeks: string) => {

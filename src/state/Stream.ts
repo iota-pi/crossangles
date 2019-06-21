@@ -1,4 +1,4 @@
-import { parseTimeStr, ClassTime } from "./util";
+import { parseTimeStr, ClassTime } from "./times";
 
 export interface RawStreamData {
   component: string,
