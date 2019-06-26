@@ -19,6 +19,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { fetchData } from './actions/fetch';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
+import TimetableContainer from './containers/TimetableContainer';
 
 const styles = (theme: Theme) => createStyles({
   main: {
@@ -63,6 +64,8 @@ class App extends Component<Props, State> {
 
           <Container>
             <CourseSelection />
+
+            <TimetableContainer />
           </Container>
         </div>
       </ThemeProvider>
