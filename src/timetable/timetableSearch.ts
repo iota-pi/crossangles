@@ -5,25 +5,17 @@ import { getClashInfo } from './getClashInfo';
 
 export type IndexTimetable = number[];
 
-function shuffleArray<T> (array: T[]) {
-  for (let i = array.length - 1; i > 0; i -= 1) {
-    let j = Math.floor(Math.random() * (i + 1))
-    let temp = array[j]
-    array[j] = array[i]
-    array[i] = temp
-  }
-  return array
-}
-
-function search (components: Component[], lastTimetable: Timetable | null): Timetable | null {
+export function search (components: Component[], lastTimetable: Timetable): Timetable | null {
   const clashInfo = getClashInfo(components);
+  console.log(clashInfo);
 
   let bestScore = -Infinity;
   let bestTimetable: Timetable | null = null;
   const timetable: IndexTimetable = (new Array(components.length)).fill(0)
+  timetable[0] = -1;
   let i = 0;
   while (i < components.length) {
-    if (timetable[i] === components[i].streams.length) {
+    if (timetable[i] === components[i].streams.length - 1) {
       timetable[i] = 0;
       i++;
     } else {
@@ -33,6 +25,7 @@ function search (components: Component[], lastTimetable: Timetable | null): Time
 
       // Score this timetable and compare with previous best
       const streams = components.map((c, i) => c.streams[timetable[i]]);
+      console.log(streams, i, components, timetable);
       const allSessions = streams.reduce((all, s) => all.concat(s.sessions), [] as Session[]);
       const score = scoreTimetable(allSessions, lastTimetable, clashInfo);
       if (score > bestScore) {
@@ -41,6 +34,8 @@ function search (components: Component[], lastTimetable: Timetable | null): Time
       }
     }
   }
+
+  console.log('search() finished', bestTimetable, bestScore);
 
   return bestTimetable;
 }

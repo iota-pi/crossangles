@@ -1,7 +1,8 @@
 import { parseTimeStr, ClassTime } from "./times";
-import Course from "./Course";
+import Course, { CourseId } from "./Course";
 
 export type LetterDay = 'M' | 'T' | 'W' | 'H' | 'F';
+export type StreamId = string;
 
 export interface Session {
   start: number;
@@ -10,8 +11,8 @@ export interface Session {
   canClash?: boolean;
   location?: string;
   weeks?: string;
-  stream?: Stream;
-  course?: Course;
+  stream?: StreamId;
+  course?: CourseId;
 }
 
 export interface RawStreamData {
@@ -28,6 +29,7 @@ export interface StreamData {
   times: ClassTime[] | null;
   full: boolean;
   web?: boolean;
+  course?: Course;
 }
 
 export class Stream {
@@ -37,6 +39,7 @@ export class Stream {
   full: boolean;
   web: boolean;
   sessions: Session[];
+  course?: Course;
 
   constructor(streamData: StreamData) {
     this.component = streamData.component;
@@ -44,6 +47,7 @@ export class Stream {
     this.times = streamData.times;
     this.full = streamData.full;
     this.web = streamData.web || false;
+    this.course = streamData.course;
     this.sessions = this.getSessions(); // TODO: if too slow, could only call for streams of chosen courses
   }
 
@@ -92,6 +96,13 @@ export class Stream {
     }
   }
 
+  get id (): string {
+    // Condition: id will be unique iff there is at most one WEB stream per course
+    let timeStr = this.times ? this.times.map(t => t.time).join(',') : 'WEB';
+    let courseId = this.course ? this.course.id : '';
+    return `${courseId}-${this.component}-${timeStr}`;
+  }
+
   private getSessions (): Session[] {
     if (this.times === null) {
       return [];
@@ -105,6 +116,8 @@ export class Stream {
           canClash: t.canClash,
           location: t.location,
           weeks: t.weeks,
+          stream: this.id,
+          course: this.course ? this.course.id : undefined,
         }
       })
     }

@@ -14,7 +14,7 @@ export function coursesToComponents (courses: Course[], events: CBSEvent[], allo
 
     for (let stream of course.streams) {
       // Skip any CBS activities which have been deselected
-      if (course.code === 'CBS' && (events as string[]).includes(stream.component)) {
+      if (course.code === 'CBS' && !events.includes(stream.component as CBSEvent)) {
         continue;
       }
 

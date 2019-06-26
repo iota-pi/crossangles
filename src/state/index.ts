@@ -1,5 +1,5 @@
 import { Course, CourseId } from "./Course";
-import Stream, { Session } from "./Stream";
+import { Session } from "./Stream";
 export * from "./Course";
 export * from "./Stream";
 
