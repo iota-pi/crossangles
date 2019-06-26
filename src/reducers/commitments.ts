@@ -1,4 +1,3 @@
-import { AnyAction } from 'redux';
 import {
   ADD_COURSE,
   REMOVE_COURSE,
@@ -9,6 +8,7 @@ import {
   ToggleOptionAction,
   EventAction,
   CourseAction,
+  CustomAction,
 } from '../actions/selection';
 import {
   Course,
@@ -24,7 +24,7 @@ import {
 import { SET_COURSE_DATA, CoursesAction } from '../actions/fetch';
 import { CBS_CODE, CourseId } from '../state/Course';
 
-export function chosen (state = baseChosen, action: CourseAction): CourseId[] {
+export function chosen (state = baseChosen, action: CourseAction | CoursesAction): CourseId[] {
   switch (action.type) {
     case ADD_COURSE:
       return [
@@ -37,12 +37,18 @@ export function chosen (state = baseChosen, action: CourseAction): CourseId[] {
         ...state.slice(0, i),
         ...state.slice(i + 1),
       ];
+    case SET_COURSE_DATA:
+      // Only keep chosen courses which have current data
+      // NB: this is necessary only if a course stops being offered for a particular semester
+      //     after timetable data has been released (very unlikely)
+      const newIds = new Set(action.courses.map(c => (new Course(c)).id));
+      return state.filter(id => newIds.has(id));
   }
 
   return state;
 };
 
-export function custom (state = baseCustom, action: AnyAction): CustomCourse[] {
+export function custom (state = baseCustom, action: CustomAction): CustomCourse[] {
   switch (action.type) {
     case ADD_CUSTOM:
       return [

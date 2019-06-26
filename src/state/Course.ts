@@ -28,7 +28,7 @@ export class Course {
   constructor(courseData: CourseData) {
     this.code = courseData.code;
     this.name = courseData.name;
-    this.streams = courseData.streams.map(s => new Stream(s));
+    this.streams = courseData.streams.map(s => new Stream({ ...s, course: this }));
     this.term = courseData.term || null;
     this.useWebStream = courseData.useWebStream || false;
   }

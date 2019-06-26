@@ -4,11 +4,11 @@ import { CourseData } from './Course';
 
 export const coursesTransform = createTransform(
   // transform state on its way to being serialized and persisted.
-  (inboundState: Map<CourseId, Course>, key) => {
+  (inboundState: Map<CourseId, Course>) => {
     return Array.from(inboundState.values()).map(course => course.data);
   },
   // transform state being rehydrated
-  (outboundState: CourseData[], key) => {
+  (outboundState: CourseData[]) => {
     const courses: Course[] = outboundState.map(courseData => new Course(courseData));
     return new Map(courses.map(c => [c.id, c]));
   },
