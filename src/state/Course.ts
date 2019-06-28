@@ -61,7 +61,7 @@ export class Course {
   }
 
   addStream (data: RawStreamData) {
-    const stream = Stream.from(data);
+    const stream = Stream.from(data, this);
     if (stream !== null) {
       this.streams.push(stream);
     }

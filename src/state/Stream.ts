@@ -11,8 +11,8 @@ export interface Session {
   canClash?: boolean;
   location?: string;
   weeks?: string;
-  stream?: StreamId;
-  course?: CourseId;
+  course: CourseId;
+  stream: StreamId;
 }
 
 export interface RawStreamData {
@@ -29,7 +29,6 @@ export interface StreamData {
   times: ClassTime[] | null;
   full: boolean;
   web?: boolean;
-  course?: Course;
 }
 
 export class Stream {
@@ -39,9 +38,9 @@ export class Stream {
   full: boolean;
   web: boolean;
   sessions: Session[];
-  course?: Course;
+  course: Course;
 
-  constructor(streamData: StreamData) {
+  constructor(streamData: StreamData & { course: Course }) {
     this.component = streamData.component;
     this.enrols = streamData.enrols;
     this.times = streamData.times;
@@ -51,7 +50,7 @@ export class Stream {
     this.sessions = this.getSessions(); // TODO: if too slow, could only call for streams of chosen courses
   }
 
-  static from (data: RawStreamData) {
+  static from (data: RawStreamData, course: Course) {
     let component = data.component;
     if (component === 'CRS') {
       return null;
@@ -83,7 +82,7 @@ export class Stream {
       component = 'LEC';
     }
 
-    return new Stream({ component, enrols, times, full, web });
+    return new Stream({ component, enrols, times, full, web, course });
   }
 
   get data (): StreamData {
@@ -117,7 +116,7 @@ export class Stream {
           location: t.location,
           weeks: t.weeks,
           stream: this.id,
-          course: this.course ? this.course.id : undefined,
+          course: this.course.id,
         }
       })
     }
