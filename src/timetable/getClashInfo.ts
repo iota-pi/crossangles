@@ -1,37 +1,43 @@
-import { Component } from "./coursesToComponents";
 import { Session, Stream } from "../state";
 
-export type ClashInfo = Map<Session, [Session, number][]>;
+export type ClashInfo = Map<Stream, Map<Stream, number>>;
 
-export const getClashInfo = (components: Component[]): ClashInfo => {
-  const streams = components.reduce((all, c) => all.concat(c.streams), [] as Stream[]);
-  const sessions = streams.reduce((all, s) => all.concat(s.sessions), [] as Session[]);
+const ALLOWED_CLASH_MULTIPLIER = 0.5;
 
-  const clashes = new Map<Session, [Session, number][]>();
-  const seenSessions: Session[] = [];
-  for (let session of sessions) {
-    // Check for all clashes this session has with previous sessions
-    const clashingSessions = seenSessions.filter(s => doesClash(session, s));
-    clashes.set(session, clashingSessions.map(s => [s, clashLength(session, s)]));
-    for (let clashingSession of clashingSessions) {
-      const initialValue = clashes.get(clashingSession) || [];
-      const newValue: [Session, number] = [session, clashLength(session, clashingSession)]
-      clashes.set(clashingSession, initialValue.concat([newValue]));
+export const getClashInfo = (streams: Stream[]): ClashInfo => {
+  const clashes = new Map<Stream, Map<Stream, number>>();
+  for (let i = 0; i < streams.length; ++i) {
+    const s1 = streams[i];
+    const childMap = new Map<Stream, number>();
+    for (let j = 0; j < streams.length; ++j) {
+      if (i === j) continue;
+
+      const s2 = streams[j];
+      const clashHours = streamClashLength(s1, s2);
+      childMap.set(s2, clashHours);
     }
-
-    seenSessions.push(session);
+    clashes.set(s1, childMap);
   }
 
   return clashes;
 }
 
-const doesClash = (a: Session, b: Session): boolean => {
-  return a.day === b.day && (a.start < b.end) && (b.start < a.end);
+export const streamClashLength = (a: Stream, b: Stream) => {
+  let total = 0;
+
+  for (let s1 of a.sessions) {
+    for (let s2 of b.sessions) {
+      total += sessionClashLength(s1, s2);
+    }
+  }
+
+  return total;
 }
 
-const clashLength = (a: Session, b: Session): number => {
-  if (doesClash(a, b)) {
-    return Math.max(0, a.end - b.start, b.end - a.start);
+export const sessionClashLength = (a: Session, b: Session): number => {
+  if (a.day === b.day) {
+    const length = Math.max(Math.min(a.end, b.end) - Math.max(a.start, b.start), 0);
+    return length * (a.canClash || b.canClash ? ALLOWED_CLASH_MULTIPLIER : 1);
   } else {
     return 0;
   }

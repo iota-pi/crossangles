@@ -27,7 +27,6 @@ export function updateTimetable (config: UpdateTimetableConfig): TimetableAction
   } = config;
   const components = coursesToComponents(courses, events, includeFull);
   const newTimetable = search(components, previousTimetable);
-  console.log(newTimetable);
   return {
     type: UPDATE_TIMETABLE,
     timetable: newTimetable || previousTimetable,

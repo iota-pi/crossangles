@@ -71,7 +71,6 @@ class TimetableContainer extends Component<Props, State> {
       previousTimetable: this.props.timetable,
       options: this.props.options,
     })
-    console.log('timetable from store', this.props.timetable);
   }
 }
 

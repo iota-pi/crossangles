@@ -1,78 +1,133 @@
-import { Session, Timetable } from '../state';
+import { Session, Timetable, Stream } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 
-export const scoreTimetable = (
+export interface TimetableScore {
+  score: number,
   timetable: Timetable,
-  pastTimetable: Timetable,
-  clashInfo: ClashInfo
-): number => {
-  // Perf note: could reduce number of iterations through timetable by combining these methods
-  // (probably not worth the performance gain though..?)
-  let score = 0;
-  score += scoreClashes(timetable, clashInfo);
-  score += scoreFreeDays(timetable);
-  score += scoreTimes(timetable);
-  score += scoreDayLength(timetable);
-  score += scoreUnchanged(timetable, pastTimetable);
+}
 
-  return score;
+export class TimetableScorer {
+  pastTimetable: Set<Session>;
+  clashInfo: ClashInfo;
+  fewestClashes: number;
+
+  constructor (pastTimetable: Session[], clashInfo: ClashInfo) {
+    this.pastTimetable = new Set(pastTimetable);
+    this.clashInfo = clashInfo;
+    this.fewestClashes = Infinity;
+  }
+
+  score (streams: Stream[], streamSessions?: Session[][]): number {
+    const clashes = countClashes(streams, this.clashInfo, this.fewestClashes);
+
+    // Quick exit for
+    if (clashes > this.fewestClashes) {
+      // return { score: -Infinity, timetable: [] };
+      return -Infinity;
+    } else {
+      this.fewestClashes = clashes;
+    }
+
+    streamSessions = streamSessions || streams.map(s => s.sessions);
+    const timetable = ([] as Session[]).concat(...streamSessions);
+    let score = 0;
+    score += scoreClashes(clashes);
+    score += scoreFreeDays(timetable);
+    score += scoreTimes(timetable);
+    score += scoreDayLength(timetable);
+    score += scoreUnchanged(timetable, this.pastTimetable);
+
+    // return { score, timetable };
+    return score;
+  }
 }
 
 export const scoreFreeDays = (sessions: Session[]): number => {
-  const freeDayValues = { M: 190, T: 150, W: 180, H: 160, F: 200 };
+  const scores = { M: 290, T: 250, W: 280, H: 260, F: 300 };
 
-  for (let session of sessions) {
-    freeDayValues[session.day] = 0;
+  for (let i = 0; i < sessions.length; ++i) {
+    scores[sessions[i].day] = 0;
   }
 
-  return Object.values(freeDayValues).reduce((sum, x) => sum + x, 0);
+  return scores.M + scores.T + scores.W + scores.H + scores.F
 }
 
 export const scoreTimes = (sessions: Session[]): number => {
-  return sessions.reduce((sum, { start, end }) => {
+  let total = 0;
+
+  for (let i = 0; i < sessions.length; ++i) {
+    const { start, end } = sessions[i];
     const scoreStart = -((start - 14) * (start - 14)) + 9;
     const scoreEnd = -((end - 14) * (end - 14)) + 9;
-    return sum + Math.min(scoreStart, scoreEnd, 0);
-  }, 0);
+    total += Math.min(scoreStart, scoreEnd, 0);
+  }
+
+  return total;
 }
 
 export const scoreDayLength = (sessions: Session[]): number => {
   const perHour = -10;
-  const dayLengths = {
-    M: [0, 24],
-    T: [0, 24],
-    W: [0, 24],
-    H: [0, 24],
-    F: [0, 24],
-  };
+  const starts = { M: 24, T: 24, W: 24, H: 24, F: 24 };
+  const ends = { M: -1, T: -1, W: -1, H: -1, F: -1 };
 
-  for (let session of sessions) {
-    const day = dayLengths[session.day];
-    if (session.start > day[0]) {
-      day[0] = session.start;
+  // for (let { day, start, end } of sessions) {
+  for (let i = 0; i < sessions.length; ++i) {
+    const { day, start, end } = sessions[i];
+    if (start < starts[day]) {
+      starts[day] = start;
     }
-    if (session.end > day[1]) {
-      day[1] = session.end;
+    if (end > ends[day]) {
+      ends[day] = end;
     }
   }
 
-  return Object.values(dayLengths).reduce((sum, [start, end]) => sum + end - start, 0) * perHour;
+  let total = 0;
+  if (ends.M > -1) total += ends.M - starts.M;
+  if (ends.T > -1) total += ends.T - starts.T;
+  if (ends.W > -1) total += ends.W - starts.W;
+  if (ends.H > -1) total += ends.H - starts.H;
+  if (ends.F > -1) total += ends.F - starts.F;
+
+  return total * perHour;
 }
 
-export const scoreUnchanged = (current: Timetable, past: Timetable): number => {
+export const scoreUnchanged = (current: Timetable, past: Set<Session>): number => {
   const perUnchangedSession = 30;
-  // Perf note: could use a Set for faster inclusion checking
-  return current.reduce((sum, curr) => sum + (past.includes(curr) ? perUnchangedSession : 0), 0);
+
+  let count = 0;
+  for (let i = 0; i < current.length; ++i) {
+    if (past.has(current[i])) {
+      count++;
+    }
+  }
+
+  return count * perUnchangedSession;
 }
 
-export const scoreClashes = (sessions: Session[], clashInfo: ClashInfo): number => {
-  const clashPenalty = -300;
-  const permittedClashPenalty = -150;
-  return sessions.reduce((sum, s) => {
-    const penalty = s.canClash ? permittedClashPenalty : clashPenalty;
-    const clashes = notUndefined(clashInfo.get(s));
-    const clashHours = clashes.reduce((sum, c) => sum + c[1], 0);
-    return sum + clashHours * penalty;
-  }, 0);
+export const countClashes = (
+  streams: Stream[],
+  clashInfo: ClashInfo,
+  maxClash: number
+): number => {
+  let count = 0;
+
+  for (let i = 0; i < streams.length; ++i) {
+    const s1 = streams[i];
+    const innerMap = notUndefined(clashInfo.get(s1));
+    for (let j = i + 1; j < streams.length; ++j) {
+      const s2 = streams[j];
+      count += notUndefined(innerMap.get(s2));
+      if (count > maxClash) {
+        return count;
+      }
+    }
+  }
+
+  return count;
+}
+
+export const scoreClashes = (counts: number): number => {
+  const clashPenalty = -1000;
+  return counts * clashPenalty;
 }

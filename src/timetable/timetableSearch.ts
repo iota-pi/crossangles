@@ -1,41 +1,38 @@
 import { Component } from '.';
-import { Timetable, Session } from '../state';
-import { scoreTimetable } from './scoreTimetable';
+import { Timetable, Session, Stream } from '../state';
+import { TimetableScorer } from './scoreTimetable';
 import { getClashInfo } from './getClashInfo';
+import { GeneticSearch } from './GeneticSearch';
 
-export type IndexTimetable = number[];
+export function search (
+  components: Component[],
+  lastTimetable: Timetable,
+  maxTime = 500,
+  maxSpawn = 5,
+): Timetable {
+  // Pre-compute clash info and set of previous timetable's sessions
+  const allStreams = components.reduce((all, c) => all.concat(c.streams), [] as Stream[]);
+  const clashInfo = getClashInfo(allStreams);
 
-export function search (components: Component[], lastTimetable: Timetable): Timetable | null {
-  const clashInfo = getClashInfo(components);
-  console.log(clashInfo);
+  // Set up scorer and searcher
+  // TODO: could increase performance by spawning in multiple web workers
+  const scorer = new TimetableScorer(lastTimetable, clashInfo);
+  const searchers = new Array(maxSpawn).fill(0).map(_ => new GeneticSearch({
+    maxTime: maxTime / maxSpawn,
+    scoreFunction: scorer.score.bind(scorer),
+    initialParents: 100,
+    maxParents: 20,
+    biasTop: 5,
+  }));
 
-  let bestScore = -Infinity;
-  let bestTimetable: Timetable | null = null;
-  const timetable: IndexTimetable = (new Array(components.length)).fill(0)
-  timetable[0] = -1;
-  let i = 0;
-  while (i < components.length) {
-    if (timetable[i] === components[i].streams.length - 1) {
-      timetable[i] = 0;
-      i++;
-    } else {
-      // Increment this element
-      timetable[i]++;
-      i = 0;
+  // Break components into streams
+  const streams = components.map(c => c.streams);
 
-      // Score this timetable and compare with previous best
-      const streams = components.map((c, i) => c.streams[timetable[i]]);
-      console.log(streams, i, components, timetable);
-      const allSessions = streams.reduce((all, s) => all.concat(s.sessions), [] as Session[]);
-      const score = scoreTimetable(allSessions, lastTimetable, clashInfo);
-      if (score > bestScore) {
-        bestScore = score;
-        bestTimetable = allSessions;
-      }
-    }
-  }
+  // Perform search
+  const results = searchers.map(s => s.search(streams));
+  const best = results.sort((a, b) => b.score - a.score)[0];
 
-  console.log('search() finished', bestTimetable, bestScore);
-
-  return bestTimetable;
+  // Return best result as list of sessions
+  const sessions = ([] as Session[]).concat(...best.values.map(s => s.sessions));
+  return sessions;
 }
