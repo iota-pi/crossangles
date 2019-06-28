@@ -1,19 +1,8 @@
-import { parseTimeStr, ClassTime } from "./times";
-import Course, { CourseId } from "./Course";
+import { parseTimeStr, ClassTime } from './times';
+import { Course, CourseId } from './Course';
+import { Session, LetterDay } from './Session';
 
-export type LetterDay = 'M' | 'T' | 'W' | 'H' | 'F';
 export type StreamId = string;
-
-export interface Session {
-  start: number;
-  end: number;
-  day: LetterDay;
-  canClash?: boolean;
-  location?: string;
-  weeks?: string;
-  course: CourseId;
-  stream: StreamId;
-}
 
 export interface RawStreamData {
   component: string,

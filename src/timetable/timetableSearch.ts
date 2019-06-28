@@ -1,8 +1,5 @@
-import { Component } from '.';
+import { Component, TimetableScorer, getClashInfo, GeneticSearch } from '.';
 import { Timetable, Session, Stream } from '../state';
-import { TimetableScorer } from './scoreTimetable';
-import { getClashInfo } from './getClashInfo';
-import { GeneticSearch } from './GeneticSearch';
 
 export function search (
   components: Component[],

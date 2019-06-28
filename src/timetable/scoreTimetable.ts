@@ -1,4 +1,4 @@
-import { Session, Timetable, Stream } from '../state';
+import { BasicSession, Timetable, Stream } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 
@@ -8,17 +8,17 @@ export interface TimetableScore {
 }
 
 export class TimetableScorer {
-  pastTimetable: Set<Session>;
+  pastTimetable: Set<BasicSession>;
   clashInfo: ClashInfo;
   fewestClashes: number;
 
-  constructor (pastTimetable: Session[], clashInfo: ClashInfo) {
+  constructor (pastTimetable: BasicSession[], clashInfo: ClashInfo) {
     this.pastTimetable = new Set(pastTimetable);
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
   }
 
-  score (streams: Stream[], streamSessions?: Session[][]): number {
+  score (streams: Stream[], streamSessions?: BasicSession[][]): number {
     const clashes = countClashes(streams, this.clashInfo, this.fewestClashes);
 
     // Quick exit for
@@ -30,7 +30,7 @@ export class TimetableScorer {
     }
 
     streamSessions = streamSessions || streams.map(s => s.sessions);
-    const timetable = ([] as Session[]).concat(...streamSessions);
+    const timetable = ([] as BasicSession[]).concat(...streamSessions);
     let score = 0;
     score += scoreClashes(clashes);
     score += scoreFreeDays(timetable);
@@ -43,7 +43,7 @@ export class TimetableScorer {
   }
 }
 
-export const scoreFreeDays = (sessions: Session[]): number => {
+export const scoreFreeDays = (sessions: BasicSession[]): number => {
   const scores = { M: 290, T: 250, W: 280, H: 260, F: 300 };
 
   for (let i = 0; i < sessions.length; ++i) {
@@ -53,7 +53,7 @@ export const scoreFreeDays = (sessions: Session[]): number => {
   return scores.M + scores.T + scores.W + scores.H + scores.F
 }
 
-export const scoreTimes = (sessions: Session[]): number => {
+export const scoreTimes = (sessions: BasicSession[]): number => {
   let total = 0;
 
   for (let i = 0; i < sessions.length; ++i) {
@@ -66,12 +66,11 @@ export const scoreTimes = (sessions: Session[]): number => {
   return total;
 }
 
-export const scoreDayLength = (sessions: Session[]): number => {
+export const scoreDayLength = (sessions: BasicSession[]): number => {
   const perHour = -10;
   const starts = { M: 24, T: 24, W: 24, H: 24, F: 24 };
   const ends = { M: -1, T: -1, W: -1, H: -1, F: -1 };
 
-  // for (let { day, start, end } of sessions) {
   for (let i = 0; i < sessions.length; ++i) {
     const { day, start, end } = sessions[i];
     if (start < starts[day]) {
@@ -92,7 +91,7 @@ export const scoreDayLength = (sessions: Session[]): number => {
   return total * perHour;
 }
 
-export const scoreUnchanged = (current: Timetable, past: Set<Session>): number => {
+export const scoreUnchanged = (current: BasicSession[], past: Set<BasicSession>): number => {
   const perUnchangedSession = 30;
 
   let count = 0;

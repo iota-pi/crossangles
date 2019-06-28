@@ -1,7 +1,8 @@
-import { Course, CourseId } from "./Course";
-import { Session } from "./Stream";
-export * from "./Course";
-export * from "./Stream";
+import { Course, CourseId } from './Course';
+import { Session } from './Session';
+export * from './Course';
+export * from './Stream';
+export * from './Session';
 
 export interface Meta {
   term: number;
