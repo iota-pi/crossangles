@@ -22,9 +22,6 @@ import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
 
 const styles = (theme: Theme) => createStyles({
-  main: {
-    padding: theme.spacing(2),
-  },
   appBarSpacer: {
     ...theme.mixins.toolbar,
     marginBottom: theme.spacing(2),
@@ -62,7 +59,9 @@ class App extends Component<Props, State> {
           <AppBar/>
           <div className={classes.appBarSpacer} />
 
-          <Container>
+          <Container
+            maxWidth="md"
+          >
             <CourseSelection />
 
             <TimetableContainer />
