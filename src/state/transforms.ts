@@ -16,4 +16,15 @@ export const coursesTransform = createTransform(
   { whitelist: ['courses'] }
 );
 
-export default coursesTransform;
+export const coloursTransform = createTransform(
+  // transform state on its way to being serialized and persisted.
+  (inboundState: Map<CourseId, string>) => {
+    return Array.from(inboundState.entries());
+  },
+  // transform state being rehydrated
+  (outboundState: [CourseId, string][]) => {
+    return new Map(outboundState);
+  },
+  // define which reducers this transform gets called for.
+  { whitelist: ['colours'] }
+);

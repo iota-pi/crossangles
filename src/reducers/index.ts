@@ -3,6 +3,7 @@ import { courses, meta } from './data';
 import { RootState } from '../state';
 import { chosen, custom, events, options, additional } from './commitments';
 import { timetable } from './timetable';
+import { colours } from './colours';
 
 export default combineReducers<RootState>({
   courses,
@@ -13,4 +14,5 @@ export default combineReducers<RootState>({
   events,
   options,
   timetable,
+  colours,
 });

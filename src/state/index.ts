@@ -54,6 +54,7 @@ export const baseOptions: Options = {
 };
 export const baseCustom: CustomCourse[] = [];
 export const baseTimetable: Timetable = [];
+export const baseColours = new Map<CourseId, string>();
 
 export interface RootState {
   courses: Map<CourseId, Course>;
@@ -64,6 +65,7 @@ export interface RootState {
   options: Options;
   custom: CustomCourse[];
   timetable: Timetable;
+  colours: Map<CourseId, string>;
 }
 
 export const baseState: RootState = {
@@ -75,4 +77,5 @@ export const baseState: RootState = {
   options: baseOptions,
   custom: baseCustom,
   timetable: baseTimetable,
+  colours: baseColours,
 }
