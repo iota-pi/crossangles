@@ -1,11 +1,15 @@
 import { CourseId, baseColours } from '../state';
 import { ColourAction, SET_COLOUR } from '../actions/colours';
 import { COURSE_COLOURS } from '../state/colours';
+import { ADD_COURSE, CourseAction } from '../actions';
 
-export function colours (state = baseColours, action: ColourAction): Map<CourseId, string> {
+export function colours (state = baseColours, action: CourseAction | ColourAction): Map<CourseId, string> {
+  const colours = new Map(state);
   switch (action.type) {
+    case ADD_COURSE:
+      colours.set(action.course.id, pickColor(Array.from(colours.values())));
+      return colours;
     case SET_COLOUR:
-      const colours = new Map(state);
       const newColour = action.colour ? action.colour : pickColor(Array.from(colours.values()));
       colours.set(action.course, newColour);
       return colours;
@@ -15,7 +19,11 @@ export function colours (state = baseColours, action: ColourAction): Map<CourseI
 };
 
 function pickColor (chosenColours: string[]): string {
-  const notChosenColours = COURSE_COLOURS.filter(c => !chosenColours.includes(c));
-  const i = Math.floor(Math.random() * notChosenColours.length);
-  return notChosenColours[i];
+  let canChoose = COURSE_COLOURS.filter(c => !chosenColours.includes(c));
+  if (canChoose.length === 0) {
+    canChoose = COURSE_COLOURS;
+  }
+
+  const i = Math.floor(Math.random() * canChoose.length);
+  return canChoose[i];
 }

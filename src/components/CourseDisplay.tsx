@@ -1,12 +1,16 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { Course, CBS_CODE, CBSEvent } from '../state';
-import { List, ListItem, ListItemText, Divider, ListItemIcon, IconButton } from '@material-ui/core';
+import { Course, CBS_CODE, CBSEvent, CourseId } from '../state';
+import { List, ListItem, ListItemText, Divider, ListItemIcon, IconButton, Popover } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import CBSEvents from './CBSEvents';
 import WebStream from './WebStream';
+import { COURSE_COLOURS } from '../state/colours';
+import { notNull } from '../typeHelpers';
+import ColourPicker from './ColourPicker';
+import Colour from './Colour';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -28,18 +32,36 @@ const styles = (theme: Theme) => createStyles({
   termText: {
     fontWeight: 400,
   },
+  colourPicker: {
+    marginRight: theme.spacing(1),
+  },
 });
 
 export interface Props extends WithStyles<typeof styles> {
   chosen: Course[],
   additional: Course[],
   events: CBSEvent[],
+  colours: Map<CourseId, string>,
   onRemoveCourse: (course: Course) => void,
   onToggleEvent: (event: CBSEvent) => void,
   onToggleWeb: (course: Course) => void,
+  onColourChange: (course: Course, colour: string) => void,
 }
 
-class CourseDisplay extends PureComponent<Props> {
+export interface State {
+  showPopover: PopoverState | null,
+}
+
+export interface PopoverState {
+  target: HTMLElement,
+  course: Course,
+}
+
+class CourseDisplay extends PureComponent<Props, State> {
+  state: State = {
+    showPopover: null,
+  }
+
   render() {
     const classes = this.props.classes;
     const allCourses = this.props.chosen.concat(this.props.additional);
@@ -47,7 +69,7 @@ class CourseDisplay extends PureComponent<Props> {
     return (
       <List className={classes.root} disablePadding>
         {allCourses.map((course, i) => (
-          <React.Fragment key={`divider-${i}`}>
+          <React.Fragment key={course.id}>
             <Divider light />
             {course.code !== CBS_CODE ? (
               <React.Fragment>
@@ -59,6 +81,15 @@ class CourseDisplay extends PureComponent<Props> {
                       <span className={classes.termText}> ({course.term})</span>
                     ) : null}
                   </ListItemText>
+
+                  <div className={classes.colourPicker}>
+                    <Colour
+                      colour={this.props.colours.get(course.id)!}
+                      size={32}
+                      isCircle
+                      onClick={e => this.showPopover(e, course)}
+                    />
+                  </div>
 
                   <ListItemIcon
                     className={classes.listIcon}
@@ -87,7 +118,28 @@ class CourseDisplay extends PureComponent<Props> {
                   <ListItemText>
                     <span>{course.name}</span>
                   </ListItemText>
+
+                  <div className={classes.colourPicker}>
+                    <Colour
+                      colour={this.props.colours.get(course.id)!}
+                      size={32}
+                      isCircle
+                      onClick={e => this.showPopover(e, course)}
+                    />
+                  </div>
+
+                  <ListItemIcon
+                    className={classes.listIcon}
+                  >
+                    <IconButton
+                      size="small"
+                      style={{ visibility: 'hidden' }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </ListItemIcon>
                 </ListItem>
+
                 <ListItem className={classes.noVertPadding}>
                   <CBSEvents
                     events={this.props.events}
@@ -99,8 +151,48 @@ class CourseDisplay extends PureComponent<Props> {
           </React.Fragment>
         ))}
         <Divider light />
+
+        <Popover
+          open={this.state.showPopover !== null}
+          anchorEl={this.state.showPopover ? this.state.showPopover.target : null}
+          onClose={this.hidePopover}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+        >
+          <ColourPicker
+            colours={COURSE_COLOURS}
+            value={this.state.showPopover ? this.props.colours.get(this.state.showPopover.course.id) : null}
+            onChange={this.handleChange}
+            size={40}
+            columns={4}
+          />
+        </Popover>
       </List>
     )
+  }
+
+  private showPopover = (event: MouseEvent<HTMLElement>, course: Course) => {
+    this.setState({
+      showPopover: {
+        target: event.currentTarget,
+        course,
+      },
+    });
+  }
+
+  private hidePopover = () => {
+    this.setState({ showPopover: null });
+  }
+
+  private handleChange = (colour: string) => {
+    this.props.onColourChange(notNull(this.state.showPopover).course, colour);
+    this.hidePopover();
   }
 }
 

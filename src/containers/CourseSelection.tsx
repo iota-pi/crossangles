@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { RootState, Course, CBSEvent, Options, OptionName } from '../state';
+import { RootState, Course, CBSEvent, Options, OptionName, CourseId } from '../state';
 import { addCourse, removeCourse, toggleWebStream, toggleEvent, toggleOption } from '../actions';
 import { isSet } from '../typeHelpers';
 
@@ -14,6 +14,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import Autocomplete from '../components/Autocomplete';
 import CourseDisplay from '../components/CourseDisplay';
 import GeneralOptions from '../components/GeneralOptions';
+import { setColour } from '../actions';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
@@ -29,14 +30,16 @@ export interface StateProps {
   additional: Course[];
   events: CBSEvent[];
   options: Options;
+  colours: Map<CourseId, string>;
 }
 
 export interface DispatchProps {
   chooseCourse: (course: Course) => void;
   removeCourse: (course: Course) => void;
   toggleWebStream: (course: Course) => void;
-  toggleEvent: (course: CBSEvent) => void;
-  toggleOption: (course: OptionName) => void;
+  toggleEvent: (event: CBSEvent) => void;
+  toggleOption: (option: OptionName) => void;
+  changeColour: (course: Course, colour: string) => void;
 }
 
 export type Props = OwnProps & StateProps & DispatchProps;
@@ -65,9 +68,11 @@ class CourseSelection extends Component<Props, State> {
             chosen={this.props.chosen}
             additional={this.props.additional}
             events={this.props.events}
+            colours={this.props.colours}
             onRemoveCourse={this.props.removeCourse}
             onToggleEvent={this.props.toggleEvent}
             onToggleWeb={this.props.toggleWebStream}
+            onColourChange={this.props.changeColour}
           />
         </div>
 
@@ -91,6 +96,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
     additional: state.additional.map(cid => isSet(state.courses.get(cid))),
     events: state.events,
     options: state.options,
+    colours: state.colours,
   }
 }
 
@@ -101,6 +107,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>, ownProps: OwnP
     toggleWebStream: async (course: Course) => await dispatch(toggleWebStream(course)),
     toggleEvent: async (event: CBSEvent) => await dispatch(toggleEvent(event)),
     toggleOption: async (option: OptionName) => await dispatch(toggleOption(option)),
+    changeColour: async (course: Course, colour: string) => await dispatch(setColour(course.id, colour)),
   }
 }
 

@@ -1,5 +1,5 @@
 import { parseTimeStr, ClassTime } from './times';
-import { Course, CourseId } from './Course';
+import { Course } from './Course';
 import { Session, LetterDay } from './Session';
 
 export type StreamId = string;
@@ -87,8 +87,7 @@ export class Stream {
   get id (): string {
     // Condition: id will be unique iff there is at most one WEB stream per course
     let timeStr = this.times ? this.times.map(t => t.time).join(',') : 'WEB';
-    let courseId = this.course ? this.course.id : '';
-    return `${courseId}-${this.component}-${timeStr}`;
+    return `${this.course.id}-${this.component}-${timeStr}`;
   }
 
   private getSessions (): Session[] {

@@ -1,11 +1,17 @@
 import { Course, CourseId } from './Course';
-import { StreamId } from './Stream';
+import { Stream, StreamId } from './Stream';
 
 export type LetterDay = 'M' | 'T' | 'W' | 'H' | 'F';
 
 export interface SessionLinks {
   course: CourseId;
   stream: StreamId;
+}
+
+export interface SessionMappedLinks {
+  course: Course;
+  stream: Stream;
+  id: string;
 }
 
 export interface CommonSession {
@@ -20,3 +26,4 @@ export interface CommonSession {
 export interface BasicSession extends CommonSession, Partial<SessionLinks> {}
 
 export interface Session extends CommonSession, SessionLinks {}
+export interface MappedSession extends CommonSession, SessionMappedLinks {}

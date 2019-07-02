@@ -7,4 +7,6 @@ export const COURSE_COLOURS = [
   '#689F38',
   '#FFA000',
   '#E64A19',
-]
+];
+
+export const CBS_COLOUR = COURSE_COLOURS[2];

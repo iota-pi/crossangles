@@ -1,5 +1,6 @@
-import { Course, CourseId } from './Course';
-import { Session } from './Session';
+import { Course, CourseId, CBS_CODE } from './Course';
+import { Session, MappedSession } from './Session';
+import { CBS_COLOUR } from './colours';
 export * from './Course';
 export * from './Stream';
 export * from './Session';
@@ -32,6 +33,7 @@ export const OptionList = new Map<OptionName, string>([
 export type CustomCourse = Course;
 
 export type Timetable = Session[];
+export type MappedTimetable = MappedSession[];
 
 
 // Initial values
@@ -54,7 +56,7 @@ export const baseOptions: Options = {
 };
 export const baseCustom: CustomCourse[] = [];
 export const baseTimetable: Timetable = [];
-export const baseColours = new Map<CourseId, string>();
+export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
 
 export interface RootState {
   courses: Map<CourseId, Course>;
