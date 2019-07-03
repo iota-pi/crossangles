@@ -19,10 +19,16 @@ const styles = (theme: Theme) => createStyles({
     zIndex: 10,
 
     transition: 'box-shadow 0.3s, transform 0.3s',
+    boxShadow: theme.shadows[3],
+
+    '&$snapped': {
+      boxShadow: theme.shadows[0],
+    },
 
     '&$dragging': {
       cursor: 'grabbing',
       transition: 'box-shadow 0.3s',
+      boxShadow: theme.shadows[8],
     },
     '&$new': {
       transition: 'none',
@@ -37,8 +43,9 @@ const styles = (theme: Theme) => createStyles({
     height: '100%',
     zIndex: 0,
   },
-  dragging: {},
   new: {},
+  dragging: {},
+  snapped: {},
   sessionText: {
     position: 'relative',
     textAlign: 'center',
@@ -79,13 +86,15 @@ export interface State {
   offset: { x: number, y: number },
   justSnapped: boolean,
   dragging: boolean,
+  snapped: boolean,
 }
 
 class TimetableSession extends PureComponent<Props, State> {
   state: State = {
     offset: { x: 0, y: 0 },
-    dragging: false,
     justSnapped: true,
+    dragging: false,
+    snapped: true,
   }
 
   render() {
@@ -93,6 +102,7 @@ class TimetableSession extends PureComponent<Props, State> {
     const rootClasses = [
       classes.root,
       this.state.dragging ? classes.dragging : '',
+      this.state.snapped ? classes.snapped : '',
       // !this.state.justSnapped ? classes.new : '',
     ].join(' ');
 
@@ -134,7 +144,7 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   private handleStart = () => {
-    this.setState({ dragging: true });
+    this.setState({ dragging: true, snapped: false });
     return this.props.onDrag(this.props.session, this.boundedOffset);
   }
 
@@ -153,7 +163,7 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   private handleSnap = () => {
-    this.setState({ offset: { x: 0, y: 0 }, justSnapped: true });
+    this.setState({ offset: { x: 0, y: 0 }, snapped: true, justSnapped: true });
   }
 
   private get course (): Course {
