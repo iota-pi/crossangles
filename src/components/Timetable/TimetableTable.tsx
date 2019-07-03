@@ -206,7 +206,7 @@ class TimetableTable extends Component<Props, State> {
 
   private get hours () {
     let start = 11;
-    let end = 6;
+    let end = 18;
 
     for (let stream of this.props.streams) {
       for (let session of stream.sessions) {
