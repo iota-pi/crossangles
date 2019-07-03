@@ -30,15 +30,6 @@ const styles = (theme: Theme) => createStyles({
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
   },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    overflow: 'hidden',
-    zIndex: 1,
-  },
   grid: {
     position: 'relative',
     overflowX: 'visible',
@@ -112,8 +103,7 @@ class TimetableTable extends Component<Props, State> {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
     return (
-      <div className={classes.root} ref={this.timetableRef}>
-        <div className={classes.overlay}>
+      <div className={classes.root}>
           {this.timetableDimensions.width ? this.props.timetable.map(s => (
             <TimetableSession
               key={`${s.course.id}-${s.stream.component}-${s.index}`}
@@ -132,10 +122,9 @@ class TimetableTable extends Component<Props, State> {
               {...d}
             />
           ))}
-        </div>
 
 
-        <div className={classes.grid}>
+        <div className={classes.grid} ref={this.timetableRef}>
           <div className={`${classes.row} ${classes.header}`}>
             <div></div>
             {days.map(day => (
@@ -162,6 +151,10 @@ class TimetableTable extends Component<Props, State> {
     }
 
     return false;
+  }
+
+  componentDidMount () {
+    window.addEventListener('resize', () => this.forceUpdate())
   }
 
   private handleDrag = (session: MappedSession) => {
@@ -239,7 +232,7 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private get timetableCellWidth (): number {
-    return Math.floor((this.timetableDimensions.width - TIMETABLE_FIRST_CELL_WIDTH - 7) / 5);
+    return (this.timetableDimensions.width - TIMETABLE_FIRST_CELL_WIDTH) / 5;
   }
 
   private sessionPlacement (session: Session | MappedSession): Placement {
@@ -247,10 +240,10 @@ class TimetableTable extends Component<Props, State> {
 
     return {
       // +2px for the borders of the first cell in row
-      x: Math.round(TIMETABLE_FIRST_CELL_WIDTH + (this.timetableCellWidth + 1) * dayIndex) + 2,
+      x: TIMETABLE_FIRST_CELL_WIDTH + this.timetableCellWidth * dayIndex + 1,
       // +1px for top border
       y: (TIMETABLE_CELL_HEIGHT) * (1 + session.start - this.hours.start) + 1,
-      width: this.timetableCellWidth,
+      width: this.timetableCellWidth - 2,
       height: (session.end - session.start) * TIMETABLE_CELL_HEIGHT - 1,
     }
   }
