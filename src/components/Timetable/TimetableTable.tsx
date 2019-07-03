@@ -79,7 +79,8 @@ export interface Props extends WithStyles<typeof styles> {
   timetable: MappedTimetable,
   streams: Stream[],
   colours: Map<CourseId, string>,
-  onSwapStreams: (oldStream: Stream, newStream: Stream) => void,
+  onSwapStreams: (oldStream: Stream, newStream: Stream, topSession: Session) => void,
+  onBumpStream: (stream: Stream, topSession: Session) => void,
 }
 
 export interface State {
@@ -104,24 +105,24 @@ class TimetableTable extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-          {this.timetableDimensions.width ? this.props.timetable.map(s => (
-            <TimetableSession
-              key={`${s.course.id}-${s.stream.component}-${s.index}`}
-              session={s}
-              placement={this.sessionPlacement(s)}
-              bounds={this.timetableDimensions}
-              color={notUndefined(this.props.colours.get(s.course.id))}
-              onDrag={this.handleDrag}
-              onDrop={this.handleDrop}
-            />
-          )) : null}
+        {this.timetableDimensions.width ? this.props.timetable.map(s => (
+          <TimetableSession
+            key={`${s.course.id}-${s.stream.component}-${s.index}`}
+            session={s}
+            placement={this.sessionPlacement(s)}
+            bounds={this.timetableDimensions}
+            color={notUndefined(this.props.colours.get(s.course.id))}
+            onDrag={this.handleDrag}
+            onDrop={this.handleDrop}
+          />
+        )) : null}
 
-          {this.dropzones.map(d => (
-            <TimetableDropzone
-              key={`${d.session.stream.id}`}
-              {...d}
-            />
-          ))}
+        {this.dropzones.map(d => (
+          <TimetableDropzone
+            key={`${d.session.stream.id}`}
+            {...d}
+          />
+        ))}
 
 
         <div className={classes.grid} ref={this.timetableRef}>
@@ -158,6 +159,7 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private handleDrag = (session: MappedSession) => {
+    this.props.onBumpStream(session.stream, session.stream.sessions[session.index]);
     this.setState({ dragging: session });
   }
 
@@ -190,7 +192,8 @@ class TimetableTable extends Component<Props, State> {
     // Swap streams in timetable
     if (nearest) {
       onSnap();
-      this.props.onSwapStreams(this.state.dragging.stream, nearest.session.stream);
+      const { stream, index } = this.state.dragging;
+      this.props.onSwapStreams(stream, nearest.session.stream, stream.sessions[index]);
     }
 
     // No longer dragging anything
@@ -257,11 +260,13 @@ class TimetableTable extends Component<Props, State> {
         // Check that course and component matches with dragged session
         if (stream.course === course && stream.component === component) {
           const session = stream.sessions[index];
-          dropzones.push({
-            session: Object.assign({}, session, { course, stream }),
-            color: notUndefined(this.props.colours.get(course.id)),
-            placement: this.sessionPlacement(session),
-          });
+          if (session) {
+            dropzones.push({
+              session: Object.assign({}, session, { course, stream }),
+              color: notUndefined(this.props.colours.get(course.id)),
+              placement: this.sessionPlacement(session),
+            });
+          }
         }
       }
     }

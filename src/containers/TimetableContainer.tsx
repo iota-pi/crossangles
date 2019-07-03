@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, Timetable, CustomCourse, CourseId, Stream, MappedSession } from '../state';
+import { RootState, Course, CBSEvent, Options, Timetable, CustomCourse, CourseId, Stream, MappedSession, Session } from '../state';
 import { isSet, notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -10,7 +10,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import TimetableTable from '../components/Timetable';
-import { swapStreams } from '../actions';
+import { swapStreams, bumpStream } from '../actions';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -45,6 +45,7 @@ class TimetableContainer extends Component<Props> {
           streams={this.timetableStreams}
           colours={this.props.colours}
           onSwapStreams={this.handleSwapStreams}
+          onBumpStream={this.handleBumpStream}
         />
       </div>
     );
@@ -62,8 +63,12 @@ class TimetableContainer extends Component<Props> {
     return false;
   }
 
-  private handleSwapStreams = (oldStream: Stream, newStream: Stream) => {
-    this.props.dispatch(swapStreams(this.props.timetable, oldStream, newStream));
+  private handleSwapStreams = (oldStream: Stream, newStream: Stream, topSession: Session) => {
+    this.props.dispatch(swapStreams(this.props.timetable, oldStream, newStream, topSession));
+  }
+
+  private handleBumpStream = (stream: Stream, session: Session) => {
+    this.props.dispatch(bumpStream(this.props.timetable, stream, session));
   }
 
   private get allCourses () {
