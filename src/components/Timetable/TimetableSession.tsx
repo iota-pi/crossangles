@@ -144,8 +144,10 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   private handleStart = () => {
+    const prevent = this.props.onDrag(this.props.session, this.boundedOffset) === false;
+    if (prevent) return false;
+
     this.setState({ dragging: true, snapped: false });
-    return this.props.onDrag(this.props.session, this.boundedOffset);
   }
 
   private handleDrag = (_: any, data: DraggableData) => {

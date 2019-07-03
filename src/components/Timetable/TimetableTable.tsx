@@ -159,6 +159,10 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private handleDrag = (session: MappedSession) => {
+    if (this.state.dragging) {
+      return false;
+    }
+
     this.props.onBumpStream(session.stream, session.stream.sessions[session.index]);
     this.setState({ dragging: session });
   }
