@@ -10,6 +10,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import TimetableTable from '../components/Timetable';
+import { swapStreams } from '../actions';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -43,6 +44,7 @@ class TimetableContainer extends Component<Props> {
           timetable={this.mappedTimetable}
           streams={this.timetableStreams}
           colours={this.props.colours}
+          onSwapStreams={this.handleSwapStreams}
         />
       </div>
     );
@@ -58,6 +60,10 @@ class TimetableContainer extends Component<Props> {
     }
 
     return false;
+  }
+
+  private handleSwapStreams = (oldStream: Stream, newStream: Stream) => {
+    this.props.dispatch(swapStreams(this.props.timetable, oldStream, newStream));
   }
 
   private get allCourses () {
@@ -77,7 +83,6 @@ class TimetableContainer extends Component<Props> {
         ...s,
         course,
         stream,
-        id: `${stream.id}-${i}`,
       };
     });
   }

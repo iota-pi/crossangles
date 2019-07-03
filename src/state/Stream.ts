@@ -94,7 +94,7 @@ export class Stream {
     if (this.times === null) {
       return [];
     } else {
-      return this.times.map(t => {
+      return this.times.map((t, i) => {
         const hours = t.time.substr(1).split('-').map(x => parseFloat(x));
         return {
           start: hours[0],
@@ -102,6 +102,7 @@ export class Stream {
           day: t.time.charAt(0) as LetterDay,
           canClash: t.canClash,
           location: t.location,
+          index: i,
           weeks: t.weeks,
           stream: this.id,
           course: this.course.id,

@@ -1,5 +1,12 @@
 
 export interface Dimensions {
-  w: number,
-  h: number,
+  width: number,
+  height: number,
 }
+
+export interface Position {
+  x: number,
+  y: number,
+}
+
+export type Placement = Dimensions & Position;

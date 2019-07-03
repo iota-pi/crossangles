@@ -1,5 +1,5 @@
 import { scoreFreeDays, scoreTimes, scoreDayLength, scoreUnchanged, scoreClashes, countClashes } from '../scoreTimetable';
-import { Session, CourseData, Course, Stream, StreamData } from '../../state';
+import { Session, CourseData, Course, Stream, StreamData, CommonSession } from '../../state';
 import coursesData from '../../../public/data-mini.json';
 import { getClashInfo } from '../getClashInfo';
 import coursesToComponents from '../coursesToComponents';
@@ -87,7 +87,7 @@ describe('scoreDayLength', () => {
 
 describe('scoreUnchanged', () => {
   it('gives correct value', () => {
-    const sessions: Session[] = [
+    const sessions: CommonSession[] = [
       { day: 'M', start: 10, end: 14 },
       { day: 'T', start: 10, end: 14 },
       { day: 'W', start: 10, end: 14 },
@@ -109,7 +109,8 @@ describe('scoreUnchanged', () => {
 
 describe('scoreClashes and countClashes', () => {
   it('gives correct count (synthetic data)', () => {
-    const mockData = { component: '', full: false, enrols: [0, 0] as [number, number] }
+    const course = new Course({ name: '', code: '', streams: [] });
+    const mockData = { component: '', full: false, enrols: [0, 0] as [number, number], course };
     const streams: Stream[] = [
       new Stream({ ...mockData, times: [{ time: 'M9-10' }] }),
       new Stream({ ...mockData, times: [{ time: 'T9-10' }, { time: 'M10-12' }] }),

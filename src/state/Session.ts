@@ -6,12 +6,13 @@ export type LetterDay = 'M' | 'T' | 'W' | 'H' | 'F';
 export interface SessionLinks {
   course: CourseId;
   stream: StreamId;
+  index: number;
 }
 
 export interface SessionMappedLinks {
   course: Course;
   stream: Stream;
-  id: string;
+  index: number;
 }
 
 export interface CommonSession {

@@ -3,9 +3,8 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import { MappedSession, CBS_CODE, Course, Stream } from '../../state';
-import { Dimensions } from './timetableTypes';
-import { TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_HEIGHT } from '.';
-import Draggable from 'react-draggable';
+import { Placement, Dimensions, Position } from './timetableTypes';
+import { DraggableCore, DraggableData } from 'react-draggable';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -17,9 +16,9 @@ const styles = (theme: Theme) => createStyles({
     color: 'white',
     cursor: 'grab',
     overflow: 'hidden',
-    zIndex: 1,
+    zIndex: 10,
 
-    transition: 'box-shadow 0.3s, left 0.3s, top 0.3s',
+    transition: 'box-shadow 0.3s, transform 0.3s',
 
     '&$dragging': {
       cursor: 'grabbing',
@@ -69,24 +68,41 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   session: MappedSession,
-  timetableDimensions: Dimensions,
-  firstHour: number,
+  placement: Placement,
   color: string,
+  bounds: Dimensions,
+  onDrag: (session: MappedSession, position: Position) => false | void,
+  onDrop: (session: MappedSession, position: Position, onSnap: () => void) => false | void,
 }
 
-class TimetableSession extends PureComponent<Props> {
+export interface State {
+  offset: { x: number, y: number },
+  justSnapped: boolean,
+  dragging: boolean,
+}
+
+class TimetableSession extends PureComponent<Props, State> {
+  state: State = {
+    offset: { x: 0, y: 0 },
+    dragging: false,
+    justSnapped: true,
+  }
+
   render() {
     const classes = this.props.classes;
+    const rootClasses = [
+      classes.root,
+      this.state.dragging ? classes.dragging : '',
+      // !this.state.justSnapped ? classes.new : '',
+    ].join(' ');
 
     return (
-      <Draggable
-        axis="both"
-        bounds="parent"
+      <DraggableCore
         onStart={this.handleStart}
         onDrag={this.handleDrag}
         onStop={this.handleStop}
       >
-        <div className={classes.root} style={this.styles}>
+        <div className={rootClasses} style={this.styles}>
           <div
             className={classes.background}
             style={{
@@ -107,20 +123,37 @@ class TimetableSession extends PureComponent<Props> {
             ))}
           </div>
         </div>
-      </Draggable>
+      </DraggableCore>
     )
   }
 
-  private handleStart = () => {
-    console.log('drag start');
+  componentDidUpdate () {
+    if (this.state.justSnapped) {
+      this.setState({ justSnapped: false });
+    }
   }
 
-  private handleDrag = () => {
-    console.log('dragging');
+  private handleStart = () => {
+    this.setState({ dragging: true });
+    return this.props.onDrag(this.props.session, this.boundedOffset);
+  }
+
+  private handleDrag = (_: any, data: DraggableData) => {
+    const { deltaX, deltaY } = data;
+    let x = this.state.offset.x + deltaX;
+    let y = this.state.offset.y + deltaY;
+
+    this.setState({ offset: { x, y } });
   }
 
   private handleStop = () => {
-    console.log('drag Stop');
+    const offset = this.boundedOffset;
+    this.setState({ offset, dragging: false });
+    return this.props.onDrop(this.props.session, offset, this.handleSnap);
+  }
+
+  private handleSnap = () => {
+    this.setState({ offset: { x: 0, y: 0 }, justSnapped: true });
   }
 
   private get course (): Course {
@@ -129,20 +162,6 @@ class TimetableSession extends PureComponent<Props> {
 
   private get stream (): Stream {
     return this.props.session.stream;
-  }
-
-  private get duration (): number {
-    return this.props.session.end - this.props.session.start;
-  }
-
-  private get basePosition () {
-    const dayIndex = ['M', 'T', 'W', 'H', 'F'].indexOf(this.props.session.day);
-    return {
-      // +2px for the borders of the first cell in row
-      left: Math.round(TIMETABLE_FIRST_CELL_WIDTH + (this.width + 1) * dayIndex) + 2,
-      // +1px for top border
-      top: (TIMETABLE_CELL_HEIGHT) * (1 + this.props.session.start - this.props.firstHour) + 1,
-    }
   }
 
   private get isSpecialCourse (): boolean {
@@ -170,15 +189,22 @@ class TimetableSession extends PureComponent<Props> {
     return [];
   }
 
-  private get width (): number {
-    return Math.floor((this.props.timetableDimensions.w - TIMETABLE_FIRST_CELL_WIDTH - 7) / 5);
+  private get boundedOffset (): Position {
+    let { width, height, x, y } = this.props.placement;
+
+    x = Math.min(Math.max(this.state.offset.x + x, 0), this.props.bounds.width - width) - x;
+    y = Math.min(Math.max(this.state.offset.y + y, 0), this.props.bounds.height - height) - y;
+
+    return { x, y };
   }
 
   private get styles (): CSSProperties {
+    const { width, height, x, y } = this.props.placement;
+
     return {
-      width: this.width,
-      height: this.duration * TIMETABLE_CELL_HEIGHT - 1,
-      ...this.basePosition,
+      transform: `translate(${this.boundedOffset.x + x}px, ${this.boundedOffset.y + y}px)`,
+      width,
+      height,
     };
   }
 }

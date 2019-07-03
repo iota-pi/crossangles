@@ -1,4 +1,4 @@
-import { Timetable, Course, CBSEvent, Options } from '../state';
+import { Timetable, Course, CBSEvent, Options, Stream } from '../state';
 import { Action } from 'redux';
 import { search } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
@@ -30,5 +30,15 @@ export function updateTimetable (config: UpdateTimetableConfig): TimetableAction
   return {
     type: UPDATE_TIMETABLE,
     timetable: newTimetable || previousTimetable,
+  }
+}
+
+export function swapStreams (timetable: Timetable, oldStream: Stream, newStream: Stream) {
+  timetable = timetable.filter(s => s.stream !== oldStream.id);
+  timetable = timetable.concat(newStream.sessions);
+
+  return {
+    type: UPDATE_TIMETABLE,
+    timetable,
   }
 }

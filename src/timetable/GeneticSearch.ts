@@ -36,6 +36,14 @@ export class GeneticSearch<T> {
   }
 
   search (data: T[][]): Parent<T> {
+    if (data.length === 0) {
+      return {
+        indexes: [],
+        values: [],
+        score: -Infinity,
+      }
+    }
+
     const startTime = performance.now();
 
     let parents = this.abiogenesis(data);
