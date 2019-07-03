@@ -17,6 +17,7 @@ export function search (
   const searchers = new Array(maxSpawn).fill(0).map(_ => new GeneticSearch({
     maxTime: maxTime / maxSpawn,
     scoreFunction: scorer.score.bind(scorer),
+    maxIterations: 5000,
     initialParents: 100,
     maxParents: 20,
     biasTop: 5,
