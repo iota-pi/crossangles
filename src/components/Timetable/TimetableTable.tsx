@@ -2,7 +2,7 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Stream, MappedTimetable, CourseId, MappedSession, Session } from '../../state';
+import { Stream, MappedTimetable, CourseId, MappedSession, Session, Options } from '../../state';
 import { Dimensions, Placement, Position } from './timetableTypes';
 import { notUndefined } from '../../typeHelpers';
 
@@ -77,6 +77,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   timetable: MappedTimetable,
+  options: Options,
   streams: Stream[],
   colours: Map<CourseId, string>,
   onSwapStreams: (oldStream: Stream, newStream: Stream, topSession: Session) => void,
@@ -264,7 +265,7 @@ class TimetableTable extends Component<Props, State> {
         // Check that course and component matches with dragged session
         if (stream.course === course && stream.component === component) {
           const session = stream.sessions[index];
-          if (session) {
+          if (session && (!stream.full || this.props.options.includeFull)) {
             dropzones.push({
               session: Object.assign({}, session, { course, stream }),
               color: notUndefined(this.props.colours.get(course.id)),

@@ -42,6 +42,7 @@ class TimetableContainer extends Component<Props> {
       <div className={classes.spaceAbove}>
         <TimetableTable
           timetable={this.mappedTimetable}
+          options={this.props.options}
           streams={this.timetableStreams}
           colours={this.props.colours}
           onSwapStreams={this.handleSwapStreams}
