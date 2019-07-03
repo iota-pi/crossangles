@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { RootState, Course, CBSEvent, Options, OptionName, CourseId } from '../state';
+import { connect,  } from 'react-redux';
+import { RootState, Course, CBSEvent, Options, OptionName, CourseId, Timetable, CustomCourse } from '../state';
 import { addCourse, removeCourse, toggleWebStream, toggleEvent, toggleOption } from '../actions';
-import { isSet } from '../typeHelpers';
+import { updateTimetable } from '../actions';
+import { isSet, WithDispatch } from '../typeHelpers';
 
 // Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -25,24 +25,17 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: Course[];
-  chosen: Course[];
-  additional: Course[];
-  events: CBSEvent[];
-  options: Options;
-  colours: Map<CourseId, string>;
+  courses: Course[],
+  chosen: Course[],
+  additional: Course[],
+  custom: CustomCourse[],
+  events: CBSEvent[],
+  options: Options,
+  timetable: Timetable,
+  colours: Map<CourseId, string>,
 }
 
-export interface DispatchProps {
-  chooseCourse: (course: Course) => void;
-  removeCourse: (course: Course) => void;
-  toggleWebStream: (course: Course) => void;
-  toggleEvent: (event: CBSEvent) => void;
-  toggleOption: (option: OptionName) => void;
-  changeColour: (course: Course, colour: string) => void;
-}
-
-export type Props = OwnProps & StateProps & DispatchProps;
+export type Props = WithDispatch<OwnProps & StateProps>;
 
 export interface State {}
 
@@ -59,7 +52,7 @@ class CourseSelection extends Component<Props, State> {
           courses={this.props.courses}
           chosen={this.props.chosen}
           additional={this.props.additional}
-          chooseCourse={this.props.chooseCourse}
+          chooseCourse={this.chooseCourse}
           maxItems={20}
         />
 
@@ -69,21 +62,63 @@ class CourseSelection extends Component<Props, State> {
             additional={this.props.additional}
             events={this.props.events}
             colours={this.props.colours}
-            onRemoveCourse={this.props.removeCourse}
-            onToggleEvent={this.props.toggleEvent}
-            onToggleWeb={this.props.toggleWebStream}
-            onColourChange={this.props.changeColour}
+            onRemoveCourse={this.removeCourse}
+            onToggleEvent={this.toggleEvent}
+            onToggleWeb={this.toggleWebStream}
+            onColourChange={this.changeColour}
           />
         </div>
 
         <div className={classes.spaceAbove}>
           <GeneralOptions
             options={this.props.options}
-            onToggleOption={this.props.toggleOption}
+            onToggleOption={this.toggleOption}
           />
         </div>
       </React.Fragment>
     );
+  }
+
+  private get allCourses () {
+    return this.props.chosen.concat(this.props.custom, this.props.additional);
+  }
+
+  private chooseCourse = async (course: Course) => {
+    await this.props.dispatch(addCourse(course));
+    await this.updateTimetable();
+  }
+
+  private removeCourse = async (course: Course) => {
+    await this.props.dispatch(removeCourse(course));
+    await this.updateTimetable();
+  }
+
+  private toggleWebStream = async (course: Course) => {
+    await this.props.dispatch(toggleWebStream(course));
+    await this.updateTimetable();
+  }
+
+  private toggleEvent = async (event: CBSEvent) => {
+    await this.props.dispatch(toggleEvent(event));
+    await this.updateTimetable();
+  }
+
+  private toggleOption = async (option: OptionName) => {
+    await this.props.dispatch(toggleOption(option));
+    await this.updateTimetable();
+  }
+
+  private updateTimetable = async () => {
+    await this.props.dispatch(updateTimetable({
+      courses: this.allCourses,
+      events: this.props.events,
+      previousTimetable: this.props.timetable,
+      options: this.props.options,
+    }));
+  }
+
+  private changeColour = async (course: Course, colour: string) => {
+    await this.props.dispatch(setColour(course.id, colour));
   }
 }
 
@@ -93,23 +128,14 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   return {
     courses: Array.from(state.courses.values()),
     chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(chosenSort),
+    custom: state.custom,
     additional: state.additional.map(cid => isSet(state.courses.get(cid))),
     events: state.events,
     options: state.options,
+    timetable: state.timetable,
     colours: state.colours,
   }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>, ownProps: OwnProps): DispatchProps => {
-  return {
-    chooseCourse: async (course: Course) => await dispatch(addCourse(course)),
-    removeCourse: async (course: Course) => await dispatch(removeCourse(course)),
-    toggleWebStream: async (course: Course) => await dispatch(toggleWebStream(course)),
-    toggleEvent: async (event: CBSEvent) => await dispatch(toggleEvent(event)),
-    toggleOption: async (option: OptionName) => await dispatch(toggleOption(option)),
-    changeColour: async (course: Course, colour: string) => await dispatch(setColour(course.id, colour)),
-  }
-}
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(mapStateToProps);
 export default withStyles(styles)(connected(CourseSelection));

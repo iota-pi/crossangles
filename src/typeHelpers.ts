@@ -1,3 +1,5 @@
+import { ThunkDispatch } from "redux-thunk";
+
 export function notNull<T = any>(val: T | null): T {
   if (val === null) {
     throw new Error('notNull given a null value');
@@ -15,3 +17,5 @@ export function notUndefined<T = any>(val: T | undefined): T {
 export function isSet<T = any>(val: T | null | undefined) {
   return notNull(notUndefined(val));
 }
+
+export type WithDispatch<T> = T & { dispatch: ThunkDispatch<{}, {}, any> };
