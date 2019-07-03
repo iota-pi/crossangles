@@ -26,6 +26,9 @@ const styles = (theme: Theme) => createStyles({
     ...theme.mixins.toolbar,
     marginBottom: theme.spacing(2),
   },
+  spaceBelow: {
+    marginBottom: theme.spacing(8),
+  },
 });
 
 export interface OwnProps extends WithStyles<typeof styles> {
@@ -61,6 +64,7 @@ class App extends Component<Props, State> {
 
           <Container
             maxWidth="md"
+            className={classes.spaceBelow}
           >
             <CourseSelection />
 

@@ -15,7 +15,7 @@ import { swapStreams, bumpStream } from '../actions';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(4),
   },
 });
 
