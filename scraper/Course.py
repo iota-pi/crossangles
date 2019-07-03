@@ -3,9 +3,12 @@ from collections import defaultdict
 import math
 import json
 import re
+import os
 from Stream import Stream
 
 __all__ = ['Course']
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 with open('courses.json') as f:
     COURSE_NAMES = json.load(f)
