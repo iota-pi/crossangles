@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Meta } from './state';
+import { RootState, Meta, Notice } from './state';
 import { Course } from "./state/Course";
 
 // Theme
@@ -20,6 +20,8 @@ import { fetchData } from './actions/fetch';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
+import { Snackbar } from '@material-ui/core';
+import { clearNotice } from './actions';
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
@@ -36,12 +38,14 @@ export interface OwnProps extends WithStyles<typeof styles> {
 }
 
 export interface StateProps {
-  courses: Course[];
-  meta: Meta;
+  courses: Course[],
+  meta: Meta,
+  notice: Notice | null,
 }
 
 export interface DispatchProps {
-  getData: () => void;
+  getData: () => void,
+  clearNotice: () => void,
 }
 
 export type Props = OwnProps & StateProps & DispatchProps;
@@ -70,6 +74,23 @@ class App extends Component<Props, State> {
 
             <TimetableContainer />
           </Container>
+
+          <Snackbar
+            key={this.props.notice ? this.props.notice.message : ''}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            open={this.props.notice !== null}
+            onClose={this.handleSnackbarClose}
+            ContentProps={{
+              'aria-describedby': 'message-id',
+            }}
+            autoHideDuration={6000}
+            message={(
+              <span id="message-id">
+                {this.props.notice ? this.props.notice.message : null}
+              </span>
+            )}
+            action={this.props.notice ? this.props.notice.actions : null}
+          />
         </div>
       </ThemeProvider>
     );
@@ -78,20 +99,24 @@ class App extends Component<Props, State> {
   componentWillMount () {
     this.props.getData();
   }
+
+  handleSnackbarClose = () => {
+    this.props.clearNotice();
+  }
 }
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   return {
     courses: Array.from(state.courses.values()),
     meta: state.meta,
+    notice: state.notice,
   }
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>, ownProps: OwnProps): DispatchProps => {
   return {
-    getData: async () => {
-      await dispatch(fetchData(process.env.REACT_APP_DATA_URI as string));
-    }
+    getData: async () => await dispatch(fetchData(process.env.REACT_APP_DATA_URI as string)),
+    clearNotice: async () => await dispatch(clearNotice()),
   }
 }
 

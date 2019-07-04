@@ -1,7 +1,23 @@
 import React, { Component } from 'react';
 import { connect,  } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, OptionName, CourseId, Timetable, CustomCourse } from '../state';
-import { addCourse, removeCourse, toggleWebStream, toggleEvent, toggleOption } from '../actions';
+import {
+  RootState,
+  Course,
+  CBSEvent,
+  Options,
+  OptionName,
+  CourseId,
+  Timetable,
+  CustomCourse,
+} from '../state';
+import {
+  addCourse,
+  removeCourse,
+  toggleWebStream,
+  toggleEvent,
+  toggleOption,
+  doTimetableSearch,
+} from '../actions';
 import { updateTimetable } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
 
@@ -109,12 +125,22 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private updateTimetable = async () => {
-    await this.props.dispatch(updateTimetable({
+    const newTimetable = doTimetableSearch({
       courses: this.allCourses,
       events: this.props.events,
       previousTimetable: this.props.timetable,
       options: this.props.options,
-    }));
+    });
+
+    if (newTimetable === null) {
+      // Displace some classes and display a warning
+
+
+      // Force update (TODO: is this necessary?)
+      this.forceUpdate();
+    } else {
+      await this.props.dispatch(updateTimetable(newTimetable));
+    }
   }
 
   private changeColour = async (course: Course, colour: string) => {

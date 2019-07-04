@@ -1,9 +1,11 @@
+import { ReactNode } from "react";
 import { Course, CourseId, CBS_CODE } from './Course';
 import { Session, MappedSession } from './Session';
 import { CBS_COLOUR } from './colours';
 export * from './Course';
 export * from './Stream';
 export * from './Session';
+export * from './colours';
 
 export interface Meta {
   term: number;
@@ -35,6 +37,10 @@ export type CustomCourse = Course;
 export type Timetable = Session[];
 export type MappedTimetable = MappedSession[];
 
+export interface Notice {
+  message: string,
+  actions: ReactNode,
+}
 
 // Initial values
 export const baseCourses = new Map<CourseId, Course>();
@@ -57,6 +63,7 @@ export const baseOptions: Options = {
 export const baseCustom: CustomCourse[] = [];
 export const baseTimetable: Timetable = [];
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
+export const baseNotice: Notice | null = null;
 
 export interface RootState {
   courses: Map<CourseId, Course>;
@@ -68,6 +75,7 @@ export interface RootState {
   custom: CustomCourse[];
   timetable: Timetable;
   colours: Map<CourseId, string>;
+  notice: Notice | null,
 }
 
 export const baseState: RootState = {
@@ -80,4 +88,5 @@ export const baseState: RootState = {
   custom: baseCustom,
   timetable: baseTimetable,
   colours: baseColours,
+  notice: baseNotice,
 }

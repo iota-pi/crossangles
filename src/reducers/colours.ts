@@ -1,7 +1,5 @@
-import { CourseId, baseColours } from '../state';
-import { ColourAction, SET_COLOUR } from '../actions/colours';
-import { COURSE_COLOURS } from '../state/colours';
-import { ADD_COURSE, CourseAction } from '../actions';
+import { CourseId, baseColours, COURSE_COLOURS } from '../state';
+import { ADD_COURSE, CourseAction, ColourAction, SET_COLOUR } from '../actions';
 
 export function colours (state = baseColours, action: CourseAction | ColourAction): Map<CourseId, string> {
   const colours = new Map(state);

@@ -16,7 +16,8 @@ export interface UpdateTimetableConfig {
   options: Options;
 }
 
-export function updateTimetable (config: UpdateTimetableConfig): TimetableAction {
+
+export function doTimetableSearch (config: UpdateTimetableConfig): Timetable | null {
   const {
     previousTimetable,
     courses,
@@ -25,11 +26,28 @@ export function updateTimetable (config: UpdateTimetableConfig): TimetableAction
       includeFull,
     },
   } = config;
+
+  // Group streams by course and component
   const components = coursesToComponents(courses, events, includeFull);
-  const newTimetable = search(components, previousTimetable);
+
+  // Check for impossible timetables
+  if (components.filter(c => c.streams.length === 0).length > 0) {
+    return null;
+  }
+
+  try {
+    const newTimetable = search(components, previousTimetable);
+    return newTimetable;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+export function updateTimetable (newTimetable: Timetable): TimetableAction {
   return {
     type: UPDATE_TIMETABLE,
-    timetable: newTimetable || previousTimetable,
+    timetable: newTimetable,
   }
 }
 
