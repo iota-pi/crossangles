@@ -118,7 +118,7 @@ export const countClashes = (
       const s2 = streams[j];
       count += notUndefined(innerMap.get(s2));
       if (count > maxClash) {
-        return count;
+        return maxClash + 1;
       }
     }
   }

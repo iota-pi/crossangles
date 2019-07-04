@@ -44,7 +44,8 @@ describe('sessionClashLength', () => {
 
 describe('streamClashLength', () => {
   it('gives correct value', () => {
-    const dummyData = { component: '', enrols: [0, 1] as [number, number], full: false };
+    const course = new Course({ code: '', name: '', streams: [] })
+    const dummyData = { component: '', enrols: [0, 1] as [number, number], full: false, course };
     expect(streamClashLength(
       new Stream({
         ...dummyData,

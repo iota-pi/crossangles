@@ -1,5 +1,12 @@
-import { scoreFreeDays, scoreTimes, scoreDayLength, scoreUnchanged, scoreClashes, countClashes } from '../scoreTimetable';
-import { Session, CourseData, Course, Stream, StreamData, CommonSession } from '../../state';
+import {
+  scoreFreeDays,
+  scoreTimes,
+  scoreDayLength,
+  scoreUnchanged,
+  scoreClashes,
+  countClashes
+} from '../scoreTimetable';
+import { CourseData, Course, Stream, CommonSession } from '../../state';
 import coursesData from '../../../public/data-mini.json';
 import { getClashInfo } from '../getClashInfo';
 import coursesToComponents from '../coursesToComponents';
@@ -139,6 +146,7 @@ describe('scoreClashes and countClashes', () => {
   it('can be limited (genuine dataset)', () => {
     const courses = (coursesData.courses as CourseData[]).map(data => new Course(data));
     const components = coursesToComponents(courses, [], false);
+
     const allStreams = ([] as Stream[]).concat(...components.map(c => c.streams));
     const clashInfo = getClashInfo(allStreams);
 

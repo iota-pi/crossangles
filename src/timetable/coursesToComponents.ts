@@ -1,4 +1,5 @@
 import { Course, Stream, CBSEvent, Session } from "../state";
+import { notUndefined } from "../typeHelpers";
 
 export interface Component {
   course: Course,
@@ -14,6 +15,11 @@ export function coursesToComponents (courses: Course[], events: CBSEvent[], allo
     let streamGroups = new Map<string, Stream[]>();
 
     for (let stream of course.streams) {
+      if (!streamGroups.has(stream.component)) {
+        streamGroups.set(stream.component, []);
+      }
+      const component = notUndefined(streamGroups.get(stream.component));
+
       // Skip any CBS activities which have been deselected
       if (course.code === 'CBS' && !events.includes(stream.component as CBSEvent)) {
         continue;
@@ -30,12 +36,7 @@ export function coursesToComponents (courses: Course[], events: CBSEvent[], allo
       }
 
       // Group streams by their component
-      const priorComponent = streamGroups.get(stream.component);
-      if (priorComponent !== undefined) {
-        priorComponent.push(stream);
-      } else {
-        streamGroups.set(stream.component, [stream]);
-      }
+      component.push(stream);
     }
 
     // Add all components which don't have a web stream enabled for them
@@ -47,10 +48,6 @@ export function coursesToComponents (courses: Course[], events: CBSEvent[], allo
       }
     }
   }
-
-  // Sort components in descending order number of streams
-  // (during DFS, roll-backs are more likely to occur on less flexible streams)
-  components.sort((a, b) => a.streams.length - b.streams.length);
 
   return components;
 }
