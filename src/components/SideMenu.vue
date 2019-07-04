@@ -128,7 +128,7 @@
         })
       },
       share () {
-        const sharingURL = encodeURIComponent(process.env.VUE_APP_DOMAIN)
+        const sharingURL = encodeURIComponent('https://crossangles.app')
         const fbURL = 'https://www.facebook.com/sharer/sharer.php?u=' + sharingURL
         window.open(fbURL, 'FBsharer', 'width=600, height=400, scrollbars=no')
         this.visible = false
