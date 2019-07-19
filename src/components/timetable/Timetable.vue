@@ -126,6 +126,9 @@
           end = 17
         }
 
+        start = Math.min(start, Math.max(end - 8, 9))
+        end = Math.max(end, Math.min(start + 8, 17))
+
         return [ Math.floor(start), Math.ceil(end) ]
       },
       hours () {
@@ -137,6 +140,11 @@
 
         for (let course of this.$store.state.chosen) {
           for (let stream of course.streams) {
+            // Skip any CBS events that haven't been selected
+            if (course.key === 'CBS' && !this.$store.state.events.includes(stream.component)) {
+              continue;
+            }
+
             if (stream.web === false) {
               for (let i of stream.sessions.keys()) {
                 let session = stream.sessions[i]
