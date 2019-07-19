@@ -7,7 +7,9 @@
     class="fixed-width"
     @click="$emit('save')"
   >
-    <span v-if="!saving">Save as Image</span>
+    <span v-if="!saving">
+      Save as Image
+    </span>
     <v-progress-circular
       v-else
       indeterminate

@@ -84,20 +84,24 @@
                 />
               </div>
 
-              <div class="pt-3">
-                <a
-                  v-if="$store.state.events.length > 0 && meta.signup"
-                  class="inherit-color no-underline"
-                  :href="meta.signup"
-                  target="_blank"
-                >
-                  Sign Up for Campus Bible Study
+              <v-btn
+                v-if="$store.state.events.length > 0 && meta.signup"
+                large
+                outline
+                round
+                :href="meta.signup"
+                target="_blank"
+              >
+                <div class="multiline-button-text">
+                  <span>Sign Up for Term {{ meta.term }}</span>
+                  <br>
+                  <span class="font-weight-light">Campus Bible Study</span>
+                </div>
 
-                  <v-icon small>
-                    open_in_new
-                  </v-icon>
-                </a>
-              </div>
+                <v-icon small right>
+                  open_in_new
+                </v-icon>
+              </v-btn>
             </div>
 
             <div class="font-weight-light pt-5">
@@ -379,6 +383,11 @@
   }
   a.inherit-color {
     color: inherit;
+  }
+  .multiline-button-text {
+    text-transform: initial;
+    line-height: 1.2;
+    font-weight: 400;
   }
 </style>
 
