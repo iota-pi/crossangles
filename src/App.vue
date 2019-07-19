@@ -98,7 +98,10 @@
                   <span class="font-weight-light">Campus Bible Study</span>
                 </div>
 
-                <v-icon small right>
+                <v-icon
+                  small
+                  right
+                >
                   open_in_new
                 </v-icon>
               </v-btn>
