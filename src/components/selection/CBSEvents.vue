@@ -9,7 +9,7 @@
       :key="event.title"
       xs12
       sm6
-      md3
+      md4
       @click.stop="chosenEvent(event)"
     >
       <v-checkbox

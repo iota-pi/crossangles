@@ -83,6 +83,41 @@
       "t": [[ "F13", null, null ]]
     },
     {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "M12", null, null ]]
+    },
+    {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "M15", null, null ]]
+    },
+    {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "T10", null, null ]]
+    },
+    {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "W8", null, null ]]
+    },
+    {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "W11", null, null ]]
+    },
+    {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "H10", null, null ]]
+    },
+    {
+      "c": "Prayer Meeting",
+      "s": 1,
+      "t": [[ "F11", null, null ]]
+    },
+    {
       "c": "Core Theology",
       "s": 1,
       "t": [[ "T16", null, null ]]

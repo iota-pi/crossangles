@@ -161,7 +161,7 @@ def getWeeks(week_string: str) -> Optional[str]:
 
     # If weeks is now empty, then this class runs entirely outside of
     # the main term weeks; return None so as to not include this class
-    if weeks == '':
+    if weeks == '':     # TODO: should be able to remove this now?
         return None
 
     return weeks
