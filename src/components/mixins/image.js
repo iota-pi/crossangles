@@ -37,9 +37,6 @@ export default {
         actual.end = display.end
       }
 
-      console.log('actual', actual.start, actual.end);
-      console.log('display', display.start, display.end);
-
       // Remove empty rows from the start and the end
       let grid = clone.lastChild
       let rows = grid.querySelectorAll('.row')
