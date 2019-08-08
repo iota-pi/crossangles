@@ -9,9 +9,13 @@ export default {
 
       // Find any blank hours at the start/end of timetable
       let display = { start: 24, end: 0 }
-      let actual = { start: 24, end: 0 }
       for (let course of this.$store.state.chosen) {
         for (let stream of course.streams) {
+          // Skip any CBS events that haven't been selected
+          if (course.key === 'CBS' && !this.$store.state.events.includes(stream.component)) {
+            continue;
+          }
+
           if (stream.web === false) {
             for (let session of stream.sessions) {
               display.start = Math.min(display.start, session.time.start)
@@ -20,6 +24,8 @@ export default {
           }
         }
       }
+
+      let actual = { start: 24, end: 0 }
       for (let session of this.$store.state.timetable) {
         actual.start = Math.min(actual.start, session.time.start)
         actual.end = Math.max(actual.end, session.time.end)
@@ -30,6 +36,9 @@ export default {
         actual.start = display.start
         actual.end = display.end
       }
+
+      console.log('actual', actual.start, actual.end);
+      console.log('display', display.start, display.end);
 
       // Remove empty rows from the start and the end
       let grid = clone.lastChild
