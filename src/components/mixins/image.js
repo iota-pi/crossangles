@@ -31,6 +31,15 @@ export default {
         actual.end = Math.max(actual.end, session.time.end)
       }
 
+      // Default time range in case of an empty timetable
+      if (display.start === 24 || display.end === 0) {
+        display.start = 9
+        display.end = 17
+      }
+
+      display.start = Math.min(display.start, Math.max(display.end - 8, 9))
+      display.end = Math.max(display.end, Math.min(display.start + 8, 17))
+
       // If timetable is empty, don't remove any rows
       if (actual.start >= display.end) {
         actual.start = display.start
