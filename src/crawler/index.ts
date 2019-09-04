@@ -3,7 +3,7 @@ process.env.APIFY_LOG_LEVEL = 'WARNING';
 
 import * as Apify from 'apify';
 import Course, { CourseData } from '../state/Course';
-import { Meta, Stream } from '../state';
+import { Meta } from '../state';
 import { writeFileSync } from 'fs';
 
 const CBS_DATA: CourseData = require('../../src/assets/cbs.json');
