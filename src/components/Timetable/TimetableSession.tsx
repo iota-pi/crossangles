@@ -5,6 +5,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import { MappedSession, CBS_CODE, Course, Stream } from '../../state';
 import { Placement, Dimensions, Position } from './timetableTypes';
 import { DraggableCore, DraggableData } from 'react-draggable';
+import { SESSION_BASE_Z, SESSION_DRAG_Z } from './timetableConstants';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -16,7 +17,6 @@ const styles = (theme: Theme) => createStyles({
     color: 'white',
     cursor: 'grab',
     overflow: 'hidden',
-    zIndex: 10,
 
     transition: 'box-shadow 0.3s, transform 0.3s',
     boxShadow: theme.shadows[3],
@@ -251,6 +251,7 @@ class TimetableSession extends PureComponent<Props, State> {
       transform: `translate(${this.boundedOffset.x + x}px, ${this.boundedOffset.y + y}px)`,
       width,
       height,
+      zIndex: SESSION_BASE_Z + (this.state.dragging ? SESSION_DRAG_Z : 0),
     };
   }
 }

@@ -4,12 +4,13 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import { MappedSession } from '../../state';
 import { Placement } from './timetableTypes';
+import { DROPZONE_Z } from './timetableConstants';
 
 const styles = (theme: Theme) => createStyles({
   root: {
     position: 'absolute',
     overflow: 'hidden',
-    zIndex: 1,
+    zIndex: DROPZONE_Z,
   },
   background: {
     transition: 'background-color 0.3s',
