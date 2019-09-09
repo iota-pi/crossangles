@@ -29,6 +29,11 @@ const styles = (theme: Theme) => createStyles({
     overflowY: 'hidden',
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
+
+    // Outside border
+    borderStyle: 'solid',
+    borderColor: 'rgba(0, 0, 0, 0.2)',
+    borderWidth: 1,
   },
   grid: {
     position: 'relative',
@@ -39,37 +44,38 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     height: TIMETABLE_CELL_HEIGHT,
 
-    '&$header': {
-      fontWeight: 500,
-      fontSize: '120%',
-    },
-
     '&>div': {
       flex: '1 1 100%',
-      borderStyle: 'solid',
-      borderColor: 'rgba(0, 0, 0, 0.2)',
-      borderWidth: 0,
-      borderLeftWidth: 1,
-      borderTopWidth: 1,
       minWidth: 120,
 
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
 
+      borderStyle: 'solid',
+      borderColor: 'rgba(0, 0, 0, 0.2)',
+      borderWidth: 0,
+      borderLeftWidth: 1,
+      borderTopWidth: 1,
+
       '&:first-child': {
         minWidth: TIMETABLE_FIRST_CELL_WIDTH,
-        flex: '0 0 60px',
-      },
+        flex: `0 0 ${TIMETABLE_FIRST_CELL_WIDTH}px`,
 
-      '&:last-child': {
-        borderRightWidth: 1,
+        // Remove left border on first cell
+        borderLeftWidth: 0,
       },
     },
 
-    '&:last-child > div': {
-      borderBottomWidth: 1,
-    }
+    '&$header': {
+      fontWeight: 500,
+      fontSize: '120%',
+
+      '&>div': {
+        // Remove top border on cells in the first row
+        borderTopWidth: 0,
+      }
+    },
   },
   header: {},
 });
@@ -255,11 +261,11 @@ class TimetableTable extends Component<Props, State> {
     const dayIndex = ['M', 'T', 'W', 'H', 'F'].indexOf(session.day);
 
     return {
-      // +2px for the borders of the first cell in row
+      // +1px on x/y is to compensate for top cell borders
       x: TIMETABLE_FIRST_CELL_WIDTH + this.timetableCellWidth * dayIndex + 1,
-      // +1px for top border
       y: (TIMETABLE_CELL_HEIGHT) * (1 + session.start - this.hours.start) + 1,
-      width: this.timetableCellWidth - 2,
+      // -1px on width/height is to compensate for above x/y offset due to cell borders
+      width: this.timetableCellWidth - 1,
       height: (session.end - session.start) * TIMETABLE_CELL_HEIGHT - 1,
     }
   }
