@@ -33,7 +33,6 @@ const styles = (theme: Theme) => createStyles({
   grid: {
     position: 'relative',
     overflowX: 'visible',
-    overflowY: 'hidden',
     ...noSelect,
   },
   row: {
