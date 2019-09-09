@@ -19,7 +19,7 @@ export interface CommonSession {
   start: number;
   end: number;
   day: LetterDay;
-  component: string;
+  component?: string;
   canClash?: boolean;
   location?: string;
   weeks?: string;
