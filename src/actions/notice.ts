@@ -16,11 +16,11 @@ export interface ClearNoticeAction extends Action {
 
 export type NoticeAction = SetNoticeAction | ClearNoticeAction;
 
-export function setNotice (message: string, actions: ReactNode[]): NoticeAction {
+export function setNotice (message: string, actions?: ReactNode[]): NoticeAction {
   return {
     type: SET_NOTICE,
     message,
-    actions,
+    actions: actions || [],
   };
 }
 
