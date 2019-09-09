@@ -78,8 +78,10 @@ export interface Props extends WithStyles<typeof styles> {
   placement: Placement,
   color: string,
   bounds: Dimensions,
+  allowFull: boolean,
+  snapToggle?: boolean,
   onDrag: (session: MappedSession, position: Position) => false | void,
-  onDrop: (session: MappedSession, position: Position, onSnap: () => void) => false | void,
+  onDrop: (session: MappedSession, position: Position) => false | void,
 }
 
 export interface State {
@@ -137,6 +139,38 @@ class TimetableSession extends PureComponent<Props, State> {
     )
   }
 
+  componentWillUpdate (nextProps: Props) {
+    // Check for change of location
+    // NB: the negations are to ensure `undefined` is treated the same as `false`
+    if (!this.props.snapToggle !== !nextProps.snapToggle) {
+      this.handleSnap();
+    }
+
+    // Displace this session if it's current position is no longer valid
+    // (this can happen if `options.includeFull` is switched to false)
+    if (this.props.session.stream.full && !this.props.allowFull && this.state.snapped) {
+      let dx = Math.floor(Math.random() * 30) - 15;
+      let dy = Math.floor(Math.random() * 20) - 10;
+      dx = (dx < 0) ? dx - 15 : dx + 16;
+      dy = (dy < 0) ? dy - 10 : dy + 11;
+
+      this.setState({
+        offset: {
+          x: this.state.offset.x + dx,
+          y: this.state.offset.y + dy,
+        },
+        snapped: false,
+      });
+    }
+
+    // Snap session if it's location has been externally changed
+    const s1 = this.props.session;
+    const s2 = nextProps.session;
+    if (s1.day !== s2.day || s1.start !== s2.start || s1.end !== s2.end) {
+      this.handleSnap();
+    }
+  }
+
   componentDidUpdate () {
     if (this.state.justSnapped) {
       this.setState({ justSnapped: false });
@@ -161,7 +195,7 @@ class TimetableSession extends PureComponent<Props, State> {
   private handleStop = () => {
     const offset = this.boundedOffset;
     this.setState({ offset, dragging: false });
-    return this.props.onDrop(this.props.session, offset, this.handleSnap);
+    return this.props.onDrop(this.props.session, offset);
   }
 
   private handleSnap = () => {

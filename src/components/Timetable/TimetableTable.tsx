@@ -110,6 +110,8 @@ class TimetableTable extends Component<Props, State> {
           <TimetableSession
             key={`${s.course.id}-${s.stream.component}-${s.index}`}
             session={s}
+            allowFull={this.props.options.includeFull}
+            snapToggle={s.snapToggle}
             placement={this.sessionPlacement(s)}
             bounds={this.timetableDimensions}
             color={notUndefined(this.props.colours.get(s.course.id))}
@@ -168,7 +170,7 @@ class TimetableTable extends Component<Props, State> {
     this.setState({ dragging: session });
   }
 
-  private handleDrop = (session: MappedSession, position: Position, onSnap: () => void) => {
+  private handleDrop = (session: MappedSession, position: Position) => {
     if (!this.state.dragging) return;
 
     // Snap session to nearest dropzone
@@ -196,9 +198,16 @@ class TimetableTable extends Component<Props, State> {
 
     // Swap streams in timetable
     if (nearest) {
-      onSnap();
       const { stream, index } = this.state.dragging;
-      this.props.onSwapStreams(stream, nearest.session.stream, stream.sessions[index]);
+      const draggingSession = stream.sessions[index];
+
+      // Toggle snapToggle for each new session
+      const sessions = nearest.session.stream.sessions;
+      for (const session of sessions) {
+        session.snapToggle = !draggingSession.snapToggle
+      }
+
+      this.props.onSwapStreams(stream, nearest.session.stream, draggingSession);
     }
 
     // No longer dragging anything

@@ -19,9 +19,11 @@ export interface CommonSession {
   start: number;
   end: number;
   day: LetterDay;
+  component: string;
   canClash?: boolean;
   location?: string;
   weeks?: string;
+  snapToggle?: boolean;
 }
 
 export interface BasicSession extends CommonSession, Partial<SessionLinks> {}

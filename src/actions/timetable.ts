@@ -1,4 +1,4 @@
-import { Timetable, Course, CBSEvent, Options, Stream, Session } from '../state';
+import { Timetable, Course, CBSEvent, Options, Stream } from '../state';
 import { Action } from 'redux';
 import { search } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
@@ -16,8 +16,13 @@ export interface UpdateTimetableConfig {
   options: Options;
 }
 
+export interface TimetableSearchResult {
+  success: boolean,
+  timetable: Timetable,
+}
 
-export function doTimetableSearch (config: UpdateTimetableConfig): Timetable | null {
+
+export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSearchResult | null {
   const {
     previousTimetable,
     courses,
@@ -28,16 +33,42 @@ export function doTimetableSearch (config: UpdateTimetableConfig): Timetable | n
   } = config;
 
   // Group streams by course and component
-  const components = coursesToComponents(courses, events, includeFull);
+  let components = coursesToComponents(courses, events, includeFull);
 
   // Check for impossible timetables
+  let success = true;
   if (components.filter(c => c.streams.length === 0).length > 0) {
-    return null;
+    components = components.filter(c => c.streams.length > 0);
+    success = false;
   }
 
   try {
     const newTimetable = search(components, previousTimetable);
-    return newTimetable;
+
+    // Snap all repositioned sessions
+    for (let s1 of newTimetable) {
+      for (let s2 of previousTimetable) {
+        if (s1.component === s2.component && s1.course === s2.course && s1.index === s2.index) {
+          s1.snapToggle = !s2.snapToggle;
+          break;
+        }
+      }
+    }
+
+    // Merge with previous timetable to keep displaced sessions
+    if (!success) {
+      const componentIds = newTimetable.map(s => `${s.course}-${s.component}`)
+      for (let session of previousTimetable) {
+        if (!componentIds.includes(`${session.course}-${session.component}`)) {
+          newTimetable.push(session);
+        }
+      }
+    }
+
+    return {
+      timetable: newTimetable,
+      success,
+    };
   } catch (err) {
     console.error(err);
     return null;
@@ -51,10 +82,10 @@ export function updateTimetable (newTimetable: Timetable): TimetableAction {
   }
 }
 
-export function swapStreams (timetable: Timetable, oldStream: Stream, newStream: Stream, topSession: Session) {
+export function swapStreams (timetable: Timetable, oldStream: Stream, newStream: Stream, topSessionIndex: number) {
   timetable = timetable.filter(s => s.stream !== oldStream.id);
-  timetable = timetable.concat(newStream.sessions.filter(s => s.index !== topSession.index));
-  timetable.push(newStream.sessions[topSession.index]);
+  timetable = timetable.concat(newStream.sessions.filter(s => s.index !== topSessionIndex));
+  timetable.push(newStream.sessions[topSessionIndex]);
 
   return {
     type: UPDATE_TIMETABLE,
@@ -62,6 +93,6 @@ export function swapStreams (timetable: Timetable, oldStream: Stream, newStream:
   }
 }
 
-export function bumpStream (timetable: Timetable, stream: Stream, topSession: Session) {
-  return swapStreams(timetable, stream, stream, topSession);
+export function bumpStream (timetable: Timetable, stream: Stream, topSessionIndex: number) {
+  return swapStreams(timetable, stream, stream, topSessionIndex);
 }

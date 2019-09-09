@@ -17,6 +17,7 @@ import {
   toggleEvent,
   toggleOption,
   doTimetableSearch,
+  setNotice,
 } from '../actions';
 import { updateTimetable } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
@@ -134,12 +135,11 @@ class CourseSelection extends Component<Props, State> {
 
     if (newTimetable === null) {
       // Displace some classes and display a warning
-
-
-      // Force update (TODO: is this necessary?)
-      this.forceUpdate();
+      await this.props.dispatch(setNotice('There was a problem generating a timetable'));
+    } else if (!newTimetable.success) {
+      await this.props.dispatch(setNotice('Some classes have been displaced'));
     } else {
-      await this.props.dispatch(updateTimetable(newTimetable));
+      await this.props.dispatch(updateTimetable(newTimetable.timetable));
     }
   }
 

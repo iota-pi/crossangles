@@ -65,11 +65,11 @@ class TimetableContainer extends Component<Props> {
   }
 
   private handleSwapStreams = (oldStream: Stream, newStream: Stream, topSession: Session) => {
-    this.props.dispatch(swapStreams(this.props.timetable, oldStream, newStream, topSession));
+    this.props.dispatch(swapStreams(this.props.timetable, oldStream, newStream, topSession.index));
   }
 
   private handleBumpStream = (stream: Stream, session: Session) => {
-    this.props.dispatch(bumpStream(this.props.timetable, stream, session));
+    this.props.dispatch(bumpStream(this.props.timetable, stream, session.index));
   }
 
   private get allCourses () {

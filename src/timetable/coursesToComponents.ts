@@ -15,11 +15,6 @@ export function coursesToComponents (courses: Course[], events: CBSEvent[], allo
     let streamGroups = new Map<string, Stream[]>();
 
     for (let stream of course.streams) {
-      if (!streamGroups.has(stream.component)) {
-        streamGroups.set(stream.component, []);
-      }
-      const component = notUndefined(streamGroups.get(stream.component));
-
       // Skip any CBS activities which have been deselected
       if (course.code === 'CBS' && !events.includes(stream.component as CBSEvent)) {
         continue;
@@ -29,6 +24,12 @@ export function coursesToComponents (courses: Course[], events: CBSEvent[], allo
       if (stream.web && !course.useWebStream) {
         continue;
       }
+
+      // Record this component (or retrieve previous record if it exists)
+      if (!streamGroups.has(stream.component)) {
+        streamGroups.set(stream.component, []);
+      }
+      const component = notUndefined(streamGroups.get(stream.component));
 
       // Skip any full streams if full streams aren't allowed
       if (stream.full && !allowFull) {

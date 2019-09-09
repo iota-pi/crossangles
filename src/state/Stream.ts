@@ -100,6 +100,7 @@ export class Stream {
           start: hours[0],
           end: hours[1] || (hours[0] + 1),
           day: t.time.charAt(0) as LetterDay,
+          component: this.component,
           canClash: t.canClash,
           location: t.location,
           index: i,
