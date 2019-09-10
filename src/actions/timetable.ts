@@ -58,9 +58,16 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
     // Merge with previous timetable to keep displaced sessions
     if (!success) {
       const componentIds = newTimetable.map(s => `${s.course}-${s.component}`)
+      const courseIds = courses.map(c => c.id);
+
       for (let session of previousTimetable) {
-        if (!componentIds.includes(`${session.course}-${session.component}`)) {
-          newTimetable.push(session);
+        // Copy old sessions only if:
+        // 1. Session belongs to a course which still included
+        // 2. This session's component is missing from the course
+        if (courseIds.includes(session.course)) {
+          if (!componentIds.includes(`${session.course}-${session.component}`)) {
+            newTimetable.push(session);
+          }
         }
       }
     }
