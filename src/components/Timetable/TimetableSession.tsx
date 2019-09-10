@@ -124,7 +124,7 @@ class TimetableSession extends PureComponent<Props, State> {
 
           <div className={classes.sessionText}>
             <div className={classes.label}>
-              <span className={classes.em}>{this.sessionTitle}</span>
+              <span className={classes.em}>{this.sessionTitle} </span>
               <span>{this.sessionComponent}</span>
             </div>
 
