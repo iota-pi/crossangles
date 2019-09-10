@@ -163,5 +163,5 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   }
 }
 
-const connected = connect(mapStateToProps);
-export default withStyles(styles)(connected(CourseSelection));
+const connection = connect(mapStateToProps);
+export default withStyles(styles)(connection(CourseSelection));

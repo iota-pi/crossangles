@@ -89,7 +89,7 @@ export function updateTimetable (newTimetable: Timetable): TimetableAction {
   }
 }
 
-export function swapStreams (timetable: Timetable, oldStream: Stream, newStream: Stream, topSessionIndex: number) {
+export function swapStreams (timetable: Timetable, oldStream: Stream, newStream: Stream, topSessionIndex: number): TimetableAction {
   timetable = timetable.filter(s => s.stream !== oldStream.id);
   timetable = timetable.concat(newStream.sessions.filter(s => s.index !== topSessionIndex));
   timetable.push(newStream.sessions[topSessionIndex]);
@@ -100,6 +100,6 @@ export function swapStreams (timetable: Timetable, oldStream: Stream, newStream:
   }
 }
 
-export function bumpStream (timetable: Timetable, stream: Stream, topSessionIndex: number) {
+export function bumpStream (timetable: Timetable, stream: Stream, topSessionIndex: number): TimetableAction {
   return swapStreams(timetable, stream, stream, topSessionIndex);
 }
