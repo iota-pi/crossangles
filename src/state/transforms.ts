@@ -1,5 +1,5 @@
 import { createTransform } from 'redux-persist';
-import { Course, CourseId } from '.';
+import { Course, CourseId, Timetable } from '.';
 import { CourseData } from './Course';
 
 export const coursesTransform = createTransform(
@@ -13,7 +13,7 @@ export const coursesTransform = createTransform(
     return new Map(courses.map(c => [c.id, c]));
   },
   // define which reducers this transform gets called for.
-  { whitelist: ['courses'] }
+  { whitelist: ['courses'] },
 );
 
 export const coloursTransform = createTransform(
@@ -26,5 +26,21 @@ export const coloursTransform = createTransform(
     return new Map(outboundState);
   },
   // define which reducers this transform gets called for.
-  { whitelist: ['colours'] }
+  { whitelist: ['colours'] },
 );
+
+export const timetableTransform = createTransform(
+  // transform state on its way to being serialized and persisted.
+  (inboundState: Timetable) => {
+    return inboundState.map(s => ({
+      ...s,
+      snapToggle: undefined,
+    }));
+  },
+  // transform state being rehydrated
+  (outboundState: Timetable) => {
+    return outboundState;
+  },
+  // define which reducers this transform gets called for.
+  { whitelist: ['timetable'] },
+)
