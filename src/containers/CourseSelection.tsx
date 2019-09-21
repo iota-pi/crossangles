@@ -9,6 +9,8 @@ import {
   CourseId,
   Timetable,
   CustomCourse,
+  LinkedTimetable,
+  Session,
 } from '../state';
 import {
   addCourse,
@@ -42,13 +44,14 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: Course[],
+  courses: Map<CourseId, Course>,
+  courseList: Course[],
   chosen: Course[],
   additional: Course[],
   custom: CustomCourse[],
   events: CBSEvent[],
   options: Options,
-  timetable: Timetable,
+  linkedTimetable: LinkedTimetable,
   colours: Map<CourseId, string>,
 }
 
@@ -66,7 +69,7 @@ class CourseSelection extends Component<Props, State> {
     return (
       <React.Fragment>
         <Autocomplete
-          courses={this.props.courses}
+          courses={this.props.courseList}
           chosen={this.props.chosen}
           additional={this.props.additional}
           chooseCourse={this.chooseCourse}
@@ -129,7 +132,7 @@ class CourseSelection extends Component<Props, State> {
     const newTimetable = doTimetableSearch({
       courses: this.allCourses,
       events: this.props.events,
-      previousTimetable: this.props.timetable,
+      previousTimetable: this.timetable,
       options: this.props.options,
     });
 
@@ -139,12 +142,17 @@ class CourseSelection extends Component<Props, State> {
     } else if (!newTimetable.success) {
       await this.props.dispatch(setNotice('Some classes have been displaced'));
     } else {
-      await this.props.dispatch(updateTimetable(newTimetable.timetable));
+      const linkedTimetable = newTimetable.timetable;
+      await this.props.dispatch(updateTimetable(linkedTimetable));
     }
   }
 
   private changeColour = async (course: Course, colour: string) => {
     await this.props.dispatch(setColour(course.id, colour));
+  }
+
+  private get timetable (): Timetable {
+    return this.props.linkedTimetable.map(s => Session.from(s, this.props.courses));
   }
 }
 
@@ -152,13 +160,14 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const chosenSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
 
   return {
-    courses: Array.from(state.courses.values()),
+    courses: state.courses,
+    courseList: Array.from(state.courses.values()),
     chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(chosenSort),
     custom: state.custom,
     additional: state.additional.map(cid => isSet(state.courses.get(cid))),
     events: state.events,
     options: state.options,
-    timetable: state.timetable,
+    linkedTimetable: state.timetable,
     colours: state.colours,
   }
 }

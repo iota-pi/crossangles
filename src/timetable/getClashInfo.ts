@@ -1,4 +1,4 @@
-import { Stream, CommonSession } from "../state";
+import { Stream, Session, ILinkedSession } from "../state";
 
 export type ClashInfo = Map<Stream, Map<Stream, number>>;
 
@@ -34,7 +34,7 @@ export const streamClashLength = (a: Stream, b: Stream) => {
   return total;
 }
 
-export const sessionClashLength = (a: CommonSession, b: CommonSession): number => {
+export const sessionClashLength = (a: Session | ILinkedSession, b: Session | ILinkedSession): number => {
   if (a.day === b.day) {
     const length = Math.max(Math.min(a.end, b.end) - Math.max(a.start, b.start), 0);
     return length * (a.canClash || b.canClash ? ALLOWED_CLASH_MULTIPLIER : 1);

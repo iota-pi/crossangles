@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, Timetable, CustomCourse, CourseId, Stream, MappedSession, Session } from '../state';
-import { isSet, notUndefined, WithDispatch } from '../typeHelpers';
+import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session } from '../state';
+import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -28,7 +28,7 @@ export interface StateProps {
   additional: Course[],
   events: CBSEvent[],
   options: Options,
-  timetable: Timetable,
+  linkedTimetable: LinkedTimetable,
   colours: Map<CourseId, string>,
 }
 
@@ -41,8 +41,9 @@ class TimetableContainer extends Component<Props> {
     return (
       <div className={classes.spaceAbove}>
         <TimetableTable
-          timetable={this.mappedTimetable}
+          timetable={this.timetable}
           options={this.props.options}
+          courses={this.props.courses}
           streams={this.timetableStreams}
           colours={this.props.colours}
           onSwapStreams={this.handleSwapStreams}
@@ -57,23 +58,29 @@ class TimetableContainer extends Component<Props> {
       return true;
     }
 
-    if (this.props.timetable !== prevProps.timetable) {
+    if (this.props.linkedTimetable !== prevProps.linkedTimetable) {
       return true;
     }
 
     return false;
   }
 
-  private handleSwapStreams = (oldStream: Stream, newStream: Stream, topSession: Session) => {
-    this.props.dispatch(swapStreams(this.props.timetable, oldStream, newStream, topSession.index));
+  private handleSwapStreams = async (oldStream: Stream, newStream: Stream, topSession: Session) => {
+    await this.props.dispatch(
+      swapStreams(this.props.linkedTimetable, oldStream, newStream, topSession.index)
+      );
   }
 
-  private handleBumpStream = (stream: Stream, session: Session) => {
-    this.props.dispatch(bumpStream(this.props.timetable, stream, session.index));
+  private handleBumpStream = async (stream: Stream, session: Session) => {
+    await this.props.dispatch(
+      bumpStream(this.props.linkedTimetable, stream, session.index)
+    );
   }
 
   private get allCourses () {
-    return this.props.chosen.concat(this.props.custom, this.props.additional)
+    const { chosen, custom, additional } = this.props;
+
+    return chosen.concat(custom, additional);
   }
 
   private get timetableStreams (): Stream[] {
@@ -81,16 +88,8 @@ class TimetableContainer extends Component<Props> {
     return ([] as Stream[]).concat(...this.allCourses.map(c => c.streams));
   }
 
-  private get mappedTimetable (): MappedSession[] {
-    return this.props.timetable.map((s, i) => {
-      const course = notUndefined(this.props.courses.get(s.course));
-      const stream = course.streams.filter(stream => stream.id === s.stream)[0];
-      return {
-        ...s,
-        course,
-        stream,
-      };
-    });
+  private get timetable (): Session[] {
+    return this.props.linkedTimetable.map(s => Session.from(s, this.props.courses));
   }
 }
 
@@ -99,12 +98,12 @@ const mapStateToProps = (state: RootState): StateProps => {
 
   return {
     courses: state.courses,
-    chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(chosenSort),
+    chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(chosenSort),
     custom: state.custom,
-    additional: state.additional.map(cid => isSet(state.courses.get(cid))),
+    additional: state.additional.map(cid => notUndefined(state.courses.get(cid))),
     events: state.events,
     options: state.options,
-    timetable: state.timetable,
+    linkedTimetable: state.timetable,
     colours: state.colours,
   }
 }

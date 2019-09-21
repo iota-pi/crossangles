@@ -2,10 +2,9 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { MappedSession, CBS_CODE, Course, Stream } from '../../state';
-import { Placement, Dimensions, Position } from './timetableTypes';
+import { Session, CBS_CODE, Course, Stream } from '../../state';
+import { Position, Dimensions } from './timetableTypes';
 import { DraggableCore, DraggableData } from 'react-draggable';
-import { SESSION_BASE_Z, SESSION_DRAG_Z } from './timetableConstants';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -21,7 +20,7 @@ const styles = (theme: Theme) => createStyles({
     transition: 'box-shadow 0.3s, transform 0.3s',
     boxShadow: theme.shadows[3],
 
-    '&$snapped': {
+    '&$snapped:not($hovering)': {
       boxShadow: theme.shadows[0],
     },
 
@@ -46,6 +45,7 @@ const styles = (theme: Theme) => createStyles({
   new: {},
   dragging: {},
   snapped: {},
+  hovering: {},
   sessionText: {
     position: 'relative',
     textAlign: 'center',
@@ -74,38 +74,32 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  session: MappedSession,
-  placement: Placement,
-  color: string,
-  bounds: Dimensions,
-  allowFull: boolean,
-  snapToggle?: boolean,
-  onDrag: (session: MappedSession, position: Position) => false | void,
-  onDrop: (session: MappedSession, position: Position) => false | void,
+  session: Session,
+  colour: string,
+  dimensions: Dimensions,
+  position: Required<Position>,
+  isDragging: boolean,
+  isSnapped: boolean,
+  clashDepth: number,
+  onDrag: (session: Session) => false | void,
+  onMove: (session: Session, delta: Position) => void,
+  onDrop: (session: Session) => void,
 }
 
 export interface State {
-  offset: { x: number, y: number },
-  justSnapped: boolean,
-  dragging: boolean,
-  snapped: boolean,
 }
 
 class TimetableSession extends PureComponent<Props, State> {
   state: State = {
-    offset: { x: 0, y: 0 },
-    justSnapped: true,
-    dragging: false,
-    snapped: true,
   }
 
   render() {
-    const classes = this.props.classes;
+    const { classes } = this.props;
     const rootClasses = [
       classes.root,
-      this.state.dragging ? classes.dragging : '',
-      this.state.snapped ? classes.snapped : '',
-      // !this.state.justSnapped ? classes.new : '',
+      this.props.isDragging ? classes.dragging : '',
+      this.props.isSnapped ? classes.snapped : '',
+      this.props.clashDepth > 0 ? classes.hovering : '',
     ].join(' ');
 
     return (
@@ -118,7 +112,7 @@ class TimetableSession extends PureComponent<Props, State> {
           <div
             className={classes.background}
             style={{
-              backgroundColor: this.props.color,
+              backgroundColor: this.props.colour,
             }}
           />
 
@@ -139,67 +133,18 @@ class TimetableSession extends PureComponent<Props, State> {
     )
   }
 
-  componentWillUpdate (nextProps: Props) {
-    // Check for change of location
-    // NB: the negations are to ensure `undefined` is treated the same as `false`
-    if (!this.props.snapToggle !== !nextProps.snapToggle) {
-      this.handleSnap();
-    }
-
-    // Displace this session if it's current position is no longer valid
-    // (this can happen if `options.includeFull` is switched to false)
-    if (this.props.session.stream.full && !this.props.allowFull && this.state.snapped) {
-      let dx = Math.floor(Math.random() * 30) - 15;
-      let dy = Math.floor(Math.random() * 20) - 10;
-      dx = (dx < 0) ? dx - 15 : dx + 16;
-      dy = (dy < 0) ? dy - 10 : dy + 11;
-
-      this.setState({
-        offset: {
-          x: this.state.offset.x + dx,
-          y: this.state.offset.y + dy,
-        },
-        snapped: false,
-      });
-    }
-
-    // Snap session if it's location has been externally changed
-    const s1 = this.props.session;
-    const s2 = nextProps.session;
-    if (s1.day !== s2.day || s1.start !== s2.start || s1.end !== s2.end) {
-      this.handleSnap();
-    }
-  }
-
-  componentDidUpdate () {
-    if (this.state.justSnapped) {
-      this.setState({ justSnapped: false });
-    }
-  }
-
   private handleStart = () => {
-    const prevent = this.props.onDrag(this.props.session, this.boundedOffset) === false;
-    if (prevent) return false;
-
-    this.setState({ dragging: true, snapped: false });
+    this.props.onDrag(this.props.session);
   }
 
   private handleDrag = (_: any, data: DraggableData) => {
-    const { deltaX, deltaY } = data;
-    let x = this.state.offset.x + deltaX;
-    let y = this.state.offset.y + deltaY;
-
-    this.setState({ offset: { x, y } });
+    let x = data.deltaX;
+    let y = data.deltaY;
+    this.props.onMove(this.props.session, { x, y });
   }
 
   private handleStop = () => {
-    const offset = this.boundedOffset;
-    this.setState({ offset, dragging: false });
-    return this.props.onDrop(this.props.session, offset);
-  }
-
-  private handleSnap = () => {
-    this.setState({ offset: { x: 0, y: 0 }, snapped: true, justSnapped: true });
+    return this.props.onDrop(this.props.session);
   }
 
   private get course (): Course {
@@ -235,23 +180,16 @@ class TimetableSession extends PureComponent<Props, State> {
     return [];
   }
 
-  private get boundedOffset (): Position {
-    let { width, height, x, y } = this.props.placement;
-
-    x = Math.min(Math.max(this.state.offset.x + x, 0), this.props.bounds.width - width) - x;
-    y = Math.min(Math.max(this.state.offset.y + y, 0), this.props.bounds.height - height) - y;
-
-    return { x, y };
-  }
-
   private get styles (): CSSProperties {
-    const { width, height, x, y } = this.props.placement;
+    const { dimensions, position } = this.props;
+    const { width, height } = dimensions;
+    const { x, y, z } = position;
 
     return {
-      transform: `translate(${this.boundedOffset.x + x}px, ${this.boundedOffset.y + y}px)`,
+      transform: `translate(${x}px, ${y}px)`,
       width,
       height,
-      zIndex: SESSION_BASE_Z + (this.state.dragging ? SESSION_DRAG_Z : 0),
+      zIndex: z,
     };
   }
 }

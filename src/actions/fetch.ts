@@ -18,16 +18,19 @@ export interface MetaAction extends Action {
 
 export function fetchData (uri: string): ThunkAction<Promise<void>, {}, {}, AnyAction> {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    return axios.get(uri).then(({ data }) => {
-      dispatch({
+    return axios.get(uri).then(async ({ data }) => {
+      const p1 = dispatch({
         type: SET_COURSE_DATA,
         courses: data.courses,
       });
 
-      dispatch({
+      const p2 = dispatch({
         type: SET_META_DATA,
         meta: data.meta,
       });
+
+      await p1;
+      await p2;
     });
   };
 }

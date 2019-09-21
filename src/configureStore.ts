@@ -1,14 +1,14 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
 import reducer from './reducers';
 import storage from 'redux-persist/lib/storage';
-import { coursesTransform, coloursTransform, timetableTransform } from './state/transforms';
+import { coursesTransform, coloursTransform } from './state/transforms';
 
-const persistConfig = {
+const persistConfig: PersistConfig = {
   key: 'root',
   storage,
-  transforms: [ coursesTransform, coloursTransform, timetableTransform ],
+  transforms: [ coursesTransform, coloursTransform ],
 }
 const persistedReducer = persistReducer(persistConfig, reducer);
 export const store = createStore(persistedReducer, applyMiddleware(thunk));

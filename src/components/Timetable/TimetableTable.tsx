@@ -2,12 +2,19 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Stream, MappedTimetable, CourseId, MappedSession, Session, Options } from '../../state';
-import { Dimensions, Placement, Position } from './timetableTypes';
+import { Stream, Timetable, CourseId, Session, Options, Course, SessionId } from '../../state';
+import { Dimensions, Position } from './timetableTypes';
 import { notUndefined } from '../../typeHelpers';
 
 import TimetableSession from './TimetableSession';
-import TimetableDropzone, { Dropzone } from './TimetableDropzone';
+import TimetableDropzone from './TimetableDropzone';
+import { sessionClashLength } from '../../timetable';
+import { TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableConstants';
+import { SessionPlacement } from './SessionPlacement';
+import { DropzonePlacement } from './DropzonePlacement';
+import { DimensionManager } from './DimensionManager';
+import { SessionManager } from './SessionManager';
+import { number } from 'prop-types';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -17,10 +24,6 @@ const noSelect: CSSProperties = {
   msUserSelect: 'none',
   userSelect: 'none',
 }
-
-export const TIMETABLE_FIRST_CELL_WIDTH = 60;
-export const TIMETABLE_CELL_HEIGHT = 50;
-export const SNAP_DIST = 40;
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -33,7 +36,7 @@ const styles = (theme: Theme) => createStyles({
     // Outside border
     borderStyle: 'solid',
     borderColor: 'rgba(0, 0, 0, 0.2)',
-    borderWidth: 1,
+    borderWidth: TIMETABLE_BORDER_WIDTH,
   },
   grid: {
     position: 'relative',
@@ -55,8 +58,8 @@ const styles = (theme: Theme) => createStyles({
       borderStyle: 'solid',
       borderColor: 'rgba(0, 0, 0, 0.2)',
       borderWidth: 0,
-      borderLeftWidth: 1,
-      borderTopWidth: 1,
+      borderLeftWidth: TIMETABLE_BORDER_WIDTH,
+      borderTopWidth: TIMETABLE_BORDER_WIDTH,
 
       '&:first-child': {
         minWidth: TIMETABLE_FIRST_CELL_WIDTH,
@@ -81,8 +84,9 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  timetable: MappedTimetable,
+  timetable: Timetable,
   options: Options,
+  courses: Map<CourseId, Course>,
   streams: Stream[],
   colours: Map<CourseId, string>,
   onSwapStreams: (oldStream: Stream, newStream: Stream, topSession: Session) => void,
@@ -90,12 +94,18 @@ export interface Props extends WithStyles<typeof styles> {
 }
 
 export interface State {
-  dragging: MappedSession | null,
+  dimensions: DimensionManager,
+  sessions: SessionManager,
+  dragging: Session | null,
+  version: number,
 }
 
 class TimetableTable extends Component<Props, State> {
   state: State = {
+    dimensions: new DimensionManager(),
+    sessions: new SessionManager(),
     dragging: null,
+    version: -1,
   }
 
   timetableRef: RefObject<HTMLDivElement>;
@@ -111,24 +121,30 @@ class TimetableTable extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        {this.timetableDimensions.width ? this.props.timetable.map(s => (
-          <TimetableSession
-            key={`${s.course.id}-${s.stream.component}-${s.index}`}
-            session={s}
-            allowFull={this.props.options.includeFull}
-            snapToggle={s.snapToggle}
-            placement={this.sessionPlacement(s)}
-            bounds={this.timetableDimensions}
-            color={notUndefined(this.props.colours.get(s.course.id))}
-            onDrag={this.handleDrag}
-            onDrop={this.handleDrop}
-          />
-        )) : null}
+        {this.state.dimensions.dimensions.width ? this.props.timetable.map(s => {
+          const placement = this.state.sessions.getMaybe(s.id);
+          return !!placement && (
+            <TimetableSession
+              key={`${s.course.id}-${s.stream.component}-${s.index}`}
+              session={s}
+              colour={this.getColour(s.course.id)}
+              position={placement.position}
+              dimensions={placement.basePlacement}
+              isDragging={placement.isDragging}
+              isSnapped={placement.isSnapped}
+              clashDepth={placement.clashDepth}
+              onDrag={this.handleDrag}
+              onMove={this.handleMove}
+              onDrop={this.handleDrop}
+            />
+          );
+        }) : null}
 
-        {this.dropzones.map(d => (
+        {this.dropzones.map(dropzone => (
           <TimetableDropzone
-            key={`${d.session.stream.id}`}
-            {...d}
+            key={dropzone.session.stream.id}
+            position={dropzone.basePlacement}
+            colour={this.getColour(dropzone.session.course.id)}
           />
         ))}
 
@@ -155,68 +171,133 @@ class TimetableTable extends Component<Props, State> {
   }
 
   shouldComponentUpdate (prevProps: Props, prevState: State) {
-    if (this.props.timetable !== prevProps.timetable || this.state.dragging !== prevState.dragging) {
+    if (this.props.timetable !== prevProps.timetable) {
+      return true;
+    }
+
+    if (this.state.dragging !== prevState.dragging) {
+      return true;
+    }
+
+    if (this.state.version !== prevState.version) {
       return true;
     }
 
     return false;
   }
 
+  componentWillUpdate (nextProps: Props, nextState: State) {
+    // Add SessionPlacement for each new session in the timetable
+    const newSessions = nextState.sessions;
+    const timetable = nextProps.timetable;
+    for (let session of timetable) {
+      if (!newSessions.has(session.id)) {
+        const dimensions = nextState.dimensions;
+        const newPlacement = new SessionPlacement({ session, dimensions });
+        newSessions.set(session.id, newPlacement);
+      }
+    }
+
+    // Update dimensions
+    const newDimensions = nextState.dimensions;
+    newDimensions.updateDimensions(this.timetableDimensions);
+    newDimensions.updateHours(this.hours);
+
+    this.setState({ sessions: newSessions, dimensions: newDimensions });
+  }
+
+  private getColour (courseId: CourseId): string {
+    const black = '#000000';
+    return this.props.colours.get(courseId) || black;
+  }
+
   componentDidMount () {
     window.addEventListener('resize', () => this.forceUpdate())
   }
 
-  private handleDrag = (session: MappedSession) => {
-    if (this.state.dragging) {
-      return false;
-    }
+  private handleDrag = (session: Session): void => {
+    // Don't drag if something else is being dragged already
+    if (this.state.dragging) return;
 
-    this.props.onBumpStream(session.stream, session.stream.sessions[session.index]);
-    this.setState({ dragging: session });
+    // Update session placement with dragging state
+    this.state.sessions.drag(session.id);
+
+    // Bump this session to the top of the session stack
+    this.props.onBumpStream(session.stream, session);
+
+    // Mark this session as being dragged
+    this.setState({
+      dragging: session,
+      version: this.state.sessions.version
+    });
   }
 
-  private handleDrop = (session: MappedSession, position: Position) => {
+  private handleDrop = (session: Session): void => {
     if (!this.state.dragging) return;
 
     // Snap session to nearest dropzone
-    const basePosition = this.sessionPlacement(session);
-    const absolutePosition = {
-      x: basePosition.x + position.x,
-      y: basePosition.y + position.y,
+    const droppedSession = this.state.sessions.get(session.id);
+    droppedSession.drop();
+    const dropzone = this.getNearestDropzone(droppedSession.position);
+
+    // Swap streams in timetable
+    if (dropzone) {
+      const oldStream = this.state.dragging.stream;
+      const newStream = dropzone.session.stream;
+      this.snapStream(oldStream, newStream);
     }
 
-    // Find nearest dropzone
-    let nearest: Dropzone | null = null;
-    let bestDistance = SNAP_DIST * SNAP_DIST;
-    for (let d of this.dropzones) {
-      let delta = {
-        x: d.placement.x - absolutePosition.x,
-        y: d.placement.y - absolutePosition.y,
-      }
+    // No longer dragging anything
+    this.setState({
+      dragging: null,
+      version: this.state.sessions.version,
+    });
+  }
 
-      let distSq = (delta.x * delta.x) + (delta.y * delta.y);
+  private getNearestDropzone (position: Position): DropzonePlacement | null {
+    let nearest: DropzonePlacement | null = null;
+    let bestDistance = SNAP_DIST * SNAP_DIST;
+    for (let dropzone of this.dropzones) {
+      const dropzonePosition = dropzone.basePlacement;
+      const deltaX = dropzonePosition.x - position.x;
+      const deltaY = dropzonePosition.y - position.y;
+
+      let distSq = (deltaX * deltaX) + (deltaY * deltaY);
       if (distSq < bestDistance) {
-        nearest = d;
+        nearest = dropzone;
         bestDistance = distSq;
       }
     }
 
-    // Swap streams in timetable
-    if (nearest) {
-      const { stream, index } = this.state.dragging;
-      const draggingSession = stream.sessions[index];
+    return nearest;
+  }
 
-      // Toggle snapToggle for each new session
-      const sessions = nearest.session.stream.sessions;
-      for (const session of sessions) {
-        session.snapToggle = !draggingSession.snapToggle
-      }
-
-      this.props.onSwapStreams(stream, nearest.session.stream, draggingSession);
+  private snapStream (oldStream: Stream, newStream: Stream) {
+    const draggingSession = this.state.dragging;
+    if (!draggingSession) {
+      return;
     }
 
-    // No longer dragging anything
-    this.setState({ dragging: null });
+    // Toggle snapToggle for each new session
+    const newSessions = newStream.sessions;
+    for (const linkedSession of newSessions) {
+      const sessionId = Session.getId(linkedSession);
+      const sessions = this.state.sessions;
+      if (sessions.has(sessionId)) {
+        sessions.snap(sessionId);
+      }
+    }
+
+    // Swap streams in timetable
+    this.props.onSwapStreams(oldStream, newStream, draggingSession);
+  }
+
+  private handleMove = (session: Session, delta: Position) => {
+    this.state.sessions.move(session.id, delta);
+
+    this.setState({
+      version: this.state.sessions.version,
+    });
   }
 
   private get hours () {
@@ -253,44 +334,67 @@ class TimetableTable extends Component<Props, State> {
     }
   }
 
-  private get timetableCellWidth (): number {
-    return (this.timetableDimensions.width - TIMETABLE_FIRST_CELL_WIDTH) / 5;
-  }
-
-  private sessionPlacement (session: Session | MappedSession): Placement {
-    const dayIndex = ['M', 'T', 'W', 'H', 'F'].indexOf(session.day);
-
-    return {
-      // +1px on x/y is to compensate for top cell borders
-      x: TIMETABLE_FIRST_CELL_WIDTH + this.timetableCellWidth * dayIndex + 1,
-      y: (TIMETABLE_CELL_HEIGHT) * (1 + session.start - this.hours.start) + 1,
-      // -1px on width/height is to compensate for above x/y offset due to cell borders
-      width: this.timetableCellWidth - 1,
-      height: (session.end - session.start) * TIMETABLE_CELL_HEIGHT - 1,
-    }
-  }
-
   private get dropzones () {
-    const dropzones: Dropzone[] = [];
+    const dropzones: DropzonePlacement[] = [];
 
     if (this.state.dragging) {
       const { course, stream: { component }, index } = this.state.dragging;
+      const dimensions = this.state.dimensions;
+      const courses = this.props.courses;
+
       for (let stream of this.props.streams) {
-        // Check that course and component matches with dragged session
+        // Check for stream with course and component matching the dragged session's
         if (stream.course === course && stream.component === component) {
-          const session = stream.sessions[index];
-          if (session && (!stream.full || this.props.options.includeFull)) {
-            dropzones.push({
-              session: Object.assign({}, session, { course, stream }),
-              color: notUndefined(this.props.colours.get(course.id)),
-              placement: this.sessionPlacement(session),
-            });
+          const session = Session.from(stream.sessions[index], courses);
+          if (!stream.full || this.props.options.includeFull) {
+            dropzones.push(
+              new DropzonePlacement({ session, dimensions })
+            );
           }
+
+          // TODO: can we break here?
         }
       }
     }
 
     return dropzones;
+  }
+
+  private get clashDepths () {
+    const clashDepths = new Map<Session, number>();
+    const timetableSessions = this.props.timetable;
+
+    for (let i = 0; i < timetableSessions.length; ++i) {
+      let takenDepths = new Set<number>();
+      const session1 = timetableSessions[i];
+      const placement1 = this.state.sessions.get(session1.id);
+
+      // Skip sessions that aren't snapped
+      if (!placement1.isSnapped) {
+        for (let j = 0; j < i; ++j) {
+          const session2 = timetableSessions[j];
+          const placement2 = this.state.sessions.get(session2.id);
+
+          // Skip sessions that aren't snapped
+          if (placement2.isSnapped) continue;
+
+          // Check if sessions clash
+          if (sessionClashLength(session1, session2) > 0) {
+            const jDepth = notUndefined(clashDepths.get(session2));
+            takenDepths.add(jDepth);
+          }
+        }
+      }
+
+      for (let j = 0; j <= takenDepths.size; ++j) {
+        if (!takenDepths.has(j)) {
+          clashDepths.set(session1, j);
+          break;
+        }
+      }
+    }
+
+    return clashDepths;
   }
 }
 

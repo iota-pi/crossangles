@@ -1,6 +1,6 @@
 import { parseTimeStr, ClassTime } from './times';
 import { Course } from './Course';
-import { Session, LetterDay } from './Session';
+import { DayLetter, ILinkedSession } from './Session';
 
 export type StreamId = string;
 
@@ -26,7 +26,7 @@ export class Stream {
   times: ClassTime[] | null;
   full: boolean;
   web: boolean;
-  sessions: Session[];
+  sessions: ILinkedSession[];
   course: Course;
 
   constructor(streamData: StreamData & { course: Course }) {
@@ -90,25 +90,25 @@ export class Stream {
     return `${this.course.id}-${this.component}-${timeStr}`;
   }
 
-  private getSessions (): Session[] {
-    if (this.times === null) {
-      return [];
-    } else {
+  private getSessions (): ILinkedSession[] {
+    if (this.times !== null) {
       return this.times.map((t, i) => {
-        const hours = t.time.substr(1).split('-').map(x => parseFloat(x));
+        const [ startHour, endHour ] = t.time.substr(1).split('-').map(x => parseFloat(x));
+
         return {
-          start: hours[0],
-          end: hours[1] || (hours[0] + 1),
-          day: t.time.charAt(0) as LetterDay,
-          component: this.component,
+          start: startHour,
+          end: endHour || (startHour + 1),
+          day: t.time.charAt(0) as DayLetter,
           canClash: t.canClash,
           location: t.location,
           index: i,
           weeks: t.weeks,
           stream: this.id,
           course: this.course.id,
-        }
-      })
+        };
+      });
+    } else {
+      return [];
     }
   }
 }

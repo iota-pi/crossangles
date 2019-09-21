@@ -2,9 +2,8 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { MappedSession } from '../../state';
-import { Placement } from './timetableTypes';
 import { DROPZONE_Z } from './timetableConstants';
+import { Placement } from './timetableTypes';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -23,24 +22,21 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-export interface Dropzone {
-  session: MappedSession,
-  color: string,
-  placement: Placement,
+export interface Props extends WithStyles<typeof styles> {
+  position: Placement,
+  colour: string,
 }
-
-export interface Props extends WithStyles<typeof styles>, Dropzone {}
 
 class TimetableDropzone extends PureComponent<Props> {
   render() {
-    const classes = this.props.classes;
+    const { classes, colour } = this.props;
 
     return (
       <div className={classes.root} style={this.styles}>
         <div
           className={classes.background}
           style={{
-            backgroundColor: this.props.color + 'A0',
+            backgroundColor: colour + 'A0',
           }}
         />
       </div>
@@ -48,11 +44,13 @@ class TimetableDropzone extends PureComponent<Props> {
   }
 
   private get styles (): CSSProperties {
+    const { width, height, x, y } = this.props.position;
+
     return {
-      width: this.props.placement.width,
-      height: this.props.placement.height,
-      left: this.props.placement.x,
-      top: this.props.placement.y,
+      left: x,
+      top: y,
+      width,
+      height,
     };
   }
 }

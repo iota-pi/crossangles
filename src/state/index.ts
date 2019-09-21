@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Course, CourseId, CBS_CODE } from './Course';
-import { Session, MappedSession } from './Session';
+import { Session, ILinkedSession } from './Session';
 import { CBS_COLOUR } from './colours';
 export * from './Course';
 export * from './Stream';
@@ -35,7 +35,7 @@ export const OptionList = new Map<OptionName, string>([
 export type CustomCourse = Course;
 
 export type Timetable = Session[];
-export type MappedTimetable = MappedSession[];
+export type LinkedTimetable = ILinkedSession[];
 
 export interface Notice {
   message: string,
@@ -61,7 +61,7 @@ export const baseOptions: Options = {
   includeFull: false,
 };
 export const baseCustom: CustomCourse[] = [];
-export const baseTimetable: Timetable = [];
+export const baseTimetable: LinkedTimetable = [];
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
 export const baseNotice: Notice | null = null;
 
@@ -73,7 +73,7 @@ export interface RootState {
   events: CBSEvent[];
   options: Options;
   custom: CustomCourse[];
-  timetable: Timetable;
+  timetable: LinkedTimetable;
   colours: Map<CourseId, string>;
   notice: Notice | null,
 }
