@@ -2,9 +2,8 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Stream, Timetable, CourseId, Session, Options, Course, SessionId } from '../../state';
+import { Stream, Timetable, CourseId, Session, Options, Course } from '../../state';
 import { Dimensions, Position } from './timetableTypes';
-import { notUndefined } from '../../typeHelpers';
 
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
@@ -14,7 +13,6 @@ import { SessionPlacement } from './SessionPlacement';
 import { DropzonePlacement } from './DropzonePlacement';
 import { DimensionManager } from './DimensionManager';
 import { SessionManager } from './SessionManager';
-import { number } from 'prop-types';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -190,7 +188,13 @@ class TimetableTable extends Component<Props, State> {
     // Add SessionPlacement for each new session in the timetable
     const newSessions = nextState.sessions;
     const timetable = nextProps.timetable;
+    const prevTimetableIds = new Set(this.props.timetable.map(s => s.id));
+    let addedSession = false;
     for (let session of timetable) {
+      if (!prevTimetableIds.has(session.id)) {
+        addedSession = true;
+      }
+
       if (!newSessions.has(session.id)) {
         const dimensions = nextState.dimensions;
         const newPlacement = new SessionPlacement({ session, dimensions });
@@ -198,12 +202,15 @@ class TimetableTable extends Component<Props, State> {
       }
     }
 
+    // Update clash depths
+    if (addedSession || this.props.timetable.length < nextProps.timetable.length) {
+      this.updateClashDepths(timetable, newSessions);
+    }
+
     // Update dimensions
     const newDimensions = nextState.dimensions;
     newDimensions.updateDimensions(this.timetableDimensions);
     newDimensions.updateHours(this.hours);
-
-    this.setState({ sessions: newSessions, dimensions: newDimensions });
   }
 
   private getColour (courseId: CourseId): string {
@@ -230,6 +237,8 @@ class TimetableTable extends Component<Props, State> {
       dragging: session,
       version: this.state.sessions.version
     });
+
+    this.updateClashDepths(this.props.timetable, this.state.sessions);
   }
 
   private handleDrop = (session: Session): void => {
@@ -252,6 +261,8 @@ class TimetableTable extends Component<Props, State> {
       dragging: null,
       version: this.state.sessions.version,
     });
+
+    this.updateClashDepths(this.props.timetable, this.state.sessions);
   }
 
   private getNearestDropzone (position: Position): DropzonePlacement | null {
@@ -290,6 +301,8 @@ class TimetableTable extends Component<Props, State> {
 
     // Swap streams in timetable
     this.props.onSwapStreams(oldStream, newStream, draggingSession);
+
+    this.updateClashDepths(this.props.timetable, this.state.sessions);
   }
 
   private handleMove = (session: Session, delta: Position) => {
@@ -345,11 +358,13 @@ class TimetableTable extends Component<Props, State> {
       for (let stream of this.props.streams) {
         // Check for stream with course and component matching the dragged session's
         if (stream.course === course && stream.component === component) {
-          const session = Session.from(stream.sessions[index], courses);
-          if (!stream.full || this.props.options.includeFull) {
-            dropzones.push(
-              new DropzonePlacement({ session, dimensions })
-            );
+          if (stream.sessions.length > index) {
+            const session = Session.from(stream.sessions[index], courses);
+            if (!stream.full || this.props.options.includeFull) {
+              dropzones.push(
+                new DropzonePlacement({ session, dimensions })
+              );
+            }
           }
 
           // TODO: can we break here?
@@ -360,27 +375,25 @@ class TimetableTable extends Component<Props, State> {
     return dropzones;
   }
 
-  private get clashDepths () {
-    const clashDepths = new Map<Session, number>();
-    const timetableSessions = this.props.timetable;
+  private updateClashDepths (timetable: Timetable, sessions: SessionManager) {
 
-    for (let i = 0; i < timetableSessions.length; ++i) {
+    for (let i = 0; i < timetable.length; ++i) {
       let takenDepths = new Set<number>();
-      const session1 = timetableSessions[i];
-      const placement1 = this.state.sessions.get(session1.id);
+      const session1 = timetable[i];
+      const placement1 = sessions.get(session1.id);
 
       // Skip sessions that aren't snapped
-      if (!placement1.isSnapped) {
+      if (placement1.isSnapped) {
         for (let j = 0; j < i; ++j) {
-          const session2 = timetableSessions[j];
-          const placement2 = this.state.sessions.get(session2.id);
+          const session2 = timetable[j];
+          const placement2 = sessions.get(session2.id);
 
           // Skip sessions that aren't snapped
-          if (placement2.isSnapped) continue;
+          if (!placement2.isSnapped) continue;
 
           // Check if sessions clash
           if (sessionClashLength(session1, session2) > 0) {
-            const jDepth = notUndefined(clashDepths.get(session2));
+            const jDepth = placement2.clashDepth;
             takenDepths.add(jDepth);
           }
         }
@@ -388,13 +401,11 @@ class TimetableTable extends Component<Props, State> {
 
       for (let j = 0; j <= takenDepths.size; ++j) {
         if (!takenDepths.has(j)) {
-          clashDepths.set(session1, j);
+          placement1.clashDepth = j;
           break;
         }
       }
     }
-
-    return clashDepths;
   }
 }
 

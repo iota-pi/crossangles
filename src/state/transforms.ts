@@ -1,5 +1,5 @@
 import { createTransform } from 'redux-persist';
-import { Course, CourseId, Timetable } from '.';
+import { Course, CourseId } from '.';
 import { CourseData } from './Course';
 
 export const coursesTransform = createTransform(

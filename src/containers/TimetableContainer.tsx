@@ -13,6 +13,21 @@ import TimetableTable from '../components/Timetable';
 import { swapStreams, bumpStream } from '../actions';
 
 
+function arraysEqual<T> (a: T[], b: T[], map: (item: T) => any): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
     paddingTop: theme.spacing(4),
@@ -58,7 +73,9 @@ class TimetableContainer extends Component<Props> {
       return true;
     }
 
-    if (this.props.linkedTimetable !== prevProps.linkedTimetable) {
+    const oldSession = this.props.linkedTimetable;
+    const newSession = prevProps.linkedTimetable;
+    if (!arraysEqual(oldSession, newSession, ls => Session.getId(ls))) {
       return true;
     }
 
@@ -68,7 +85,7 @@ class TimetableContainer extends Component<Props> {
   private handleSwapStreams = async (oldStream: Stream, newStream: Stream, topSession: Session) => {
     await this.props.dispatch(
       swapStreams(this.props.linkedTimetable, oldStream, newStream, topSession.index)
-      );
+    );
   }
 
   private handleBumpStream = async (stream: Stream, session: Session) => {
