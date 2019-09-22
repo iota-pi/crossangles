@@ -8,28 +8,35 @@ export interface TimetableScore {
 }
 
 export class TimetableScorer {
-  lastSessionIds: Set<string>;
-  clashInfo: ClashInfo;
-  fewestClashes: number;
+  private lastSessionIds: Set<string>;
+  private clashInfo: ClashInfo;
+  private fewestClashes: number;
+  private cache: Map<string, number>;
 
   constructor (lastSessionIds: string[], clashInfo: ClashInfo) {
     this.lastSessionIds = new Set(lastSessionIds);
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
+    this.cache = new Map<string, number>();
   }
 
-  score (streams: Stream[], streamSessions?: ILinkedSession[][]): number {
+  score (streams: Stream[]): number {
+    const streamIds = streams.map(s => s.id).join(',');
+    const cachedScore = this.cache.get(streamIds);
+    if (cachedScore !== undefined) {
+      return cachedScore;
+    }
+
     const clashes = countClashes(streams, this.clashInfo, this.fewestClashes);
 
     // Quick exit for
     if (clashes > this.fewestClashes) {
-      // return { score: -Infinity, timetable: [] };
       return -Infinity;
     } else {
       this.fewestClashes = clashes;
     }
 
-    streamSessions = streamSessions || streams.map(s => s.sessions);
+    const streamSessions = streams.map(s => s.sessions);
     const timetable = ([] as ILinkedSession[]).concat(...streamSessions);
     let score = 0;
     score += scoreClashes(clashes);
@@ -38,7 +45,7 @@ export class TimetableScorer {
     score += scoreDayLength(timetable);
     score += scoreUnchanged(timetable, this.lastSessionIds);
 
-    // return { score, timetable };
+    this.cache.set(streamIds, score);
     return score;
   }
 }
