@@ -11,21 +11,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 // Components
 import TimetableTable from '../components/Timetable';
 import { swapStreams, bumpStream } from '../actions';
-
-
-function arraysEqual<T> (a: T[], b: T[], map: (item: T) => any): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
-
-  for (let i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
+import { arraysEqual } from '../components/Timetable/timetableUtil';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -73,9 +59,9 @@ class TimetableContainer extends Component<Props> {
       return true;
     }
 
-    const oldSession = this.props.linkedTimetable;
-    const newSession = prevProps.linkedTimetable;
-    if (!arraysEqual(oldSession, newSession, ls => Session.getId(ls))) {
+    const oldSession = this.props.linkedTimetable.map(ls => Session.getId(ls));
+    const newSession = prevProps.linkedTimetable.map(ls => Session.getId(ls));
+    if (!arraysEqual(oldSession, newSession)) {
       return true;
     }
 

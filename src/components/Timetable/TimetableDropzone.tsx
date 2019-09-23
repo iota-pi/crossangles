@@ -2,7 +2,7 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { DROPZONE_Z } from './timetableConstants';
+import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
 
 const styles = (theme: Theme) => createStyles({

@@ -17,3 +17,18 @@ export const DISPLACE_VARIATION_X = 15;
 export const DISPLACE_VARIATION_Y = 10;
 export const DISPLACE_RADIUS_X = 15;
 export const DISPLACE_RADIUS_Y = 10;
+
+
+export function arraysEqual<T> (a: T[], b: T[]): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  for (let i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}

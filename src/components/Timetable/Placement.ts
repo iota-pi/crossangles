@@ -1,6 +1,6 @@
 import { Session } from "../../state";
 import { Dimensions, Placement } from "./timetableTypes";
-import { TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH } from "./timetableConstants";
+import { TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH } from "./timetableUtil";
 import { DimensionManager } from "./DimensionManager";
 
 export interface ITimetablePlacement {

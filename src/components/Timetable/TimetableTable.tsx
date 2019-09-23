@@ -8,7 +8,7 @@ import { Dimensions, Position } from './timetableTypes';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
 import { sessionClashLength } from '../../timetable';
-import { TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableConstants';
+import { TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_BORDER_WIDTH, SNAP_DIST, arraysEqual } from './timetableUtil';
 import { SessionPlacement } from './SessionPlacement';
 import { DropzonePlacement } from './DropzonePlacement';
 import { DimensionManager } from './DimensionManager';
