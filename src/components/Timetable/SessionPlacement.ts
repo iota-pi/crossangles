@@ -1,6 +1,6 @@
 import { Position } from "./timetableTypes";
 import { TimetablePlacement, ITimetablePlacement } from "./Placement";
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z, DISPLACE_RADIUS_X, DISPLACE_RADIUS_Y, DISPLACE_VARIATION_X, DISPLACE_VARIATION_Y } from "./timetableConstants";
+import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z, DISPLACE_RADIUS_X, DISPLACE_RADIUS_Y, DISPLACE_VARIATION_X, DISPLACE_VARIATION_Y } from "./timetableUtil";
 
 export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;
@@ -68,9 +68,9 @@ export class SessionPlacement extends TimetablePlacement {
     this._offset.y += dy;
   }
 
-  shouldDisplace (allowFullClasses: boolean) {
-    const stream = this.session.stream
-    return stream.full && !allowFullClasses && this.isSnapped
+  shouldDisplace (includeFullClasses: boolean): boolean {
+    const stream = this.session.stream;
+    return stream.full && !includeFullClasses && this.isSnapped;
   }
 
   get position (): Required<Position> {
@@ -92,7 +92,7 @@ export class SessionPlacement extends TimetablePlacement {
     return { x, y, z };
   }
 
-  clone () {
+  clone (): SessionPlacement {
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
   }
 }
