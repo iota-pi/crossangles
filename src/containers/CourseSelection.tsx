@@ -125,7 +125,11 @@ class CourseSelection extends Component<Props, State> {
 
   private toggleOption = async (option: OptionName) => {
     await this.props.dispatch(toggleOption(option));
-    await this.updateTimetable();
+
+    const generationOptions: OptionName[] = ['includeFull']
+    if (generationOptions.includes(option)) {
+      await this.updateTimetable();
+    }
   }
 
   private updateTimetable = async () => {
@@ -145,8 +149,6 @@ class CourseSelection extends Component<Props, State> {
       const linkedTimetable = newTimetable.timetable;
       await this.props.dispatch(updateTimetable(linkedTimetable));
     }
-
-    console.log('updateTimetable', newTimetable);
   }
 
   private changeColour = async (course: Course, colour: string) => {
