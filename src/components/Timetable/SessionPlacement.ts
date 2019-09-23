@@ -1,6 +1,6 @@
 import { Position } from "./timetableTypes";
 import { TimetablePlacement, ITimetablePlacement } from "./Placement";
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z } from "./timetableConstants";
+import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z, DISPLACE_RADIUS_X, DISPLACE_RADIUS_Y, DISPLACE_VARIATION_X, DISPLACE_VARIATION_Y } from "./timetableConstants";
 
 export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;
@@ -56,16 +56,12 @@ export class SessionPlacement extends TimetablePlacement {
   }
 
   // Slightly displace this session
-  // (e.g. if it was in a full place and is no longer)
+  // (e.g. if it was in a full stream and can't be anymore)
   displace (): void {
-    const variationX = 15;
-    const variationY = 10;
-    const radiusX = 15;
-    const radiusY = 10;
-    let dx = Math.floor(Math.random() * variationX * 2) - variationX;
-    let dy = Math.floor(Math.random() * variationY * 2) - variationY;
-    dx = (dx < 0) ? dx - radiusX : dx + radiusX + 1;
-    dy = (dy < 0) ? dy - radiusY : dy + radiusY + 1;
+    let dx = Math.floor(Math.random() * DISPLACE_VARIATION_X * 2) - DISPLACE_VARIATION_X;
+    let dy = Math.floor(Math.random() * DISPLACE_VARIATION_Y * 2) - DISPLACE_VARIATION_Y;
+    dx = (dx < 0) ? dx - DISPLACE_RADIUS_X : dx + DISPLACE_RADIUS_X + 1;
+    dy = (dy < 0) ? dy - DISPLACE_RADIUS_Y : dy + DISPLACE_RADIUS_Y + 1;
 
     this._isSnapped = false;
     this._offset.x += dx;

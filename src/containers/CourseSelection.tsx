@@ -145,6 +145,8 @@ class CourseSelection extends Component<Props, State> {
       const linkedTimetable = newTimetable.timetable;
       await this.props.dispatch(updateTimetable(linkedTimetable));
     }
+
+    console.log('updateTimetable', newTimetable);
   }
 
   private changeColour = async (course: Course, colour: string) => {

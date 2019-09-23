@@ -186,25 +186,32 @@ class TimetableTable extends Component<Props, State> {
 
   componentWillUpdate (nextProps: Props, nextState: State) {
     // Add SessionPlacement for each new session in the timetable
-    const newSessions = nextState.sessions;
+    const sessions = nextState.sessions;
     const timetable = nextProps.timetable;
     const prevTimetableIds = new Set(this.props.timetable.map(s => s.id));
     let addedSession = false;
     for (let session of timetable) {
       if (!prevTimetableIds.has(session.id)) {
         addedSession = true;
+
+        // If session previously existed it may have had an offset
+        const existingPlacement = sessions.getMaybe(session.id);
+        if (existingPlacement) {
+          // Snap to new location
+          existingPlacement.snap();
+        }
       }
 
-      if (!newSessions.has(session.id)) {
+      if (!sessions.has(session.id)) {
         const dimensions = nextState.dimensions;
         const newPlacement = new SessionPlacement({ session, dimensions });
-        newSessions.set(session.id, newPlacement);
+        sessions.set(session.id, newPlacement);
       }
     }
 
     // Update clash depths
     if (addedSession || this.props.timetable.length < nextProps.timetable.length) {
-      this.updateClashDepths(timetable, newSessions);
+      this.updateClashDepths(timetable, sessions);
     }
 
     // Update dimensions
