@@ -9,6 +9,11 @@ export interface TimetableAction extends Action {
   timetable: LinkedTimetable;
 }
 
+export const BUMP_TIMETABLE_VERSION = 'BUMP_TIMETABLE_VERSION';
+export interface TimetableVersionAction extends Action {
+  type: typeof BUMP_TIMETABLE_VERSION;
+}
+
 export interface UpdateTimetableConfig {
   previousTimetable: Timetable;
   courses: Course[];
@@ -76,6 +81,12 @@ export function updateTimetable (newTimetable: LinkedTimetable): TimetableAction
   return {
     type: UPDATE_TIMETABLE,
     timetable: newTimetable,
+  }
+}
+
+export function bumpTimetableVersion (): TimetableVersionAction {
+  return {
+    type: BUMP_TIMETABLE_VERSION,
   }
 }
 

@@ -62,6 +62,7 @@ export const baseOptions: Options = {
 };
 export const baseCustom: CustomCourse[] = [];
 export const baseTimetable: LinkedTimetable = [];
+export const baseTimetableVersion: number = 0;
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
 export const baseNotice: Notice | null = null;
 
@@ -74,6 +75,7 @@ export interface RootState {
   options: Options;
   custom: CustomCourse[];
   timetable: LinkedTimetable;
+  timetableVersion: number;
   colours: Map<CourseId, string>;
   notice: Notice | null,
 }
@@ -87,6 +89,7 @@ export const baseState: RootState = {
   options: baseOptions,
   custom: baseCustom,
   timetable: baseTimetable,
+  timetableVersion: baseTimetableVersion,
   colours: baseColours,
   notice: baseNotice,
 }

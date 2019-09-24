@@ -83,6 +83,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   timetable: Timetable,
+  timetableVersion: number,
   options: Options,
   courses: Map<CourseId, Course>,
   streams: Stream[],
@@ -169,7 +170,7 @@ class TimetableTable extends Component<Props, State> {
   }
 
   shouldComponentUpdate (prevProps: Props, prevState: State) {
-    if (this.props.timetable !== prevProps.timetable) {
+    if (this.props.timetable !== prevProps.timetable || this.props.timetableVersion !== prevProps.timetableVersion) {
       return true;
     }
 
@@ -188,29 +189,31 @@ class TimetableTable extends Component<Props, State> {
     // Add SessionPlacement for each new session in the timetable
     const sessions = nextState.sessions;
     const timetable = nextProps.timetable;
-    const prevTimetableIds = new Set(this.props.timetable.map(s => s.id));
-    let addedSession = false;
+    const includeFull = nextProps.options.includeFull;
     for (let session of timetable) {
-      if (!prevTimetableIds.has(session.id)) {
-        addedSession = true;
-
-        // If session previously existed it may have had an offset
-        const existingPlacement = sessions.getMaybe(session.id);
-        if (existingPlacement) {
-          // Snap to new location
-          existingPlacement.snap();
-        }
-      }
-
+      // Add new session placements
       if (!sessions.has(session.id)) {
         const dimensions = nextState.dimensions;
         const newPlacement = new SessionPlacement({ session, dimensions });
         sessions.set(session.id, newPlacement);
       }
+
+      const existingPlacement = sessions.getMaybe(session.id);
+      if (existingPlacement) {
+        // Displace session if it needs to be
+        if (existingPlacement.shouldDisplace(includeFull)) {
+          existingPlacement.displace();
+        }
+
+        // Snap session if it's been updated
+        if (this.props.timetableVersion !== nextProps.timetableVersion) {
+          existingPlacement.snap();
+        }
+      }
     }
 
     // Update clash depths
-    if (addedSession || this.props.timetable.length < nextProps.timetable.length) {
+    if (this.timetableHasChanged(nextProps.timetable, false)) {
       this.updateClashDepths(timetable, sessions);
     }
 
@@ -220,13 +223,25 @@ class TimetableTable extends Component<Props, State> {
     newDimensions.updateHours(this.hours);
   }
 
+  componentDidMount () {
+    window.addEventListener('resize', () => this.forceUpdate())
+  }
+
   private getColour (courseId: CourseId): string {
     const black = '#000000';
     return this.props.colours.get(courseId) || black;
   }
 
-  componentDidMount () {
-    window.addEventListener('resize', () => this.forceUpdate())
+  private timetableHasChanged (nextTimetable: Timetable, sort?: boolean): boolean {
+    let oldSessionIds = this.props.timetable.map(s => s.id);
+    let newSessionIds = nextTimetable.map(s => s.id);
+
+    if (sort !== false) {
+      oldSessionIds = oldSessionIds.slice().sort();
+      newSessionIds = newSessionIds.slice().sort();
+    }
+
+    return !arraysEqual(oldSessionIds, newSessionIds);
   }
 
   private handleDrag = (session: Session): void => {

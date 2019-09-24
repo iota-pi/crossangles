@@ -30,6 +30,7 @@ export interface StateProps {
   events: CBSEvent[],
   options: Options,
   linkedTimetable: LinkedTimetable,
+  timetableVersion: number,
   colours: Map<CourseId, string>,
 }
 
@@ -43,6 +44,7 @@ class TimetableContainer extends Component<Props> {
       <div className={classes.spaceAbove}>
         <TimetableTable
           timetable={this.timetable}
+          timetableVersion={this.props.timetableVersion}
           options={this.props.options}
           courses={this.props.courses}
           streams={this.timetableStreams}
@@ -107,6 +109,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     events: state.events,
     options: state.options,
     linkedTimetable: state.timetable,
+    timetableVersion: state.timetableVersion,
     colours: state.colours,
   }
 }

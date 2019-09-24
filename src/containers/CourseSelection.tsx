@@ -20,6 +20,7 @@ import {
   toggleOption,
   doTimetableSearch,
   setNotice,
+  bumpTimetableVersion,
 } from '../actions';
 import { updateTimetable } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
@@ -148,6 +149,7 @@ class CourseSelection extends Component<Props, State> {
     } else {
       const linkedTimetable = newTimetable.timetable;
       await this.props.dispatch(updateTimetable(linkedTimetable));
+      await this.props.dispatch(bumpTimetableVersion());
     }
   }
 
