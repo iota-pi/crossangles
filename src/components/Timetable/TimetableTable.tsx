@@ -120,13 +120,17 @@ class TimetableTable extends Component<Props, State> {
 
     return (
       <div className={classes.root}>
-        {this.state.dimensions.dimensions.width ? this.props.timetable.map(s => {
-          const placement = this.state.sessions.getMaybe(s.id);
-          return !!placement && (
+        {this.state.dimensions.dimensions.width ? this.state.sessions.order.map(sid => {
+          const placement = this.state.sessions.getMaybe(sid);
+          if (!placement) return null;
+
+          const session = placement.session;
+          // const isDragging = this.state.dragging ? this.state.dragging.stream === s.stream : false;
+          return (
             <TimetableSession
-              key={`${s.course.id}-${s.stream.component}-${s.index}`}
-              session={s}
-              colour={this.getColour(s.course.id)}
+              key={`${session.course.id}-${session.stream.component}-${session.index}`}
+              session={session}
+              colour={this.getColour(session.course.id)}
               position={placement.position}
               dimensions={placement.basePlacement}
               isDragging={placement.isDragging}
@@ -198,7 +202,7 @@ class TimetableTable extends Component<Props, State> {
         sessions.set(session.id, newPlacement);
       }
 
-      const existingPlacement = sessions.getMaybe(session.id);
+      const existingPlacement = sessions.getMaybe(session.id); //TODO: could just be `get()`?
       if (existingPlacement) {
         // Displace session if it needs to be
         if (existingPlacement.shouldDisplace(includeFull)) {
@@ -252,7 +256,8 @@ class TimetableTable extends Component<Props, State> {
     this.state.sessions.drag(session.id);
 
     // Bump this session to the top of the session stack
-    this.props.onBumpStream(session.stream, session);
+    // this.props.onBumpStream(session.stream, session);
+    this.state.sessions.bumpStream(session.id);
 
     // Mark this session as being dragged
     this.setState({
@@ -273,9 +278,27 @@ class TimetableTable extends Component<Props, State> {
 
     // Swap streams in timetable
     if (dropzone) {
-      const oldStream = this.state.dragging.stream;
-      const newStream = dropzone.session.stream;
-      this.snapStream(oldStream, newStream);
+      const oldSessionId = this.state.dragging.id;
+      const newSession = dropzone.session;
+      const newStream = newSession.stream.sessions;
+
+      // Add new session placements
+      for (let linkedSession of newStream) {
+        const id = Session.getId(linkedSession);
+        if (!this.state.sessions.has(id)) {
+          const dimensions = this.state.dimensions;
+          const newPlacement = new SessionPlacement({
+            session: Session.from(linkedSession, this.props.courses),
+            dimensions
+          });
+          this.state.sessions.set(id, newPlacement);
+        }
+      }
+
+      this.state.sessions.swapStream(oldSessionId, newSession.id);
+
+      // Explicitly snap the new session to the dropzone
+      this.state.sessions.snap(newSession.id);
     }
 
     // No longer dragging anything
