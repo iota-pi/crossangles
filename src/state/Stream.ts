@@ -28,6 +28,8 @@ export class Stream {
   web: boolean;
   sessions: ILinkedSession[];
   course: Course;
+  private timeString: string;
+  id: StreamId;
 
   constructor(streamData: StreamData & { course: Course }) {
     this.component = streamData.component;
@@ -36,6 +38,11 @@ export class Stream {
     this.full = streamData.full;
     this.web = streamData.web || false;
     this.course = streamData.course;
+
+    // Condition: id will be unique iff there is at most one WEB stream per course
+    this.timeString = this.times ? this.times.map(t => t.time).join(',') : 'WEB';
+    this.id = `${this.course.id}-${this.component}-${this.timeString}`;
+
     this.sessions = this.getSessions(); // TODO: if too slow, could only call for streams of chosen courses
   }
 
@@ -82,12 +89,6 @@ export class Stream {
       full: this.full,
       web: this.web,
     }
-  }
-
-  get id (): string {
-    // Condition: id will be unique iff there is at most one WEB stream per course
-    let timeStr = this.times ? this.times.map(t => t.time).join(',') : 'WEB';
-    return `${this.course.id}-${this.component}-${timeStr}`;
   }
 
   private getSessions (): ILinkedSession[] {
