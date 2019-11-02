@@ -8,7 +8,7 @@ import { writeFileSync } from 'fs';
 
 const CBS_DATA: CourseData = require('../../src/assets/cbs.json');
 const OUTPUT_DATA_FILE = './public/data.json';
-const CLASSUTIL_BASE = 'http://classutil.unsw.edu.au';
+const CLASSUTIL_BASE = 'https://nss.cse.unsw.edu.au/sitar/classes2019';
 
 
 const crawl = async (term: number) => {
@@ -86,7 +86,7 @@ const crawl = async (term: number) => {
   const facultyPages = await findFacultyPages();
   const courses = await crawlFacultyPages(facultyPages);
   const meta = generateMetaData();
-  const data = JSON.stringify({ courses, meta });
+  const data = JSON.stringify({ courses: courses.map(c => c.data), meta });
 
   writeFileSync(OUTPUT_DATA_FILE, data, 'utf-8');
 }
