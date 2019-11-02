@@ -99,24 +99,43 @@ export class GeneticSearch<T> {
   }
 
   mutate (parent: Parent<T>, data: T[][]): Parent<T> {
-    // Make a copy of the parent
-    const child = Object.assign({}, parent);
+    const values = parent.values.slice();
+    let indexes = parent.indexes;
 
     // Mutate child
-    const i = Math.floor(Math.random() * child.indexes.length);
-    const newIndex = Math.floor(Math.random() * data[i].length);
+    let i = this.chooseIndexToMutate(data);
+    const newIndex = this.chooseNewIndexValue(indexes[i], data[i].length);
 
-    child.values = child.values.slice();
-    child.values[i] = data[i][newIndex];
-    child.score = this.config.scoreFunction(child.values);
+    values[i] = data[i][newIndex];
+    const score = this.config.scoreFunction(values);
 
     // Copy and update indexes only if score is passable (i.e. not -Infinity)
-    if (Number.isFinite(child.score)) {
-      child.indexes = child.indexes.slice();
-      child.indexes[i] = newIndex;
+    if (Number.isFinite(score)) {
+      indexes = indexes.slice();
+      indexes[i] = newIndex;
     }
 
-    return child;
+    return { values, indexes, score };
+  }
+
+  chooseIndexToMutate (data: T[][], max_attempts=10): number {
+    let i = -1;
+    let attempts = 0;
+    while (i < 0 || data[i].length <= 1) {
+      i = Math.floor(Math.random() * data.length);
+      if (++attempts > max_attempts) break;
+    }
+    return i;
+  }
+
+  chooseNewIndexValue (previous: number, max: number, max_attempts=10): number {
+    let n = previous;
+    let attempts = 0;
+    while (n === previous) {
+      n = Math.floor(Math.random() * max);
+      if (++attempts > max_attempts) break;
+    }
+    return n;
   }
 
   private parentSort (a: Parent<T>, b: Parent<T>) {
