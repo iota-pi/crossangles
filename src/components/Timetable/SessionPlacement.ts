@@ -1,6 +1,6 @@
 import { Position } from "./timetableTypes";
 import { TimetablePlacement, ITimetablePlacement } from "./Placement";
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z, DISPLACE_RADIUS_X, DISPLACE_RADIUS_Y, DISPLACE_VARIATION_X, DISPLACE_VARIATION_Y } from "./timetableUtil";
+import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z, DISPLACE_RADIUS_X, DISPLACE_RADIUS_Y, DISPLACE_VARIATION_X, DISPLACE_VARIATION_Y, RAISE_DIST_X, RAISE_DIST_Y } from "./timetableUtil";
 
 export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;
@@ -63,9 +63,19 @@ export class SessionPlacement extends TimetablePlacement {
     dx = (dx < 0) ? dx - DISPLACE_RADIUS_X : dx + DISPLACE_RADIUS_X + 1;
     dy = (dy < 0) ? dy - DISPLACE_RADIUS_Y : dy + DISPLACE_RADIUS_Y + 1;
 
-    this._isSnapped = false;
-    this._offset.x += dx;
-    this._offset.y += dy;
+    this.displaceBy(dx, dy)
+  }
+
+  raise (): void {
+    this.displaceBy(RAISE_DIST_X, RAISE_DIST_Y);
+  }
+
+  private displaceBy (dx: number, dy: number): void {
+    if (this._isSnapped) {
+      this._isSnapped = false;
+      this._offset.x += dx;
+      this._offset.y += dy;
+    }
   }
 
   shouldDisplace (includeFullClasses: boolean): boolean {

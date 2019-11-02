@@ -48,13 +48,32 @@ export class SessionManager {
     this.map.set(sessionId, session);
 
     if (!this._order.includes(sessionId)) {
-      this._order.push(sessionId);
+      this._order = [...this._order, sessionId];
+    }
+
+    this.next();
+  }
+
+  remove (sessionId: SessionId, hard = false): void {
+    this.removeSession(sessionId);
+
+    if (hard) {
+      this.map.delete(sessionId);
     }
   }
 
   drag (sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.drag();
+
+    const stream = session.session.stream;
+    for (let linkedSession of stream.sessions) {
+      let otherId = Session.getId(linkedSession);
+      if (otherId !== sessionId) {
+        this.raise(otherId);
+      }
+    }
+
     this.next();
   }
 
@@ -68,6 +87,19 @@ export class SessionManager {
     const session = this.get(sessionId);
     session.drop();
     this.next();
+  }
+
+  raise (sessionId: SessionId): void {
+    const session = this.get(sessionId);
+    session.raise();
+    this.next();
+  }
+
+  snapStream (sessionId: SessionId): void {
+    const stream = this.get(sessionId).session.stream;
+    for (let linkedSession of stream.sessions) {
+      this.snap(Session.getId(linkedSession));
+    }
   }
 
   snap (sessionId: SessionId): void {
@@ -100,25 +132,31 @@ export class SessionManager {
     // Update session ordering
     this.removeSession(prevSessionId);
     this.removeSession(nextSessionId);
-    this._order.push(nextSessionId);
+    this._order = [...this._order, nextSessionId];
 
     // Snap this session if we've newly added it to the timetable
     if (prevSessionId !== nextSessionId) {
       this.get(nextSessionId).snap();
     }
 
-    this._version++;
+    this.next();
   }
 
   private removeSession (prevSessionId: SessionId): void {
     const index = this._order.indexOf(prevSessionId);
     if (index !== -1) {
-      this._order.splice(index, 1);
+      this._order = [...this._order.slice(0, index), ...this._order.slice(index + 1)];
     }
   }
 
   private bumpSession (sessionId: SessionId): void {
     this.swapSession(sessionId, sessionId);
+  }
+
+  setClashDepth (sessionId: SessionId, depth: number): void {
+    const placement = this.get(sessionId);
+    placement.clashDepth = depth;
+    this.next();
   }
 
   private next (): void {

@@ -18,6 +18,9 @@ export const DISPLACE_VARIATION_Y = 10;
 export const DISPLACE_RADIUS_X = 15;
 export const DISPLACE_RADIUS_Y = 10;
 
+export const RAISE_DIST_X = -5;
+export const RAISE_DIST_Y = -5;
+
 
 export function arraysEqual<T> (a: T[], b: T[]): boolean {
   if (a.length !== b.length) {

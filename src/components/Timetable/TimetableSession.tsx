@@ -2,7 +2,7 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Session, CBS_CODE, Course, Stream } from '../../state';
+import { Session, CBS_CODE, Course, Stream, Options } from '../../state';
 import { Position, Dimensions } from './timetableTypes';
 import { DraggableCore, DraggableData } from 'react-draggable';
 
@@ -81,6 +81,7 @@ export interface Props extends WithStyles<typeof styles> {
   isDragging: boolean,
   isSnapped: boolean,
   clashDepth: number,
+  options: Options,
   onDrag: (session: Session) => false | void,
   onMove: (session: Session, delta: Position) => void,
   onDrop: (session: Session) => void,

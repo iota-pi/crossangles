@@ -125,7 +125,6 @@ class TimetableTable extends Component<Props, State> {
           if (!placement) return null;
 
           const session = placement.session;
-          // const isDragging = this.state.dragging ? this.state.dragging.stream === s.stream : false;
           return (
             <TimetableSession
               key={`${session.course.id}-${session.stream.component}-${session.index}`}
@@ -136,6 +135,7 @@ class TimetableTable extends Component<Props, State> {
               isDragging={placement.isDragging}
               isSnapped={placement.isSnapped}
               clashDepth={placement.clashDepth}
+              options={this.props.options}
               onDrag={this.handleDrag}
               onMove={this.handleMove}
               onDrop={this.handleDrop}
@@ -194,8 +194,10 @@ class TimetableTable extends Component<Props, State> {
     const sessions = nextState.sessions;
     const timetable = nextProps.timetable;
     const includeFull = nextProps.options.includeFull;
+    const missing = new Set(this.props.timetable.map(s => s.id));
     for (let session of timetable) {
       // Add new session placements
+      missing.delete(session.id);
       if (!sessions.has(session.id)) {
         const dimensions = nextState.dimensions;
         const newPlacement = new SessionPlacement({ session, dimensions });
@@ -216,9 +218,14 @@ class TimetableTable extends Component<Props, State> {
       }
     }
 
+    // Remove old session placements
+    for (let session of missing.keys()) {
+      sessions.remove(session, true);
+    }
+
     // Update clash depths
     if (this.timetableHasChanged(nextProps.timetable, false)) {
-      this.updateClashDepths(timetable, sessions);
+      this.updateClashDepths(sessions);
     }
 
     // Update dimensions
@@ -265,7 +272,7 @@ class TimetableTable extends Component<Props, State> {
       version: this.state.sessions.version
     });
 
-    this.updateClashDepths(this.props.timetable, this.state.sessions);
+    this.updateClashDepths(this.state.sessions);
   }
 
   private handleDrop = (session: Session): void => {
@@ -297,8 +304,8 @@ class TimetableTable extends Component<Props, State> {
 
       this.state.sessions.swapStream(oldSessionId, newSession.id);
 
-      // Explicitly snap the new session to the dropzone
-      this.state.sessions.snap(newSession.id);
+      // Explicitly snap the new session and all sessions in it's stream
+      this.state.sessions.snapStream(newSession.id);
     }
 
     // No longer dragging anything
@@ -307,7 +314,7 @@ class TimetableTable extends Component<Props, State> {
       version: this.state.sessions.version,
     });
 
-    this.updateClashDepths(this.props.timetable, this.state.sessions);
+    this.updateClashDepths(this.state.sessions);
   }
 
   private getNearestDropzone (position: Position): DropzonePlacement | null {
@@ -326,28 +333,6 @@ class TimetableTable extends Component<Props, State> {
     }
 
     return nearest;
-  }
-
-  private snapStream (oldStream: Stream, newStream: Stream) {
-    const draggingSession = this.state.dragging;
-    if (!draggingSession) {
-      return;
-    }
-
-    // Toggle snapToggle for each new session
-    const newSessions = newStream.sessions;
-    for (const linkedSession of newSessions) {
-      const sessionId = Session.getId(linkedSession);
-      const sessions = this.state.sessions;
-      if (sessions.has(sessionId)) {
-        sessions.snap(sessionId);
-      }
-    }
-
-    // Swap streams in timetable
-    this.props.onSwapStreams(oldStream, newStream, draggingSession);
-
-    this.updateClashDepths(this.props.timetable, this.state.sessions);
   }
 
   private handleMove = (session: Session, delta: Position) => {
@@ -420,37 +405,43 @@ class TimetableTable extends Component<Props, State> {
     return dropzones;
   }
 
-  private updateClashDepths (timetable: Timetable, sessions: SessionManager) {
-
-    for (let i = 0; i < timetable.length; ++i) {
+  private updateClashDepths (sessions: SessionManager) {
+    console.log('updateClashDepths');
+    for (let i = 0; i < sessions.order.length; ++i) {
       let takenDepths = new Set<number>();
-      const session1 = timetable[i];
-      const placement1 = sessions.get(session1.id);
+      const sessionId1 = sessions.order[i];
+      const placement1 = sessions.get(sessionId1);
 
-      // Skip sessions that aren't snapped
+      // Only measure for sessions which are snapped
       if (placement1.isSnapped) {
         for (let j = 0; j < i; ++j) {
-          const session2 = timetable[j];
-          const placement2 = sessions.get(session2.id);
+          const sessionId2 = sessions.order[j];
+          const placement2 = sessions.get(sessionId2);
 
-          // Skip sessions that aren't snapped
+          // Skip checking other sessions which aren't snapped
           if (!placement2.isSnapped) continue;
 
           // Check if sessions clash
-          if (sessionClashLength(session1, session2) > 0) {
+          if (sessionClashLength(placement1.session, placement2.session) > 0) {
             const jDepth = placement2.clashDepth;
             takenDepths.add(jDepth);
           }
         }
       }
 
-      for (let j = 0; j <= takenDepths.size; ++j) {
-        if (!takenDepths.has(j)) {
-          placement1.clashDepth = j;
-          break;
-        }
+      // Update clash depth
+      sessions.setClashDepth(sessionId1, this.findFreeDepth(takenDepths));
+    }
+  }
+
+  private findFreeDepth (takenDepths: Set<number>): number {
+    for (let j = 0; j < takenDepths.size; ++j) {
+      if (!takenDepths.has(j)) {
+        return j;
       }
     }
+
+    return takenDepths.size;
   }
 }
 
