@@ -70,7 +70,7 @@ export class Session {
   }
 
   static getId (session: ILinkedSession): SessionId {
-    return `${session.course}-${session.stream}-${session.index}`
+    return `${session.stream}-${session.index}`;
   }
 
   get course (): Course {
@@ -98,7 +98,7 @@ export class Session {
   }
 
   get id (): SessionId {
-    return `${this._course.id}-${this._stream.id}-${this._index}`;
+    return `${this._stream.id}-${this._index}`;
   }
 
   get component (): string {
