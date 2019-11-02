@@ -43,7 +43,7 @@ const _parseDataStr = (data: string): ClassTime[] => {
     }
     const [time, canClash] = tidiedTime;
 
-    const otherDetails = data.slice(openBracketIndex, data.indexOf(')'));
+    const otherDetails = data.slice(openBracketIndex + 1, data.indexOf(')'));
     const weeks = getWeeks(otherDetails);
     if (weeks === null) {
       return [];
