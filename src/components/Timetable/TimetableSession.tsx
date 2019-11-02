@@ -178,7 +178,35 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   private get details (): string[] {
-    return [];
+    const details: string[] = [];
+
+    if (this.props.options.showLocations) {
+      const location = this.props.session.location;
+      if (location) {
+        details.push(location);
+      }
+    }
+
+    if (this.props.options.showEnrolments) {
+      const enrols = this.stream.enrols;
+      if (enrols[1] > 0) {
+        const enrolsText = enrols.join('/');
+        if (details.length > 0) {
+          details[0] += ` (${enrolsText})`;
+        } else {
+          details.push(enrolsText);
+        }
+      }
+    }
+
+    if (this.props.options.showWeeks) {
+      const weeks = this.props.session.weeks;
+      if (weeks) {
+        details.push('Weeks: ' + weeks.replace('-', '–'));
+      }
+    }
+
+    return details;
   }
 
   private get styles (): CSSProperties {
