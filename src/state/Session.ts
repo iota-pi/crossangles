@@ -6,7 +6,7 @@ export type SessionId = string;
 
 export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F';
 
-interface ISessionCommon {
+export interface ISessionCommon {
   index: number;
   start: number;
   end: number;
@@ -37,6 +37,7 @@ export class Session {
   private _canClash?: boolean;
   private _location?: string;
   private _weeks?: string;
+  private _id: SessionId;
 
   constructor (session: ISession) {
     this._course = session.course;
@@ -48,6 +49,7 @@ export class Session {
     this._canClash = session.canClash;
     this._location = session.location;
     this._weeks = session.weeks;
+    this._id = `${this._stream.id}-${this._index}`;
   }
 
   static from (linkedSession: ILinkedSession, courses: Map<CourseId, Course>): Session {
@@ -98,7 +100,7 @@ export class Session {
   }
 
   get id (): SessionId {
-    return `${this._stream.id}-${this._index}`;
+    return this._id;
   }
 
   get component (): string {

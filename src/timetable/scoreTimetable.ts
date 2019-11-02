@@ -1,6 +1,7 @@
 import { Timetable, Stream, Session, ILinkedSession } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
+import TimetableScorerCache from './TimetableScorerCache';
 
 export interface TimetableScore {
   score: number,
@@ -11,33 +12,31 @@ export class TimetableScorer {
   private lastSessionIds: Set<string>;
   private clashInfo: ClashInfo;
   private fewestClashes: number;
-  private cache: Map<string, number>;
+  private cache: TimetableScorerCache<number>;
 
   constructor (lastSessionIds: string[], clashInfo: ClashInfo) {
     this.lastSessionIds = new Set(lastSessionIds);
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
-    this.cache = new Map<string, number>();
+    this.cache = new TimetableScorerCache();
   }
 
-  score (streams: Stream[]): number {
-    const streamIds = streams.map(s => s.id).join(',');
-    const cachedScore = this.cache.get(streamIds);
+  score (streams: Stream[], indexes: number[]): number {
+    const cachedScore = this.cache.get(indexes);
     if (cachedScore !== undefined) {
       return cachedScore;
     }
 
     const clashes = countClashes(streams, this.clashInfo, this.fewestClashes);
 
-    // Quick exit for
+    // Quick exit for timetables with more clashes than a previously found timetable
     if (clashes > this.fewestClashes) {
       return -Infinity;
     } else {
       this.fewestClashes = clashes;
     }
 
-    const streamSessions = streams.map(s => s.sessions);
-    const timetable = ([] as ILinkedSession[]).concat(...streamSessions);
+    const timetable = streams.flatMap(s => s.sessions);
     let score = 0;
     score += scoreClashes(clashes);
     score += scoreFreeDays(timetable);
@@ -45,7 +44,7 @@ export class TimetableScorer {
     score += scoreDayLength(timetable);
     score += scoreUnchanged(timetable, this.lastSessionIds);
 
-    this.cache.set(streamIds, score);
+    this.cache.set(indexes, score);
     return score;
   }
 }
@@ -57,7 +56,7 @@ export const scoreFreeDays = (sessions: ILinkedSession[]): number => {
     scores[sessions[i].day] = 0;
   }
 
-  return scores.M + scores.T + scores.W + scores.H + scores.F
+  return scores.M + scores.T + scores.W + scores.H + scores.F;
 }
 
 export const scoreTimes = (sessions: ILinkedSession[]): number => {
@@ -114,7 +113,7 @@ export const scoreUnchanged = (current: ILinkedSession[], past: Set<string>): nu
 export const countClashes = (
   streams: Stream[],
   clashInfo: ClashInfo,
-  maxClash: number
+  maxClash: number,
 ): number => {
   let count = 0;
 

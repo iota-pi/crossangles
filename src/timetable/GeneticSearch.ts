@@ -8,7 +8,7 @@ export interface GeneticSearchOptionalConfig {
 }
 
 export interface GeneticSearchRequiredConfig<T> {
-  scoreFunction: (result: T[]) => number,
+  scoreFunction: (result: T[], indexes: number[]) => number,
 }
 
 export type GeneticSearchConfig<T> = GeneticSearchOptionalConfig & GeneticSearchRequiredConfig<T>;
@@ -48,10 +48,12 @@ export class GeneticSearch<T> {
 
     let parents = this.abiogenesis(data);
 
-    for (let i = 0; i < this.config.maxIterations; ++i) {
+    const max = this.config.maxIterations;
+    const checkIters = this.config.checkIters;
+    for (let i = 0; i < max; ++i) {
       parents.push(this.mutate(this.chooseParent(parents), data));
 
-      if (i % this.config.checkIters === 0) {
+      if (i % checkIters === 0) {
         // Re-sort parents then remove the worst ones
         this.cullParents(parents);
 
@@ -69,14 +71,10 @@ export class GeneticSearch<T> {
   abiogenesis (data: T[][]): Parent<T>[] {
     const parents: Parent<T>[] = [];
     for (let i = 0; i < this.config.initialParents; ++i) {
-      const parent = data.map(x => Math.floor(Math.random() * x.length));
-      const mapped = parent.map((n, i) => data[i][n]);
-      const score = this.config.scoreFunction(mapped);
-      parents.push({
-        indexes: parent,
-        values: mapped,
-        score,
-      });
+      const indexes = data.map(x => Math.floor(Math.random() * x.length));
+      const values = indexes.map((n, i) => data[i][n]);
+      const score = this.config.scoreFunction(values, indexes);
+      parents.push({ indexes, values, score });
     }
 
     return parents.sort(this.parentSort);
@@ -107,7 +105,7 @@ export class GeneticSearch<T> {
     const newIndex = this.chooseNewIndexValue(indexes[i], data[i].length);
 
     values[i] = data[i][newIndex];
-    const score = this.config.scoreFunction(values);
+    const score = this.config.scoreFunction(values, indexes);
 
     // Copy and update indexes only if score is passable (i.e. not -Infinity)
     if (Number.isFinite(score)) {
@@ -149,6 +147,9 @@ export class GeneticSearch<T> {
 
   private cullParents (parents: Parent<T>[]): void {
     parents.sort(this.parentSort);
-    parents.splice(this.config.maxParents);
+    const max = this.config.maxParents;
+    if (parents.length > max) {
+      parents.length = max;
+    }
   }
 }
