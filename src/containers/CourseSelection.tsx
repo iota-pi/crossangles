@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect,  } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   RootState,
   Course,
@@ -21,6 +21,7 @@ import {
   doTimetableSearch,
   setNotice,
   bumpTimetableVersion,
+  addCustom,
 } from '../actions';
 import { updateTimetable } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
@@ -35,10 +36,18 @@ import Autocomplete from '../components/Autocomplete';
 import CourseDisplay from '../components/CourseDisplay';
 import GeneralOptions from '../components/GeneralOptions';
 import { setColour } from '../actions';
+import CreateCustom from '../components/CreateCustom';
+import { ClassTime } from '../state/times';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
     paddingTop: theme.spacing(2),
+  },
+  flex: {
+    display: 'flex',
+  },
+  flexGrow: {
+    flexGrow: 1,
   },
 });
 
@@ -69,13 +78,21 @@ class CourseSelection extends Component<Props, State> {
 
     return (
       <React.Fragment>
-        <Autocomplete
-          courses={this.props.courseList}
-          chosen={this.props.chosen}
-          additional={this.props.additional}
-          chooseCourse={this.chooseCourse}
-          maxItems={20}
-        />
+        <div className={classes.flex}>
+          <div className={classes.flexGrow}>
+            <Autocomplete
+              courses={this.props.courseList}
+              chosen={this.props.chosen}
+              additional={this.props.additional}
+              chooseCourse={this.chooseCourse}
+              maxItems={20}
+            />
+          </div>
+
+          <CreateCustom
+            onSave={this.addCustom}
+          />
+        </div>
 
         <div className={classes.spaceAbove}>
           <CourseDisplay
@@ -111,6 +128,21 @@ class CourseSelection extends Component<Props, State> {
 
   private removeCourse = async (course: Course) => {
     await this.props.dispatch(removeCourse(course));
+    await this.updateTimetable();
+  }
+
+  private addCustom = async (name: string, times: ClassTime[]) => {
+    const course = new CustomCourse({
+      code: 'custom_' + Math.random(),
+      name,
+      streams: times.map(time => ({
+        component: '',
+        enrols: [0, 0],
+        full: false,
+        times: [time],
+      })),
+    });
+    await this.props.dispatch(addCustom(course));
     await this.updateTimetable();
   }
 
