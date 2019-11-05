@@ -8,6 +8,15 @@ export const theme = createMuiTheme({
       main: '#1976D2',
     },
   },
+  overrides: {
+    MuiSelect: {
+      select: {
+        '&:focus': {
+          backgroundColor: 'none',
+        },
+      },
+    },
+  },
   typography: {},
 });
 
