@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
-import { courses, meta } from './data';
+import { courses } from './courses';
+import { meta } from "./meta";
 import { RootState } from '../state';
 import { chosen, custom, events, options, additional } from './commitments';
 import { timetable } from './timetable';
