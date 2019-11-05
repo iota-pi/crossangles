@@ -102,7 +102,8 @@ export const scoreUnchanged = (current: ILinkedSession[], past: Set<string>): nu
 
   let count = 0;
   for (let i = 0; i < current.length; ++i) {
-    if (past.has(Session.getId(current[i]))) {
+    const id = Session.getId(current[i])
+    if (past.has(id)) {
       count++;
     }
   }

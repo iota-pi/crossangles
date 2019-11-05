@@ -39,7 +39,7 @@ export function chosen (state = baseChosen, action: CourseAction | CoursesAction
       ];
     case SET_COURSE_DATA:
       // Only keep chosen courses which have current data
-      // NB: this is necessary only if a course stops being offered for a particular semester
+      // NB: this should only be necessary if a course stops being offered for a particular term
       //     after timetable data has been released (very unlikely)
       const newIds = new Set(action.courses.map(c => (new Course(c)).id));
       return state.filter(id => newIds.has(id));
