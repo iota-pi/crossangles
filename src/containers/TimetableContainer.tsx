@@ -99,12 +99,12 @@ class TimetableContainer extends Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const chosenSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
+  const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
 
   return {
     courses: state.courses,
-    chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(chosenSort),
-    custom: state.custom,
+    chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
+    custom: state.custom.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
     additional: state.additional.map(cid => notUndefined(state.courses.get(cid))),
     events: state.events,
     options: state.options,

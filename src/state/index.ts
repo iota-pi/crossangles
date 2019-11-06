@@ -32,7 +32,7 @@ export const OptionList = new Map<OptionName, string>([
   ['includeFull', 'Include full classes'],
 ]);
 
-export type CustomCourse = Course;
+export class CustomCourse extends Course {};
 
 export type Timetable = Session[];
 export type LinkedTimetable = ILinkedSession[];
@@ -60,7 +60,7 @@ export const baseOptions: Options = {
   showWeeks: false,
   includeFull: false,
 };
-export const baseCustom: CustomCourse[] = [];
+export const baseCustom: CourseId[] = [];
 export const baseTimetable: LinkedTimetable = [];
 export const baseTimetableVersion: number = 0;
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
@@ -73,7 +73,7 @@ export interface RootState {
   additional: CourseId[];
   events: CBSEvent[];
   options: Options;
-  custom: CustomCourse[];
+  custom: CourseId[];
   timetable: LinkedTimetable;
   timetableVersion: number;
   colours: Map<CourseId, string>;

@@ -48,15 +48,15 @@ export function chosen (state = baseChosen, action: CourseAction | CoursesAction
   return state;
 };
 
-export function custom (state = baseCustom, action: CustomAction): CustomCourse[] {
+export function custom (state = baseCustom, action: CustomAction): CourseId[] {
   switch (action.type) {
     case ADD_CUSTOM:
       return [
         ...state,
-        action.custom,
+        action.custom.code,
       ];
     case REMOVE_CUSTOM:
-      const i = state.indexOf(action.custom);
+      const i = state.indexOf(action.custom.code);
       return [
         ...state.slice(0, i),
         ...state.slice(i + 1),

@@ -195,13 +195,13 @@ class CourseSelection extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
-  const chosenSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
+  const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
 
   return {
     courses: state.courses,
     courseList: Array.from(state.courses.values()),
-    chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(chosenSort),
-    custom: state.custom,
+    chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(courseSort),
+    custom: state.custom.map(cid => isSet(state.courses.get(cid))).sort(courseSort),
     additional: state.additional.map(cid => isSet(state.courses.get(cid))),
     events: state.events,
     options: state.options,
