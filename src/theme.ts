@@ -16,6 +16,11 @@ export const theme = createMuiTheme({
         },
       },
     },
+    MuiIconButton: {
+      sizeSmall: {
+        padding: 6,
+      },
+    },
   },
   typography: {},
 });

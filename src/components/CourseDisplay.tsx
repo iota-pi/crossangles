@@ -3,8 +3,15 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { Course, CBS_CODE, CBSEvent, CourseId, CustomCourse } from '../state';
-import { List, ListItem, ListItemText, Divider, ListItemIcon, IconButton, Popover } from '@material-ui/core';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import IconButton from '@material-ui/core/IconButton';
+import Popover from '@material-ui/core/Popover';
 import Close from '@material-ui/icons/Close';
+import Edit from '@material-ui/icons/Edit';
 import CBSEvents from './CBSEvents';
 import WebStream from './WebStream';
 import { COURSE_COLOURS } from '../state/colours';
@@ -32,7 +39,7 @@ const styles = (theme: Theme) => createStyles({
   termText: {
     fontWeight: 400,
   },
-  colourPicker: {
+  marginRight: {
     marginRight: theme.spacing(1),
   },
 });
@@ -43,6 +50,7 @@ export interface Props extends WithStyles<typeof styles> {
   additional: Course[],
   events: CBSEvent[],
   colours: Map<CourseId, string>,
+  onEditCustomCourse: (course: Course) => void,
   onRemoveCourse: (course: Course) => void,
   onToggleEvent: (event: CBSEvent) => void,
   onToggleWeb: (course: Course) => void,
@@ -90,7 +98,17 @@ class CourseDisplay extends PureComponent<Props, State> {
                     </ListItemText>
                   )}
 
-                  <div className={classes.colourPicker}>
+                  {course.isCustom && (
+                    <IconButton
+                      size="small"
+                      className={classes.marginRight}
+                      onClick={() => this.props.onEditCustomCourse(course)}
+                    >
+                      <Edit />
+                    </IconButton>
+                  )}
+
+                  <div className={classes.marginRight}>
                     <Colour
                       colour={this.props.colours.get(course.id)!}
                       size={32}
@@ -127,7 +145,7 @@ class CourseDisplay extends PureComponent<Props, State> {
                     <span>{course.name}</span>
                   </ListItemText>
 
-                  <div className={classes.colourPicker}>
+                  <div className={classes.marginRight}>
                     <Colour
                       colour={this.props.colours.get(course.id)!}
                       size={32}

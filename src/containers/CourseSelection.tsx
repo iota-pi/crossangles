@@ -69,10 +69,13 @@ export interface StateProps {
 
 export type Props = WithDispatch<OwnProps & StateProps>;
 
-export interface State {}
+export interface State {
+  editingCourse: CustomCourse | null,
+}
 
 class CourseSelection extends Component<Props, State> {
   state = {
+    editingCourse: null,
   }
 
   render () {
@@ -92,6 +95,8 @@ class CourseSelection extends Component<Props, State> {
           </div>
 
           <CreateCustom
+            editing={this.state.editingCourse}
+            onClearEditing={this.handleClearEditing}
             onSave={this.addCustom}
           />
         </div>
@@ -103,6 +108,7 @@ class CourseSelection extends Component<Props, State> {
             additional={this.props.additional}
             events={this.props.events}
             colours={this.props.colours}
+            onEditCustomCourse={this.editCustomCourse}
             onRemoveCourse={this.removeCourse}
             onToggleEvent={this.toggleEvent}
             onToggleWeb={this.toggleWebStream}
@@ -196,6 +202,14 @@ class CourseSelection extends Component<Props, State> {
       await this.props.dispatch(updateTimetable(linkedTimetable));
       await this.props.dispatch(bumpTimetableVersion());
     }
+  }
+
+  private editCustomCourse = (course: CustomCourse) => {
+    this.setState({ editingCourse: course });
+  }
+
+  private handleClearEditing = () => {
+    this.setState({ editingCourse: null });
   }
 
   private get timetable (): Timetable {

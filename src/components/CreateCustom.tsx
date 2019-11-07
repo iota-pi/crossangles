@@ -8,7 +8,7 @@ import { Dialog, DialogTitle, Typography, IconButton, DialogContent, Button, Dia
 import EventIcon from '@material-ui/icons/Event';
 import CloseIcon from '@material-ui/icons/Close';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
-import { DayLetter } from '../state';
+import { DayLetter, CustomCourse } from '../state';
 import { ClassTime } from '../state/times';
 
 const styles = (theme: Theme) => createStyles({
@@ -44,6 +44,8 @@ export const getBlankOption = (): CustomTimeOption => {
 };
 
 export interface Props extends WithStyles<typeof styles> {
+  editing: CustomCourse | null,
+  onClearEditing: () => void,
   onSave: (name: string, times: ClassTime[]) => void,
 }
 
@@ -262,7 +264,7 @@ class CreateCustom extends PureComponent<Props, State> {
 
           <DialogActions>
             <Button color="primary" variant="contained" fullWidth onClick={this.handleClickSave}>
-              Add Event
+              {!this.props.editing ? "Add Event" : "Save Event"}
             </Button>
           </DialogActions>
         </Dialog>
@@ -270,11 +272,40 @@ class CreateCustom extends PureComponent<Props, State> {
     );
   }
 
+  componentDidUpdate (prevProps: Props) {
+    const editing = this.props.editing;
+    if (editing !== prevProps.editing) {
+      if (editing) {
+        const streams = editing.streams;
+        const { end, start } = streams[0].sessions[0];
+        const options: CustomTimeOption[] = streams.map(stream => {
+          const { day, start } = stream.sessions[0];
+          return { day, start };
+        });
+        options.push(getBlankOption());
+
+        this.setState({
+          open: true,
+          name: editing.name,
+          duration: end - start,
+          options,
+        });
+      } else {
+        this.setState({
+          name: '',
+          duration: 1,
+          options: [getBlankOption()],
+        });
+      }
+    }
+  }
+
   handleClickOpen = () => {
     this.setState({
       open: true,
       placeholderName: this.pickPlaceholderName(),
     });
+    this.props.onClearEditing();
   }
 
   handleClickSave = () => {
@@ -352,26 +383,20 @@ class CreateCustom extends PureComponent<Props, State> {
 
   private pickPlaceholderName () {
     const choices = [
-      'Catching the bus',
-      'Tutoring COMP1511',
+      'Watching Netflix',
+      'Playing spikeball',
       'Skipping a lecture',
       'Sitting in the Quad',
-      'Planning my holidays',
-      'Watching some Netflix',
-      'Playing some spikeball',
+      'Writing a lab report',
       'Sleeping in the library',
-      'Chasing Richard Buckland',
       'Watching a lecture online',
-      'Doing my tutorial homework',
       'Applying for a grad program',
       'Lining up for the CSESoc BBQ',
       'Wondering where Rex Vowels is',
+      'Meeting with thesis supervisor',
       'Complaining about my lecturers',
-      'Pretending to study for an exam',
       'Boasting about skipping lectures',
-      'Meeting with my thesis supervisor',
       'Drinking the best coffee on campus',
-      "Joining societies I'll never attend",
       'Being noisy outside lecture theatres',
     ]
     return choices[Math.floor(Math.random() * choices.length)];
