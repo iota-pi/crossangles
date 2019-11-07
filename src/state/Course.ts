@@ -16,6 +16,7 @@ export interface CourseData {
   streams: StreamData[];
   term?: string | null;
   useWebStream?: boolean;
+  isCustom?: boolean;
 }
 
 export class Course {
@@ -24,6 +25,7 @@ export class Course {
   streams: Stream[];
   term: string | null;
   useWebStream: boolean;
+  isCustom: boolean;
 
   constructor(courseData: CourseData) {
     this.code = courseData.code;
@@ -31,6 +33,7 @@ export class Course {
     this.streams = courseData.streams.map(s => new Stream({ ...s, course: this }));
     this.term = courseData.term || null;
     this.useWebStream = courseData.useWebStream || false;
+    this.isCustom = courseData.isCustom || false;
   }
 
   static from (data: RawCourseData) {
@@ -53,6 +56,7 @@ export class Course {
       streams: this.streams.map(s => s.data),
       term: this.term,
       useWebStream: this.useWebStream,
+      isCustom: this.isCustom,
     }
   }
 

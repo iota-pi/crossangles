@@ -60,7 +60,7 @@ export const baseOptions: Options = {
   showWeeks: false,
   includeFull: false,
 };
-export const baseCustom: CourseId[] = [];
+export const baseCustom: CustomCourse[] = [];
 export const baseTimetable: LinkedTimetable = [];
 export const baseTimetableVersion: number = 0;
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
@@ -73,7 +73,7 @@ export interface RootState {
   additional: CourseId[];
   events: CBSEvent[];
   options: Options;
-  custom: CourseId[];
+  custom: CustomCourse[];
   timetable: LinkedTimetable;
   timetableVersion: number;
   colours: Map<CourseId, string>;
@@ -92,4 +92,12 @@ export const baseState: RootState = {
   timetableVersion: baseTimetableVersion,
   colours: baseColours,
   notice: baseNotice,
+}
+
+export const getAllCourses = (state: RootState) => {
+  const allCourses = new Map(state.courses);
+  for (const custom of state.custom) {
+    allCourses.set(custom.code, custom);
+  }
+  return allCourses;
 }

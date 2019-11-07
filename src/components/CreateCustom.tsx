@@ -284,7 +284,7 @@ class CreateCustom extends PureComponent<Props, State> {
     this.props.onSave(
       this.state.name,
       cleanOptions.map(option => ({
-        time: `${option.day}${option.start}` + (duration !== 1) ? `${option.start! + duration}` : '',
+        time: `${option.day}${option.start}` + ((duration !== 1) ? `${option.start! + duration}` : ''),
       })),
     );
     this.handleClose();

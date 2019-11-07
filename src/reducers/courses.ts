@@ -18,13 +18,13 @@ export function courses (
         ...action.course.data,
         useWebStream: !action.course.useWebStream,
       }));
-    case ADD_CUSTOM:
-      newMap = new Map(state);
-      return newMap.set(action.custom.code, action.custom);
-    case REMOVE_CUSTOM:
-      newMap = new Map(state);
-      newMap.delete(action.custom.code);
-      return newMap;
+    // case ADD_CUSTOM:
+    //   newMap = new Map(state);
+    //   return newMap.set(action.custom.code, action.custom);
+    // case REMOVE_CUSTOM:
+    //   newMap = new Map(state);
+    //   newMap.delete(action.custom.code);
+    //   return newMap;
   }
 
   return state;

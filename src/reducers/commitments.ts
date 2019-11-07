@@ -16,10 +16,10 @@ import {
   baseCustom,
   baseEvents,
   baseOptions,
-  CustomCourse,
   CBSEvent,
   Options,
   baseAdditional,
+  CustomCourse,
 } from '../state';
 import { SET_COURSE_DATA, CoursesAction } from '../actions/fetch';
 import { CBS_CODE, CourseId } from '../state/Course';
@@ -48,15 +48,15 @@ export function chosen (state = baseChosen, action: CourseAction | CoursesAction
   return state;
 };
 
-export function custom (state = baseCustom, action: CustomAction): CourseId[] {
+export function custom (state = baseCustom, action: CustomAction): CustomCourse[] {
   switch (action.type) {
     case ADD_CUSTOM:
       return [
         ...state,
-        action.custom.code,
+        action.custom,
       ];
     case REMOVE_CUSTOM:
-      const i = state.indexOf(action.custom.code);
+      const i = state.indexOf(action.custom);
       return [
         ...state.slice(0, i),
         ...state.slice(i + 1),

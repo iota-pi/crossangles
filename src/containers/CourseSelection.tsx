@@ -11,6 +11,7 @@ import {
   CustomCourse,
   LinkedTimetable,
   Session,
+  getAllCourses,
 } from '../state';
 import {
   addCourse,
@@ -136,11 +137,12 @@ class CourseSelection extends Component<Props, State> {
       code: 'custom_' + Math.random(),
       name,
       streams: times.map(time => ({
-        component: '',
+        component: name,
         enrols: [0, 0],
         full: false,
         times: [time],
       })),
+      isCustom: true,
     });
     await this.props.dispatch(addCustom(course));
     await this.updateTimetable();
@@ -198,10 +200,10 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
 
   return {
-    courses: state.courses,
+    courses: getAllCourses(state),
     courseList: Array.from(state.courses.values()),
     chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(courseSort),
-    custom: state.custom.map(cid => isSet(state.courses.get(cid))).sort(courseSort),
+    custom: state.custom,
     additional: state.additional.map(cid => isSet(state.courses.get(cid))),
     events: state.events,
     options: state.options,

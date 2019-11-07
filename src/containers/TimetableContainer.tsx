@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session } from '../state';
+import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses } from '../state';
 import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -102,9 +102,9 @@ const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
 
   return {
-    courses: state.courses,
+    courses: getAllCourses(state),
     chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
-    custom: state.custom.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
+    custom: state.custom,
     additional: state.additional.map(cid => notUndefined(state.courses.get(cid))),
     events: state.events,
     options: state.options,

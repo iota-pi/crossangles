@@ -157,8 +157,7 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   private get isSpecialCourse (): boolean {
-    // TODO handle custom courses
-    return this.course.code === CBS_CODE;
+    return this.course.code === CBS_CODE || this.course.isCustom || false;
   }
 
   private get sessionTitle (): string {
