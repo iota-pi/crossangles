@@ -23,6 +23,7 @@ import {
   setNotice,
   bumpTimetableVersion,
   addCustom,
+  removeCustom,
 } from '../actions';
 import { updateTimetable } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
@@ -128,11 +129,6 @@ class CourseSelection extends Component<Props, State> {
     await this.updateTimetable();
   }
 
-  private removeCourse = async (course: Course) => {
-    await this.props.dispatch(removeCourse(course));
-    await this.updateTimetable();
-  }
-
   private addCustom = async (name: string, times: ClassTime[]) => {
     const course = new CustomCourse({
       code: 'custom_' + Math.random(),
@@ -147,6 +143,15 @@ class CourseSelection extends Component<Props, State> {
     });
     await this.props.dispatch(addCustom(course));
     await this.props.dispatch(setColour(course.id));
+    await this.updateTimetable();
+  }
+
+  private removeCourse = async (course: Course | CustomCourse) => {
+    if (course.isCustom) {
+      await this.props.dispatch(removeCustom(course));
+    } else {
+      await this.props.dispatch(removeCourse(course));
+    }
     await this.updateTimetable();
   }
 
@@ -194,7 +199,13 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private get timetable (): Timetable {
-    return this.props.linkedTimetable.map(s => Session.from(s, this.props.courses));
+    const timetable = [];
+    for (const session of this.props.linkedTimetable) {
+      if (this.props.courses.has(session.course)) {
+        timetable.push(Session.from(session, this.props.courses));
+      }
+    }
+    return timetable;
   }
 }
 

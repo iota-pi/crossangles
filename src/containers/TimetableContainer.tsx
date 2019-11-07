@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses } from '../state';
+import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses, Timetable } from '../state';
 import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -93,8 +93,14 @@ class TimetableContainer extends Component<Props> {
     return ([] as Stream[]).concat(...this.allCourses.map(c => c.streams));
   }
 
-  private get timetable (): Session[] {
-    return this.props.linkedTimetable.map(s => Session.from(s, this.props.courses));
+  private get timetable (): Timetable {
+    const timetable = [];
+    for (const session of this.props.linkedTimetable) {
+      if (this.props.courses.has(session.course)) {
+        timetable.push(Session.from(session, this.props.courses));
+      }
+    }
+    return timetable;
   }
 }
 
