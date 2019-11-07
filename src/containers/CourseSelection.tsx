@@ -146,7 +146,12 @@ class CourseSelection extends Component<Props, State> {
       isCustom: true,
     });
     await this.props.dispatch(addCustom(course));
+    await this.props.dispatch(setColour(course.id));
     await this.updateTimetable();
+  }
+
+  private changeColour = async (course: Course, colour: string) => {
+    await this.props.dispatch(setColour(course.id, colour));
   }
 
   private toggleWebStream = async (course: Course) => {
@@ -186,10 +191,6 @@ class CourseSelection extends Component<Props, State> {
       await this.props.dispatch(updateTimetable(linkedTimetable));
       await this.props.dispatch(bumpTimetableVersion());
     }
-  }
-
-  private changeColour = async (course: Course, colour: string) => {
-    await this.props.dispatch(setColour(course.id, colour));
   }
 
   private get timetable (): Timetable {
