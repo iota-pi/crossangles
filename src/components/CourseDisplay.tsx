@@ -2,7 +2,7 @@ import React, { PureComponent, MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { Course, CBS_CODE, CBSEvent, CourseId } from '../state';
+import { Course, CBS_CODE, CBSEvent, CourseId, CustomCourse } from '../state';
 import { List, ListItem, ListItemText, Divider, ListItemIcon, IconButton, Popover } from '@material-ui/core';
 import Close from '@material-ui/icons/Close';
 import CBSEvents from './CBSEvents';
@@ -39,6 +39,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   chosen: Course[],
+  custom: CustomCourse[],
   additional: Course[],
   events: CBSEvent[],
   colours: Map<CourseId, string>,
@@ -64,7 +65,7 @@ class CourseDisplay extends PureComponent<Props, State> {
 
   render() {
     const classes = this.props.classes;
-    const allCourses = this.props.chosen.concat(this.props.additional);
+    const allCourses = this.props.chosen.concat(this.props.custom, this.props.additional);
 
     return (
       <List className={classes.root} disablePadding>
@@ -74,13 +75,20 @@ class CourseDisplay extends PureComponent<Props, State> {
             {course.code !== CBS_CODE ? (
               <React.Fragment>
                 <ListItem className={course.hasWebStream ? classes.lessSpaceBelow : undefined}>
-                  <ListItemText>
-                    <span>{course.code}</span>
-                    <span className={classes.lightText}> — {course.name}</span>
-                    {course.term ? (
-                      <span className={classes.termText}> ({course.term})</span>
-                    ) : null}
-                  </ListItemText>
+                  {!course.isCustom ? (
+                    <ListItemText>
+                      <span>{course.code}</span>
+                      <span className={classes.lightText}> — {course.name}</span>
+                      {course.term ? (
+                        <span className={classes.termText}> ({course.term})</span>
+                      ) : null}
+                    </ListItemText>
+                  ) : (
+                    <ListItemText>
+                      <span>{course.name}</span>
+                      <span className={classes.lightText}> (Personal)</span>
+                    </ListItemText>
+                  )}
 
                   <div className={classes.colourPicker}>
                     <Colour

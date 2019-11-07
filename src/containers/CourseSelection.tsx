@@ -98,6 +98,7 @@ class CourseSelection extends Component<Props, State> {
         <div className={classes.spaceAbove}>
           <CourseDisplay
             chosen={this.props.chosen}
+            custom={this.props.custom}
             additional={this.props.additional}
             events={this.props.events}
             colours={this.props.colours}
