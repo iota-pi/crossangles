@@ -25,6 +25,9 @@ const styles = (theme: Theme) => createStyles({
   moveRight: {
     marginRight: theme.spacing(-1),
   },
+  marginTop: {
+    marginTop: theme.spacing(2.5),
+  },
   paddingBottom: {
     paddingBottom: theme.spacing(2),
   },
@@ -165,9 +168,9 @@ class CreateCustom extends PureComponent<Props, State> {
               fullWidth
             />
 
-            <Grid container spacing={1} alignItems="flex-end" className={classes.paddingBottom}>
+            <Grid container spacing={1} className={classes.paddingBottom}>
               <Grid item>
-                <TimelapseIcon />
+                <TimelapseIcon className={classes.marginTop} />
               </Grid>
               <Grid item className={classes.flexGrow}>
                 <TextField
@@ -175,7 +178,9 @@ class CreateCustom extends PureComponent<Props, State> {
                   select
                   fullWidth
                   value={this.state.duration}
+                  error={this.durationError()}
                   onChange={this.handleChangeDuration}
+                  helperText={this.durationError() ? "Events cannot be timetabled past midnight" : ""}
                 >
                   {durationOptions.map(item => (
                     <MenuItem value={item.duration} key={item.text}>
@@ -238,6 +243,7 @@ class CreateCustom extends PureComponent<Props, State> {
                     fullWidth
                     value={option.start || ''}
                     onChange={event => this.handleChangeTime(event, i)}
+                    error={(option.start || 0) + this.state.duration > 24}
                     InputProps={{
                       endAdornment: option.start && (
                         <InputAdornment position="end" className={classes.clearButton}>
@@ -266,7 +272,13 @@ class CreateCustom extends PureComponent<Props, State> {
           </DialogContent>
 
           <DialogActions>
-            <Button color="primary" variant="contained" fullWidth onClick={this.handleClickSave}>
+            <Button
+              color="primary"
+              variant="contained"
+              fullWidth
+              disabled={!this.canSubmit()}
+              onClick={this.handleClickSave}
+            >
               {!this.props.editing ? "Add Event" : "Save Event"}
             </Button>
           </DialogActions>
@@ -382,6 +394,22 @@ class CreateCustom extends PureComponent<Props, State> {
   private hasFullOptionLast = (options: CustomTimeOption[]) => {
     const last = options[options.length - 1];
     return last.day && last.start;
+  }
+
+  private durationError = () => {
+    const latestStart = Math.max(...this.state.options.map(o => o.start || 0));
+    return latestStart + this.state.duration > 24;
+  }
+
+  private canSubmit = (): boolean => {
+    const nameError = !this.state.name;
+    const durationError = this.durationError();
+    const noOptionsError = this.state.options.length <= 1;
+
+    // Don't allow an option to have a day OR a time but not both
+    const emptyCellError = this.state.options.filter(o => (!o.day !== !o.start)).length > 0;
+
+    return !nameError && !durationError && !emptyCellError && !noOptionsError;
   }
 
   private pickPlaceholderName () {
