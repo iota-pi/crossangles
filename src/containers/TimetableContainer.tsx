@@ -100,12 +100,13 @@ class TimetableContainer extends Component<Props> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
+  const customSort = (a: Course, b: Course) => +(a.name > b.name) - +(a.name < b.name);
 
   return {
     courses: getAllCourses(state),
     chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
-    custom: state.custom,
-    additional: state.additional.map(cid => notUndefined(state.courses.get(cid))),
+    custom: state.custom.sort(customSort),
+    additional: state.additional.map(cid => notUndefined(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
     linkedTimetable: state.timetable,
