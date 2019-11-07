@@ -155,11 +155,14 @@ class CreateCustom extends PureComponent<Props, State> {
           <DialogContent>
             <TextField
               label="Event Name"
-              className={classes.paddingBottom}
               placeholder={this.state.placeholderName}
               value={this.state.name}
-              fullWidth
               onChange={this.handleChangeName}
+              inputProps={{ maxLength: 40 }}
+              helperText={`${this.state.name.length} / 40`}
+              autoFocus
+              className={classes.paddingBottom}
+              fullWidth
             />
 
             <Grid container spacing={1} alignItems="flex-end" className={classes.paddingBottom}>
