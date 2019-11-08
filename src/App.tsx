@@ -34,7 +34,6 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface OwnProps extends WithStyles<typeof styles> {
-
 }
 
 export interface StateProps {
@@ -96,7 +95,9 @@ class App extends Component<Props, State> {
     );
   }
 
-  componentWillMount () {
+  componentDidMount () {
+    // TODO: immediately start data loading (asynchronously) without waiting for render
+    // (maybe put near store initialisation)
     this.props.getData();
   }
 
@@ -105,7 +106,7 @@ class App extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: RootState): StateProps => {
   return {
     courses: Array.from(state.courses.values()),
     meta: state.meta,

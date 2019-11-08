@@ -189,17 +189,17 @@ class TimetableTable extends Component<Props, State> {
     return false;
   }
 
-  componentWillUpdate (nextProps: Props, nextState: State) {
+  componentDidUpdate (prevProps: Props) {
     // Add SessionPlacement for each new session in the timetable
-    const sessions = nextState.sessions;
-    const timetable = nextProps.timetable;
-    const includeFull = nextProps.options.includeFull;
-    const missing = new Set(this.props.timetable.map(s => s.id));
+    const sessions = this.state.sessions;
+    const timetable = this.props.timetable;
+    const includeFull = this.props.options.includeFull;
+    const missing = new Set(prevProps.timetable.map(s => s.id));
     for (let session of timetable) {
       // Add new session placements
       missing.delete(session.id);
       if (!sessions.has(session.id)) {
-        const dimensions = nextState.dimensions;
+        const dimensions = this.state.dimensions;
         const newPlacement = new SessionPlacement({ session, dimensions });
         sessions.set(session.id, newPlacement);
       }
@@ -212,7 +212,7 @@ class TimetableTable extends Component<Props, State> {
         }
 
         // Snap session if it's been updated
-        if (this.props.timetableVersion !== nextProps.timetableVersion) {
+        if (prevProps.timetableVersion !== this.props.timetableVersion) {
           existingPlacement.snap();
         }
       }
@@ -224,12 +224,12 @@ class TimetableTable extends Component<Props, State> {
     }
 
     // Update clash depths
-    if (this.timetableHasChanged(nextProps.timetable, false)) {
+    if (this.timetableHasChanged(this.props.timetable, false)) {
       this.updateClashDepths(sessions);
     }
 
     // Update dimensions
-    const newDimensions = nextState.dimensions;
+    const newDimensions = this.state.dimensions;
     newDimensions.updateDimensions(this.timetableDimensions);
     newDimensions.updateHours(this.hours);
   }
