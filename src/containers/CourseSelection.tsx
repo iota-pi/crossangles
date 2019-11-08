@@ -12,6 +12,7 @@ import {
   LinkedTimetable,
   Session,
   getAllCourses,
+  CourseData,
 } from '../state';
 import {
   addCourse,
@@ -24,6 +25,7 @@ import {
   bumpTimetableVersion,
   addCustom,
   removeCustom,
+  updateCustom,
 } from '../actions';
 import { updateTimetable } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
@@ -74,7 +76,7 @@ export interface State {
 }
 
 class CourseSelection extends Component<Props, State> {
-  state = {
+  state: State = {
     editingCourse: null,
   }
 
@@ -136,8 +138,8 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private addCustom = async (name: string, times: ClassTime[]) => {
-    const course = new CustomCourse({
-      code: 'custom_' + Math.random(),
+    let course: CustomCourse;
+    const updatedValues: Omit<CourseData, 'code'> = {
       name,
       streams: times.map(time => ({
         component: name,
@@ -145,11 +147,29 @@ class CourseSelection extends Component<Props, State> {
         full: false,
         times: [time],
       })),
-      isCustom: true,
-    });
-    await this.props.dispatch(addCustom(course));
-    await this.props.dispatch(setColour(course.id));
+    }
+
+    if (this.state.editingCourse) {
+      course = new CustomCourse({
+        ...this.state.editingCourse.data,
+        ...updatedValues,
+      });
+      await this.props.dispatch(updateCustom(
+        this.state.editingCourse,
+        updatedValues,
+      ));
+    } else {
+      course = new CustomCourse({
+        code: 'custom_' + Math.random(),
+        isCustom: true,
+        ...updatedValues,
+      });
+      await this.props.dispatch(addCustom(course));
+      await this.props.dispatch(setColour(course.id));
+    }
+
     await this.updateTimetable();
+    this.setState({ editingCourse: null }); // TODO replace with after close in CreateCustom
   }
 
   private removeCourse = async (course: Course | CustomCourse) => {

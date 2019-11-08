@@ -140,6 +140,7 @@ class CreateCustom extends PureComponent<Props, State> {
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
+          // TODO: call this.props.onClearEditing *after* close
           aria-labelledby="custom-event-dialog-title"
           className={classes.dialog}
           fullWidth

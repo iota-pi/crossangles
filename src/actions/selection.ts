@@ -1,4 +1,4 @@
-import { CBSEvent, Options, CustomCourse, Course, OptionName } from "../state";
+import { CBSEvent, Options, CustomCourse, Course, OptionName, CourseData } from "../state";
 import { Action } from "redux";
 
 // Chosen courses
@@ -34,11 +34,18 @@ export function toggleWebStream (course: Course): CourseAction {
 
 // Custom courses
 export const ADD_CUSTOM = 'ADD_CUSTOM';
+export const UPDATE_CUSTOM = 'UPDATE_CUSTOM';
 export const REMOVE_CUSTOM = 'REMOVE_CUSTOM';
-export interface CustomAction extends Action {
+export interface SimpleCustomAction extends Action {
   type: typeof ADD_CUSTOM | typeof REMOVE_CUSTOM;
   custom: CustomCourse;
 }
+export interface UpdateCustomAction {
+  type: typeof UPDATE_CUSTOM;
+  custom: CustomCourse;
+  newData: Partial<CourseData>;
+}
+export type CustomAction = SimpleCustomAction | UpdateCustomAction;
 
 export function addCustom (custom: CustomCourse): CustomAction {
   return {
@@ -51,6 +58,14 @@ export function removeCustom (custom: CustomCourse): CustomAction {
   return {
     type: REMOVE_CUSTOM,
     custom,
+  }
+}
+
+export function updateCustom (custom: CustomCourse, newData: Partial<CourseData>): CustomAction {
+  return {
+    type: UPDATE_CUSTOM,
+    custom,
+    newData,
   }
 }
 

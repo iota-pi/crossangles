@@ -9,6 +9,7 @@ import {
   EventAction,
   CourseAction,
   CustomAction,
+  UPDATE_CUSTOM,
 } from '../actions/selection';
 import {
   Course,
@@ -49,6 +50,7 @@ export function chosen (state = baseChosen, action: CourseAction | CoursesAction
 };
 
 export function custom (state = baseCustom, action: CustomAction): CustomCourse[] {
+  let i: number;
   switch (action.type) {
     case ADD_CUSTOM:
       return [
@@ -56,11 +58,18 @@ export function custom (state = baseCustom, action: CustomAction): CustomCourse[
         action.custom,
       ];
     case REMOVE_CUSTOM:
-      const i = state.indexOf(action.custom);
+      i = state.indexOf(action.custom);
       return [
         ...state.slice(0, i),
         ...state.slice(i + 1),
       ];
+    case UPDATE_CUSTOM:
+      i = state.indexOf(action.custom);
+      return [
+        ...state.slice(0, i),
+        new CustomCourse({ ...state[i].data, ...action.newData }),
+        ...state.slice(i + 1),
+      ]
   }
 
   return state;
