@@ -144,7 +144,7 @@ class CreateCustom extends PureComponent<Props, State> {
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
-          // TODO: call this.props.onClearEditing *after* close
+          onExited={this.handleExited}
           aria-labelledby="custom-event-title"
           className={classes.dialog}
           fullWidth
@@ -317,29 +317,22 @@ class CreateCustom extends PureComponent<Props, State> {
 
   componentDidUpdate (prevProps: Props) {
     const editing = this.props.editing;
-    if (editing !== prevProps.editing) {
-      if (editing) {
-        const streams = editing.streams;
-        const { end, start } = streams[0].sessions[0];
-        const options: CustomTimeOption[] = streams.map(stream => {
-          const { day, start } = stream.sessions[0];
-          return { day, start };
-        });
-        options.push(getBlankOption());
+    if (editing && editing !== prevProps.editing) {
+      const streams = editing.streams;
+      const { end, start } = streams[0].sessions[0];
+      const options: CustomTimeOption[] = streams.map(stream => {
+        const { day, start } = stream.sessions[0];
+        console.log(day, start)
+        return { day, start };
+      });
+      options.push(getBlankOption());
 
-        this.setState({
-          open: true,
-          name: editing.name,
-          duration: end - start,
-          options,
-        });
-      } else {
-        this.setState({
-          name: '',
-          duration: 1,
-          options: [getBlankOption()],
-        });
-      }
+      this.setState({
+        open: true,
+        name: editing.name,
+        duration: end - start,
+        options,
+      });
     }
   }
 
@@ -348,7 +341,6 @@ class CreateCustom extends PureComponent<Props, State> {
       open: true,
       placeholderName: this.pickPlaceholderName(),
     });
-    this.props.onClearEditing();
   }
 
   handleClickSave = () => {
@@ -358,7 +350,7 @@ class CreateCustom extends PureComponent<Props, State> {
     this.props.onSave(
       this.state.name,
       cleanOptions.map(option => ({
-        time: `${option.day}${option.start}` + ((duration !== 1) ? `${option.start! + duration}` : ''),
+        time: `${option.day}${option.start}` + ((duration !== 1) ? `-${option.start! + duration}` : ''),
       })),
     );
     this.handleClose();
@@ -366,6 +358,15 @@ class CreateCustom extends PureComponent<Props, State> {
 
   handleClose = () => {
     this.setState({ open: false });
+  }
+
+  handleExited = () => {
+    this.setState({
+      name: '',
+      duration: 1,
+      options: [getBlankOption()],
+    });
+    this.props.onClearEditing();
   }
 
   handleChangeName = (event: ChangeEvent<{value: unknown}>) => {

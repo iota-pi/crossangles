@@ -103,6 +103,7 @@ class CourseDisplay extends PureComponent<Props, State> {
                       size="small"
                       className={classes.marginRight}
                       onClick={() => this.props.onEditCustomCourse(course)}
+                      data-cy="edit-custom"
                     >
                       <Edit />
                     </IconButton>
