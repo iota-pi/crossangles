@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 
-context('Actions', () => {
+context('Course selection', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/')
   })

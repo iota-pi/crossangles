@@ -1,13 +1,13 @@
 /// <reference types="Cypress" />
 
-context('Actions', () => {
+context('Custom event', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000/')
     cy.dataCy('create-custom-event')
       .click()
   })
 
-  it('can open and close custom course dialog', () => {
+  it('can open and close custom event dialog', () => {
     cy.get('#custom-event-title')
       .should('exist')
     cy.dataCy('custom-event-name')
