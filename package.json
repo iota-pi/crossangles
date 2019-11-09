@@ -15,6 +15,7 @@
     "@types/react-select": "^2.0.19",
     "apify": "^0.14.15",
     "axios": "^0.19.0",
+    "cypress": "^3.6.0",
     "enzyme": "^3.10.0",
     "esm": "^3.2.25",
     "puppeteer": "^2.0.0",
@@ -37,7 +38,8 @@
     "eject": "react-scripts eject",
     "start:crawl": "node build/crawler",
     "build:crawl": "tsc src/crawler/index.ts --outDir build --target es5",
-    "watch:crawl": "tsc -w src/crawler/index.ts --outDir build --target es5"
+    "watch:crawl": "tsc -w src/crawler/index.ts --outDir build --target es5",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"

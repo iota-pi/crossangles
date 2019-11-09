@@ -34,6 +34,7 @@ export class Option extends Component<Props> {
         component="div"
         onKeyPress={this.handleKeyPress}
         {...innerProps}
+        data-cy="autocomplete-option"
       >
         {!this.props.isDisabled ? (
           <React.Fragment>

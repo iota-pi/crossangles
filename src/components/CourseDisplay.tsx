@@ -76,7 +76,7 @@ class CourseDisplay extends PureComponent<Props, State> {
     const allCourses = this.props.chosen.concat(this.props.custom, this.props.additional);
 
     return (
-      <List className={classes.root} disablePadding>
+      <List className={classes.root} disablePadding id="course-display">
         {allCourses.map((course, i) => (
           <React.Fragment key={course.id}>
             <Divider light />
@@ -123,6 +123,7 @@ class CourseDisplay extends PureComponent<Props, State> {
                     <IconButton
                       size="small"
                       onClick={() => this.props.onRemoveCourse(course)}
+                      data-cy="remove-course"
                     >
                       <Close />
                     </IconButton>

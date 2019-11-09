@@ -133,7 +133,11 @@ class CreateCustom extends PureComponent<Props, State> {
 
     return (
       <div>
-        <IconButton color="primary" onClick={this.handleClickOpen}>
+        <IconButton
+          color="primary"
+          onClick={this.handleClickOpen}
+          data-cy="create-custom-event"
+        >
           <EventIcon/>
         </IconButton>
 
@@ -141,17 +145,22 @@ class CreateCustom extends PureComponent<Props, State> {
           open={this.state.open}
           onClose={this.handleClose}
           // TODO: call this.props.onClearEditing *after* close
-          aria-labelledby="custom-event-dialog-title"
+          aria-labelledby="custom-event-title"
           className={classes.dialog}
           fullWidth
           maxWidth="sm"
         >
           <DialogTitle disableTypography className={classes.dialogTitle}>
-            <Typography variant="h6" id="custom-event-dialog-title" className={classes.flexGrow}>
+            <Typography variant="h6" id="custom-event-title" className={classes.flexGrow}>
               Add Personal Event
             </Typography>
 
-            <IconButton aria-label="close" onClick={this.handleClose} className={classes.moveRight}>
+            <IconButton
+              aria-label="close"
+              onClick={this.handleClose}
+              className={classes.moveRight}
+              data-cy="close-dialog"
+            >
               <CloseIcon></CloseIcon>
             </IconButton>
           </DialogTitle>
@@ -167,6 +176,7 @@ class CreateCustom extends PureComponent<Props, State> {
               autoFocus
               className={classes.paddingBottom}
               fullWidth
+              data-cy="custom-event-name"
             />
 
             <Grid container spacing={1} className={classes.paddingBottom}>
@@ -182,9 +192,14 @@ class CreateCustom extends PureComponent<Props, State> {
                   error={this.durationError()}
                   onChange={this.handleChangeDuration}
                   helperText={this.durationError() ? "Events cannot be timetabled past midnight" : ""}
+                  data-cy="custom-event-duration"
                 >
                   {durationOptions.map(item => (
-                    <MenuItem value={item.duration} key={item.text}>
+                    <MenuItem
+                      value={item.duration}
+                      key={item.text}
+                      data-cy="custom-event-duration-item"
+                    >
                       {item.text}
                     </MenuItem>
                   ))}
@@ -223,15 +238,21 @@ class CreateCustom extends PureComponent<Props, State> {
                             disableFocusRipple
                             size="small"
                             onClick={() => this.handleClickClearDay(i)}
+                            data-cy="clear-input"
                           >
                             <CloseIcon />
                           </IconButton>
                         </InputAdornment>
                       )
                     }}
+                    data-cy="custom-event-day"
                   >
                     {dayOptions.map(item => (
-                      <MenuItem value={item.letter} key={item.text}>
+                      <MenuItem
+                        value={item.letter}
+                        key={item.text}
+                        data-cy="custom-event-day-item"
+                      >
                         {item.text}
                       </MenuItem>
                     ))}
@@ -254,15 +275,21 @@ class CreateCustom extends PureComponent<Props, State> {
                             disableFocusRipple
                             size="small"
                             onClick={() => this.handleClickClearTime(i)}
-                          >
+                            data-cy="clear-input"
+                            >
                             <CloseIcon />
                           </IconButton>
                         </InputAdornment>
                       )
                     }}
+                    data-cy="custom-event-time"
                   >
                     {timeOptions.map(item => (
-                      <MenuItem value={item.time} key={item.text}>
+                      <MenuItem
+                        value={item.time}
+                        key={item.text}
+                        data-cy="custom-event-time-item"
+                      >
                         {item.text}
                       </MenuItem>
                     ))}
@@ -278,7 +305,7 @@ class CreateCustom extends PureComponent<Props, State> {
               variant="contained"
               fullWidth
               disabled={!this.canSubmit()}
-              onClick={this.handleClickSave}
+              onClick={this.handleClickSave}data-cy="custom-event-submit"
             >
               {!this.props.editing ? "Add Event" : "Save Event"}
             </Button>
