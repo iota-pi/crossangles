@@ -2,7 +2,7 @@
 
 context('Course selection', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
   })
 
   it('can add and remove courses', () => {

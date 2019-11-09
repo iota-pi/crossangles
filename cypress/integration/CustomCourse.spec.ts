@@ -2,7 +2,7 @@
 
 context('Custom event', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/')
+    cy.visit('/')
     cy.dataCy('create-custom-event')
       .click()
   })
