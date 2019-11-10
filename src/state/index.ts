@@ -53,7 +53,7 @@ export const baseMeta: Meta = {
 }
 export const baseChosen: CourseId[] = [];
 export const baseAdditional: CourseId[] = [];
-export const baseEvents: CBSEvent[] = ['The Bible Talks'];
+export const baseEvents: CBSEvent[] = [];
 export const baseOptions: Options = {
   showEnrolments: false,
   showLocations: false,
