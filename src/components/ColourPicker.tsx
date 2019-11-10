@@ -41,6 +41,7 @@ class ColourPicker extends PureComponent<Props> {
     return (
       <div
         className={classes.root}
+        data-cy="colour-picker"
       >
         <div
           className={classes.colourContainer}

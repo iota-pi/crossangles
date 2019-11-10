@@ -86,12 +86,27 @@ export class SessionManager {
   drop (sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.drop();
+
+    const stream = session.session.stream;
+    for (let linkedSession of stream.sessions) {
+      const linkedId = Session.getId(linkedSession);
+      if (linkedId !== sessionId) {
+        this.lower(linkedId);
+      }
+    }
+
     this.next();
   }
 
   raise (sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.raise();
+    this.next();
+  }
+
+  lower (sessionId: SessionId): void {
+    const session = this.get(sessionId);
+    session.lower();
     this.next();
   }
 

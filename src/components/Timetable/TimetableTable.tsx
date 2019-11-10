@@ -119,7 +119,7 @@ class TimetableTable extends Component<Props, State> {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
     return (
-      <div className={classes.root}>
+      <div className={classes.root} data-cy="timetable">
         {this.state.dimensions.dimensions.width ? this.state.sessions.order.map(sid => {
           const placement = this.state.sessions.getMaybe(sid);
           if (!placement) return null;
@@ -148,6 +148,7 @@ class TimetableTable extends Component<Props, State> {
             key={dropzone.session.stream.id}
             position={dropzone.basePlacement}
             colour={this.getColour(dropzone.session.course.id)}
+            session={dropzone.session}
           />
         ))}
 

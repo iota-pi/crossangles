@@ -97,17 +97,17 @@ context('Custom event', () => {
     cy.dataCy('custom-event-day')
       .should('have.length', 3)
       .eq(0)
-      .find('[data-cy=clear-input]')
+      .dataCy('clear-input')
       .click()
     cy.dataCy('custom-event-time')
       .should('have.length', 3)
       .eq(1)
-      .find('[data-cy=clear-input]')
+      .dataCy('clear-input')
       .click()
     cy.dataCy('custom-event-time')
       .should('have.length', 3)
       .eq(0)
-      .find('[data-cy=clear-input]')
+      .dataCy('clear-input')
       .click()
 
     cy.dataCy('custom-event-day')
@@ -177,13 +177,13 @@ context('Custom event', () => {
 
     cy.dataCy('custom-event-day')
       .first()
-      .find('[data-cy=clear-input]')
+      .dataCy('clear-input')
       .click()
     checkSubmitDisabled();
 
     cy.dataCy('custom-event-time')
       .first()
-      .find('[data-cy=clear-input]')
+      .dataCy('clear-input')
       .click()
     checkSubmitEnabled();
 

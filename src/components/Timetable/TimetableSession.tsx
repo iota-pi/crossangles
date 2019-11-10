@@ -95,7 +95,7 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, session } = this.props;
     const rootClasses = [
       classes.root,
       this.props.isDragging ? classes.dragging : '',
@@ -109,12 +109,18 @@ class TimetableSession extends PureComponent<Props, State> {
         onDrag={this.handleDrag}
         onStop={this.handleStop}
       >
-        <div className={rootClasses} style={this.styles}>
+        <div
+          className={rootClasses}
+          style={this.styles}
+          data-cy="timetable-session"
+          data-session={`${session.course.code}-${session.day}${session.start}-${session.end}`}
+        >
           <div
             className={classes.background}
             style={{
               backgroundColor: this.props.colour,
             }}
+            data-cy="timetable-session-background"
           />
 
           <div className={classes.sessionText}>

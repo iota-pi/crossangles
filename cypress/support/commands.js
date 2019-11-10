@@ -22,8 +22,15 @@
 //
 //
 // -- This will overwrite an existing command --
-// Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('dataCy', (value) => {
-  return cy.get(`[data-cy=${value}]`)
+import dragAndDrop from './draganddrop'
+
+Cypress.Commands.add('dataCy', { prevSubject: 'optional' }, (subject, value) => {
+  if (subject) {
+    return cy.wrap(subject).find(`[data-cy=${value}]`)
+  } else {
+    return cy.get(`[data-cy=${value}]`)
+  }
 })
+
+Cypress.Commands.add('dragAndDrop', { prevSubject: 'optional' }, dragAndDrop);

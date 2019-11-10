@@ -6,6 +6,7 @@ export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;
   private _isSnapped: boolean = true;
   private _isDragging: boolean = false;
+  private _isRaised: boolean = false;
   clashDepth: number = 0;
 
   constructor (data: ITimetablePlacement) {
@@ -19,6 +20,10 @@ export class SessionPlacement extends TimetablePlacement {
 
   get isDragging (): boolean {
     return this._isDragging;
+  }
+
+  get isRaised (): boolean {
+    return this._isRaised;
   }
 
   private get boundedOffset (): Position {
@@ -53,6 +58,7 @@ export class SessionPlacement extends TimetablePlacement {
   snap (): void {
     this._offset = { x: 0, y: 0 };
     this._isSnapped = true;
+    this._isRaised = false;
   }
 
   // Slightly displace this session
@@ -67,7 +73,11 @@ export class SessionPlacement extends TimetablePlacement {
   }
 
   raise (): void {
-    this.displaceBy(RAISE_DIST_X, RAISE_DIST_Y);
+    this._isRaised = true;
+  }
+
+  lower (): void {
+    this._isRaised = false;
   }
 
   private displaceBy (dx: number, dy: number): void {
@@ -90,9 +100,11 @@ export class SessionPlacement extends TimetablePlacement {
 
     const clashOffsetX = this.clashDepth * CLASH_OFFSET_X;
     const clashOffsetY = this.clashDepth * CLASH_OFFSET_Y;
+    const raisedX = (this._isRaised) ? RAISE_DIST_X : 0;
+    const raisedY = (this._isRaised) ? RAISE_DIST_Y : 0;
 
-    const x = baseX + clashOffsetX;
-    const y = baseY + clashOffsetY;
+    const x = baseX + clashOffsetX + raisedX;
+    const y = baseY + clashOffsetY + raisedY;
 
     const baseZ = SESSION_BASE_Z;
     const unsnapZ = (!this._isSnapped) ? SESSION_DRAG_Z : 0;

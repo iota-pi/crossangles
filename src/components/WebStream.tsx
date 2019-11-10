@@ -28,6 +28,8 @@ class WebStream extends PureComponent<Props> {
 
     return (
       <FormControlLabel
+        label="Choose online-only lecture stream"
+        className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
         control={
           <Checkbox
             checked={this.props.checked}
@@ -35,8 +37,7 @@ class WebStream extends PureComponent<Props> {
             value={true}
           />
         }
-        className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
-        label="Choose online-only lecture stream"
+        data-cy="web-stream-toggle"
       />
     )
   }

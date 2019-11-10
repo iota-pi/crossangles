@@ -49,6 +49,7 @@ class Colour extends PureComponent<Props> {
           height: this.props.size,
         }}
         onClick={this.props.onClick}
+        data-cy="colour-selector"
       >
         {this.props.isSelected ? <Check/> : null}
       </div>

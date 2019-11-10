@@ -4,6 +4,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
+import { Session } from '../../state';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -24,15 +25,20 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   position: Placement,
+  session: Session,
   colour: string,
 }
 
 class TimetableDropzone extends PureComponent<Props> {
   render() {
-    const { classes, colour } = this.props;
+    const { classes, colour, session } = this.props;
 
     return (
-      <div className={classes.root} style={this.styles}>
+      <div
+        className={classes.root}
+        style={this.styles}
+        data-cy={`timetable-dropzone-${session.day}${session.start}`}
+      >
         <div
           className={classes.background}
           style={{
