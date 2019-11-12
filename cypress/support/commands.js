@@ -23,7 +23,7 @@
 //
 // -- This will overwrite an existing command --
 
-import dragAndDrop from './draganddrop'
+import { dragAndDrop, dragStart, dragMove, dragStop } from './draganddrop'
 
 Cypress.Commands.add('dataCy', { prevSubject: 'optional' }, (subject, value) => {
   if (subject) {
@@ -33,4 +33,12 @@ Cypress.Commands.add('dataCy', { prevSubject: 'optional' }, (subject, value) => 
   }
 })
 
+// This is a workaround for https://github.com/cypress-io/cypress/issues/5655
+Cypress.Commands.add('expectData', { prevSubject: 'element' }, (subject, key, value) => {
+  return cy.wrap(subject).filter(`[data-${key}=${value}]`).should('exist')
+})
+
 Cypress.Commands.add('dragAndDrop', { prevSubject: 'optional' }, dragAndDrop);
+Cypress.Commands.add('dragStart', { prevSubject: 'optional' }, dragStart);
+Cypress.Commands.add('dragMove', { prevSubject: 'optional' }, dragMove);
+Cypress.Commands.add('dragStop', { prevSubject: 'optional' }, dragStop);
