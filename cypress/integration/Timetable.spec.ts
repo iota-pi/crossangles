@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-import { SESSION_BASE_Z, SESSION_LIFT_Z, SESSION_DRAG_Z } from '../../src/components/Timetable/timetableUtil';
+import { SESSION_BASE_Z, SESSION_DRAG_Z, SESSION_LIFT_Z } from '../../src/components/Timetable/timetableUtil';
 
 const TEST_CODE = 'TEST1010'
 
@@ -17,78 +17,78 @@ context('Timetable interaction', () => {
   })
 
   it('can do basic dragging and snapping', () => {
-    cy.get(`[data-session=${TEST_CODE}-F9-10]`).as('session')
+    const session = `[data-session=${TEST_CODE}-F9-10]`
 
-    cy.get('@session')
-      .should('have.css', 'z-index')
-      .and('eq', '' + SESSION_BASE_Z)
-    cy.get('@session')
+    cy.get(session)
+      .expectData('snapped', 1)
+      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
+    cy.get(session)
       .trigger('mousedown', { force: true })
-      .should('have.css', 'z-index')
-      .and('eq', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
+    cy.get(`[data-session=${TEST_CODE}-F9-10]`)
+      .expectData('snapped', 0)
+      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
     cy.dataCy('timetable-dropzone-F9')
       .should('exist')
-    cy.get('@session')
+    cy.get(session)
       .trigger('mouseup', { force: true })
-      .should('have.css', 'z-index')
-      .and('eq', '' + SESSION_BASE_Z)
+    cy.get(`[data-session=${TEST_CODE}-F9-10]`)
+      .expectData('snapped', 1)
+      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
     cy.dataCy('timetable-dropzone-F9')
       .should('not.exist')
 
-    cy.get('@session')
+    cy.get(session)
       .dragAndDrop({ x: -100, y: 100 })
+      .expectData('snapped', 0)
+      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
 
-    // cy.get('@session')
-    //   .then($el => {
-    //     const offset = $el.offset()!
-    //     expect(Math.floor(offset.top)).equal(Math.floor(initialOffset.top))
-    //     expect(Math.floor(offset.left)).equal(Math.floor(initialOffset.left))
-    //   })
+    cy.get(session)
+      .dragAndDrop({ x: 50, y: -50 })
+      .expectData('snapped', 0)
+      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
 
-    // cy.get('@session')
-    //   .trigger('mousedown')
-    //   .should('have.css', 'z-index')
-    //   .and('eq', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
-    // cy.get('@session')
-    //   .trigger('mousemove', { clientX: 500, clientY: 500 })
-    // cy.get('@session')
-    //   .trigger('mouseup')
-    //   .should('have.css', 'z-index')
-    //   .and('eq', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
-
-    // cy.get('@session')
-    //   .trigger('mousedown')
-    //   .should('have.css', 'z-index')
-    //   .and('eq', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
-    // cy.get('@session')
-    //   .trigger('mousemove', { clientX: initialOffset.left, clientY: initialOffset.top })
-    // cy.get('@session')
-    //   .trigger('mouseup')
-    //   .should('have.css', 'z-index')
-    //   .and('eq', '' + SESSION_BASE_Z)
+    cy.get(session)
+      .dragAndDrop({ x: 30, y: -30 })
+      .expectData('snapped', 1)
+      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
   })
 
-  // it('can drag linked sessions around', () => {
-  //   cy.dataCy('timetable-session')
-  //     .first()
-  //     .trigger('mousedown')
-  //     .trigger('mouseup')
-  //   cy.dataCy('timetable-session')
-  //     .should('have.css', 'z-index')
-  //     .and('eq', '' + SESSION_BASE_Z)
+  it('prevents dragging outside of the timetable', () => {
+    cy.get(`[data-session=${TEST_CODE}-F9-10]`).as('session')
 
-  //   // let offset;
-  //   cy.dataCy('timetable-session')
-  //     .first()
-  //     // .then($el => {
-  //     //   offset = $el.offset();
-  //     // })
-  //     .trigger('mousedown')
-  //   cy.dataCy('timetable-session')
-  //     .first()
-  //     .trigger('mousemove')
-  //   cy.dataCy('timetable-session')
-  //     .first()
-  //     .trigger('mouseup')
-  // })
+    cy.get('@session')
+      .dragAndDrop({ x: 0, y: 0, absolute: true })
+      .then($el => {
+        const offset = $el[0].getBoundingClientRect()
+        const parent = $el[0].offsetParent!.getBoundingClientRect()
+        expect(offset.left).to.be.approximately(parent.left + 1, 0.1)
+        expect(offset.top).to.be.approximately(parent.top + 1, 0.1)
+
+        cy.get('@session')
+          .dragAndDrop({ x: 2000, y: 2000, absolute: true })
+          .then($el => {
+            const offset = $el[0].getBoundingClientRect()
+            const parent = $el[0].offsetParent!.getBoundingClientRect()
+            expect(offset.left + offset.width).to.be.approximately(parent.left + parent.width - 1, 0.1)
+            expect(offset.top + offset.height).to.be.approximately(parent.top + parent.height - 1, 0.1)
+          })
+      })
+  })
+
+  it('raises and lowers linked sessions', () => {
+    cy.get(`[data-session=${TEST_CODE}-M10-11]`).as('session')
+    cy.get(`[data-session=${TEST_CODE}-T10-12]`).as('linked')
+
+    cy.get('@session')
+      .dragStart()
+    cy.get('@linked')
+      .expectData('snapped', 0)
+      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
+    cy.get('@session')
+      .dragMove({ x: 100, y: 100 })
+      .dragStop()
+    cy.get('@linked')
+      .expectData('snapped', 1)
+      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
+  })
 })

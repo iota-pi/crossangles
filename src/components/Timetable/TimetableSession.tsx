@@ -114,6 +114,8 @@ class TimetableSession extends PureComponent<Props, State> {
           style={this.styles}
           data-cy="timetable-session"
           data-session={`${session.course.code}-${session.day}${session.start}-${session.end}`}
+          data-snapped={+this.props.isSnapped}
+          data-dragging={+this.props.isDragging}
         >
           <div
             className={classes.background}

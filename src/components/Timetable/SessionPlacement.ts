@@ -15,7 +15,7 @@ export class SessionPlacement extends TimetablePlacement {
   }
 
   get isSnapped (): boolean {
-    return this._isSnapped;
+    return this._isSnapped && !this._isRaised;
   }
 
   get isDragging (): boolean {
@@ -61,6 +61,14 @@ export class SessionPlacement extends TimetablePlacement {
     this._isRaised = false;
   }
 
+  raise (): void {
+    this._isRaised = true;
+  }
+
+  lower (): void {
+    this._isRaised = false;
+  }
+
   // Slightly displace this session
   // (e.g. if it was in a full stream and can't be anymore)
   displace (): void {
@@ -70,14 +78,6 @@ export class SessionPlacement extends TimetablePlacement {
     dy = (dy < 0) ? dy - DISPLACE_RADIUS_Y : dy + DISPLACE_RADIUS_Y + 1;
 
     this.displaceBy(dx, dy)
-  }
-
-  raise (): void {
-    this._isRaised = true;
-  }
-
-  lower (): void {
-    this._isRaised = false;
   }
 
   private displaceBy (dx: number, dy: number): void {

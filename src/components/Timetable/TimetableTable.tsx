@@ -280,9 +280,9 @@ class TimetableTable extends Component<Props, State> {
     if (!this.state.dragging) return;
 
     // Snap session to nearest dropzone
-    const droppedSession = this.state.sessions.get(session.id);
-    droppedSession.drop();
-    const dropzone = this.getNearestDropzone(droppedSession.position);
+    this.state.sessions.drop(session.id);
+    const sessionPlacement = this.state.sessions.get(session.id);
+    const dropzone = this.getNearestDropzone(sessionPlacement.position);
 
     // Swap streams in timetable
     if (dropzone) {
