@@ -123,6 +123,12 @@ export class SessionManager {
     this.next();
   }
 
+  displace (sessionId: SessionId): void {
+    const session = this.get(sessionId);
+    session.displace();
+    this.next();
+  }
+
   swapStream (prevSession: SessionId, nextSession: SessionId): void {
     const prevStream = this.get(prevSession).session.stream;
     const nextStream = this.get(nextSession).session.stream;

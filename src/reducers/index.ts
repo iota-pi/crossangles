@@ -6,6 +6,7 @@ import { chosen, custom, events, options, additional } from './commitments';
 import { timetable } from './timetable';
 import { timetableVersion } from './timetableVersion';
 import { colours } from './colours';
+import { webStreams } from './webStreams';
 import { notice } from './notice';
 
 export default combineReducers<RootState>({
@@ -19,5 +20,6 @@ export default combineReducers<RootState>({
   timetable,
   timetableVersion,
   colours,
+  webStreams,
   notice,
 });

@@ -32,6 +32,7 @@ export interface StateProps {
   linkedTimetable: LinkedTimetable,
   timetableVersion: number,
   colours: Map<CourseId, string>,
+  webStreams: Set<CourseId>,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -47,8 +48,10 @@ class TimetableContainer extends Component<Props> {
           timetableVersion={this.props.timetableVersion}
           options={this.props.options}
           courses={this.props.courses}
+          allChosenIds={new Set(this.allCourses.map(c => c.id))}
           streams={this.timetableStreams}
           colours={this.props.colours}
+          webStreams={this.props.webStreams}
           onSwapStreams={this.handleSwapStreams}
           onBumpStream={this.handleBumpStream}
         />
@@ -118,6 +121,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     linkedTimetable: state.timetable,
     timetableVersion: state.timetableVersion,
     colours: state.colours,
+    webStreams: state.webStreams,
   }
 }
 

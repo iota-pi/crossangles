@@ -67,6 +67,7 @@ export interface StateProps {
   options: Options,
   linkedTimetable: LinkedTimetable,
   colours: Map<CourseId, string>,
+  webStreams: Set<CourseId>,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -110,6 +111,7 @@ class CourseSelection extends Component<Props, State> {
             additional={this.props.additional}
             events={this.props.events}
             colours={this.props.colours}
+            webStreams={this.props.webStreams}
             onEditCustomCourse={this.editCustomCourse}
             onRemoveCourse={this.removeCourse}
             onToggleEvent={this.toggleEvent}
@@ -206,12 +208,14 @@ class CourseSelection extends Component<Props, State> {
 
   private updateTimetable = async () => {
     const newTimetable = doTimetableSearch({
+      previousTimetable: this.timetable,
       courses: this.allCourses,
       events: this.props.events,
-      previousTimetable: this.timetable,
+      webStreams: this.props.webStreams,
       options: this.props.options,
     });
 
+    console.log('new timetable', newTimetable);
     if (newTimetable === null) {
       // Displace some classes and display a warning
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
@@ -257,6 +261,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     options: state.options,
     linkedTimetable: state.timetable,
     colours: state.colours,
+    webStreams: state.webStreams,
   }
 }
 

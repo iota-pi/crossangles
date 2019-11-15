@@ -8,55 +8,62 @@ export const dragAndDrop = (subject, offset = { x: 0, y: 0, absolute: false }) =
     .dragStop()
 };
 
-export const dragStart = (subject) => {
+export const dragTo = (subject, time) => {
   cy.wrap(subject)
-    .first()
-    .then(element => {
-      const coords = element[0].getBoundingClientRect();
-      coords.x += CLICK_MARGIN;
-      coords.y += CLICK_MARGIN;
+    .trigger('mousemove')
+    .wait(500)
+    .trigger('mousedown')
+  cy.get(`[data-time=${time}]`)
+    .trigger('mousemove', { force: true })
+  cy.wrap(subject)
+    .trigger('mouseup')
+}
 
-      cy.wrap(element)
-        .trigger('mousemove', {
-          button: PRIMARY_BUTTON,
-          clientX: coords.x,
-          clientY: coords.y,
-          force: true,
-        })
-      cy.wrap(element)
-        .trigger('mousedown', {
-          button: PRIMARY_BUTTON,
-          clientX: coords.x,
-          clientY: coords.y,
-          force: true,
-        });
+export const dragStart = (subject) => {
+  const coords = subject[0].getBoundingClientRect();
+  coords.x += CLICK_MARGIN;
+  coords.y += CLICK_MARGIN;
+
+  cy.wrap(subject)
+    .trigger('mousedown', {
+      button: PRIMARY_BUTTON,
+      clientX: coords.x,
+      clientY: coords.y,
+      force: true,
+      which: 1,
     })
-
-    return cy.wrap(subject)
+    .trigger('mousemove', {
+      button: PRIMARY_BUTTON,
+      clientX: coords.x,
+      clientY: coords.y,
+      force: true,
+      which: 1,
+    })
 }
 
 export const dragMove = (subject, offset = { x: 0, y: 0, absolute: false }) => {
-  cy.wrap(subject)
-    .first()
-    .then(element => {
-      const coords = element[0].getBoundingClientRect();
-      coords.x += CLICK_MARGIN;
-      coords.y += CLICK_MARGIN;
+  const coords = subject[0].getBoundingClientRect();
+  coords.x += CLICK_MARGIN;
+  coords.y += CLICK_MARGIN;
 
-      cy.get('body')
-        .trigger('mousemove', {
-          button: PRIMARY_BUTTON,
-          clientX: (!offset.absolute ? coords.x : CLICK_MARGIN) + offset.x,
-          clientY: (!offset.absolute ? coords.y : CLICK_MARGIN) + offset.y,
-          force: true,
-        })
+  cy.get('body')
+    .trigger('mousemove', {
+      button: PRIMARY_BUTTON,
+      clientX: (!offset.absolute ? coords.x : CLICK_MARGIN) + offset.x,
+      clientY: (!offset.absolute ? coords.y : CLICK_MARGIN) + offset.y,
+      force: true,
+      which: 1,
     })
 
-    return cy.wrap(subject)
+  return cy.wrap(subject)
 }
 
 export const dragStop = (subject) => {
-  cy.get('body').trigger('mouseup');
+  cy.get('body').trigger('mouseup', {
+      button: PRIMARY_BUTTON,
+      force: true,
+      which: 1,
+    });
 
   return cy.wrap(subject);
 }

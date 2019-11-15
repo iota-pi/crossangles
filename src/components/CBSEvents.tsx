@@ -37,6 +37,7 @@ class CBSEvents extends PureComponent<Props> {
                   checked={this.props.events.includes(eventName)}
                   onChange={() => this.props.onToggleEvent(eventName)}
                   value={eventName}
+                  data-cy={`cbs-event-${eventName}`}
                 />
               }
               className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}

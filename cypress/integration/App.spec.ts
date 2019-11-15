@@ -21,6 +21,14 @@ context('General app flow', () => {
       .should('contain.text', 'COMP1511 TLB')
       .should('contain.text', 'MATH1231 LEC')
       .should('contain.text', 'MATH1231 TUT')
+
+    cy.dataCy('remove-course')
+      .eq(1)
+      .click()
+
+    cy.dataCy('timetable-session')
+      .should('contain.text', 'COMP1511')
+      .should('not.contain.text', 'MATH1231')
   })
 
   it('can change course colours', () => {
@@ -101,5 +109,34 @@ context('General app flow', () => {
       .should('not.contain.text', 'COMP2511 LEC')
       .should('contain.text', 'COMP1511 TLB')
       .should('contain.text', 'COMP2511 TLB')
+  })
+
+  it('can add and remove CBS events', () => {
+    cy.dataCy('cbs-event-The Bible Talks')
+      .click()
+    cy.dataCy('timetable-session')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('cbs-event-Bible Study')
+      .click()
+    cy.dataCy('cbs-event-Core Theology')
+      .click()
+    cy.dataCy('cbs-event-Core Training')
+      .click()
+
+    cy.dataCy('timetable-session')
+      .should('contain.text', 'The Bible Talks')
+      .should('contain.text', 'Bible Study')
+      .should('contain.text', 'Core Theology')
+      .should('contain.text', 'Core Training')
+
+    cy.dataCy('cbs-event-The Bible Talks')
+      .click()
+    cy.dataCy('cbs-event-Core Theology')
+      .click()
+    cy.dataCy('timetable-session')
+      .should('not.contain.text', 'The Bible Talks')
+      .should('not.contain.text', 'Core Theology')
+      .should('contain.text', 'Bible Study')
+      .should('contain.text', 'Core Training')
   })
 })

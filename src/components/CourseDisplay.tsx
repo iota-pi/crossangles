@@ -50,6 +50,7 @@ export interface Props extends WithStyles<typeof styles> {
   additional: Course[],
   events: CBSEvent[],
   colours: Map<CourseId, string>,
+  webStreams: Set<CourseId>,
   onEditCustomCourse: (course: Course) => void,
   onRemoveCourse: (course: Course) => void,
   onToggleEvent: (event: CBSEvent) => void,
@@ -134,7 +135,7 @@ class CourseDisplay extends PureComponent<Props, State> {
                 {course.hasWebStream ? (
                   <ListItem className={classes.noVertPadding}>
                     <WebStream
-                      checked={course.useWebStream}
+                      checked={this.props.webStreams.has(course.id)}
                       onChange={() => this.props.onToggleWeb(course)}
                     />
                   </ListItem>

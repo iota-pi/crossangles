@@ -1,4 +1,4 @@
-import { Timetable, Course, CBSEvent, Options, Stream, LinkedTimetable } from '../state';
+import { Timetable, Course, CBSEvent, Options, Stream, LinkedTimetable, CourseId } from '../state';
 import { Action } from 'redux';
 import { search } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
@@ -16,9 +16,10 @@ export interface TimetableVersionAction extends Action {
 
 export interface UpdateTimetableConfig {
   previousTimetable: Timetable;
-  courses: Course[];
-  events: CBSEvent[];
-  options: Options;
+  courses: Course[],
+  events: CBSEvent[],
+  webStreams: Set<CourseId>,
+  options: Options,
 }
 
 export interface TimetableSearchResult {
@@ -32,13 +33,14 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
     previousTimetable,
     courses,
     events,
+    webStreams,
     options: {
       includeFull,
     },
   } = config;
 
   // Group streams by course and component
-  let components = coursesToComponents(courses, events, includeFull);
+  let components = coursesToComponents(courses, events, webStreams, includeFull);
 
   // Check for impossible timetables
   let success = true;

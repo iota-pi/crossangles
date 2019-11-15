@@ -41,3 +41,18 @@ export const coloursTransform = createTransform(
   // define which reducers this transform gets called for.
   { whitelist: ['colours'] },
 );
+
+export const webStreamsTransform = createTransform(
+  // transform state on its way to being serialized and persisted.
+  (inboundState: Set<CourseId>) => {
+    return Array.from(inboundState.values());
+  },
+  // transform state being rehydrated
+  (outboundState: CourseId[]) => {
+    return new Set(outboundState);
+  },
+  // define which reducers this transform gets called for.
+  { whitelist: ['webStreams'] },
+);
+
+export default [ coursesTransform, customTransform, coloursTransform, webStreamsTransform ];
