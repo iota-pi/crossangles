@@ -68,10 +68,10 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {
   maxItems?: number,
   separator?: string,
-  courses: Course[];
-  chosen: Course[];
-  additional: Course[];
-  chooseCourse: (course: Course) => void;
+  courses: Course[],
+  chosen: Course[],
+  additional: Course[],
+  chooseCourse: (course: Course) => void,
 }
 
 export interface State {
@@ -122,13 +122,13 @@ class Autocomplete extends PureComponent<Props, State> {
         filterOption={() => true}
         value={null}
         label={null}
-        placeholder={''}
         noOptionsMessage={() => 'No matching courses found'}
         autoFocus
         classes={this.props.classes}
         id="course-selection-autocomplete"
         TextFieldProps={{
           label: 'Select your courses…',
+          value: this.state.search,
         }}
         OptionProps={{
           search: this.state.search,

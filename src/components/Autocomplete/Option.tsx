@@ -69,6 +69,10 @@ export class Option extends Component<Props> {
       return true;
     }
 
+    if (this.props.isDisabled !== nextProps.isDisabled) {
+      return true;
+    }
+
     if (this.props.children && nextProps.children) {
       if (this.props.children.toString() !== nextProps.children.toString()) {
         return true;

@@ -5,7 +5,7 @@ context('Course selection', () => {
     cy.visit('/')
   })
 
-  it('can add and remove courses', () => {
+  it ('can add a course by pressing enter', () => {
     // Add COMP1511
     cy.get('#course-selection-autocomplete')
       .type('comp1511')
@@ -15,8 +15,32 @@ context('Course selection', () => {
     cy.get('#course-selection-autocomplete')
       .type('{enter}')
     cy.get('#course-display').should('contain.text', 'COMP1511')
+  })
 
-    // Add COMP1521
+  it('can see more search results', () => {
+    // Search for courses starting with "M" and click 'see more'
+    cy.get('#course-selection-autocomplete').type('m')
+    cy.dataCy('autocomplete-option')
+      .last().should('contain.text', 'See more results')
+      .click()
+      .should('not.contain.text', 'See more results')
+    cy.dataCy('autocomplete-option')
+      .last().should('contain.text', 'See more results')
+
+    // Add MATH1231 (should be in the second batch of results)
+    cy.dataCy('autocomplete-option')
+      .contains('MATH1231')
+      .click()
+    cy.get('#course-display')
+      .should('contain.text', 'MATH1231')
+  })
+
+  it('can add and remove courses by clicking', () => {
+    // Add COMP1511 and COMP1521
+    cy.get('#course-selection-autocomplete').type('comp15')
+    cy.dataCy('autocomplete-option')
+      .first().should('contain.text', 'COMP1511')
+      .click()
     cy.get('#course-selection-autocomplete').type('comp15')
     cy.dataCy('autocomplete-option')
       .first().should('contain.text', 'COMP1521')
@@ -25,16 +49,6 @@ context('Course selection', () => {
       .should('contain.text', 'COMP1511')
       .should('contain.text', 'COMP1521')
 
-    // Search for courses starting with "M", select MATH1231 (requires clicking 'see more')
-    cy.get('#course-selection-autocomplete').type('m')
-    cy.dataCy('autocomplete-option')
-      .last().should('contain.text', 'See more results...')
-      .click()
-    cy.dataCy('autocomplete-option')
-      .contains('MATH1231')
-      .click()
-    cy.get('#course-display').should('contain.text', 'MATH1231')
-
     // Can remove a course
     cy.dataCy('remove-course')
       .eq(1)
@@ -42,7 +56,6 @@ context('Course selection', () => {
     cy.get('#course-display')
       .should('not.contain.text', 'COMP1521')
       .should('contain.text', 'COMP1511')
-      .should('contain.text', 'MATH1231')
   })
 
   it('can add/edit/remove a custom event', () => {
