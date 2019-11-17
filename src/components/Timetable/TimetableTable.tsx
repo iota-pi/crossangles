@@ -129,8 +129,6 @@ class TimetableTable extends Component<Props, State> {
           const placement = this.state.sessions.getMaybe(sid);
           if (!placement) return null;
           const session = placement.session;
-          const useWebStream = this.props.webStreams.has(session.course.id);
-          if (session.stream.web && !useWebStream) return null;
 
           return (
             <TimetableSession
@@ -188,24 +186,19 @@ class TimetableTable extends Component<Props, State> {
 
   shouldComponentUpdate (prevProps: Props, prevState: State) {
     return true;
-    console.log('shouldComponentUpdate?')
-    if (this.props.timetable !== prevProps.timetable || this.props.timetableVersion !== prevProps.timetableVersion) {
-      console.log(true, 1)
-      return true;
-    }
+    // if (this.props.timetable !== prevProps.timetable || this.props.timetableVersion !== prevProps.timetableVersion) {
+    //   return true;
+    // }
 
-    if (this.state.dragging !== prevState.dragging) {
-      console.log(true, 2)
-      return true;
-    }
+    // if (this.state.dragging !== prevState.dragging) {
+    //   return true;
+    // }
 
-    if (this.state.version !== prevState.version) {
-      console.log(true, 3)
-      return true;
-    }
+    // if (this.state.version !== prevState.version) {
+    //   return true;
+    // }
 
-    console.log(false, 4)
-    return false;
+    // return false;
   }
 
   componentDidUpdate (prevProps: Props) {
@@ -223,15 +216,13 @@ class TimetableTable extends Component<Props, State> {
 
       // Displace session if it needs to be
       if (placement.shouldDisplace(includeFull)) {
+        console.log('should displace');
         placement.displace();
       }
     }
 
-    // Remove all sessions from deselected courses
-    this.removeDeselectedCourses();
-
     // Remove all sessions which have been moved
-    this.removeReplacedSessions(prevProps);
+    this.removeOldSessions(prevProps);
 
     // Update clash depths
     if (this.timetableHasChanged(this.props.timetable, false)) {
@@ -244,22 +235,11 @@ class TimetableTable extends Component<Props, State> {
     newDimensions.updateHours(this.hours);
   }
 
-  removeReplacedSessions = (prevProps: Props) => {
-    const streams = new Set(this.props.timetable.map(c => c.stream.id));
-    const sessions = this.state.sessions;
+  private removeOldSessions = (prevProps: Props) => {
+    const sessions = new Set(this.props.timetable.map(s => s.id));
     for (const prevSession of prevProps.timetable) {
-      if (!streams.has(prevSession.stream.id)) {
-        sessions.remove(prevSession.id, false);
-      }
-    }
-  }
-
-  removeDeselectedCourses = () => {
-    const sessions = this.state.sessions;
-    for (const sessionId of sessions.order) {
-      const session = sessions.get(sessionId).session;
-      if (!this.props.allChosenIds.has(session.course.id)) {
-        sessions.remove(session.id, false);
+      if (!sessions.has(prevSession.id)) {
+        this.state.sessions.remove(prevSession.id);
       }
     }
   }

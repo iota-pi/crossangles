@@ -54,7 +54,7 @@ export class SessionManager {
     this.next();
   }
 
-  remove (sessionId: SessionId, hard = false): void {
+  remove (sessionId: SessionId, hard = true): void {
     this.removeSession(sessionId);
 
     if (hard) {

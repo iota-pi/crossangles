@@ -9,7 +9,7 @@ export function notNull<T = any>(val: T | null): T {
 
 export function notUndefined<T = any>(val: T | undefined): T {
   if (val === undefined) {
-    throw new Error('notUndefined given an undefined value');
+    throw new TypeError('notUndefined given an undefined value');
   }
   return val;
 }
