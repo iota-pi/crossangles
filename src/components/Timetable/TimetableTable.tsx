@@ -90,8 +90,6 @@ export interface Props extends WithStyles<typeof styles> {
   streams: Stream[],
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
-  onSwapStreams: (oldStream: Stream, newStream: Stream, topSession: Session) => void,
-  onBumpStream: (stream: Stream, topSession: Session) => void,
 }
 
 export interface State {
@@ -272,9 +270,9 @@ class TimetableTable extends Component<Props, State> {
     // Update session placement with dragging state
     this.state.sessions.drag(session.id);
 
-    // Bump this session to the top of the session stack
-    // this.props.onBumpStream(session.stream, session);
+    // Bump this stream and this session to the top of the session stack
     this.state.sessions.bumpStream(session.id);
+    this.state.sessions.bumpSession(session.id);
 
     // Mark this session as being dragged
     this.setState({
@@ -312,7 +310,8 @@ class TimetableTable extends Component<Props, State> {
         }
       }
 
-      this.state.sessions.swapStream(oldSessionId, newSession.id);
+      // Remove old session placements
+      this.state.sessions.removeStream(oldSessionId);
 
       // Explicitly snap the new session and all sessions in it's stream
       this.state.sessions.snapStream(newSession.id);

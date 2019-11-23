@@ -10,7 +10,6 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import TimetableTable from '../components/Timetable';
-import { swapStreams, bumpStream } from '../actions';
 import { arraysEqual } from '../components/Timetable/timetableUtil';
 
 
@@ -52,8 +51,6 @@ class TimetableContainer extends Component<Props> {
           streams={this.timetableStreams}
           colours={this.props.colours}
           webStreams={this.props.webStreams}
-          onSwapStreams={this.handleSwapStreams}
-          onBumpStream={this.handleBumpStream}
         />
       </div>
     );
@@ -71,18 +68,6 @@ class TimetableContainer extends Component<Props> {
     }
 
     return false;
-  }
-
-  private handleSwapStreams = async (oldStream: Stream, newStream: Stream, topSession: Session) => {
-    await this.props.dispatch(
-      swapStreams(this.props.linkedTimetable, oldStream, newStream, topSession.index)
-    );
-  }
-
-  private handleBumpStream = async (stream: Stream, session: Session) => {
-    await this.props.dispatch(
-      bumpStream(this.props.linkedTimetable, stream, session.index)
-    );
   }
 
   private get allCourses () {

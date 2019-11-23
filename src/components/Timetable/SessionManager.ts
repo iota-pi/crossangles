@@ -7,16 +7,19 @@ export class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
   private _order: SessionId[];
   private _version: number;
+  private _changing: boolean;
 
   constructor (base?: SessionManager) {
     if (base) {
       this.map = new Map(base.map);
       this._order = base._order.slice();
       this._version = base._version;
+      this._changing = false;
     } else {
       this.map = new Map<SessionId, SessionPlacement>();
       this._order = [];
       this._version = 0;
+      this._changing = false;
     }
   }
 
@@ -54,15 +57,29 @@ export class SessionManager {
     this.next();
   }
 
-  remove (sessionId: SessionId, hard = true): void {
-    this.removeSession(sessionId);
+  remove (sessionId: SessionId, hardDelete = true): void {
+    const index = this._order.indexOf(sessionId);
+    if (index !== -1) {
+      this._order = [
+        ...this._order.slice(0, index),
+        ...this._order.slice(index + 1)
+      ];
+    }
 
-    if (hard) {
+    if (hardDelete) {
       this.map.delete(sessionId);
     }
   }
 
+  removeStream (sessionId: SessionId, hardDelete = true): void {
+    const stream = this.get(sessionId).session.stream;
+    for (let linkedSession of stream.sessions) {
+      this.remove(Session.getId(linkedSession), hardDelete);
+    }
+  }
+
   drag (sessionId: SessionId): void {
+    this.startChange();
     const session = this.get(sessionId);
     session.drag();
 
@@ -74,7 +91,7 @@ export class SessionManager {
       }
     }
 
-    this.next();
+    this.stopChange();
   }
 
   move (sessionId: SessionId, delta: Position): void {
@@ -84,6 +101,7 @@ export class SessionManager {
   }
 
   drop (sessionId: SessionId): void {
+    this.startChange();
     const session = this.get(sessionId);
     session.drop();
 
@@ -95,7 +113,7 @@ export class SessionManager {
       }
     }
 
-    this.next();
+    this.stopChange();
   }
 
   raise (sessionId: SessionId): void {
@@ -111,10 +129,12 @@ export class SessionManager {
   }
 
   snapStream (sessionId: SessionId): void {
+    this.startChange();
     const stream = this.get(sessionId).session.stream;
     for (let linkedSession of stream.sessions) {
       this.snap(Session.getId(linkedSession));
     }
+    this.stopChange();
   }
 
   snap (sessionId: SessionId): void {
@@ -129,49 +149,27 @@ export class SessionManager {
     this.next();
   }
 
-  swapStream (prevSession: SessionId, nextSession: SessionId): void {
-    const prevStream = this.get(prevSession).session.stream;
-    const nextStream = this.get(nextSession).session.stream;
-    const prevSessions = prevStream.sessions;
-    const nextSessions = nextStream.sessions;
-
-    for (let i = 0; i < prevSessions.length; ++i) {
-      const prevId = Session.getId(prevSessions[i]);
-      const nextId = Session.getId(nextSessions[i]);
-      this.swapSession(prevId, nextId);
+  bumpSession (sessionId: SessionId): void {
+    const index = this._order.indexOf(sessionId);
+    if (index > -1) {
+      this._order = [
+        ...this._order.slice(0, index),
+        ...this._order.slice(index + 1),
+        sessionId,
+      ];
+    } else {
+      throw Error(`Cannot bump unknown session id ${sessionId}`);
     }
-
-    // Ensure session for which this was called ends up on top
-    this.bumpSession(nextSession);
-  }
-
-  bumpStream (sessionId: SessionId): void {
-    this.swapStream(sessionId, sessionId);
-  }
-
-  private swapSession (prevSessionId: SessionId, nextSessionId: SessionId): void {
-    // Update session ordering
-    this.removeSession(prevSessionId);
-    this.removeSession(nextSessionId);
-    this._order = [...this._order, nextSessionId];
-
-    // Snap this session if we've newly added it to the timetable
-    if (prevSessionId !== nextSessionId) {
-      this.get(nextSessionId).snap();
-    }
-
     this.next();
   }
 
-  private removeSession (prevSessionId: SessionId): void {
-    const index = this._order.indexOf(prevSessionId);
-    if (index !== -1) {
-      this._order = [...this._order.slice(0, index), ...this._order.slice(index + 1)];
+  bumpStream (sessionId: SessionId): void {
+    this.startChange();
+    const stream = this.get(sessionId).session.stream;
+    for (const linkedSession of stream.sessions) {
+      this.bumpSession(Session.getId(linkedSession))
     }
-  }
-
-  private bumpSession (sessionId: SessionId): void {
-    this.swapSession(sessionId, sessionId);
+    this.stopChange();
   }
 
   setClashDepth (sessionId: SessionId, depth: number): void {
@@ -181,6 +179,17 @@ export class SessionManager {
   }
 
   private next (): void {
-    this._version++;
+    if (!this._changing) {
+      this._version++;
+    }
+  }
+
+  private startChange (): void {
+    this._changing = true;
+  }
+
+  private stopChange (): void {
+    this._changing = false;
+    this.next();
   }
 }
