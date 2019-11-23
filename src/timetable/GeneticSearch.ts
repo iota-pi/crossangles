@@ -1,5 +1,15 @@
+/*
+ * A simple genetic search algorithm
+ *
+ * To reduce the chance of getting stuck in a local maxima, run the `search`
+ * method with a lower `maxIterations` and run it multiple times, keeping
+ * the best.
+ *
+ * Please note that `mutate` and `scoreFunction` are hot code
+ */
+
 export interface GeneticSearchOptionalConfig {
-  maxTime?: number,  // time in milliseconds
+  maxTime?: number,  // max execution time in milliseconds
   maxIterations?: number,
   checkIters?: number,
   initialParents?: number,
