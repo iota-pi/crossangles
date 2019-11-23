@@ -121,7 +121,10 @@ function processData (context, courses, meta) {
 
         return true
       })[0]
-      restored.push(stream.sessions[item.index])
+
+      if (stream) {
+        restored.push(stream.sessions[item.index])
+      }
     }
 
     context.commit('timetable', restored)
