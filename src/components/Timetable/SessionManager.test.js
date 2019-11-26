@@ -3,13 +3,11 @@ import { SessionManager } from './SessionManager';
 describe('SessionManager', () => {
   test('get throws if not found', () => {
     const s = new SessionManager();
-
     expect(() => s.get('a')).toThrowError(TypeError);
   })
 
   test('getMaybe returns undefined if not found', () => {
     const s = new SessionManager();
-
     expect(s.getMaybe('a')).toBe(undefined);
   })
 
@@ -17,7 +15,6 @@ describe('SessionManager', () => {
     const s = new SessionManager();
     const p = {};
     s.set('a', p);
-
     expect(s.get('a')).toBe(p);
   })
 
@@ -25,20 +22,17 @@ describe('SessionManager', () => {
     const s = new SessionManager();
     const p = {};
     s.set('a', p);
-
     expect(s.getMaybe('a')).toBe(p);
   })
 
   test('has returns true when found', () => {
     const s = new SessionManager();
     s.set('a', {});
-
     expect(s.has('a')).toBe(true);
   })
 
   test('has returns false when not found', () => {
     const s = new SessionManager();
-
     expect(s.has('a')).toBe(false);
   })
 
@@ -54,7 +48,6 @@ describe('SessionManager', () => {
     s.set('o', {});
     s.set('r', {});
     s.set('d', {});
-
     expect(s.order).toEqual(['o', 'r', 'd']);
   })
 
@@ -79,7 +72,6 @@ describe('SessionManager', () => {
     s.set('o', {});
     s.set('r', {});
     s.set('d', {});
-
     expect(s.getOrder('o')).toBe(0);
     expect(s.getOrder('r')).toBe(1);
     expect(s.getOrder('d')).toBe(2);
@@ -92,7 +84,6 @@ describe('SessionManager', () => {
     s.set('r', {});
     s.set('d', {});
     s.remove('r');
-
     expect(s.getOrder('o')).toBe(0);
     expect(s.getOrder('d')).toBe(1);
     expect(s.getOrder('r')).toBe(-1);
