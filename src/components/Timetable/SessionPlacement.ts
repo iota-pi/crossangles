@@ -1,6 +1,7 @@
 import { Position } from "./timetableTypes";
 import { TimetablePlacement, ITimetablePlacement } from "./Placement";
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y, SESSION_DRAG_Z, SESSION_BASE_Z, SESSION_LIFT_Z, DISPLACE_RADIUS_X, DISPLACE_RADIUS_Y, DISPLACE_VARIATION_X, DISPLACE_VARIATION_Y, RAISE_DIST_X, RAISE_DIST_Y } from "./timetableUtil";
+import * as tt from "./timetableUtil";
+import SessionPosition from "./SessionPosition";
 
 export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;
@@ -39,8 +40,8 @@ export class SessionPlacement extends TimetablePlacement {
 
   drag (): void {
     // Add clashOffset to current offset
-    this._offset.x += this.clashDepth * CLASH_OFFSET_X;
-    this._offset.y += this.clashDepth * CLASH_OFFSET_Y;
+    this._offset.x += this.clashDepth * tt.CLASH_OFFSET_X;
+    this._offset.y += this.clashDepth * tt.CLASH_OFFSET_Y;
 
     this._isSnapped = false;
     this._isDragging = true;
@@ -72,10 +73,10 @@ export class SessionPlacement extends TimetablePlacement {
   // Slightly displace this session
   // (e.g. if it was in a full stream and can't be anymore)
   displace (): void {
-    let dx = Math.floor(Math.random() * DISPLACE_VARIATION_X * 2) - DISPLACE_VARIATION_X;
-    let dy = Math.floor(Math.random() * DISPLACE_VARIATION_Y * 2) - DISPLACE_VARIATION_Y;
-    dx = (dx < 0) ? dx - DISPLACE_RADIUS_X : dx + DISPLACE_RADIUS_X + 1;
-    dy = (dy < 0) ? dy - DISPLACE_RADIUS_Y : dy + DISPLACE_RADIUS_Y + 1;
+    let dx = Math.floor(Math.random() * tt.DISPLACE_VARIATION_X * 2) - tt.DISPLACE_VARIATION_X;
+    let dy = Math.floor(Math.random() * tt.DISPLACE_VARIATION_Y * 2) - tt.DISPLACE_VARIATION_Y;
+    dx = (dx < 0) ? dx - tt.DISPLACE_RADIUS_X : dx + tt.DISPLACE_RADIUS_X + 1;
+    dy = (dy < 0) ? dy - tt.DISPLACE_RADIUS_Y : dy + tt.DISPLACE_RADIUS_Y + 1;
 
     this.displaceBy(dx, dy);
   }
@@ -94,27 +95,18 @@ export class SessionPlacement extends TimetablePlacement {
   }
 
   get position (): Required<Position> {
-    const placement = this.basePlacement;
-    const baseX = placement.x + this.boundedOffset.x;
-    const baseY = placement.y + this.boundedOffset.y;
-
-    const clashOffsetX = this.clashDepth * CLASH_OFFSET_X;
-    const clashOffsetY = this.clashDepth * CLASH_OFFSET_Y;
-    const raisedX = (this._isRaised) ? RAISE_DIST_X : 0;
-    const raisedY = (this._isRaised) ? RAISE_DIST_Y : 0;
-
-    const x = baseX + clashOffsetX + raisedX;
-    const y = baseY + clashOffsetY + raisedY;
-
-    const baseZ = SESSION_BASE_Z;
-    const unsnapZ = (!this._isSnapped) ? SESSION_DRAG_Z : 0;
-    const clashZ = SESSION_LIFT_Z * this.clashDepth;
-    const z = baseZ + unsnapZ + clashZ;
+    const base = SessionPosition.getBasePosition(
+      this.basePlacement,
+      this.boundedOffset,
+    );
+    const clash = SessionPosition.getClashOffset(this.clashDepth);
+    const raised = SessionPosition.getRaisedOffset(this.isRaised);
+    const x = base.x + clash.x + raised.x;
+    const y = base.y + clash.y + raised.y;
+    const z = SessionPosition.getZ(this.isSnapped, this.clashDepth);
 
     return { x, y, z };
   }
-
-  clone (): SessionPlacement {
-    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
-  }
 }
+
+export default SessionPlacement;
