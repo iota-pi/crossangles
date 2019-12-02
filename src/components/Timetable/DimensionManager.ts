@@ -33,8 +33,4 @@ export class DimensionManager {
   updateHours (newHours: IHourSpan) {
     this._hours = newHours;
   }
-
-  clone (): DimensionManager {
-    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
-  }
 }

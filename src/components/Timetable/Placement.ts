@@ -57,8 +57,4 @@ export abstract class TimetablePlacement {
   private calculateHeight (): number {
     return (this._session.end - this._session.start) * TIMETABLE_CELL_HEIGHT;
   }
-
-  clone () {
-    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
-  }
 }
