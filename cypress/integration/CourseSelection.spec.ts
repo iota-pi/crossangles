@@ -8,12 +8,7 @@ context('Course selection', () => {
   it ('can add a course by pressing enter', () => {
     // Add COMP1511
     cy.get('#course-selection-autocomplete')
-      .type('comp1511')
-    cy.dataCy('autocomplete-option')
-      .should('have.length', 1)
-      .should('contain.text', 'COMP1511')
-    cy.get('#course-selection-autocomplete')
-      .type('{enter}')
+      .type('comp1511{enter}')
     cy.get('#course-display').should('contain.text', 'COMP1511')
   })
 
