@@ -14,6 +14,7 @@ import {
   getAllCourses,
   CourseData,
   CourseMap,
+  SessionFactory,
 } from '../state';
 import {
   addCourse,
@@ -60,6 +61,7 @@ export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
   courses: CourseMap,
+  sessionFactory: SessionFactory,
   courseList: Course[],
   chosen: Course[],
   additional: Course[],
@@ -239,9 +241,10 @@ class CourseSelection extends Component<Props, State> {
 
   private get timetable (): Timetable {
     const timetable = [];
-    for (const session of this.props.linkedTimetable) {
-      if (this.props.courses.has(session.course)) {
-        timetable.push(Session.from(session, this.props.courses));
+    for (const linkedSession of this.props.linkedTimetable) {
+      if (this.props.courses.has(linkedSession.course)) {
+        const session = this.props.sessionFactory.create(linkedSession);
+        timetable.push(session);
       }
     }
     return timetable;
@@ -251,9 +254,11 @@ class CourseSelection extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
   const customSort = (a: Course, b: Course) => +(a.name > b.name) - +(a.name < b.name);
+  const allCourses = getAllCourses(state);
 
   return {
-    courses: getAllCourses(state),
+    courses: allCourses,
+    sessionFactory: new SessionFactory(allCourses),
     courseList: Array.from(state.courses.values()),
     chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(courseSort),
     custom: state.custom.sort(customSort),

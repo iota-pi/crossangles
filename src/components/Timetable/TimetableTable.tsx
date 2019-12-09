@@ -2,7 +2,7 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Stream, Timetable, CourseId, Session, Options, Course } from '../../state';
+import { Stream, Timetable, CourseId, Session, Options, Course, CourseMap, SessionFactory } from '../../state';
 import { Dimensions, Position } from './timetableTypes';
 
 import TimetableSession from './TimetableSession';
@@ -85,11 +85,11 @@ export interface Props extends WithStyles<typeof styles> {
   timetable: Timetable,
   timetableVersion: number,
   options: Options,
-  courses: Map<CourseId, Course>,
   allChosenIds: Set<CourseId>,
   streams: Stream[],
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
+  sessionFactory: SessionFactory,
 }
 
 export interface State {
@@ -289,28 +289,11 @@ class TimetableTable extends Component<Props, State> {
 
     // Swap streams in timetable
     if (dropzone) {
-      const oldSessionId = this.state.dragging.id;
-      const newSession = dropzone.session;
-      const newStream = newSession.stream.sessions;
-
-      // Add new session placements
-      for (let linkedSession of newStream) {
-        const id = Session.getId(linkedSession);
-        if (!this.state.sessions.has(id)) {
-          const dimensions = this.state.dimensions;
-          const newPlacement = new SessionPlacement({
-            session: Session.from(linkedSession, this.props.courses),
-            dimensions
-          });
-          this.state.sessions.set(id, newPlacement);
-        }
-      }
-
-      // Remove old session placements
-      this.state.sessions.removeStream(oldSessionId);
-
-      // Explicitly snap the new session and all sessions in it's stream
-      this.state.sessions.snapStream(newSession.id);
+      this.state.sessions.snapSessionTo(
+        sessionPlacement,
+        dropzone.session,
+        this.props.sessionFactory,
+      );
     }
 
     // No longer dragging anything
@@ -388,13 +371,13 @@ class TimetableTable extends Component<Props, State> {
     if (this.state.dragging) {
       const { course, stream: { component }, index } = this.state.dragging;
       const dimensions = this.state.dimensions;
-      const courses = this.props.courses;
 
       for (let stream of this.props.streams) {
         // Check for stream with course and component matching the dragged session's
         if (stream.course === course && stream.component === component) {
           if (stream.sessions.length > index) {
-            const session = Session.from(stream.sessions[index], courses);
+            const linkedSession = stream.sessions[index];
+            const session = this.props.sessionFactory.create(linkedSession);
             if (!stream.full || this.props.options.includeFull) {
               dropzones.push(
                 new DropzonePlacement({ session, dimensions })

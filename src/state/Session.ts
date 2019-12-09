@@ -1,4 +1,4 @@
-import { Course, CourseId } from './Course';
+import { Course, CourseId, CourseMap } from './Course';
 import { Stream, StreamId } from './Stream';
 import { notUndefined, notNull } from '../typeHelpers';
 
@@ -50,25 +50,6 @@ export class Session {
     this._location = session.location;
     this._weeks = session.weeks;
     this._id = `${this._stream.id}-${this._index}`;
-  }
-
-  static from (linkedSession: ILinkedSession, courses: Map<CourseId, Course>): Session {
-    const course = notUndefined(courses.get(linkedSession.course));
-
-    let stream = null;
-    for (let i = 0; i < course.streams.length; ++i) {
-      stream = course.streams[i];
-      if (course.streams[i].id === linkedSession.stream) {
-        break;
-      }
-    }
-    stream = notNull(stream);
-
-    return new Session({
-      ...linkedSession,
-      course,
-      stream,
-    });
   }
 
   static getId (session: ILinkedSession): SessionId {
@@ -132,5 +113,36 @@ export class Session {
       location: this._location,
       weeks: this._weeks,
     }
+  }
+}
+
+export class SessionFactory {
+  private courses: CourseMap;
+
+  constructor (courses: CourseMap) {
+    this.courses = courses;
+  }
+
+  updateCourses (courses: CourseMap) {
+    return new SessionFactory(courses);
+  }
+
+  create (data: ILinkedSession) {
+    const course = notUndefined(this.courses.get(data.course));
+
+    let stream = null;
+    for (let i = 0; i < course.streams.length; ++i) {
+      stream = course.streams[i];
+      if (course.streams[i].id === data.stream) {
+        break;
+      }
+    }
+    stream = notNull(stream);
+
+    return new Session({
+      ...data,
+      course,
+      stream,
+    });
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses, Timetable, CourseMap } from '../state';
+import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses, Timetable, CourseMap, SessionFactory } from '../state';
 import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -37,6 +37,13 @@ export interface StateProps {
 export type Props = WithDispatch<OwnProps & StateProps>;
 
 class TimetableContainer extends Component<Props> {
+  sessionFactory: SessionFactory;
+
+  constructor (props: Props) {
+    super(props);
+    this.sessionFactory = new SessionFactory(props.courses);
+  }
+
   render () {
     const classes = this.props.classes;
 
@@ -46,11 +53,11 @@ class TimetableContainer extends Component<Props> {
           timetable={this.timetable}
           timetableVersion={this.props.timetableVersion}
           options={this.props.options}
-          courses={this.props.courses}
           allChosenIds={new Set(this.allCourses.map(c => c.id))}
           streams={this.timetableStreams}
           colours={this.props.colours}
           webStreams={this.props.webStreams}
+          sessionFactory={this.sessionFactory}
         />
       </div>
     );
@@ -70,6 +77,12 @@ class TimetableContainer extends Component<Props> {
     return false;
   }
 
+  componentDidUpdate () {
+    this.setState({
+      sessionFactory: this.sessionFactory.updateCourses(this.props.courses),
+    });
+  }
+
   private get allCourses () {
     const { chosen, custom, additional } = this.props;
 
@@ -83,9 +96,9 @@ class TimetableContainer extends Component<Props> {
 
   private get timetable (): Timetable {
     const timetable = [];
-    for (const session of this.props.linkedTimetable) {
-      if (this.props.courses.has(session.course)) {
-        timetable.push(Session.from(session, this.props.courses));
+    for (const linkedSession of this.props.linkedTimetable) {
+      if (this.props.courses.has(linkedSession.course)) {
+        timetable.push(this.sessionFactory.create(linkedSession));
       }
     }
     return timetable;
