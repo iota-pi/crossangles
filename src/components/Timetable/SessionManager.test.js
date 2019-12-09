@@ -316,27 +316,28 @@ describe('SessionManager', () => {
     expect(() => s.bumpStream('a')).toThrow();
     expect(s.version).toBe(v);
   })
+})
 
-  test('snapSessionTo', () => {
-    // Setup
-    const s = new SessionManager();
-    const spf = new SessionPlacementFactory({});
-    const oldSessions = [
-      { stream: 'a', index: 0 },
-      { stream: 'b', index: 0 },
-    ];
-    const newSessions = [
-      { stream: 'c', index: 0 },
-      { stream: 'd', index: 0 },
-    ]
+describe('snapSessionTo', () => {
+  const spf = new SessionPlacementFactory({});
+  const oldSessions = [
+    { stream: 'a', index: 0 },
+    { stream: 'b', index: 0 },
+  ];
+  const newSessions = [
+    { stream: 'c', index: 0 },
+    { stream: 'd', index: 0 },
+  ];
+  let s;
+
+  beforeEach(() => {
+    s = new SessionManager();
     s.set('a-0', spf.create({ stream: { sessions: oldSessions } }));
     s.set('b-0', spf.create({}));
-    const c = spf.create({});
-    c._offset = { x: 10, y: 10 };
-    s.set('c-0', c);
-    const v = s.version;
+  })
 
-    // Execute
+  test('increments version', () => {
+    const v = s.version;
     s.snapSessionTo(
       'a-0',
       newSessions,
@@ -344,12 +345,39 @@ describe('SessionManager', () => {
       spf,
     );
 
-    // Verify
+    expect(s.version).toBe(v + 1);
+  })
+
+  test('replaces old sessions with new', () => {
+    s.snapSessionTo(
+      'a-0',
+      newSessions,
+      { create: jest.fn() },
+      spf,
+    );
+
     expect(s.has('a-0')).toBe(false);
     expect(s.has('b-0')).toBe(false);
     expect(s.has('c-0')).toBe(true);
     expect(s.has('d-0')).toBe(true);
+  })
+
+  test('new sessions are snapped', () => {
+    const c = spf.create({});
+    const d = spf.create({});
+    c._offset = { x: 10, y: 10 };
+    d._offset = { x: 20, y: 0 };
+    s.set('c-0', c);
+    s.set('d-0', d);
+
+    s.snapSessionTo(
+      'a-0',
+      newSessions,
+      { create: jest.fn() },
+      spf,
+    );
+
     expect(s.get('c-0')._offset).toEqual({ x: 0, y: 0 });
-    expect(s.version).toBe(v + 1);
+    expect(s.get('d-0')._offset).toEqual({ x: 0, y: 0 });
   })
 })
