@@ -367,7 +367,7 @@ class TimetableTable extends Component<Props, State> {
 
       for (let stream of this.props.streams) {
         // Check for stream with course and component matching the dragged session's
-        if (stream.course === course && stream.component === component) {
+        if (stream.course.id === course.id && stream.component === component) {
           if (stream.sessions.length > index) {
             const linkedSession = stream.sessions[index];
             const session = this.props.sessionFactory.create(linkedSession);
