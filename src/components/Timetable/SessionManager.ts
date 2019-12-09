@@ -1,6 +1,6 @@
-import { SessionId, Session } from "../../state";
+import { SessionId, Session, SessionFactory, ILinkedSession } from "../../state";
 import { notUndefined } from "../../typeHelpers";
-import { SessionPlacement } from "./SessionPlacement";
+import { SessionPlacement, SessionPlacementFactory } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
 
 export class SessionManager {
@@ -174,6 +174,34 @@ export class SessionManager {
     for (const linkedSession of stream.sessions) {
       this.bumpSession(Session.getId(linkedSession))
     }
+    this.stopChange();
+  }
+
+  snapSessionTo (
+    sessionId: SessionId,
+    nextSessions: ILinkedSession[],
+    sessionFactory: SessionFactory,
+    sessionPlacementFactory: SessionPlacementFactory,
+  ): void {
+    this.startChange();
+
+    // Remove old session placements
+    this.removeStream(sessionId);
+
+    // Add new session placements
+    for (let linkedSession of nextSessions) {
+      const id = Session.getId(linkedSession);
+      const newSession = sessionFactory.create(linkedSession);
+      const newPlacement = sessionPlacementFactory.create(newSession);
+      this.set(id, newPlacement);
+
+      // Explicitly snap this session
+      // TODO: is this necessary?
+      this.snap(id);
+    }
+
+    // TODO: bump nextSession?
+
     this.stopChange();
   }
 

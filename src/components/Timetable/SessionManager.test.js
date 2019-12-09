@@ -1,4 +1,5 @@
 import { SessionManager } from './SessionManager';
+import { SessionPlacementFactory } from './SessionPlacement';
 
 describe('SessionManager', () => {
   test('get throws if not found', () => {
@@ -314,5 +315,33 @@ describe('SessionManager', () => {
     const v = s.version;
     expect(() => s.bumpStream('a')).toThrow();
     expect(s.version).toBe(v);
+  })
+
+  test('snapSessionTo', () => {
+    const s = new SessionManager();
+    const spf = new SessionPlacementFactory({});
+    const oldSessions = [
+      { stream: 'a', index: 0 },
+      { stream: 'b', index: 0 },
+    ];
+    const newSessions = [
+      { stream: 'c', index: 0 },
+      { stream: 'd', index: 0 },
+    ]
+    s.set('a-0', spf.create({ stream: { sessions: oldSessions } }));
+    s.set('b-0', spf.create({}));
+
+    const v = s.version;
+    s.snapSessionTo(
+      'a-0',
+      newSessions,
+      { create: jest.fn() },
+      spf,
+    );
+    expect(s.has('a-0')).toBe(false);
+    expect(s.has('b-0')).toBe(false);
+    expect(s.has('c-0')).toBe(true);
+    expect(s.has('d-0')).toBe(true);
+    expect(s.version).toBe(v + 1);
   })
 })

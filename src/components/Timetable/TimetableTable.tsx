@@ -283,7 +283,7 @@ class TimetableTable extends Component<Props, State> {
     if (dropzone) {
       this.state.sessions.snapSessionTo(
         session.id,
-        dropzone.session,
+        dropzone.session.stream.sessions,
         this.props.sessionFactory,
         this.sessionPlacementFactory,
       );
