@@ -2,6 +2,8 @@ import { Position } from "./timetableTypes";
 import { TimetablePlacement, ITimetablePlacement } from "./Placement";
 import * as tt from "./timetableUtil";
 import SessionPosition from "./SessionPosition";
+import { DimensionManager } from "./DimensionManager";
+import { Session } from "../../state";
 
 export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;
@@ -110,3 +112,24 @@ export class SessionPlacement extends TimetablePlacement {
 }
 
 export default SessionPlacement;
+
+
+export class SessionPlacementFactory {
+  private dimensions: DimensionManager;
+
+  constructor (dimensions: DimensionManager) {
+    this.dimensions = dimensions;
+  }
+
+  updateDimensions (dimensions: DimensionManager) {
+    this.dimensions = dimensions;
+    return new SessionPlacementFactory(dimensions);
+  }
+
+  create (session: Session) {
+    return new SessionPlacement({
+      session,
+      dimensions: this.dimensions
+    });
+  }
+}

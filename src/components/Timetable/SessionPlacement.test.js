@@ -1,4 +1,4 @@
-import { SessionPlacement } from './SessionPlacement';
+import { SessionPlacementFactory } from './SessionPlacement';
 import { CLASH_OFFSET_X, CLASH_OFFSET_Y } from './timetableUtil';
 import SessionPosition from './SessionPosition';
 
@@ -13,12 +13,13 @@ const dimensions = {
     width: 1000,
   },
 };
+const factory = new SessionPlacementFactory(dimensions);
 
 jest.mock('./SessionPosition');
 
 describe('SessionPlacement', () => {
   test('can initialise instance with expected base position', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     expect(p.session).toBe(session);
 
     const cellWidth = (1000 - 60) / 5;
@@ -31,14 +32,14 @@ describe('SessionPlacement', () => {
   });
 
   test('getters return expected initial values', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     expect(p.isSnapped).toBe(true);
     expect(p.isDragging).toBe(false);
     expect(p.isRaised).toBe(false);
   });
 
   test('begin drag', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     p.clashDepth = 2;
     p.drag();
     expect(p.isSnapped).toBe(false);
@@ -50,7 +51,7 @@ describe('SessionPlacement', () => {
   });
 
   test('move', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
 
     p.move({ x: 10, y: -10 });
     p.move({ x: 5, y: 10 });
@@ -59,7 +60,7 @@ describe('SessionPlacement', () => {
   });
 
   test('drop', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     p.drag();
 
     p.drop();
@@ -70,7 +71,7 @@ describe('SessionPlacement', () => {
   });
 
   test('snap', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     p._offset = { x: 15, y: 0};
     p._isSnapped = false;
     p._isRaised = true;
@@ -83,7 +84,7 @@ describe('SessionPlacement', () => {
   });
 
   test('snapping when already snapped changes nothing', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
 
     p.snap();
 
@@ -93,7 +94,7 @@ describe('SessionPlacement', () => {
   });
 
   test('raise', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
 
     p.raise();
 
@@ -101,7 +102,7 @@ describe('SessionPlacement', () => {
   });
 
   test('lower', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     p._isRaised = true;
 
     p.lower();
@@ -110,14 +111,14 @@ describe('SessionPlacement', () => {
   });
 
   test('displace', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     p.displace();
     expect(p.isSnapped).toBe(false);
     expect(p._offset).not.toEqual({ x: 0, y: 0 });
   });
 
   test('shouldDisplace', () => {
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
 
     p.session.stream = { full: false };
     expect(p.shouldDisplace(false)).toBe(false);
@@ -145,7 +146,7 @@ describe('SessionPlacement', () => {
     SessionPosition.getClashOffset = getClashOffset.bind(SessionPosition);
     SessionPosition.getRaisedOffset = getRaisedOffset.bind(SessionPosition);
     SessionPosition.getZ = getZ.bind(SessionPosition);
-    const p = new SessionPlacement({ session, dimensions });
+    const p = factory.create(session);
     p.clashDepth = 7;
     p._isRaised = true;
     expect(p.position).toEqual({ x: 6, y: 9, z: 5 });

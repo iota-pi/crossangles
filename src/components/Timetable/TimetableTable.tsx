@@ -9,7 +9,7 @@ import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
 import { sessionClashLength } from '../../timetable';
 import { TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_BORDER_WIDTH, SNAP_DIST, arraysEqual } from './timetableUtil';
-import { SessionPlacement } from './SessionPlacement';
+import { SessionPlacementFactory } from './SessionPlacement';
 import { DropzonePlacement } from './DropzonePlacement';
 import { DimensionManager } from './DimensionManager';
 import { SessionManager } from './SessionManager';
@@ -109,9 +109,12 @@ class TimetableTable extends Component<Props, State> {
 
   timetableRef: RefObject<HTMLDivElement>;
 
+  sessionPlacementFactory: SessionPlacementFactory;
+
   constructor (props: Props) {
     super(props);
     this.timetableRef = createRef();
+    this.sessionPlacementFactory = new SessionPlacementFactory(this.state.dimensions);
   }
 
   render() {
@@ -183,23 +186,13 @@ class TimetableTable extends Component<Props, State> {
   }
 
   shouldComponentUpdate (prevProps: Props, prevState: State) {
+    // TODO: can I do anything more efficient?
     return true;
-    // if (this.props.timetable !== prevProps.timetable || this.props.timetableVersion !== prevProps.timetableVersion) {
-    //   return true;
-    // }
-
-    // if (this.state.dragging !== prevState.dragging) {
-    //   return true;
-    // }
-
-    // if (this.state.version !== prevState.version) {
-    //   return true;
-    // }
-
-    // return false;
   }
 
   componentDidUpdate (prevProps: Props) {
+    this.sessionPlacementFactory.updateDimensions(this.state.dimensions);
+
     // Add SessionPlacement for each new session in the timetable
     const sessions = this.state.sessions;
     const timetable = this.props.timetable;
@@ -207,10 +200,9 @@ class TimetableTable extends Component<Props, State> {
     for (let session of timetable) {
       let placement = sessions.getMaybe(session.id);
       if (!placement) {
-        const dimensions = this.state.dimensions;
-        placement = new SessionPlacement({ session, dimensions });
+        placement = this.sessionPlacementFactory.create(session);
+        sessions.set(session.id, placement);
       }
-      sessions.set(session.id, placement);
 
       // Displace session if it needs to be
       if (placement.shouldDisplace(includeFull)) {
@@ -290,9 +282,10 @@ class TimetableTable extends Component<Props, State> {
     // Swap streams in timetable
     if (dropzone) {
       this.state.sessions.snapSessionTo(
-        sessionPlacement,
+        session.id,
         dropzone.session,
         this.props.sessionFactory,
+        this.sessionPlacementFactory,
       );
     }
 
