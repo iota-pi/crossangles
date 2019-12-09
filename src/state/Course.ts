@@ -5,6 +5,8 @@ export const CBS_CODE = 'CBS';
 
 export type CourseId = string;
 
+export type CourseMap = Map<CourseId, Course>;
+
 export interface RawCourseData {
   code: string;
   name: string;

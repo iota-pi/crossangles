@@ -13,6 +13,7 @@ import {
   Session,
   getAllCourses,
   CourseData,
+  CourseMap,
 } from '../state';
 import {
   addCourse,
@@ -58,7 +59,7 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: Map<CourseId, Course>,
+  courses: CourseMap,
   courseList: Course[],
   chosen: Course[],
   additional: Course[],

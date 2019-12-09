@@ -1,10 +1,10 @@
 import { createTransform } from 'redux-persist';
 import { Course, CourseId, CustomCourse } from '.';
-import { CourseData } from './Course';
+import { CourseData, CourseMap } from './Course';
 
 export const coursesTransform = createTransform(
   // transform state on its way to being serialized and persisted.
-  (inboundState: Map<CourseId, Course>) => {
+  (inboundState: CourseMap) => {
     return Array.from(inboundState.values()).map(course => course.data);
   },
   // transform state being rehydrated

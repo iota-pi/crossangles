@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Course, CourseId, CBS_CODE } from './Course';
+import { Course, CourseId, CBS_CODE, CourseMap } from './Course';
 import { Session, ILinkedSession } from './Session';
 import { CBS_COLOUR } from './colours';
 export * from './Course';
@@ -68,7 +68,7 @@ export const baseWebStreams = new Set<CourseId>();
 export const baseNotice: Notice | null = null;
 
 export interface RootState {
-  courses: Map<CourseId, Course>,
+  courses: CourseMap,
   meta: Meta,
   chosen: CourseId[],
   additional: CourseId[],

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses, Timetable } from '../state';
+import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses, Timetable, CourseMap } from '../state';
 import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -22,7 +22,7 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: Map<CourseId, Course>,
+  courses: CourseMap,
   chosen: Course[],
   custom: CustomCourse[],
   additional: Course[],
