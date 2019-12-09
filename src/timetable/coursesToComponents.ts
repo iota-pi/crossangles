@@ -90,7 +90,6 @@ export const addComponentsTo = (
     if (!webStreams.has(course.id) || streams.filter(s => s.web).length === 0) {
       const streamSessions: ILinkedSession[] = [];
       for (let stream of streams) {
-        // const sessions = stream.sessions.map(ls => Session.from(ls, courses));
         const sessions = stream.sessions;
         streamSessions.push(...sessions);
       }
