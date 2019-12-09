@@ -318,6 +318,7 @@ describe('SessionManager', () => {
   })
 
   test('snapSessionTo', () => {
+    // Setup
     const s = new SessionManager();
     const spf = new SessionPlacementFactory({});
     const oldSessions = [
@@ -330,18 +331,25 @@ describe('SessionManager', () => {
     ]
     s.set('a-0', spf.create({ stream: { sessions: oldSessions } }));
     s.set('b-0', spf.create({}));
-
+    const c = spf.create({});
+    c._offset = { x: 10, y: 10 };
+    s.set('c-0', c);
     const v = s.version;
+
+    // Execute
     s.snapSessionTo(
       'a-0',
       newSessions,
       { create: jest.fn() },
       spf,
     );
+
+    // Verify
     expect(s.has('a-0')).toBe(false);
     expect(s.has('b-0')).toBe(false);
     expect(s.has('c-0')).toBe(true);
     expect(s.has('d-0')).toBe(true);
+    expect(s.get('c-0')._offset).toEqual({ x: 0, y: 0 });
     expect(s.version).toBe(v + 1);
   })
 })

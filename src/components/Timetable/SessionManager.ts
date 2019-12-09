@@ -194,10 +194,6 @@ export class SessionManager {
       const newSession = sessionFactory.create(linkedSession);
       const newPlacement = sessionPlacementFactory.create(newSession);
       this.set(id, newPlacement);
-
-      // Explicitly snap this session
-      // TODO: is this necessary?
-      this.snap(id);
     }
 
     // TODO: bump nextSession?
