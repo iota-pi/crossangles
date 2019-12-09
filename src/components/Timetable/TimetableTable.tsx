@@ -270,10 +270,6 @@ class TimetableTable extends Component<Props, State> {
     // Update session placement with dragging state
     this.state.sessions.drag(session.id);
 
-    // Bump this stream and this session to the top of the session stack
-    this.state.sessions.bumpStream(session.id);
-    this.state.sessions.bumpSession(session.id);
-
     // Mark this session as being dragged
     this.setState({
       dragging: session,

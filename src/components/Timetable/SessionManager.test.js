@@ -110,6 +110,9 @@ describe('SessionManager', () => {
 
   test('can drag a session', () => {
     const s = new SessionManager();
+    const callOrder = [];
+    jest.spyOn(s, 'bumpStream').mockImplementation(() => callOrder.push('bumpStream'));
+    jest.spyOn(s, 'bumpSession').mockImplementation(() => callOrder.push('bumpSession'));
     const p1 = { drag: jest.fn(), session: { stream: { sessions: [] } } };
     const p2 = { drag: jest.fn() };
     s.set('a', p1);
@@ -118,6 +121,7 @@ describe('SessionManager', () => {
     s.drag('a');
     expect(p1.drag).toHaveBeenCalledTimes(1);
     expect(p2.drag).not.toHaveBeenCalled();
+    expect(callOrder).toEqual(['bumpStream', 'bumpSession']);
     expect(s.version).toBe(v + 1);
   })
 
@@ -257,13 +261,13 @@ describe('SessionManager', () => {
       { stream: 'a', index: 2 },
     ];
     s.set('a-0', {});
-    s.set('b-1', {});
-    s.set('a-2', { session: { stream: { sessions } } });
     s.set('b-0', {});
+    s.set('a-2', { session: { stream: { sessions } } });
+    s.set('b-1', {});
     s.set('a-1', {});
     const v = s.version;
     s.bumpStream('a-2');
-    expect(s.order).toEqual(['b-1', 'b-0', 'a-0', 'a-1', 'a-2']);
+    expect(s.order).toEqual(['b-0', 'b-1', 'a-0', 'a-1', 'a-2']);
     expect(s.version).toBe(v + 1);
   })
 

@@ -7,19 +7,19 @@ export class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
   private _order: SessionId[];
   private _version: number;
-  private _changing: boolean;
+  private _changing: number;
 
   constructor (base?: SessionManager) {
     if (base) {
       this.map = new Map(base.map);
       this._order = base._order.slice();
       this._version = base._version;
-      this._changing = false;
+      this._changing = 0;
     } else {
       this.map = new Map<SessionId, SessionPlacement>();
       this._order = [];
       this._version = 0;
-      this._changing = false;
+      this._changing = 0;
     }
   }
 
@@ -72,14 +72,15 @@ export class SessionManager {
   }
 
   removeStream (sessionId: SessionId, hardDelete = true): void {
-    const stream = this.get(sessionId).session.stream;
-    for (let linkedSession of stream.sessions) {
+    const linkedSessions = this.get(sessionId).session.stream.sessions;
+    for (let linkedSession of linkedSessions) {
       this.remove(Session.getId(linkedSession), hardDelete);
     }
   }
 
   drag (sessionId: SessionId): void {
     this.startChange();
+
     const session = this.get(sessionId);
     session.drag();
 
@@ -90,6 +91,10 @@ export class SessionManager {
         this.raise(otherId);
       }
     }
+
+    // Bump dragged stream, keeping the dragged session on top
+    this.bumpStream(sessionId);
+    this.bumpSession(sessionId);
 
     this.stopChange();
   }
@@ -179,17 +184,17 @@ export class SessionManager {
   }
 
   private next (): void {
-    if (!this._changing) {
+    if (this._changing === 0) {
       this._version++;
     }
   }
 
   private startChange (): void {
-    this._changing = true;
+    this._changing++;
   }
 
   private stopChange (): void {
-    this._changing = false;
+    this._changing--;
     this.next();
   }
 }
