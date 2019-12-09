@@ -42,6 +42,10 @@ export abstract class TimetablePlacement {
     return { x, y, width, height };
   }
 
+  get dimensionManager (): DimensionManager {
+    return this._dimensions;
+  }
+
   protected get dimensions (): Dimensions {
     return this._dimensions.dimensions;
   }
