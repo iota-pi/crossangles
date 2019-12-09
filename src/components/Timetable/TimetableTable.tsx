@@ -2,7 +2,7 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Stream, Timetable, CourseId, Session, Options, Course, CourseMap, SessionFactory } from '../../state';
+import { Stream, Timetable, CourseId, Session, Options, SessionFactory } from '../../state';
 import { Dimensions, Position } from './timetableTypes';
 
 import TimetableSession from './TimetableSession';

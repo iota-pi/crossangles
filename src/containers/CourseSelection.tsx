@@ -10,7 +10,6 @@ import {
   Timetable,
   CustomCourse,
   LinkedTimetable,
-  Session,
   getAllCourses,
   CourseData,
   CourseMap,
