@@ -124,6 +124,7 @@ export class SessionFactory {
   }
 
   updateCourses (courses: CourseMap) {
+    this.courses = courses;
     return new SessionFactory(courses);
   }
 

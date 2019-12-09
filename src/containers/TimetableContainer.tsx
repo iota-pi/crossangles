@@ -78,9 +78,7 @@ class TimetableContainer extends Component<Props> {
   }
 
   componentDidUpdate () {
-    this.setState({
-      sessionFactory: this.sessionFactory.updateCourses(this.props.courses),
-    });
+    this.sessionFactory.updateCourses(this.props.courses);
   }
 
   private get allCourses () {
