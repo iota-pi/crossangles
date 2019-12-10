@@ -1,7 +1,7 @@
 import { SessionManager } from './SessionManager';
 import { SessionPlacementFactory } from './SessionPlacement';
 
-describe('SessionManager', () => {
+describe('SessionManager basic functionality', () => {
   test('get throws if not found', () => {
     const s = new SessionManager();
     expect(() => s.get('a')).toThrowError(TypeError);
@@ -77,6 +77,37 @@ describe('SessionManager', () => {
     expect(s.getOrder('r')).toBe(1);
     expect(s.getOrder('d')).toBe(2);
     expect(s.getOrder('-')).toBe(-1);
+  })
+
+  test('getSession doesn\'t affect the version', () => {
+    const s = new SessionManager();
+    s.set('a', {});
+    const v = s.version;
+    s.getSession('a');
+    expect(s.version).toBe(v);
+  })
+
+  test('getSession returns session', () => {
+    const s = new SessionManager();
+    const session = {};
+    s.set('a', { session });
+    expect(s.getSession('a')).toBe(session);
+  })
+
+  test('getSession throws if session id doesn\'t exist', () => {
+    const s = new SessionManager();
+    expect(() => s.getSession('a')).toThrowError(TypeError);
+  })
+
+  test('orderSessions gives expected result', () => {
+    const s = new SessionManager();
+    const sessions = [{}, {}, {}];
+    s.set('a', { session: sessions[0] });
+    s.set('b', { session: sessions[1] });
+    s.set('c', { session: sessions[2] });
+    const v = s.version;
+    expect(s.orderSessions).toEqual(sessions);
+    expect(s.version).toBe(v);
   })
 
   test('remove removes from order', () => {
@@ -253,7 +284,10 @@ describe('SessionManager', () => {
     expect(p.displace).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
+})
 
+
+describe('bumping sessions and streams', () => {
   test('can bump a stream', () => {
     const s = new SessionManager();
     const sessions = [
@@ -317,6 +351,52 @@ describe('SessionManager', () => {
     expect(s.version).toBe(v);
   })
 })
+
+
+describe('constructor, data, and from', () => {
+  test('can copy using constructor', () => {
+    const s1 = new SessionManager();
+    const placements = [{}, {}, {}]
+    s1.set('a', placements[0]);
+    s1.set('b', placements[1]);
+    const v = s1.version;
+    const s2 = new SessionManager(s1);
+    s1.set('c', placements[2]);
+    expect(s2._order).toEqual(['a', 'b']);
+    expect(Array.from(s2.map.entries())).toEqual(
+      [['a', placements[0]], ['b', placements[1]]]
+    );
+    expect(s2.version).toBe(v);
+  })
+
+  test('data gives expected values', () => {
+    const s = new SessionManager();
+    const placements = [{}, {}, {}]
+    s.set('a', placements[0]);
+    s.set('b', placements[1]);
+    const v = s.version;
+    const data = s.data;
+    s.set('c', placements[2]);
+    expect(data.order).toEqual(['a', 'b']);
+    expect(data.map).toEqual(
+      [['a', placements[0]], ['b', placements[1]]]
+    );
+    expect(data.version).toBe(v);
+  })
+
+  test('from() gives SessionManager with expected state', () => {
+    const p = {};
+    const s = SessionManager.from({
+      map: new Map([['a', p]]),
+      order: ['a'],
+      version: 10,
+    });
+    expect(s.get('a')).toBe(p);
+    expect(s.order).toEqual(['a']);
+    expect(s.version).toBe(10);
+  })
+})
+
 
 describe('snapSessionTo', () => {
   const spf = new SessionPlacementFactory({});

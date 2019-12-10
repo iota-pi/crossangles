@@ -3,6 +3,12 @@ import { notUndefined } from "../../typeHelpers";
 import { SessionPlacement, SessionPlacementFactory } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
 
+export interface ISessionManager {
+  map: Array<[SessionId, SessionPlacement]>,
+  order: SessionId[],
+  version: number,
+}
+
 export class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
   private _order: SessionId[];
@@ -23,12 +29,32 @@ export class SessionManager {
     }
   }
 
+  get data (): ISessionManager {
+    return {
+      map: Array.from(this.map.entries()),
+      order: this.order.slice(),
+      version: this.version,
+    };
+  }
+
+  static from (data: ISessionManager): SessionManager {
+    const sm = new SessionManager();
+    sm.map = new Map(data.map);
+    sm._order = data.order;
+    sm._version = data.version;
+    return sm;
+  }
+
   get version () {
     return this._version;
   }
 
   get order () {
     return this._order;
+  }
+
+  get orderSessions () {
+    return this._order.map(sid => this.getSession(sid));
   }
 
   getOrder (sessionId: SessionId) {
@@ -41,6 +67,10 @@ export class SessionManager {
 
   getMaybe (sessionId: SessionId): SessionPlacement | undefined {
     return this.map.get(sessionId);
+  }
+
+  getSession (sessionId: SessionId): Session {
+    return this.get(sessionId).session;
   }
 
   has (sessionId: SessionId): boolean {
