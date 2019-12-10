@@ -3,8 +3,7 @@ import { courses } from './courses';
 import { meta } from "./meta";
 import { RootState } from '../state';
 import { chosen, custom, events, options, additional } from './commitments';
-import { timetable } from './timetable';
-import { timetableVersion } from './timetableVersion';
+import { sessionManager } from './sessionManager';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
@@ -17,8 +16,7 @@ export default combineReducers<RootState>({
   custom,
   events,
   options,
-  timetable,
-  timetableVersion,
+  sessionManager,
   colours,
   webStreams,
   notice,

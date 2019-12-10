@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Course, CourseId, CBS_CODE, CourseMap } from './Course';
 import { Session, ILinkedSession } from './Session';
 import { CBS_COLOUR } from './colours';
+import { SessionManager } from "../components/Timetable/SessionManager";
 export * from './Course';
 export * from './Stream';
 export * from './Session';
@@ -61,8 +62,6 @@ export const baseOptions: Options = {
   includeFull: false,
 };
 export const baseCustom: CustomCourse[] = [];
-export const baseTimetable: LinkedTimetable = [];
-export const baseTimetableVersion: number = 0;
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
 export const baseWebStreams = new Set<CourseId>();
 export const baseNotice: Notice | null = null;
@@ -75,26 +74,10 @@ export interface RootState {
   events: CBSEvent[],
   options: Options,
   custom: CustomCourse[],
-  timetable: LinkedTimetable,
-  timetableVersion: number,
+  sessionManager: SessionManager,
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
   notice: Notice | null,
-}
-
-export const baseState: RootState = {
-  courses: baseCourses,
-  meta: baseMeta,
-  chosen: baseChosen,
-  additional: baseAdditional,
-  events: baseEvents,
-  options: baseOptions,
-  custom: baseCustom,
-  timetable: baseTimetable,
-  timetableVersion: baseTimetableVersion,
-  colours: baseColours,
-  webStreams: baseWebStreams,
-  notice: baseNotice,
 }
 
 export const getAllCourses = (state: RootState) => {

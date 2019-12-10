@@ -2,7 +2,7 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Stream, Timetable, CourseId, Session, Options, SessionFactory } from '../../state';
+import { Stream, CourseId, Session, Options, SessionFactory, SessionId } from '../../state';
 import { Dimensions, Position } from './timetableTypes';
 
 import TimetableSession from './TimetableSession';
@@ -82,8 +82,8 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  timetable: Timetable,
-  timetableVersion: number,
+  // timetable: Timetable,
+  sessionManager: SessionManager,
   options: Options,
   allChosenIds: Set<CourseId>,
   streams: Stream[],
@@ -94,7 +94,6 @@ export interface Props extends WithStyles<typeof styles> {
 
 export interface State {
   dimensions: DimensionManager,
-  sessions: SessionManager,
   dragging: Session | null,
   version: number,
 }
@@ -102,18 +101,19 @@ export interface State {
 class TimetableTable extends Component<Props, State> {
   state: State = {
     dimensions: new DimensionManager(),
-    sessions: new SessionManager(),
     dragging: null,
     version: -1,
   }
 
   timetableRef: RefObject<HTMLDivElement>;
 
+  sessions: SessionManager;
   sessionPlacementFactory: SessionPlacementFactory;
 
   constructor (props: Props) {
     super(props);
     this.timetableRef = createRef();
+    this.sessions = new SessionManager();
     this.sessionPlacementFactory = new SessionPlacementFactory(this.state.dimensions);
   }
 
@@ -126,8 +126,8 @@ class TimetableTable extends Component<Props, State> {
 
     return (
       <div className={classes.root} data-cy="timetable">
-        {this.state.dimensions.dimensions.width ? this.state.sessions.order.map(sid => {
-          const placement = this.state.sessions.getMaybe(sid);
+        {this.state.dimensions.dimensions.width ? this.sessions.order.map(sid => {
+          const placement = this.sessions.getMaybe(sid);
           if (!placement) return null;
           const session = placement.session;
 
@@ -191,33 +191,37 @@ class TimetableTable extends Component<Props, State> {
   }
 
   componentDidUpdate (prevProps: Props) {
+    console.log('didComponentUpdate')
     this.sessionPlacementFactory.updateDimensions(this.state.dimensions);
 
     // Add SessionPlacement for each new session in the timetable
-    const sessions = this.state.sessions;
-    const timetable = this.props.timetable;
-    const includeFull = this.props.options.includeFull;
-    for (let session of timetable) {
-      let placement = sessions.getMaybe(session.id);
-      if (!placement) {
-        placement = this.sessionPlacementFactory.create(session);
-        sessions.set(session.id, placement);
-      }
+    // const sessions = this.sessions;
+    // const timetable = this.props.timetable;
+    // const includeFull = this.props.options.includeFull;
+    // console.log('timetable', timetable)
+    // for (let session of timetable) {
+    //   let placement = sessions.getMaybe(session.id);
+    //   if (!placement) {
+    //     placement = this.sessionPlacementFactory.create(session);
+    //     sessions.set(session.id, placement);
+    //   }
 
-      // Displace session if it needs to be
-      if (placement.shouldDisplace(includeFull)) {
-        console.log('should displace');
-        placement.displace();
-      }
-    }
+    //   // Displace session if it needs to be
+    //   if (placement.shouldDisplace(includeFull)) {
+    //     console.log('should displace');
+    //     placement.displace();
+    //   }
+    // }
 
-    // Remove all sessions which have been moved
-    this.removeOldSessions(prevProps);
+    // // Remove all sessions which have been moved
+    // console.log('before', this.sessions.order);
+    // this.removeOldSessions(prevProps);
+    // console.log('after', this.sessions.order);
 
     // Update clash depths
-    if (this.timetableHasChanged(this.props.timetable, false)) {
-      this.updateClashDepths(sessions);
-    }
+    // if (this.timetableHasChanged(prevProps.sessionManager.order, false)) {
+    //   this.updateClashDepths(sessions);
+    // }
 
     // Update dimensions
     const newDimensions = this.state.dimensions;
@@ -225,14 +229,15 @@ class TimetableTable extends Component<Props, State> {
     newDimensions.updateHours(this.hours);
   }
 
-  private removeOldSessions = (prevProps: Props) => {
-    const sessions = new Set(this.props.timetable.map(s => s.id));
-    for (const prevSession of prevProps.timetable) {
-      if (!sessions.has(prevSession.id)) {
-        this.state.sessions.remove(prevSession.id);
-      }
-    }
-  }
+  // private removeOldSessions = (prevProps: Props) => {
+  //   const sessions = new Set(this.props.timetable.map(s => s.id));
+  //   console.log(sessions, prevProps.timetable.map(s => s.id));
+  //   for (const prevSession of prevProps.timetable) {
+  //     if (!sessions.has(prevSession.id)) {
+  //       this.sessions.remove(prevSession.id);
+  //     }
+  //   }
+  // }
 
   componentDidMount () {
     window.addEventListener('resize', () => this.forceUpdate())
@@ -243,9 +248,8 @@ class TimetableTable extends Component<Props, State> {
     return this.props.colours.get(courseId) || black;
   }
 
-  private timetableHasChanged (nextTimetable: Timetable, sort?: boolean): boolean {
-    let oldSessionIds = this.props.timetable.map(s => s.id);
-    let newSessionIds = nextTimetable.map(s => s.id);
+  private timetableHasChanged (newSessionIds: SessionId[], sort?: boolean): boolean {
+    let oldSessionIds = this.props.sessionManager.order;
 
     if (sort !== false) {
       oldSessionIds = oldSessionIds.slice().sort();
@@ -260,42 +264,52 @@ class TimetableTable extends Component<Props, State> {
     if (this.state.dragging) return;
 
     // Update session placement with dragging state
-    this.state.sessions.drag(session.id);
+    this.sessions.drag(session.id);
+
+    this.updateClashDepths(this.sessions);
 
     // Mark this session as being dragged
     this.setState({
       dragging: session,
-      version: this.state.sessions.version,
+      version: this.sessions.version,
     });
-
-    this.updateClashDepths(this.state.sessions);
   }
 
   private handleDrop = (session: Session): void => {
     if (!this.state.dragging) return;
 
+    console.log('1', this.sessions.order);
+
     // Snap session to nearest dropzone
-    this.state.sessions.drop(session.id);
-    const sessionPlacement = this.state.sessions.get(session.id);
+    this.sessions.drop(session.id);
+    const sessionPlacement = this.sessions.get(session.id);
     const dropzone = this.getNearestDropzone(sessionPlacement.position);
 
     // Swap streams in timetable
     if (dropzone) {
-      this.state.sessions.snapSessionTo(
+      console.log('2', this.sessions.order);
+      this.sessions.snapSessionTo(
         session.id,
         dropzone.session.stream.sessions,
         this.props.sessionFactory,
         this.sessionPlacementFactory,
       );
+      console.log('3', this.sessions.order);
     }
+
+    console.log('4', this.sessions.order);
+
+    this.updateClashDepths(this.sessions);
+
+    console.log('5', this.sessions.order);
 
     // No longer dragging anything
     this.setState({
       dragging: null,
-      version: this.state.sessions.version,
+      version: this.sessions.version,
     });
 
-    this.updateClashDepths(this.state.sessions);
+    console.log('9', this.sessions.order);
   }
 
   private getNearestDropzone (position: Position): DropzonePlacement | null {
@@ -317,10 +331,10 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private handleMove = (session: Session, delta: Position) => {
-    this.state.sessions.move(session.id, delta);
+    this.sessions.move(session.id, delta);
 
     this.setState({
-      version: this.state.sessions.version,
+      version: this.sessions.version,
     });
   }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, LinkedTimetable, CustomCourse, CourseId, Stream, Session, getAllCourses, Timetable, CourseMap, SessionFactory } from '../state';
+import { RootState, Course, CBSEvent, Options, CustomCourse, CourseId, Stream, getAllCourses, CourseMap, SessionFactory } from '../state';
 import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -11,6 +11,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 // Components
 import TimetableTable from '../components/Timetable';
 import { arraysEqual } from '../components/Timetable/timetableUtil';
+import { SessionManager } from '../components/Timetable/SessionManager';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -28,8 +29,7 @@ export interface StateProps {
   additional: Course[],
   events: CBSEvent[],
   options: Options,
-  linkedTimetable: LinkedTimetable,
-  timetableVersion: number,
+  sessionManager: SessionManager,
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
 }
@@ -50,8 +50,7 @@ class TimetableContainer extends Component<Props> {
     return (
       <div className={classes.spaceAbove}>
         <TimetableTable
-          timetable={this.timetable}
-          timetableVersion={this.props.timetableVersion}
+          sessionManager={this.props.sessionManager}
           options={this.props.options}
           allChosenIds={new Set(this.allCourses.map(c => c.id))}
           streams={this.timetableStreams}
@@ -68,9 +67,10 @@ class TimetableContainer extends Component<Props> {
       return true;
     }
 
-    const oldSession = this.props.linkedTimetable.map(ls => Session.getId(ls));
-    const newSession = prevProps.linkedTimetable.map(ls => Session.getId(ls));
-    if (!arraysEqual(oldSession, newSession)) {
+    // TODO is this necessary? should they be sorted first?
+    const oldSessions = this.props.sessionManager.order;
+    const newSessions = prevProps.sessionManager.order;
+    if (!arraysEqual(oldSessions, newSessions)) {
       return true;
     }
 
@@ -91,16 +91,6 @@ class TimetableContainer extends Component<Props> {
     // Get all streams of chosen courses
     return ([] as Stream[]).concat(...this.allCourses.map(c => c.streams));
   }
-
-  private get timetable (): Timetable {
-    const timetable = [];
-    for (const linkedSession of this.props.linkedTimetable) {
-      if (this.props.courses.has(linkedSession.course)) {
-        timetable.push(this.sessionFactory.create(linkedSession));
-      }
-    }
-    return timetable;
-  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -114,8 +104,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     additional: state.additional.map(cid => notUndefined(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
-    linkedTimetable: state.timetable,
-    timetableVersion: state.timetableVersion,
+    sessionManager: state.sessionManager,
     colours: state.colours,
     webStreams: state.webStreams,
   }

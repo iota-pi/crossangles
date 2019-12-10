@@ -3,7 +3,7 @@ import { TimetablePlacement, ITimetablePlacement } from "./Placement";
 import * as tt from "./timetableUtil";
 import SessionPosition from "./SessionPosition";
 import { DimensionManager } from "./DimensionManager";
-import { Session } from "../../state";
+import { Session } from "../../state/Session";
 
 export class SessionPlacement extends TimetablePlacement {
   private _offset: Position;

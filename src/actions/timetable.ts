@@ -2,11 +2,12 @@ import { Timetable, Course, CBSEvent, Options, LinkedTimetable, CourseId } from 
 import { Action } from 'redux';
 import { search } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
+import { SessionManager } from '../components/Timetable/SessionManager';
 
 export const UPDATE_TIMETABLE = 'UPDATE_TIMETABLE';
 export interface TimetableAction extends Action {
   type: typeof UPDATE_TIMETABLE;
-  timetable: LinkedTimetable;
+  timetable: SessionManager;
 }
 
 export const BUMP_TIMETABLE_VERSION = 'BUMP_TIMETABLE_VERSION';
@@ -79,7 +80,7 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   }
 }
 
-export function updateTimetable (newTimetable: LinkedTimetable): TimetableAction {
+export function updateTimetable (newTimetable: SessionManager): TimetableAction {
   return {
     type: UPDATE_TIMETABLE,
     timetable: newTimetable,

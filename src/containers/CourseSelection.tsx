@@ -9,7 +9,6 @@ import {
   CourseId,
   Timetable,
   CustomCourse,
-  LinkedTimetable,
   getAllCourses,
   CourseData,
   CourseMap,
@@ -43,6 +42,7 @@ import GeneralOptions from '../components/GeneralOptions';
 import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';
 import { ClassTime } from '../state/times';
+import { SessionManager } from '../components/Timetable/SessionManager';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
@@ -67,7 +67,7 @@ export interface StateProps {
   custom: CustomCourse[],
   events: CBSEvent[],
   options: Options,
-  linkedTimetable: LinkedTimetable,
+  sessionManager: SessionManager,
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
 }
@@ -224,8 +224,9 @@ class CourseSelection extends Component<Props, State> {
     } else if (!newTimetable.success) {
       await this.props.dispatch(setNotice('Some classes have been displaced'));
     } else {
-      const linkedTimetable = newTimetable.timetable;
-      await this.props.dispatch(updateTimetable(linkedTimetable));
+      const sessionManager = new SessionManager(this.props.sessionManager);
+      // sessionManager.update(newTimetable.timetable);
+      await this.props.dispatch(updateTimetable(sessionManager));
       await this.props.dispatch(bumpTimetableVersion());
     }
   }
@@ -240,11 +241,9 @@ class CourseSelection extends Component<Props, State> {
 
   private get timetable (): Timetable {
     const timetable = [];
-    for (const linkedSession of this.props.linkedTimetable) {
-      if (this.props.courses.has(linkedSession.course)) {
-        const session = this.props.sessionFactory.create(linkedSession);
-        timetable.push(session);
-      }
+    for (const sessionId of this.props.sessionManager.order) {
+      const session = this.props.sessionManager.getSession(sessionId);
+      timetable.push(session);
     }
     return timetable;
   }
@@ -264,7 +263,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     additional: state.additional.map(cid => isSet(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
-    linkedTimetable: state.timetable,
+    sessionManager: state.sessionManager,
     colours: state.colours,
     webStreams: state.webStreams,
   }
