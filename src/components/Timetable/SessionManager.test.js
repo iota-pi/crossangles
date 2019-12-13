@@ -1,5 +1,5 @@
-import { SessionManager } from './SessionManager';
-import { SessionPlacementFactory } from './SessionPlacement';
+import SessionManager from './SessionManager';
+import SessionPlacement from './SessionPlacement';
 
 describe('SessionManager basic functionality', () => {
   test('get throws if not found', () => {
@@ -244,6 +244,16 @@ describe('SessionManager basic functionality', () => {
     expect(s.version).toBe(v + 1);
   })
 
+  test('can touch a session', () => {
+    const s = new SessionManager();
+    const p = { touch: jest.fn() };
+    s.set('a', p);
+    const v = s.version;
+    s.touch('a');
+    expect(p.touch).toHaveBeenCalledTimes(1);
+    expect(s.version).toBe(v);
+  })
+
   test('can snap all sessions in a stream', () => {
     const s = new SessionManager();
     const sessions = [
@@ -371,7 +381,7 @@ describe('constructor, data, and from', () => {
 
   test('data gives expected values', () => {
     const s = new SessionManager();
-    const placements = [{}, {}, {}]
+    const placements = [{ data: {} }, { data: {} }, { data: {} }];
     s.set('a', placements[0]);
     s.set('b', placements[1]);
     const v = s.version;
@@ -379,27 +389,29 @@ describe('constructor, data, and from', () => {
     s.set('c', placements[2]);
     expect(data.order).toEqual(['a', 'b']);
     expect(data.map).toEqual(
-      [['a', placements[0]], ['b', placements[1]]]
+      [['a', placements[0].data], ['b', placements[1].data]]
     );
     expect(data.version).toBe(v);
   })
 
   test('from() gives SessionManager with expected state', () => {
-    const p = {};
+    const p = { data: {} };
+    const returnSession = {};
+    const createSession = jest.fn().mockReturnValue(returnSession);
     const s = SessionManager.from({
-      map: new Map([['a', p]]),
+      map: [['a', p.data]],
       order: ['a'],
       version: 10,
-    });
-    expect(s.get('a')).toBe(p);
+    }, { create: createSession });
+    expect(s.get('a').session).toBe(returnSession);
     expect(s.order).toEqual(['a']);
     expect(s.version).toBe(10);
+    expect(createSession).toHaveBeenCalled();
   })
 })
 
 
 describe('snapSessionTo', () => {
-  const spf = new SessionPlacementFactory({});
   const oldSessions = [
     { stream: 'a', index: 0 },
     { stream: 'b', index: 0 },
@@ -412,8 +424,8 @@ describe('snapSessionTo', () => {
 
   beforeEach(() => {
     s = new SessionManager();
-    s.set('a-0', spf.create({ stream: { sessions: oldSessions } }));
-    s.set('b-0', spf.create({}));
+    s.set('a-0', new SessionPlacement({ stream: { sessions: oldSessions } }));
+    s.set('b-0', new SessionPlacement({}));
   })
 
   test('increments version', () => {
@@ -422,7 +434,6 @@ describe('snapSessionTo', () => {
       'a-0',
       newSessions,
       { create: jest.fn() },
-      spf,
     );
 
     expect(s.version).toBe(v + 1);
@@ -433,7 +444,6 @@ describe('snapSessionTo', () => {
       'a-0',
       newSessions,
       { create: jest.fn() },
-      spf,
     );
 
     expect(s.has('a-0')).toBe(false);
@@ -442,9 +452,31 @@ describe('snapSessionTo', () => {
     expect(s.has('d-0')).toBe(true);
   })
 
+  test('touches new sessions', () => {
+    s.snapSessionTo(
+      'a-0',
+      newSessions,
+      { create: jest.fn() },
+    );
+
+    expect(s.get('c-0').touched).toBe(true);
+    expect(s.get('d-0').touched).toBe(true);
+  })
+
+  test('touches sessions if unchanged', () => {
+    s.snapSessionTo(
+      'a-0',
+      oldSessions,
+      { create: jest.fn() },
+    );
+
+    expect(s.get('a-0').touched).toBe(false);
+    expect(s.get('b-0').touched).toBe(false);
+  })
+
   test('new sessions are snapped', () => {
-    const c = spf.create({});
-    const d = spf.create({});
+    const c = new SessionPlacement({});
+    const d = new SessionPlacement({});
     c._offset = { x: 10, y: 10 };
     d._offset = { x: 20, y: 0 };
     s.set('c-0', c);
@@ -454,10 +486,14 @@ describe('snapSessionTo', () => {
       'a-0',
       newSessions,
       { create: jest.fn() },
-      spf,
     );
 
     expect(s.get('c-0')._offset).toEqual({ x: 0, y: 0 });
     expect(s.get('d-0')._offset).toEqual({ x: 0, y: 0 });
   })
+})
+
+
+describe('update', () => {
+
 })

@@ -1,14 +1,6 @@
-import { Placement, Position } from "./timetableTypes";
 import * as tt from "./timetableUtil";
 
 export class SessionPosition {
-  static getBasePosition (basePlacement: Placement, boundedOffset: Position) {
-    return {
-      x: basePlacement.x + boundedOffset.x,
-      y: basePlacement.y + boundedOffset.y,
-    };
-  }
-
   static getClashOffset (clashDepth: number) {
     return {
       x: clashDepth * tt.CLASH_OFFSET_X,

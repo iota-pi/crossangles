@@ -1,4 +1,4 @@
-import { Timetable, Stream, Session, ILinkedSession } from '../state';
+import { Timetable, Stream, ILinkedSession } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 import TimetableScorerCache from './TimetableScorerCache';
@@ -9,13 +9,13 @@ export interface TimetableScore {
 }
 
 export class TimetableScorer {
-  private lastSessionIds: Set<string>;
+  private fixedSessions: ILinkedSession[];
   private clashInfo: ClashInfo;
   private fewestClashes: number;
   private cache: TimetableScorerCache<number>;
 
-  constructor (lastSessionIds: string[], clashInfo: ClashInfo) {
-    this.lastSessionIds = new Set(lastSessionIds);
+  constructor (fixedSessions: ILinkedSession[], clashInfo: ClashInfo) {
+    this.fixedSessions = fixedSessions;
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
     this.cache = new TimetableScorerCache();
@@ -36,13 +36,12 @@ export class TimetableScorer {
       this.fewestClashes = clashes;
     }
 
-    const timetable = streams.flatMap(s => s.sessions);
+    const timetable = streams.flatMap(s => s.sessions).concat(this.fixedSessions);
     let score = 0;
     score += scoreClashes(clashes);
     score += scoreFreeDays(timetable);
     score += scoreTimes(timetable);
     score += scoreDayLength(timetable);
-    score += scoreUnchanged(timetable, this.lastSessionIds);
 
     this.cache.set(indexes, score);
     return score;
@@ -95,20 +94,6 @@ export const scoreDayLength = (sessions: ILinkedSession[]): number => {
   if (ends.F > -1) total += ends.F - starts.F;
 
   return total * perHour;
-}
-
-export const scoreUnchanged = (current: ILinkedSession[], past: Set<string>): number => {
-  const perUnchangedSession = 30;
-
-  let count = 0;
-  for (let i = 0; i < current.length; ++i) {
-    const id = Session.getId(current[i])
-    if (past.has(id)) {
-      count++;
-    }
-  }
-
-  return count * perUnchangedSession;
 }
 
 export const countClashes = (

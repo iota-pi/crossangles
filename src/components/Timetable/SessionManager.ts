@@ -1,10 +1,12 @@
 import { SessionId, Session, SessionFactory, ILinkedSession } from "../../state";
 import { notUndefined } from "../../typeHelpers";
-import { SessionPlacement, SessionPlacementFactory } from "./SessionPlacement";
+import { SessionPlacement, ILinkedSessionPlacement } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
 
-export interface ISessionManager {
-  map: Array<[SessionId, SessionPlacement]>,
+export type LinkedSessionManagerEntries = Array<[SessionId, ILinkedSessionPlacement]>;
+
+export interface ILinkedSessionManager {
+  map: LinkedSessionManagerEntries,
   order: SessionId[],
   version: number,
 }
@@ -29,17 +31,23 @@ export class SessionManager {
     }
   }
 
-  get data (): ISessionManager {
+  get data (): ILinkedSessionManager {
+    const mapData: LinkedSessionManagerEntries = [];
+    this.map.forEach((value, key) => {
+      mapData.push([key, value.data]);
+    });
     return {
-      map: Array.from(this.map.entries()),
+      map: mapData,
       order: this.order.slice(),
       version: this.version,
     };
   }
 
-  static from (data: ISessionManager): SessionManager {
+  static from (data: ILinkedSessionManager, sessionFactory: SessionFactory): SessionManager {
     const sm = new SessionManager();
-    sm.map = new Map(data.map);
+    sm.map = new Map(data.map.map(([sid, ls]) => {
+      return [sid, SessionPlacement.from(ls, sessionFactory)];
+    }));
     sm._order = data.order;
     sm._version = data.version;
     return sm;
@@ -163,6 +171,11 @@ export class SessionManager {
     this.next();
   }
 
+  touch (sessionId: SessionId): void {
+    const session = this.get(sessionId);
+    session.touch();
+  }
+
   snapStream (sessionId: SessionId): void {
     this.startChange();
     const stream = this.get(sessionId).session.stream;
@@ -207,13 +220,24 @@ export class SessionManager {
     this.stopChange();
   }
 
+  setClashDepth (sessionId: SessionId, depth: number): void {
+    const placement = this.get(sessionId);
+    placement.clashDepth = depth;
+    this.next();
+  }
+
   snapSessionTo (
     sessionId: SessionId,
     nextSessions: ILinkedSession[],
     sessionFactory: SessionFactory,
-    sessionPlacementFactory: SessionPlacementFactory,
   ): void {
     this.startChange();
+
+    // Mark new stream as touched iff stream has changed
+    let shouldTouch = false;
+    if (sessionId && !nextSessions.map(s => Session.getId(s)).includes(sessionId)) {
+      shouldTouch = true
+    }
 
     // Remove old session placements
     this.removeStream(sessionId);
@@ -222,8 +246,12 @@ export class SessionManager {
     for (let linkedSession of nextSessions) {
       const id = Session.getId(linkedSession);
       const newSession = sessionFactory.create(linkedSession);
-      const newPlacement = sessionPlacementFactory.create(newSession);
+      const newPlacement = new SessionPlacement(newSession);
       this.set(id, newPlacement);
+
+      if (shouldTouch) {
+        this.touch(id);
+      }
     }
 
     // TODO: bump nextSession?
@@ -231,10 +259,18 @@ export class SessionManager {
     this.stopChange();
   }
 
-  setClashDepth (sessionId: SessionId, depth: number): void {
-    const placement = this.get(sessionId);
-    placement.clashDepth = depth;
-    this.next();
+  update (
+    newSessions: ILinkedSession[],
+    sessionFactory: SessionFactory,
+  ) {
+    for (let linkedSession of newSessions) {
+      const id = Session.getId(linkedSession);
+      if (!this.has(id)) {
+        const session = sessionFactory.create(linkedSession);
+        const placement = new SessionPlacement(session);
+        this.set(id, placement);
+      }
+    }
   }
 
   private next (): void {
@@ -251,4 +287,13 @@ export class SessionManager {
     this._changing--;
     this.next();
   }
+}
+
+export default SessionManager;
+
+export const hydrateLinkedSessionManager = (
+  linkedSessionManager: ILinkedSessionManager,
+  sessionFactory: SessionFactory,
+) => {
+  return SessionManager.from(linkedSessionManager, sessionFactory);
 }

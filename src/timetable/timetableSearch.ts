@@ -6,7 +6,7 @@ class TimetableSearch {
 
   search (
     components: Component[],
-    lastSessionIds: string[],
+    fixedSessions: ILinkedSession[],
     maxTime = 300,
     maxSpawn = 3,
   ): LinkedTimetable {
@@ -22,7 +22,7 @@ class TimetableSearch {
 
     // Set up scorer and searcher
     // TODO: could increase performance by spawning in multiple web workers
-    const scorer = new TimetableScorer(lastSessionIds, clashInfo);
+    const scorer = new TimetableScorer(fixedSessions, clashInfo);
     const searchers = new Array(maxSpawn).fill(0).map(_ => new GeneticSearch({
       maxTime: maxTime / maxSpawn,
       scoreFunction: scorer.score.bind(scorer),

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Course, CourseId, CBS_CODE, CourseMap } from './Course';
 import { Session, ILinkedSession } from './Session';
 import { CBS_COLOUR } from './colours';
-import { SessionManager } from "../components/Timetable/SessionManager";
+import { ILinkedSessionManager } from "../components/Timetable/SessionManager";
 export * from './Course';
 export * from './Stream';
 export * from './Session';
@@ -74,7 +74,7 @@ export interface RootState {
   events: CBSEvent[],
   options: Options,
   custom: CustomCourse[],
-  sessionManager: SessionManager,
+  sessionManager: ILinkedSessionManager,
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
   notice: Notice | null,

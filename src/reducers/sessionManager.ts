@@ -1,14 +1,14 @@
 import { UPDATE_TIMETABLE, TimetableAction } from '../actions';
-import { SessionManager } from '../components/Timetable/SessionManager';
+import { SessionManager, ILinkedSessionManager } from '../components/Timetable/SessionManager';
 
 export function sessionManager (
-  state: SessionManager | undefined,
+  state: ILinkedSessionManager | undefined,
   action: TimetableAction
-): SessionManager {
+): ILinkedSessionManager {
   switch (action.type) {
     case UPDATE_TIMETABLE:
       return action.timetable;
   }
 
-  return state || new SessionManager();
+  return state || new SessionManager().data;
 };

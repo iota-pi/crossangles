@@ -7,7 +7,6 @@ import {
   Options,
   OptionName,
   CourseId,
-  Timetable,
   CustomCourse,
   getAllCourses,
   CourseData,
@@ -42,7 +41,7 @@ import GeneralOptions from '../components/GeneralOptions';
 import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';
 import { ClassTime } from '../state/times';
-import { SessionManager } from '../components/Timetable/SessionManager';
+import { SessionManager, hydrateLinkedSessionManager } from '../components/Timetable/SessionManager';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
@@ -209,25 +208,35 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private updateTimetable = async () => {
+    const sessionManager = new SessionManager(this.props.sessionManager);
+    const sessions = sessionManager.orderSessions;
+    const fixedSessions = sessions.filter(s => sessionManager.get(s.id).touched);
+    const fixedLinkedSessions = fixedSessions.map(s => s.serialise());
+
     const newTimetable = doTimetableSearch({
-      previousTimetable: this.timetable,
+      fixedSessions: fixedLinkedSessions,
       courses: this.allCourses,
       events: this.props.events,
       webStreams: this.props.webStreams,
       options: this.props.options,
     });
 
-    console.log('new timetable', newTimetable);
+    removeOldSessions(sessionManager, this.allCourses);
+
     if (newTimetable === null) {
       // Displace some classes and display a warning
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
-    } else if (!newTimetable.success) {
-      await this.props.dispatch(setNotice('Some classes have been displaced'));
     } else {
-      const sessionManager = new SessionManager(this.props.sessionManager);
-      // sessionManager.update(newTimetable.timetable);
-      await this.props.dispatch(updateTimetable(sessionManager));
+      sessionManager.update(
+        newTimetable.timetable,
+        this.props.sessionFactory,
+      );
+      await this.props.dispatch(updateTimetable(sessionManager.data));
       await this.props.dispatch(bumpTimetableVersion());
+
+      if (newTimetable.unplaced.length > 0) {
+        await this.props.dispatch(setNotice('Some classes have been displaced'));
+      }
     }
   }
 
@@ -238,14 +247,14 @@ class CourseSelection extends Component<Props, State> {
   private handleClearEditing = () => {
     this.setState({ editingCourse: null });
   }
+}
 
-  private get timetable (): Timetable {
-    const timetable = [];
-    for (const sessionId of this.props.sessionManager.order) {
-      const session = this.props.sessionManager.getSession(sessionId);
-      timetable.push(session);
+const removeOldSessions = (sessionManager: SessionManager, courses: Course[]) => {
+  const courseIds = courses.map(c => c.id);
+  for (let sid of sessionManager.order) {
+    if (!courseIds.includes(sid)) {
+      sessionManager.remove(sid);
     }
-    return timetable;
   }
 }
 
@@ -253,6 +262,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
   const customSort = (a: Course, b: Course) => +(a.name > b.name) - +(a.name < b.name);
   const allCourses = getAllCourses(state);
+  const sessionFactory = new SessionFactory(state.courses);
 
   return {
     courses: allCourses,
@@ -263,7 +273,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     additional: state.additional.map(cid => isSet(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
-    sessionManager: state.sessionManager,
+    sessionManager: hydrateLinkedSessionManager(state.sessionManager, sessionFactory),
     colours: state.colours,
     webStreams: state.webStreams,
   }

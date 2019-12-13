@@ -11,7 +11,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 // Components
 import TimetableTable from '../components/Timetable';
 import { arraysEqual } from '../components/Timetable/timetableUtil';
-import { SessionManager } from '../components/Timetable/SessionManager';
+import { SessionManager, hydrateLinkedSessionManager } from '../components/Timetable/SessionManager';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -96,6 +96,7 @@ class TimetableContainer extends Component<Props> {
 const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
   const customSort = (a: Course, b: Course) => +(a.name > b.name) - +(a.name < b.name);
+  const sessionFactory = new SessionFactory(state.courses);
 
   return {
     courses: getAllCourses(state),
@@ -104,10 +105,10 @@ const mapStateToProps = (state: RootState): StateProps => {
     additional: state.additional.map(cid => notUndefined(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
-    sessionManager: state.sessionManager,
+    sessionManager: hydrateLinkedSessionManager(state.sessionManager, sessionFactory),
     colours: state.colours,
     webStreams: state.webStreams,
-  }
+  };
 }
 
 const connected = connect(mapStateToProps);
