@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Meta, Notice } from './state';
-import { Course } from "./state/Course";
+import { RootState, Notice } from './state';
 
 // Theme
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -16,7 +15,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from './containers/AppBar';
 import { ThunkDispatch } from 'redux-thunk';
-import { fetchData } from './actions/fetch';
+import { fetchData } from './actions/fetchData';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
@@ -37,8 +36,6 @@ export interface OwnProps extends WithStyles<typeof styles> {
 }
 
 export interface StateProps {
-  courses: Course[],
-  meta: Meta,
   notice: Notice | null,
 }
 
@@ -108,13 +105,11 @@ class App extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    courses: Array.from(state.courses.values()),
-    meta: state.meta,
     notice: state.notice,
   }
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>, ownProps: OwnProps): DispatchProps => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): DispatchProps => {
   return {
     getData: async () => await dispatch(fetchData(process.env.REACT_APP_DATA_URI as string)),
     clearNotice: async () => await dispatch(clearNotice()),

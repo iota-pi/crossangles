@@ -290,11 +290,12 @@ class TimetableTable extends Component<Props, State> {
       }
     }
 
-    return { start, end }
+    return { start, end };
   }
 
   private get hoursArray () {
-    return new Array(this.hours.end - this.hours.start).fill(0).map((_, i) => this.hours.start + i);
+    const duration = this.hours.end - this.hours.start;
+    return new Array(duration).fill(0).map((_, i) => this.hours.start + i);
   }
 
   private getTimetableDimensions (): Dimensions {

@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
-import { Course, CourseId, CBS_CODE, CourseMap } from './Course';
+import { Course, CourseId, CBS_CODE } from './Course';
 import { Session, ILinkedSession } from './Session';
 import { CBS_COLOUR } from './colours';
 import { ILinkedSessionManager } from "../components/Timetable/SessionManager";
+import { CourseManager } from "./CourseManager";
 export * from './Course';
 export * from './Stream';
 export * from './Session';
@@ -44,7 +45,7 @@ export interface Notice {
 }
 
 // Initial values
-export const baseCourses = new Map<CourseId, Course>();
+export const baseCourses = new CourseManager();
 export const baseMeta: Meta = {
   term: 1,
   year: 1960,
@@ -53,7 +54,6 @@ export const baseMeta: Meta = {
   signup: '',
 }
 export const baseChosen: CourseId[] = [];
-export const baseAdditional: CourseId[] = [];
 export const baseEvents: CBSEvent[] = [];
 export const baseOptions: Options = {
   showEnrolments: false,
@@ -61,29 +61,18 @@ export const baseOptions: Options = {
   showWeeks: false,
   includeFull: false,
 };
-export const baseCustom: CustomCourse[] = [];
 export const baseColours = new Map<CourseId, string>([[CBS_CODE, CBS_COLOUR]]);
 export const baseWebStreams = new Set<CourseId>();
 export const baseNotice: Notice | null = null;
 
 export interface RootState {
-  courses: CourseMap,
+  courses: CourseManager,
   meta: Meta,
   chosen: CourseId[],
-  additional: CourseId[],
   events: CBSEvent[],
   options: Options,
-  custom: CustomCourse[],
   sessionManager: ILinkedSessionManager,
   colours: Map<CourseId, string>,
   webStreams: Set<CourseId>,
   notice: Notice | null,
-}
-
-export const getAllCourses = (state: RootState) => {
-  const allCourses = new Map(state.courses);
-  for (const custom of state.custom) {
-    allCourses.set(custom.code, custom);
-  }
-  return allCourses;
 }

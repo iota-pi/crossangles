@@ -1,6 +1,7 @@
-import { Course, CourseId, CourseMap } from './Course';
+import { Course, CourseId } from './Course';
 import { Stream, StreamId } from './Stream';
 import { notUndefined, notNull } from '../typeHelpers';
+import CourseManager from './CourseManager';
 
 export type SessionId = string;
 
@@ -117,13 +118,13 @@ export class Session {
 }
 
 export class SessionFactory {
-  private courses: CourseMap;
+  private courses: CourseManager;
 
-  constructor (courses: CourseMap) {
+  constructor (courses: CourseManager) {
     this.courses = courses;
   }
 
-  updateCourses (courses: CourseMap) {
+  updateCourses (courses: CourseManager) {
     this.courses = courses;
     return new SessionFactory(courses);
   }

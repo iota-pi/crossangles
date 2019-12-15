@@ -170,7 +170,7 @@ describe('SessionPlacement', () => {
     expect(getZ).toHaveBeenLastCalledWith(p.isSnapped, p.clashDepth);
   });
 
-  test('position object changes', () => {
+  test('position object always changes', () => {
     const p = new SessionPlacement(session);
     const pos1 = p.getPosition(dimensions, startHour);
     expect(p.getPosition(dimensions, startHour)).not.toBe(pos1);

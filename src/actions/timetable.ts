@@ -45,41 +45,22 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   let components = coursesToComponents(courses, events, webStreams, includeFull);
 
   // Check for impossible timetables
+  // const fullSessions = components.filter(c => c.streams.length === 0);
   components = components.filter(c => c.streams.length > 0);
-  // let allPlaced = true;
-  // if (components.filter(c => c.streams.length === 0).length > 0) {
-    // allPlaced = false;
-  // }
 
   try {
     // Search for a new timetable, scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered 'unplaced'
     const newTimetable = search(components, fixedSessions);
 
-    // TODO:
-    // Merge with previous timetable to keep displaced sessions
-    // if (!allPlaced) {
-    //   const componentIds = newTimetable.map(s => `${s.course}-${s.component}`)
-    //   for (let session of previousTimetable) {
-    //     // Copy old sessions only if:
-    //     // 1. Session belongs to a course which still included
-    //     // 2. This session's component is missing from the course
-    //     if (courses.includes(session.course)) {
-    //       if (!componentIds.includes(`${session.course.id}-${session.component}`)) {
-    //         newTimetable.push(session.serialise());
-    //       }
-    //     }
-    //   }
-    // }
-
     // Add fixed sessions
     const timetable = fixedSessions.concat(newTimetable);
 
     // Add full sessions
-    const unplaced = getFullSessions(courses);
-    timetable.push(...unplaced);
+    // const unplaced = getFullSessions(courses);
+    // timetable.push(...unplaced);
 
-    return { timetable, unplaced };
+    return { timetable, unplaced: [] };
   } catch (err) {
     console.error(err);
     return null;
@@ -87,11 +68,14 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
 }
 
 function getFullSessions (courses: Course[]) {
-  const fullStreams: ILinkedSession[] = [];
+  const fullSessions: ILinkedSession[] = [];
   for (let course of courses) {
-    fullStreams.push(...course.streams.filter(s => s.full).flatMap(s => s.sessions));
+    const fullStreams = course.streams.filter(s => s.full);
+    if (fullStreams.length) {
+      fullSessions.push(...fullStreams[0].sessions);
+    }
   }
-  return fullStreams;
+  return fullSessions;
 }
 
 export function updateTimetable (newTimetable: ILinkedSessionManager): TimetableAction {

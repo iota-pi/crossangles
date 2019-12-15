@@ -8,9 +8,7 @@ import {
   OptionName,
   CourseId,
   CustomCourse,
-  getAllCourses,
   CourseData,
-  CourseMap,
   SessionFactory,
 } from '../state';
 import {
@@ -42,6 +40,7 @@ import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';
 import { ClassTime } from '../state/times';
 import { SessionManager, hydrateLinkedSessionManager } from '../components/Timetable/SessionManager';
+import CourseManager from '../state/CourseManager';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
@@ -58,12 +57,10 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: CourseMap,
+  courses: CourseManager,
   sessionFactory: SessionFactory,
   courseList: Course[],
   chosen: Course[],
-  additional: Course[],
-  custom: CustomCourse[],
   events: CBSEvent[],
   options: Options,
   sessionManager: SessionManager,
@@ -92,7 +89,7 @@ class CourseSelection extends Component<Props, State> {
             <Autocomplete
               courses={this.props.courseList}
               chosen={this.props.chosen}
-              additional={this.props.additional}
+              additional={this.props.courses.additional}
               chooseCourse={this.chooseCourse}
               maxItems={20}
             />
@@ -108,8 +105,8 @@ class CourseSelection extends Component<Props, State> {
         <div className={classes.spaceAbove}>
           <CourseDisplay
             chosen={this.props.chosen}
-            custom={this.props.custom}
-            additional={this.props.additional}
+            custom={this.props.courses.custom}
+            additional={this.props.courses.additional}
             events={this.props.events}
             colours={this.props.colours}
             webStreams={this.props.webStreams}
@@ -132,7 +129,7 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private get allCourses () {
-    return this.props.chosen.concat(this.props.custom, this.props.additional);
+    return this.props.chosen.concat(this.props.courses.custom, this.props.courses.additional);
   }
 
   private chooseCourse = async (course: Course) => {
@@ -260,17 +257,13 @@ const removeOldSessions = (sessionManager: SessionManager, courses: Course[]) =>
 
 const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
-  const customSort = (a: Course, b: Course) => +(a.name > b.name) - +(a.name < b.name);
-  const allCourses = getAllCourses(state);
   const sessionFactory = new SessionFactory(state.courses);
 
   return {
-    courses: allCourses,
-    sessionFactory: new SessionFactory(allCourses),
-    courseList: Array.from(state.courses.values()),
+    courses: state.courses,
+    sessionFactory: sessionFactory,
+    courseList: state.courses.official,
     chosen: state.chosen.map(cid => isSet(state.courses.get(cid))).sort(courseSort),
-    custom: state.custom.sort(customSort),
-    additional: state.additional.map(cid => isSet(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
     sessionManager: hydrateLinkedSessionManager(state.sessionManager, sessionFactory),

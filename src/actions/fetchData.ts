@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { Action, AnyAction } from 'redux';
 import { ThunkDispatch, ThunkAction } from "redux-thunk";
-import { CourseData } from '../state/Course';
-import { Meta } from '../state';
+import { Meta, Course, CourseData } from '../state';
 
 export const SET_COURSE_DATA = 'SET_COURSE_DATA';
+export const SET_COURSE_MANAGER = 'SET_COURSE_MANAGER';
 export const SET_META_DATA = 'SET_META_DATA';
 
-export interface CoursesAction extends Action {
+export interface CourseListAction extends Action {
   type: typeof SET_COURSE_DATA;
-  courses: CourseData[];
+  courses: Course[];
 }
 export interface MetaAction extends Action {
   type: typeof SET_META_DATA;
@@ -19,10 +19,11 @@ export interface MetaAction extends Action {
 export function fetchData (uri: string): ThunkAction<Promise<void>, {}, {}, AnyAction> {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
     return axios.get(uri).then(async ({ data }) => {
-      const p1 = dispatch({
+      const setCourseAction: CourseListAction = {
         type: SET_COURSE_DATA,
-        courses: data.courses,
-      });
+        courses: data.courses.map((c: CourseData) => new Course(c)),
+      };
+      const p1 = dispatch(setCourseAction);
 
       const p2 = dispatch({
         type: SET_META_DATA,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, CustomCourse, CourseId, Stream, getAllCourses, CourseMap, SessionFactory } from '../state';
+import { RootState, Course, CBSEvent, Options, CourseId, Stream, SessionFactory } from '../state';
 import { notUndefined, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -12,6 +12,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import TimetableTable from '../components/Timetable';
 import { arraysEqual } from '../components/Timetable/timetableUtil';
 import { SessionManager, hydrateLinkedSessionManager } from '../components/Timetable/SessionManager';
+import CourseManager from '../state/CourseManager';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -23,10 +24,8 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: CourseMap,
+  courses: CourseManager,
   chosen: Course[],
-  custom: CustomCourse[],
-  additional: Course[],
   events: CBSEvent[],
   options: Options,
   sessionManager: SessionManager,
@@ -63,7 +62,7 @@ class TimetableContainer extends Component<Props> {
   }
 
   shouldComponentUpdate (prevProps: Props) {
-    if (this.props.courses !== prevProps.courses || this.props.chosen !== prevProps.chosen || this.props.events !== prevProps.events || this.props.options !== prevProps.options || this.props.additional !== prevProps.additional) {
+    if (this.props.courses !== prevProps.courses || this.props.chosen !== prevProps.chosen || this.props.events !== prevProps.events || this.props.options !== prevProps.options) {
       return true;
     }
 
@@ -81,10 +80,10 @@ class TimetableContainer extends Component<Props> {
     this.sessionFactory.updateCourses(this.props.courses);
   }
 
-  private get allCourses () {
-    const { chosen, custom, additional } = this.props;
+  private get allCourses (): Course[] {
+    const { courses, chosen } = this.props;
 
-    return chosen.concat(custom, additional);
+    return chosen.concat(courses.custom, courses.additional);
   }
 
   private get timetableStreams (): Stream[] {
@@ -95,14 +94,11 @@ class TimetableContainer extends Component<Props> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
-  const customSort = (a: Course, b: Course) => +(a.name > b.name) - +(a.name < b.name);
   const sessionFactory = new SessionFactory(state.courses);
 
   return {
-    courses: getAllCourses(state),
+    courses: state.courses,
     chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
-    custom: state.custom.sort(customSort),
-    additional: state.additional.map(cid => notUndefined(state.courses.get(cid))).sort(customSort),
     events: state.events,
     options: state.options,
     sessionManager: hydrateLinkedSessionManager(state.sessionManager, sessionFactory),

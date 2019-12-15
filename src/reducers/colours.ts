@@ -1,7 +1,7 @@
 import { CourseId, baseColours, COURSE_COLOURS } from '../state';
-import { ADD_COURSE, CourseAction, ColourAction, SET_COLOUR } from '../actions';
+import { ADD_COURSE, CourseAction, ColourAction, SET_COLOUR, OtherAction } from '../actions';
 
-export function colours (state = baseColours, action: CourseAction | ColourAction): Map<CourseId, string> {
+export function colours (state = baseColours, action: CourseAction | ColourAction | OtherAction): Map<CourseId, string> {
   const colours = new Map(state);
   switch (action.type) {
     case ADD_COURSE:
