@@ -421,10 +421,11 @@ describe('snapSessionTo', () => {
     { stream: 'd', index: 0 },
   ];
   let s;
+  const mockFactory = { create: jest.fn().mockReturnValue({ index: 0 }) };
 
   beforeEach(() => {
     s = new SessionManager();
-    s.set('a-0', new SessionPlacement({ stream: { sessions: oldSessions } }));
+    s.set('a-0', new SessionPlacement({ stream: { sessions: oldSessions }, }));
     s.set('b-0', new SessionPlacement({}));
   })
 
@@ -433,7 +434,7 @@ describe('snapSessionTo', () => {
     s.snapSessionTo(
       'a-0',
       newSessions,
-      { create: jest.fn() },
+      mockFactory,
     );
 
     expect(s.version).toBe(v + 1);
@@ -443,7 +444,7 @@ describe('snapSessionTo', () => {
     s.snapSessionTo(
       'a-0',
       newSessions,
-      { create: jest.fn() },
+      mockFactory,
     );
 
     expect(s.has('a-0')).toBe(false);
@@ -456,7 +457,7 @@ describe('snapSessionTo', () => {
     s.snapSessionTo(
       'a-0',
       newSessions,
-      { create: jest.fn() },
+      mockFactory,
     );
 
     expect(s.get('c-0').touched).toBe(true);
@@ -467,7 +468,7 @@ describe('snapSessionTo', () => {
     s.snapSessionTo(
       'a-0',
       oldSessions,
-      { create: jest.fn() },
+      mockFactory,
     );
 
     expect(s.get('a-0').touched).toBe(false);
@@ -485,7 +486,7 @@ describe('snapSessionTo', () => {
     s.snapSessionTo(
       'a-0',
       newSessions,
-      { create: jest.fn() },
+      mockFactory,
     );
 
     expect(s.get('c-0')._offset).toEqual({ x: 0, y: 0 });

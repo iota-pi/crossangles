@@ -236,25 +236,39 @@ export class SessionManager {
     // Mark new stream as touched iff stream has changed
     let shouldTouch = false;
     if (sessionId && !nextSessions.map(s => Session.getId(s)).includes(sessionId)) {
-      shouldTouch = true
+      shouldTouch = true;
     }
+
+    // Get the index of the session which initiated this move (i.e. the dragged/dropped session)
+    const initiatingIndex = this.get(sessionId).session.index;
 
     // Remove old session placements
     this.removeStream(sessionId);
 
     // Add new session placements
+    let replacementSession: Session | undefined;
     for (let linkedSession of nextSessions) {
       const id = Session.getId(linkedSession);
       const newSession = sessionFactory.create(linkedSession);
       const newPlacement = new SessionPlacement(newSession);
       this.set(id, newPlacement);
 
+      if (newSession.index === initiatingIndex) {
+        replacementSession = newSession;
+      }
+
       if (shouldTouch) {
         this.touch(id);
       }
     }
 
-    // TODO: bump nextSession?
+    // Bump session which corresponds to the initiating session
+    // NB: aside from neatness, this also is required for React to apply transistions correctly,
+    //     even though it doesn't affect the key of the ReactDOM elements
+    // TODO: investigate why this is required for transitions ()
+    if (replacementSession) {
+      this.bumpSession(replacementSession.id);
+    }
 
     this.stopChange();
   }
