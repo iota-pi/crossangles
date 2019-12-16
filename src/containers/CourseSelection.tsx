@@ -24,7 +24,7 @@ import {
   removeCustom,
   updateCustom,
 } from '../actions';
-import { updateTimetable } from '../actions';
+import { updateSessionManager } from '../actions';
 import { isSet, WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -228,7 +228,7 @@ class CourseSelection extends Component<Props, State> {
         newTimetable.timetable,
         this.props.sessionFactory,
       );
-      await this.props.dispatch(updateTimetable(sessionManager.data));
+      await this.props.dispatch(updateSessionManager(sessionManager.data));
       await this.props.dispatch(bumpTimetableVersion());
 
       if (newTimetable.unplaced.length > 0) {

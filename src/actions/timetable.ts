@@ -4,10 +4,10 @@ import { search } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
 import { ILinkedSessionManager } from '../components/Timetable/SessionManager';
 
-export const UPDATE_TIMETABLE = 'UPDATE_TIMETABLE';
-export interface TimetableAction extends Action {
-  type: typeof UPDATE_TIMETABLE;
-  timetable: ILinkedSessionManager;
+export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER';
+export interface SessionManagerAction extends Action {
+  type: typeof UPDATE_SESSION_MANAGER;
+  sessionManager: ILinkedSessionManager;
 }
 
 export const BUMP_TIMETABLE_VERSION = 'BUMP_TIMETABLE_VERSION';
@@ -78,10 +78,10 @@ function getFullSessions (courses: Course[]) {
   return fullSessions;
 }
 
-export function updateTimetable (newTimetable: ILinkedSessionManager): TimetableAction {
+export function updateSessionManager (newTimetable: ILinkedSessionManager): SessionManagerAction {
   return {
-    type: UPDATE_TIMETABLE,
-    timetable: newTimetable,
+    type: UPDATE_SESSION_MANAGER,
+    sessionManager: newTimetable,
   }
 }
 
