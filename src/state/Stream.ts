@@ -1,17 +1,8 @@
-import { ClassTime } from './times';
-import { DayLetter, ILinkedSession } from './Session';
-import { CourseData } from '../state';
+import { DayLetter, SessionData } from './Session';
+import { CourseData, StreamData } from '.';
 import { getCourseId } from './Course';
 
 export type StreamId = string;
-
-export interface StreamData {
-  component: string;
-  enrols: [number, number];
-  times: ClassTime[] | null;
-  full: boolean;
-  web?: boolean;
-}
 
 
 export const getStreamId = (course: CourseData, stream: StreamData) => {
@@ -20,7 +11,7 @@ export const getStreamId = (course: CourseData, stream: StreamData) => {
   return id;
 }
 
-export const getSessions = (course: CourseData, stream: StreamData): ILinkedSession[] => {
+export const getSessions = (course: CourseData, stream: StreamData): SessionData[] => {
   const courseId = getCourseId(course);
   const streamId = getStreamId(course, stream);
   if (stream.times !== null) {

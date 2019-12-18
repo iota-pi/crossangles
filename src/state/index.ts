@@ -22,11 +22,11 @@ export interface CourseData {
 }
 
 export interface StreamData {
-  component: string;
-  enrols: [number, number];
-  times: ClassTime[] | null;
-  full: boolean;
-  web?: boolean;
+  component: string,
+  enrols: [number, number],
+  times: ClassTime[] | null,
+  full: boolean,
+  web?: boolean,
 }
 
 export interface ClassTime {

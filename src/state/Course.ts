@@ -1,4 +1,4 @@
-import { CourseData } from '../state';
+import { CourseData } from '.';
 
 export const CBS_CODE = 'CBS';
 
