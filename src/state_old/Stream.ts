@@ -1,4 +1,4 @@
-import { parseTimeStr, ClassTime } from './times';
+import { ClassTime } from './times';
 import { Course } from './Course';
 import { DayLetter, ILinkedSession } from './Session';
 
@@ -44,41 +44,6 @@ export class Stream {
     this.id = `${this.course.id}-${this.component}-${this.timeString}`;
 
     this.sessions = this.getSessions(); // TODO: if too slow, could only call for streams of chosen courses
-  }
-
-  static from (data: RawStreamData, course: Course) {
-    let component = data.component;
-    if (component === 'CRS') {
-      return null;
-    }
-
-    const status = data.status.trim().replace(/\*$/, '').toLocaleLowerCase();
-    if (status !== 'open' && status !== 'full') {
-      return null;
-    }
-    const full = status === 'full';
-
-    const enrols = data.enrols.split(' ')[0].split('/').map(x => parseInt(x)) as [number, number];
-    if (enrols[1] === 0) {
-      return null;
-    }
-
-    let web = false;
-    let times: ClassTime[] | null = null;
-    if (data.section.indexOf('WEB') === -1) {
-      times = parseTimeStr(data.times);
-
-      if (times === null || times.length === 0) {
-        return null;
-      }
-    } else {
-      web = true;
-
-      // Standardise all web streams as 'LEC' component
-      component = 'LEC';
-    }
-
-    return new Stream({ component, enrols, times, full, web, course });
   }
 
   get data (): StreamData {
