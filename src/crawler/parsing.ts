@@ -1,4 +1,5 @@
-import { CourseData, StreamData, ClassTime } from "../state";
+import { CourseData } from "../state/Course";
+import { StreamData, ClassTime } from "../state/Stream";
 
 const CourseNames: { [code: string]: string } = require('../../src/assets/courses.json');
 

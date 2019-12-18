@@ -1,8 +1,22 @@
-import { DayLetter, SessionData } from './Session';
-import { CourseData, StreamData } from '.';
-import { getCourseId } from './Course';
+import { SessionData, DayLetter } from './Session';
+import { CourseData, getCourseId } from './Course';
 
 export type StreamId = string;
+
+export interface StreamData {
+  component: string,
+  enrols: [number, number],
+  times: ClassTime[] | null,
+  full: boolean,
+  web?: boolean,
+}
+
+export interface ClassTime {
+  time: string,
+  location?: string,
+  weeks?: string,
+  canClash?: boolean,
+}
 
 
 export const getStreamId = (course: CourseData, stream: StreamData) => {

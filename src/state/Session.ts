@@ -1,6 +1,5 @@
-import { CourseId } from './Course';
-import { StreamId, getStreamId } from './Stream';
-import { CourseData, StreamData } from '.';
+import { CourseData, CourseId } from './Course';
+import { StreamData, StreamId, getStreamId } from './Stream';
 
 export type SessionId = string;
 
