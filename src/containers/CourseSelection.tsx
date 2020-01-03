@@ -126,7 +126,11 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private get allCourses () {
-    return this.props.chosen.concat(this.props.courses.custom, this.props.courses.additional);
+    return [
+      ...this.props.chosen,
+      ...this.props.custom,
+      ...this.props.additional,
+    ];
   }
 
   private chooseCourse = async (course: CourseData) => {
@@ -205,7 +209,6 @@ class CourseSelection extends Component<Props, State> {
     const sessionManager = SessionManager.from(this.props.timetable, this.props.courses);
     const sessions = sessionManager.orderSessions;
     const fixedSessions = sessions.filter(s => sessionManager.get(s.id).touched);
-    // const fixedLinkedSessions = fixedSessions.map(s => unlinkSession(s));
 
     const newTimetable = doTimetableSearch({
       fixedSessions,
@@ -238,16 +241,6 @@ class CourseSelection extends Component<Props, State> {
   private handleClearEditing = () => {
     this.setState({ editingCourse: null });
   }
-
-  // private linkTimetable = (timetable: SessionData[]): LinkedSession[] => {
-  //   const linkedTimetable = timetable.map(session => {
-  //     const course = this.props.courses[session.course];
-  //     const stream = getStream(course, session.stream);
-  //     return linkSession(course, stream, session)
-  //   });
-
-  //   return linkedTimetable;
-  // }
 }
 
 const removeOldSessions = (sessionManager: SessionManager, courses: CourseData[]) => {
