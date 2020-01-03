@@ -1,6 +1,6 @@
-import { StreamData } from "./Stream";
+import { StreamData, StreamId, getStreamId } from "./Stream";
 
-export const CBS_CODE = 'CBS';
+export const CBS_CODE: CourseId = 'CBS';
 
 export type CourseId = string;
 
@@ -10,6 +10,10 @@ export interface CourseData {
   streams: StreamData[],
   term?: string | null,
   isCustom?: boolean,
+}
+
+export interface CourseMap {
+  [id: string]: CourseData,
 }
 
 
@@ -26,4 +30,14 @@ export const hasWebStream = (course: CourseData): boolean => {
   }
 
   return false;
+}
+
+export const getStream = (course: CourseData, streamId: StreamId): StreamData => {
+  for (let stream of course.streams) {
+    if (getStreamId(course, stream) === streamId) {
+      return stream;
+    }
+  }
+
+  throw new Error(`No stream with id ${streamId} in course ${getCourseId(course)}`);
 }

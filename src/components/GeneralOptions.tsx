@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { OptionList, Options, OptionName } from '../state';
+import { OptionList, Options, OptionName } from '../state/Options';
 
 // Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";

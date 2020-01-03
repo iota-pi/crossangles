@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Select from 'react-select';
-import { Course } from '../../state';
+import { CourseData } from '../../state/Course';
 
 // Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -65,13 +65,17 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
+export interface CourseOption extends CourseData {
+  isDisabled?: boolean
+};
+
 export interface Props extends WithStyles<typeof styles> {
   maxItems?: number,
   separator?: string,
-  courses: Course[],
-  chosen: Course[],
-  additional: Course[],
-  chooseCourse: (course: Course) => void,
+  courses: CourseData[],
+  chosen: CourseData[],
+  additional: CourseData[],
+  chooseCourse: (course: CourseData) => void,
 }
 
 export interface State {
@@ -80,6 +84,7 @@ export interface State {
   menuOpen: boolean,
   focused: boolean,
 }
+
 
 const DEFAULT_MAX_ITEMS = 10;
 
@@ -143,7 +148,7 @@ class Autocomplete extends PureComponent<Props, State> {
     );
   }
 
-  private handleChange = (course: Course | null | undefined) => {
+  private handleChange = (course: CourseData | null | undefined) => {
     if (course) {
       this.props.chooseCourse(course);
     }
@@ -182,10 +187,10 @@ class Autocomplete extends PureComponent<Props, State> {
     });
   }
 
-  private get options (): Course[] {
+  private get options (): CourseOption[] {
     // Filter out courses which don't match the search
     const search = this.state.search.toLowerCase();
-    const options = this.props.courses.filter(course => this.optionFilter(course, search));
+    const options: CourseOption[] = this.props.courses.filter(course => this.optionFilter(course, search));
 
     // Sort courses with matching course codes first
     options.sort(this.optionSort);
@@ -193,17 +198,18 @@ class Autocomplete extends PureComponent<Props, State> {
     const maxItems = this.state.currentMaxItems;
     if (options.length > maxItems) {
       // Limit number of returned courses
-      return options.slice(0, maxItems).concat([Object.assign(new Course({
+      return options.slice(0, maxItems).concat([{
         code: 'See more results...',
         name: '',
         streams: [],
-      }), { isDisabled: true })]);
+        isDisabled: true,
+      }]);
     }
 
     return options;
   }
 
-  private optionFilter = (course: Course, search: string): boolean => {
+  private optionFilter = (course: CourseData, search: string): boolean => {
     // Pre: search is lowercase
 
     // Don't include already chosen courses
@@ -212,10 +218,12 @@ class Autocomplete extends PureComponent<Props, State> {
     }
 
     // Include any courses which match the search in either their code or name
-    return course.code.toLowerCase().includes(search) || course.name.toLowerCase().includes(search);
+    const code = course.code.toLowerCase();
+    const name = course.name.toLowerCase();
+    return code.includes(search) || name.includes(search);
   }
 
-  private optionSort = (a: Course, b: Course): number => {
+  private optionSort = (a: CourseData, b: CourseData): number => {
     let search = this.state.search.toLowerCase();
 
     let alphaOrder = +(a.code > b.code) - +(a.code < b.code);

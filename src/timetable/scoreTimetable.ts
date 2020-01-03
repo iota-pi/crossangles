@@ -1,27 +1,28 @@
-import { Timetable, Stream, ILinkedSession } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 import TimetableScorerCache from './TimetableScorerCache';
+import { LinkedSession } from '../state/Session';
+import { LinkedStream } from '../state/Stream';
 
 export interface TimetableScore {
   score: number,
-  timetable: Timetable,
+  timetable: LinkedSession[],
 }
 
 export class TimetableScorer {
-  private fixedSessions: ILinkedSession[];
+  private fixedSessions: LinkedSession[];
   private clashInfo: ClashInfo;
   private fewestClashes: number;
   private cache: TimetableScorerCache<number>;
 
-  constructor (fixedSessions: ILinkedSession[], clashInfo: ClashInfo) {
+  constructor (fixedSessions: LinkedSession[], clashInfo: ClashInfo) {
     this.fixedSessions = fixedSessions;
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
     this.cache = new TimetableScorerCache();
   }
 
-  score (streams: Stream[], indexes: number[]): number {
+  score (streams: LinkedStream[], indexes: number[]): number {
     const cachedScore = this.cache.get(indexes);
     if (cachedScore !== undefined) {
       return cachedScore;
@@ -48,7 +49,7 @@ export class TimetableScorer {
   }
 }
 
-export const scoreFreeDays = (sessions: ILinkedSession[]): number => {
+export const scoreFreeDays = (sessions: LinkedSession[]): number => {
   const scores = { M: 290, T: 250, W: 280, H: 260, F: 300 };
 
   for (let i = 0; i < sessions.length; ++i) {
@@ -58,7 +59,7 @@ export const scoreFreeDays = (sessions: ILinkedSession[]): number => {
   return scores.M + scores.T + scores.W + scores.H + scores.F;
 }
 
-export const scoreTimes = (sessions: ILinkedSession[]): number => {
+export const scoreTimes = (sessions: LinkedSession[]): number => {
   let total = 0;
 
   for (let i = 0; i < sessions.length; ++i) {
@@ -71,7 +72,7 @@ export const scoreTimes = (sessions: ILinkedSession[]): number => {
   return total;
 }
 
-export const scoreDayLength = (sessions: ILinkedSession[]): number => {
+export const scoreDayLength = (sessions: LinkedSession[]): number => {
   const perHour = -10;
   const starts = { M: 24, T: 24, W: 24, H: 24, F: 24 };
   const ends = { M: -1, T: -1, W: -1, H: -1, F: -1 };
@@ -97,7 +98,7 @@ export const scoreDayLength = (sessions: ILinkedSession[]): number => {
 }
 
 export const countClashes = (
-  streams: Stream[],
+  streams: LinkedStream[],
   clashInfo: ClashInfo,
   maxClash: number,
 ): number => {

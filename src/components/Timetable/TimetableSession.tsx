@@ -2,9 +2,12 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Session, CBS_CODE, Course, Stream, Options } from '../../state';
+import { CBS_CODE, CourseData } from '../../state/Course';
 import { Position, Dimensions } from './timetableTypes';
 import { DraggableCore, DraggableData } from 'react-draggable';
+import { LinkedSession } from '../../state/Session';
+import { Options } from '../../state/Options';
+import { StreamData } from '../../state/Stream';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -74,7 +77,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  session: Session,
+  session: LinkedSession,
   colour: string,
   dimensions: Dimensions,
   position: Required<Position>,
@@ -82,9 +85,9 @@ export interface Props extends WithStyles<typeof styles> {
   isSnapped: boolean,
   clashDepth: number,
   options: Options,
-  onDrag: (session: Session) => false | void,
-  onMove: (session: Session, delta: Position) => void,
-  onDrop: (session: Session) => void,
+  onDrag: (session: LinkedSession) => false | void,
+  onMove: (session: LinkedSession, delta: Position) => void,
+  onDrop: (session: LinkedSession) => void,
 }
 
 export interface State {
@@ -156,11 +159,11 @@ class TimetableSession extends PureComponent<Props, State> {
     return this.props.onDrop(this.props.session);
   }
 
-  private get course (): Course {
+  private get course (): CourseData {
     return this.props.session.course;
   }
 
-  private get stream (): Stream {
+  private get stream (): StreamData {
     return this.props.session.stream;
   }
 

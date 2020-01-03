@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Course, CBSEvent, Options, CourseId, Stream, SessionFactory } from '../state';
-import { notUndefined, WithDispatch } from '../typeHelpers';
+import { RootState, CBSEvent } from '../state';
+import { WithDispatch } from '../typeHelpers';
 
 // Styles
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -10,9 +10,11 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import TimetableTable from '../components/Timetable';
-import { arraysEqual } from '../components/Timetable/timetableUtil';
-import { SessionManager, hydrateLinkedSessionManager } from '../components/Timetable/SessionManager';
-import CourseManager from '../state/CourseManager';
+import { CourseData, CourseId, CourseMap, getCourseId } from '../state/Course';
+import { linkStream, LinkedStream } from '../state/Stream';
+import { Options } from '../state/Options';
+import { ColourMap } from '../state/Colours';
+import { SessionManagerData } from '../components/Timetable/SessionManager';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -24,38 +26,33 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: CourseManager,
-  chosen: Course[],
+  courses: CourseMap,
+  chosen: CourseData[],
+  custom: CourseData[],
+  additional: CourseData[],
   events: CBSEvent[],
   options: Options,
-  sessionManager: SessionManager,
-  colours: Map<CourseId, string>,
-  webStreams: Set<CourseId>,
+  colours: ColourMap,
+  webStreams: CourseId[],
+  timetableData: SessionManagerData,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
 
 class TimetableContainer extends Component<Props> {
-  sessionFactory: SessionFactory;
-
-  constructor (props: Props) {
-    super(props);
-    this.sessionFactory = new SessionFactory(props.courses);
-  }
-
   render () {
     const classes = this.props.classes;
 
     return (
       <div className={classes.spaceAbove}>
         <TimetableTable
-          sessionManager={this.props.sessionManager}
+          courses={this.props.courses}
           options={this.props.options}
-          allChosenIds={new Set(this.allCourses.map(c => c.id))}
+          allChosenIds={this.chosenIds}
           streams={this.timetableStreams}
           colours={this.props.colours}
           webStreams={this.props.webStreams}
-          sessionFactory={this.sessionFactory}
+          timetableData={this.props.timetableData}
         />
       </div>
     );
@@ -67,43 +64,45 @@ class TimetableContainer extends Component<Props> {
     }
 
     // TODO is this necessary? should they be sorted first?
-    const oldSessions = this.props.sessionManager.order;
-    const newSessions = prevProps.sessionManager.order;
-    if (!arraysEqual(oldSessions, newSessions)) {
-      return true;
-    }
+    // const oldSessions = this.props.sessionManager.order;
+    // const newSessions = prevProps.sessionManager.order;
+    // if (!arraysEqual(oldSessions, newSessions)) {
+    //   return true;
+    // }
 
     return false;
   }
 
-  componentDidUpdate () {
-    this.sessionFactory.updateCourses(this.props.courses);
+  private get allCourses (): CourseData[] {
+    const { chosen, custom, additional } = this.props;
+
+    return chosen.concat(custom, additional);
   }
 
-  private get allCourses (): Course[] {
-    const { courses, chosen } = this.props;
-
-    return chosen.concat(courses.custom, courses.additional);
+  private get chosenIds (): CourseId[] {
+    return this.allCourses.map(c => getCourseId(c));
   }
 
-  private get timetableStreams (): Stream[] {
+  private get timetableStreams (): LinkedStream[] {
     // Get all streams of chosen courses
-    return ([] as Stream[]).concat(...this.allCourses.map(c => c.streams));
+    return this.allCourses.flatMap(c => c.streams.map(s => linkStream(c, s)));
   }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const courseSort = (a: Course, b: Course) => +(a.code > b.code) - +(a.code < b.code);
-  const sessionFactory = new SessionFactory(state.courses);
+  const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
+  const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);
 
   return {
     courses: state.courses,
-    chosen: state.chosen.map(cid => notUndefined(state.courses.get(cid))).sort(courseSort),
+    chosen: state.chosen.map(cid => state.courses[cid]).sort(courseSort),
+    custom: state.custom.map(c => state.courses[c]).sort(customSort),
+    additional: state.additional.map(c => state.courses[c]).sort(courseSort),
     events: state.events,
     options: state.options,
-    sessionManager: hydrateLinkedSessionManager(state.sessionManager, sessionFactory),
     colours: state.colours,
     webStreams: state.webStreams,
+    timetableData: state.timetable,
   };
 }
 

@@ -2,9 +2,10 @@ process.env.APIFY_LOCAL_STORAGE_DIR = './apify_storage';
 process.env.APIFY_LOG_LEVEL = 'WARNING';
 
 import * as Apify from 'apify';
-import { Meta, CourseData } from '../state';
+import { Meta } from '../state';
 import { writeFileSync } from 'fs';
 import { parseCourse, parseStream, removeDuplicateStreams } from './parsing';
+import { CourseData } from '../state/Course';
 
 const CBS_DATA: CourseData = require('../../src/assets/cbs.json');
 const OUTPUT_DATA_FILE = './public/data.json';

@@ -1,17 +1,20 @@
-import { Course, Stream, CBSEvent, ILinkedSession, CourseId } from "../state";
+import { CBSEvent } from "../state";
 import { notUndefined } from "../typeHelpers";
+import { CourseData, CourseId, getCourseId } from "../state/Course";
+import { getSessions, LinkedStream, linkStream } from "../state/Stream";
+import { SessionData } from "../state/Session";
 
 export interface Component {
-  course: Course,
+  course: CourseData,
   name: string,
-  streams: Stream[],
-  streamSessions: ILinkedSession[],
+  streams: LinkedStream[],
+  streamSessions: SessionData[],
 }
 
 export function coursesToComponents (
-  courseList: Course[],
+  courseList: CourseData[],
   events: CBSEvent[],
-  webStreams: Set<CourseId>,
+  webStreams: CourseId[],
   allowFull: boolean,
 ): Component[] {
   // Group streams by component for each course
@@ -27,12 +30,12 @@ export function coursesToComponents (
 }
 
 const groupStreamsByComponent = (
-  course: Course,
+  course: CourseData,
   events: CBSEvent[],
-  webStreams: Set<CourseId>,
+  webStreams: CourseId[],
   allowFull: boolean,
 ) => {
-  let streamGroups = new Map<string, Stream[]>();
+  let streamGroups = new Map<string, LinkedStream[]>();
 
   for (let stream of course.streams) {
     // Skip any CBS activities which have been deselected
@@ -41,7 +44,7 @@ const groupStreamsByComponent = (
     }
 
     // Skip any web streams when not enabled for this course
-    if (stream.web && !webStreams.has(course.id)) {
+    if (stream.web && !webStreams.includes(getCourseId(course))) {
       continue;
     }
 
@@ -57,22 +60,22 @@ const groupStreamsByComponent = (
     }
 
     // Group streams by their component
-    component.push(stream);
+    component.push(linkStream(course, stream));
   }
 
   return streamGroups;
 }
 
 export const filterOutWebStreams = (
-  course: Course,
-  streamGroups: Map<string, Stream[]>,
-  webStreams: Set<CourseId>,
+  course: CourseData,
+  streamGroups: Map<string, LinkedStream[]>,
+  webStreams: CourseId[],
 ) => {
   const streamGroupsEntries = Array.from(streamGroups.entries());
 
   for (let [ component, streams ] of streamGroupsEntries) {
     // Remove component if web stream has been requested for this course AND this component has a web stream
-    if (webStreams.has(course.id) && streams.filter(s => s.web).length > 0) {
+    if (webStreams.includes(getCourseId(course)) && streams.filter(s => s.web).length > 0) {
       streamGroups.delete(component);
     }
   }
@@ -80,17 +83,17 @@ export const filterOutWebStreams = (
 
 export const addComponentsTo = (
   components: Component[],
-  course: Course,
-  streamGroups: Map<string, Stream[]>,
-  webStreams: Set<CourseId>,
+  course: CourseData,
+  streamGroups: Map<string, LinkedStream[]>,
+  webStreams: CourseId[],
 ) => {
   const streamGroupsEntries = Array.from(streamGroups.entries());
 
   for (let [component, streams] of streamGroupsEntries) {
-    if (!webStreams.has(course.id) || streams.filter(s => s.web).length === 0) {
-      const streamSessions: ILinkedSession[] = [];
+    if (!webStreams.includes(getCourseId(course)) || streams.filter(s => s.web).length === 0) {
+      const streamSessions: SessionData[] = [];
       for (let stream of streams) {
-        const sessions = stream.sessions;
+        const sessions = getSessions(course, stream);
         streamSessions.push(...sessions);
       }
 

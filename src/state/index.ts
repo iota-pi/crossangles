@@ -1,15 +1,8 @@
-import { CourseData, CourseId } from "./Course";
-import { SessionData } from "./Session";
-import { Options } from "./Options";
-import { Notice } from "./Notice";
-
-export interface CourseMap {
-  [id: string]: CourseData,
-}
-
-export interface ColourMap {
-  [course: string]: string,
-}
+import { CourseId, CourseMap } from './Course';
+import { Options } from './Options';
+import { Notice } from './Notice';
+import { ColourMap } from './Colours';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 
 export interface Meta {
   term: number;
@@ -23,11 +16,13 @@ export type CBSEvent = string;
 
 export interface RootState {
   courses: CourseMap,
+  custom: CourseId[],
+  additional: CourseId[],
   meta: Meta,
   chosen: CourseId[],
   events: CBSEvent[],
   options: Options,
-  timetable: SessionData[],
+  timetable: SessionManagerData,
   colours: ColourMap,
   webStreams: CourseId[],
   notice: Notice | null,
@@ -35,6 +30,8 @@ export interface RootState {
 
 export const baseState: RootState = {
   courses: {},
+  custom: [],
+  additional: [],
   meta: {
     term: 1,
     year: 1960,
@@ -45,7 +42,7 @@ export const baseState: RootState = {
   chosen: [],
   events: [],
   options: {},
-  timetable: [],
+  timetable: new SessionManager().data,
   colours: {},
   webStreams: [],
   notice: null,

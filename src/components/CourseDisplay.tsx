@@ -2,7 +2,7 @@ import React, { PureComponent, MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { Course, CBS_CODE, CBSEvent, CourseId, CustomCourse } from '../state';
+import { CBSEvent } from '../state';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,10 +14,11 @@ import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
 import CBSEvents from './CBSEvents';
 import WebStream from './WebStream';
-import { COURSE_COLOURS } from '../state/colours';
+import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
 import { notNull } from '../typeHelpers';
 import ColourPicker from './ColourPicker';
-import Colour from './Colour';
+import ColourControl from './Colour';
+import { CourseData, CourseId, getCourseId, CBS_CODE, hasWebStream } from '../state/Course';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -45,17 +46,18 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  chosen: Course[],
-  custom: CustomCourse[],
-  additional: Course[],
+  cbs: CourseData,
+  chosen: CourseData[],
+  custom: CourseData[],
+  additional: CourseData[],
   events: CBSEvent[],
-  colours: Map<CourseId, string>,
-  webStreams: Set<CourseId>,
-  onEditCustomCourse: (course: Course) => void,
-  onRemoveCourse: (course: Course) => void,
+  colours: ColourMap,
+  webStreams: CourseId[],
+  onEditCustomCourse: (course: CourseData) => void,
+  onRemoveCourse: (course: CourseData) => void,
   onToggleEvent: (event: CBSEvent) => void,
-  onToggleWeb: (course: Course) => void,
-  onColourChange: (course: Course, colour: string) => void,
+  onToggleWeb: (course: CourseData) => void,
+  onColourChange: (course: CourseData, colour: Colour) => void,
 }
 
 export interface State {
@@ -64,7 +66,7 @@ export interface State {
 
 export interface PopoverState {
   target: HTMLElement,
-  course: Course,
+  course: CourseData,
 }
 
 class CourseDisplay extends PureComponent<Props, State> {
@@ -79,11 +81,11 @@ class CourseDisplay extends PureComponent<Props, State> {
     return (
       <List className={classes.root} disablePadding id="course-display">
         {allCourses.map((course, i) => (
-          <React.Fragment key={course.id}>
+          <React.Fragment key={getCourseId(course)}>
             <Divider light />
             {course.code !== CBS_CODE ? (
               <React.Fragment>
-                <ListItem className={course.hasWebStream ? classes.lessSpaceBelow : undefined}>
+                <ListItem className={hasWebStream(course) ? classes.lessSpaceBelow : undefined}>
                   {!course.isCustom ? (
                     <ListItemText>
                       <span>{course.code}</span>
@@ -111,8 +113,8 @@ class CourseDisplay extends PureComponent<Props, State> {
                   )}
 
                   <div className={classes.marginRight}>
-                    <Colour
-                      colour={this.props.colours.get(course.id)!}
+                    <ColourControl
+                      colour={this.props.colours[getCourseId(course)]!}
                       size={32}
                       isCircle
                       onClick={e => this.showPopover(e, course)}
@@ -132,10 +134,10 @@ class CourseDisplay extends PureComponent<Props, State> {
                   </ListItemIcon>
                 </ListItem>
 
-                {course.hasWebStream ? (
+                {hasWebStream(course) ? (
                   <ListItem className={classes.noVertPadding}>
                     <WebStream
-                      checked={this.props.webStreams.has(course.id)}
+                      checked={this.props.webStreams.includes(getCourseId(course))}
                       onChange={() => this.props.onToggleWeb(course)}
                     />
                   </ListItem>
@@ -149,8 +151,8 @@ class CourseDisplay extends PureComponent<Props, State> {
                   </ListItemText>
 
                   <div className={classes.marginRight}>
-                    <Colour
-                      colour={this.props.colours.get(course.id)!}
+                    <ColourControl
+                      colour={this.props.colours[getCourseId(course)]!}
                       size={32}
                       isCircle
                       onClick={e => this.showPopover(e, course)}
@@ -171,6 +173,7 @@ class CourseDisplay extends PureComponent<Props, State> {
 
                 <ListItem className={classes.noVertPadding}>
                   <CBSEvents
+                    cbs={this.props.cbs}
                     events={this.props.events}
                     onToggleEvent={this.props.onToggleEvent}
                   />
@@ -196,7 +199,7 @@ class CourseDisplay extends PureComponent<Props, State> {
         >
           <ColourPicker
             colours={COURSE_COLOURS}
-            value={this.state.showPopover ? this.props.colours.get(this.state.showPopover.course.id) : null}
+            value={this.state.showPopover ? this.props.colours[getCourseId(this.state.showPopover.course)] : null}
             onChange={this.handleChange}
             size={40}
             columns={4}
@@ -206,7 +209,7 @@ class CourseDisplay extends PureComponent<Props, State> {
     )
   }
 
-  private showPopover = (event: MouseEvent<HTMLElement>, course: Course) => {
+  private showPopover = (event: MouseEvent<HTMLElement>, course: CourseData) => {
     this.setState({
       showPopover: {
         target: event.currentTarget,
@@ -219,7 +222,7 @@ class CourseDisplay extends PureComponent<Props, State> {
     this.setState({ showPopover: null });
   }
 
-  private handleChange = (colour: string) => {
+  private handleChange = (colour: Colour) => {
     this.props.onColourChange(notNull(this.state.showPopover).course, colour);
     this.hidePopover();
   }

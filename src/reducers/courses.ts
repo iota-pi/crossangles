@@ -1,45 +1,46 @@
-import CourseManager from "../state/CourseManager";
 import { CourseListAction, ADD_COURSE, SET_COURSE_DATA, CourseAction, REMOVE_COURSE, OtherAction, CustomAction, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM } from "../actions";
-import { CourseId, CustomCourse } from "../state";
+import { CourseMap, CourseId, getCourseId, CBS_CODE } from "../state/Course";
+import { baseState } from "../state";
 
 export function courses (
-  state: CourseManager | undefined,
+  state: CourseMap = baseState.courses,
   action: CourseListAction | CustomAction | OtherAction,
-): CourseManager {
-  if ([SET_COURSE_DATA, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM].includes(action.type)) {
-    const cm = new CourseManager(state);
+): CourseMap {
+  switch (action.type) {
+    case SET_COURSE_DATA:
+      const allCourses: CourseMap = {};
 
-    if (action.type === SET_COURSE_DATA) {
-      cm.update_official(action.courses);
-
-      // Auto-select CBS as an additional course
-      const cbs = cm.get('CBS');
-      if (cbs && !cm.additional.includes(cbs)) {
-        cm.update_additional([...cm.additional, cbs]);
+      // Add in previously existing custom courses
+      for (const [id, course] of Object.entries(state)) {
+        if (course.isCustom) {
+          allCourses[id] = course;
+        }
       }
-    }
 
-    if (action.type === ADD_CUSTOM) {
-      cm.update_custom([...cm.custom, action.custom]);
-    } else if (action.type === REMOVE_CUSTOM) {
-      const i = cm.custom.indexOf(action.custom);
-      cm.update_custom([
-        ...cm.custom.slice(0, i),
-        ...cm.custom.slice(i + 1),
-      ]);
-    } else if (action.type === UPDATE_CUSTOM) {
-      const i = cm.custom.indexOf(action.custom);
-      cm.update_custom([
-        ...cm.custom.slice(0, i),
-        new CustomCourse({ ...cm.custom[i].data, ...action.newData }),
-        ...cm.custom.slice(i + 1),
-      ]);
-    }
+      // Return with new course data
+      for (const course of action.courses) {
+        const id = getCourseId(course);
+        allCourses[id] = course;
+      }
 
-    return cm;
+      return { ...state, ...allCourses };
+    case ADD_CUSTOM:
+      return {
+        ...state,
+        [getCourseId(action.custom)]: action.custom,
+      }
+    case REMOVE_CUSTOM:
+      const clonedState = Object.assign({}, state);
+      delete clonedState[getCourseId(action.custom)];
+      return clonedState;
+    case UPDATE_CUSTOM:
+      return {
+        ...state,
+        [getCourseId(action.custom)]: action.custom,
+      }
   }
 
-  return state || new CourseManager();
+  return state;
 };
 
 export function chosen (
@@ -50,10 +51,10 @@ export function chosen (
     case ADD_COURSE:
       return [
         ...state,
-        action.course.id,
+        getCourseId(action.course),
       ];
     case REMOVE_COURSE:
-      const i = state.indexOf(action.course.id);
+      const i = state.indexOf(getCourseId(action.course));
       return [
         ...state.slice(0, i),
         ...state.slice(i + 1),
@@ -62,9 +63,41 @@ export function chosen (
       // Only keep chosen courses which have current data
       // NB: this should only be necessary if a course stops being offered for a particular term
       //     after timetable data has been released (very unlikely)
-      const newIds = new Set(action.courses.map(c => c.id));
+      const newIds = new Set(action.courses.map(c => getCourseId(c)));
       return state.filter(id => newIds.has(id));
   }
 
   return state;
 };
+
+export function custom (
+  state: CourseId[] = [],
+  action: CustomAction | OtherAction,
+): CourseId[] {
+  let i: number;
+  switch (action.type) {
+    case ADD_CUSTOM:
+      return [...state, getCourseId(action.custom)];
+    case REMOVE_CUSTOM:
+      i = state.indexOf(getCourseId(action.custom));
+      return [...state.slice(0, i), ...state.slice(i + 1)];
+    case UPDATE_CUSTOM:
+      const customId = getCourseId(action.custom);
+      i = state.indexOf(customId);
+      return [...state.slice(0, i), customId, ...state.slice(i + 1)];
+  }
+
+  return state;
+}
+
+export function additional (
+  state: CourseId[] = [],
+  action: CourseListAction | OtherAction,
+): CourseId[] {
+  switch (action.type) {
+    case SET_COURSE_DATA:
+      return action.courses.filter(c => c.code === CBS_CODE).map(c => getCourseId(c));
+  }
+
+  return state;
+}

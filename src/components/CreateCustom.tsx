@@ -8,8 +8,9 @@ import { Dialog, DialogTitle, Typography, IconButton, DialogContent, Button, Dia
 import EventIcon from '@material-ui/icons/Event';
 import CloseIcon from '@material-ui/icons/Close';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
-import { DayLetter, CustomCourse } from '../state';
-import { ClassTime } from '../state/times';
+import { DayLetter } from '../state/Session';
+import { CourseData } from '../state/Course';
+import { ClassTime, getSessions } from '../state/Stream';
 
 const styles = (theme: Theme) => createStyles({
   dialog: {
@@ -47,7 +48,7 @@ export const getBlankOption = (): CustomTimeOption => {
 };
 
 export interface Props extends WithStyles<typeof styles> {
-  editing: CustomCourse | null,
+  editing: CourseData | null,
   onClearEditing: () => void,
   onSave: (name: string, times: ClassTime[]) => void,
 }
@@ -319,10 +320,9 @@ class CreateCustom extends PureComponent<Props, State> {
     const editing = this.props.editing;
     if (editing && editing !== prevProps.editing) {
       const streams = editing.streams;
-      const { end, start } = streams[0].sessions[0];
+      const { end, start } = getSessions(editing, streams[0])[0];
       const options: CustomTimeOption[] = streams.map(stream => {
-        const { day, start } = stream.sessions[0];
-        console.log(day, start)
+        const { day, start } = getSessions(editing, stream)[0];
         return { day, start };
       });
       options.push(getBlankOption());

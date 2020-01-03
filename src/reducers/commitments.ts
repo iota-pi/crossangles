@@ -5,13 +5,12 @@ import {
   EventAction,
 } from '../actions/selection';
 import {
-  baseEvents,
-  baseOptions,
-  CBSEvent,
-  Options,
+  CBSEvent, baseState,
 } from '../state';
+import { OtherAction } from '../actions';
+import { Options } from '../state/Options';
 
-export function events (state = baseEvents, action: EventAction): CBSEvent[] {
+export function events (state: CBSEvent[] = [], action: EventAction | OtherAction): CBSEvent[] {
   switch (action.type) {
     case TOGGLE_EVENT:
       if (!state.includes(action.event)) {
@@ -31,7 +30,10 @@ export function events (state = baseEvents, action: EventAction): CBSEvent[] {
   return state;
 };
 
-export function options (state = baseOptions, action: ToggleOptionAction): Options {
+export function options (
+  state: Options = baseState.options,
+  action: ToggleOptionAction | OtherAction
+): Options {
   switch (action.type) {
     case TOGGLE_OPTION:
       return {

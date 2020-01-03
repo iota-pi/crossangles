@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { Notice } from "../state";
+import { Notice } from "../state/Notice";
 import { ReactNode } from "react";
 
 // Chosen courses

@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
-import { CBSEvent, CBSEventList } from '../state';
+import { CBSEvent } from '../state';
 
 // Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { FormControlLabel, Checkbox, Grid } from '@material-ui/core';
+import { CourseData } from '../state/Course';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -19,6 +20,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
+  cbs: CourseData,
   events: CBSEvent[],
   onToggleEvent: (event: CBSEvent) => void,
 }
@@ -26,10 +28,11 @@ export interface Props extends WithStyles<typeof styles> {
 class CBSEvents extends PureComponent<Props> {
   render() {
     const classes = this.props.classes;
+    const eventList = this.getEventList();
 
     return (
       <Grid container spacing={0}>
-        {CBSEventList.map(eventName => (
+        {eventList.map(eventName => (
           <Grid item xs={12} sm={6} md={3} key={eventName}>
             <FormControlLabel
               control={
@@ -47,6 +50,12 @@ class CBSEvents extends PureComponent<Props> {
         ))}
       </Grid>
     )
+  }
+
+  getEventList (): CBSEvent[] {
+    const components = this.props.cbs.streams.map(s => s.component);
+    const events = components.filter((c, i) => components.indexOf(c) === i);
+    return events;
   }
 }
 

@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import { MenuProps } from 'react-select/lib/components/Menu';
-import { Course } from '../../state';
+import { CourseData } from '../../state/Course';
 import Paper from '@material-ui/core/Paper';
 
-export interface Props extends MenuProps<Course> {}
+export interface Props extends MenuProps<CourseData> {}
 
 class Menu extends PureComponent<Props> {
   render () {

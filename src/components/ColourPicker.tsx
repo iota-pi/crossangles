@@ -2,7 +2,8 @@ import React, { PureComponent } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import Colour from './Colour';
+import ColourControl from './Colour';
+import { Colour } from '../state/Colours';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -27,11 +28,11 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  colours: string[],
+  colours: Colour[],
   columns: number,
   size: number,
   value?: string | null,
-  onChange: (colour: string) => void,
+  onChange: (colour: Colour) => void,
 }
 
 class ColourPicker extends PureComponent<Props> {
@@ -50,7 +51,7 @@ class ColourPicker extends PureComponent<Props> {
           }}
         >
           {this.props.colours.map(colour => (
-            <Colour
+            <ColourControl
               key={colour}
               colour={colour}
               onClick={() => this.props.onChange(colour)}

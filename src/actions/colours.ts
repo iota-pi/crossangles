@@ -1,5 +1,6 @@
-import { CourseId } from "../state";
+import { CourseId } from "../state/Course";
 import { Action } from "redux";
+import { Colour } from "../state/Colours";
 
 // Chosen courses
 export const SET_COLOUR = 'SET_COLOUR';
@@ -7,10 +8,10 @@ export const SET_COLOUR = 'SET_COLOUR';
 export interface ColourAction extends Action {
   type: typeof SET_COLOUR;
   course: CourseId;
-  colour?: string;
+  colour?: Colour;
 }
 
-export function setColour (course: CourseId, colour?: string): ColourAction {
+export function setColour (course: CourseId, colour?: Colour): ColourAction {
   return {
     type: SET_COLOUR,
     course,

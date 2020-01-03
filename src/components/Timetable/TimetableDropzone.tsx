@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
-import { Session } from '../../state';
+import { LinkedSession, SessionData } from '../../state/Session';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -25,7 +25,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   position: Placement,
-  session: Session,
+  session: LinkedSession | SessionData,
   colour: string,
 }
 

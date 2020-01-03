@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import { Course } from '../../state';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
+import { CourseData } from '../../state/Course';
 
-export interface Props extends IndicatorProps<Course> {}
+export interface Props extends IndicatorProps<CourseData> {}
 
 class Menu extends PureComponent<Props> {
   render () {

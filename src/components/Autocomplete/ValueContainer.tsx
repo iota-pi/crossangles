@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Course } from '../../state';
 import { ValueContainerProps } from 'react-select/lib/components/containers';
+import { CourseData } from '../../state/Course';
 
-export interface Props extends ValueContainerProps<Course> {}
+export interface Props extends ValueContainerProps<CourseData> {}
 
 class ValueContainer extends Component<Props> {
   render () {

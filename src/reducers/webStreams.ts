@@ -1,17 +1,21 @@
-import { CourseId, baseWebStreams } from '../state';
+import { CourseId, getCourseId } from '../state/Course';
 import { TOGGLE_WEB_STREAM, CourseAction } from '../actions/selection';
 
-export function webStreams (state = baseWebStreams, action: CourseAction): Set<CourseId> {
-  const streams = new Set(state);
+export function webStreams (
+  state: CourseId[] | undefined, action: CourseAction
+): CourseId[] {
   switch (action.type) {
     case TOGGLE_WEB_STREAM:
-      if (streams.has(action.course.id)) {
-        streams.delete(action.course.id);
+      const streams = [...state];
+      const courseId = getCourseId(action.course);
+      const index = streams.indexOf(courseId);
+      if (index > -1) {
+        streams.splice(index, 1);
       } else {
-        streams.add(action.course.id);
+        streams.push(courseId);
       }
       return streams;
   }
 
-  return state;
+  return state || [];
 };

@@ -1,5 +1,4 @@
 import React, { Component, KeyboardEvent } from 'react';
-import { Course } from '../../state';
 
 // Components
 import Typography from '@material-ui/core/Typography';
@@ -7,8 +6,9 @@ import HighlightedText from "./HighlightedText";
 import MenuItem from '@material-ui/core/MenuItem';
 import { OptionProps } from 'react-select/lib/components/Option';
 import { NoticeProps } from 'react-select/lib/components/Menu';
+import { CourseData } from '../../state/Course';
 
-export type Props = OptionProps<Course>
+export type Props = OptionProps<CourseData>
 
 export class Option extends Component<Props> {
   render () {
@@ -97,7 +97,7 @@ export class Option extends Component<Props> {
   }
 }
 
-export const NoOptionsMessage = (props: NoticeProps<Course>) => {
+export const NoOptionsMessage = (props: NoticeProps<CourseData>) => {
   return (
     <Typography color="textSecondary" className={props.selectProps.classes.noOptionsMessage}>
       {props.children}

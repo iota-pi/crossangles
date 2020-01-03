@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState, Notice } from './state';
+import { RootState } from './state';
 
 // Theme
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -21,6 +21,7 @@ import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
 import { Snackbar } from '@material-ui/core';
 import { clearNotice } from './actions';
+import { Notice } from './state/Notice';
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {

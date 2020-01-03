@@ -1,5 +1,7 @@
-import { CBSEvent, Options, CustomCourse, Course, OptionName, CourseData } from "../state";
+import { CBSEvent } from "../state";
 import { Action } from "redux";
+import { CourseData } from "../state/Course";
+import { OptionName } from "../state/Options";
 
 // Chosen courses
 export const ADD_COURSE = 'ADD_COURSE';
@@ -7,17 +9,17 @@ export const REMOVE_COURSE = 'REMOVE_COURSE';
 export const TOGGLE_WEB_STREAM = 'TOGGLE_WEB_STREAM';
 export interface CourseAction extends Action {
   type: typeof ADD_COURSE | typeof REMOVE_COURSE | typeof TOGGLE_WEB_STREAM;
-  course: Course;
+  course: CourseData;
 }
 
-export function addCourse (course: Course): CourseAction {
+export function addCourse (course: CourseData): CourseAction {
   return {
     type: ADD_COURSE,
     course,
   }
 }
 
-export function removeCourse (course: Course): CourseAction {
+export function removeCourse (course: CourseData): CourseAction {
   return {
     type: REMOVE_COURSE,
     course,
@@ -25,7 +27,7 @@ export function removeCourse (course: Course): CourseAction {
 }
 
 // Web streams
-export function toggleWebStream (course: Course): CourseAction {
+export function toggleWebStream (course: CourseData): CourseAction {
   return {
     type: TOGGLE_WEB_STREAM,
     course,
@@ -38,30 +40,30 @@ export const UPDATE_CUSTOM = 'UPDATE_CUSTOM';
 export const REMOVE_CUSTOM = 'REMOVE_CUSTOM';
 export interface SimpleCustomAction extends Action {
   type: typeof ADD_CUSTOM | typeof REMOVE_CUSTOM;
-  custom: CustomCourse;
+  custom: CourseData;
 }
 export interface UpdateCustomAction {
   type: typeof UPDATE_CUSTOM;
-  custom: CustomCourse;
+  custom: CourseData;
   newData: Partial<CourseData>;
 }
 export type CustomAction = SimpleCustomAction | UpdateCustomAction;
 
-export function addCustom (custom: CustomCourse): CustomAction {
+export function addCustom (custom: CourseData): CustomAction {
   return {
     type: ADD_CUSTOM,
     custom,
   }
 }
 
-export function removeCustom (custom: CustomCourse): CustomAction {
+export function removeCustom (custom: CourseData): CustomAction {
   return {
     type: REMOVE_CUSTOM,
     custom,
   }
 }
 
-export function updateCustom (custom: CustomCourse, newData: Partial<CourseData>): CustomAction {
+export function updateCustom (custom: CourseData, newData: Partial<CourseData>): CustomAction {
   return {
     type: UPDATE_CUSTOM,
     custom,
@@ -88,7 +90,7 @@ export const TOGGLE_OPTION = 'TOGGLE_OPTION';
 
 export interface ToggleOptionAction extends Action {
   type: typeof TOGGLE_OPTION;
-  option: keyof Options;
+  option: OptionName;
 }
 
 export function toggleOption (option: OptionName): ToggleOptionAction {

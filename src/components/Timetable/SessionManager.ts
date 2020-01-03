@@ -1,12 +1,13 @@
-import { SessionId, Session, SessionFactory, ILinkedSession } from "../../state";
 import { notUndefined } from "../../typeHelpers";
-import { SessionPlacement, ILinkedSessionPlacement } from "./SessionPlacement";
+import { SessionPlacement, SessionPlacementData } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
+import { SessionId, LinkedSession } from "../../state/Session";
+import { CourseMap } from "../../state/Course";
 
-export type LinkedSessionManagerEntries = Array<[SessionId, ILinkedSessionPlacement]>;
+export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
-export interface ILinkedSessionManager {
-  map: LinkedSessionManagerEntries,
+export interface SessionManagerData {
+  map: SessionManagerEntriesData,
   order: SessionId[],
   version: number,
 }
@@ -31,10 +32,10 @@ export class SessionManager {
     }
   }
 
-  get data (): ILinkedSessionManager {
-    const mapData: LinkedSessionManagerEntries = [];
-    this.map.forEach((value, key) => {
-      mapData.push([key, value.data]);
+  get data (): SessionManagerData {
+    const mapData: SessionManagerEntriesData = [];
+    this.map.forEach((placement, sessionId) => {
+      mapData.push([sessionId, placement.data]);
     });
     return {
       map: mapData,
@@ -43,10 +44,11 @@ export class SessionManager {
     };
   }
 
-  static from (data: ILinkedSessionManager, sessionFactory: SessionFactory): SessionManager {
+  static from (data: SessionManagerData, courses: CourseMap): SessionManager {
     const sm = new SessionManager();
-    sm.map = new Map(data.map.map(([sid, ls]) => {
-      return [sid, SessionPlacement.from(ls, sessionFactory)];
+    sm.map = new Map(data.map.map(([sid, s]) => {
+      const course = courses[s.session.course];
+      return [sid, SessionPlacement.from(s, course)];
     }));
     sm._order = data.order;
     sm._version = data.version;
@@ -77,7 +79,7 @@ export class SessionManager {
     return this.map.get(sessionId);
   }
 
-  getSession (sessionId: SessionId): Session {
+  getSession (sessionId: SessionId): LinkedSession {
     return this.get(sessionId).session;
   }
 
@@ -110,9 +112,9 @@ export class SessionManager {
   }
 
   removeStream (sessionId: SessionId, hardDelete = true): void {
-    const linkedSessions = this.get(sessionId).session.stream.sessions;
-    for (let linkedSession of linkedSessions) {
-      this.remove(Session.getId(linkedSession), hardDelete);
+    const sessions = this.getSession(sessionId).stream.sessions;
+    for (let session of sessions) {
+      this.remove(session.id, hardDelete);
     }
   }
 
@@ -123,8 +125,8 @@ export class SessionManager {
     session.drag();
 
     const stream = session.session.stream;
-    for (let linkedSession of stream.sessions) {
-      let otherId = Session.getId(linkedSession);
+    for (let session of stream.sessions) {
+      let otherId = session.id;
       if (otherId !== sessionId) {
         this.raise(otherId);
       }
@@ -150,7 +152,7 @@ export class SessionManager {
 
     const stream = session.session.stream;
     for (let linkedSession of stream.sessions) {
-      const linkedId = Session.getId(linkedSession);
+      const linkedId = linkedSession.id;
       if (linkedId !== sessionId) {
         this.lower(linkedId);
       }
@@ -180,7 +182,7 @@ export class SessionManager {
     this.startChange();
     const stream = this.get(sessionId).session.stream;
     for (let linkedSession of stream.sessions) {
-      this.snap(Session.getId(linkedSession));
+      this.snap(linkedSession.id);
     }
     this.stopChange();
   }
@@ -215,7 +217,7 @@ export class SessionManager {
     this.startChange();
     const stream = this.get(sessionId).session.stream;
     for (const linkedSession of stream.sessions) {
-      this.bumpSession(Session.getId(linkedSession))
+      this.bumpSession(linkedSession.id);
     }
     this.stopChange();
   }
@@ -228,14 +230,14 @@ export class SessionManager {
 
   snapSessionTo (
     sessionId: SessionId,
-    nextSessions: ILinkedSession[],
-    sessionFactory: SessionFactory,
+    nextSessions: LinkedSession[],
   ): void {
     this.startChange();
 
     // Mark new stream as touched iff stream has changed
     let shouldTouch = false;
-    if (sessionId && !nextSessions.map(s => Session.getId(s)).includes(sessionId)) {
+    const nextSessionIds = nextSessions.map(s => s.id);
+    if (sessionId && !nextSessionIds.includes(sessionId)) {
       shouldTouch = true;
     }
 
@@ -246,19 +248,17 @@ export class SessionManager {
     this.removeStream(sessionId);
 
     // Add new session placements
-    let replacementSession: Session | undefined;
-    for (let linkedSession of nextSessions) {
-      const id = Session.getId(linkedSession);
-      const newSession = sessionFactory.create(linkedSession);
-      const newPlacement = new SessionPlacement(newSession);
-      this.set(id, newPlacement);
+    let replacementSession: LinkedSession | undefined;
+    for (let session of nextSessions) {
+      const newPlacement = new SessionPlacement(session);
+      this.set(session.id, newPlacement);
 
-      if (newSession.index === initiatingIndex) {
-        replacementSession = newSession;
+      if (session.index === initiatingIndex) {
+        replacementSession = session;
       }
 
       if (shouldTouch) {
-        this.touch(id);
+        this.touch(session.id);
       }
     }
 
@@ -274,15 +274,12 @@ export class SessionManager {
   }
 
   update (
-    newSessions: ILinkedSession[],
-    sessionFactory: SessionFactory,
+    newSessions: LinkedSession[],
   ) {
-    for (let linkedSession of newSessions) {
-      const id = Session.getId(linkedSession);
-      if (!this.has(id)) {
-        const session = sessionFactory.create(linkedSession);
+    for (let session of newSessions) {
+      if (!this.has(session.id)) {
         const placement = new SessionPlacement(session);
-        this.set(id, placement);
+        this.set(session.id, placement);
       }
     }
   }
@@ -304,10 +301,3 @@ export class SessionManager {
 }
 
 export default SessionManager;
-
-export const hydrateLinkedSessionManager = (
-  linkedSessionManager: ILinkedSessionManager,
-  sessionFactory: SessionFactory,
-) => {
-  return SessionManager.from(linkedSessionManager, sessionFactory);
-}

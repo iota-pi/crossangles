@@ -1,10 +1,10 @@
 import { UPDATE_SESSION_MANAGER, SessionManagerAction, OtherAction } from '../actions';
-import { SessionManager, ILinkedSessionManager } from '../components/Timetable/SessionManager';
+import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
 
-export function sessionManager (
-  state: ILinkedSessionManager | undefined,
+export function timetable (
+  state: SessionManagerData | undefined,
   action: SessionManagerAction | OtherAction
-): ILinkedSessionManager {
+): SessionManagerData {
   if (action.type === UPDATE_SESSION_MANAGER) {
     return action.sessionManager;
   }

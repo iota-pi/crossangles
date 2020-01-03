@@ -1,4 +1,4 @@
-import { SessionData, DayLetter } from './Session';
+import { SessionData, DayLetter, LinkedSession, linkSession } from './Session';
 import { CourseData, getCourseId } from './Course';
 
 export type StreamId = string;
@@ -9,6 +9,12 @@ export interface StreamData {
   times: ClassTime[] | null,
   full: boolean,
   web?: boolean,
+}
+
+export interface LinkedStream extends StreamData {
+  course: CourseData,
+  sessions: LinkedSession[],
+  id: StreamId,
 }
 
 export interface ClassTime {
@@ -47,4 +53,16 @@ export const getSessions = (course: CourseData, stream: StreamData): SessionData
   } else {
     return [];
   }
+}
+
+export const linkStream = (course: CourseData, stream: StreamData): LinkedStream => {
+  const sessionData = getSessions(course, stream)
+  const linkedStream: LinkedStream = {
+    ...stream,
+    course,
+    sessions: [],
+    id: getStreamId(course, stream),
+  };
+  linkedStream.sessions = sessionData.map(session => linkSession(course, linkedStream, session));
+  return linkedStream;
 }

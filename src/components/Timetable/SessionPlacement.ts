@@ -1,17 +1,19 @@
-import { Position, Dimensions } from "./timetableTypes";
-import { TimetablePlacement } from "./Placement";
-import * as tt from "./timetableUtil";
-import SessionPosition from "./SessionPosition";
-import { Session, ILinkedSession, SessionFactory } from "../../state";
+import { Position, Dimensions } from './timetableTypes';
+import { TimetablePlacement } from './Placement';
+import * as tt from './timetableUtil';
+import SessionPosition from './SessionPosition';
+import { LinkedSession, SessionData, unlinkSession, linkSession } from '../../state/Session';
+import { CourseData } from '../../state/Course';
+import { getStreamId, linkStream } from '../../state/Stream';
 
-export interface ILinkedSessionPlacement {
+export interface SessionPlacementData {
   offset: Position,
   isSnapped: boolean,
   isDragging: boolean,
   isRaised: boolean,
   touched: boolean,
   clashDepth: number,
-  session: ILinkedSession,
+  session: SessionData,
 }
 
 export class SessionPlacement extends TimetablePlacement {
@@ -22,12 +24,12 @@ export class SessionPlacement extends TimetablePlacement {
   private _touched: boolean = false;
   clashDepth: number = 0;
 
-  constructor (session: Session) {
+  constructor (session: LinkedSession) {
     super(session);
     this._offset = { x: 0, y: 0 };
   }
 
-  get data (): ILinkedSessionPlacement {
+  get data (): SessionPlacementData {
     return {
       offset: this._offset,
       isSnapped: this._isSnapped,
@@ -35,12 +37,15 @@ export class SessionPlacement extends TimetablePlacement {
       isRaised: this._isRaised,
       touched: this._touched,
       clashDepth: this.clashDepth,
-      session: this.session.serialise(),
+      session: unlinkSession(this.session),
     }
   }
 
-  static from (data: ILinkedSessionPlacement, sessionFactory: SessionFactory) {
-    const session = sessionFactory.create(data.session);
+  static from (data: SessionPlacementData, course: CourseData) {
+    const streamId = data.session.stream
+    const stream = course.streams.filter(s => getStreamId(course, s) === streamId)[0];
+    const linkedStream = linkStream(course, stream);
+    const session = linkSession(course, linkedStream, data.session);
     return new SessionPlacement(session);
   }
 
