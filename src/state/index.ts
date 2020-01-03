@@ -1,7 +1,7 @@
-import { CourseId, CourseMap } from './Course';
+import { CourseId, CourseMap, CBS_CODE } from './Course';
 import { Options } from './Options';
 import { Notice } from './Notice';
-import { ColourMap } from './Colours';
+import { ColourMap, CBS_COLOUR } from './Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 
 export interface Meta {
@@ -43,7 +43,7 @@ export const baseState: RootState = {
   events: [],
   options: {},
   timetable: new SessionManager().data,
-  colours: {},
+  colours: { [CBS_CODE]: CBS_COLOUR },
   webStreams: [],
   notice: null,
 };

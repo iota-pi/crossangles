@@ -1,6 +1,7 @@
 import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
 import { ADD_COURSE, CourseAction, ColourAction, SET_COLOUR, OtherAction } from '../actions';
 import { getCourseId } from '../state/Course';
+import { baseState } from '../state';
 
 export function colours (state: ColourMap | undefined, action: CourseAction | ColourAction | OtherAction): ColourMap {
   switch (action.type) {
@@ -19,7 +20,7 @@ export function colours (state: ColourMap | undefined, action: CourseAction | Co
       };
   }
 
-  return state || {};
+  return state || baseState.colours;
 };
 
 function pickColor (chosenColours: Colour[]): Colour {
