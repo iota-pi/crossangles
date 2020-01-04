@@ -142,10 +142,10 @@ export class SessionManager {
     this.stopChange();
   }
 
-  move (sessionId: SessionId, delta: Position): void {
+  move (sessionId: SessionId, delta: Position, shouldCallback=false): void {
     const session = this.get(sessionId);
     session.move(delta);
-    this.next();
+    this.next(shouldCallback);
   }
 
   drop (sessionId: SessionId): void {
@@ -289,10 +289,10 @@ export class SessionManager {
     this.stopChange();
   }
 
-  private next (): void {
+  private next (shouldCallback=true): void {
     if (this._changing === 0) {
       this._version++;
-      if (this.callback) {
+      if (shouldCallback && this.callback) {
         this.callback(this.data);
       }
     }
