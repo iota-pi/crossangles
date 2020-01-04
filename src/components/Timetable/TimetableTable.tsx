@@ -194,7 +194,7 @@ class TimetableTable extends Component<Props, State> {
 
   componentDidUpdate (prevProps: Props) {
     // Update session manager if timetable data has been updated
-    if (prevProps.timetableData !== this.props.timetableData) {
+    if (this.props.timetableData.version > this.sessionManager.version) {
       // TODO: is this going to be too slow?
       const { timetableData, courses } = this.props;
       this.sessionManager = SessionManager.from(timetableData, courses);
