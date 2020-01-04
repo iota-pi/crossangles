@@ -90,8 +90,7 @@ export interface Props extends WithStyles<typeof styles> {
   streams: LinkedStream[],
   colours: ColourMap,
   webStreams: CourseId[],
-  timetableData: SessionManagerData,
-  onUpdate: (timetable: SessionManagerData) => void,
+  timetable: SessionManager,
 }
 
 export interface State {
@@ -108,13 +107,10 @@ class TimetableTable extends Component<Props, State> {
   }
 
   timetableRef: RefObject<HTMLDivElement>;
-  sessionManager: SessionManager;
 
   constructor (props: Props) {
     super(props);
     this.timetableRef = createRef();
-    this.sessionManager = new SessionManager();
-    this.sessionManager.callback = this.props.onUpdate;
   }
 
   render() {
@@ -128,8 +124,8 @@ class TimetableTable extends Component<Props, State> {
 
     return (
       <div className={classes.root} data-cy="timetable">
-        {dimensions.width ? this.sessionManager.order.map(sid => {
-          const placement = this.sessionManager.getMaybe(sid);
+        {dimensions.width ? this.props.timetable.order.map(sid => {
+          const placement = this.props.timetable.getMaybe(sid);
           if (!placement) return null;
           const session = placement.session;
           const courseId = getCourseId(session.course);
@@ -194,14 +190,6 @@ class TimetableTable extends Component<Props, State> {
   }
 
   componentDidUpdate (prevProps: Props) {
-    // Update session manager if timetable data has been updated
-    if (this.props.timetableData.version > this.sessionManager.version) {
-      // TODO: is this going to be too slow?
-      const { timetableData, courses } = this.props;
-      this.sessionManager = SessionManager.from(timetableData, courses);
-      this.sessionManager.callback = this.props.onUpdate;
-    }
-
     // Update dimensions
     const dimensions = this.getTimetableDimensions();
     const { width, height } = this.state.dimensions;
@@ -225,22 +213,22 @@ class TimetableTable extends Component<Props, State> {
     if (this.state.dragging) return;
 
     // Update session placement with dragging state
-    this.sessionManager.drag(session.id);
+    this.props.timetable.drag(session.id);
 
-    this.updateClashDepths(this.sessionManager);
+    this.updateClashDepths(this.props.timetable);
 
     // Mark this session as being dragged
     this.setState({
       dragging: session,
-      version: this.sessionManager.version,
+      version: this.props.timetable.version,
     });
   }
 
   private handleMove = (session: LinkedSession, delta: Position) => {
-    this.sessionManager.move(session.id, delta);
+    this.props.timetable.move(session.id, delta);
 
     this.setState({
-      version: this.sessionManager.version,
+      version: this.props.timetable.version,
     });
   }
 
@@ -248,8 +236,8 @@ class TimetableTable extends Component<Props, State> {
     if (!this.state.dragging) return;
 
     // Snap session to nearest dropzone
-    this.sessionManager.drop(session.id);
-    const sessionPlacement = this.sessionManager.get(session.id);
+    this.props.timetable.drop(session.id);
+    const sessionPlacement = this.props.timetable.get(session.id);
     const dimensions = this.state.dimensions;
     const startHour = this.hours.start;
     const position = sessionPlacement.getPosition(dimensions, startHour);
@@ -257,18 +245,18 @@ class TimetableTable extends Component<Props, State> {
 
     // Swap streams in timetable
     if (dropzone) {
-      this.sessionManager.snapSessionTo(
+      this.props.timetable.snapSessionTo(
         session.id,
         dropzone.session.stream.sessions,
       );
     }
 
-    this.updateClashDepths(this.sessionManager);
+    this.updateClashDepths(this.props.timetable);
 
     // No longer dragging anything
     this.setState({
       dragging: null,
-      version: this.sessionManager.version,
+      version: this.props.timetable.version,
     });
   }
 

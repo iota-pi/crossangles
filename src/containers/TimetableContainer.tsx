@@ -14,8 +14,9 @@ import { CourseData, CourseId, CourseMap, getCourseId } from '../state/Course';
 import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
-import { SessionManagerData } from '../components/Timetable/SessionManager';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../actions';
+import { ThunkDispatch } from 'redux-thunk';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -40,7 +41,15 @@ export interface StateProps {
 
 export type Props = WithDispatch<OwnProps & StateProps>;
 
+export interface State {
+  timetable: SessionManager,
+}
+
 class TimetableContainer extends Component<Props> {
+  state: State = {
+    timetable: new SessionManager(),
+  }
+
   render () {
     const classes = this.props.classes;
 
@@ -53,11 +62,26 @@ class TimetableContainer extends Component<Props> {
           streams={this.timetableStreams}
           colours={this.props.colours}
           webStreams={this.props.webStreams}
-          timetableData={this.props.timetableData}
-          onUpdate={this.handleUpdate}
+          timetable={this.state.timetable}
         />
       </div>
     );
+  }
+
+  static getDerivedStateFromProps (props: Props, state: State) {
+    // Update session manager if timetable data has been updated
+    let timetable = state.timetable;
+    if (props.timetableData.version > timetable.version) {
+      // TODO: is this going to be too slow?
+      const { timetableData, courses } = props;
+      timetable = SessionManager.from(timetableData, courses);
+      timetable.callback = (data) => handleUpdate(data, props.dispatch);
+    }
+
+    return {
+      ...state,
+      timetable,
+    }
   }
 
   shouldComponentUpdate (prevProps: Props) {
@@ -73,10 +97,6 @@ class TimetableContainer extends Component<Props> {
     // }
 
     return false;
-  }
-
-  private handleUpdate = (timetable: SessionManagerData) => {
-    this.props.dispatch(updateTimetable(timetable));
   }
 
   private get allCourses (): CourseData[] {
@@ -110,6 +130,10 @@ const mapStateToProps = (state: RootState): StateProps => {
     webStreams: state.webStreams,
     timetableData: state.timetable,
   };
+}
+
+const handleUpdate = (timetable: SessionManagerData, dispatch: ThunkDispatch<{}, {}, any>) => {
+  dispatch(updateTimetable(timetable));
 }
 
 const connected = connect(mapStateToProps);
