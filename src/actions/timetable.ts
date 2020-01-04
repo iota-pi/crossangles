@@ -81,7 +81,7 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
 //   return fullSessions;
 // }
 
-export function updateSessionManager (newTimetable: SessionManagerData): SessionManagerAction {
+export function updateTimetable (newTimetable: SessionManagerData): SessionManagerAction {
   return {
     type: UPDATE_SESSION_MANAGER,
     sessionManager: newTimetable,

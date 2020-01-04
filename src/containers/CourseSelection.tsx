@@ -17,7 +17,7 @@ import {
   removeCustom,
   updateCustom,
 } from '../actions';
-import { updateSessionManager } from '../actions';
+import { updateTimetable } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -225,7 +225,7 @@ class CourseSelection extends Component<Props, State> {
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
     } else {
       sessionManager.update(newTimetable.timetable);
-      await this.props.dispatch(updateSessionManager(sessionManager.data));
+      await this.props.dispatch(updateTimetable(sessionManager.data));
       await this.props.dispatch(bumpTimetableVersion());
 
       if (newTimetable.unplaced.length > 0) {
