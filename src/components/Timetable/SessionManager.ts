@@ -17,6 +17,7 @@ export class SessionManager {
   private _order: SessionId[];
   private _version: number;
   private _changing: number;
+  callback: ((timetable: SessionManagerData) => void) | undefined;
 
   constructor (base?: SessionManager) {
     if (base) {
@@ -109,6 +110,8 @@ export class SessionManager {
     if (hardDelete) {
       this.map.delete(sessionId);
     }
+
+    this.next();
   }
 
   removeStream (sessionId: SessionId, hardDelete = true): void {
@@ -276,17 +279,22 @@ export class SessionManager {
   update (
     newSessions: LinkedSession[],
   ) {
+    this.startChange();
     for (let session of newSessions) {
       if (!this.has(session.id)) {
         const placement = new SessionPlacement(session);
         this.set(session.id, placement);
       }
     }
+    this.stopChange();
   }
 
   private next (): void {
     if (this._changing === 0) {
       this._version++;
+      if (this.callback) {
+        this.callback(this.data);
+      }
     }
   }
 

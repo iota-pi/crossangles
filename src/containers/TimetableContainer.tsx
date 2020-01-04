@@ -15,6 +15,7 @@ import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
+import { updateTimetable } from '../actions';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -53,6 +54,7 @@ class TimetableContainer extends Component<Props> {
           colours={this.props.colours}
           webStreams={this.props.webStreams}
           timetableData={this.props.timetableData}
+          onUpdate={this.handleUpdate}
         />
       </div>
     );
@@ -71,6 +73,10 @@ class TimetableContainer extends Component<Props> {
     // }
 
     return false;
+  }
+
+  private handleUpdate = (timetable: SessionManagerData) => {
+    this.props.dispatch(updateTimetable(timetable));
   }
 
   private get allCourses (): CourseData[] {

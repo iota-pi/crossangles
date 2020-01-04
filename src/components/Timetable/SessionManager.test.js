@@ -37,11 +37,15 @@ describe('SessionManager basic functionality', () => {
     expect(s.has('a')).toBe(false);
   })
 
-  test('set advances version', () => {
+  test('set advances version and calls callback', () => {
     const s = new SessionManager();
     const v = s.version;
+    const cb = jest.fn();
+    s.callback = cb;
     s.set('a', {});
     expect(s.version).toBe(v + 1);
+    expect(cb).toHaveBeenCalledTimes(1);
+    expect(cb.mock.calls[0][0]).toEqual(s.data);
   })
 
   test('set adds items in expected order', () => {
@@ -115,18 +119,24 @@ describe('SessionManager basic functionality', () => {
     s.set('o', {});
     s.set('r', {});
     s.set('d', {});
+    const v = s.version;
+    const cb = jest.fn();
+    s.callback = cb;
     s.remove('r');
+    expect(s.version).toBe(v + 1);
+    expect(cb).toHaveBeenCalledTimes(1);
+    expect(cb.mock.calls[0][0]).toEqual(s.data);
     expect(s.getOrder('o')).toBe(0);
     expect(s.getOrder('d')).toBe(1);
     expect(s.getOrder('r')).toBe(-1);
     expect(s.order).toEqual(['o', 'd']);
   })
 
-  test('remove does nothing (and does not throw) if session doesn\'t exist', () => {
+  test('remove doesn\'t if session doesn\'t exist', () => {
     const s = new SessionManager();
     const v = s.version;
     s.remove('a');
-    expect(s.version).toBe(v);
+    expect(s.version).toBe(v + 1);
   })
 
   test('update clash depth', () => {

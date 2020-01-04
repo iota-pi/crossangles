@@ -91,6 +91,7 @@ export interface Props extends WithStyles<typeof styles> {
   colours: ColourMap,
   webStreams: CourseId[],
   timetableData: SessionManagerData,
+  onUpdate: (timetable: SessionManagerData) => void,
 }
 
 export interface State {
@@ -113,6 +114,7 @@ class TimetableTable extends Component<Props, State> {
     super(props);
     this.timetableRef = createRef();
     this.sessionManager = new SessionManager();
+    this.sessionManager.callback = this.props.onUpdate;
   }
 
   render() {
@@ -196,6 +198,7 @@ class TimetableTable extends Component<Props, State> {
       // TODO: is this going to be too slow?
       const { timetableData, courses } = this.props;
       this.sessionManager = SessionManager.from(timetableData, courses);
+      this.sessionManager.callback = this.props.onUpdate;
     }
 
     // Update dimensions
@@ -207,7 +210,7 @@ class TimetableTable extends Component<Props, State> {
   }
 
   componentDidMount () {
-    window.addEventListener('resize', () => this.forceUpdate())
+    window.addEventListener('resize', () => this.forceUpdate());
   }
 
   private getColour (course: CourseData): string {
@@ -228,6 +231,14 @@ class TimetableTable extends Component<Props, State> {
     // Mark this session as being dragged
     this.setState({
       dragging: session,
+      version: this.sessionManager.version,
+    });
+  }
+
+  private handleMove = (session: LinkedSession, delta: Position) => {
+    this.sessionManager.move(session.id, delta);
+
+    this.setState({
       version: this.sessionManager.version,
     });
   }
@@ -278,14 +289,6 @@ class TimetableTable extends Component<Props, State> {
     }
 
     return nearest;
-  }
-
-  private handleMove = (session: LinkedSession, delta: Position) => {
-    this.sessionManager.move(session.id, delta);
-
-    this.setState({
-      version: this.sessionManager.version,
-    });
   }
 
   private get hours () {
