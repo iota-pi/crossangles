@@ -45,7 +45,6 @@ export interface SimpleCustomAction extends Action {
 export interface UpdateCustomAction {
   type: typeof UPDATE_CUSTOM;
   custom: CourseData;
-  newData: Partial<CourseData>;
 }
 export type CustomAction = SimpleCustomAction | UpdateCustomAction;
 
@@ -63,11 +62,10 @@ export function removeCustom (custom: CourseData): CustomAction {
   }
 }
 
-export function updateCustom (custom: CourseData, newData: Partial<CourseData>): CustomAction {
+export function updateCustom (custom: CourseData): CustomAction {
   return {
     type: UPDATE_CUSTOM,
     custom,
-    newData,
   }
 }
 

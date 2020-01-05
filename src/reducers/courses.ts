@@ -81,10 +81,6 @@ export function custom (
     case REMOVE_CUSTOM:
       i = state.indexOf(getCourseId(action.custom));
       return [...state.slice(0, i), ...state.slice(i + 1)];
-    case UPDATE_CUSTOM:
-      const customId = getCourseId(action.custom);
-      i = state.indexOf(customId);
-      return [...state.slice(0, i), customId, ...state.slice(i + 1)];
   }
 
   return state;

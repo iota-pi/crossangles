@@ -155,10 +155,7 @@ class CourseSelection extends Component<Props, State> {
         ...this.state.editingCourse,
         ...updatedValues,
       };
-      await this.props.dispatch(updateCustom(
-        this.state.editingCourse,
-        updatedValues,
-      ));
+      await this.props.dispatch(updateCustom(course));
     } else {
       course = {
         code: 'custom_' + Math.random(),
