@@ -27,7 +27,8 @@ export interface ClassTime {
 
 export const getStreamId = (course: CourseData, stream: StreamData) => {
   const timeString = stream.times ? stream.times.map(t => t.time).join(',') : 'WEB';
-  const id = `${getCourseId(course)}~${stream.component}~${timeString}`;
+  const componentString = course.isCustom ? '' : stream.component;
+  const id = `${getCourseId(course)}~${componentString}~${timeString}`;
   return id;
 }
 
