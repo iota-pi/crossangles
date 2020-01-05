@@ -215,12 +215,11 @@ class CourseSelection extends Component<Props, State> {
       options: this.props.options,
     });
 
-    removeOldSessions(sessionManager, this.allCourses);
-
     if (newTimetable === null) {
       // Displace some classes and display a warning
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
     } else {
+      sessionManager.clear();
       sessionManager.update(newTimetable.timetable);
       await this.props.dispatch(updateTimetable(sessionManager.data));
       await this.props.dispatch(bumpTimetableVersion());
@@ -237,15 +236,6 @@ class CourseSelection extends Component<Props, State> {
 
   private handleClearEditing = () => {
     this.setState({ editingCourse: null });
-  }
-}
-
-const removeOldSessions = (sessionManager: SessionManager, courses: CourseData[]) => {
-  const courseIds = courses.map(c => getCourseId(c));
-  for (let sid of sessionManager.order) {
-    if (!courseIds.includes(sid)) {
-      sessionManager.remove(sid);
-    }
   }
 }
 

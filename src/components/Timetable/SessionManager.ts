@@ -276,6 +276,12 @@ export class SessionManager {
     this.stopChange();
   }
 
+  clear () {
+    this.map.clear();
+    this._order = [];
+    this.next();
+  }
+
   update (
     newSessions: LinkedSession[],
   ) {
