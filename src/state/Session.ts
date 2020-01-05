@@ -30,7 +30,7 @@ export interface LinkedSession extends SessionCommon {
 
 export const getSessionId = (course: CourseData, stream: StreamData, session: SessionData) => {
   const streamId = getStreamId(course, stream);
-  return `${streamId}-${session.index}`
+  return `${streamId}~${session.index}`;
 }
 
 export const linkSession = (course: CourseData, stream: LinkedStream, session: SessionData): LinkedSession => {
