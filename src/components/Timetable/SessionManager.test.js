@@ -44,8 +44,7 @@ describe('SessionManager basic functionality', () => {
     s.callback = cb;
     s.set('a', {});
     expect(s.version).toBe(v + 1);
-    expect(cb).toHaveBeenCalledTimes(1);
-    expect(cb.mock.calls[0][0]).toEqual(s.data);
+    expect(cb).toHaveBeenCalledTimes(0);
   })
 
   test('set adds items in expected order', () => {
@@ -124,8 +123,7 @@ describe('SessionManager basic functionality', () => {
     s.callback = cb;
     s.remove('r');
     expect(s.version).toBe(v + 1);
-    expect(cb).toHaveBeenCalledTimes(1);
-    expect(cb.mock.calls[0][0]).toEqual(s.data);
+    expect(cb).toHaveBeenCalledTimes(0);
     expect(s.getOrder('o')).toBe(0);
     expect(s.getOrder('d')).toBe(1);
     expect(s.getOrder('r')).toBe(-1);
