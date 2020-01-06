@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { RootState, CBSEvent } from '../state';
+import { RootState, CBSEvent, StateHistory } from '../state';
 import { WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -9,7 +9,10 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
+import TimetableControls from '../components/TimetableControls';
 import TimetableTable from '../components/Timetable';
+
+// General
 import { CourseData, CourseId, CourseMap, getCourseId } from '../state/Course';
 import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
@@ -17,6 +20,7 @@ import { ColourMap } from '../state/Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../actions';
 import { ThunkDispatch } from 'redux-thunk';
+import { undoTimetable } from '../actions/history';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -37,6 +41,7 @@ export interface StateProps {
   colours: ColourMap,
   webStreams: CourseId[],
   timetableData: SessionManagerData,
+  timetableHistory: StateHistory,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -55,6 +60,11 @@ class TimetableContainer extends PureComponent<Props> {
 
     return (
       <div className={classes.spaceAbove}>
+        <TimetableControls
+          history={this.props.timetableHistory}
+          onUndo={this.handleUndo}
+        />
+
         <TimetableTable
           courses={this.props.courses}
           options={this.props.options}
@@ -84,12 +94,8 @@ class TimetableContainer extends PureComponent<Props> {
     }
   }
 
-  shouldComponentUpdate (prevProps: Props) {
-    if (this.props.courses !== prevProps.courses || this.props.chosen !== prevProps.chosen || this.props.events !== prevProps.events || this.props.options !== prevProps.options) {
-      return true;
-    }
-
-    return false;
+  private handleUndo = () => {
+    this.props.dispatch(undoTimetable());
   }
 
   private get allCourses (): CourseData[] {
@@ -122,6 +128,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     colours: state.colours,
     webStreams: state.webStreams,
     timetableData: state.timetable,
+    timetableHistory: state.history,
   };
 }
 

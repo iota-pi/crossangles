@@ -11,3 +11,14 @@ export function timetable (
 
   return state || new SessionManager().data;
 };
+
+export function history (
+  state: SessionManagerData | undefined,
+  action: SessionManagerAction | OtherAction
+): SessionManagerData {
+  if (action.type === UPDATE_SESSION_MANAGER) {
+    return action.sessionManager;
+  }
+
+  return state || new SessionManager().data;
+};

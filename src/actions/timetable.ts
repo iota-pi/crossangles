@@ -6,10 +6,11 @@ import { SessionManagerData } from '../components/Timetable/SessionManager';
 import { SessionData, LinkedSession } from '../state/Session';
 import { CourseData, CourseId } from '../state/Course';
 import { Options } from '../state/Options';
+import { UserAction } from '.';
 // import { getSessions } from '../state/Stream';
 
 export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER';
-export interface SessionManagerAction extends Action {
+export interface SessionManagerAction extends UserAction {
   type: typeof UPDATE_SESSION_MANAGER;
   sessionManager: SessionManagerData;
 }
@@ -85,6 +86,7 @@ export function updateTimetable (newTimetable: SessionManagerData): SessionManag
   return {
     type: UPDATE_SESSION_MANAGER,
     sessionManager: newTimetable,
+    isUser: true,
   }
 }
 

@@ -14,24 +14,45 @@ export interface Meta {
 
 export type CBSEvent = string;
 
-export interface RootState {
+export interface TimetableState {
   courses: CourseMap,
   custom: CourseId[],
   additional: CourseId[],
-  meta: Meta,
   chosen: CourseId[],
   events: CBSEvent[],
   options: Options,
   timetable: SessionManagerData,
   colours: ColourMap,
   webStreams: CourseId[],
+}
+
+export interface StateHistory {
+  past: TimetableState[],
+  present: TimetableState,
+  future: TimetableState[],
+}
+
+export interface RootState extends TimetableState {
+  meta: Meta,
+  history: StateHistory,
   notice: Notice | null,
 }
 
-export const baseState: RootState = {
+
+export const baseTimetableState: TimetableState = {
   courses: {},
   custom: [],
   additional: [],
+  chosen: [],
+  events: [],
+  options: {},
+  timetable: new SessionManager().data,
+  colours: { [CBS_CODE]: CBS_COLOUR },
+  webStreams: [],
+}
+
+export const baseState: RootState = {
+  ...baseTimetableState,
   meta: {
     term: 1,
     year: 1960,
@@ -39,11 +60,10 @@ export const baseState: RootState = {
     updateTime: '',
     signup: '',
   },
-  chosen: [],
-  events: [],
-  options: {},
-  timetable: new SessionManager().data,
-  colours: { [CBS_CODE]: CBS_COLOUR },
-  webStreams: [],
+  history: {
+    past: [],
+    present: baseTimetableState,
+    future: []
+  },
   notice: null,
 };
