@@ -121,7 +121,7 @@ export class SessionManager {
     }
   }
 
-  drag (sessionId: SessionId): void {
+  drag (sessionId: SessionId, shouldCallback=false): void {
     this.startChange();
 
     const session = this.get(sessionId);
@@ -139,7 +139,7 @@ export class SessionManager {
     this.bumpStream(sessionId);
     this.bumpSession(sessionId);
 
-    this.stopChange();
+    this.stopChange(shouldCallback);
   }
 
   move (sessionId: SessionId, delta: Position, shouldCallback=false): void {
@@ -148,7 +148,7 @@ export class SessionManager {
     this.next(shouldCallback);
   }
 
-  drop (sessionId: SessionId): void {
+  drop (sessionId: SessionId, shouldCallback=true): void {
     this.startChange();
     const session = this.get(sessionId);
     session.drop();
@@ -161,7 +161,7 @@ export class SessionManager {
       }
     }
 
-    this.stopChange();
+    this.stopChange(shouldCallback);
   }
 
   raise (sessionId: SessionId): void {
@@ -295,7 +295,7 @@ export class SessionManager {
     this.stopChange();
   }
 
-  private next (shouldCallback=true): void {
+  private next (shouldCallback=false): void {
     if (this._changing === 0) {
       this._version++;
       if (shouldCallback && this.callback) {
@@ -308,9 +308,9 @@ export class SessionManager {
     this._changing++;
   }
 
-  private stopChange (): void {
+  private stopChange (shouldCallback?: boolean): void {
     this._changing--;
-    this.next();
+    this.next(shouldCallback);
   }
 }
 
