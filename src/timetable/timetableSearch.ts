@@ -11,7 +11,7 @@ class TimetableSearch {
     maxTime = 300,
     maxSpawn = 3,
   ): LinkedSession[] {
-    const componentIds = components.map(c => `${c.course}-${c.name}`).join(',');
+    const componentIds = components.map(c => c.id).join('~~~');
     const cachedTimetable = this.cache.get(componentIds);
     if (cachedTimetable !== undefined) {
       return cachedTimetable;

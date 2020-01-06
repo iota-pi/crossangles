@@ -1,14 +1,15 @@
-import { CBSEvent } from "../state";
-import { notUndefined } from "../typeHelpers";
-import { CourseData, CourseId, getCourseId } from "../state/Course";
-import { getSessions, LinkedStream, linkStream } from "../state/Stream";
-import { SessionData } from "../state/Session";
+import { CBSEvent } from '../state';
+import { notUndefined } from '../typeHelpers';
+import { CourseData, CourseId, getCourseId } from '../state/Course';
+import { getSessions, getStreamId, LinkedStream, linkStream } from '../state/Stream';
+import { SessionData } from '../state/Session';
 
 export interface Component {
   course: CourseData,
   name: string,
   streams: LinkedStream[],
   streamSessions: SessionData[],
+  id: string,
 }
 
 export function coursesToComponents (
@@ -90,15 +91,19 @@ export const addComponentsTo = (
   const streamGroupsEntries = Array.from(streamGroups.entries());
 
   for (let [component, streams] of streamGroupsEntries) {
-    if (!webStreams.includes(getCourseId(course)) || streams.filter(s => s.web).length === 0) {
+    const courseId = getCourseId(course);
+    if (!webStreams.includes(courseId) || streams.filter(s => s.web).length === 0) {
+      const idParts: string[] = [courseId, component];
       const streamSessions: SessionData[] = [];
       for (let stream of streams) {
         const sessions = getSessions(course, stream);
         streamSessions.push(...sessions);
+        idParts.push(getStreamId(course, stream));
       }
+      const id = idParts.join('~');
 
       // Add this component
-      components.push({ name: component, streams, course, streamSessions });
+      components.push({ name: component, streams, course, streamSessions, id });
     }
   }
 }
