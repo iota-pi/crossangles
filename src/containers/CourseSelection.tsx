@@ -134,11 +134,13 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private chooseCourse = async (course: CourseData) => {
+    const sessionManager = this.getSessionManager();
     await this.props.dispatch(addCourse(course));
-    await this.updateTimetable();
+    await this.updateTimetable(sessionManager);
   }
 
   private addCustom = async (name: string, times: ClassTime[]) => {
+    const sessionManager = this.getSessionManager();
     let course: CourseData;
     const updatedValues: Omit<CourseData, 'code'> = {
       name,
@@ -166,17 +168,18 @@ class CourseSelection extends Component<Props, State> {
       await this.props.dispatch(setColour(getCourseId(course)));
     }
 
-    await this.updateTimetable();
+    await this.updateTimetable(sessionManager);
     this.setState({ editingCourse: null }); // TODO replace with after close in CreateCustom
   }
 
   private removeCourse = async (course: CourseData) => {
+    const sessionManager = this.getSessionManager();
     if (course.isCustom) {
       await this.props.dispatch(removeCustom(course));
     } else {
       await this.props.dispatch(removeCourse(course));
     }
-    await this.updateTimetable();
+    await this.updateTimetable(sessionManager);
   }
 
   private changeColour = async (course: CourseData, colour: Colour) => {
@@ -184,26 +187,32 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private toggleWebStream = async (course: CourseData) => {
+    const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleWebStream(course));
-    await this.updateTimetable();
+    await this.updateTimetable(sessionManager);
   }
 
   private toggleEvent = async (event: CBSEvent) => {
+    const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleEvent(event));
-    await this.updateTimetable();
+    await this.updateTimetable(sessionManager);
   }
 
   private toggleOption = async (option: OptionName) => {
+    const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleOption(option));
 
     const generationOptions: OptionName[] = ['includeFull']
     if (generationOptions.includes(option)) {
-      await this.updateTimetable();
+      await this.updateTimetable(sessionManager);
     }
   }
 
-  private updateTimetable = async () => {
-    const sessionManager = SessionManager.from(this.props.timetable, this.props.courses);
+  private getSessionManager = () => {
+    return SessionManager.from(this.props.timetable, this.props.courses);
+  }
+
+  private updateTimetable = async (sessionManager: SessionManager) => {
     const sessions = sessionManager.orderSessions;
     const fixedSessions = sessions.filter(s => sessionManager.get(s.id).touched);
 
