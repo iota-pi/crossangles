@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { RootState, CBSEvent } from '../state';
 import { WithDispatch } from '../typeHelpers';
@@ -45,7 +45,7 @@ export interface State {
   timetable: SessionManager,
 }
 
-class TimetableContainer extends Component<Props> {
+class TimetableContainer extends PureComponent<Props> {
   state: State = {
     timetable: new SessionManager(),
   }
@@ -88,13 +88,6 @@ class TimetableContainer extends Component<Props> {
     if (this.props.courses !== prevProps.courses || this.props.chosen !== prevProps.chosen || this.props.events !== prevProps.events || this.props.options !== prevProps.options) {
       return true;
     }
-
-    // TODO is this necessary? should they be sorted first?
-    // const oldSessions = this.props.sessionManager.order;
-    // const newSessions = prevProps.sessionManager.order;
-    // if (!arraysEqual(oldSessions, newSessions)) {
-    //   return true;
-    // }
 
     return false;
   }
