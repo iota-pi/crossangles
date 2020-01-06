@@ -9,7 +9,7 @@ import TimetableDropzone from './TimetableDropzone';
 import { sessionClashLength } from '../../timetable';
 import { TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableUtil';
 import { DropzonePlacement } from './DropzonePlacement';
-import { SessionManager, SessionManagerData } from './SessionManager';
+import { SessionManager } from './SessionManager';
 import { ColourMap } from '../../state/Colours';
 import { Options } from '../../state/Options';
 import { CourseId, CourseMap, getCourseId, CourseData } from '../../state/Course';
