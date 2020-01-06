@@ -20,7 +20,7 @@ import { ColourMap } from '../state/Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../actions';
 import { ThunkDispatch } from 'redux-thunk';
-import { undoTimetable } from '../actions/history';
+import { undoTimetable, redoTimetable } from '../actions/history';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -63,6 +63,7 @@ class TimetableContainer extends PureComponent<Props> {
         <TimetableControls
           history={this.props.timetableHistory}
           onUndo={this.handleUndo}
+          onRedo={this.handleRedo}
         />
 
         <TimetableTable
@@ -96,6 +97,10 @@ class TimetableContainer extends PureComponent<Props> {
 
   private handleUndo = () => {
     this.props.dispatch(undoTimetable());
+  }
+
+  private handleRedo = () => {
+    this.props.dispatch(redoTimetable());
   }
 
   private get allCourses (): CourseData[] {

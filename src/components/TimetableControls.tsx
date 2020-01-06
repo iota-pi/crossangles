@@ -6,6 +6,8 @@ import { StateHistory } from '../state';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Undo from '@material-ui/icons/Undo';
+import Redo from '@material-ui/icons/Redo';
+import Refresh from '@material-ui/icons/Refresh';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -34,6 +36,23 @@ class TimetableControls extends PureComponent<Props> {
             disabled={this.props.history.past.length === 0}
           >
             <Undo />
+          </IconButton>
+        )}
+        {this.props.onRedo && (
+          <IconButton
+            onClick={this.props.onRedo}
+            color="primary"
+            disabled={this.props.history.future.length === 0}
+          >
+            <Redo />
+          </IconButton>
+        )}
+        {this.props.onUpdate && (
+          <IconButton
+            onClick={this.props.onUpdate}
+            color="primary"
+          >
+            <Refresh />
           </IconButton>
         )}
       </Toolbar>
