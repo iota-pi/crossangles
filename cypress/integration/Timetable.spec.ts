@@ -82,7 +82,7 @@ context('Timetable interaction', () => {
       .dragStart()
     cy.get('@linked')
       .expectData('snapped', 0)
-      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
+      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
     cy.get('@session')
       .dragMove({ x: 100, y: 100 })
       .dragStop()
