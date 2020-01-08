@@ -34,6 +34,7 @@ class TimetableControls extends PureComponent<Props> {
             onClick={this.props.onUndo}
             color="primary"
             disabled={this.props.history.past.length === 0}
+            data-cy="undo-button"
           >
             <Undo />
           </IconButton>
@@ -43,6 +44,7 @@ class TimetableControls extends PureComponent<Props> {
             onClick={this.props.onRedo}
             color="primary"
             disabled={this.props.history.future.length === 0}
+            data-cy="redo-button"
           >
             <Redo />
           </IconButton>
@@ -51,6 +53,7 @@ class TimetableControls extends PureComponent<Props> {
           <IconButton
             onClick={this.props.onUpdate}
             color="primary"
+            data-cy="update-button"
           >
             <Refresh />
           </IconButton>

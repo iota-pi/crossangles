@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-import { SESSION_BASE_Z, SESSION_DRAG_Z, SESSION_LIFT_Z } from '../../src/components/Timetable/timetableUtil';
+import { SESSION_BASE_Z, SESSION_DRAG_Z } from '../../src/components/Timetable/timetableUtil';
 
 const TEST_CODE = 'TEST1010'
 
@@ -159,5 +159,138 @@ context('Timetable interaction', () => {
       .should('exist')
     cy.get(`[data-session=${TEST_CODE}-T11-13]`)
       .should('not.exist')
+  })
+})
+
+context('Timetable controls', () => {
+  beforeEach(() => {
+    cy.server()
+    cy.route('/data.json', 'fixture:data-with-cbs.json')
+    cy.visit('/')
+
+    // Add test course
+    cy.get('#course-selection-autocomplete')
+      .click()
+    cy.dataCy('autocomplete-option')
+      .click()
+
+    // Add custom course
+    cy.dataCy('create-custom-event')
+      .click()
+    cy.dataCy('custom-event-name')
+      .type('Playing spikeball')
+    cy.dataCy('custom-event-duration')
+      .click()
+    cy.dataCy('custom-event-duration-item')
+      .eq(4)
+      .click()
+    cy.dataCy('custom-event-day')
+      .last()
+      .click()
+    cy.dataCy('custom-event-day-item')
+      .first()
+      .click()
+    cy.dataCy('custom-event-time')
+      .last()
+      .click()
+    cy.dataCy('custom-event-time-item')
+      .first()
+      .click()
+    cy.dataCy('custom-event-submit')
+      .click()
+
+    // Add the Bible talks
+    cy.dataCy('cbs-event-The Bible Talks')
+      .click()
+  })
+
+  it('can use undo/redo buttons', () => {
+    // Should not be able to redo
+    cy.dataCy('redo-button')
+      .should('be.disabled')
+
+    // Undo adding the Bible talks
+    cy.dataCy('timetable-session')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('cbs-event-The Bible Talks')
+      .find('input[type=checkbox]')
+      .should('be.checked')
+    cy.dataCy('undo-button')
+      .click()
+    cy.dataCy('timetable-session')
+      .should('not.contain.text', 'The Bible Talks')
+    cy.dataCy('cbs-event-The Bible Talks')
+      .find('input[type=checkbox]')
+      .should('not.be.checked')
+
+    // Redo it
+    cy.dataCy('redo-button')
+      .should('not.be.disabled')
+    cy.dataCy('redo-button')
+      .click()
+    cy.dataCy('timetable-session')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('cbs-event-The Bible Talks')
+      .find('input[type=checkbox]')
+      .should('be.checked')
+
+    // Should not be able to redo
+    cy.dataCy('redo-button')
+      .should('be.disabled')
+
+    // Edit custom course
+    cy.dataCy('edit-custom')
+      .click()
+    cy.dataCy('custom-event-name')
+      .find('input')
+      .should('have.value', 'Playing spikeball')
+      .clear()
+      .type('Walkup')
+    cy.dataCy('custom-event-duration')
+      .first()
+      .click()
+    cy.dataCy('custom-event-duration-item')
+      .eq(3)
+      .click()
+    cy.dataCy('custom-event-day')
+      .first()
+      .click()
+    cy.dataCy('custom-event-day-item')
+      .eq(1)
+      .click()
+    cy.dataCy('custom-event-submit')
+      .click()
+
+    // Undo twice
+    cy.get('[data-session^="custom_"][data-session$="T8-10"]')
+      .should('exist')
+    cy.dataCy('undo-button')
+      .click()
+    cy.get('[data-session^="custom_"][data-session$="T8-10"]')
+      .should('not.exist')
+    cy.get('[data-session^="custom_"][data-session$="M8-10.5"]')
+      .should('exist')
+    cy.dataCy('undo-button')
+      .click()
+    cy.dataCy('timetable-session')
+      .should('not.contain.text', 'The Bible Talks')
+    cy.dataCy('cbs-event-The Bible Talks')
+      .find('input[type=checkbox]')
+      .should('not.be.checked')
+
+    // Redo twice
+    cy.dataCy('redo-button')
+      .click()
+    cy.get('[data-session^="custom_"][data-session$="T8-10"]')
+      .should('not.exist')
+    cy.dataCy('redo-button')
+      .click()
+    cy.get('[data-session^="custom_"][data-session$="T8-10"]')
+      .should('exist')
+  })
+
+  it('can undo after dragging', () => {
+    // TODO
+    cy.get('absjdkhgsldkgjsdlkjg');
   })
 })
