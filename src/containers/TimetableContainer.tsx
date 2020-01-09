@@ -18,7 +18,7 @@ import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { updateTimetable } from '../actions';
+import { updateTimetable, doTimetableSearch, setNotice } from '../actions';
 import { ThunkDispatch } from 'redux-thunk';
 import { undoTimetable, redoTimetable } from '../actions/history';
 
@@ -64,6 +64,7 @@ class TimetableContainer extends PureComponent<Props> {
           history={this.props.timetableHistory}
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
+          onUpdate={this.handleUpdate}
         />
 
         <TimetableTable
@@ -101,6 +102,30 @@ class TimetableContainer extends PureComponent<Props> {
 
   private handleRedo = () => {
     this.props.dispatch(redoTimetable());
+  }
+
+  private handleUpdate = async () => {
+    const newTimetable = doTimetableSearch({
+      fixedSessions: [],
+      courses: this.allCourses,
+      events: this.props.events,
+      webStreams: this.props.webStreams,
+      options: this.props.options,
+    });
+
+    if (newTimetable === null) {
+      // Displace some classes and display a warning
+      await this.props.dispatch(setNotice('There was a problem generating a timetable'));
+    } else {
+      const sessionManager = new SessionManager(this.state.timetable);
+      sessionManager.clear();
+      sessionManager.update(newTimetable.timetable);
+      await this.props.dispatch(updateTimetable(sessionManager.data));
+
+      if (newTimetable.unplaced.length > 0) {
+        await this.props.dispatch(setNotice('Some classes have been displaced'));
+      }
+    }
   }
 
   private get allCourses (): CourseData[] {
