@@ -7,6 +7,7 @@ context('Timetable interaction', () => {
   beforeEach(() => {
     cy.server()
     cy.route('/data.json', 'fixture:data.json')
+    cy.clearLocalStorage() // TODO: this shouldn't be necessary?!?!
     cy.visit('/')
 
     // Add test course
@@ -63,14 +64,15 @@ context('Timetable interaction', () => {
         const parent = $el[0].offsetParent!.getBoundingClientRect()
         expect(offset.left).to.be.approximately(parent.left + 1, 0.1)
         expect(offset.top).to.be.approximately(parent.top + 1, 0.1)
-      })
-    cy.get('@session')
-      .dragAndDrop({ x: 2000, y: 2000, absolute: true })
-      .then($el => {
-        const offset = $el[0].getBoundingClientRect()
-        const parent = $el[0].offsetParent!.getBoundingClientRect()
-        expect(offset.left + offset.width).to.be.approximately(parent.left + parent.width - 1, 0.1)
-        expect(offset.top + offset.height).to.be.approximately(parent.top + parent.height - 1, 0.1)
+
+        cy.get('@session')
+          .dragAndDrop({ x: 2000, y: 2000, absolute: true })
+          .then($el => {
+            const offset = $el[0].getBoundingClientRect()
+            const parent = $el[0].offsetParent!.getBoundingClientRect()
+            expect(offset.left + offset.width).to.be.approximately(parent.left + parent.width - 1, 0.1)
+            expect(offset.top + offset.height).to.be.approximately(parent.top + parent.height - 1, 0.1)
+          })
       })
   })
 
