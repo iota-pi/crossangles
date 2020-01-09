@@ -12,7 +12,6 @@ import {
   toggleOption,
   doTimetableSearch,
   setNotice,
-  bumpTimetableVersion,
   addCustom,
   removeCustom,
   updateCustom,
@@ -231,7 +230,6 @@ class CourseSelection extends Component<Props, State> {
       sessionManager.clear();
       sessionManager.update(newTimetable.timetable);
       await this.props.dispatch(updateTimetable(sessionManager.data));
-      await this.props.dispatch(bumpTimetableVersion());
 
       if (newTimetable.unplaced.length > 0) {
         await this.props.dispatch(setNotice('Some classes have been displaced'));

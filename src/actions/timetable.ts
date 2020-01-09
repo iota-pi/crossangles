@@ -15,11 +15,6 @@ export interface SessionManagerAction extends UserAction {
   sessionManager: SessionManagerData;
 }
 
-export const BUMP_TIMETABLE_VERSION = 'BUMP_TIMETABLE_VERSION';
-export interface TimetableVersionAction extends Action {
-  type: typeof BUMP_TIMETABLE_VERSION;
-}
-
 export interface UpdateTimetableConfig {
   fixedSessions: LinkedSession[];
   courses: CourseData[],
@@ -87,11 +82,5 @@ export function updateTimetable (newTimetable: SessionManagerData): SessionManag
     type: UPDATE_SESSION_MANAGER,
     sessionManager: newTimetable,
     isUser: true,
-  }
-}
-
-export function bumpTimetableVersion (): TimetableVersionAction {
-  return {
-    type: BUMP_TIMETABLE_VERSION,
   }
 }
