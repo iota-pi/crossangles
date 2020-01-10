@@ -8,7 +8,7 @@ import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
 import { UNDO, REDO } from '../actions/history';
-import { UPDATE_SESSION_MANAGER } from '../actions';
+import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA } from '../actions';
 
 type NoHistoryState = Omit<RootState, 'history'>
 const basicReducer = combineReducers<NoHistoryState>({
@@ -30,6 +30,31 @@ const removeHistory = (state: RootState): NoHistoryState | undefined => {
   delete state.history;
 
   return state;
+}
+
+const getTimetableState = <T extends TimetableState>(state: T): TimetableState => {
+  const {
+    courses,
+    custom,
+    additional,
+    chosen,
+    events,
+    options,
+    timetable,
+    colours,
+    webStreams,
+  } = state;
+  return {
+    courses,
+    custom,
+    additional,
+    chosen,
+    events,
+    options,
+    timetable,
+    colours,
+    webStreams,
+  };
 }
 
 export const undo = (history: StateHistory): StateHistory => {
@@ -62,7 +87,7 @@ export const push = (history: StateHistory, next: TimetableState): StateHistory 
 const rootReducer = (state: RootState | undefined, action: AnyAction): RootState => {
   state = state || baseState;
   const nextState = basicReducer(removeHistory(state), action);
-  let history = state ? state.history : baseState.history;
+  let history = state.history;
 
   switch (action.type) {
     case UNDO:
@@ -82,10 +107,18 @@ const rootReducer = (state: RootState | undefined, action: AnyAction): RootState
         history,
       };
     case UPDATE_SESSION_MANAGER:
-      history = push(history, nextState);
+      history = push(history, getTimetableState(nextState));
       return {
         ...nextState,
         history,
+      };
+    case SET_COURSE_DATA:
+      return {
+        ...nextState,
+        history: {
+          ...history,
+          present: getTimetableState(nextState),
+        }
       };
   }
 
