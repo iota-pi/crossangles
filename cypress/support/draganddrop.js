@@ -10,9 +10,9 @@ export const dragAndDrop = (subject, offset = { x: 0, y: 0, absolute: false }) =
 
 export const dragTo = (subject, time) => {
   cy.wrap(subject)
-    .trigger('mousemove')
+    .trigger('mousemove', { force: true })
     .wait(500)
-    .trigger('mousedown')
+    .trigger('mousedown', { force: true })
   cy.get(`[data-time=${time}]`)
     .trigger('mousemove', { force: true })
   cy.wrap(subject)

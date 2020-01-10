@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-import { SESSION_BASE_Z, SESSION_DRAG_Z } from '../../src/components/Timetable/timetableUtil';
+import { SESSION_BASE_Z, SESSION_DRAG_Z, TIMETABLE_CELL_HEIGHT } from '../../src/components/Timetable/timetableUtil';
 
 const TEST_CODE = 'TEST1010'
 
@@ -14,6 +14,7 @@ context('Timetable interaction', () => {
     cy.get('#course-selection-autocomplete')
       .click()
     cy.dataCy('autocomplete-option')
+      .first()
       .click()
   })
 
@@ -162,6 +163,37 @@ context('Timetable interaction', () => {
     cy.get(`[data-session=${TEST_CODE}-T11-13]`)
       .should('not.exist')
   })
+
+  it('allows and handles clashes properly', () => {
+    cy.get(`[data-session=${TEST_CODE}-F9-10]` ).as('session1')
+    cy.get(`[data-session=${TEST_CODE}-M10-11]`).as('session2')
+
+    // Move session to clash
+    cy.get('@session1')
+      .dragTo('M9')
+      .should('have.css', 'box-shadow').and('not.be', 'none')
+    cy.get('@session1')
+      .should('have.css', 'height', `${TIMETABLE_CELL_HEIGHT * 3 - 1}px`)
+    cy.get('@session2')
+      .should('have.css', 'box-shadow', 'none')
+
+    // Move other clashing session on top
+    cy.get('@session2')
+      .dragStart()
+      .dragStop()
+      .should('have.css', 'box-shadow').and('not.be', 'none')
+
+    // Move first session back to a non-clashing position
+    cy.get('@session1')
+      .should('have.css', 'box-shadow', 'none')
+    cy.get('@session1')
+      .dragTo('F10')
+      .should('have.css', 'box-shadow', 'none')
+    cy.get('@session1')
+      .should('have.css', 'height', `${TIMETABLE_CELL_HEIGHT - 1}px`)
+    cy.get('@session2')
+      .should('have.css', 'box-shadow', 'none')
+  })
 })
 
 context('Timetable controls', () => {
@@ -175,7 +207,9 @@ context('Timetable controls', () => {
       .click()
     cy.dataCy('autocomplete-option')
       .click()
+  })
 
+  it('can use undo/redo buttons', () => {
     // Add custom course
     cy.dataCy('create-custom-event')
       .click()
@@ -204,9 +238,7 @@ context('Timetable controls', () => {
     // Add the Bible talks
     cy.dataCy('cbs-event-The Bible Talks')
       .click()
-  })
 
-  it('can use undo/redo buttons', () => {
     // Should not be able to redo
     cy.dataCy('redo-button')
       .should('be.disabled')

@@ -75,6 +75,21 @@
           ],
           "full": false,
           "web": false
+        },
+        {
+          "component": "TUT",
+          "enrols": [
+            0,
+            1
+          ],
+          "times": [
+            {
+              "time": "M9-12",
+              "location": "Patmos Th"
+            }
+          ],
+          "full": false,
+          "web": false
         }
       ],
       "term": null,
