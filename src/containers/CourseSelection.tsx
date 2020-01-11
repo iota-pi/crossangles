@@ -26,7 +26,7 @@ import createStyles from "@material-ui/core/styles/createStyles";
 
 // Components
 import Autocomplete from '../components/Autocomplete';
-import CourseDisplay from '../components/CourseDisplay';
+import CourseDisplay from '../components/CourseList';
 import GeneralOptions from '../components/GeneralOptions';
 import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';

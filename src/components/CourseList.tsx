@@ -69,7 +69,8 @@ export interface PopoverState {
   course: CourseData,
 }
 
-class CourseDisplay extends PureComponent<Props, State> {
+
+class CourseList extends PureComponent<Props, State> {
   state: State = {
     showPopover: null,
   }
@@ -84,101 +85,17 @@ class CourseDisplay extends PureComponent<Props, State> {
           <React.Fragment key={getCourseId(course)}>
             <Divider light />
             {course.code !== CBS_CODE ? (
-              <React.Fragment>
-                <ListItem className={hasWebStream(course) ? classes.lessSpaceBelow : undefined}>
-                  {!course.isCustom ? (
-                    <ListItemText>
-                      <span>{course.code}</span>
-                      <span className={classes.lightText}> — {course.name}</span>
-                      {course.term ? (
-                        <span className={classes.termText}> ({course.term})</span>
-                      ) : null}
-                    </ListItemText>
-                  ) : (
-                    <ListItemText>
-                      <span>{course.name}</span>
-                      <span className={classes.lightText}> (Personal)</span>
-                    </ListItemText>
-                  )}
-
-                  {course.isCustom && (
-                    <IconButton
-                      size="small"
-                      className={classes.marginRight}
-                      onClick={() => this.props.onEditCustomCourse(course)}
-                      data-cy="edit-custom"
-                    >
-                      <Edit />
-                    </IconButton>
-                  )}
-
-                  <div className={classes.marginRight}>
-                    <ColourControl
-                      colour={this.props.colours[getCourseId(course)]!}
-                      size={32}
-                      isCircle
-                      onClick={e => this.showPopover(e, course)}
-                    />
-                  </div>
-
-                  <ListItemIcon
-                    className={classes.listIcon}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => this.props.onRemoveCourse(course)}
-                      data-cy="remove-course"
-                    >
-                      <Close />
-                    </IconButton>
-                  </ListItemIcon>
-                </ListItem>
-
-                {hasWebStream(course) ? (
-                  <ListItem className={classes.noVertPadding}>
-                    <WebStream
-                      checked={this.props.webStreams.includes(getCourseId(course))}
-                      onChange={() => this.props.onToggleWeb(course)}
-                    />
-                  </ListItem>
-                ) : <React.Fragment/>}
-              </React.Fragment>
+              <CourseDisplay
+                {...this.props}
+                course={course}
+                onShowPopover={this.showPopover}
+              />
             ) : (
-              <React.Fragment>
-                <ListItem className={classes.lessSpaceBelow}>
-                  <ListItemText>
-                    <span>{course.name}</span>
-                  </ListItemText>
-
-                  <div className={classes.marginRight}>
-                    <ColourControl
-                      colour={this.props.colours[getCourseId(course)]!}
-                      size={32}
-                      isCircle
-                      onClick={e => this.showPopover(e, course)}
-                    />
-                  </div>
-
-                  <ListItemIcon
-                    className={classes.listIcon}
-                  >
-                    <IconButton
-                      size="small"
-                      style={{ visibility: 'hidden' }}
-                    >
-                      <Close />
-                    </IconButton>
-                  </ListItemIcon>
-                </ListItem>
-
-                <ListItem className={classes.noVertPadding}>
-                  <CBSEvents
-                    cbs={this.props.cbs}
-                    events={this.props.events}
-                    onToggleEvent={this.props.onToggleEvent}
-                  />
-                </ListItem>
-              </React.Fragment>
+              <CBSCourseDisplay
+                {...this.props}
+                course={course}
+                onShowPopover={this.showPopover}
+              />
             )}
           </React.Fragment>
         ))}
@@ -228,4 +145,131 @@ class CourseDisplay extends PureComponent<Props, State> {
   }
 }
 
-export default withStyles(styles)(CourseDisplay);
+
+export interface CourseProps extends Props {
+  course: CourseData,
+  onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
+}
+
+export const CourseDisplay = withStyles(styles)(({
+  classes,
+  course,
+  colours,
+  webStreams,
+  onEditCustomCourse,
+  onRemoveCourse,
+  onToggleWeb,
+  onShowPopover,
+}: CourseProps) => {
+  return (
+    <React.Fragment>
+      <ListItem className={hasWebStream(course) ? classes.lessSpaceBelow : undefined}>
+        {!course.isCustom ? (
+          <ListItemText>
+            <span>{course.code}</span>
+            <span className={classes.lightText}> — {course.name}</span>
+            {course.term ? (
+              <span className={classes.termText}> ({course.term})</span>
+            ) : null}
+          </ListItemText>
+        ) : (
+          <ListItemText>
+            <span>{course.name}</span>
+            <span className={classes.lightText}> (Personal)</span>
+          </ListItemText>
+        )}
+
+        {course.isCustom && (
+          <IconButton
+            size="small"
+            className={classes.marginRight}
+            onClick={() => onEditCustomCourse(course)}
+            data-cy="edit-custom"
+          >
+            <Edit />
+          </IconButton>
+        )}
+
+        <div className={classes.marginRight}>
+          <ColourControl
+            colour={colours[getCourseId(course)]!}
+            size={32}
+            isCircle
+            onClick={e => onShowPopover(e, course)}
+          />
+        </div>
+
+        <ListItemIcon
+          className={classes.listIcon}
+        >
+          <IconButton
+            size="small"
+            onClick={() => onRemoveCourse(course)}
+            data-cy="remove-course"
+          >
+            <Close />
+          </IconButton>
+        </ListItemIcon>
+      </ListItem>
+
+      {hasWebStream(course) ? (
+        <ListItem className={classes.noVertPadding}>
+          <WebStream
+            checked={webStreams.includes(getCourseId(course))}
+            onChange={() => onToggleWeb(course)}
+          />
+        </ListItem>
+      ) : <React.Fragment/>}
+    </React.Fragment>
+  )
+});
+
+export const CBSCourseDisplay = withStyles(styles)(({
+  classes,
+  course,
+  cbs,
+  events,
+  colours,
+  onShowPopover,
+  onToggleEvent,
+}: CourseProps) => {
+  return (
+    <React.Fragment>
+      <ListItem className={classes.lessSpaceBelow}>
+        <ListItemText>
+          <span>{course.name}</span>
+        </ListItemText>
+
+        <div className={classes.marginRight}>
+          <ColourControl
+            colour={colours[getCourseId(course)]!}
+            size={32}
+            isCircle
+            onClick={e => onShowPopover(e, course)}
+          />
+        </div>
+
+        <ListItemIcon
+          className={classes.listIcon}
+        >
+          <IconButton
+            size="small"
+            style={{ visibility: 'hidden' }}
+          >
+            <Close />
+          </IconButton>
+        </ListItemIcon>
+      </ListItem>
+
+      <ListItem className={classes.noVertPadding}>
+        <CBSEvents
+          cbs={cbs}
+          events={events}
+          onToggleEvent={onToggleEvent}
+        />
+      </ListItem>
+    </React.Fragment>
+  )
+});
+
+export default withStyles(styles)(CourseList);
