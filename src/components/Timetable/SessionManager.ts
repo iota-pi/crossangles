@@ -3,6 +3,7 @@ import { SessionPlacement, SessionPlacementData } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
 import { SessionId, LinkedSession } from "../../state/Session";
 import { CourseMap } from "../../state/Course";
+import { sessionClashLength } from "../../timetable";
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
@@ -274,6 +275,49 @@ export class SessionManager {
     }
 
     this.stopChange();
+  }
+
+  updateClashDepths () {
+    this.startChange();
+
+    for (let i = 0; i < this.order.length; ++i) {
+      let takenDepths = new Set<number>();
+      const sessionId1 = this.order[i];
+      const placement1 = this.get(sessionId1);
+
+      // Only measure for sessions which are snapped
+      if (placement1.isSnapped) {
+        for (let j = 0; j < i; ++j) {
+          const sessionId2 = this.order[j];
+          const placement2 = this.get(sessionId2);
+
+          // Skip checking other sessions which aren't snapped
+          if (!placement2.isSnapped) continue;
+
+          // Check if sessions clash
+          if (sessionClashLength(placement1.session, placement2.session) > 0) {
+            const jDepth = placement2.clashDepth;
+            takenDepths.add(jDepth);
+          }
+        }
+      }
+
+      // Update clash depth
+      const depth = this.findFreeDepth(takenDepths);
+      this.setClashDepth(sessionId1, depth);
+    }
+
+    this.stopChange();
+  }
+
+  private findFreeDepth (takenDepths: Set<number>): number {
+    for (let j = 0; j < takenDepths.size; ++j) {
+      if (!takenDepths.has(j)) {
+        return j;
+      }
+    }
+
+    return takenDepths.size;
   }
 
   clear () {

@@ -6,7 +6,6 @@ import { Dimensions, Position } from './timetableTypes';
 
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { sessionClashLength } from '../../timetable';
 import { TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableUtil';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
@@ -213,7 +212,7 @@ class TimetableTable extends Component<Props, State> {
     // Update session placement with dragging state
     this.props.timetable.drag(session.id);
 
-    this.updateClashDepths(this.props.timetable);
+    this.props.timetable.updateClashDepths();
 
     // Mark this session as being dragged
     this.setState({
@@ -247,7 +246,7 @@ class TimetableTable extends Component<Props, State> {
       );
     }
 
-    this.updateClashDepths(this.props.timetable);
+    this.props.timetable.updateClashDepths();
 
     // No longer dragging anything
     this.setState({
@@ -334,46 +333,6 @@ class TimetableTable extends Component<Props, State> {
     }
 
     return dropzones;
-  }
-
-  private updateClashDepths (sessions: SessionManager) {
-    // TODO: move into SessionManager
-    console.log('updateClashDepths');
-    for (let i = 0; i < sessions.order.length; ++i) {
-      let takenDepths = new Set<number>();
-      const sessionId1 = sessions.order[i];
-      const placement1 = sessions.get(sessionId1);
-
-      // Only measure for sessions which are snapped
-      if (placement1.isSnapped) {
-        for (let j = 0; j < i; ++j) {
-          const sessionId2 = sessions.order[j];
-          const placement2 = sessions.get(sessionId2);
-
-          // Skip checking other sessions which aren't snapped
-          if (!placement2.isSnapped) continue;
-
-          // Check if sessions clash
-          if (sessionClashLength(placement1.session, placement2.session) > 0) {
-            const jDepth = placement2.clashDepth;
-            takenDepths.add(jDepth);
-          }
-        }
-      }
-
-      // Update clash depth
-      sessions.setClashDepth(sessionId1, this.findFreeDepth(takenDepths));
-    }
-  }
-
-  private findFreeDepth (takenDepths: Set<number>): number {
-    for (let j = 0; j < takenDepths.size; ++j) {
-      if (!takenDepths.has(j)) {
-        return j;
-      }
-    }
-
-    return takenDepths.size;
   }
 }
 
