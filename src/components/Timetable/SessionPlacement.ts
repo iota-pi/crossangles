@@ -42,11 +42,22 @@ export class SessionPlacement extends TimetablePlacement {
   }
 
   static from (data: SessionPlacementData, course: CourseData) {
+    // Get linked session
     const streamId = data.session.stream
     const stream = course.streams.filter(s => getStreamId(course, s) === streamId)[0];
     const linkedStream = linkStream(course, stream);
     const session = linkSession(course, linkedStream, data.session);
-    return new SessionPlacement(session);
+    const placement = new SessionPlacement(session);
+
+    // Update placement properties
+    placement._offset = data.offset;
+    placement._isSnapped = data.isSnapped;
+    placement._isDragging = data.isDragging;
+    placement._isRaised = data.isRaised;
+    placement._touched = data.touched;
+    placement.clashDepth = data.clashDepth;
+
+    return placement;
   }
 
   get isSnapped (): boolean {
