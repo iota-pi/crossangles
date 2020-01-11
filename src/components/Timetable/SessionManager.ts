@@ -4,6 +4,7 @@ import { Position } from "./timetableTypes";
 import { SessionId, LinkedSession } from "../../state/Session";
 import { CourseMap } from "../../state/Course";
 import { sessionClashLength } from "../../timetable";
+import { DropzonePlacement } from "./DropzonePlacement";
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
@@ -149,11 +150,18 @@ export class SessionManager {
     this.next(shouldCallback);
   }
 
-  drop (sessionId: SessionId, shouldCallback=true): void {
+  drop (
+    sessionId: SessionId,
+    dropzone: DropzonePlacement | null,
+    shouldCallback=true,
+  ): void {
     this.startChange();
+
+    // Drop this placement
     const session = this.get(sessionId);
     session.drop();
 
+    // Lower all linked placements
     const stream = session.session.stream;
     for (let linkedSession of stream.sessions) {
       const linkedId = linkedSession.id;
@@ -161,6 +169,17 @@ export class SessionManager {
         this.lower(linkedId);
       }
     }
+
+    // Snap to nearest dropzone (if there is one near enough)
+    if (dropzone) {
+      this.snapSessionTo(
+        sessionId,
+        dropzone.session.stream.sessions,
+      );
+    }
+
+    // Update clash depths
+    this.updateClashDepths();
 
     this.stopChange(shouldCallback);
   }
