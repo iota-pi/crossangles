@@ -39,7 +39,7 @@ class GeneralOptions extends PureComponent<Props> {
             <FormControlLabel
               control={
                 <Switch
-                  checked={this.props.options[optionName]}
+                  checked={this.props.options[optionName] || false}
                   onChange={() => this.props.onToggleOption(optionName)}
                   value={optionName}
                   classes={{
