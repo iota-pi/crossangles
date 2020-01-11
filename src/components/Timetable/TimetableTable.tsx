@@ -96,14 +96,12 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
   dimensions: Dimensions,
   dragging: LinkedSession | null,
-  version: number,
 }
 
 class TimetableTable extends Component<Props, State> {
   state: State = {
     dimensions: { width: 0, height: 0 },
     dragging: null,
-    version: -1,
   }
 
   timetableRef: RefObject<HTMLDivElement>;
@@ -220,7 +218,6 @@ class TimetableTable extends Component<Props, State> {
     // Mark this session as being dragged
     this.setState({
       dragging: session,
-      version: this.props.timetable.version,
     });
   }
 
@@ -228,7 +225,6 @@ class TimetableTable extends Component<Props, State> {
     this.props.timetable.move(session.id, delta);
 
     this.setState({
-      version: this.props.timetable.version,
     });
   }
 
@@ -256,7 +252,6 @@ class TimetableTable extends Component<Props, State> {
     // No longer dragging anything
     this.setState({
       dragging: null,
-      version: this.props.timetable.version,
     });
   }
 
