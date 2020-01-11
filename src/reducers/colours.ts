@@ -3,11 +3,11 @@ import { ADD_COURSE, CourseAction, ColourAction, SET_COLOUR, OtherAction } from 
 import { getCourseId } from '../state/Course';
 import { baseState } from '../state';
 
-export function colours (state: ColourMap | undefined, action: CourseAction | ColourAction | OtherAction): ColourMap {
+export function colours (state = baseState.colours, action: CourseAction | ColourAction | OtherAction): ColourMap {
   switch (action.type) {
     case ADD_COURSE:
       const courseId = getCourseId(action.course);
-      const colour = pickColor(Object.values(colours));
+      const colour = pickColor(Object.values(state));
       return {
         ...state,
         [courseId]: colour,
@@ -20,7 +20,7 @@ export function colours (state: ColourMap | undefined, action: CourseAction | Co
       };
   }
 
-  return state || baseState.colours;
+  return state;
 };
 
 function pickColor (chosenColours: Colour[]): Colour {
