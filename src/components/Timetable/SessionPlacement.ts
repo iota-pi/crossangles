@@ -31,7 +31,7 @@ export class SessionPlacement extends TimetablePlacement {
 
   get data (): SessionPlacementData {
     return {
-      offset: this._offset,
+      offset: { ...this._offset },
       isSnapped: this._isSnapped,
       isDragging: this._isDragging,
       isRaised: this._isRaised,
@@ -50,7 +50,7 @@ export class SessionPlacement extends TimetablePlacement {
     const placement = new SessionPlacement(session);
 
     // Update placement properties
-    placement._offset = data.offset;
+    placement._offset = { ...data.offset };
     placement._isSnapped = data.isSnapped;
     placement._isDragging = data.isDragging;
     placement._isRaised = data.isRaised;
