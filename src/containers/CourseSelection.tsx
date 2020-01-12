@@ -227,8 +227,7 @@ class CourseSelection extends Component<Props, State> {
       // Displace some classes and display a warning
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
     } else {
-      sessionManager.clear();
-      sessionManager.update(newTimetable.timetable);
+      sessionManager.update(newTimetable.timetable, fixedSessions);
       await this.props.dispatch(updateTimetable(sessionManager.data));
 
       if (newTimetable.unplaced.length > 0) {

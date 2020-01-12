@@ -118,8 +118,7 @@ class TimetableContainer extends PureComponent<Props> {
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
     } else {
       const sessionManager = new SessionManager(this.state.timetable);
-      sessionManager.clear();
-      sessionManager.update(newTimetable.timetable);
+      sessionManager.update(newTimetable.timetable, []);
       await this.props.dispatch(updateTimetable(sessionManager.data));
 
       if (newTimetable.unplaced.length > 0) {

@@ -347,13 +347,23 @@ export class SessionManager {
 
   update (
     newSessions: LinkedSession[],
+    fixedSessions: LinkedSession[],
   ) {
     this.startChange();
+
+    const fixedSessionIds = fixedSessions.map(s => s.id);
+    const fixedPlacements = fixedSessionIds.map(id => this.get(id));
+    this.clear();
+
     for (let session of newSessions) {
-      if (!this.has(session.id)) {
-        const placement = new SessionPlacement(session);
-        this.set(session.id, placement);
+      const index = fixedSessionIds.indexOf(session.id);
+      let placement: SessionPlacement;
+      if (index > -1) {
+        placement = fixedPlacements[index];
+      } else {
+        placement = new SessionPlacement(session);
       }
+      this.set(session.id, placement);
     }
     this.stopChange();
   }
