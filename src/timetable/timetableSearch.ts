@@ -12,7 +12,9 @@ class TimetableSearch {
     maxSpawn = 3,
   ): LinkedSession[] {
     const componentIds = components.map(c => c.id).join('~~~');
-    const cachedTimetable = this.cache.get(componentIds);
+    const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
+    const cacheKey = `${componentIds}//${fixedSessionsIds}`;
+    const cachedTimetable = this.cache.get(cacheKey);
     if (cachedTimetable !== undefined) {
       return cachedTimetable;
     }
@@ -42,7 +44,7 @@ class TimetableSearch {
 
     // Return best result as list of sessions
     const sessions = ([] as LinkedSession[]).concat(...best.values.map(s => s.sessions));
-    this.cache.set(componentIds, sessions);
+    this.cache.set(cacheKey, sessions);
     return sessions;
   }
 }
