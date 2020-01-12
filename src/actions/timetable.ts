@@ -1,5 +1,4 @@
 import { CBSEvent } from '../state';
-import { Action } from 'redux';
 import { search } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
