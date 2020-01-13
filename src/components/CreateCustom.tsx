@@ -266,7 +266,7 @@ class CreateCustom extends PureComponent<Props, State> {
                     fullWidth
                     value={option.start || ''}
                     onChange={event => this.handleChangeTime(event, i)}
-                    error={(option.start || 0) + this.state.duration > 24}
+                    error={this.startTimeError(option)}
                     InputProps={{
                       endAdornment: option.start && (
                         <InputAdornment position="end" className={classes.clearButton}>
@@ -430,6 +430,12 @@ class CreateCustom extends PureComponent<Props, State> {
     return latestStart + this.state.duration > 24;
   }
 
+  private startTimeError = (option: CustomTimeOption) => {
+    const sameStart = this.state.options.filter(({ day, start }) => start === option.start && day === option.day);
+    const runsTooLate = (option.start || 0) + this.state.duration > 24;
+    return runsTooLate || sameStart.length > 1;
+  }
+
   private canSubmit = (): boolean => {
     const nameError = !this.state.name;
     const durationError = this.durationError();
@@ -438,7 +444,10 @@ class CreateCustom extends PureComponent<Props, State> {
     // Don't allow an option to have a day OR a time but not both
     const emptyCellError = this.state.options.filter(o => (!o.day !== !o.start)).length > 0;
 
-    return !nameError && !durationError && !emptyCellError && !noOptionsError;
+    // Don't allow multiple options to have the same day and start time
+    const startTimeError = this.state.options.filter(o => this.startTimeError(o)).length > 0;
+
+    return !nameError && !durationError && !emptyCellError && !noOptionsError && !startTimeError;
   }
 
   private pickPlaceholderName () {

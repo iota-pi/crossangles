@@ -171,6 +171,14 @@ context('Custom event', () => {
       .last()
       .click()
     cy.dataCy('custom-event-time-item')
+      .first()
+      .click()
+    checkSubmitDisabled();
+
+    cy.dataCy('custom-event-time')
+      .eq(1)
+      .click()
+    cy.dataCy('custom-event-time-item')
       .last()
       .click()
     checkSubmitEnabled();
