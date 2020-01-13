@@ -40,7 +40,13 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   // Group streams by course and component
   // NB: removes full streams
   let includeFull = options.includeFull || false;
-  let components = coursesToComponents(courses, events, webStreams, includeFull);
+  let components = coursesToComponents(
+    courses,
+    events,
+    webStreams,
+    fixedSessions,
+    includeFull,
+  );
 
   // Check for impossible timetables
   // const fullSessions = components.filter(c => c.streams.length === 0);
@@ -49,10 +55,10 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   try {
     // Search for a new timetable, scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered 'unplaced'
-    const newTimetable = search(components, fixedSessions);
+    const timetable = search(components, fixedSessions);
 
     // Add fixed sessions
-    const timetable = fixedSessions.concat(newTimetable);
+    timetable.push(...fixedSessions);
 
     // Add full sessions
     // const unplaced = getFullSessions(courses);
