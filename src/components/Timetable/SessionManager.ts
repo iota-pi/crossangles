@@ -3,7 +3,7 @@ import { SessionPlacement, SessionPlacementData } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
 import { SessionId, LinkedSession } from "../../state/Session";
 import { CourseMap } from "../../state/Course";
-import { sessionClashLength } from "../../timetable";
+import { sessionClashLength } from "../../timetable/getClashInfo";
 import { DropzonePlacement } from "./DropzonePlacement";
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
