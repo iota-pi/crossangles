@@ -36,6 +36,7 @@ export interface RootState extends TimetableState {
   meta: Meta,
   history: StateHistory,
   notice: Notice | null,
+  suggestionScore: number | null,
 }
 
 
@@ -66,4 +67,5 @@ export const baseState: RootState = {
     future: []
   },
   notice: null,
+  suggestionScore: null,
 };

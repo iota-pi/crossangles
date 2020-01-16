@@ -237,11 +237,17 @@ class CourseSelection extends Component<Props, State> {
       // Displace some classes and display a warning
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
     } else {
-      sessionManager.update(newTimetable.timetable, fixedSessions);
+      sessionManager.update(newTimetable.timetable, fixedSessions, newTimetable.score);
       await this.props.dispatch(updateTimetable(sessionManager.data));
 
-      if (newTimetable.unplaced.length > 0) {
+      if (newTimetable.unplaced && newTimetable.unplaced.length > 0) {
         await this.props.dispatch(setNotice('Some classes have been displaced'));
+      }
+
+      // If we had some fixed session constraints, try calculate a more optimal
+      // timetable (if there is one)
+      if (fixedSessions.length > 0) {
+        this.recommendTimetable(sessionManager);
       }
     }
   }
@@ -252,6 +258,24 @@ class CourseSelection extends Component<Props, State> {
 
   private handleClearEditing = () => {
     this.setState({ editingCourse: null });
+  }
+
+  private recommendTimetable = async (sessionManager: SessionManager) => {
+    const newTimetable = doTimetableSearch({
+      fixedSessions: [],
+      courses: this.allCourses,
+      events: this.props.events,
+      webStreams: this.props.webStreams,
+      options: this.props.options,
+    });
+
+    if (newTimetable === null) {
+      console.error('Could not generate a timetable without any fixed sessions...');
+    } else {
+      sessionManager = new SessionManager(sessionManager);
+      sessionManager.update(newTimetable.timetable, [],  newTimetable.score);
+      await this.props.dispatch(updateTimetable(sessionManager.data));
+    }
   }
 }
 

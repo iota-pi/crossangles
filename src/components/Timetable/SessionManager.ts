@@ -12,12 +12,14 @@ export interface SessionManagerData {
   map: SessionManagerEntriesData,
   order: SessionId[],
   version: number,
+  score: number,
 }
 
 export class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
   private _order: SessionId[];
   private _version: number;
+  private _score: number;
   private _changing: number;
   callback: ((timetable: SessionManagerData) => void) | undefined;
 
@@ -26,11 +28,13 @@ export class SessionManager {
       this.map = new Map(base.map);
       this._order = base._order.slice();
       this._version = base._version;
+      this._score = base._score;
       this._changing = 0;
     } else {
       this.map = new Map<SessionId, SessionPlacement>();
       this._order = [];
       this._version = 0;
+      this._score = 0;
       this._changing = 0;
     }
   }
@@ -44,6 +48,7 @@ export class SessionManager {
       map: mapData,
       order: this.order.slice(),
       version: this.version,
+      score: this._score,
     };
   }
 
@@ -55,11 +60,17 @@ export class SessionManager {
     }));
     sm._order = data.order;
     sm._version = data.version;
+    sm._score = data.score;
     return sm;
   }
 
   get version () {
     return this._version;
+  }
+
+  get score () {
+    // Returns this timetable's score as of when it was generated
+    return this._score;
   }
 
   get order () {
@@ -348,11 +359,16 @@ export class SessionManager {
   update (
     newSessions: LinkedSession[],
     fixedSessions: LinkedSession[],
+    score: number,
   ) {
     this.startChange();
 
+    // TODO: calculate fixed sessions from newSessions via s.get(id).touched
+    // Get placements of fixed sessions
     const fixedSessionIds = fixedSessions.map(s => s.id);
     const fixedPlacements = fixedSessionIds.map(id => this.get(id));
+
+    // Clear all placements (NB: must be done after fetching fixed session placements)
     this.clear();
 
     for (let session of newSessions) {
@@ -365,6 +381,9 @@ export class SessionManager {
       }
       this.set(session.id, placement);
     }
+
+    this._score = score;
+
     this.stopChange();
   }
 

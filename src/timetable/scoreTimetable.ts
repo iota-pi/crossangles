@@ -4,6 +4,8 @@ import TimetableScorerCache from './TimetableScorerCache';
 import { LinkedSession } from '../state/Session';
 import { LinkedStream } from '../state/Stream';
 
+export const MIN_SCORE_TO_PROMPT = 50;
+
 export interface TimetableScore {
   score: number,
   timetable: LinkedSession[],

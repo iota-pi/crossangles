@@ -3,7 +3,7 @@ import { meta } from "./meta";
 import { RootState, baseState, TimetableState, StateHistory } from '../state';
 import { courses, chosen, custom, additional } from './courses';
 import { events, options } from './commitments';
-import { timetable } from './timetable';
+import { timetable, suggestionScore } from './timetable';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
@@ -20,6 +20,7 @@ const basicReducer = combineReducers<NoHistoryState>({
   events,
   options,
   timetable,
+  suggestionScore,
   colours,
   webStreams,
   notice,

@@ -2,15 +2,21 @@ import { Component, TimetableScorer, getClashInfo, GeneticSearch } from '.';
 import { LinkedSession } from '../state/Session';
 import { LinkedStream } from '../state/Stream';
 
+export interface TimetableSearchResult {
+  timetable: LinkedSession[],
+  score: number,
+  unplaced?: LinkedSession[],
+}
+
 class TimetableSearch {
-  private cache = new Map<string, LinkedSession[]>();
+  private cache = new Map<string, TimetableSearchResult>();
 
   search (
     components: Component[],
     fixedSessions: LinkedSession[],
     maxTime = 300,
     maxSpawn = 3,
-  ): LinkedSession[] {
+  ): TimetableSearchResult {
     const componentIds = components.map(c => c.id).join('~~~');
     const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
     const cacheKey = `${componentIds}//${fixedSessionsIds}`;
@@ -43,9 +49,11 @@ class TimetableSearch {
     const best = results.sort((a, b) => b.score - a.score)[0];
 
     // Return best result as list of sessions
-    const sessions = ([] as LinkedSession[]).concat(...best.values.map(s => s.sessions));
-    this.cache.set(cacheKey, sessions);
-    return sessions;
+    const timetable = ([] as LinkedSession[]).concat(...best.values.map(s => s.sessions));
+    const score = best.score;
+    const result = { timetable, score };
+    this.cache.set(cacheKey, result);
+    return result;
   }
 }
 

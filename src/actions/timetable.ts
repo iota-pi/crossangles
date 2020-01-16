@@ -1,8 +1,8 @@
 import { CBSEvent } from '../state';
-import { search } from '../timetable/timetableSearch';
+import { search, TimetableSearchResult } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
-import { SessionData, LinkedSession } from '../state/Session';
+import { LinkedSession } from '../state/Session';
 import { CourseData, CourseId } from '../state/Course';
 import { Options } from '../state/Options';
 import { UserAction } from '.';
@@ -10,8 +10,14 @@ import { UserAction } from '.';
 
 export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER';
 export interface SessionManagerAction extends UserAction {
-  type: typeof UPDATE_SESSION_MANAGER;
-  sessionManager: SessionManagerData;
+  type: typeof UPDATE_SESSION_MANAGER,
+  sessionManager: SessionManagerData,
+}
+
+export const UPDATE_SUGGESTED_TIMETABLE = 'UPDATE_SUGGESTED_TIMETABLE';
+export interface SuggestionAction extends UserAction {
+  type: typeof UPDATE_SUGGESTED_TIMETABLE,
+  score: number | null,
 }
 
 export interface UpdateTimetableConfig {
@@ -20,11 +26,6 @@ export interface UpdateTimetableConfig {
   events: CBSEvent[],
   webStreams: CourseId[],
   options: Options,
-}
-
-export interface TimetableSearchResult {
-  unplaced: SessionData[],
-  timetable: LinkedSession[],
 }
 
 
@@ -55,16 +56,16 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   try {
     // Search for a new timetable, scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered 'unplaced'
-    const timetable = search(components, fixedSessions);
+    const result = search(components, fixedSessions);
 
     // Add fixed sessions
-    timetable.push(...fixedSessions);
+    result.timetable.push(...fixedSessions);
 
     // Add full sessions
     // const unplaced = getFullSessions(courses);
     // timetable.push(...unplaced);
 
-    return { timetable, unplaced: [] };
+    return { ...result, unplaced: [] };
   } catch (err) {
     console.error(err);
     return null;

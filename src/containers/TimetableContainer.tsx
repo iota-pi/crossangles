@@ -21,6 +21,7 @@ import SessionManager, { SessionManagerData } from '../components/Timetable/Sess
 import { updateTimetable, doTimetableSearch, setNotice } from '../actions';
 import { ThunkDispatch } from 'redux-thunk';
 import { undoTimetable, redoTimetable } from '../actions/history';
+import { MIN_SCORE_TO_PROMPT } from '../timetable';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -42,6 +43,7 @@ export interface StateProps {
   webStreams: CourseId[],
   timetableData: SessionManagerData,
   timetableHistory: StateHistory,
+  suggestionScore: number | null,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -118,10 +120,10 @@ class TimetableContainer extends PureComponent<Props> {
       await this.props.dispatch(setNotice('There was a problem generating a timetable'));
     } else {
       const sessionManager = new SessionManager(this.state.timetable);
-      sessionManager.update(newTimetable.timetable, []);
+      sessionManager.update(newTimetable.timetable, [], newTimetable.score);
       await this.props.dispatch(updateTimetable(sessionManager.data));
 
-      if (newTimetable.unplaced.length > 0) {
+      if (newTimetable.unplaced && newTimetable.unplaced.length > 0) {
         await this.props.dispatch(setNotice('Some classes have been displaced'));
       }
     }
@@ -141,6 +143,22 @@ class TimetableContainer extends PureComponent<Props> {
     // Get all streams of chosen courses
     return this.allCourses.flatMap(c => c.streams.map(s => linkStream(c, s)));
   }
+
+  private hasSuggestion = () => {
+    const { suggestionScore } = this.props;
+    if (suggestionScore !== null) {
+      const scoreDiff = suggestionScore - this.state.timetable.score;
+      return scoreDiff > MIN_SCORE_TO_PROMPT;
+    }
+
+    return false;
+  }
+
+  private takeSuggestion = async () => {
+    if (this.props.suggestionScore !== null) {
+      await this.handleUpdate();
+    }
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -158,6 +176,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     webStreams: state.webStreams,
     timetableData: state.timetable,
     timetableHistory: state.history,
+    suggestionScore: state.suggestionScore,
   };
 }
 
