@@ -55,9 +55,9 @@ const emptiestStream = (streams: StreamData[]) => {
 export const parseStream = (
   component: string,
   section: string,
+  status: string,
   enrolString: string,
   timeString: string,
-  status: string,
 ): StreamData | null => {
   if (component === 'CRS') {
     return null;
