@@ -67,6 +67,7 @@ class TimetableContainer extends PureComponent<Props> {
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
+          shouldPulseUpdate={this.hasSuggestion()}
         />
 
         <TimetableTable
@@ -89,7 +90,7 @@ class TimetableContainer extends PureComponent<Props> {
       // TODO: is this going to be too slow?
       const { timetableData, courses } = props;
       timetable = SessionManager.from(timetableData, courses);
-      timetable.callback = (data) => handleUpdate(data, props.dispatch);
+      timetable.callback = (data) => handleTimetableCallback(data, props.dispatch);
     }
 
     return {
@@ -154,11 +155,6 @@ class TimetableContainer extends PureComponent<Props> {
     return false;
   }
 
-  private takeSuggestion = async () => {
-    if (this.props.suggestionScore !== null) {
-      await this.handleUpdate();
-    }
-  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -180,7 +176,10 @@ const mapStateToProps = (state: RootState): StateProps => {
   };
 }
 
-const handleUpdate = (timetable: SessionManagerData, dispatch: ThunkDispatch<{}, {}, any>) => {
+const handleTimetableCallback = (
+  timetable: SessionManagerData,
+  dispatch: ThunkDispatch<{}, {}, any>
+) => {
   dispatch(updateTimetable(timetable));
 }
 

@@ -15,6 +15,7 @@ import {
   addCustom,
   removeCustom,
   updateCustom,
+  setSuggestionScore,
 } from '../actions';
 import { updateTimetable } from '../actions';
 import { WithDispatch } from '../typeHelpers';
@@ -269,12 +270,8 @@ class CourseSelection extends Component<Props, State> {
       options: this.props.options,
     });
 
-    if (newTimetable === null) {
-      console.error('Could not generate a timetable without any fixed sessions...');
-    } else {
-      sessionManager = new SessionManager(sessionManager);
-      sessionManager.update(newTimetable.timetable, [],  newTimetable.score);
-      await this.props.dispatch(updateTimetable(sessionManager.data));
+    if (newTimetable !== null) {
+      await this.props.dispatch(setSuggestionScore(newTimetable.score));
     }
   }
 }

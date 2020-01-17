@@ -90,3 +90,11 @@ export function updateTimetable (newTimetable: SessionManagerData): SessionManag
     isUser: true,
   }
 }
+
+export function setSuggestionScore (score: number): SuggestionAction {
+  return {
+    type: UPDATE_SUGGESTED_TIMETABLE,
+    score,
+    isUser: true,
+  }
+}
