@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
@@ -23,44 +23,46 @@ export interface Props extends WithStyles<typeof styles> {
   onUpdate?: () => void,
 }
 
-class TimetableControls extends PureComponent<Props> {
-  render() {
-    const classes = this.props.classes;
-
-    return (
-      <Toolbar className={classes.root}>
-        {this.props.onUndo && (
-          <IconButton
-            onClick={this.props.onUndo}
-            color="primary"
-            disabled={this.props.history.past.length === 0}
-            data-cy="undo-button"
-          >
-            <Undo />
-          </IconButton>
-        )}
-        {this.props.onRedo && (
-          <IconButton
-            onClick={this.props.onRedo}
-            color="primary"
-            disabled={this.props.history.future.length === 0}
-            data-cy="redo-button"
-          >
-            <Redo />
-          </IconButton>
-        )}
-        {this.props.onUpdate && (
-          <IconButton
-            onClick={this.props.onUpdate}
-            color="primary"
-            data-cy="update-button"
-          >
-            <Refresh />
-          </IconButton>
-        )}
-      </Toolbar>
-    )
-  }
+export const TimetableControls = ({
+  classes,
+  history,
+  onUndo,
+  onRedo,
+  onUpdate,
+}: Props) => {
+  return (
+    <Toolbar className={classes.root}>
+      {onUndo && (
+        <IconButton
+          onClick={onUndo}
+          color="primary"
+          disabled={history.past.length === 0}
+          data-cy="undo-button"
+        >
+          <Undo />
+        </IconButton>
+      )}
+      {onRedo && (
+        <IconButton
+          onClick={onRedo}
+          color="primary"
+          disabled={history.future.length === 0}
+          data-cy="redo-button"
+        >
+          <Redo />
+        </IconButton>
+      )}
+      {onUpdate && (
+        <IconButton
+          onClick={onUpdate}
+          color="primary"
+          data-cy="update-button"
+        >
+          <Refresh />
+        </IconButton>
+      )}
+    </Toolbar>
+  )
 }
 
 export default withStyles(styles)(TimetableControls);
