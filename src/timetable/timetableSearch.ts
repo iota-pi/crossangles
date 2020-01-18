@@ -14,7 +14,7 @@ class TimetableSearch {
   search (
     components: Component[],
     fixedSessions: LinkedSession[],
-    maxTime = 300,
+    maxTime = 500,
     maxSpawn = 3,
   ): TimetableSearchResult {
     const componentIds = components.map(c => c.id).join('~~~');
