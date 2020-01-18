@@ -10,6 +10,7 @@ export interface CourseData {
   streams: StreamData[],
   term?: string | null,
   isCustom?: boolean,
+  isAdditional?: boolean,
 }
 
 export interface CourseMap {

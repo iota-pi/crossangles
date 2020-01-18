@@ -11,6 +11,7 @@ export function courses (
       const allCourses: CourseMap = {};
 
       // Add in previously existing custom courses
+      // TODO: is this necessary?
       for (const [id, course] of Object.entries(state)) {
         if (course.isCustom) {
           allCourses[id] = course;

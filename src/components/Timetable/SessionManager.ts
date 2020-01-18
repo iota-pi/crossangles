@@ -83,14 +83,23 @@ export class SessionManager {
   }
 
   getFixedSessions (allCourses: CourseData[], events: CBSEvent[]) {
-    const sessions = this.orderSessions;
-    const touchedSessions = sessions.filter(s => this.get(s.id).touched);
-
     const allCourseIds = allCourses.map(c => getCourseId(c));
-    const filteredByCourses = touchedSessions.filter(s => allCourseIds.includes(getCourseId(s.course)));
-    const filteredByEvents = filteredByCourses.filter(s => !s.isEvent || events.includes(s.stream.component));
+    const touchedSessions = this.orderSessions.filter(s => this.get(s.id).touched);
 
-    return filteredByEvents;
+    // Filter by included courses and events
+    const fixedSessions = touchedSessions.filter(session => {
+      if (session.course.isAdditional && !events.includes(session.stream.component)) {
+        return false;
+      }
+
+      if (!allCourseIds.includes(getCourseId(session.course))) {
+        return false;
+      }
+
+      return true;
+    });
+
+    return fixedSessions;
   }
 
   getOrder (sessionId: SessionId) {

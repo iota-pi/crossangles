@@ -14,7 +14,6 @@ export interface SessionCommon {
   canClash?: boolean,
   location?: string,
   weeks?: string,
-  isEvent?: boolean,
 }
 
 export interface SessionData extends SessionCommon {
