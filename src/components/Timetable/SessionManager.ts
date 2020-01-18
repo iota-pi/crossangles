@@ -402,6 +402,8 @@ export class SessionManager {
 
     this._score = score;
 
+    this.updateClashDepths();
+
     this.stopChange();
   }
 
