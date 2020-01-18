@@ -254,16 +254,6 @@ describe('SessionManager basic functionality', () => {
     expect(s.version).toBe(v + 1);
   })
 
-  test('can touch a session', () => {
-    const s = new SessionManager();
-    const p = { touch: jest.fn() };
-    s.set('a', p);
-    const v = s.version;
-    s.touch('a');
-    expect(p.touch).toHaveBeenCalledTimes(1);
-    expect(s.version).toBe(v);
-  })
-
   test('can snap all sessions in a stream', () => {
     const s = new SessionManager();
     const sessions = [
@@ -425,19 +415,20 @@ describe('constructor, data, and from', () => {
 
 describe('snapSessionTo', () => {
   const oldSessions = [
-    { id: 'a-0' },
+    { id: 'a-0', stream: { id: 'a' } },
     { id: 'b-0' },
   ];
   const newSessions = [
-    { id: 'c-0' },
+    { id: 'c-0', stream: { id: 'c' } },
     { id: 'd-0' },
   ];
   let s;
-  const mockFactory = { create: jest.fn().mockReturnValue({ index: 0 }) };
 
   beforeEach(() => {
     s = new SessionManager();
-    s.set('a-0', new SessionPlacement({ stream: { sessions: oldSessions }, }));
+    s.set('a-0', new SessionPlacement({
+      stream: { sessions: oldSessions, id: 'a' },
+    }));
     s.set('b-0', new SessionPlacement({}));
   })
 
@@ -446,7 +437,6 @@ describe('snapSessionTo', () => {
     s.snapSessionTo(
       'a-0',
       newSessions,
-      mockFactory,
     );
 
     expect(s.version).toBe(v + 1);
@@ -474,7 +464,7 @@ describe('snapSessionTo', () => {
     expect(s.get('d-0').touched).toBe(true);
   })
 
-  test('touches sessions if unchanged', () => {
+  test('doesn\'t touch sessions if unchanged', () => {
     s.snapSessionTo(
       'a-0',
       oldSessions,

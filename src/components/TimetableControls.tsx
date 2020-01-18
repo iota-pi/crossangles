@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
@@ -16,8 +16,11 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
+const PULSE_DELAY = 1000;
+
 export interface Props extends WithStyles<typeof styles> {
   history: StateHistory,
+  shouldPulseUpdate?: boolean,
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
@@ -29,7 +32,40 @@ export const TimetableControls = ({
   onUndo,
   onRedo,
   onUpdate,
+  shouldPulseUpdate,
 }: Props) => {
+  const [ doPulse, setDoPulse ] = useState(false);
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const updateButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (shouldPulseUpdate) {
+      if (pulseTimer.current === null) {
+        setDoPulse(true);
+        pulseTimer.current = setTimeout(() => {
+          pulseTimer.current = null;
+        }, PULSE_DELAY);
+      } else {
+        clearTimeout(pulseTimer.current);
+        pulseTimer.current = null;
+      }
+    }
+  }, [shouldPulseUpdate]);
+  useEffect(() => {
+    if (pulseTimer.current) {
+      clearTimeout(pulseTimer.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (doPulse) {
+      if (updateButton.current) {
+        updateButton.current.click();
+      }
+      setDoPulse(false);
+    }
+  }, [doPulse])
+
   return (
     <Toolbar className={classes.root}>
       {onUndo && (
@@ -54,9 +90,10 @@ export const TimetableControls = ({
       )}
       {onUpdate && (
         <IconButton
-          onClick={onUpdate}
+          onClick={doPulse ? undefined : onUpdate}
           color="primary"
           data-cy="update-button"
+          ref={updateButton}
         >
           <Refresh />
         </IconButton>

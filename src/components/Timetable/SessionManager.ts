@@ -195,21 +195,16 @@ export class SessionManager {
     this.stopChange(shouldCallback);
   }
 
-  raise (sessionId: SessionId): void {
+  private raise (sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.raise();
     this.next();
   }
 
-  lower (sessionId: SessionId): void {
+  private lower (sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.lower();
     this.next();
-  }
-
-  touch (sessionId: SessionId): void {
-    const session = this.get(sessionId);
-    session.touch();
   }
 
   snapStream (sessionId: SessionId): void {
@@ -262,21 +257,23 @@ export class SessionManager {
     this.next();
   }
 
-  snapSessionTo (
+  private snapSessionTo (
     sessionId: SessionId,
     nextSessions: LinkedSession[],
   ): void {
     this.startChange();
 
+    // Get the session which initiated this move (i.e. the dragged/dropped session)
+    const initiator = this.get(sessionId).session;
+    const initiatorIndex = initiator.index;
+
     // Mark new stream as touched iff stream has changed
     let shouldTouch = false;
-    const nextSessionIds = nextSessions.map(s => s.id);
-    if (sessionId && !nextSessionIds.includes(sessionId)) {
+    const nextStreamId = nextSessions[0].stream.id;
+    const prevStreamId = initiator.stream.id;
+    if (nextStreamId !== prevStreamId) {
       shouldTouch = true;
     }
-
-    // Get the index of the session which initiated this move (i.e. the dragged/dropped session)
-    const initiatingIndex = this.get(sessionId).session.index;
 
     // Remove old session placements
     this.removeStream(sessionId);
@@ -287,12 +284,12 @@ export class SessionManager {
       const newPlacement = new SessionPlacement(session);
       this.set(session.id, newPlacement);
 
-      if (session.index === initiatingIndex) {
+      if (session.index === initiatorIndex) {
         replacementSession = session;
       }
 
       if (shouldTouch) {
-        this.touch(session.id);
+        newPlacement.touch();
       }
     }
 
