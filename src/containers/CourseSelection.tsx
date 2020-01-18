@@ -212,19 +212,8 @@ class CourseSelection extends Component<Props, State> {
     return SessionManager.from(this.props.timetable, this.props.courses);
   }
 
-  private getFixedSessions = (sessionManager: SessionManager) => {
-    const sessions = sessionManager.orderSessions;
-    const touchedSessions = sessions.filter(s => sessionManager.get(s.id).touched);
-
-    const allCourseIds = this.allCourses.map(c => getCourseId(c));
-    const filteredByCourses = touchedSessions.filter(s => allCourseIds.includes(getCourseId(s.course)));
-    const filteredByEvents = filteredByCourses.filter(s => this.props.events.includes(s.stream.component));
-
-    return filteredByEvents;
-  }
-
   private updateTimetable = async (sessionManager: SessionManager) => {
-    const fixedSessions = this.getFixedSessions(sessionManager);
+    const fixedSessions = sessionManager.getFixedSessions(this.allCourses, this.props.events);
 
     const newTimetable = doTimetableSearch({
       fixedSessions,

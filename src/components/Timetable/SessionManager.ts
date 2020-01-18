@@ -2,9 +2,10 @@ import { notUndefined } from "../../typeHelpers";
 import { SessionPlacement, SessionPlacementData } from "./SessionPlacement";
 import { Position } from "./timetableTypes";
 import { SessionId, LinkedSession } from "../../state/Session";
-import { CourseMap } from "../../state/Course";
+import { CourseMap, CourseData, getCourseId } from "../../state/Course";
 import { sessionClashLength } from "../../timetable/getClashInfo";
 import { DropzonePlacement } from "./DropzonePlacement";
+import { CBSEvent } from "../../state";
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
@@ -79,6 +80,17 @@ export class SessionManager {
 
   get orderSessions () {
     return this._order.map(sid => this.getSession(sid));
+  }
+
+  getFixedSessions (allCourses: CourseData[], events: CBSEvent[]) {
+    const sessions = this.orderSessions;
+    const touchedSessions = sessions.filter(s => this.get(s.id).touched);
+
+    const allCourseIds = allCourses.map(c => getCourseId(c));
+    const filteredByCourses = touchedSessions.filter(s => allCourseIds.includes(getCourseId(s.course)));
+    const filteredByEvents = filteredByCourses.filter(s => !s.isEvent || events.includes(s.stream.component));
+
+    return filteredByEvents;
   }
 
   getOrder (sessionId: SessionId) {
