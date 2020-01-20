@@ -6,6 +6,7 @@ import { CourseMap, CourseData, getCourseId } from "../../state/Course";
 import { sessionClashLength } from "../../timetable/getClashInfo";
 import { DropzonePlacement } from "./DropzonePlacement";
 import { CBSEvent } from "../../state";
+import { getSessionManagerScore } from "../../timetable/scoreSessionManager";
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
@@ -70,7 +71,6 @@ export class SessionManager {
   }
 
   get score () {
-    // Returns this timetable's score as of when it was generated
     return this._score;
   }
 
@@ -213,6 +213,9 @@ export class SessionManager {
     // Update clash depths
     this.updateClashDepths();
 
+    // Update timetable score
+    this.updateScore();
+
     this.stopChange(shouldCallback);
   }
 
@@ -276,6 +279,10 @@ export class SessionManager {
     const placement = this.get(sessionId);
     placement.clashDepth = depth;
     this.next();
+  }
+
+  private updateScore () {
+    this._score = getSessionManagerScore(this);
   }
 
   private snapSessionTo (
