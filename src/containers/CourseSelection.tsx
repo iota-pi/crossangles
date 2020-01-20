@@ -257,6 +257,10 @@ class CourseSelection extends Component<Props, State> {
       events: this.props.events,
       webStreams: this.props.webStreams,
       options: this.props.options,
+      maxSpawn: 1,
+      searchConfig: {
+        maxTime: 100,
+      },
     });
 
     if (newTimetable !== null) {
