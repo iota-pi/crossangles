@@ -25,7 +25,7 @@ export type GeneticSearchConfig<T> = GeneticSearchOptionalConfig & GeneticSearch
 
 const defaultConfig: Required<GeneticSearchOptionalConfig> = {
   maxTime: 500,
-  maxIterations: 10000,
+  maxIterations: 5000,
   checkIters: 10,
   initialParents: 100,
   maxParents: 20,

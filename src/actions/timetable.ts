@@ -6,6 +6,7 @@ import { LinkedSession } from '../state/Session';
 import { CourseData, CourseId } from '../state/Course';
 import { Options } from '../state/Options';
 import { UserAction } from '.';
+import { GeneticSearchOptionalConfig } from '../timetable';
 // import { getSessions } from '../state/Stream';
 
 export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER';
@@ -26,6 +27,8 @@ export interface UpdateTimetableConfig {
   events: CBSEvent[],
   webStreams: CourseId[],
   options: Options,
+  maxSpawn?: number,
+  searchConfig?: GeneticSearchOptionalConfig,
 }
 
 
@@ -36,6 +39,8 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
     events,
     webStreams,
     options,
+    maxSpawn,
+    searchConfig,
   } = config;
 
   // Group streams by course and component
@@ -56,7 +61,7 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   try {
     // Search for a new timetable, scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered 'unplaced'
-    const result = search(components, fixedSessions);
+    const result = search(components, fixedSessions, maxSpawn, searchConfig);
 
     // Add fixed sessions
     result.timetable.push(...fixedSessions);

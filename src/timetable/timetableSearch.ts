@@ -1,6 +1,7 @@
 import { Component, TimetableScorer, getClashInfo, GeneticSearch } from '.';
 import { LinkedSession } from '../state/Session';
 import { LinkedStream } from '../state/Stream';
+import { GeneticSearchOptionalConfig } from './GeneticSearch';
 
 export interface TimetableSearchResult {
   timetable: LinkedSession[],
@@ -14,8 +15,8 @@ class TimetableSearch {
   search (
     components: Component[],
     fixedSessions: LinkedSession[],
-    maxTime = 500,
     maxSpawn = 3,
+    config: GeneticSearchOptionalConfig = {},
   ): TimetableSearchResult {
     const componentIds = components.map(c => c.id).join('~~~');
     const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
@@ -33,12 +34,9 @@ class TimetableSearch {
     // TODO: could improve performance by spawning in multiple web workers
     const scorer = new TimetableScorer(clashInfo, fixedSessions);
     const searchers = new Array(maxSpawn).fill(0).map(_ => new GeneticSearch({
-      maxTime: maxTime / maxSpawn,
+      ...config,
+      maxTime: (config.maxTime || 500) / maxSpawn,
       scoreFunction: scorer.score.bind(scorer),
-      maxIterations: 5000,
-      initialParents: 100,
-      maxParents: 20,
-      biasTop: 5,
     }));
 
     // Break components into streams
