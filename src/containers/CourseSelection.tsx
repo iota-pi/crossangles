@@ -125,7 +125,7 @@ class CourseSelection extends Component<Props, State> {
     );
   }
 
-  private get allCourses () {
+  private get allChosenCourses () {
     return [
       ...this.props.chosen,
       ...this.props.custom,
@@ -213,11 +213,11 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private updateTimetable = async (sessionManager: SessionManager) => {
-    const fixedSessions = sessionManager.getFixedSessions(this.allCourses, this.props.events);
+    const fixedSessions = sessionManager.getFixedSessions(this.allChosenCourses, this.props.events);
 
     const newTimetable = doTimetableSearch({
       fixedSessions,
-      courses: this.allCourses,
+      courses: this.allChosenCourses,
       events: this.props.events,
       webStreams: this.props.webStreams,
       options: this.props.options,
@@ -237,7 +237,7 @@ class CourseSelection extends Component<Props, State> {
       // If we had some fixed session constraints, try calculate a more optimal
       // timetable (if there is one)
       if (fixedSessions.length > 0) {
-        this.recommendTimetable(sessionManager);
+        this.recommendTimetable();
       }
     }
   }
@@ -250,10 +250,10 @@ class CourseSelection extends Component<Props, State> {
     this.setState({ editingCourse: null });
   }
 
-  private recommendTimetable = async (sessionManager: SessionManager) => {
+  private recommendTimetable = async () => {
     const newTimetable = doTimetableSearch({
       fixedSessions: [],
-      courses: this.allCourses,
+      courses: this.allChosenCourses,
       events: this.props.events,
       webStreams: this.props.webStreams,
       options: this.props.options,
