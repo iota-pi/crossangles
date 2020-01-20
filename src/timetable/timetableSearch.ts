@@ -31,7 +31,7 @@ class TimetableSearch {
 
     // Set up scorer and searcher
     // TODO: could improve performance by spawning in multiple web workers
-    const scorer = new TimetableScorer(fixedSessions, clashInfo);
+    const scorer = new TimetableScorer(clashInfo, fixedSessions);
     const searchers = new Array(maxSpawn).fill(0).map(_ => new GeneticSearch({
       maxTime: maxTime / maxSpawn,
       scoreFunction: scorer.score.bind(scorer),

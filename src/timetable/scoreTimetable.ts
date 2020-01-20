@@ -4,8 +4,6 @@ import TimetableScorerCache from './TimetableScorerCache';
 import { LinkedSession } from '../state/Session';
 import { LinkedStream } from '../state/Stream';
 
-export const MIN_SCORE_TO_PROMPT = 50;
-
 export interface TimetableScore {
   score: number,
   timetable: LinkedSession[],
@@ -17,17 +15,19 @@ export class TimetableScorer {
   private fewestClashes: number;
   private cache: TimetableScorerCache<number>;
 
-  constructor (fixedSessions: LinkedSession[], clashInfo: ClashInfo) {
+  constructor (clashInfo: ClashInfo, fixedSessions: LinkedSession[]) {
     this.fixedSessions = fixedSessions;
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
     this.cache = new TimetableScorerCache();
   }
 
-  score (streams: LinkedStream[], indexes: number[]): number {
-    const cachedScore = this.cache.get(indexes);
-    if (cachedScore !== undefined) {
-      return cachedScore;
+  score (streams: LinkedStream[], cacheKey?: number[]): number {
+    if (cacheKey !== undefined) {
+      const cachedScore = this.cache.get(cacheKey);
+      if (cachedScore !== undefined) {
+        return cachedScore;
+      }
     }
 
     const clashes = countClashes(streams, this.clashInfo, this.fewestClashes);
@@ -46,7 +46,10 @@ export class TimetableScorer {
     score += scoreTimes(timetable);
     score += scoreDayLength(timetable);
 
-    this.cache.set(indexes, score);
+    if (cacheKey) {
+      this.cache.set(cacheKey, score);
+    }
+
     return score;
   }
 }
