@@ -18,10 +18,8 @@ import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { updateTimetable, doTimetableSearch, setNotice } from '../actions';
-import { ThunkDispatch } from 'redux-thunk';
+import { updateTimetable, doTimetableSearch, setNotice, setSuggestionScore } from '../actions';
 import { undoTimetable, redoTimetable } from '../actions/history';
-import { MIN_SCORE_TO_PROMPT } from '../timetable';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -67,7 +65,7 @@ class TimetableContainer extends PureComponent<Props> {
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
-          shouldPulseUpdate={this.hasSuggestion()}
+          improvementScore={this.suggestionImprovementScore}
         />
 
         <TimetableTable
@@ -90,12 +88,19 @@ class TimetableContainer extends PureComponent<Props> {
       // TODO: is this going to be too slow?
       const { timetableData, courses } = props;
       timetable = SessionManager.from(timetableData, courses);
-      timetable.callback = (data) => handleTimetableCallback(data, props.dispatch);
     }
 
     return {
       ...state,
       timetable,
+    }
+  }
+
+  componentDidUpdate () {
+    if (!this.state.timetable.callback) {
+      const timetable = new SessionManager(this.state.timetable);
+      timetable.callback = data => this.handleTimetableCallback(data);
+      this.setState({ timetable });
     }
   }
 
@@ -110,7 +115,7 @@ class TimetableContainer extends PureComponent<Props> {
   private handleUpdate = async () => {
     const newTimetable = doTimetableSearch({
       fixedSessions: [],
-      courses: this.allCourses,
+      courses: this.allChosenCourses,
       events: this.props.events,
       webStreams: this.props.webStreams,
       options: this.props.options,
@@ -130,31 +135,52 @@ class TimetableContainer extends PureComponent<Props> {
     }
   }
 
-  private get allCourses (): CourseData[] {
+  private recommendTimetable = async () => {
+    const newTimetable = doTimetableSearch({
+      fixedSessions: [],
+      courses: this.allChosenCourses,
+      events: this.props.events,
+      webStreams: this.props.webStreams,
+      options: this.props.options,
+      maxSpawn: 1,
+      searchConfig: {
+        maxTime: 100,
+      },
+    });
+
+    if (newTimetable !== null) {
+      await this.props.dispatch(setSuggestionScore(newTimetable.score));
+    }
+  }
+
+  private get allChosenCourses (): CourseData[] {
     const { chosen, custom, additional } = this.props;
 
     return chosen.concat(custom, additional);
   }
 
   private get chosenIds (): CourseId[] {
-    return this.allCourses.map(c => getCourseId(c));
+    return this.allChosenCourses.map(c => getCourseId(c));
   }
 
   private get timetableStreams (): LinkedStream[] {
     // Get all streams of chosen courses
-    return this.allCourses.flatMap(c => c.streams.map(s => linkStream(c, s)));
+    return this.allChosenCourses.flatMap(c => c.streams.map(s => linkStream(c, s)));
   }
 
-  private hasSuggestion = () => {
+  private get suggestionImprovementScore () {
     const { suggestionScore } = this.props;
     if (suggestionScore !== null) {
-      const scoreDiff = suggestionScore - this.state.timetable.score;
-      return scoreDiff > MIN_SCORE_TO_PROMPT;
+      return suggestionScore - this.state.timetable.score;
     }
 
-    return false;
+    return 0;
   }
 
+  private async handleTimetableCallback (timetable: SessionManagerData) {
+    await this.props.dispatch(updateTimetable(timetable));
+    this.recommendTimetable();
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -174,13 +200,6 @@ const mapStateToProps = (state: RootState): StateProps => {
     timetableHistory: state.history,
     suggestionScore: state.suggestionScore,
   };
-}
-
-const handleTimetableCallback = (
-  timetable: SessionManagerData,
-  dispatch: ThunkDispatch<{}, {}, any>
-) => {
-  dispatch(updateTimetable(timetable));
 }
 
 const connected = connect(mapStateToProps);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
@@ -10,17 +10,23 @@ import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 
 const styles = (theme: Theme) => createStyles({
-  root: {
-    // backgroundColor: theme.palette.primary.main,
-    // color: theme.palette.primary.contrastText,
+  primary: {
+    transition: 'color ease 0.3s',
+    color: theme.palette.primary.main,
+  },
+  amber: {
+    transition: 'color ease 0.3s',
+    color: theme.palette.warning.main,
+  },
+  red: {
+    transition: 'color ease 0.3s',
+    color: theme.palette.error.main,
   },
 });
 
-const PULSE_DELAY = 1000;
-
 export interface Props extends WithStyles<typeof styles> {
   history: StateHistory,
-  shouldPulseUpdate?: boolean,
+  improvementScore: number,
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
@@ -32,42 +38,19 @@ export const TimetableControls = ({
   onUndo,
   onRedo,
   onUpdate,
-  shouldPulseUpdate,
+  improvementScore,
 }: Props) => {
-  const [ doPulse, setDoPulse ] = useState(false);
-  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const updateButton = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (shouldPulseUpdate) {
-      if (pulseTimer.current === null) {
-        setDoPulse(true);
-        pulseTimer.current = setTimeout(() => {
-          pulseTimer.current = null;
-        }, PULSE_DELAY);
-      } else {
-        clearTimeout(pulseTimer.current);
-        pulseTimer.current = null;
-      }
+  let updateClass = classes.primary;
+  if (improvementScore > 100) {
+    if (improvementScore < 800) {
+      updateClass = classes.amber;
+    } else {
+      updateClass = classes.red;
     }
-  }, [shouldPulseUpdate]);
-  useEffect(() => {
-    if (pulseTimer.current) {
-      clearTimeout(pulseTimer.current);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (doPulse) {
-      if (updateButton.current) {
-        updateButton.current.click();
-      }
-      setDoPulse(false);
-    }
-  }, [doPulse])
+  }
 
   return (
-    <Toolbar className={classes.root}>
+    <Toolbar>
       {onUndo && (
         <IconButton
           onClick={onUndo}
@@ -90,10 +73,9 @@ export const TimetableControls = ({
       )}
       {onUpdate && (
         <IconButton
-          onClick={doPulse ? undefined : onUpdate}
-          color="primary"
+          onClick={onUpdate}
+          className={updateClass}
           data-cy="update-button"
-          ref={updateButton}
         >
           <Refresh />
         </IconButton>
