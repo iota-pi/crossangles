@@ -1,5 +1,5 @@
 import { CourseListAction, ADD_COURSE, SET_COURSE_DATA, CourseAction, REMOVE_COURSE, OtherAction, CustomAction, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM } from "../actions";
-import { CourseMap, CourseId, getCourseId, CBS_CODE } from "../state/Course";
+import { CourseMap, CourseId, getCourseId } from "../state/Course";
 import { baseState } from "../state";
 
 export function courses (
@@ -93,7 +93,7 @@ export function additional (
 ): CourseId[] {
   switch (action.type) {
     case SET_COURSE_DATA:
-      return action.courses.filter(c => c.code === CBS_CODE).map(c => getCourseId(c));
+      return action.courses.filter(c => c.isAdditional).map(c => getCourseId(c));
   }
 
   return state;

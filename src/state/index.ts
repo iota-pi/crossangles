@@ -1,5 +1,5 @@
-import { CourseId, CourseMap, CBS_CODE } from './Course';
-import { ColourMap, CBS_COLOUR } from './Colours';
+import { CourseId, CourseMap } from './Course';
+import { ColourMap } from './Colours';
 import { Options } from './Options';
 import { Notice } from './Notice';
 import { Meta } from './Meta';
@@ -41,7 +41,7 @@ export const baseTimetableState: TimetableState = {
   events: [],
   options: {},
   timetable: new SessionManager().data,
-  colours: { [CBS_CODE]: CBS_COLOUR },
+  colours: {},
   webStreams: [],
 }
 

@@ -11,8 +11,6 @@ export const COURSE_COLOURS: Colour[] = [
   '#E64A19',
 ];
 
-export const CBS_COLOUR: Colour = COURSE_COLOURS[2];
-
 export interface ColourMap {
   [course: string]: Colour,
 }

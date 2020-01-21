@@ -27,12 +27,12 @@ import createStyles from "@material-ui/core/styles/createStyles";
 
 // Components
 import Autocomplete from '../components/Autocomplete';
-import CourseDisplay from '../components/CourseList';
+import CourseList from '../components/CourseList';
 import GeneralOptions from '../components/GeneralOptions';
 import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';
 import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
-import { CourseMap, CourseData, CourseId, CBS_CODE, getCourseId } from '../state/Course';
+import { CourseMap, CourseData, CourseId, getCourseId } from '../state/Course';
 import { Options, OptionName } from '../state/Options';
 import { ColourMap, Colour } from '../state/Colours';
 import { ClassTime } from '../state/Stream';
@@ -99,8 +99,7 @@ class CourseSelection extends Component<Props, State> {
         </div>
 
         <div className={classes.spaceAbove}>
-          <CourseDisplay
-            cbs={this.props.courses[CBS_CODE]}
+          <CourseList
             chosen={this.props.chosen}
             custom={this.props.custom}
             additional={this.props.additional}

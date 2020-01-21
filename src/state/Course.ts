@@ -1,7 +1,5 @@
 import { StreamData, StreamId, getStreamId } from "./Stream";
 
-export const CBS_CODE: CourseId = 'CBS';
-
 export type CourseId = string;
 
 export interface CourseData {

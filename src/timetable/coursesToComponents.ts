@@ -41,8 +41,8 @@ const groupStreamsByComponent = (
   let streamGroups = new Map<string, LinkedStream[]>();
 
   for (let stream of course.streams) {
-    // Skip any CBS activities which have been deselected
-    if (course.code === 'CBS' && !events.includes(stream.component as AdditionalEvent)) {
+    // Skip any additional events which have been deselected
+    if (course.isAdditional && !events.includes(stream.component as AdditionalEvent)) {
       continue;
     }
 

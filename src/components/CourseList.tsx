@@ -18,7 +18,7 @@ import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
 import { notNull } from '../typeHelpers';
 import ColourPicker from './ColourPicker';
 import ColourControl from './Colour';
-import { CourseData, CourseId, getCourseId, CBS_CODE, hasWebStream } from '../state/Course';
+import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -46,7 +46,6 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  cbs: CourseData,
   chosen: CourseData[],
   custom: CourseData[],
   additional: CourseData[],
@@ -84,14 +83,14 @@ class CourseList extends PureComponent<Props, State> {
         {allCourses.map((course, i) => (
           <React.Fragment key={getCourseId(course)}>
             <Divider light />
-            {course.code !== CBS_CODE ? (
+            {!course.isAdditional ? (
               <CourseDisplay
                 {...this.props}
                 course={course}
                 onShowPopover={this.showPopover}
               />
             ) : (
-              <CBSCourseDisplay
+              <AdditionalCourseDisplay
                 {...this.props}
                 course={course}
                 onShowPopover={this.showPopover}
@@ -224,10 +223,9 @@ export const CourseDisplay = withStyles(styles)(({
   )
 });
 
-export const CBSCourseDisplay = withStyles(styles)(({
+export const AdditionalCourseDisplay = withStyles(styles)(({
   classes,
   course,
-  cbs,
   events,
   colours,
   onShowPopover,
@@ -263,7 +261,7 @@ export const CBSCourseDisplay = withStyles(styles)(({
 
       <ListItem className={classes.noVertPadding}>
         <AdditionalEvents
-          cbs={cbs}
+          course={course}
           events={events}
           onToggleEvent={onToggleEvent}
         />

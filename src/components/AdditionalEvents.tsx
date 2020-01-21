@@ -1,12 +1,10 @@
 import React from 'react';
-import { AdditionalEvent } from '../state';
-
-// Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { FormControlLabel, Checkbox, Grid } from '@material-ui/core';
 import { CourseData } from '../state/Course';
+import { AdditionalEvent } from '../state';
 
 const styles = (theme: Theme) => createStyles({
   lessSpaceAbove: {
@@ -18,18 +16,18 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  cbs: CourseData,
+  course: CourseData,
   events: AdditionalEvent[],
   onToggleEvent: (event: AdditionalEvent) => void,
 }
 
 export const AdditionalEvents = ({
-  cbs,
+  course,
   events,
   onToggleEvent,
   classes,
 }: Props) => {
-  const components = cbs.streams.map(s => s.component);
+  const components = course.streams.map(s => s.component);
   const eventList = components.filter((c, i) => components.indexOf(c) === i);
   const eventCount = eventList.length;
 
@@ -49,7 +47,7 @@ export const AdditionalEvents = ({
                 checked={events.includes(eventName)}
                 onChange={() => onToggleEvent(eventName)}
                 value={eventName}
-                data-cy={`cbs-event-${eventName}`}
+                data-cy={`event-${eventName}`}
               />
             }
             className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
