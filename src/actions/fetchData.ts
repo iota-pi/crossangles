@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Action, AnyAction } from 'redux';
 import { ThunkDispatch, ThunkAction } from "redux-thunk";
-import { Meta } from '../state';
+import { Meta } from '../state/Meta';
 import { CourseData } from '../state/Course';
 
 export const SET_COURSE_DATA = 'SET_COURSE_DATA';

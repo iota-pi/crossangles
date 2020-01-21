@@ -6,7 +6,7 @@ import { LinkedSession } from '../state/Session';
 import { CourseData, CourseId } from '../state/Course';
 import { Options } from '../state/Options';
 import { UserAction } from '.';
-import { GeneticSearchOptionalConfig } from '../timetable';
+import { GeneticSearchOptionalConfig } from '../timetable/GeneticSearch';
 // import { getSessions } from '../state/Stream';
 
 export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER';

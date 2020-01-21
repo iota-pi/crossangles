@@ -1,16 +1,9 @@
 import { CourseId, CourseMap, CBS_CODE } from './Course';
+import { ColourMap, CBS_COLOUR } from './Colours';
 import { Options } from './Options';
 import { Notice } from './Notice';
-import { ColourMap, CBS_COLOUR } from './Colours';
+import { Meta } from './Meta';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-
-export interface Meta {
-  term: number;
-  year: number;
-  updateDate: string;
-  updateTime: string;
-  signup: string;
-}
 
 export type CBSEvent = string;
 

@@ -1,7 +1,9 @@
-import { Component, TimetableScorer, getClashInfo, GeneticSearch } from '.';
-import { LinkedSession } from '../state/Session';
+import { TimetableScorer } from './scoreTimetable';
+import { getClashInfo } from './getClashInfo';
+import { GeneticSearch, GeneticSearchOptionalConfig } from './GeneticSearch';
+import { Component } from './coursesToComponents';
 import { LinkedStream } from '../state/Stream';
-import { GeneticSearchOptionalConfig } from './GeneticSearch';
+import { LinkedSession } from '../state/Session';
 
 export interface TimetableSearchResult {
   timetable: LinkedSession[],
