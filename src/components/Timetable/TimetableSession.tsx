@@ -2,12 +2,12 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { CBS_CODE, CourseData } from '../../state/Course';
 import { Position, Dimensions } from './timetableTypes';
 import { DraggableCore, DraggableData } from 'react-draggable';
-import { LinkedSession } from '../../state/Session';
+import { CourseData } from '../../state/Course';
 import { Options } from '../../state/Options';
 import { StreamData } from '../../state/Stream';
+import { LinkedSession } from '../../state/Session';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -168,7 +168,7 @@ class TimetableSession extends PureComponent<Props, State> {
   }
 
   private get isSpecialCourse (): boolean {
-    return this.course.code === CBS_CODE || this.course.isCustom || false;
+    return this.course.isAdditional || this.course.isCustom || false;
   }
 
   private get sessionTitle (): string {
