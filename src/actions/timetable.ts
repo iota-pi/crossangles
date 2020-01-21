@@ -1,4 +1,4 @@
-import { CBSEvent } from '../state';
+import { AdditionalEvent } from '../state';
 import { search, TimetableSearchResult } from '../timetable/timetableSearch';
 import { coursesToComponents } from '../timetable/coursesToComponents';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
@@ -24,7 +24,7 @@ export interface SuggestionAction extends UserAction {
 export interface UpdateTimetableConfig {
   fixedSessions: LinkedSession[];
   courses: CourseData[],
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   webStreams: CourseId[],
   options: Options,
   maxSpawn?: number,

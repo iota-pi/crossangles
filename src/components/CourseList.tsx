@@ -2,7 +2,7 @@ import React, { PureComponent, MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { CBSEvent } from '../state';
+import { AdditionalEvent } from '../state';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
-import CBSEvents from './CBSEvents';
+import AdditionalEvents from './AdditionalEvents';
 import WebStream from './WebStream';
 import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
 import { notNull } from '../typeHelpers';
@@ -50,12 +50,12 @@ export interface Props extends WithStyles<typeof styles> {
   chosen: CourseData[],
   custom: CourseData[],
   additional: CourseData[],
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   colours: ColourMap,
   webStreams: CourseId[],
   onEditCustomCourse: (course: CourseData) => void,
   onRemoveCourse: (course: CourseData) => void,
-  onToggleEvent: (event: CBSEvent) => void,
+  onToggleEvent: (event: AdditionalEvent) => void,
   onToggleWeb: (course: CourseData) => void,
   onColourChange: (course: CourseData, colour: Colour) => void,
 }
@@ -262,7 +262,7 @@ export const CBSCourseDisplay = withStyles(styles)(({
       </ListItem>
 
       <ListItem className={classes.noVertPadding}>
-        <CBSEvents
+        <AdditionalEvents
           cbs={cbs}
           events={events}
           onToggleEvent={onToggleEvent}

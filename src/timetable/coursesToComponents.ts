@@ -1,4 +1,4 @@
-import { CBSEvent } from '../state';
+import { AdditionalEvent } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { CourseData, CourseId, getCourseId } from '../state/Course';
 import { getSessions, getStreamId, LinkedStream, linkStream } from '../state/Stream';
@@ -14,7 +14,7 @@ export interface Component {
 
 export function coursesToComponents (
   courseList: CourseData[],
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   webStreams: CourseId[],
   fixedSessions: LinkedSession[],
   allowFull: boolean,
@@ -34,7 +34,7 @@ export function coursesToComponents (
 
 const groupStreamsByComponent = (
   course: CourseData,
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   webStreams: CourseId[],
   allowFull: boolean,
 ) => {
@@ -42,7 +42,7 @@ const groupStreamsByComponent = (
 
   for (let stream of course.streams) {
     // Skip any CBS activities which have been deselected
-    if (course.code === 'CBS' && !events.includes(stream.component as CBSEvent)) {
+    if (course.code === 'CBS' && !events.includes(stream.component as AdditionalEvent)) {
       continue;
     }
 

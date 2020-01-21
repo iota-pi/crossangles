@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { RootState, CBSEvent, StateHistory } from '../state';
+import { RootState, AdditionalEvent, StateHistory } from '../state';
 import { WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -35,7 +35,7 @@ export interface StateProps {
   chosen: CourseData[],
   custom: CourseData[],
   additional: CourseData[],
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   options: Options,
   colours: ColourMap,
   webStreams: CourseId[],

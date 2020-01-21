@@ -1,5 +1,5 @@
 import React from 'react';
-import { CBSEvent } from '../state';
+import { AdditionalEvent } from '../state';
 
 // Styles
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -19,11 +19,11 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   cbs: CourseData,
-  events: CBSEvent[],
-  onToggleEvent: (event: CBSEvent) => void,
+  events: AdditionalEvent[],
+  onToggleEvent: (event: AdditionalEvent) => void,
 }
 
-export const CBSEvents = ({
+export const AdditionalEvents = ({
   cbs,
   events,
   onToggleEvent,
@@ -61,4 +61,4 @@ export const CBSEvents = ({
   );
 }
 
-export default withStyles(styles)(CBSEvents);
+export default withStyles(styles)(AdditionalEvents);

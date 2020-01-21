@@ -5,7 +5,7 @@ import { SessionId, LinkedSession } from "../../state/Session";
 import { CourseMap, CourseData, getCourseId } from "../../state/Course";
 import { sessionClashLength } from "../../timetable/getClashInfo";
 import { DropzonePlacement } from "./DropzonePlacement";
-import { CBSEvent } from "../../state";
+import { AdditionalEvent } from "../../state";
 import { getSessionManagerScore } from "../../timetable/scoreSessionManager";
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
@@ -82,7 +82,7 @@ export class SessionManager {
     return this._order.map(sid => this.getSession(sid));
   }
 
-  getFixedSessions (allCourses: CourseData[], events: CBSEvent[]) {
+  getFixedSessions (allCourses: CourseData[], events: AdditionalEvent[]) {
     const allCourseIds = allCourses.map(c => getCourseId(c));
     const touchedSessions = this.orderSessions.filter(s => this.get(s.id).touched);
 

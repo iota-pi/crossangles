@@ -5,14 +5,14 @@ import { Notice } from './Notice';
 import { Meta } from './Meta';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 
-export type CBSEvent = string;
+export type AdditionalEvent = string;
 
 export interface TimetableState {
   courses: CourseMap,
   custom: CourseId[],
   additional: CourseId[],
   chosen: CourseId[],
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   options: Options,
   timetable: SessionManagerData,
   colours: ColourMap,

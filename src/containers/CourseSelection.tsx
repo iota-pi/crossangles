@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   RootState,
-  CBSEvent,
+  AdditionalEvent,
 } from '../state';
 import {
   addCourse,
@@ -57,7 +57,7 @@ export interface StateProps {
   chosen: CourseData[],
   custom: CourseData[],
   additional: CourseData[],
-  events: CBSEvent[],
+  events: AdditionalEvent[],
   options: Options,
   timetable: SessionManagerData,
   colours: ColourMap,
@@ -192,7 +192,7 @@ class CourseSelection extends Component<Props, State> {
     await this.updateTimetable(sessionManager);
   }
 
-  private toggleEvent = async (event: CBSEvent) => {
+  private toggleEvent = async (event: AdditionalEvent) => {
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleEvent(event));
     await this.updateTimetable(sessionManager);

@@ -1,4 +1,4 @@
-import { CBSEvent } from "../state";
+import { AdditionalEvent } from "../state";
 import { CourseData } from "../state/Course";
 import { OptionName } from "../state/Options";
 import { UserAction } from ".";
@@ -79,10 +79,10 @@ export function updateCustom (custom: CourseData): CustomAction {
 export const TOGGLE_EVENT = 'TOGGLE_EVENT';
 export interface EventAction extends UserAction {
   type: typeof TOGGLE_EVENT;
-  event: CBSEvent;
+  event: AdditionalEvent;
 }
 
-export function toggleEvent (event: CBSEvent): EventAction {
+export function toggleEvent (event: AdditionalEvent): EventAction {
   return {
     type: TOGGLE_EVENT,
     event,
