@@ -202,6 +202,7 @@ describe('SessionManager basic functionality', () => {
 
   test('can drop a session', () => {
     const s = new SessionManager();
+    const updateScore = jest.spyOn(s, 'updateScore').mockImplementation();
     const p1 = { drop: jest.fn(), session: { stream: { sessions: [] } } };
     const p2 = { drop: jest.fn() };
     s.set('a', p1);
@@ -210,11 +211,13 @@ describe('SessionManager basic functionality', () => {
     s.drop('a');
     expect(p1.drop).toHaveBeenCalledTimes(1);
     expect(p2.drop).not.toHaveBeenCalled();
+    expect(updateScore).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
 
   test('dropping lowers linked sessions', () => {
     const s = new SessionManager();
+    const updateScore = jest.spyOn(s, 'updateScore').mockImplementation();
     const sessions = [
       { id: 'a-0' },
       { id: 'a-1' },
@@ -231,6 +234,7 @@ describe('SessionManager basic functionality', () => {
     expect(p1.lower).not.toHaveBeenCalled();
     expect(p2.lower).toHaveBeenCalledTimes(1);
     expect(p3.lower).toHaveBeenCalledTimes(1);
+    expect(updateScore).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
 
