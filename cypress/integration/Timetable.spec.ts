@@ -236,7 +236,7 @@ context('Timetable controls', () => {
       .click()
 
     // Add the Bible talks
-    cy.dataCy('cbs-event-The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
       .click()
 
     // Should not be able to redo
@@ -246,14 +246,14 @@ context('Timetable controls', () => {
     // Undo adding the Bible talks
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('cbs-event-The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
     cy.dataCy('undo-button')
       .click()
     cy.dataCy('timetable-session')
       .should('not.contain.text', 'The Bible Talks')
-    cy.dataCy('cbs-event-The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
       .find('input[type=checkbox]')
       .should('not.be.checked')
 
@@ -264,7 +264,7 @@ context('Timetable controls', () => {
       .click()
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('cbs-event-The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
 
@@ -308,7 +308,7 @@ context('Timetable controls', () => {
       .click()
     cy.dataCy('timetable-session')
       .should('not.contain.text', 'The Bible Talks')
-    cy.dataCy('cbs-event-The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
       .find('input[type=checkbox]')
       .should('not.be.checked')
 

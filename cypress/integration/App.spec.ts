@@ -111,16 +111,16 @@ context('General app flow', () => {
       .should('contain.text', 'COMP2511 TLB')
   })
 
-  it('can add and remove CBS events', () => {
-    cy.dataCy('cbs-event-The Bible Talks')
+  it('can add and remove additional events', () => {
+    cy.dataCy('event-The Bible Talks')
       .click()
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('cbs-event-Bible Study')
+    cy.dataCy('event-Bible Study')
       .click()
-    cy.dataCy('cbs-event-Core Theology')
+    cy.dataCy('event-Core Theology')
       .click()
-    cy.dataCy('cbs-event-Core Training')
+    cy.dataCy('event-Core Training')
       .click()
 
     cy.dataCy('timetable-session')
@@ -129,9 +129,9 @@ context('General app flow', () => {
       .should('contain.text', 'Core Theology')
       .should('contain.text', 'Core Training')
 
-    cy.dataCy('cbs-event-The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
       .click()
-    cy.dataCy('cbs-event-Core Theology')
+    cy.dataCy('event-Core Theology')
       .click()
     cy.dataCy('timetable-session')
       .should('not.contain.text', 'The Bible Talks')
