@@ -322,6 +322,24 @@ context('Timetable controls', () => {
       .click()
     cy.get('[data-session^="custom_"][data-session$="T8-10"]')
       .should('exist')
+
+    // Refresh page
+    cy.reload()
+
+    // Cannot undo or redo
+    cy.dataCy('undo-button').should('be.disabled')
+    cy.dataCy('redo-button').should('be.disabled')
+
+    // Sessions exist
+    cy.get('[data-session^="custom_"][data-session$="T8-10"]')
+      .should('exist')
+    cy.dataCy('timetable-session')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('event-The Bible Talks')
+      .find('input[type=checkbox]')
+      .should('be.checked')
+    cy.get(`[data-session^="${TEST_CODE}"]`)
+      .should('have.length', 3)
   })
 
   it('can undo after dragging', () => {
