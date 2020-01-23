@@ -19,21 +19,21 @@ context('Timetable interaction', () => {
   })
 
   it('can do basic dragging and snapping', () => {
-    const session = `[data-session=${TEST_CODE}-F9-10]`
+    const session = `[data-session=${TEST_CODE}-TUT-F9-10]`
 
     cy.get(session)
       .expectData('snapped', 1)
       .should('have.css', 'z-index', '' + SESSION_BASE_Z)
     cy.get(session)
       .trigger('mousedown', { force: true })
-    cy.get(`[data-session=${TEST_CODE}-F9-10]`)
+    cy.get(`[data-session=${TEST_CODE}-TUT-F9-10]`)
       .expectData('snapped', 0)
       .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
     cy.dataCy('timetable-dropzone-F9')
       .should('exist')
     cy.get(session)
       .trigger('mouseup', { force: true })
-    cy.get(`[data-session=${TEST_CODE}-F9-10]`)
+    cy.get(`[data-session=${TEST_CODE}-TUT-F9-10]`)
       .expectData('snapped', 1)
       .should('have.css', 'z-index', '' + SESSION_BASE_Z)
     cy.dataCy('timetable-dropzone-F9')
@@ -56,7 +56,7 @@ context('Timetable interaction', () => {
   })
 
   it('prevents dragging outside of the timetable', () => {
-    cy.get(`[data-session=${TEST_CODE}-F9-10]`).as('session')
+    cy.get(`[data-session=${TEST_CODE}-TUT-F9-10]`).as('session')
 
     cy.get('@session')
       .dragAndDrop({ x: 0, y: 0, absolute: true })
@@ -78,8 +78,8 @@ context('Timetable interaction', () => {
   })
 
   it('raises and lowers linked sessions', () => {
-    cy.get(`[data-session=${TEST_CODE}-M10-11]`).as('session')
-    cy.get(`[data-session=${TEST_CODE}-T10-12]`).as('linked')
+    cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`).as('session')
+    cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`).as('linked')
 
     cy.get('@session')
       .dragStart()
@@ -108,19 +108,19 @@ context('Timetable interaction', () => {
   })
 
   it('moves linked sessions', () => {
-    cy.get(`[data-session=${TEST_CODE}-T10-12]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`)
       .dragAndDrop({ x: 0, y: -50 })
-    cy.get(`[data-session=${TEST_CODE}-M9-10]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-M9-10]`)
       .should('exist')
       .expectData('snapped', 1)
-    cy.get(`[data-session=${TEST_CODE}-T9-11]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-T9-11]`)
       .should('exist')
       .expectData('snapped', 1)
   })
 
   it('allows full classes', () => {
-    cy.get(`[data-session=${TEST_CODE}-M10-11]`).as('session')
-    cy.get(`[data-session=${TEST_CODE}-T10-12]`).as('linked')
+    cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`).as('session')
+    cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`).as('linked')
 
     cy.get('@session')
       .dragStart()
@@ -135,18 +135,18 @@ context('Timetable interaction', () => {
 
     cy.get('@session')
       .expectData('snapped', 1)
-    cy.get(`[data-session=${TEST_CODE}-M10-11]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`)
       .should('not.exist');
-    cy.get(`[data-session=${TEST_CODE}-M11-12]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-M11-12]`)
       .should('exist');
-    cy.get(`[data-session=${TEST_CODE}-T11-13]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-T11-13]`)
       .should('exist')
       .expectData('snapped', 1)
   })
 
   it('displaces full classes', () => {
-    cy.get(`[data-session=${TEST_CODE}-M10-11]`).as('session')
-    cy.get(`[data-session=${TEST_CODE}-T10-12]`).as('linked')
+    cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`).as('session')
+    cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`).as('linked')
 
     cy.get('input[value=includeFull]')
       .check()
@@ -155,19 +155,19 @@ context('Timetable interaction', () => {
     cy.get('input[value=includeFull]')
       .uncheck()
 
-    cy.get(`[data-session=${TEST_CODE}-M10-11]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`)
       .should('exist')
-    cy.get(`[data-session=${TEST_CODE}-M11-12]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-M11-12]`)
       .should('not.exist')
-    cy.get(`[data-session=${TEST_CODE}-T10-12]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`)
       .should('exist')
-    cy.get(`[data-session=${TEST_CODE}-T11-13]`)
+    cy.get(`[data-session=${TEST_CODE}-LEC-T11-13]`)
       .should('not.exist')
   })
 
   it('allows and handles clashes properly', () => {
-    cy.get(`[data-session=${TEST_CODE}-F9-10]` ).as('session1')
-    cy.get(`[data-session=${TEST_CODE}-M10-11]`).as('session2')
+    cy.get(`[data-session=${TEST_CODE}-TUT-F9-10]` ).as('session1')
+    cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`).as('session2')
 
     // Move session to clash
     cy.get('@session1')
@@ -348,7 +348,7 @@ context('Timetable controls', () => {
       .click()
 
     // Move the Bible talk
-    cy.get('[data-session="CBS-T12-13"]').as('session')
+    cy.get('[data-session="CBS-The Bible Talks-T12-13"]').as('session')
       .should('exist')
     cy.get('@session')
       .dragTo('W12')
@@ -359,9 +359,9 @@ context('Timetable controls', () => {
 
     // Undo and check position
     cy.dataCy('undo-button').click()
-    cy.get('[data-session="CBS-H12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-H12-13"]')
       .should('not.exist')
-    cy.get('[data-session="CBS-W12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-W12-13"]')
       .should('exist')
 
     // Should be able to redo
@@ -376,18 +376,18 @@ context('Timetable controls', () => {
 
     // Undo and check position
     cy.dataCy('undo-button').click()
-    cy.get('[data-session="CBS-T13-14"]')
+    cy.get('[data-session="CBS-The Bible Talks-T13-14"]')
       .should('not.exist')
-    cy.get('[data-session="CBS-W12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-W12-13"]')
       .should('exist')
     cy.dataCy('undo-button').click()
-    cy.get('[data-session="CBS-W12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-W12-13"]')
       .should('not.exist')
-    cy.get('[data-session="CBS-T12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-T12-13"]')
       .should('exist')
 
     cy.dataCy('undo-button').click()
-    cy.get('[data-session^="CBS-"]')
+    cy.get('[data-session^="CBS-The Bible Talks-"]')
       .should('not.exist')
   })
 })

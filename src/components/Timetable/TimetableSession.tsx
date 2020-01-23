@@ -105,6 +105,7 @@ class TimetableSession extends PureComponent<Props, State> {
       this.props.isSnapped ? classes.snapped : '',
       this.props.clashDepth > 0 ? classes.hovering : '',
     ].join(' ');
+    const { course, stream, day, start, end } = session;
 
     return (
       <DraggableCore
@@ -116,7 +117,7 @@ class TimetableSession extends PureComponent<Props, State> {
           className={rootClasses}
           style={this.styles}
           data-cy="timetable-session"
-          data-session={`${session.course.code}-${session.day}${session.start}-${session.end}`}
+          data-session={`${course.code}-${stream.component}-${day}${start}-${end}`}
           data-snapped={+this.props.isSnapped}
           data-dragging={+this.props.isDragging}
         >
