@@ -43,14 +43,17 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
     searchConfig,
   } = config;
 
+  // Remove fixed sessions from full streams
+  let includeFull = options.includeFull || false;
+  const fixed = fixedSessions.filter(s => includeFull || !s.stream.full);
+
   // Group streams by course and component
   // NB: removes full streams
-  let includeFull = options.includeFull || false;
   let components = coursesToComponents(
     courses,
     events,
     webStreams,
-    fixedSessions,
+    fixed,
     includeFull,
   );
 
@@ -58,23 +61,25 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
   // const fullSessions = components.filter(c => c.streams.length === 0);
   components = components.filter(c => c.streams.length > 0);
 
+  let result: ReturnType<typeof search>;
   try {
-    // Search for a new timetable, scoring should take fixed sessions into account too
-    // NB: full sessions don't matter here, since they can be considered 'unplaced'
-    const result = search(components, fixedSessions, maxSpawn, searchConfig);
-
-    // Add fixed sessions
-    result.timetable.push(...fixedSessions);
-
-    // Add full sessions
-    // const unplaced = getFullSessions(courses);
-    // timetable.push(...unplaced);
-
-    return { ...result, unplaced: [] };
+    // Search for a new timetable
+    // NB: scoring should take fixed sessions into account too
+    // NB: full sessions don't matter here, since they can be considered to be 'unplaced'
+    result = search(components, fixed, maxSpawn, searchConfig);
   } catch (err) {
     console.error(err);
     return null;
   }
+
+  // Add fixed sessions
+  result.timetable.push(...fixed);
+
+  // Add full sessions
+  // const unplaced = getFullSessions(courses);
+  // timetable.push(...unplaced);
+
+  return { ...result, unplaced: [] };
 }
 
 // function getFullSessions (courses: CourseData[]) {
