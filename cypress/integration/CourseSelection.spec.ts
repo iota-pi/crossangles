@@ -2,11 +2,16 @@
 
 context('Course selection', () => {
   beforeEach(() => {
+    cy.server()
+    cy.route('/data.json', 'fixture:data-s2-2019.json')
     cy.visit('/')
   })
 
   it ('can add a course by pressing enter', () => {
     // Add COMP1511
+    cy.get('#course-selection-autocomplete')
+      .click()
+    cy.dataCy('autocomplete-option')
     cy.get('#course-selection-autocomplete')
       .type('comp1511{enter}')
     cy.get('#course-display').should('contain.text', 'COMP1511')
