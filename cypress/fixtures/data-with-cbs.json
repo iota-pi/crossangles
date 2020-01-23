@@ -83,6 +83,7 @@
     {
       "code": "CBS",
       "name": "Campus Bible Study",
+      "isAdditional": true,
       "streams": [
         {
           "component": "The Bible Talks",

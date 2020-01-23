@@ -134,10 +134,11 @@ context('Timetable interaction', () => {
       .check()
 
     cy.get('@session')
-      .expectData('snapped', 0)
-      .dragStart()
-      .dragStop()
       .expectData('snapped', 1)
+    cy.get(`[data-session=${TEST_CODE}-M10-11]`)
+      .should('not.exist');
+    cy.get(`[data-session=${TEST_CODE}-M11-12]`)
+      .should('exist');
     cy.get(`[data-session=${TEST_CODE}-T11-13]`)
       .should('exist')
       .expectData('snapped', 1)
@@ -324,7 +325,51 @@ context('Timetable controls', () => {
   })
 
   it('can undo after dragging', () => {
-    // TODO
-    cy.get('absjdkhgsldkgjsdlkjg');
+    // Add TBT
+    cy.dataCy('event-The Bible Talks')
+      .click()
+
+    // Move the Bible talk
+    cy.get('[data-session="CBS-T12-13"]').as('session')
+      .should('exist')
+    cy.get('@session')
+      .dragTo('W12')
+      .dragTo('H12')
+
+    // Should not be able to redo
+    cy.dataCy('redo-button').should('be.disabled')
+
+    // Undo and check position
+    cy.dataCy('undo-button').click()
+    cy.get('[data-session="CBS-H12-13"]')
+      .should('not.exist')
+    cy.get('[data-session="CBS-W12-13"]')
+      .should('exist')
+
+    // Should be able to redo
+    cy.dataCy('redo-button').should('not.be.disabled')
+
+    // Move session again
+    cy.get('@session')
+      .dragTo('T13')
+
+    // Should not be able to redo
+    cy.dataCy('redo-button').should('be.disabled')
+
+    // Undo and check position
+    cy.dataCy('undo-button').click()
+    cy.get('[data-session="CBS-T13-14"]')
+      .should('not.exist')
+    cy.get('[data-session="CBS-W12-13"]')
+      .should('exist')
+    cy.dataCy('undo-button').click()
+    cy.get('[data-session="CBS-W12-13"]')
+      .should('not.exist')
+    cy.get('[data-session="CBS-T12-13"]')
+      .should('exist')
+
+    cy.dataCy('undo-button').click()
+    cy.get('[data-session^="CBS-"]')
+      .should('not.exist')
   })
 })
