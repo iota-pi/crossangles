@@ -101,7 +101,7 @@ export function updateTimetable (newTimetable: SessionManagerData): SessionManag
   }
 }
 
-export function setSuggestionScore (score: number): SuggestionAction {
+export function setSuggestionScore (score: number | null): SuggestionAction {
   return {
     type: UPDATE_SUGGESTED_TIMETABLE,
     score,

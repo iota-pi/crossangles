@@ -233,10 +233,12 @@ class CourseSelection extends Component<Props, State> {
         await this.props.dispatch(setNotice('Some classes have been displaced'));
       }
 
-      // If we had some fixed session constraints, try calculate a more optimal
-      // timetable (if there is one)
       if (fixedSessions.length > 0) {
+        // Try to calculate a more optimal timetable
         this.recommendTimetable();
+      } else {
+        // Clear outdated recommendation
+        await this.props.dispatch(setSuggestionScore(null));
       }
     }
   }
@@ -262,6 +264,7 @@ class CourseSelection extends Component<Props, State> {
       },
     });
 
+    console.log('suggestion', newTimetable);
     if (newTimetable !== null) {
       await this.props.dispatch(setSuggestionScore(newTimetable.score));
     }
