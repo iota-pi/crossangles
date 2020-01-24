@@ -28,6 +28,7 @@ export interface UpdateTimetableConfig {
   webStreams: CourseId[],
   options: Options,
   maxSpawn?: number,
+  ignoreCache?: boolean,
   searchConfig?: GeneticSearchOptionalConfig,
 }
 
@@ -40,6 +41,7 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
     webStreams,
     options,
     maxSpawn,
+    ignoreCache,
     searchConfig,
   } = config;
 
@@ -66,7 +68,7 @@ export function doTimetableSearch (config: UpdateTimetableConfig): TimetableSear
     // Search for a new timetable
     // NB: scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered to be 'unplaced'
-    result = search(components, fixed, maxSpawn, searchConfig);
+    result = search(components, fixed, maxSpawn, ignoreCache, searchConfig);
   } catch (err) {
     console.error(err);
     return null;

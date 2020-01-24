@@ -119,6 +119,7 @@ class TimetableContainer extends PureComponent<Props> {
       events: this.props.events,
       webStreams: this.props.webStreams,
       options: this.props.options,
+      ignoreCache: true,
     });
 
     if (newTimetable === null) {

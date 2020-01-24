@@ -18,14 +18,17 @@ class TimetableSearch {
     components: Component[],
     fixedSessions: LinkedSession[],
     maxSpawn = 3,
+    ignoreCache = false,
     config: GeneticSearchOptionalConfig = {},
   ): TimetableSearchResult {
     const componentIds = components.map(c => c.id).join('~~~');
     const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
     const cacheKey = `${componentIds}//${fixedSessionsIds}`;
-    const cachedTimetable = this.cache.get(cacheKey);
-    if (cachedTimetable !== undefined) {
-      return cachedTimetable;
+    if (!ignoreCache) {
+      const cachedTimetable = this.cache.get(cacheKey);
+      if (cachedTimetable !== undefined) {
+        return cachedTimetable;
+      }
     }
 
     // Pre-compute clash info and set of previous timetable's sessions
