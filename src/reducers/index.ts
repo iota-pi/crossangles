@@ -78,11 +78,45 @@ export const redo = (history: StateHistory): StateHistory => {
 
 export const push = (history: StateHistory, next: TimetableState): StateHistory => {
   const { past, present } = history;
+
+  if (noStateChange(present, next)) {
+    return history;
+  }
+
   return {
     past: [...past, present],
     present: next,
     future: [],
   };
+}
+
+const noStateChange = (current: TimetableState, next: TimetableState) => {
+  if (current.custom !== next.custom) {
+    return false;
+  }
+  if (current.additional !== next.additional) {
+    return false;
+  }
+  if (current.chosen !== next.chosen) {
+    return false;
+  }
+  if (current.events !== next.events) {
+    return false;
+  }
+  if (current.options !== next.options) {
+    return false;
+  }
+  if (current.colours !== next.colours) {
+    return false;
+  }
+  if (current.webStreams !== next.webStreams) {
+    return false;
+  }
+  if (JSON.stringify(current.timetable.map) !== JSON.stringify(next.timetable.map)) {
+    return false;
+  }
+
+  return true;
 }
 
 const rootReducer = (state: RootState | undefined, action: AnyAction): RootState => {
