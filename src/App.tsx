@@ -19,9 +19,9 @@ import { fetchData } from './actions/fetchData';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
-import { Snackbar } from '@material-ui/core';
 import { clearNotice } from './actions';
 import { Notice } from './state/Notice';
+import { NoticeDisplay } from './components/Notice';
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
@@ -72,21 +72,9 @@ class App extends Component<Props, State> {
             <TimetableContainer />
           </Container>
 
-          <Snackbar
-            key={this.props.notice ? this.props.notice.message : ''}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            open={this.props.notice !== null}
-            onClose={this.handleSnackbarClose}
-            ContentProps={{
-              'aria-describedby': 'message-id',
-            }}
-            autoHideDuration={6000}
-            message={(
-              <span id="message-id">
-                {this.props.notice ? this.props.notice.message : null}
-              </span>
-            )}
-            action={this.props.notice ? this.props.notice.actions : null}
+          <NoticeDisplay
+            notice={this.props.notice}
+            onSnackbarClose={this.handleSnackbarClose}
           />
         </div>
       </ThemeProvider>
