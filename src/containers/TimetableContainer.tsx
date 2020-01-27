@@ -18,8 +18,9 @@ import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { updateTimetable, doTimetableSearch, setNotice, setSuggestionScore } from '../actions';
+import { setTimetable } from '../actions';
 import { undoTimetable, redoTimetable } from '../actions/history';
+import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -113,45 +114,21 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   private handleUpdate = async () => {
-    const newTimetable = doTimetableSearch({
-      fixedSessions: [],
-      courses: this.allChosenCourses,
-      events: this.props.events,
-      webStreams: this.props.webStreams,
-      options: this.props.options,
-      ignoreCache: true,
-    });
-
-    if (newTimetable === null) {
-      // Displace some classes and display a warning
-      await this.props.dispatch(setNotice('There was a problem generating a timetable'));
-    } else {
-      const sessionManager = new SessionManager(this.state.timetable);
-      sessionManager.update(newTimetable.timetable, [], newTimetable.score);
-      await this.props.dispatch(updateTimetable(sessionManager.data));
-
-      if (newTimetable.unplaced && newTimetable.unplaced.length > 0) {
-        await this.props.dispatch(setNotice('Some classes have been displaced'));
-      }
-    }
+    const { chosen, additional, custom, events, options, webStreams } = this.props;
+    updateTimetable({
+      dispatch: this.props.dispatch,
+      sessionManager: new SessionManager(this.state.timetable),
+      selection: { chosen, additional, custom, events, options, webStreams },
+      cleanUpdate: true,
+    })
   }
 
   private recommendTimetable = async () => {
-    const newTimetable = doTimetableSearch({
-      fixedSessions: [],
-      courses: this.allChosenCourses,
-      events: this.props.events,
-      webStreams: this.props.webStreams,
-      options: this.props.options,
-      maxSpawn: 1,
-      searchConfig: {
-        maxTime: 100,
-      },
-    });
-
-    if (newTimetable !== null) {
-      await this.props.dispatch(setSuggestionScore(newTimetable.score));
-    }
+    const { chosen, additional, custom, events, options, webStreams } = this.props;
+    recommendTimetable(
+      this.props.dispatch,
+      { chosen, additional, custom, events, options, webStreams },
+    );
   }
 
   private get allChosenCourses (): CourseData[] {
@@ -179,7 +156,7 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   private async handleTimetableCallback (timetable: SessionManagerData) {
-    await this.props.dispatch(updateTimetable(timetable));
+    await this.props.dispatch(setTimetable(timetable));
     this.recommendTimetable();
   }
 }

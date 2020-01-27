@@ -82,7 +82,7 @@ export class SessionManager {
     return this._order.map(sid => this.getSession(sid));
   }
 
-  getFixedSessions (allCourses: CourseData[], events: AdditionalEvent[]) {
+  getTouchedSessions (allCourses: CourseData[], events: AdditionalEvent[]) {
     const allCourseIds = allCourses.map(c => getCourseId(c));
     const touchedSessions = this.orderSessions.filter(s => this.get(s.id).touched);
 
