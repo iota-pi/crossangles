@@ -1,10 +1,20 @@
 import React, { PureComponent, ChangeEvent } from 'react';
 
 // Styles
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
-import { Dialog, DialogTitle, Typography, IconButton, DialogContent, Button, DialogActions, TextField, MenuItem, Grid, InputAdornment } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import DialogContent from '@material-ui/core/DialogContent';
+import Button from '@material-ui/core/Button';
+import DialogActions from '@material-ui/core/DialogActions';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import EventIcon from '@material-ui/icons/Event';
 import CloseIcon from '@material-ui/icons/Close';
 import TimelapseIcon from '@material-ui/icons/Timelapse';

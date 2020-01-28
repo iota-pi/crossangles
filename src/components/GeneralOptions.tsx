@@ -2,10 +2,12 @@ import React, { PureComponent } from 'react';
 import { OptionList, Options, OptionName } from '../state/Options';
 
 // Styles
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
-import { Grid, FormControlLabel, Switch } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import Grid from '@material-ui/core/Grid';
 
 const styles = (theme: Theme) => createStyles({
   root: {
