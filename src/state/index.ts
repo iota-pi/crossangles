@@ -30,6 +30,7 @@ export interface RootState extends TimetableState {
   history: StateHistory,
   notice: Notice | null,
   suggestionScore: number | null,
+  hiddenEvents: CourseId[],
 }
 
 
@@ -61,4 +62,5 @@ export const baseState: RootState = {
   },
   notice: null,
   suggestionScore: null,
+  hiddenEvents: [],
 };

@@ -1,5 +1,5 @@
 import { AdditionalEvent } from "../state";
-import { CourseData } from "../state/Course";
+import { CourseData, CourseId } from "../state/Course";
 import { OptionName } from "../state/Options";
 import { UserAction } from ".";
 
@@ -86,6 +86,20 @@ export function toggleEvent (event: AdditionalEvent): EventAction {
   return {
     type: TOGGLE_EVENT,
     event,
+    isUser: true,
+  }
+}
+
+export const TOGGLE_SHOW_EVENTS = 'TOGGLE_SHOW_EVENTS';
+export interface ToggleShowEventsAction extends UserAction {
+  type: typeof TOGGLE_SHOW_EVENTS;
+  course: CourseId;
+}
+
+export function toggleShowEvents (courseId: CourseId): ToggleShowEventsAction {
+  return {
+    type: TOGGLE_SHOW_EVENTS,
+    course: courseId,
     isUser: true,
   }
 }

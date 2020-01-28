@@ -2,7 +2,7 @@ import { combineReducers, AnyAction } from 'redux';
 import { meta } from "./meta";
 import { RootState, baseState, TimetableState, StateHistory } from '../state';
 import { courses, chosen, custom, additional } from './courses';
-import { events, options } from './commitments';
+import { events, options, hiddenEvents } from './commitments';
 import { timetable, suggestionScore } from './timetable';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
@@ -24,6 +24,7 @@ const basicReducer = combineReducers<NoHistoryState>({
   colours,
   webStreams,
   notice,
+  hiddenEvents,
 });
 
 const removeHistory = (state: RootState): NoHistoryState | undefined => {
