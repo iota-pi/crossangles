@@ -12,8 +12,13 @@ context('Course selection', () => {
     cy.get('#course-selection-autocomplete')
       .click()
     cy.dataCy('autocomplete-option')
-    cy.get('#course-selection-autocomplete')
-      .type('comp1511{enter}')
+    cy.get('#course-selection-autocomplete input')
+      .type('comp1511')
+    cy.dataCy('autocomplete-option')
+      .should('have.length', 1)
+      .should('contain.text', 'COMP1511')
+    cy.get('#course-selection-autocomplete input')
+      .type('{enter}')
     cy.get('#course-display').should('contain.text', 'COMP1511')
   })
 
@@ -62,7 +67,7 @@ context('Course selection', () => {
     cy.dataCy('create-custom-event')
       .click()
     cy.dataCy('custom-event-name')
-      .type('A personal event name')
+      .type('abcd')
     cy.dataCy('custom-event-duration')
       .click()
     cy.dataCy('custom-event-duration-item')
@@ -97,7 +102,7 @@ context('Course selection', () => {
       .click()
 
     cy.get('#course-display')
-      .should('contain.text', 'A personal event name')
+      .should('contain.text', 'abcd')
 
     // Clicking add new event gives clean dialog
     cy.dataCy('create-custom-event')
@@ -123,9 +128,9 @@ context('Course selection', () => {
       .should('exist')
     cy.dataCy('custom-event-name')
       .find('input')
-      .should('have.value', 'A personal event name')
+      .should('have.value', 'abcd')
       .clear()
-      .type('New name for event')
+      .type('dcba')
     cy.dataCy('custom-event-duration')
       .find('input')
       .should('have.value', '2.5')
@@ -147,9 +152,8 @@ context('Course selection', () => {
       .click()
 
     cy.get('#course-display')
-      .should('not.contain.text', 'A personal event name')
-      .should('contain.text', 'New name for event')
-
+      .should('not.contain.text', 'abcd')
+      .should('contain.text', 'dcba')
 
     cy.dataCy('remove-course')
       .click()

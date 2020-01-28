@@ -13,6 +13,7 @@ import ValueContainer from './ValueContainer';
 import DropdownIndicator from './DropdownIndicator';
 import Menu from './Menu';
 import { Option, NoOptionsMessage } from './Option';
+import { InputActionMeta } from 'react-select/lib/types';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -41,7 +42,7 @@ const styles = (theme: Theme) => createStyles({
   },
   menu: {
     position: 'absolute',
-    zIndex: 1,
+    zIndex: 2,
     left: 0,
     right: 0,
   },
@@ -156,8 +157,11 @@ class Autocomplete extends PureComponent<Props, State> {
     this.resetMaxItems();
   }
 
-  private handleInputChange = (search: string) => {
-    this.setState({ search });
+  private handleInputChange = (search: string, { action }: InputActionMeta) => {
+    const listeningTo = ['set-value', 'input-change', 'input-blur'];
+    if (listeningTo.includes(action)) {
+      this.setState({ search });
+    }
   }
 
   private handleFocus = () => {
