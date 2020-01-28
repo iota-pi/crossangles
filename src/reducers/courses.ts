@@ -89,11 +89,17 @@ export function custom (
 
 export function additional (
   state: CourseId[] = [],
-  action: CourseListAction | OtherAction,
+  action: CourseAction | CourseListAction | OtherAction,
 ): CourseId[] {
   switch (action.type) {
     case SET_COURSE_DATA:
-      return action.courses.filter(c => c.isAdditional).map(c => getCourseId(c));
+      return action.courses.filter(c => c.isAdditional && c.autoSelect).map(c => getCourseId(c));
+    case REMOVE_COURSE:
+      if (action.course.isAdditional) {
+        return state.filter(c => c !== getCourseId(action.course));
+      } else {
+        return state;
+      }
   }
 
   return state;

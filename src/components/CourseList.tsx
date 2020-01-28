@@ -230,7 +230,36 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
   colours,
   onShowPopover,
   onToggleEvent,
+  onRemoveCourse,
 }: CourseProps) => {
+  const components = course.streams.map(s => s.component);
+  const eventList = components.filter((c, i) => components.indexOf(c) === i);
+
+  const RemoveButton = () => course.autoSelect ? (
+    <ListItemIcon
+      className={classes.listIcon}
+    >
+      <IconButton
+        size="small"
+        style={{ visibility: 'hidden' }}
+      >
+        <Close />
+      </IconButton>
+    </ListItemIcon>
+  ) : (
+    <ListItemIcon
+      className={classes.listIcon}
+    >
+      <IconButton
+        size="small"
+        onClick={() => onRemoveCourse(course)}
+        data-cy="remove-course"
+      >
+        <Close />
+      </IconButton>
+    </ListItemIcon>
+  );
+
   return (
     <React.Fragment>
       <ListItem className={classes.lessSpaceBelow}>
@@ -247,25 +276,18 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
           />
         </div>
 
-        <ListItemIcon
-          className={classes.listIcon}
-        >
-          <IconButton
-            size="small"
-            style={{ visibility: 'hidden' }}
-          >
-            <Close />
-          </IconButton>
-        </ListItemIcon>
+        <RemoveButton />
       </ListItem>
 
-      <ListItem className={classes.noVertPadding}>
-        <AdditionalEvents
-          course={course}
-          events={events}
-          onToggleEvent={onToggleEvent}
-        />
-      </ListItem>
+      {(eventList.length > 1 || course.autoSelect) && (
+        <ListItem className={classes.noVertPadding}>
+          <AdditionalEvents
+            course={course}
+            events={events}
+            onToggleEvent={onToggleEvent}
+          />
+        </ListItem>
+      )}
     </React.Fragment>
   )
 });

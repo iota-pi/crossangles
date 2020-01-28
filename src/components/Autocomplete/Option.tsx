@@ -17,6 +17,10 @@ export class Option extends Component<Props> {
       this.props.data.name,
       this.props.data.term,
     ]
+    if (this.props.data.isAdditional) {
+      // Don't show course code for additional courses
+      text.shift();
+    }
     const separator = this.props.selectProps.OptionProps.separator;
 
     // Update event handlers for disabled items
@@ -43,17 +47,19 @@ export class Option extends Component<Props> {
               search={this.props.selectProps.OptionProps.search}
               classes={classes}
             />
-            <span className={classes.lightText}>
-              <span className={classes.preserveWhitespace}>{separator}</span>
-              <HighlightedText
-                text={text[1]}
-                search={this.props.selectProps.OptionProps.search}
-                classes={classes}
-              />
-            </span>
-            {text[2] ? (
+            {text[1] && (
+              <span className={classes.lightText}>
+                <span className={classes.preserveWhitespace}>{separator}</span>
+                <HighlightedText
+                  text={text[1]}
+                  search={this.props.selectProps.OptionProps.search}
+                  classes={classes}
+                />
+              </span>
+            )}
+            {text[2] && (
               <span className={classes.preserveWhitespace}> ({text[2]})</span>
-            ) : null}
+            )}
           </React.Fragment>
         ) : (
           <Typography color="textSecondary">

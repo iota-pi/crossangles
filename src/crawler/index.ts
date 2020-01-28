@@ -7,7 +7,7 @@ import { CourseData } from '../state/Course';
 import { Meta } from '../state/Meta';
 import { parseCourse, parseStream, removeDuplicateStreams } from './parsing';
 
-const CBS_DATA: CourseData = require('../../src/assets/cbs.json');
+const ADDITIONAL_DATA: CourseData[] = require('../../src/assets/additional-cbs.json');
 const OUTPUT_DATA_FILE = './public/data.json';
 const CLASSUTIL_BASE = 'https://nss.cse.unsw.edu.au/sitar/classes2019';
 
@@ -65,7 +65,7 @@ const crawl = async (term: number) => {
     }
 
     // Add CBS "course" data
-    courses.push(CBS_DATA);
+    courses.push(...ADDITIONAL_DATA);
 
     // Sort courses for consistency
     courses.sort((a, b) => a.code.localeCompare(b.code));

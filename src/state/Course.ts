@@ -9,6 +9,7 @@ export interface CourseData {
   term?: string | null,
   isCustom?: boolean,
   isAdditional?: boolean,
+  autoSelect?: boolean,
 }
 
 export interface CourseMap {

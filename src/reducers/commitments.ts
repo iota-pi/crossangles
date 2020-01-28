@@ -1,8 +1,10 @@
 import {
+  ADD_COURSE,
   TOGGLE_EVENT,
   TOGGLE_OPTION,
   ToggleOptionAction,
   EventAction,
+  CourseAction,
 } from '../actions/selection';
 import {
   AdditionalEvent, baseState,
@@ -10,7 +12,7 @@ import {
 import { OtherAction } from '../actions';
 import { Options } from '../state/Options';
 
-export function events (state: AdditionalEvent[] = [], action: EventAction | OtherAction): AdditionalEvent[] {
+export function events (state: AdditionalEvent[] = [], action: EventAction | CourseAction | OtherAction): AdditionalEvent[] {
   switch (action.type) {
     case TOGGLE_EVENT:
       if (!state.includes(action.event)) {
@@ -25,6 +27,15 @@ export function events (state: AdditionalEvent[] = [], action: EventAction | Oth
           ...state.slice(i + 1),
         ];
       }
+    case ADD_COURSE:
+      if (action.course.isAdditional && !action.course.autoSelect) {
+        const components = action.course.streams.map(s => s.component);
+        const eventList = components.filter((c, i) => components.indexOf(c) === i);
+        if (eventList.length === 1) {
+          return [ ...state, eventList[0] ];
+        }
+      }
+      break;
   }
 
   return state;

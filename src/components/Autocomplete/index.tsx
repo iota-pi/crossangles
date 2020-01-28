@@ -127,6 +127,7 @@ class Autocomplete extends PureComponent<Props, State> {
         filterOption={() => true}
         value={null}
         label={null}
+        inputValue={this.state.search}
         noOptionsMessage={() => 'No matching courses found'}
         autoFocus
         classes={this.props.classes}
