@@ -13,6 +13,7 @@ import {
   addCustom,
   removeCustom,
   updateCustom,
+  toggleShowEvents,
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 
@@ -59,6 +60,7 @@ export interface StateProps {
   timetable: SessionManagerData,
   colours: ColourMap,
   webStreams: CourseId[],
+  hiddenEvents: CourseId[],
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -103,8 +105,10 @@ class CourseSelection extends Component<Props, State> {
             events={this.props.events}
             colours={this.props.colours}
             webStreams={this.props.webStreams}
+            hiddenEvents={this.props.hiddenEvents}
             onEditCustomCourse={this.editCustomCourse}
             onRemoveCourse={this.removeCourse}
+            onToggleShowEvents={this.toggleShowEvents}
             onToggleEvent={this.toggleEvent}
             onToggleWeb={this.toggleWebStream}
             onColourChange={this.changeColour}
@@ -188,6 +192,10 @@ class CourseSelection extends Component<Props, State> {
     await this.updateTimetable(sessionManager);
   }
 
+  private toggleShowEvents = async (course: CourseData) => {
+    await this.props.dispatch(toggleShowEvents(getCourseId(course)));
+  }
+
   private toggleEvent = async (event: AdditionalEvent) => {
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleEvent(event));
@@ -233,6 +241,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     timetable: state.timetable,
     colours: state.colours,
     webStreams: state.webStreams,
+    hiddenEvents: state.hiddenEvents,
   }
 }
 

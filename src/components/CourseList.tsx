@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
+import Expand from '@material-ui/icons/ExpandMore';
 import AdditionalEvents from './AdditionalEvents';
 import WebStream from './WebStream';
 import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
@@ -19,31 +20,50 @@ import { notNull } from '../typeHelpers';
 import ColourPicker from './ColourPicker';
 import ColourControl from './Colour';
 import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course';
+import { Collapse } from '@material-ui/core';
 
-const styles = (theme: Theme) => createStyles({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  lessSpaceBelow: {
-    paddingBottom: theme.spacing(0.5),
-  },
-  noVertPadding: {
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-  listIcon: {
-    minWidth: 'initial',
-  },
-  lightText: {
-    fontWeight: 300,
-  },
-  termText: {
-    fontWeight: 400,
-  },
-  marginRight: {
-    marginRight: theme.spacing(1),
-  },
-});
+const styles = (theme: Theme) => {
+  const transition = {
+    duration: theme.transitions.duration.shorter,
+  };
+
+  return createStyles({
+    root: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    minimised: {
+      '& $expandIcon': {
+        transform: 'rotate(180deg)',
+      },
+    },
+    compactSpaceBelow: {
+      transition: theme.transitions.create('paddingBottom', transition),
+      ':not(&$minimised)': {
+        paddingBottom: theme.spacing(0.5),
+      },
+    },
+    expandIcon: {
+      transform: 'rotate(0deg)',
+      transition: theme.transitions.create('transform', transition),
+    },
+    noVertPadding: {
+      paddingTop: 0,
+      paddingBottom: 0,
+    },
+    listIcon: {
+      minWidth: 'initial',
+    },
+    lightText: {
+      fontWeight: 300,
+    },
+    termText: {
+      fontWeight: 400,
+    },
+    marginRight: {
+      marginRight: theme.spacing(1),
+    },
+  });
+};
 
 export interface Props extends WithStyles<typeof styles> {
   chosen: CourseData[],
@@ -52,8 +72,10 @@ export interface Props extends WithStyles<typeof styles> {
   events: AdditionalEvent[],
   colours: ColourMap,
   webStreams: CourseId[],
+  hiddenEvents: CourseId[],
   onEditCustomCourse: (course: CourseData) => void,
   onRemoveCourse: (course: CourseData) => void,
+  onToggleShowEvents: (course: CourseData) => void,
   onToggleEvent: (event: AdditionalEvent) => void,
   onToggleWeb: (course: CourseData) => void,
   onColourChange: (course: CourseData, colour: Colour) => void,
@@ -162,7 +184,7 @@ export const CourseDisplay = withStyles(styles)(({
 }: CourseProps) => {
   return (
     <React.Fragment>
-      <ListItem className={hasWebStream(course) ? classes.lessSpaceBelow : undefined}>
+      <ListItem className={hasWebStream(course) ? classes.compactSpaceBelow : undefined}>
         {!course.isCustom ? (
           <ListItemText>
             <span>{course.code}</span>
@@ -228,68 +250,100 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
   course,
   events,
   colours,
+  hiddenEvents,
   onShowPopover,
   onToggleEvent,
   onRemoveCourse,
+  onToggleShowEvents,
 }: CourseProps) => {
   const components = course.streams.map(s => s.component);
   const eventList = components.filter((c, i) => components.indexOf(c) === i);
 
-  const RemoveButton = () => course.autoSelect ? (
-    <ListItemIcon
-      className={classes.listIcon}
-    >
-      <IconButton
-        size="small"
-        style={{ visibility: 'hidden' }}
-      >
-        <Close />
-      </IconButton>
-    </ListItemIcon>
-  ) : (
-    <ListItemIcon
-      className={classes.listIcon}
-    >
-      <IconButton
-        size="small"
-        onClick={() => onRemoveCourse(course)}
-        data-cy="remove-course"
-      >
-        <Close />
-      </IconButton>
-    </ListItemIcon>
-  );
+  const courseId = getCourseId(course);
+  const minimiseEvents = hiddenEvents.includes(courseId);
+  const showEvents = eventList.length > 1 || course.autoSelect;
+  const colour = colours[courseId];
+
+  const rootClasses = [classes.compactSpaceBelow];
+  if (minimiseEvents) {
+    rootClasses.push(classes.minimised);
+  }
 
   return (
     <React.Fragment>
-      <ListItem className={classes.lessSpaceBelow}>
+      <ListItem className={rootClasses.join(' ')}>
         <ListItemText>
           <span>{course.name}</span>
         </ListItemText>
 
         <div className={classes.marginRight}>
           <ColourControl
-            colour={colours[getCourseId(course)]!}
+            colour={colour}
             size={32}
             isCircle
             onClick={e => onShowPopover(e, course)}
           />
         </div>
 
-        <RemoveButton />
+        <CourseAction
+          classes={classes}
+          course={course}
+          onRemoveCourse={onRemoveCourse}
+          onToggleShowEvents={onToggleShowEvents}
+        />
       </ListItem>
 
-      {(eventList.length > 1 || course.autoSelect) && (
-        <ListItem className={classes.noVertPadding}>
-          <AdditionalEvents
-            course={course}
-            events={events}
-            onToggleEvent={onToggleEvent}
-          />
-        </ListItem>
+      {showEvents && (
+        <Collapse in={!minimiseEvents}>
+          <ListItem className={classes.noVertPadding}>
+            <AdditionalEvents
+              course={course}
+              events={events}
+              onToggleEvent={onToggleEvent}
+            />
+          </ListItem>
+        </Collapse>
       )}
     </React.Fragment>
   )
 });
+
+interface CourseActionProps extends WithStyles<typeof styles> {
+  course: CourseData,
+  onRemoveCourse: (course: CourseData) => void,
+  onToggleShowEvents: (course: CourseData) => void,
+}
+
+const CourseAction = ({
+  classes,
+  course,
+  onToggleShowEvents,
+  onRemoveCourse,
+}: CourseActionProps) => (course.isAdditional && course.autoSelect) ? (
+  <ListItemIcon
+    className={classes.listIcon}
+  >
+    <IconButton
+      size="small"
+      onClick={() => onToggleShowEvents(course)}
+      data-cy="hide-events"
+      className={classes.expandIcon}
+    >
+      <Expand />
+    </IconButton>
+  </ListItemIcon>
+) : (
+  <ListItemIcon
+    className={classes.listIcon}
+  >
+    <IconButton
+      size="small"
+      onClick={() => onRemoveCourse(course)}
+      data-cy="remove-course"
+    >
+      <Close />
+    </IconButton>
+  </ListItemIcon>
+);
 
 export default withStyles(styles)(CourseList);

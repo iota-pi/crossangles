@@ -5,12 +5,15 @@ import {
   ToggleOptionAction,
   EventAction,
   CourseAction,
+  ToggleShowEventsAction,
+  TOGGLE_SHOW_EVENTS,
 } from '../actions/selection';
 import {
   AdditionalEvent, baseState,
 } from '../state';
 import { OtherAction } from '../actions';
 import { Options } from '../state/Options';
+import { CourseId } from '../state/Course';
 
 export function events (state: AdditionalEvent[] = [], action: EventAction | CourseAction | OtherAction): AdditionalEvent[] {
   switch (action.type) {
@@ -55,3 +58,26 @@ export function options (
 
   return state;
 };
+
+export function hiddenEvents (
+  state: CourseId[] = baseState.hiddenEvents,
+  action: ToggleShowEventsAction | OtherAction,
+): CourseId[] {
+  switch (action.type) {
+    case TOGGLE_SHOW_EVENTS:
+      if (!state.includes(action.course)) {
+        return [
+          ...state,
+          action.course,
+        ];
+      } else {
+        const i = state.indexOf(action.course);
+        return [
+          ...state.slice(0, i),
+          ...state.slice(i + 1),
+        ];
+      }
+  }
+
+  return state;
+}
