@@ -86,6 +86,7 @@ const crawl = async (term: number) => {
       year: term === 1 && currentMonth >= 6 ? currentYear + 1 : currentYear,
       updateDate: `${zfill(currentDay)}/${zfill(currentMonth + 1)}/${currentYear}`,
       updateTime: `${zfill(now.getHours())}:${zfill(now.getMinutes())}`,
+      source: campus_data.source,
       ...campus_data.meta,
     } as Meta;
   }

@@ -10,4 +10,5 @@ export interface Meta extends MinistryMeta {
   updateDate: string,
   updateTime: string,
   signup: string,
+  source: string,
 }

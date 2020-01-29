@@ -31,7 +31,7 @@ const styles = (theme: Theme) => createStyles({
     marginBottom: theme.spacing(2),
   },
   spaceAbove: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(8),
   },
   spaceBelow: {
     marginBottom: theme.spacing(8),
@@ -79,9 +79,13 @@ class App extends Component<Props, State> {
 
             <InfoText
               meta={this.props.meta}
+              className={classes.spaceAbove}
               typographyProps={{
-                className: classes.spaceAbove,
+                variant: "body2",
+                style: { fontWeight: 300 },
               }}
+              link
+              disclaimer
             />
           </Container>
 

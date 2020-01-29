@@ -57,6 +57,7 @@ export const baseState: RootState = {
     promoText: '',
     linkText: '',
     linkURL: '',
+    source: '',
   },
   history: {
     past: [],
