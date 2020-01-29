@@ -34,3 +34,5 @@ export const NoticeDisplay = ({
     />
   )
 }
+
+export default NoticeDisplay;

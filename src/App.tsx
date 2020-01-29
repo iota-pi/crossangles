@@ -19,14 +19,19 @@ import { fetchData } from './actions/fetchData';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
+import NoticeDisplay from './components/Notice';
+import InfoText from './components/InfoText';
 import { clearNotice } from './actions';
 import { Notice } from './state/Notice';
-import { NoticeDisplay } from './components/Notice';
+import { Meta } from './state/Meta';
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
     ...theme.mixins.toolbar,
     marginBottom: theme.spacing(2),
+  },
+  spaceAbove: {
+    marginTop: theme.spacing(4),
   },
   spaceBelow: {
     marginBottom: theme.spacing(8),
@@ -38,6 +43,7 @@ export interface OwnProps extends WithStyles<typeof styles> {
 
 export interface StateProps {
   notice: Notice | null,
+  meta: Meta,
 }
 
 export interface DispatchProps {
@@ -70,6 +76,13 @@ class App extends Component<Props, State> {
             <CourseSelection />
 
             <TimetableContainer />
+
+            <InfoText
+              meta={this.props.meta}
+              typographyProps={{
+                className: classes.spaceAbove,
+              }}
+            />
           </Container>
 
           <NoticeDisplay
@@ -95,6 +108,7 @@ class App extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     notice: state.notice,
+    meta: state.meta,
   }
 }
 
