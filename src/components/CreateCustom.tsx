@@ -222,91 +222,18 @@ class CreateCustom extends PureComponent<Props, State> {
               You may enter multiple possible times below, your event will be able to be scheduled in any one of them.
             </Typography>
 
-            {this.state.options.map((option, i) => (
-              <Grid
-                container
-                spacing={1}
-                alignItems="flex-end"
-                key={`option-${i}`}
-                className={classes.paddingBottom}
-              >
-                <Grid item xs={12} sm={2}>
-                  <Typography>Option {i + 1}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={5}>
-                  <TextField
-                    label="Day"
-                    select
-                    fullWidth
-                    value={option.day || ''}
-                    onChange={event => this.handleChangeDay(event, i)}
-                    InputProps={{
-                      endAdornment: option.day && (
-                        <InputAdornment position="end" className={classes.clearButton}>
-                          <IconButton
-                            aria-label="clear"
-                            disableRipple
-                            disableFocusRipple
-                            size="small"
-                            onClick={() => this.handleClickClearDay(i)}
-                            data-cy="clear-input"
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                    data-cy="custom-event-day"
-                  >
-                    {dayOptions.map(item => (
-                      <MenuItem
-                        value={item.letter}
-                        key={item.text}
-                        data-cy="custom-event-day-item"
-                      >
-                        {item.text}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={5}>
-                  <TextField
-                    label="Start time"
-                    select
-                    fullWidth
-                    value={option.start || ''}
-                    onChange={event => this.handleChangeTime(event, i)}
-                    error={this.startTimeError(option)}
-                    InputProps={{
-                      endAdornment: option.start && (
-                        <InputAdornment position="end" className={classes.clearButton}>
-                          <IconButton
-                            aria-label="clear"
-                            disableRipple
-                            disableFocusRipple
-                            size="small"
-                            onClick={() => this.handleClickClearTime(i)}
-                            data-cy="clear-input"
-                            >
-                            <CloseIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      )
-                    }}
-                    data-cy="custom-event-time"
-                  >
-                    {timeOptions.map(item => (
-                      <MenuItem
-                        value={item.time}
-                        key={item.text}
-                        data-cy="custom-event-time-item"
-                      >
-                        {item.text}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-              </Grid>
+            {this.state.options.map((option, index) => (
+              <TimeOption
+                classes={classes}
+                option={option}
+                index={index}
+                hasStartTimeError={this.startTimeError(option)}
+                onChangeDay={this.handleChangeDay}
+                onClickClearDay={this.handleClickClearDay}
+                onChangeTime={this.handleChangeTime}
+                onClickClearTime={this.handleClickClearTime}
+                key={`option-${index}`}
+              />
             ))}
           </DialogContent>
 
@@ -476,6 +403,114 @@ class CreateCustom extends PureComponent<Props, State> {
     ];
     return choices[Math.floor(Math.random() * choices.length)];
   }
+}
+
+interface TimeOptionProps extends WithStyles<typeof styles> {
+  option: CustomTimeOption,
+  index: number,
+  hasStartTimeError: boolean,
+  onChangeDay: (event: ChangeEvent<{value: unknown}>, optionIndex: number) => void,
+  onClickClearDay: (optionIndex: number) => void,
+  onChangeTime: (event: ChangeEvent<{value: unknown}>, optionIndex: number) => void,
+  onClickClearTime: (optionIndex: number) => void,
+}
+
+const TimeOption = ({
+  classes,
+  option,
+  index,
+  hasStartTimeError,
+  onChangeDay,
+  onClickClearDay,
+  onChangeTime,
+  onClickClearTime,
+}: TimeOptionProps) => {
+  return (
+    <Grid
+      container
+      spacing={1}
+      alignItems="flex-end"
+      key={`option-${index}`}
+      className={classes.paddingBottom}
+    >
+      <Grid item xs={12} sm={2}>
+        <Typography>Option {index + 1}</Typography>
+      </Grid>
+      <Grid item xs={12} sm={5}>
+        <TextField
+          label="Day"
+          select
+          fullWidth
+          value={option.day || ''}
+          onChange={event => onChangeDay(event, index)}
+          InputProps={{
+            endAdornment: option.day && (
+              <InputAdornment position="end" className={classes.clearButton}>
+                <IconButton
+                  aria-label="clear"
+                  disableRipple
+                  disableFocusRipple
+                  size="small"
+                  onClick={() => onClickClearDay(index)}
+                  data-cy="clear-input"
+                >
+                  <CloseIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+          data-cy="custom-event-day"
+        >
+          {dayOptions.map(item => (
+            <MenuItem
+              value={item.letter}
+              key={item.text}
+              data-cy="custom-event-day-item"
+            >
+              {item.text}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+      <Grid item xs={12} sm={5}>
+        <TextField
+          label="Start time"
+          select
+          fullWidth
+          value={option.start || ''}
+          onChange={event => onChangeTime(event, index)}
+          error={hasStartTimeError}
+          InputProps={{
+            endAdornment: option.start && (
+              <InputAdornment position="end" className={classes.clearButton}>
+                <IconButton
+                  aria-label="clear"
+                  disableRipple
+                  disableFocusRipple
+                  size="small"
+                  onClick={() => onClickClearTime(index)}
+                  data-cy="clear-input"
+                  >
+                  <CloseIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+          data-cy="custom-event-time"
+        >
+          {timeOptions.map(item => (
+            <MenuItem
+              value={item.time}
+              key={item.text}
+              data-cy="custom-event-time-item"
+            >
+              {item.text}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
+    </Grid>
+  )
 }
 
 export default withStyles(styles)(CreateCustom);
