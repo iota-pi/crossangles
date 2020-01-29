@@ -6,17 +6,17 @@ import { writeFileSync } from 'fs';
 import { CourseData } from '../state/Course';
 import { Meta } from '../state/Meta';
 import { parseCourse, parseStream, removeDuplicateStreams } from './parsing';
+import { getCampusData, Campus } from './campus';
 
-const ADDITIONAL_DATA: CourseData[] = require('../../src/assets/additional-cbs.json');
-const OUTPUT_DATA_FILE = './public/data.json';
-const CLASSUTIL_BASE = 'https://nss.cse.unsw.edu.au/sitar/classes2019';
+const campus = (process.env.REACT_APP_CAMPUS || 'unsw') as Campus;
+const campus_data = getCampusData(campus);
 
 
 const crawl = async (term: number) => {
   const findFacultyPages = async () => {
     const links: string[] = [];
     const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
-    await crawlPages([CLASSUTIL_BASE], async ({ $ }) => {
+    await crawlPages([campus_data.source], async ({ $ }) => {
       const matchingLinks = $('a').filter((i: number, e: any) => linkRegex.test($(e).attr('href')));
       links.push(...matchingLinks.map((i: number, e: any): string => $(e).attr('href')));
     });
@@ -25,7 +25,7 @@ const crawl = async (term: number) => {
 
   const crawlFacultyPages = async (pages: string[]) => {
     const courses: CourseData[] = [];
-    const urls = pages.map(page => `${CLASSUTIL_BASE}/${page}`);
+    const urls = pages.map(page => `${campus_data.source}/${page}`);
     await crawlPages(urls, async ({ $ }) => {
       // Get all rows of the table (except for the first which is the header)
       const rows = $($('table').get(2)).find('tr').slice(1);
@@ -64,8 +64,8 @@ const crawl = async (term: number) => {
       removeDuplicateStreams(course);
     }
 
-    // Add CBS "course" data
-    courses.push(...ADDITIONAL_DATA);
+    // Add additional events (campus-specific) data
+    courses.push(...campus_data.data);
 
     // Sort courses for consistency
     courses.sort((a, b) => a.code.localeCompare(b.code));
@@ -86,7 +86,8 @@ const crawl = async (term: number) => {
       year: term === 1 && currentMonth >= 6 ? currentYear + 1 : currentYear,
       updateDate: `${zfill(currentDay)}/${zfill(currentMonth + 1)}/${currentYear}`,
       updateTime: `${zfill(now.getHours())}:${zfill(now.getMinutes())}`,
-    } as Meta
+      ...campus_data.meta,
+    } as Meta;
   }
 
   const facultyPages = await findFacultyPages();
@@ -94,7 +95,7 @@ const crawl = async (term: number) => {
   const meta = generateMetaData();
   const data = JSON.stringify({ courses, meta });
 
-  writeFileSync(OUTPUT_DATA_FILE, data, 'utf-8');
+  writeFileSync(campus_data.output, data, 'utf-8');
 }
 
 const crawlPages = async (urls: string[], handler: (result: any) => any) => {
@@ -105,7 +106,7 @@ const crawlPages = async (urls: string[], handler: (result: any) => any) => {
 
   const crawler = new Apify.CheerioCrawler({
     requestList,
-    handlePageFunction: handler
+    handlePageFunction: handler,
   });
   await crawler.run();
 }
