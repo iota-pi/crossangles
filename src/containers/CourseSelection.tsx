@@ -29,7 +29,7 @@ import GeneralOptions from '../components/GeneralOptions';
 import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';
 import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
-import { CourseMap, CourseData, CourseId, getCourseId } from '../state/Course';
+import { CourseMap, CourseData, CourseId, getCourseId, courseSort, customSort } from '../state/Course';
 import { Options, OptionName } from '../state/Options';
 import { ColourMap, Colour } from '../state/Colours';
 import { ClassTime } from '../state/Stream';
@@ -227,9 +227,6 @@ class CourseSelection extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
-  const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);
-
   return {
     courses: state.courses,
     courseList: Object.values(state.courses),

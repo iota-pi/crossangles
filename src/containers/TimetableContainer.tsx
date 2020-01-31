@@ -13,7 +13,7 @@ import TimetableControls from '../components/TimetableControls';
 import TimetableTable from '../components/Timetable';
 
 // General
-import { CourseData, CourseId, CourseMap, getCourseId } from '../state/Course';
+import { CourseData, CourseId, CourseMap, getCourseId, courseSort, customSort } from '../state/Course';
 import { linkStream, LinkedStream } from '../state/Stream';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
@@ -162,9 +162,6 @@ class TimetableContainer extends PureComponent<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
-  const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);
-
   return {
     courses: state.courses,
     chosen: state.chosen.map(cid => state.courses[cid]).sort(courseSort),

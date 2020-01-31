@@ -41,3 +41,6 @@ export const getStream = (course: CourseData, streamId: StreamId): StreamData =>
 
   throw new Error(`No stream with id ${streamId} in course ${getCourseId(course)}`);
 }
+
+export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
+export const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);
