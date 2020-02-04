@@ -35,5 +35,4 @@ export class FileWriter implements Writer {
     const backupPath = this.getBackupFilePath();
     writeFileSync(backupPath, content, 'utf-8');
   }
-
 }
