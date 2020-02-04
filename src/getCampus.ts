@@ -1,13 +1,26 @@
 const campusRegex = /\b([a-z]+)\.crossangles.app$/;
+let cache: string | null = null;
 
 export const getCampus = (hostname: string): string => {
-  const results = hostname.match(campusRegex);
-  if (results) {
-    return results[1];
+  if (cache !== null) {
+    return cache;
   }
 
   // Default to value from environment variable
-  return process.env.REACT_APP_CAMPUS!;
+  let result = process.env.REACT_APP_CAMPUS!;
+
+  // Try to find campus from hostname
+  const matches = hostname.match(campusRegex);
+  if (matches) {
+    result = matches[1];
+  }
+
+  cache = result;
+  return result;
+}
+
+export const clearCampusCache = () => {
+  cache = null;
 }
 
 export default getCampus;

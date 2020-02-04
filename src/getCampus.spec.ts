@@ -1,6 +1,10 @@
-import getCampus from './getCampus';
+import { getCampus, clearCampusCache } from './getCampus';
 
 describe('getCampus', () => {
+  beforeEach(() => {
+    clearCampusCache();
+  })
+
   it.each`
     hostname                       | campus_env | result
     ${'localhost'}                 | ${'unsw'}  | ${'unsw'}
