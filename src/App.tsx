@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from './state';
+import { ThunkDispatch } from 'redux-thunk';
+import { Meta } from './state/Meta';
+import { Notice } from './state/Notice';
+import { fetchData } from './actions/fetchData';
+import { clearNotice } from './actions/notice';
+import loadable from '@loadable/component';
 
 // Theme
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
@@ -14,16 +20,12 @@ import createStyles from "@material-ui/core/styles/createStyles";
 // Components
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from './containers/AppBar';
-import { ThunkDispatch } from 'redux-thunk';
-import { fetchData } from './actions/fetchData';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
-import NoticeDisplay from './components/Notice';
 import InfoText from './components/InfoText';
-import { clearNotice } from './actions';
-import { Notice } from './state/Notice';
-import { Meta } from './state/Meta';
+
+const NoticeDisplay = loadable(() => import('./components/Notice'));
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
