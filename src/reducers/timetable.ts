@@ -1,10 +1,10 @@
-import { UPDATE_SESSION_MANAGER, SessionManagerAction, OtherAction, UPDATE_SUGGESTED_TIMETABLE, SuggestionAction } from '../actions';
+import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions } from '../actions';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
 import { baseState } from '../state';
 
 export function timetable (
   state: SessionManagerData | undefined,
-  action: SessionManagerAction | OtherAction
+  action: AllActions
 ): SessionManagerData {
   if (action.type === UPDATE_SESSION_MANAGER) {
     return action.sessionManager;
@@ -15,7 +15,7 @@ export function timetable (
 
 export function suggestionScore (
   state: number | null | undefined,
-  action: SuggestionAction | OtherAction,
+  action: AllActions,
 ): number | null {
   if (action.type === UPDATE_SUGGESTED_TIMETABLE) {
     return action.score;

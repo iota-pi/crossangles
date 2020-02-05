@@ -2,20 +2,16 @@ import {
   ADD_COURSE,
   TOGGLE_EVENT,
   TOGGLE_OPTION,
-  ToggleOptionAction,
-  EventAction,
-  CourseAction,
-  ToggleShowEventsAction,
   TOGGLE_SHOW_EVENTS,
 } from '../actions/selection';
 import {
   AdditionalEvent, baseState,
 } from '../state';
-import { OtherAction } from '../actions';
 import { Options } from '../state/Options';
 import { CourseId } from '../state/Course';
+import { AllActions } from '../actions';
 
-export function events (state: AdditionalEvent[] = [], action: EventAction | CourseAction | OtherAction): AdditionalEvent[] {
+export function events (state: AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
   switch (action.type) {
     case TOGGLE_EVENT:
       if (!state.includes(action.event)) {
@@ -46,7 +42,7 @@ export function events (state: AdditionalEvent[] = [], action: EventAction | Cou
 
 export function options (
   state: Options = baseState.options,
-  action: ToggleOptionAction | OtherAction
+  action: AllActions
 ): Options {
   switch (action.type) {
     case TOGGLE_OPTION:
@@ -61,7 +57,7 @@ export function options (
 
 export function hiddenEvents (
   state: CourseId[] = baseState.hiddenEvents,
-  action: ToggleShowEventsAction | OtherAction,
+  action: AllActions,
 ): CourseId[] {
   switch (action.type) {
     case TOGGLE_SHOW_EVENTS:

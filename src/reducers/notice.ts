@@ -1,10 +1,10 @@
 import { Notice } from '../state/Notice';
-import { NoticeAction, SET_NOTICE, CLEAR_NOTICE, OtherAction } from '../actions';
+import { SET_NOTICE, CLEAR_NOTICE, AllActions } from '../actions';
 import { baseState } from '../state';
 
 export function notice (
   state = baseState.notice,
-  action: NoticeAction | OtherAction
+  action: AllActions
 ): Notice | null {
   switch (action.type) {
     case SET_NOTICE:

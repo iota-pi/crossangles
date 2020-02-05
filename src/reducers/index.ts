@@ -1,4 +1,4 @@
-import { combineReducers, AnyAction } from 'redux';
+import { combineReducers } from 'redux';
 import { meta } from "./meta";
 import { RootState, baseState, TimetableState, StateHistory } from '../state';
 import { courses, chosen, custom, additional } from './courses';
@@ -8,7 +8,7 @@ import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
 import { UNDO, REDO } from '../actions/history';
-import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA } from '../actions';
+import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA, AllActions } from '../actions';
 
 type NoHistoryState = Omit<RootState, 'history'>
 const basicReducer = combineReducers<NoHistoryState>({
@@ -120,7 +120,7 @@ const noStateChange = (current: TimetableState, next: TimetableState) => {
   return true;
 }
 
-const rootReducer = (state: RootState | undefined, action: AnyAction): RootState => {
+const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
   state = state || baseState;
   const nextState = basicReducer(removeHistory(state), action);
   let history = state.history;

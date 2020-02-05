@@ -1,10 +1,10 @@
-import { CourseListAction, ADD_COURSE, SET_COURSE_DATA, CourseAction, REMOVE_COURSE, OtherAction, CustomAction, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM } from "../actions";
+import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM, AllActions } from "../actions";
 import { CourseMap, CourseId, getCourseId } from "../state/Course";
 import { baseState } from "../state";
 
 export function courses (
   state: CourseMap = baseState.courses,
-  action: CourseListAction | CustomAction | OtherAction,
+  action: AllActions,
 ): CourseMap {
   switch (action.type) {
     case SET_COURSE_DATA:
@@ -46,7 +46,7 @@ export function courses (
 
 export function chosen (
   state: CourseId[] = [],
-  action: CourseAction | CourseListAction | OtherAction
+  action: AllActions
 ): CourseId[] {
   switch (action.type) {
     case ADD_COURSE:
@@ -73,7 +73,7 @@ export function chosen (
 
 export function custom (
   state: CourseId[] = [],
-  action: CustomAction | OtherAction,
+  action: AllActions,
 ): CourseId[] {
   let i: number;
   switch (action.type) {
@@ -89,7 +89,7 @@ export function custom (
 
 export function additional (
   state: CourseId[] = [],
-  action: CourseAction | CourseListAction | OtherAction,
+  action: AllActions,
 ): CourseId[] {
   switch (action.type) {
     case SET_COURSE_DATA:

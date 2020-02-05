@@ -1,8 +1,9 @@
 import { CourseId, getCourseId } from '../state/Course';
-import { TOGGLE_WEB_STREAM, CourseAction } from '../actions/selection';
+import { TOGGLE_WEB_STREAM } from '../actions/selection';
+import { AllActions } from '../actions';
 
 export function webStreams (
-  state: CourseId[] | undefined, action: CourseAction
+  state: CourseId[] | undefined, action: AllActions
 ): CourseId[] {
   switch (action.type) {
     case TOGGLE_WEB_STREAM:

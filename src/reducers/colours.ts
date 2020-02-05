@@ -1,9 +1,9 @@
 import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
-import { ADD_COURSE, CourseAction, ColourAction, SET_COLOUR, OtherAction, CourseListAction, SET_COURSE_DATA } from '../actions';
+import { ADD_COURSE, SET_COLOUR, AllActions, SET_COURSE_DATA } from '../actions';
 import { getCourseId } from '../state/Course';
 import { baseState } from '../state';
 
-export function colours (state = baseState.colours, action: CourseListAction | CourseAction | ColourAction | OtherAction): ColourMap {
+export function colours (state = baseState.colours, action: AllActions): ColourMap {
   switch (action.type) {
     case ADD_COURSE:
       const courseId = getCourseId(action.course);
