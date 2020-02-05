@@ -25,7 +25,6 @@ import TimetableContainer from './containers/TimetableContainer';
 import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
-import { fetchData } from './actions';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -51,7 +50,6 @@ export interface StateProps {
 }
 
 export interface DispatchProps {
-  getData: () => void,
   clearNotice: () => void,
 }
 
@@ -96,12 +94,6 @@ class App extends Component<Props> {
     );
   }
 
-  componentDidMount () {
-    // TODO: immediately start data loading (asynchronously) without waiting for render
-    // (maybe put near store initialisation)
-    this.props.getData();
-  }
-
   handleSnackbarClose = () => {
     this.props.clearNotice();
   }
@@ -116,7 +108,6 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): DispatchProps => {
   return {
-    getData: async () => await dispatch(fetchData(process.env.REACT_APP_DATA_URI as string)),
     clearNotice: async () => await dispatch(clearNotice()),
   }
 }

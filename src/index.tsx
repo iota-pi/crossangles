@@ -2,9 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
+import fetchData from './fetchData';
 
 import loadable from '@loadable/component';
 const App = loadable(() => import('./App'));
+
+// Start loading data file (asynchronously) before rendering app
+fetchData();
 
 ReactDOM.render(
   <Router>

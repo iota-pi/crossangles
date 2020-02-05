@@ -17,7 +17,7 @@ export interface MetaAction extends Action {
   meta: Meta;
 }
 
-export function fetchData (uri: string): ThunkAction<Promise<void>, {}, {}, AnyAction> {
+export function fetchData (uri: string): ThunkAction<Promise<void>, {}, undefined, AnyAction> {
   return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
     return axios.get(uri).then(async ({ data }) => {
       const setCourseAction: CourseListAction = {
