@@ -1,8 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { store, persistor } from './configureStore';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
@@ -10,17 +7,13 @@ import loadable from '@loadable/component';
 const App = loadable(() => import('./App'));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <PersistGate persistor={persistor} loading={null}>
-      <Router>
-        <Switch>
-          <Route path="/">
-            <App />
-          </Route>
-        </Switch>
-      </Router>
-    </PersistGate>
-  </Provider>,
+  <Router>
+    <Switch>
+      <Route path="/">
+        <App />
+      </Route>
+    </Switch>
+  </Router>,
   document.getElementById('root')
 );
 

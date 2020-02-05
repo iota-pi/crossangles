@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import { RootState } from './state';
 import { ThunkDispatch } from 'redux-thunk';
 import { Meta } from './state/Meta';
 import { Notice } from './state/Notice';
-import { fetchData } from './actions/fetchData';
 import { clearNotice } from './actions/notice';
 import loadable from '@loadable/component';
 
@@ -24,6 +23,9 @@ import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
 import InfoText from './components/InfoText';
+import { store, persistor } from './configureStore';
+import { PersistGate } from 'redux-persist/integration/react';
+import { fetchData } from './actions';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -55,13 +57,7 @@ export interface DispatchProps {
 
 export type Props = OwnProps & StateProps & DispatchProps;
 
-export interface State {
-}
-
-class App extends Component<Props, State> {
-  state = {
-  }
-
+class App extends Component<Props> {
   render () {
     const classes = this.props.classes;
     return (
@@ -125,5 +121,21 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): DispatchProps
   }
 }
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
-export default withStyles(styles)(connected(App));
+const connection = connect(mapStateToProps, mapDispatchToProps);
+const styledApp = withStyles(styles)(connection(App));
+
+export function wrapApp(AppComponent: typeof styledApp) {
+  return class AppWrapper extends Component {
+    render () {
+      return (
+        <Provider store={store}>
+          <PersistGate persistor={persistor} loading={null}>
+            <AppComponent {...this.props} />
+          </PersistGate>
+        </Provider>
+      );
+    }
+  }
+}
+
+export default wrapApp(styledApp);
