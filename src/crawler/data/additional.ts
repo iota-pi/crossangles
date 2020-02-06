@@ -1,4 +1,6 @@
-[
+import { CourseData } from "../../state/Course";
+
+const unsw: CourseData[] = [
   {
     "code": "CBS",
     "name": "Campus Bible Study",
@@ -176,4 +178,10 @@
       }
     ]
   }
-]
+];
+
+const additional = {
+  unsw,
+};
+
+export default additional;

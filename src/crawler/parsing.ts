@@ -1,12 +1,12 @@
 import { CourseData } from "../state/Course";
 import { StreamData, ClassTime } from "../state/Stream";
 
-const CourseNames: { [code: string]: string } = require('./courses-unsw.json');
+const courseNames: { [code: string]: string } = require('./courses-unsw.json');
 
 export const parseCourse = (_code: string, _name: string): CourseData => {
   const code = _code.trim();
   const term = (/ \(([A-Z][A-Z0-9]{2})\)/.exec(_name) || [])[1];
-  const fullName = CourseNames[code];
+  const fullName = courseNames[code];
   const name = fullName || _name.trim().replace(new RegExp(`\\s*\\(${term}\\)$`), '');
   return {
     code,

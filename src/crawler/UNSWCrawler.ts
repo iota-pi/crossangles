@@ -1,6 +1,8 @@
 import { CampusCrawler } from './CampusCrawler';
 import { CourseData, courseSort } from '../state/Course';
 import { parseCourse, parseStream, removeDuplicateStreams } from './parsing';
+import additional from './data/additional';
+import info from './data/info';
 
 const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
@@ -8,8 +10,8 @@ const REGULAR_CELL_COUNT = 8;
 const MAX_FACULTIES = Infinity;
 
 export class UNSWCrawler extends CampusCrawler {
-  readonly additional = require(process.env.UNSW_ADDITIONAL_DATA_FILE!);
-  readonly meta = require(process.env.UNSW_INFO_FILE!);
+  readonly additional = additional.unsw;
+  readonly meta = info.unsw;
   readonly source = process.env.UNSW_DATA_SOURCE!;
   readonly output = process.env.UNSW_OUTPUT_FILE!;
   readonly name = 'UNSW';
