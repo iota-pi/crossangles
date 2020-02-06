@@ -18,7 +18,7 @@ describe('getCampus', () => {
     ${'blah.usyd.crossangles.app'} | ${'unsw'}  | ${'usyd'}
     ${'unsw.usyd.crossangles.app'} | ${'unsw'}  | ${'usyd'}
   `('getCampus("$hostname") with default "$campus_env" = "$result"', ({ hostname, campus_env, result }) => {
-    process.env.REACT_APP_CAMPUS = campus_env;
+    process.env.REACT_APP_DEFAULT_CAMPUS = campus_env;
     expect(getCampus(hostname)).toBe(result);
   })
 })

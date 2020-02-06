@@ -7,7 +7,7 @@ export const getCampus = (hostname: string): string => {
   }
 
   // Default to value from environment variable
-  let result = process.env.REACT_APP_CAMPUS!;
+  let result = process.env.REACT_APP_DEFAULT_CAMPUS!;
 
   // Try to find campus from hostname
   const matches = hostname.match(campusRegex);
