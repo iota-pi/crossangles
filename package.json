@@ -38,9 +38,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start:crawl": "node build/crawler",
-    "build:crawl": "tsc src/crawler/index.ts --outDir build --target es5",
-    "watch:crawl": "tsc -w src/crawler/index.ts --outDir build --target es5",
+    "scraper:start": "node build/scraper",
+    "scraper:build": "tsc src/scraper/index.ts --outDir build --target es5",
+    "scraper:watch": "tsc -w src/scraper/index.ts --outDir build --target es5",
     "cypress:open": "cypress open"
   },
   "eslintConfig": {

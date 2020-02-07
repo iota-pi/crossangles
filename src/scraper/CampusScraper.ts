@@ -7,14 +7,14 @@ export interface CampusData {
   meta: Meta,
 }
 
-export abstract class CampusCrawler {
+export abstract class CampusScraper {
   protected abstract readonly additional: CourseData[];
   protected abstract readonly meta: MinistryMeta;
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
 
-  abstract async crawl (): Promise<CampusData>;
+  abstract async scrape (): Promise<CampusData>;
 
   generateMetaData (term: number): Meta {
     const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');
@@ -34,7 +34,7 @@ export abstract class CampusCrawler {
     };
   }
 
-  async crawlPages (urls: string[], handler: (result: any) => any) {
+  async scrapePages (urls: string[], handler: (result: any) => any) {
     const requestList = new Apify.RequestList({
       sources: urls.map(url => ({ url })),
     });

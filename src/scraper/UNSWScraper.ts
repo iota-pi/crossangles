@@ -1,4 +1,4 @@
-import { CampusCrawler } from './CampusCrawler';
+import { CampusScraper } from './CampusScraper';
 import { CourseData, courseSort } from '../state/Course';
 import additional from './data/additional';
 import info from './data/info';
@@ -11,7 +11,7 @@ const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
 const MAX_FACULTIES = Infinity;
 
-export class UNSWCrawler extends CampusCrawler {
+export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   protected readonly meta = info.unsw;
   readonly source = process.env.UNSW_DATA_SOURCE!;
@@ -24,11 +24,11 @@ export class UNSWCrawler extends CampusCrawler {
     this.parser = parser || new Parser();
   }
 
-  async crawl () {
+  async scrape () {
     const term = 2;
-    this.log(`crawling term ${term} from ${this.source}`);
+    this.log(`scraping term ${term} from ${this.source}`);
     const facultyPages = await this.findFacultyPages(term);
-    const courses = await this.crawlFacultyPages(facultyPages);
+    const courses = await this.scrapeFacultyPages(facultyPages);
     const meta = this.generateMetaData(term);
     return { courses, meta };
   }
@@ -36,7 +36,7 @@ export class UNSWCrawler extends CampusCrawler {
   private async findFacultyPages (term: number) {
     const links: string[] = [];
     const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
-    await this.crawlPages([this.source], async ({ $ }) => {
+    await this.scrapePages([this.source], async ({ $ }) => {
       const matchingLinks = $('a').filter((i: number, e: any) => linkRegex.test($(e).attr('href')));
       links.push(...matchingLinks.map((i: number, e: any): string => $(e).attr('href')));
     });
@@ -47,10 +47,10 @@ export class UNSWCrawler extends CampusCrawler {
     return links;
   }
 
-  private async crawlFacultyPages (pages: string[]) {
+  private async scrapeFacultyPages (pages: string[]) {
     const courses: CourseData[] = [];
     const urls = pages.map(page => `${this.source}/${page}`);
-    await this.crawlPages(urls, async ({ $ }) => {
+    await this.scrapePages(urls, async ({ $ }) => {
       // Get all rows of the table (except for the first which is the header)
       const rows = $($('table').get(2)).find('tr').slice(1);
       rows.map((i: any, e: any) => {
