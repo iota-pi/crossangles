@@ -8,8 +8,8 @@ export interface CampusData {
 }
 
 export abstract class CampusCrawler {
-  abstract readonly additional: CourseData[];
-  abstract readonly meta: MinistryMeta;
+  protected abstract readonly additional: CourseData[];
+  protected abstract readonly meta: MinistryMeta;
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;

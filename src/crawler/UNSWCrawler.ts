@@ -1,8 +1,10 @@
 import { CampusCrawler } from './CampusCrawler';
 import { CourseData, courseSort } from '../state/Course';
-import { parseCourse, parseStream, removeDuplicateStreams } from './parsing';
 import additional from './data/additional';
 import info from './data/info';
+import { ClassTime, StreamData } from '../state/Stream';
+
+const courseNames: { [code: string]: string } = require('./courses-unsw.json');
 
 const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
@@ -10,11 +12,17 @@ const REGULAR_CELL_COUNT = 8;
 const MAX_FACULTIES = Infinity;
 
 export class UNSWCrawler extends CampusCrawler {
-  readonly additional = additional.unsw;
-  readonly meta = info.unsw;
+  protected readonly additional = additional.unsw;
+  protected readonly meta = info.unsw;
   readonly source = process.env.UNSW_DATA_SOURCE!;
   readonly output = process.env.UNSW_OUTPUT_FILE!;
   readonly name = 'UNSW';
+  readonly parser: Parser;
+
+  constructor (parser?: Parser) {
+    super();
+    this.parser = parser || new Parser();
+  }
 
   async crawl () {
     const term = 2;
@@ -51,14 +59,14 @@ export class UNSWCrawler extends CampusCrawler {
         if (cells.length === TABLE_END_COUNT) {
           return false;
         } else if (cells.length === COURSE_HEADING_COUNT) {
-          const course = parseCourse(
+          const course = this.parser.parseCourse(
             $(cells.get(0)).text(),
             $(cells.get(1)).text(),
           );
           courses.push(course);
         } else if (cells.length === REGULAR_CELL_COUNT) {
           const course = courses[courses.length - 1];
-          const stream = parseStream(
+          const stream = this.parser.parseStream(
             $(cells.get(0)).text(),
             $(cells.get(1)).text(),
             $(cells.get(4)).text(),
@@ -74,7 +82,7 @@ export class UNSWCrawler extends CampusCrawler {
 
     // Remove duplicate streams from each course
     for (let course of courses) {
-      removeDuplicateStreams(course);
+      this.parser.removeDuplicateStreams(course);
     }
 
     // Add (campus-specific) additional events
@@ -85,5 +93,217 @@ export class UNSWCrawler extends CampusCrawler {
 
     this.log(`parsed ${courses.length} courses`);
     return courses;
+  }
+}
+
+class Parser {
+  public parseCourse (_code: string, _name: string): CourseData {
+    const code = _code.trim();
+    const term = (/ \(([A-Z][A-Z0-9]{2})\)/.exec(_name) || [])[1];
+    const fullName = courseNames[code];
+    const name = fullName || _name.trim().replace(new RegExp(`\\s*\\(${term}\\)$`), '');
+    return {
+      code,
+      name,
+      streams: [],
+      term,
+    };
+  }
+
+  public removeDuplicateStreams (course: CourseData) {
+    const mapping = new Map<string, StreamData[]>();
+    for (let stream of course.streams) {
+      const times = stream.times !== null ? stream.times.map(t => t.time) : null;
+      const key = stream.component + `[${times}]`;
+      const currentGroup = mapping.get(key) || [];
+      const newGroup = currentGroup.concat(stream);
+      mapping.set(key, newGroup);
+    }
+
+    // For each set of streams with identical component and times, remove all but the emptiest stream
+    for (const streamGroup of Array.from(mapping.values())) {
+      const emptiest = this.emptiestStream(streamGroup);
+      for (let stream of streamGroup) {
+        if (stream !== emptiest) {
+          const index = course.streams.indexOf(stream)
+          course.streams.splice(index, 1);
+        }
+      }
+    }
+  }
+
+  private emptiestStream (streams: StreamData[]) {
+    let bestStream = null;
+    let bestRatio = Infinity;
+    for (let stream of streams) {
+      const ratio = stream.enrols[0] / stream.enrols[1];
+      if (ratio < bestRatio) {
+        bestRatio = ratio;
+        bestStream = stream;
+      }
+    }
+
+    return bestStream!;
+  }
+
+  public parseStream (
+    component: string,
+    section: string,
+    status: string,
+    enrolString: string,
+    timeString: string,
+  ): StreamData | null {
+    if (component === 'CRS') {
+      return null;
+    }
+
+    status = status.trim().replace(/\*$/, '').toLowerCase();
+    if (status !== 'open' && status !== 'full') {
+      return null;
+    }
+    const full = status === 'full';
+
+    const enrols = enrolString.split(' ')[0].split('/').map(x => parseInt(x)) as [number, number];
+    if (enrols[1] === 0) {
+      return null;
+    }
+
+    let web = false;
+    let times: ClassTime[] | null = null;
+    if (section.indexOf('WEB') === -1) {
+      times = this.parseTimeStr(timeString);
+
+      if (times === null || times.length === 0) {
+        return null;
+      }
+    } else {
+      web = true;
+
+      // Standardise all web streams as 'LEC' component
+      component = 'LEC';
+    }
+
+    return {
+      component,
+      enrols,
+      full,
+      times,
+      web,
+    };
+  }
+
+  private parseTimeStr (timeString: string): ClassTime[] | null {
+    // Basic string sanitisation
+    timeString = timeString.replace(/\/odd|\/even|Comb\/w.*/g, '').trim();
+
+    // Return empty list if no data has been given
+    if (timeString === '') {
+      return [];
+    }
+
+    if (timeString.indexOf('; ') !== -1) {
+      const timeParts = timeString.split('; ');
+      const times = timeParts.reduce((a: ClassTime[], t) => a.concat(this._parseDataStr(t)), []);
+
+      // Remove any duplicate times
+      const timeSet = new Set();
+      const finalTimes: ClassTime[] = [];
+      for (let time of times) {
+        if (!timeSet.has(time.time)) {
+          timeSet.add(time.time);
+          finalTimes.push(time);
+        }
+      }
+
+      return finalTimes;
+    } else {
+      return this._parseDataStr(timeString);
+    }
+  }
+
+  private _parseDataStr (data: string): ClassTime[] {
+    const openBracketIndex = data.indexOf('(');
+    if (openBracketIndex !== -1) {
+      const tidiedTime = this.tidyUpTime(data.slice(0, openBracketIndex).trim());
+      if (tidiedTime === null) {
+        return [];
+      }
+      const [time, canClash] = tidiedTime;
+
+      const otherDetails = data.slice(openBracketIndex + 1, data.indexOf(')'));
+      const weeks = this.getWeeks(otherDetails);
+      if (weeks === null) {
+        return [];
+      }
+
+      const commaIndex = otherDetails.indexOf(', ')
+      let location = '';
+      if (commaIndex !== -1) {
+        location = otherDetails.slice(commaIndex + 2);
+      } else if (otherDetails.length > 0 && otherDetails[0] !== 'w') {
+        location = otherDetails;
+      }
+
+      location = location.toLowerCase() !== 'see school' ? location : '';
+
+      return [{
+        time,
+        weeks: weeks || undefined,
+        location: location || undefined,
+        canClash,
+      }];
+    } else {
+      const tidiedTime = this.tidyUpTime(data);
+      if (tidiedTime !== null) {
+        const [ time, canClash ] = tidiedTime;
+        return [{ time, canClash }];
+      } else {
+        return [];
+      }
+    }
+  }
+
+  private tidyUpTime (time: string): [string, boolean | undefined] | null {
+    if (time === '' || time === '00-00') {
+      return null;
+    }
+
+    const days = {'Mon': 'M', 'Tue': 'T', 'Wed': 'W', 'Thu': 'H', 'Fri': 'F', 'Sat': 'S', 'Sun': 's'};
+    for (let [day, letter] of Object.entries(days)) {
+      time = time.replace(day + ' ', letter);
+    }
+
+    // Use decimal notation for half-hours
+    time = time.replace(':30', '.5')
+
+    // Remove leading zeros
+    time = time.replace(/(?<=[MTWHFSs])0(?=[0-9])/, '');
+
+    // Don't include courses which run over multiple days (usually intensives) or on weekends
+    if (isNaN(+time[1]) || time.toLocaleLowerCase().indexOf('s') !== -1) {
+      return null;
+    }
+
+    const canClash = time.endsWith('#') ? true : undefined;
+    time = time.replace(/#$/, '');
+
+    return [time, canClash];
+  }
+
+  private getWeeks (weeks: string) {
+    weeks = weeks.split(', ')[0].replace(/^[, ]|[, ]$/g, '');
+
+    if (weeks === '' || weeks[0] !== 'w') {
+      return '';
+    }
+
+    weeks = weeks.replace(/^w/, '');
+
+    // Don't include classes which only run outside of regular term weeks
+    if (/^((11|N[0-9]|< ?1)[, ]*)*$/.test(weeks)) {
+      return null;
+    }
+
+    return weeks;
   }
 }
