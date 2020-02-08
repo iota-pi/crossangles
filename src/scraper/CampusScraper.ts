@@ -13,6 +13,7 @@ export abstract class CampusScraper {
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
+  logging = true;
 
   abstract async scrape (): Promise<CampusData>;
 
@@ -48,6 +49,8 @@ export abstract class CampusScraper {
   }
 
   log (...args: any[]) {
-    console.log(`${this.name}:`, ...args);
+    if (this.logging) {
+      console.log(`${this.name}:`, ...args);
+    }
   }
 }

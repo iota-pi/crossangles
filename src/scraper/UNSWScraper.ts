@@ -19,10 +19,9 @@ export class UNSWScraper extends CampusScraper {
   readonly parser: Parser;
   maxFaculties = Infinity;
 
-  constructor (parser?: Parser, maxFaculties?: number) {
+  constructor (parser?: Parser) {
     super();
     this.parser = parser || new Parser();
-    this.maxFaculties = maxFaculties || this.maxFaculties;
   }
 
   async scrape () {

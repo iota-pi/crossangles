@@ -4,8 +4,10 @@ import { StreamData } from '../state/Stream';
 
 describe('UNSWScraper', () => {
   it('doesn\'t throw errors', async () => {
+    // TODO mock or save snapshot page responses
     const s = new UNSWScraper();
-    s.maxFaculties = 10;
+    s.maxFaculties = 1;
+    s.logging = false;
     await s.scrape();
   })
 })
