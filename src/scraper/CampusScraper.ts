@@ -34,7 +34,7 @@ export abstract class CampusScraper {
     };
   }
 
-  async scrapePages (urls: string[], handler: (result: any) => any) {
+  protected async scrapePages (urls: string[], handler: (result: any) => any) {
     const requestList = new Apify.RequestList({
       sources: urls.map(url => ({ url })),
     });
