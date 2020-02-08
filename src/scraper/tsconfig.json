@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "esnext"
+    ],
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    // "downlevelIteration": true,  // TODO: not sure why, but this gave a bug in a spread operator in UNSWScraper
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "typeRoots": [
+      "../../typings",
+      "../../node_modules/@types"
+    ],
+    "outDir": "../../build",
+  },
+  "include": [
+    "**/*",
+  ],
+}
