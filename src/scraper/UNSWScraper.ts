@@ -1,8 +1,10 @@
 import { CampusScraper } from './CampusScraper';
-import { CourseData, courseSort } from '../state/Course';
+import { CourseData } from '../state/Course';
+import { ClassTime, StreamData } from '../state/Stream';
 import additional from './data/additional';
 import info from './data/info';
-import { ClassTime, StreamData } from '../state/Stream';
+
+export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
 const courseNames: { [code: string]: string } = require('./courses-unsw.json');
 
