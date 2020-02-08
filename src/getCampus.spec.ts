@@ -21,4 +21,9 @@ describe('getCampus', () => {
     process.env.REACT_APP_DEFAULT_CAMPUS = campus_env;
     expect(getCampus(hostname)).toBe(result);
   })
+
+  it('caches values', () => {
+    expect(getCampus('unsw.crossangles.app')).toBe('unsw');
+    expect(getCampus('usyd.crossangles.app')).toBe('unsw');
+  })
 })

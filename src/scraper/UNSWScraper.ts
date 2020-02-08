@@ -6,12 +6,9 @@ import info from './data/info';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
-const courseNames: { [code: string]: string } = require('./courses-unsw.json');
-
 const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
-const MAX_FACULTIES = Infinity;
 
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
@@ -20,10 +17,12 @@ export class UNSWScraper extends CampusScraper {
   readonly output = process.env.UNSW_OUTPUT_FILE!;
   readonly name = 'UNSW';
   readonly parser: Parser;
+  maxFaculties = Infinity;
 
-  constructor (parser?: Parser) {
+  constructor (parser?: Parser, maxFaculties?: number) {
     super();
     this.parser = parser || new Parser();
+    this.maxFaculties = maxFaculties || this.maxFaculties;
   }
 
   async scrape () {
@@ -44,7 +43,7 @@ export class UNSWScraper extends CampusScraper {
       links.push(...matchingLinks);
     });
 
-    links.length = Math.min(links.length, MAX_FACULTIES);
+    links.length = Math.min(links.length, this.maxFaculties);
 
     this.log(`found ${links.length} faculy pages`);
     return links;
@@ -85,7 +84,7 @@ export class UNSWScraper extends CampusScraper {
 
     // Remove duplicate streams from each course
     for (let course of courses) {
-      this.parser.removeDuplicateStreams(course);
+      removeDuplicateStreams(course);
     }
 
     // Add (campus-specific) additional events
@@ -99,12 +98,19 @@ export class UNSWScraper extends CampusScraper {
   }
 }
 
-class Parser {
-  public parseCourse (_code: string, _name: string): CourseData {
-    const code = _code.trim();
-    const term = (/ \(([A-Z][A-Z0-9]{2})\)/.exec(_name) || [])[1];
-    const fullName = courseNames[code];
-    const name = fullName || _name.trim().replace(new RegExp(`\\s*\\(${term}\\)$`), '');
+export default UNSWScraper;
+
+
+export class Parser {
+  courseNames: { [code: string]: string } = require('./courses-unsw.json');
+
+  parseCourse (rawCode: string, rawName: string): CourseData {
+    const code = rawCode.trim();
+    rawName = rawName.trim();
+    const term = (/ \(([A-Z][A-Z0-9]{2})\)$/.exec(rawName) || [])[1];
+    const fullName = this.courseNames[code];
+    const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
+    const name = fullName || rawName.replace(termRegex, '');
     return {
       code,
       name,
@@ -113,43 +119,7 @@ class Parser {
     };
   }
 
-  public removeDuplicateStreams (course: CourseData) {
-    const mapping = new Map<string, StreamData[]>();
-    for (let stream of course.streams) {
-      const times = stream.times !== null ? stream.times.map(t => t.time) : null;
-      const key = stream.component + `[${times}]`;
-      const currentGroup = mapping.get(key) || [];
-      const newGroup = currentGroup.concat(stream);
-      mapping.set(key, newGroup);
-    }
-
-    // For each set of streams with identical component and times, remove all but the emptiest stream
-    for (const streamGroup of Array.from(mapping.values())) {
-      const emptiest = this.emptiestStream(streamGroup);
-      for (let stream of streamGroup) {
-        if (stream !== emptiest) {
-          const index = course.streams.indexOf(stream)
-          course.streams.splice(index, 1);
-        }
-      }
-    }
-  }
-
-  private emptiestStream (streams: StreamData[]) {
-    let bestStream = null;
-    let bestRatio = Infinity;
-    for (let stream of streams) {
-      const ratio = stream.enrols[0] / stream.enrols[1];
-      if (ratio < bestRatio) {
-        bestRatio = ratio;
-        bestStream = stream;
-      }
-    }
-
-    return bestStream!;
-  }
-
-  public parseStream (
+  parseStream (
     component: string,
     section: string,
     status: string,
@@ -309,4 +279,40 @@ class Parser {
 
     return weeks;
   }
+}
+
+export function removeDuplicateStreams (course: CourseData) {
+  const mapping = new Map<string, StreamData[]>();
+  for (let stream of course.streams) {
+    const times = stream.times !== null ? stream.times.map(t => t.time) : null;
+    const key = stream.component + `[${times}]`;
+    const currentGroup = mapping.get(key) || [];
+    const newGroup = currentGroup.concat(stream);
+    mapping.set(key, newGroup);
+  }
+
+  // For each set of streams with identical component and times, remove all but the emptiest stream
+  for (const streamGroup of Array.from(mapping.values())) {
+    const emptiest = emptiestStream(streamGroup);
+    for (let stream of streamGroup) {
+      if (stream !== emptiest) {
+        const index = course.streams.indexOf(stream)
+        course.streams.splice(index, 1);
+      }
+    }
+  }
+}
+
+function emptiestStream (streams: StreamData[]) {
+  let bestStream = null;
+  let bestRatio = Infinity;
+  for (let stream of streams) {
+    const ratio = stream.enrols[0] / stream.enrols[1];
+    if (ratio < bestRatio) {
+      bestRatio = ratio;
+      bestStream = stream;
+    }
+  }
+
+  return bestStream!;
 }
