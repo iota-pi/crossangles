@@ -39,8 +39,9 @@ export class UNSWScraper extends CampusScraper {
     const links: string[] = [];
     const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
     await this.scrapePages([this.source], async ({ $ }) => {
-      const matchingLinks = $('a').filter((i: number, e: any) => linkRegex.test($(e).attr('href')));
-      links.push(...matchingLinks.map((i: number, e: any): string => $(e).attr('href')));
+      const allLinks: string[] = $('a').map((i: number, e: any) => $(e).attr('href')).toArray();
+      const matchingLinks = allLinks.filter(link => linkRegex.test(link));
+      links.push(...matchingLinks);
     });
 
     links.length = Math.min(links.length, MAX_FACULTIES);
