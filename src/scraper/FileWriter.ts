@@ -8,11 +8,11 @@ export class FileWriter implements Writer {
     private readonly destination: string,
   ) {}
 
-  async write (data: CampusData, backup = true) {
+  async write (data: CampusData, createBackup = true) {
     const json = JSON.stringify(data);
 
-    if (backup) {
-      this.backup(json)
+    if (createBackup) {
+      this.createBackup(json);
     }
 
     writeFileSync(this.destination, json, 'utf-8');
@@ -31,8 +31,10 @@ export class FileWriter implements Writer {
     return `${fname}-${year}-${month}-${day}.json`;
   }
 
-  private backup (content: string) {
+  private createBackup (content: string) {
     const backupPath = this.getBackupFilePath();
     writeFileSync(backupPath, content, 'utf-8');
   }
 }
+
+export default FileWriter;
