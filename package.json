@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",
+    "aws-sdk": "^2.614.0",
     "cypress": "^3.8.2"
   }
 }
