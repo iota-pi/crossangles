@@ -97,13 +97,16 @@ class Parser:
         if self.cache and url in self.cache:
             return self.cache[url]
 
-        html = str(requests.get(url, timeout=timeout).content, encoding='utf-8')
+        content = requests.get(url, timeout=timeout).content
+        html = str(content, encoding='utf-8')
 
         # Cache then return HTML
         self.cache[url] = html
         return html
 
-    def loadPages(self, *urls: str, prefix='', postfix='') -> Iterator[BeautifulSoup]:
+    def loadPages(
+        self, *urls: str, prefix='', postfix=''
+    ) -> Iterator[BeautifulSoup]:
         with ThreadPoolExecutor(max_workers=self.windowSize) as executor:
             tasks = (executor.submit(
                 self.loadHTML,
@@ -168,7 +171,8 @@ if __name__ == '__main__':
         courses = scrapeTerm(term, config['cache'], config['url'])
 
         # Try to find a Term with at least 20% of courses having stream data
-        if sum(len(course.streams) > 0 for course in courses) / len(courses) >= 0.2:
+        hasStreamData = sum(len(course.streams) > 0 for course in courses)
+        if hasStreamData / len(courses) >= 0.2:
             data = [course.to_dict() for course in courses]
             currentTerm = term
             break
@@ -183,7 +187,15 @@ if __name__ == '__main__':
 
         # Save scraped data
         with open(config['output'], 'w') as f:
-            json.dump({'courses': data, 'meta': meta}, f, separators=(',', ':'))
+            json.dump(
+                {'courses': data, 'meta': meta},
+                f,
+                separators=(',', ':')
+            )
     else:
         # Leave data unchanged if no such Term exists
-        sys.stderr.write('No Term with enough data found. Tried {}\n'.format(config["terms"]))
+        sys.stderr.write(
+            'No Term with enough data found. Tried {}\n'.format(
+                config["terms"]
+            )
+        )
