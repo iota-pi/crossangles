@@ -1,6 +1,6 @@
 import Writer from './Writer';
-import FileWriter from './FileWriter'
 import S3Writer from './S3Writer';
+import FileWriter from './FileWriter';
 
 export const getWriter = (destination: string): Writer => {
   if (destination.startsWith('s3://')) {

@@ -14,12 +14,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "typeRoots": [
-      "../../typings",
-      "../../node_modules/@types"
+      "node_modules/@types",
     ],
-    "outDir": "../../build",
+    "outDir": "build",
   },
   "include": [
     "**/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.js",
   ],
 }

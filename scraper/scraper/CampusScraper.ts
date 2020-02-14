@@ -1,6 +1,9 @@
-import * as Apify from 'apify';
-import { CourseData } from '../state/Course';
-import { MinistryMeta, Meta } from '../state/Meta';
+import { CourseData } from '../../src/state/Course';
+import { MinistryMeta, Meta } from '../../src/state/Meta';
+import LocalCache from './LocalCache';
+import cheerio from 'cheerio';
+import async from 'async';
+import axios from 'axios';
 
 export interface CampusData {
   courses: CourseData[],
@@ -13,6 +16,8 @@ export abstract class CampusScraper {
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
+  maxRequests: number = 10;
+  cache?: LocalCache;
   logging = true;
 
   abstract async scrape (): Promise<CampusData>;
@@ -35,17 +40,29 @@ export abstract class CampusScraper {
     };
   }
 
-  protected async scrapePages (urls: string[], handler: (result: any) => any) {
-    const requestList = new Apify.RequestList({
-      sources: urls.map(url => ({ url })),
-    });
-    await requestList.initialize();
+  protected async scrapePages (urls: string[], handler: (page: CheerioStatic) => void) {
+    await async.mapLimit(
+      urls,
+      this.maxRequests,
+      url => this.getPageContent(url, handler),
+    );
+  }
 
-    const crawler = new Apify.CheerioCrawler({
-      requestList,
-      handlePageFunction: handler,
-    });
-    await crawler.run();
+  private async getPageContent (url: string, handler: (page: CheerioStatic) => void) {
+    let content: string;
+    if (this.cache && this.cache.has(url)) {
+      content = this.cache.get(url);
+    } else {
+      const response = await axios.get<string>(url);
+      content = response.data;
+
+      if (this.cache) {
+        this.cache.set(url, content);
+      }
+    }
+
+    const page = cheerio.load(content);
+    handler(page);
   }
 
   log (...args: any[]) {

@@ -1,7 +1,5 @@
-require('dotenv').config();
-
-import { getCampusScraper } from './campus';
-import { getWriter } from './output';
+import { getCampusScraper } from './scraper';
+import { getWriter } from './writer';
 
 const scrapeCampus = async (campus: string) => {
   const scraper = getCampusScraper(campus);

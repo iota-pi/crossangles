@@ -1,4 +1,4 @@
-import { CampusData } from './CampusScraper';
+import { CampusData } from '../scraper/CampusScraper';
 import { Writer } from './Writer';
 import S3 from 'aws-sdk/clients/s3';
 import crypto from 'crypto';

@@ -1,0 +1,26 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "CrossAngles scraper",
+  "main": "index.ts",
+  "scripts": {
+    "test": "npx jest",
+    "build": "npx tsc",
+    "watch": "npx tsc -w",
+    "start": "node build/scraper"
+  },
+  "author": "David Adams",
+  "dependencies": {
+    "@types/async": "^3.0.7",
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "async": "^3.1.1",
+    "cheerio": "^1.0.0-rc.3"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "ts-jest": "^25.2.0",
+    "typescript": "^3.7.5",
+    "aws-sdk": "^2.614.0"
+  }
+}

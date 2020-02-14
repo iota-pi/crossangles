@@ -20,7 +20,6 @@
     "noEmit": true,
     "jsx": "preserve",
     "typeRoots": [
-      "./typings",
       "node_modules/@types"
     ]
   },

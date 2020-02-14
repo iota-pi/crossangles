@@ -1,4 +1,4 @@
-import { CampusData } from './CampusScraper';
+import { CampusData } from '../scraper/CampusScraper';
 import { Writer } from './Writer';
 import { writeFileSync } from 'fs';
 

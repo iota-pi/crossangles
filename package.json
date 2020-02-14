@@ -4,20 +4,19 @@
   "private": true,
   "dependencies": {
     "@loadable/component": "^5.12.0",
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/icons": "^4.5.1",
-    "@types/enzyme": "^3.10.4",
-    "@types/jest": "^24.9.0",
+    "@material-ui/core": "^4.9.2",
+    "@material-ui/icons": "^4.9.1",
+    "@types/enzyme": "^3.10.5",
+    "@types/jest": "^24.9.1",
     "@types/loadable__component": "^5.10.0",
-    "@types/node": "^12.12.24",
+    "@types/node": "^12.12.27",
     "@types/react": "16.8.19",
     "@types/react-color": "^3.0.1",
     "@types/react-dom": "16.8.4",
-    "@types/react-redux": "^7.1.6",
+    "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.3",
     "@types/react-select": "^2.0.19",
-    "apify": "^0.14.15",
-    "axios": "^0.19.1",
+    "axios": "^0.19.2",
     "enzyme": "^3.11.0",
     "esm": "^3.2.25",
     "react": "^16.12.0",
@@ -26,7 +25,7 @@
     "react-draggable": "^3.3.2",
     "react-redux": "^7.1.3",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^3.3.1",
     "react-select": "^3.0.8",
     "redux": "^4.0.5",
     "redux-persist": "^5.10.0",
@@ -60,7 +59,7 @@
   },
   "devDependencies": {
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",
-    "aws-sdk": "^2.614.0",
-    "cypress": "^3.8.2"
+    "aws-sdk": "^2.618.0",
+    "cypress": "^3.8.3"
   }
 }

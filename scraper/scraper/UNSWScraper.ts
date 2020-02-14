@@ -1,43 +1,61 @@
-import { CampusScraper } from './CampusScraper';
-import { CourseData } from '../state/Course';
-import { ClassTime, StreamData } from '../state/Stream';
-import additional from './data/additional';
-import info from './data/info';
+import { CampusScraper, CampusData } from './CampusScraper';
+import { CourseData } from '../../src/state/Course';
+import { ClassTime, StreamData } from '../../src/state/Stream';
+import additional from '../data/additional';
+import info from '../data/info';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
 const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
+const DATA_THRESHOLD = 0.2;
 
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   protected readonly meta = info.unsw;
-  readonly source = process.env.UNSW_DATA_SOURCE!;
-  readonly output = process.env.UNSW_OUTPUT_FILE!;
+  readonly source = 'https://nss.cse.unsw.edu.au/sitar/classes2019';
+  readonly output = 'unsw/data.json';
   readonly name = 'UNSW';
   readonly parser: Parser;
   maxFaculties = Infinity;
+  maxCourses = Infinity;
 
   constructor (parser?: Parser) {
     super();
     this.parser = parser || new Parser();
   }
 
-  async scrape () {
-    const term = 2;
+  async scrape (): Promise<CampusData> {
+    let courses: CourseData[];
+    let term: number;
+
+    for (term = 3; term > 0; term--) {
+      courses = await this.scrapeTerm(term);
+
+      // Assume that the current term is the latest one with stream data available for enough of their courses
+      const hasStreamData = courses.filter(c => c.streams.length > 0);
+      if (hasStreamData.length >= courses.length * DATA_THRESHOLD) {
+        break;
+      }
+    }
+
+    const meta = this.generateMetaData(term);
+    return { courses, meta };
+  }
+
+  async scrapeTerm (term: number) {
     this.log(`scraping term ${term} from ${this.source}`);
     const facultyPages = await this.findFacultyPages(term);
     const courses = await this.scrapeFacultyPages(facultyPages);
-    const meta = this.generateMetaData(term);
-    return { courses, meta };
+    return courses;
   }
 
   private async findFacultyPages (term: number) {
     const links: string[] = [];
     const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
-    await this.scrapePages([this.source], async ({ $ }) => {
-      const allLinks: string[] = $('a').map((i: number, e: any) => $(e).attr('href')).toArray();
+    await this.scrapePages([this.source], async ($) => {
+      const allLinks = Array.from($('a')).map(e => $(e).attr('href'));
       const matchingLinks = allLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);
     });
@@ -49,17 +67,26 @@ export class UNSWScraper extends CampusScraper {
   }
 
   private async scrapeFacultyPages (pages: string[]) {
-    const courses: CourseData[] = [];
+    const allCourses: CourseData[] = [];
     const urls = pages.map(page => `${this.source}/${page}`);
-    await this.scrapePages(urls, async ({ $ }) => {
-      // Get all rows of the table (except for the first which is the header)
-      const rows = $($('table').get(2)).find('tr').slice(1);
-      rows.map((i: any, e: any) => {
-        const cells = $(e).find('td');
+    await this.scrapePages(urls, async ($) => {
+      // Get all rows of the table
+      const rows = Array.from($($('table').get(2)).find('tr'));
+
+      // Remove first row (which is the header)
+      const bodyRows = rows.slice(1);
+      const courses: CourseData[] = [];
+
+      for (const row of bodyRows) {
+        const cells = $(row).find('td');
 
         if (cells.length === TABLE_END_COUNT) {
-          return false;
+          break;
         } else if (cells.length === COURSE_HEADING_COUNT) {
+          if (courses.length >= this.maxCourses) {
+            break;
+          }
+
           const course = this.parser.parseCourse(
             $(cells.get(0)).text(),
             $(cells.get(1)).text(),
@@ -78,22 +105,24 @@ export class UNSWScraper extends CampusScraper {
             course.streams.push(stream);
           }
         }
-      })
+      }
+
+      allCourses.push(...courses);
     });
 
     // Remove duplicate streams from each course
-    for (let course of courses) {
+    for (let course of allCourses) {
       removeDuplicateStreams(course);
     }
 
     // Add (campus-specific) additional events
-    courses.push(...this.additional);
+    allCourses.push(...this.additional);
 
     // Sort courses for consistency
-    courses.sort(courseSort);
+    allCourses.sort(courseSort);
 
-    this.log(`parsed ${courses.length} courses`);
-    return courses;
+    this.log(`parsed ${allCourses.length} courses`);
+    return allCourses;
   }
 }
 
@@ -101,7 +130,7 @@ export default UNSWScraper;
 
 
 export class Parser {
-  courseNames: { [code: string]: string } = require('./courses-unsw.json');
+  courseNames: { [code: string]: string } = require('../data/courses-unsw.json');
 
   parseCourse (rawCode: string, rawName: string): CourseData {
     const code = rawCode.trim();
