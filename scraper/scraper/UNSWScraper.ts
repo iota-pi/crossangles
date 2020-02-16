@@ -19,7 +19,6 @@ export class UNSWScraper extends CampusScraper {
   readonly name = 'UNSW';
   readonly parser: Parser;
   maxFaculties = Infinity;
-  maxCourses = Infinity;
 
   constructor (parser?: Parser) {
     super();
@@ -67,48 +66,10 @@ export class UNSWScraper extends CampusScraper {
   }
 
   private async scrapeFacultyPages (pages: string[]) {
-    const allCourses: CourseData[] = [];
+    // const allCourses: CourseData[] = [];
     const urls = pages.map(page => `${this.source}/${page}`);
-    await this.scrapePages(urls, async ($) => {
-      // Get all rows of the table
-      const rows = Array.from($($('table').get(2)).find('tr'));
-
-      // Remove first row (which is the header)
-      const bodyRows = rows.slice(1);
-      const courses: CourseData[] = [];
-
-      for (const row of bodyRows) {
-        const cells = $(row).find('td');
-
-        if (cells.length === TABLE_END_COUNT) {
-          break;
-        } else if (cells.length === COURSE_HEADING_COUNT) {
-          if (courses.length >= this.maxCourses) {
-            break;
-          }
-
-          const course = this.parser.parseCourse(
-            $(cells.get(0)).text(),
-            $(cells.get(1)).text(),
-          );
-          courses.push(course);
-        } else if (cells.length === REGULAR_CELL_COUNT) {
-          const course = courses[courses.length - 1];
-          const stream = this.parser.parseStream(
-            $(cells.get(0)).text(),
-            $(cells.get(1)).text(),
-            $(cells.get(4)).text(),
-            $(cells.get(5)).text(),
-            $(cells.get(7)).text(),
-          );
-          if (stream !== null) {
-            course.streams.push(stream);
-          }
-        }
-      }
-
-      allCourses.push(...courses);
-    });
+    const results = await this.scrapePages(urls, page => this.parser.parseFacultyPage(page));
+    const allCourses = results.flat();
 
     // Remove duplicate streams from each course
     for (let course of allCourses) {
@@ -131,6 +92,43 @@ export default UNSWScraper;
 
 export class Parser {
   courseNames: { [code: string]: string } = require('../data/courses-unsw.json');
+
+  async parseFacultyPage ($: CheerioStatic): Promise<CourseData[]> {
+    // Get all rows of the table
+    const rows = Array.from($($('table').get(2)).find('tr'));
+
+    // Remove first row (which is the header)
+    const bodyRows = rows.slice(1);
+    const courses: CourseData[] = [];
+
+    for (const row of bodyRows) {
+      const cells = $(row).find('td');
+
+      if (cells.length === TABLE_END_COUNT) {
+        break;
+      } else if (cells.length === COURSE_HEADING_COUNT) {
+        const course = this.parseCourse(
+          $(cells.get(0)).text(),
+          $(cells.get(1)).text(),
+        );
+        courses.push(course);
+      } else if (cells.length === REGULAR_CELL_COUNT) {
+        const course = courses[courses.length - 1];
+        const stream = this.parseStream(
+          $(cells.get(0)).text(),
+          $(cells.get(1)).text(),
+          $(cells.get(4)).text(),
+          $(cells.get(5)).text(),
+          $(cells.get(7)).text(),
+        );
+        if (stream !== null) {
+          course.streams.push(stream);
+        }
+      }
+    }
+
+    return courses;
+  }
 
   parseCourse (rawCode: string, rawName: string): CourseData {
     const code = rawCode.trim();

@@ -7,6 +7,7 @@ describe('UNSWScraper', () => {
   it('gives consistent results', async () => {
     // Setup
     const s = new UNSWScraper();
+    s.maxFaculties = 3;
     s.logging = false;
     s.cache = new HTMLCache();
     const cacheFile = './unsw-snapshot.json';
@@ -26,7 +27,7 @@ describe('Parser', () => {
     ${' BLAH9870 '} | ${'Thesis (Full-time)'}   | ${'BLAH9870'} | ${'Thesis (Full-time)'}  | ${undefined}
     ${'BLAH9876\t'} | ${'Hist. Foobar'}         | ${'BLAH9876'} | ${'A History of Foobar'} | ${undefined}
     ${'BLAH9876'}   | ${'Hist. Foobar  (UE2) '} | ${'BLAH9876'} | ${'A History of Foobar'} | ${'UE2'}
-  `('parseCourse("$code", "$name") = "$result"', ({ rawCode, rawName, code, name, term }) => {
+  `('parseCourse("$code", "$name") give term "$term"', ({ rawCode, rawName, code, name, term }) => {
     const p = new Parser();
     p.courseNames = {
       BLAH9876: 'A History of Foobar',

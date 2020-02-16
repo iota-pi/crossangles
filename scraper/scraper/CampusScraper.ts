@@ -40,15 +40,12 @@ export abstract class CampusScraper {
     };
   }
 
-  protected async scrapePages (urls: string[], handler: (page: CheerioStatic) => Promise<void>) {
-    const queue = new AsyncQueue(this.maxRequests);
+  protected async scrapePages<T> (urls: string[], handler: (page: CheerioStatic) => Promise<T>) {
+    const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
     const processor = async (url: string) => handler(await this.getPageContent(url));
     const parsingPromises = await queue.run(processor);
-
-    if (parsingPromises) {
-      await Promise.all(parsingPromises);
-    }
+    return await Promise.all(parsingPromises);
   }
 
   private async getPageContent (url: string) {
