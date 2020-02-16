@@ -16,7 +16,7 @@ export abstract class CampusScraper {
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
-  maxRequests: number = 10;
+  maxRequests: number = 5;
   cache?: HTMLCache;
   logging = true;
 
