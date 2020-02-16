@@ -1,17 +1,27 @@
 import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
 import { CourseData } from '../../src/state/Course';
 import { StreamData } from '../../src/state/Stream';
+import HTMLCache from './HTMLCache';
 
-// describe('UNSWScraper', () => {
-//   it('doesn\'t throw errors', async () => {
-//     // TODO mock or save snapshot page responses
-//     const s = new UNSWScraper();
-//     s.maxFaculties = 1;
-//     s.maxCourses = 1;
-//     s.logging = false;
-//     await s.scrape();
-//   })
-// })
+describe('UNSWScraper', () => {
+  it('doesn\'t throw errors', async () => {
+    // Setup
+    const s = new UNSWScraper();
+    s.maxFaculties = 1;
+    s.maxCourses = 1;
+    s.logging = false;
+    s.cache = new HTMLCache();
+    const cacheFile = './UNSWScraper-cache-snapshot.json';
+    let writeCache = false;
+    await s.cache.load(cacheFile).catch(() => writeCache = true);
+
+    // Execute
+    await s.scrape();
+
+    // Save cache
+    if (writeCache) await s.cache.write(cacheFile);
+  })
+})
 
 describe('Parser', () => {
   it.each`

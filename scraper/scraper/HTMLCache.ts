@@ -2,7 +2,6 @@ import { writeFileSync, readFileSync } from "fs";
 
 export class HTMLCache {
   private data: Map<string, string>;
-  destination: string;
 
   constructor () {
     this.data = new Map();
