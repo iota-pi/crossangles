@@ -15,7 +15,7 @@ export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   protected readonly meta = info.unsw;
   readonly source = 'https://nss.cse.unsw.edu.au/sitar/classes2019';
-  readonly output = 'unsw/data.json';
+  readonly output = 'output/unsw/data.json';
   readonly name = 'UNSW';
   readonly parser: Parser;
   maxFaculties = Infinity;
@@ -54,7 +54,7 @@ export class UNSWScraper extends CampusScraper {
   private async findFacultyPages (term: number) {
     const links: string[] = [];
     const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
-    await this.scrapePages([this.source], async ($) => {
+    await this.scrapePages([this.source, this.source], async ($) => {
       const allLinks = Array.from($('a')).map(e => $(e).attr('href'));
       const matchingLinks = allLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);

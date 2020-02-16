@@ -2,16 +2,16 @@ import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
 import { CourseData } from '../../src/state/Course';
 import { StreamData } from '../../src/state/Stream';
 
-describe('UNSWScraper', () => {
-  it('doesn\'t throw errors', async () => {
-    // TODO mock or save snapshot page responses
-    const s = new UNSWScraper();
-    s.maxFaculties = 1;
-    s.maxCourses = 1;
-    s.logging = false;
-    await s.scrape();
-  })
-})
+// describe('UNSWScraper', () => {
+//   it('doesn\'t throw errors', async () => {
+//     // TODO mock or save snapshot page responses
+//     const s = new UNSWScraper();
+//     s.maxFaculties = 1;
+//     s.maxCourses = 1;
+//     s.logging = false;
+//     await s.scrape();
+//   })
+// })
 
 describe('Parser', () => {
   it.each`

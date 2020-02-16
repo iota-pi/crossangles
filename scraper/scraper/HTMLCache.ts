@@ -1,6 +1,6 @@
 import { writeFileSync, readFileSync } from "fs";
 
-export class LocalCache {
+export class HTMLCache {
   private data: Map<string, string>;
   destination: string;
 
@@ -32,4 +32,4 @@ export class LocalCache {
   }
 }
 
-export default LocalCache;
+export default HTMLCache;

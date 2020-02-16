@@ -3,9 +3,9 @@ import { getWriter } from './writer';
 
 const scrapeCampus = async (campus: string) => {
   const scraper = getCampusScraper(campus);
-  const output = getWriter(scraper.output);
   const data = await scraper.scrape();
-  output.write(data);
+  const output = getWriter(scraper.output);
+  await output.write(data);
   scraper.log(`written to ${output}`);
 }
 
@@ -20,9 +20,7 @@ const main = async () => {
     promises.push(promise);
   }
 
-  for (const promise of promises) {
-    await promise;
-  }
+  await Promise.all(promises);
 }
 
 main();

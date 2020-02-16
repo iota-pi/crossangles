@@ -1,8 +1,8 @@
 import { CourseData } from '../../src/state/Course';
 import { MinistryMeta, Meta } from '../../src/state/Meta';
-import LocalCache from './LocalCache';
+import AsyncQueue from './AsyncQueue';
+import HTMLCache from './HTMLCache';
 import cheerio from 'cheerio';
-import async from 'async';
 import axios from 'axios';
 
 export interface CampusData {
@@ -17,7 +17,7 @@ export abstract class CampusScraper {
   abstract readonly output: string;
   abstract readonly name: string;
   maxRequests: number = 10;
-  cache?: LocalCache;
+  cache?: HTMLCache;
   logging = true;
 
   abstract async scrape (): Promise<CampusData>;
@@ -40,15 +40,18 @@ export abstract class CampusScraper {
     };
   }
 
-  protected async scrapePages (urls: string[], handler: (page: CheerioStatic) => void) {
-    await async.mapLimit(
-      urls,
-      this.maxRequests,
-      url => this.getPageContent(url, handler),
-    );
+  protected async scrapePages (urls: string[], handler: (page: CheerioStatic) => Promise<void>) {
+    const queue = new AsyncQueue(this.maxRequests);
+    queue.enqueue(urls);
+    const processor = async (url: string) => handler(await this.getPageContent(url));
+    const parsingPromises = await queue.run(processor);
+
+    if (parsingPromises) {
+      await Promise.all(parsingPromises);
+    }
   }
 
-  private async getPageContent (url: string, handler: (page: CheerioStatic) => void) {
+  private async getPageContent (url: string) {
     let content: string;
     if (this.cache && this.cache.has(url)) {
       content = this.cache.get(url);
@@ -62,7 +65,7 @@ export abstract class CampusScraper {
     }
 
     const page = cheerio.load(content);
-    handler(page);
+    return page;
   }
 
   log (...args: any[]) {
