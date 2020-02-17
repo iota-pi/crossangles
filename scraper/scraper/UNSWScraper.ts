@@ -14,7 +14,7 @@ const DATA_THRESHOLD = 0.2;
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   protected readonly meta = info.unsw;
-  readonly source = 'https://nss.cse.unsw.edu.au/sitar/classes2019';
+  readonly source = 'http://classutil.unsw.edu.au';
   readonly output = 'unsw/data.json';
   readonly name = 'UNSW';
   readonly parser: Parser;
