@@ -124,8 +124,8 @@ export class SessionPlacement extends TimetablePlacement {
   }
 
   shouldDisplace (includeFullClasses: boolean): boolean {
-    const stream = this.session.stream;
-    return stream.full && !includeFullClasses && this.isSnapped;
+    const isFull: boolean = !!this.session.stream.full;
+    return isFull && !includeFullClasses && this.isSnapped;
   }
 
   get touched (): boolean {

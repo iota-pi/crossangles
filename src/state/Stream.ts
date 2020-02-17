@@ -7,7 +7,7 @@ export interface StreamData {
   component: string,
   enrols: [number, number],
   times: ClassTime[] | null,
-  full: boolean,
+  full?: boolean,
   web?: boolean,
 }
 
