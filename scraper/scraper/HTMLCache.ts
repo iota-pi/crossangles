@@ -20,7 +20,9 @@ export class HTMLCache {
   }
 
   async write (destination: string) {
-    const json = JSON.stringify(Array.from(this.data));
+    const arrayData = Array.from(this.data);
+    arrayData.sort((a, b) => +(a > b) - +(a < b))
+    const json = JSON.stringify(arrayData);
     writeFileSync(destination, json, 'utf-8');
   }
 

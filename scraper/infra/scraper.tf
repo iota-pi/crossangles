@@ -3,19 +3,29 @@ provider "aws" {
   version = "~> 2.48"
 }
 
+provider "archive" {
+  version = "~> 1.3"
+}
+
+data "archive_file" "scraper_code" {
+  type        = "zip"
+  source_file = "../build/bundled/lambda.js"
+  output_path = "../build/bundled/scraper.zip"
+}
+
 resource "aws_lambda_function" "scraper" {
   function_name = "crossangles-scraper"
 
-  # The bucket name as created earlier with "aws s3api create-bucket"
-  s3_bucket = var.lambda_code_bucket
-  s3_key    = "scraper/scraper.zip"
-
-  # "main" is the filename within the zip file (main.js) and "handler"
+  # "lambda" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
   # exported in that file.
-  handler     = "main.handler"
+  handler     = "lambda.handler"
   runtime     = "nodejs12.x"
-  memory_size = 1024
+  memory_size = 512
+  timeout     = 30
+
+  filename         = data.archive_file.scraper_code.output_path
+  source_code_hash = data.archive_file.scraper_code.output_base64sha256
 
   role = aws_iam_role.scraper_role.arn
 }
@@ -25,7 +35,7 @@ resource "aws_iam_role" "scraper_role" {
 
   assume_role_policy = <<EOF
 {
-  "Version": "2020-02-08",
+  "Version": "2012-10-17",
   "Statement": [
     {
       "Action": "sts:AssumeRole",
@@ -66,7 +76,7 @@ resource "aws_iam_role_policy_attachment" "scraper_policy_attach" {
 
 resource "aws_s3_bucket" "scraper_output" {
   bucket = "crossangles-course-data"
-  acl    = "public-read"
+  acl    = "private"
 
   tags = {
     Name        = "CrossAngles Data"

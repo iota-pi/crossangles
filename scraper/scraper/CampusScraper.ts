@@ -50,18 +50,21 @@ export abstract class CampusScraper {
 
   private async getPageContent (url: string) {
     let content: string;
+    let loadedFromCache = false;
     if (this.cache && this.cache.has(url)) {
       content = this.cache.get(url);
+      loadedFromCache = true;
     } else {
       const response = await axios.get<string>(url);
       content = response.data;
-
-      if (this.cache) {
-        this.cache.set(url, content);
-      }
     }
 
     const page = cheerio.load(content);
+
+    if (!loadedFromCache && this.cache) {
+      this.cache.set(url, page.html());
+    }
+
     return page;
   }
 

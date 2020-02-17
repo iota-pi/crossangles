@@ -12,13 +12,13 @@ export class S3Writer implements Writer {
     private readonly path: string,
   ) {}
 
-  async write (data: CampusData, createBackup = true) {
+  async write (data: CampusData, createBackup = false) {
     const json = JSON.stringify(data);
 
-    this.putObject(json);
+    await this.upload(json);
 
     if (createBackup) {
-      this.createBackup(json);
+      await this.createBackup(json);
     }
   }
 
@@ -28,18 +28,19 @@ export class S3Writer implements Writer {
   }
 
   private createBackup (content: string) {
-    this.putObject(content, { Tagging: 'data-type=backup' });
+    const key = this.path;
+    return this.upload(content, { Key: key, Tagging: 'data-type=backup' });
   }
 
-  private putObject (content: string, additionalParams?: Partial<S3.PutObjectRequest>) {
-    return this.s3.putObject({
+  private upload (content: string, additionalParams?: Partial<S3.PutObjectRequest>) {
+    return this.s3.upload({
       Bucket: this.bucket,
       Key: this.path,
       ContentType: 'application/json',
       Body: content,
       ContentMD5: this.getHash(content),
       ...additionalParams,
-    });
+    }).promise();
   }
 
   // Get base64 digest of md5 hash of content
