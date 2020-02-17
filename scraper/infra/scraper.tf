@@ -21,8 +21,8 @@ resource "aws_lambda_function" "scraper" {
   # exported in that file.
   handler     = "lambda.handler"
   runtime     = "nodejs12.x"
-  memory_size = 512
-  timeout     = 30
+  memory_size = 1024
+  timeout     = 60
 
   filename         = data.archive_file.scraper_code.output_path
   source_code_hash = data.archive_file.scraper_code.output_base64sha256
