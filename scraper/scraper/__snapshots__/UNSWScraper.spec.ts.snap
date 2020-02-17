@@ -9,206 +9,240 @@ Array [
       Object {
         "component": "LEC",
         "enrols": Array [
-          297,
           350,
+          352,
         ],
-        "full": false,
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Burrows Th",
+            "time": "T11-13",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          279,
+          282,
+        ],
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "CLB 7",
-            "time": "T11-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          198,
-          200,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "CLB 6",
-            "time": "W16-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          150,
-          200,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "CLB 8",
             "time": "W9-11",
-            "weeks": "1-10",
+            "weeks": "1-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          264,
+          275,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "CLB 7",
+            "time": "W15-17",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          160,
+          170,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "AinswthG03",
+            "time": "H10-12",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          257,
+          260,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "AinswthG03",
+            "time": "H14-16",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
+          22,
           24,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Sqhouse203",
+            "location": "Webst 252",
             "time": "F9-10.5",
-            "weeks": "2-10",
+            "weeks": "2-5,7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
+          21,
           24,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Sqhouse203",
+            "location": "Webst 252",
             "time": "F10.5-12",
-            "weeks": "2-10",
+            "weeks": "2-5,7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
+          23,
           24,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Quad G026",
+            "location": "Webst 252",
+            "time": "F12-13.5",
+            "weeks": "2-5,7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 252",
             "time": "H9-10.5",
-            "weeks": "2-10",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
+          23,
           24,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Quad G026",
+            "location": "Webst 252",
             "time": "H10.5-12",
-            "weeks": "2-10",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          23,
+          24,
           24,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Sqhouse203",
+            "location": "Webst 252",
             "time": "H12-13.5",
-            "weeks": "2-10",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
+          23,
           24,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Sqhouse203",
+            "location": "Quad G054",
             "time": "H13.5-15",
-            "weeks": "2-10",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
-          24,
+          25,
+          25,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Block G13",
-            "time": "H15-16.5",
-            "weeks": "2-10",
+            "location": "Law 111",
+            "time": "H16-17.5",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          23,
+          22,
           24,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Block G13",
-            "time": "H16.5-18",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Block G13",
+            "location": "Quad G054",
             "time": "H18-19.5",
-            "weeks": "2-10",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
@@ -220,97 +254,12 @@ Array [
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Block G15",
-            "time": "T9-10.5",
-            "weeks": "2-10",
+            "location": "BUS 118",
+            "time": "M9-10.5",
+            "weeks": "2-5,7-8,10-11",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Block G15",
-            "time": "T10.5-12",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G027",
-            "time": "T12-13.5",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G027",
-            "time": "T13.5-15",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 215",
-            "time": "T15-16.5",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 215",
-            "time": "T16.5-18",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
@@ -318,16 +267,101 @@ Array [
           23,
           24,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 207",
-            "time": "T18-19.5",
-            "weeks": "2-10",
+            "location": "BUS 114",
+            "time": "M10.5-12",
+            "weeks": "2-5,7-8,10-11",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 107",
+            "time": "M12-13.5",
+            "weeks": "2-5,7-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 107",
+            "time": "M13.5-15",
+            "weeks": "2-5,7-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 107",
+            "time": "M15-16.5",
+            "weeks": "2-5,7-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 107",
+            "time": "M16.5-18",
+            "weeks": "2-5,7-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 252",
+            "time": "M18-19.5",
+            "weeks": "2-5,7-8,10-11",
+          },
+        ],
+        "web": undefined,
       },
       Object {
         "component": "TUT",
@@ -339,12 +373,29 @@ Array [
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law 275",
-            "time": "W9-10.5",
-            "weeks": "2-10",
+            "location": "Quad G054",
+            "time": "T9-10.5",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G054",
+            "time": "T10.5-12",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
       },
       Object {
         "component": "TUT",
@@ -356,97 +407,563 @@ Array [
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law 275",
-            "time": "W10.5-12",
-            "weeks": "2-10",
+            "location": "Webst 252",
+            "time": "T12-13.5",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
-          24,
+          25,
+          25,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law 301",
-            "time": "W12-13.5",
-            "weeks": "2-10",
+            "location": "Quad G052",
+            "time": "T13.5-15",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 301",
-            "time": "W13.5-15",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 301",
-            "time": "W15-16.5",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 301",
-            "time": "W16.5-18",
-            "weeks": "2-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          24,
+          25,
+          25,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS 114",
-            "time": "W18-19.5",
-            "weeks": "2-10",
+            "time": "T15-16.5",
+            "weeks": "2-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 114",
+            "time": "T16.5-18",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 252",
+            "time": "T18-19.5",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 114",
+            "time": "W9-10.5",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G054",
+            "time": "W10.5-12",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G054",
+            "time": "W12-13.5",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "W13.5-15",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G054",
+            "time": "W15-16.5",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          20,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 252",
+            "time": "W16.5-18",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 252",
+            "time": "W18-19.5",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT1511",
+    "name": "Accounting and Financial Management 1B",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          200,
+          205,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ChemSc M18",
+            "time": "H13-15",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          50,
+          180,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThB",
+            "time": "W9-11",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          204,
+          231,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "CLB 6",
+            "time": "T18-20",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G052",
+            "time": "H10",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G053",
+            "time": "H11",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          26,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G053",
+            "time": "H12",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          26,
+          26,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G053",
+            "time": "H13",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          26,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 162",
+            "time": "H14",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          30,
+          30,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 119",
+            "time": "H16",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          26,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 219",
+            "time": "H17",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 205",
+            "time": "H18",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          26,
+          26,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 205",
+            "time": "T14",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          30,
+          30,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G052",
+            "time": "T15",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          20,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G052",
+            "time": "T16",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 202",
+            "time": "W9",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          26,
+          26,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 202",
+            "time": "W10",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          26,
+          26,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 163",
+            "time": "W12",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          26,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 101",
+            "time": "W13",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 203",
+            "time": "W15",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law 388",
+            "time": "W16",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 119",
+            "time": "W17",
+            "weeks": "2-5,7-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -458,25 +975,450 @@ Array [
     "term": undefined,
   },
   Object {
-    "code": "ACCT2507",
-    "name": "Introduction to Accounting Research",
+    "code": "ACCT2522",
+    "name": "Management Accounting 1",
     "streams": Array [
       Object {
-        "component": "SEM",
+        "component": "LEC",
         "enrols": Array [
-          6,
-          20,
+          213,
+          345,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 215",
-            "time": "T9-12",
+            "location": "AinswthG03",
+            "time": "T9-11",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          254,
+          330,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law Th G04",
+            "time": "T15-17",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          114,
+          148,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ElecEngG23",
+            "time": "T18-20",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          431,
+          500,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": undefined,
+            "time": "H17-19",
+            "weeks": "6",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          150,
+          500,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": undefined,
+            "time": "H19-21",
+            "weeks": "6",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G03",
+            "time": "H9-10.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G03",
+            "time": "H10.5-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Col LG01",
+            "time": "H12-13.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Col LG01",
+            "time": "H13.5-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          17,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G02",
+            "time": "M10-11.5",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G02",
+            "time": "M11.5-13",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G02",
+            "time": "M13-14.5",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G02",
+            "time": "M14.5-16",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth201",
+            "time": "T11-12.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth201",
+            "time": "T12.5-14",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth201",
+            "time": "T14-15.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth201",
+            "time": "T15.5-17",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          20,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1046",
+            "time": "T18-19.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          21,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1045",
+            "time": "T19.5-21",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1045",
+            "time": "W9-10.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          22,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1045",
+            "time": "W10.5-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "RedC 3037",
+            "time": "W12-13.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "RedC 3037",
+            "time": "W13.5-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth101",
+            "time": "W15-16.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth101",
+            "time": "W16.5-18",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          19,
+          20,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Col LG02",
+            "time": "W18-19.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -500,240 +1442,104 @@ Array [
       Object {
         "component": "SEM",
         "enrols": Array [
-          40,
-          40,
+          37,
+          42,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G26",
-            "time": "F12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          39,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
+            "location": "Gold G09",
             "time": "H9-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          41,
+          42,
           42,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G24",
+            "location": "Gold G09",
             "time": "H12-15",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          27,
+          34,
           40,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G23",
-            "time": "M9-12",
-            "weeks": undefined,
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          40,
-          40,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "M12-15",
-            "weeks": undefined,
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          30,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "M15-18",
-            "weeks": undefined,
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          32,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "M18-21",
-            "weeks": undefined,
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          37,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
+            "location": "Quad G040",
             "time": "T9-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          42,
-          42,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "T12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          42,
-          42,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "T15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
           39,
-          40,
+          42,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G24",
-            "time": "T18-21",
+            "location": "ElecEngG04",
+            "time": "T13-16",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          40,
-          40,
+          23,
+          42,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G24",
+            "location": "ElecEngG04",
             "time": "W9-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          41,
+          35,
           42,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G24",
+            "location": "ElecEngG04",
             "time": "W12-15",
             "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          40,
-          40,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "W15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -746,270 +1552,76 @@ Array [
         "component": "SEM",
         "enrols": Array [
           39,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "F12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          36,
-          36,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G26",
-            "time": "H9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          40,
-          40,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G26",
-            "time": "H12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
           39,
-          40,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G26",
-            "time": "H15-18",
-            "weeks": "1-10",
+            "location": "BUS G24",
+            "time": "M9-12",
+            "weeks": "1-8,10-11",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          34,
           40,
+          39,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G23",
-            "time": "T9-12",
-            "weeks": "1-10",
+            "location": "BUS G24",
+            "time": "M12-15",
+            "weeks": "1-8,10-11",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
           38,
-          40,
+          39,
         ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "T12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          40,
-          40,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "T15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          27,
-          36,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G053",
-            "time": "T18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          34,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "W9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          40,
-          40,
-        ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS G26",
-            "time": "W12-15",
-            "weeks": "1-10",
+            "time": "M16-19",
+            "weeks": "1-8,10-11",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          37,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "W15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          39,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G23",
-            "time": "W18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
   },
   Object {
-    "code": "ACCT3601",
-    "name": "Global Financial Reporting and Analysis",
+    "code": "ACCT3610",
+    "name": "Business Analysis and Valuation",
     "streams": Array [
       Object {
         "component": "LEC",
         "enrols": Array [
-          41,
-          45,
+          51,
+          53,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 220",
-            "time": "T14-17",
+            "location": "BUS 119",
+            "time": "H13-16",
             "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          41,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "MacauleyTh",
-            "time": "M16-18",
-            "weeks": "7",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT3625",
-    "name": "Integrated Reporting, Integrated Thinking and Value Creation",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          19,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "H15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -1021,172 +1633,121 @@ Array [
       Object {
         "component": "SEM",
         "enrols": Array [
-          41,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "TETB LG05",
-            "time": "F10-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          45,
-          45,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "SEB G05",
-            "time": "H10-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          45,
-          45,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 220",
-            "time": "H14-17",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          34,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 220",
-            "time": "H18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          28,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 216",
-            "time": "M10-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
           30,
-          45,
+          42,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "SEB G05",
-            "time": "M15-18",
+            "location": "ElecEngG04",
+            "time": "H9-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          45,
-          45,
+          26,
+          38,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G03",
+            "time": "H12-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          33,
+          38,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 106",
+            "time": "T9-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          38,
+          38,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 119",
-            "time": "T14-17",
+            "location": "Mat 106",
+            "time": "T12-15",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          42,
+          42,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 250",
+            "time": "W9-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
           36,
-          45,
+          38,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 119",
-            "time": "T18-21",
+            "location": "Mat 106",
+            "time": "W13-16",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          45,
-          45,
+          38,
+          42,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 220",
-            "time": "W10-13",
+            "location": "ElecEngG09",
+            "time": "W18-21",
             "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          45,
-          45,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 220",
-            "time": "W15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -1198,8 +1759,26 @@ Array [
     "term": undefined,
   },
   Object {
-    "code": "ACCT4798",
-    "name": "Thesis (Accounting) C",
+    "code": "ACCT4796",
+    "name": "Thesis (Accounting) A",
+    "streams": Array [],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT4809",
+    "name": "Current Developments in Auditing Research",
+    "streams": Array [],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT4851",
+    "name": "Current Developments in Accounting Research - Financial",
+    "streams": Array [],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT4897",
+    "name": "Seminar in Research Methodology",
     "streams": Array [],
     "term": undefined,
   },
@@ -1216,42 +1795,117 @@ Array [
     "term": undefined,
   },
   Object {
-    "code": "ACCT5907",
-    "name": "Int'l Fin Statement Analysis",
+    "code": "ACCT5906",
+    "name": "Financial Literacy Business",
     "streams": Array [
       Object {
-        "component": "LEC",
+        "component": "SEM",
         "enrols": Array [
-          51,
-          70,
+          45,
+          48,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law Th G02",
-            "time": "H18-21",
-            "weeks": "1-10",
+            "location": "Quad G031",
+            "time": "F10-13",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "LEC",
+        "component": "SEM",
         "enrols": Array [
-          46,
+          49,
           50,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS 216",
+            "time": "W14-17",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          47,
+          50,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Myers Thtr",
+            "time": "W18-21",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT5907",
+    "name": "Int'l Fin Statement Analysis",
+    "streams": Array [
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          50,
+          50,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G031",
             "time": "W9-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          41,
+          40,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Col LG01",
+            "time": "W14-17",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          46,
+          46,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ElecEngG10",
+            "time": "W18-21",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -1263,25 +1917,72 @@ Array [
       Object {
         "component": "SEM",
         "enrols": Array [
+          41,
           45,
-          30,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "CivEng 102",
+            "time": "T10-13",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          45,
+          45,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 115",
-            "time": "H14-17",
+            "location": "BUS 220",
+            "time": "T14-17",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          42,
           30,
+          45,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Block G16",
+            "time": "T18-21",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT5909",
+    "name": "Current Developments Auditing",
+    "streams": Array [],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT5910",
+    "name": "Business  Analysis & Valuation",
+    "streams": Array [
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          50,
+          50,
         ],
         "full": true,
         "times": Array [
@@ -1292,116 +1993,82 @@ Array [
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          38,
-          30,
+          50,
+          50,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 220",
-            "time": "T9-12",
+            "location": "BUS 216",
+            "time": "T15-18",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          31,
-          30,
+          50,
+          50,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 115",
-            "time": "T18-21",
+            "location": "BUS 216",
+            "time": "W11-14",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
   },
   Object {
-    "code": "ACCT5919",
-    "name": "Business Risk Management",
+    "code": "ACCT5920",
+    "name": "Managing Intangible Resources",
     "streams": Array [
       Object {
         "component": "SEM",
         "enrols": Array [
-          49,
-          49,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 115",
-            "time": "M14-17",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          47,
-          47,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 119",
-            "time": "M18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          46,
-          47,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 115",
-            "time": "T10-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
+          44,
           45,
-          47,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 115",
-            "time": "T14-17",
-            "weeks": "1-10",
+            "location": "Quad G031",
+            "time": "M14-17",
+            "weeks": "1-8,10-11",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          28,
+          45,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G031",
+            "time": "M18-21",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -1411,140 +2078,89 @@ Array [
     "name": "Financial Accounting",
     "streams": Array [
       Object {
-        "component": "OTH",
+        "component": "SEM",
         "enrols": Array [
-          356,
-          357,
+          52,
+          53,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": undefined,
-            "time": "F16-18",
-            "weeks": "5",
+            "location": "BUS 220",
+            "time": "F10-13",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          50,
-          51,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 119",
-            "time": "F9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          51,
-          51,
+          53,
+          53,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS 220",
-            "time": "H11-14",
+            "time": "H9-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          51,
-          51,
+          56,
+          56,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 220",
-            "time": "M10-13",
+            "location": "RedC 1040",
+            "time": "T10-13",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          51,
-          51,
+          84,
+          84,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 119",
-            "time": "T9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          51,
-          51,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 216",
+            "location": "TETB LG07",
             "time": "T14-17",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          51,
-          51,
+          45,
+          48,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 220",
+            "location": "Col LG01",
             "time": "T18-21",
             "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          51,
-          51,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 119",
-            "time": "W12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -1556,341 +2172,118 @@ Array [
       Object {
         "component": "SEM",
         "enrols": Array [
-          35,
-          35,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "F14-17",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          20,
-          35,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 102",
-            "time": "M9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          35,
-          35,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 102",
-            "time": "M12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          35,
-          35,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G26",
-            "time": "T9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          35,
-          35,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad 1043",
-            "time": "T18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5942",
-    "name": "Corporate Accounting & Regulat",
-    "streams": Array [
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          44,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 115",
-            "time": "W10-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          44,
-          44,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "SEB G02",
-            "time": "W14-17",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5943",
-    "name": "Advanced Financial Reporting",
-    "streams": Array [
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          39,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 220",
-            "time": "F9-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          44,
-          46,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 216",
-            "time": "F13-16",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          45,
-          46,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 119",
-            "time": "H12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          42,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "MacauleyTh",
-            "time": "T18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          29,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 119",
-            "time": "W15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5949",
-    "name": "Managing Agile Organisations",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
+          32,
           36,
-          40,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 119",
-            "time": "W18-21",
-            "weeks": "1-10",
+            "location": "BUS G23",
+            "time": "F14-17",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5955",
-    "name": "Management  Control Systems",
-    "streams": Array [
       Object {
         "component": "SEM",
         "enrols": Array [
-          45,
-          45,
+          35,
+          35,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Quad G034",
-            "time": "M14-17",
+            "location": "BUS G23",
+            "time": "H10-13",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "SEM",
         "enrols": Array [
-          45,
-          45,
+          33,
+          36,
         ],
-        "full": true,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Quad G034",
-            "time": "M18-21",
+            "location": "BUS G23",
+            "time": "T10-13",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5961",
-    "name": "Reporting for Climate Change",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          45,
-          49,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS G24",
-            "time": "W18-21",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5967",
-    "name": "Special Topic in Accounting",
-    "streams": Array [],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACCT5972",
-    "name": "Accounting analytics",
-    "streams": Array [
       Object {
         "component": "SEM",
         "enrols": Array [
           34,
           36,
         ],
-        "full": false,
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS G23",
+            "time": "T14-17",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          32,
+          35,
+        ],
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS G24",
-            "time": "M10-13",
-            "weeks": "1-3,5-11",
+            "time": "T18-21",
+            "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "SEM",
+        "enrols": Array [
+          36,
+          36,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS G23",
+            "time": "W13-16",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT5951",
+    "name": "Current Develop  Account Res F",
+    "streams": Array [],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT5967",
+    "name": "Special Topic in Accounting",
+    "streams": Array [],
     "term": undefined,
   },
   Object {
@@ -1906,107 +2299,90 @@ Array [
       Object {
         "component": "LEC",
         "enrols": Array [
-          93,
-          120,
+          170,
+          170,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "ElecEngG23",
-            "time": "M9",
+            "location": "TETB G16",
+            "time": "M11-13",
             "weeks": "1,10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "LEC",
         "enrols": Array [
-          115,
-          120,
+          55,
+          150,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "ElecEngG22",
-            "time": "M18",
+            "location": "ColomboThB",
+            "time": "M18-20",
             "weeks": "1,10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "SEM",
+        "component": "TUT",
         "enrols": Array [
-          30,
-          30,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G040",
-            "time": "H12-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          36,
-          36,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G053",
-            "time": "T10-13",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          30,
-          30,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G040",
-            "time": "T13-16",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          40,
+          42,
           42,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G23",
+            "location": "BUS G24",
+            "time": "T9-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          42,
+          42,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS G24",
+            "time": "T12-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          60,
+          70,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS G26",
             "time": "T18-21",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "SEM",
+        "component": "TUT",
         "enrols": Array [
           42,
           42,
@@ -2015,31 +2391,37 @@ Array [
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS G23",
+            "location": "BUS G24",
+            "time": "W9-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          39,
+          42,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS G24",
             "time": "W12-15",
             "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "SEM",
-        "enrols": Array [
-          30,
-          30,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G040",
-            "time": "W15-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACCT5997",
+    "name": "Seminar in Research Methodolgy",
+    "streams": Array [],
     "term": undefined,
   },
   Object {
@@ -2067,42 +2449,25 @@ Array [
     "term": undefined,
   },
   Object {
-    "code": "ACTL1101",
-    "name": "Introduction to Actuarial Studies",
+    "code": "ACTL2111",
+    "name": "Financial Mathematics for Actuaries",
     "streams": Array [
       Object {
         "component": "LAB",
         "enrols": Array [
-          19,
+          21,
           25,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "Mat 211",
-            "time": "F10.5-12",
-            "weeks": "1-10",
+            "time": "F10",
+            "weeks": "1-7",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          13,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 211",
-            "time": "F12-13.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "LAB",
@@ -2115,11 +2480,11 @@ Array [
           Object {
             "canClash": undefined,
             "location": "Mat 211",
-            "time": "F13.5-15",
-            "weeks": "1-10",
+            "time": "F11",
+            "weeks": "1-7",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "LAB",
@@ -2132,258 +2497,65 @@ Array [
           Object {
             "canClash": undefined,
             "location": "Mat 211",
-            "time": "H15-16.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          23,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 211",
-            "time": "H16.5-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G021",
-            "time": "M13-14.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G021",
-            "time": "M14.5-16",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G021",
-            "time": "M16-17.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 211",
-            "time": "T10.5-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 211",
-            "time": "T12-13.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 211",
-            "time": "T13.5-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LAB",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 211",
-            "time": "T16-17.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          280,
-          330,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law Th G04",
-            "time": "M11-13",
-            "weeks": "1-3,5-11",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "Law Th G04",
-            "time": "T15",
-            "weeks": "1-2,4-6,9-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          98,
-          330,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "PhysicsTh",
-            "time": "F16-18",
-            "weeks": "5",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Sqhouse203",
-            "time": "F12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          17,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "ElecEngG09",
             "time": "H10",
-            "weeks": "1-10",
+            "weeks": "1-7",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "TUT",
+        "component": "LAB",
         "enrols": Array [
-          24,
+          25,
           25,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Newt 306",
+            "location": "Mat 211",
+            "time": "H11",
+            "weeks": "1-7",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
+            "time": "H12",
+            "weeks": "1-7",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
             "time": "H13",
-            "weeks": "1-10",
+            "weeks": "1-7",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "TUT",
-        "enrols": Array [
-          18,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "MorvB LG2",
-            "time": "W9",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
+        "component": "LAB",
         "enrols": Array [
           25,
           25,
@@ -2392,161 +2564,114 @@ Array [
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Gold G09",
+            "location": "Mat 211",
+            "time": "H14",
+            "weeks": "1-7",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
+            "time": "H15",
+            "weeks": "1-7",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
+            "time": "H16",
+            "weeks": "1-7",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          22,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
+            "time": "H17",
+            "weeks": "1-7",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
             "time": "W10",
-            "weeks": "1-10",
+            "weeks": "1-7",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Ainswth201",
-            "time": "W11",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 162",
-            "time": "W15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL3162",
-    "name": "General Insurance Techniques",
-    "streams": Array [
       Object {
         "component": "LEC",
         "enrols": Array [
-          351,
-          402,
+          268,
+          330,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Burrows Th",
-            "time": "T18-21",
+            "location": "MathewsThA",
+            "time": "T14-16",
             "weeks": "1-10",
           },
-          Object {
-            "canClash": undefined,
-            "location": "MathewsThA",
-            "time": "F20",
-            "weeks": "1,3-7,9-10",
-          },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "OTH",
         "enrols": Array [
-          351,
-          450,
+          268,
+          330,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "MathewsThA",
-            "time": "F16-18",
+            "location": undefined,
+            "time": "F18-20",
             "weeks": "6",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          23,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G025",
-            "time": "F13-14.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G025",
-            "time": "F14.5-16",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          23,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G027",
-            "time": "M10.5-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          21,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Mat 308",
-            "time": "T13-14.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
@@ -2554,436 +2679,1040 @@ Array [
           18,
           25,
         ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 201",
-            "time": "T14.5-16",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          19,
-          24,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 202",
-            "time": "T16-17.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 389",
-            "time": "W10.5-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Gold G09",
-            "time": "W15-16.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          23,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Gold G09",
-            "time": "W16.5-18",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL3182",
-    "name": "Asset-Liability and Derivative Models",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          127,
-          150,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law Th G04",
-            "time": "M18-21",
-            "weeks": "1-3,5-11",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "CLB 8",
-            "time": "W17",
-            "weeks": "1,3-7,9-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          152,
-          300,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law Th G04",
-            "time": "W9-12",
-            "weeks": "1-10",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "PhysicsTh",
-            "time": "F9",
-            "weeks": "1,3-7,9-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          279,
-          450,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "CLB 7",
-            "time": "F16-18",
-            "weeks": "5",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 114",
-            "time": "F12.5-14",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          21,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Gold G02",
-            "time": "F14-15.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          12,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Sqhouse203",
-            "time": "H10.5-12",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          16,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Quad G025",
-            "time": "H12-13.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          21,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "SEB B27",
-            "time": "H13.5-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          21,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 107",
-            "time": "H16-17.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          24,
-          25,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 163",
-            "time": "W13.5-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          25,
-          25,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Law 202",
-            "time": "W15-16.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL3192",
-    "name": "Retirement Saving and Spending Over the Lifecycle",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          51,
-          75,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Webst ThA",
-            "time": "M16-18",
-            "weeks": "1-3,5-11",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "Webst ThA",
-            "time": "T14",
-            "weeks": "7,10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          51,
-          75,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "ColomboThA",
-            "time": "H12-13.5",
-            "weeks": "5",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          10,
-          12,
-        ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS 207",
-            "time": "W10.5-12",
-            "weeks": "1-10",
+            "time": "F10.5-12",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          12,
-          12,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 215",
-            "time": "W12-13.5",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          12,
-          12,
-        ],
-        "full": true,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "BUS 215",
-            "time": "W13.5-15",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          12,
-          12,
+          25,
+          25,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
             "location": "BUS 118",
-            "time": "W15.5-17",
-            "weeks": "1-10",
+            "time": "F12-13.5",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          5,
-          6,
+          25,
+          25,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Quad 1049",
+            "location": "BUS 118",
+            "time": "F13.5-15",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 219",
+            "time": "F15-16.5",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "H10.5-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 114",
+            "time": "H12-13.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "T16-17.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "W12-13.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "W13.5-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
             "time": "W15-16.5",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "W16.5-18",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
   },
   Object {
-    "code": "ACTL3303",
-    "name": "Industry Placement 3",
+    "code": "ACTL2131",
+    "name": "Probability and Mathematical Statistics",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          150,
+          150,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ColomboThB",
+            "time": "M14-17",
+            "weeks": "1-8,10-11",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "MathewsThB",
+            "time": "T16",
+            "weeks": "1,3,7,9",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          117,
+          150,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ColomboThC",
+            "time": "M18-21",
+            "weeks": "1-8,10-11",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "Law Th G04",
+            "time": "T18",
+            "weeks": "1,3,7,9",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          57,
+          110,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "NSGlob Th",
+            "time": "H19-21",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "F10.5-12",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          21,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "H9-10.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "H10.5-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "H12-13.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "H13.5-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "T11-12.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 118",
+            "time": "T12.5-14",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "W10-11.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "W11.5-13",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 219",
+            "time": "W15-16.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          22,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 219",
+            "time": "W16.5-18",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL3141",
+    "name": "Actuarial Models and Statistics",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          90,
+          140,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThA",
+            "time": "T18-20.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          101,
+          140,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "OMB149",
+            "time": "W12-14.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          93,
+          270,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law Th G04",
+            "time": "F18-20",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "SEB B26",
+            "time": "H10-11.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "SEB B26",
+            "time": "H11.5-13",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G052",
+            "time": "H17-18.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G052",
+            "time": "H18.5-20",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1048",
+            "time": "W15-16.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1048",
+            "time": "W16.5-18",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          20,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 215",
+            "time": "W18-19.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL3151",
+    "name": "Life Contingencies",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          110,
+          135,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "TETB G16",
+            "time": "M18-20.5",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          92,
+          140,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "OMB149",
+            "time": "H9-11.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          96,
+          260,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Rex Vowels",
+            "time": "F18-20",
+            "weeks": "6",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 107",
+            "time": "F10.5-12",
+            "weeks": "2-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G047",
+            "time": "F12-13.5",
+            "weeks": "2-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 302",
+            "time": "H12-13.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 302",
+            "time": "H13.5-15",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          8,
+          10,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "SEB B24",
+            "time": "M16.5-18",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          22,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 207",
+            "time": "T9-10.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1047",
+            "time": "T12-13.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          25,
+          25,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad 1047",
+            "time": "T13.5-15",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 303",
+            "time": "T15-16.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL3191",
+    "name": "Superannuation and Retirement Benefits",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          49,
+          60,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThA",
+            "time": "W15-17",
+            "weeks": "1-5,7-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          12,
+          12,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Sqhouse115",
+            "time": "F10.5-12",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          12,
+          12,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 226",
+            "time": "F12-13.5",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          10,
+          10,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G01",
+            "time": "H10-11.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          15,
+          15,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Gold G01",
+            "time": "H11.5-13",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL3202",
+    "name": "Industry Placement 2",
     "streams": Array [],
     "term": undefined,
   },
   Object {
-    "code": "ACTL4000",
-    "name": "Thesis (Actuarial Studies)",
-    "streams": Array [],
+    "code": "ACTL4001",
+    "name": "Actuarial Theory and Practice A",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          87,
+          125,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ColomboThB",
+            "time": "W18-20",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          37,
+          125,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThA",
+            "time": "H18-20",
+            "weeks": "4",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          23,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 114",
+            "time": "F13-14.5",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          19,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 114",
+            "time": "F14.5-16",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          21,
+          22,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 250",
+            "time": "H12-13.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          24,
+          24,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst 250",
+            "time": "H13.5-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
     "term": undefined,
   },
   Object {
@@ -2994,73 +3723,26 @@ Array [
         "component": "LEC",
         "enrols": Array [
           0,
-          8,
+          10,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "BUS 130",
+            "location": "BUS 105",
             "time": "F10-13",
-            "weeks": "1-10",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
   },
   Object {
-    "code": "ACTL4012",
-    "name": "Thesis (Actuarial Studies) C",
+    "code": "ACTL4010",
+    "name": "Thesis (Actuarial Studies) A",
     "streams": Array [],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL4302",
-    "name": "Risk and Capital Management",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          15,
-          60,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "NSGlob Th",
-            "time": "T18-21",
-            "weeks": "1-10",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "CivEng 101",
-            "time": "H17",
-            "weeks": "1,3-7,9-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          15,
-          60,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "ColomboThA",
-            "time": "F14-16",
-            "weeks": "5",
-          },
-        ],
-        "web": false,
-      },
-    ],
     "term": undefined,
   },
   Object {
@@ -3076,310 +3758,766 @@ Array [
     "term": undefined,
   },
   Object {
-    "code": "ACTL5003",
-    "name": "Res. Methods in Risk & Act. St",
-    "streams": Array [],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL5106",
-    "name": "Insurance Risk Models",
+    "code": "ACTL5002",
+    "name": "Super and Retirement Benefits",
     "streams": Array [
       Object {
         "component": "LEC",
         "enrols": Array [
-          33,
-          36,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Burrows Th",
-            "time": "T18-21",
-            "weeks": "1-10",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "MathewsThA",
-            "time": "F20",
-            "weeks": "1,3-7,9-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          33,
-          40,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "MathewsThA",
-            "time": "F16-18",
-            "weeks": "6",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
+          23,
           24,
-          25,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law 275",
-            "time": "W14-15.5",
-            "weeks": "1-10",
+            "location": "Webst ThA",
+            "time": "W15-17",
+            "weeks": "1-5,7-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "TUT",
+        "component": "TU1",
         "enrols": Array [
-          9,
-          25,
+          23,
+          24,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law 275",
-            "time": "W15.5-17",
+            "location": "Quad G047",
+            "time": "H13.5-15",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,
   },
   Object {
-    "code": "ACTL5108",
-    "name": "Finance for Actuaries",
+    "code": "ACTL5003",
+    "name": "Res. Methods in Risk & Act. St",
     "streams": Array [
       Object {
         "component": "LEC",
         "enrols": Array [
-          40,
-          44,
+          1,
+          20,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "SEB G02",
-            "time": "W18-21",
-            "weeks": "1-10",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "SEB G02",
-            "time": "H18",
-            "weeks": "6-7,9-10",
+            "location": "BUS 105",
+            "time": "F10-13",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL5004",
+    "name": "Project Report - Act. Stud.",
+    "streams": Array [],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL5100",
+    "name": "Actuarial Theory & Pract. A",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          14,
+          40,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "ColomboThB",
+            "time": "W18-20",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
       Object {
         "component": "OTH",
         "enrols": Array [
+          5,
           40,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThA",
+            "time": "H18-20",
+            "weeks": "4",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          14,
+          25,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 310",
+            "time": "F16-18",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL5101",
+    "name": "Prob.& Statis. for Actuaries",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          31,
+          45,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ritchie Th",
+            "time": "T18-21",
+            "weeks": "1-10",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "Ritchie Th",
+            "time": "H18",
+            "weeks": "1,3,7,9",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          31,
+          45,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThA",
+            "time": "H19-21",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          31,
+          32,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 107",
+            "time": "T14.5-16",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL5102",
+    "name": "Financial Mathematics",
+    "streams": Array [
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          30,
+          32,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 211",
+            "time": "F13",
+            "weeks": "1-7,9-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          30,
+          45,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "BUS 216",
+            "time": "M18-20",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          30,
+          45,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": undefined,
+            "time": "F18-20",
+            "weeks": "6",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          30,
+          32,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G052",
+            "time": "W13.5-15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL5104",
+    "name": "Actuarial Statistics",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          28,
           40,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Webst ThA",
+            "time": "T18-20.5",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          10,
+          40,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law Th G04",
+            "time": "F18-20",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          28,
+          30,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Quad G047",
+            "time": "W12-13.5",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "ACTL5105",
+    "name": "Life Insurance & Super.",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          22,
+          40,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "TETB G16",
+            "time": "M18-20.5",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "OTH",
+        "enrols": Array [
+          7,
+          40,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Law Th G04",
+            "time": "F18-20",
+            "weeks": "6",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          22,
+          24,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "SEB B24",
+            "time": "M16.5-18",
+            "weeks": "2-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "AERO3410",
+    "name": "Aerospace Structures",
+    "streams": Array [
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          8,
+          8,
         ],
         "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "TETB LG07",
-            "time": "H19-21",
+            "location": "UTL 214A",
+            "time": "F10",
             "weeks": "5",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL5109",
-    "name": "Financial Economics",
-    "streams": Array [
       Object {
-        "component": "LEC",
+        "component": "LAB",
         "enrols": Array [
-          26,
-          45,
+          9,
+          9,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law Th G04",
-            "time": "M18-21",
-            "weeks": "1-3,5-11",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "CLB 8",
-            "time": "W17",
-            "weeks": "1,3-7,9-10",
-          },
-        ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          26,
-          45,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "CLB 7",
-            "time": "F16-18",
+            "location": "UTL 214A",
+            "time": "F11",
             "weeks": "5",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "TUT",
+        "component": "LAB",
         "enrols": Array [
-          26,
-          28,
+          7,
+          8,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Law 202",
-            "time": "W12-13.5",
-            "weeks": "1-10",
+            "location": "UTL 214A",
+            "time": "F12",
+            "weeks": "5",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "ACTL5302",
-    "name": "Risk and Capital Management",
-    "streams": Array [
       Object {
-        "component": "LEC",
+        "component": "LAB",
         "enrols": Array [
-          28,
-          45,
+          9,
+          9,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "NSGlob Th",
-            "time": "T18-21",
-            "weeks": "1-10",
+            "location": "UTL 214A",
+            "time": "F13",
+            "weeks": "5",
           },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          8,
+          8,
+        ],
+        "full": true,
+        "times": Array [
           Object {
             "canClash": undefined,
-            "location": "CivEng 101",
+            "location": "UTL 214A",
+            "time": "F14",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          8,
+          8,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "UTL 214A",
+            "time": "F15",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          8,
+          9,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "UTL 214A",
+            "time": "F16",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          7,
+          8,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "UTL 214A",
+            "time": "F17",
+            "weeks": "5",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          8,
+          8,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "UTL 214A",
+            "time": "H16",
+            "weeks": "5,8",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          8,
+          8,
+        ],
+        "full": true,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "UTL 214A",
             "time": "H17",
-            "weeks": "1,3-7,9-10",
+            "weeks": "5,8",
           },
         ],
-        "web": false,
+        "web": undefined,
       },
       Object {
-        "component": "OTH",
+        "component": "LAB",
         "enrols": Array [
-          28,
-          45,
+          8,
+          8,
         ],
-        "full": false,
+        "full": true,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "ColomboThA",
-            "time": "F14-16",
-            "weeks": "5",
+            "location": "UTL 214A",
+            "time": "H18",
+            "weeks": "5,8",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          88,
+          91,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth202",
+            "time": "M10-12",
+            "weeks": "1-8,10-11",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          88,
+          91,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Mat 103",
+            "time": "W17",
+            "weeks": "1-10",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth202",
+            "time": "H10-12",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
   },
   Object {
-    "code": "ACTL5306",
-    "name": "Retirement Saving and Spending",
+    "code": "AERO3630",
+    "name": "Aerodynamics",
     "streams": Array [
+      Object {
+        "component": "LAB",
+        "enrols": Array [
+          76,
+          84,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "UTL 214A",
+            "time": "T16-18",
+            "weeks": "2,5,8-9",
+          },
+        ],
+        "web": undefined,
+      },
       Object {
         "component": "LEC",
         "enrols": Array [
-          12,
-          30,
+          76,
+          84,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Webst ThA",
-            "time": "M16-18",
-            "weeks": "1-3,5-11",
+            "location": "AinswthG02",
+            "time": "T14-16",
+            "weeks": "1-10",
           },
           Object {
             "canClash": undefined,
-            "location": "Webst ThA",
-            "time": "T14",
-            "weeks": "7,10",
+            "location": "Ainswth202",
+            "time": "W9",
+            "weeks": "1-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "OTH",
-        "enrols": Array [
-          12,
-          30,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "ColomboThA",
-            "time": "H12-13.5",
-            "weeks": "5",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
       Object {
         "component": "TUT",
         "enrols": Array [
-          12,
-          15,
+          35,
+          42,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Quad 1049",
-            "time": "W16.5-18",
+            "location": "AinswthG02",
+            "time": "W10-12",
             "weeks": "1-10",
           },
         ],
-        "web": false,
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "AERO3660",
+    "name": "Flight Performance and Propulsion",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          74,
+          84,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth102",
+            "time": "T11-13",
+            "weeks": "1-10",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth102",
+            "time": "W14",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          74,
+          84,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth102",
+            "time": "W15",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
+      },
+    ],
+    "term": undefined,
+  },
+  Object {
+    "code": "AERO4620",
+    "name": "Dynamics of Aerospace Vehicles, Systems and Avionics",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          55,
+          80,
+        ],
+        "full": undefined,
+        "times": Array [
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth102",
+            "time": "M15-17",
+            "weeks": "1-8,10-11",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "CivEng G1",
+            "time": "T12-15",
+            "weeks": "1-10",
+          },
+          Object {
+            "canClash": undefined,
+            "location": "Ainswth102",
+            "time": "H12-14",
+            "weeks": "1-10",
+          },
+        ],
+        "web": undefined,
       },
     ],
     "term": undefined,
@@ -3397,95 +4535,31 @@ Array [
     "term": undefined,
   },
   Object {
-    "code": "AERO9500",
-    "name": "Space Systems Architectures and Orbits",
+    "code": "AERO9610",
+    "name": "The Space Segment",
     "streams": Array [
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          14,
-          22,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Ainswth101",
-            "time": "H17",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
       Object {
         "component": "LEC",
         "enrols": Array [
-          4,
-          13,
+          16,
+          34,
         ],
-        "full": false,
+        "full": undefined,
         "times": Array [
           Object {
             "canClash": undefined,
-            "location": "Ainswth202",
+            "location": "TETB LG03",
             "time": "M12-14",
-            "weeks": "1-3,5-11",
+            "weeks": "1-8,10-11",
           },
           Object {
             "canClash": undefined,
             "location": "Ainswth102",
-            "time": "H15",
-            "weeks": "1-10",
+            "time": "F14-16",
+            "weeks": "1-7,9-10",
           },
         ],
-        "web": false,
-      },
-      Object {
-        "component": "TUT",
-        "enrols": Array [
-          4,
-          13,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "Ainswth102",
-            "time": "H16",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
-      },
-    ],
-    "term": undefined,
-  },
-  Object {
-    "code": "AERO9660",
-    "name": "Advanced Aerospace Propulsion",
-    "streams": Array [
-      Object {
-        "component": "LEC",
-        "enrols": Array [
-          3,
-          10,
-        ],
-        "full": false,
-        "times": Array [
-          Object {
-            "canClash": undefined,
-            "location": "AinswthG02",
-            "time": "M15-17",
-            "weeks": "1-3,5-11",
-          },
-          Object {
-            "canClash": undefined,
-            "location": "AinswthG02",
-            "time": "H12-14",
-            "weeks": "1-10",
-          },
-        ],
-        "web": false,
+        "web": undefined,
       },
     ],
     "term": undefined,

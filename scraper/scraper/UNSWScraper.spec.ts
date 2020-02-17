@@ -10,7 +10,7 @@ describe('UNSWScraper', () => {
     s.maxFaculties = 3;
     s.logging = false;
     s.cache = new HTMLCache();
-    const cacheFile = './unsw-snapshot.json';
+    const cacheFile = './unsw-snapshot.json.br';
     await s.cache.load(cacheFile);
 
     // Execute
