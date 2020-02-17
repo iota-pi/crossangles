@@ -160,14 +160,14 @@ export class Parser {
     if (status !== 'open' && status !== 'full') {
       return null;
     }
-    const full = status === 'full';
+    const full = status === 'full' ? true : undefined;
 
     const enrols = enrolString.split(' ')[0].split('/').map(x => parseInt(x)) as [number, number];
     if (enrols[1] === 0) {
       return null;
     }
 
-    let web = false;
+    let web = undefined;
     let times: ClassTime[] | null = null;
     if (section.indexOf('WEB') === -1) {
       times = this.parseTimeStr(timeString);
