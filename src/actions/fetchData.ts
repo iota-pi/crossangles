@@ -24,15 +24,14 @@ export function fetchData (uri: string): ThunkAction<Promise<void>, {}, undefine
         type: SET_COURSE_DATA,
         courses: data.courses,
       };
-      const p1 = dispatch(setCourseAction);
 
-      const p2 = dispatch({
-        type: SET_META_DATA,
-        meta: data.meta,
-      });
-
-      await p1;
-      await p2;
+      await Promise.all([
+        dispatch(setCourseAction),
+        dispatch({
+          type: SET_META_DATA,
+          meta: data.meta,
+        }),
+      ]);
     });
   };
 }
