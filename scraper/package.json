@@ -18,9 +18,9 @@
     "webpack-cli": "^3.3.11"
   },
   "devDependencies": {
+    "aws-sdk": "^2.619.0",
     "jest": "^25.1.0",
     "ts-jest": "^25.2.0",
-    "typescript": "^3.7.5",
-    "aws-sdk": "^2.614.0"
+    "typescript": "^3.7.5"
   }
 }

@@ -1,4 +1,5 @@
 import { writeFileSync, readFileSync } from "fs";
+import zlib from 'zlib';
 
 export class HTMLCache {
   private data: Map<string, string>;
@@ -21,13 +22,13 @@ export class HTMLCache {
 
   async write (destination: string) {
     const arrayData = Array.from(this.data);
-    arrayData.sort((a, b) => +(a > b) - +(a < b))
-    const json = JSON.stringify(arrayData);
+    arrayData.sort((a, b) => +(a > b) - +(a < b));
+    const json = zlib.brotliCompressSync(Buffer.from(JSON.stringify(arrayData)));
     writeFileSync(destination, json, 'utf-8');
   }
 
   async load (source: string) {
-    const json = readFileSync(source, 'utf-8');
+    const json = zlib.brotliDecompressSync(readFileSync(source)).toString('utf-8');
     const data: [string, string][] = JSON.parse(json);
     this.data = new Map(data);
   }
