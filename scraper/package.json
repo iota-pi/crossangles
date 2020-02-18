@@ -4,7 +4,7 @@
   "description": "CrossAngles scraper",
   "main": "index.ts",
   "scripts": {
-    "test": "npx jest --watch",
+    "test": "./node_modules/.bin/jest --watch",
     "build": "npx tsc",
     "watch": "npx tsc -w",
     "start": "node build/scraper"
@@ -18,7 +18,7 @@
     "webpack-cli": "^3.3.11"
   },
   "devDependencies": {
-    "aws-sdk": "^2.619.0",
+    "aws-sdk": "^2.620.0",
     "jest": "^25.1.0",
     "ts-jest": "^25.2.0",
     "typescript": "^3.7.5"
