@@ -1,5 +1,5 @@
-import { CourseData } from '../../src/state/Course';
-import { MinistryMeta, Meta } from '../../src/state/Meta';
+import { CourseData } from '../../app/src/state/Course';
+import { MinistryMeta, Meta } from '../../app/src/state/Meta';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
 import cheerio from 'cheerio';

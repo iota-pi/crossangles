@@ -2,8 +2,9 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "esnext"
+      "esnext",
     ],
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
@@ -24,7 +25,6 @@
   "exclude": [
     "node_modules",
     "build",
-    "**/*.spec.ts",
-    "**/*.test.ts",
+    "**/*.js",
   ],
 }

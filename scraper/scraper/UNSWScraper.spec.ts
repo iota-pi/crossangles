@@ -1,6 +1,6 @@
 import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
-import { CourseData } from '../../src/state/Course';
-import { StreamData } from '../../src/state/Stream';
+import { CourseData } from '../../app/src/state/Course';
+import { StreamData } from '../../app/src/state/Stream';
 import HTMLCache from './HTMLCache';
 
 describe('UNSWScraper', () => {

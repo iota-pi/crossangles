@@ -4,7 +4,7 @@ const main = async () => {
   const args = process.argv.slice(2);
   const promises: Promise<void>[] = [];
   for (let campus of args) {
-    const outputDir = 'output/'
+    const outputDir = '../app/public/';
     const cacheFile = `./${campus}-snapshot.json.br`;
     const promise = scrapeCampus(campus, outputDir, cacheFile).catch(e => {
       console.error(e + '');

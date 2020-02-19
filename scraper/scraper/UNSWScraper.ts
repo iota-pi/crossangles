@@ -1,6 +1,6 @@
 import { CampusScraper, CampusData } from './CampusScraper';
-import { CourseData } from '../../src/state/Course';
-import { ClassTime, StreamData } from '../../src/state/Stream';
+import { CourseData } from '../../app/src/state/Course';
+import { ClassTime, StreamData } from '../../app/src/state/Stream';
 import additional from '../data/additional';
 import info from '../data/info';
 
