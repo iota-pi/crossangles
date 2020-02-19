@@ -4,8 +4,7 @@
   "description": "CrossAngles scraper",
   "main": "index.ts",
   "scripts": {
-    "test": "./node_modules/.bin/jest --watch",
-    "test:ci": "./node_modules/.bin/jest",
+    "test": "./test.sh",
     "build": "npx tsc",
     "watch": "npx tsc -w",
     "start": "node build/scraper"

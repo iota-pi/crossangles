@@ -8,7 +8,7 @@ npx jest
 npm run build
 ./node_modules/.bin/webpack
 
-# Apply changes
+# Apply infra changes
 (
   cd infra
   terraform apply -auto-approve
