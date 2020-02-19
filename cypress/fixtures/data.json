@@ -1,0 +1,109 @@
+{
+  "courses": [
+    {
+      "code": "TEST1010",
+      "name": "Eschatology and the Sea",
+      "streams": [
+        {
+          "component": "LEC",
+          "enrols": [
+            0,
+            1
+          ],
+          "times": [
+            {
+              "time": "M9",
+              "location": "Patmos Th"
+            },
+            {
+              "time": "T9-11",
+              "location": "Patmos Th"
+            }
+          ],
+          "full": false,
+          "web": false
+        },
+        {
+          "component": "LEC",
+          "enrols": [
+            0,
+            1
+          ],
+          "times": [
+            {
+              "time": "M10",
+              "location": "Patmos Th"
+            },
+            {
+              "time": "T10-12",
+              "location": "Patmos Th"
+            }
+          ],
+          "full": false,
+          "web": false
+        },
+        {
+          "component": "LEC",
+          "enrols": [
+            1,
+            1
+          ],
+          "times": [
+            {
+              "time": "M11",
+              "location": "Patmos Th"
+            },
+            {
+              "time": "T11-13",
+              "location": "Patmos Th"
+            }
+          ],
+          "full": true,
+          "web": false
+        },
+        {
+          "component": "TUT",
+          "enrols": [
+            0,
+            1
+          ],
+          "times": [
+            {
+              "time": "F9",
+              "location": "Patmos Th"
+            }
+          ],
+          "full": false,
+          "web": false
+        },
+        {
+          "component": "TUT",
+          "enrols": [
+            0,
+            1
+          ],
+          "times": [
+            {
+              "time": "M9-12",
+              "location": "Patmos Th"
+            }
+          ],
+          "full": false,
+          "web": false
+        }
+      ],
+      "term": null,
+      "useWebStream": false
+    }
+  ],
+  "meta": {
+    "term": 2,
+    "year": 2019,
+    "updateDate": "20/06/2019",
+    "updateTime": "09:45",
+    "promoText": "This tool is provided by {link} — a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
+    "linkText": "Campus Bible Study",
+    "linkURL": "https://www.campusbiblestudy.org",
+    "source":"https://nss.cse.unsw.edu.au/sitar/classes2019"
+  }
+}
