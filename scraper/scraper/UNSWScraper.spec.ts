@@ -16,7 +16,30 @@ describe('UNSWScraper', () => {
     // Execute
     const data = await s.scrape();
 
+    // Verify
     expect(data.courses).toMatchSnapshot();
+  })
+
+  it('skips terms with insufficient data', async () => {
+    const s = new UNSWScraper();
+    s.logging = false;
+
+    const courseData: CourseData = {
+      code: 'COMP9876',
+      name: 'Theory of Practical Blockchain',
+      streams: [{ component: 'LEC', enrols: [0, 0], times: [] }],
+    };
+    s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
+                            .mockImplementationOnce(async () => [courseData]);
+    const result = await s.scrape();
+    expect(result.courses).toEqual([courseData]);
+  })
+
+  it('throws if no terms have sufficient data', async () => {
+    const s = new UNSWScraper();
+    s.logging = false;
+    s.scrapeTerm = jest.fn().mockImplementation(() => []);
+    await expect(s.scrape()).rejects.toThrow();
   })
 })
 

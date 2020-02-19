@@ -26,17 +26,23 @@ export class UNSWScraper extends CampusScraper {
   }
 
   async scrape (): Promise<CampusData> {
-    let courses: CourseData[];
+    let courses: CourseData[] = [];
     let term: number;
 
     for (term = 3; term > 0; term--) {
-      courses = await this.scrapeTerm(term);
+      const termResult = await this.scrapeTerm(term);
 
       // Assume that the current term is the latest one with stream data available for enough of their courses
-      const hasStreamData = courses.filter(c => c.streams.length > 0);
-      if (hasStreamData.length >= courses.length * DATA_THRESHOLD) {
+      const hasStreamData = termResult.filter(c => c.streams.length > 0);
+      if (hasStreamData.length > termResult.length * DATA_THRESHOLD) {
+        courses = termResult;
         break;
       }
+    }
+
+    if (courses.length === 0) {
+      this.log('no term found with sufficient course data');
+      throw new Error();
     }
 
     const meta = this.generateMetaData(term);
