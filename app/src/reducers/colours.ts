@@ -4,26 +4,27 @@ import { getCourseId } from '../state/Course';
 import { baseState } from '../state';
 
 export function colours (state = baseState.colours, action: AllActions): ColourMap {
+  const chosenColours = Object.values(state);
   switch (action.type) {
     case ADD_COURSE:
       const courseId = getCourseId(action.course);
-      const colour = action.course.defaultColour || pickColor(Object.values(state));
+      const colour = action.course.defaultColour || pickColor(chosenColours);
       return {
         ...state,
         [courseId]: colour,
       };
     case SET_COLOUR:
-      const newColour = action.colour ? action.colour : pickColor(Object.values(state));
+      const newColour = action.colour ? action.colour : pickColor(chosenColours);
       return {
         ...state,
         [action.course]: newColour,
       };
     case SET_COURSE_DATA:
-      const additional = action.courses.filter(c => c.isAdditional && c.defaultColour);
+      const additional = action.courses.filter(c => c.isAdditional && c.autoSelect);
       state = Object.assign(
         {},
         ...additional.map(c => ({
-          [getCourseId(c)]: c.defaultColour,
+          [getCourseId(c)]: c.defaultColour || pickColor(chosenColours),
         })),
         state,
       );
