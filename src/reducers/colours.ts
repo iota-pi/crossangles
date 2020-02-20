@@ -7,7 +7,7 @@ export function colours (state = baseState.colours, action: AllActions): ColourM
   switch (action.type) {
     case ADD_COURSE:
       const courseId = getCourseId(action.course);
-      const colour = pickColor(Object.values(state));
+      const colour = action.course.defaultColour || pickColor(Object.values(state));
       return {
         ...state,
         [courseId]: colour,
@@ -19,12 +19,11 @@ export function colours (state = baseState.colours, action: AllActions): ColourM
         [action.course]: newColour,
       };
     case SET_COURSE_DATA:
-      const additional_colour = COURSE_COLOURS[2];
-      const additional = action.courses.filter(c => c.isAdditional);
+      const additional = action.courses.filter(c => c.isAdditional && c.defaultColour);
       state = Object.assign(
         {},
         ...additional.map(c => ({
-          [getCourseId(c)]: additional_colour,
+          [getCourseId(c)]: c.defaultColour,
         })),
         state,
       );
