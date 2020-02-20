@@ -104,12 +104,13 @@ describe('colours reducer', () => {
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
       courses: [
-        { code: 'a', name: '', streams: [], isAdditional: true, defaultColour: COURSE_COLOURS[0] },
-        { code: 'b', name: '', streams: [], isAdditional: true, defaultColour: COURSE_COLOURS[1] },
-        { code: 'c', name: '', streams: [], isAdditional: true },
-        { code: 'd', name: '', streams: [] },
+        { code: 'a', name: '', streams: [], autoSelect: true, isAdditional: true, defaultColour: COURSE_COLOURS[0] },
+        { code: 'b', name: '', streams: [], autoSelect: true, isAdditional: true, defaultColour: COURSE_COLOURS[1] },
+        { code: 'c', name: '', streams: [], autoSelect: true, isAdditional: true },
+        { code: 'd', name: '', streams: [], autoSelect: true },
       ],
     };
+
     const prevState = { ...baseState.colours };
     const state = colours(prevState, action);
     expect(prevState).toEqual(baseState.colours);
@@ -118,6 +119,7 @@ describe('colours reducer', () => {
     expect(state['b']).toBe(COURSE_COLOURS[1]);
     expect(state['c']).not.toBe(COURSE_COLOURS[0]);
     expect(state['c']).not.toBe(COURSE_COLOURS[1]);
+    expect(state['c']).not.toBeUndefined();
     expect(state['d']).toBeUndefined();
   })
 })
