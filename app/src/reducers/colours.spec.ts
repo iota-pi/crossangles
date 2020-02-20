@@ -2,6 +2,7 @@ import { colours } from './colours';
 import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA } from '../actions';
 import { baseState } from '../state';
 import { ColourMap, COURSE_COLOURS } from '../state/Colours';
+import { CourseData } from '../state/Course';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 
@@ -101,25 +102,39 @@ describe('colours reducer', () => {
   })
 
   it('defaults additional courses to correct value when selected', () => {
+    const courses = COURSE_COLOURS.map((colour, i): CourseData => {
+      return {
+        code: '' + i,
+        name: '',
+        streams: [],
+        autoSelect: true,
+        isAdditional: true,
+        defaultColour: colour,
+      };
+    });
+    courses.pop();
+    courses.pop();
+    courses.push({ code: 'a', name: '', streams: [], autoSelect: true, isAdditional: true });
+    courses.push({ code: 'b', name: '', streams: [], autoSelect: true, isAdditional: true });
+    courses.push({ code: 'c', name: '', streams: [], autoSelect: true });
+
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
-      courses: [
-        { code: 'a', name: '', streams: [], autoSelect: true, isAdditional: true, defaultColour: COURSE_COLOURS[0] },
-        { code: 'b', name: '', streams: [], autoSelect: true, isAdditional: true, defaultColour: COURSE_COLOURS[1] },
-        { code: 'c', name: '', streams: [], autoSelect: true, isAdditional: true },
-        { code: 'd', name: '', streams: [], autoSelect: true },
-      ],
+      courses,
     };
 
     const prevState = { ...baseState.colours };
     const state = colours(prevState, action);
     expect(prevState).toEqual(baseState.colours);
 
-    expect(state['a']).toBe(COURSE_COLOURS[0]);
-    expect(state['b']).toBe(COURSE_COLOURS[1]);
-    expect(state['c']).not.toBe(COURSE_COLOURS[0]);
-    expect(state['c']).not.toBe(COURSE_COLOURS[1]);
-    expect(state['c']).not.toBeUndefined();
-    expect(state['d']).toBeUndefined();
+    for (let i = 0; i < COURSE_COLOURS.length - 2; ++i) {
+      expect(state['' + i]).toBe(COURSE_COLOURS[i]);
+      expect(state['a']).not.toBe(COURSE_COLOURS[i]);
+      expect(state['b']).not.toBe(COURSE_COLOURS[i]);
+    }
+    expect(state['a']).not.toBeUndefined();
+    expect(state['b']).not.toBeUndefined();
+    expect(state['a']).not.toBe(state['b']);
+    expect(state['c']).toBeUndefined();
   })
 })
