@@ -1,0 +1,47 @@
+import { webStreams } from './webStreams';
+import { ClearNoticeAction, CLEAR_NOTICE, CourseAction, TOGGLE_WEB_STREAM } from '../actions';
+import { baseState } from '../state';
+import { CourseId } from '../state/Course';
+
+const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
+
+describe('webStreams reducer', () => {
+  it('initialises correctly', () => {
+    const state = webStreams(undefined, otherAction);
+    expect(state).toEqual(baseState.webStreams);
+  })
+
+  it('doesn\'t change on no-op actions', () => {
+    const initialState: CourseId[] = [];
+    const state = [ ...initialState ];
+    const result = webStreams(state, otherAction);
+    expect(result).toBe(state);
+    expect(state).toEqual(initialState);
+  })
+
+  it('can toggle on', () => {
+    const state = [...baseState.webStreams];
+    const action: CourseAction = {
+      type: TOGGLE_WEB_STREAM,
+      course: { code: 'a', name: '', streams: [] },
+    };
+    const prevState = state;
+    const result = webStreams(state, action);
+    expect(state).toBe(prevState);
+    expect(state).toEqual(baseState.webStreams);
+    expect(result).toEqual(['a']);
+  })
+
+  it('can toggle on', () => {
+    const state = ['a'];
+    const action: CourseAction = {
+      type: TOGGLE_WEB_STREAM,
+      course: { code: 'a', name: '', streams: [] },
+    };
+    const prevState = state;
+    const result = webStreams(state, action);
+    expect(state).toBe(prevState);
+    expect(state).toEqual(['a']);
+    expect(result).toEqual([]);
+  })
+})
