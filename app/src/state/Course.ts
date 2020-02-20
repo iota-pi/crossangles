@@ -1,4 +1,5 @@
 import { StreamData, StreamId, getStreamId } from "./Stream";
+import { Colour } from "./Colours";
 
 export type CourseId = string;
 
@@ -10,6 +11,7 @@ export interface CourseData {
   isCustom?: boolean,
   isAdditional?: boolean,
   autoSelect?: boolean,
+  defaultColour?: Colour;
 }
 
 export interface CourseMap {

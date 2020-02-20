@@ -6,6 +6,7 @@ const unsw: CourseData[] = [
     "name": "Campus Bible Study",
     "isAdditional": true,
     "autoSelect": true,
+    "defaultColour": "#303F9F",
     "streams": [
       {
         "component": "The Bible Talks",
