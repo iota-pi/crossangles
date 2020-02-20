@@ -13,7 +13,7 @@ export function colours (state = baseState.colours, action: AllActions): ColourM
         [courseId]: colour,
       };
     case SET_COLOUR:
-      const newColour = action.colour ? action.colour : pickColor(Object.values(colours));
+      const newColour = action.colour ? action.colour : pickColor(Object.values(state));
       return {
         ...state,
         [action.course]: newColour,
