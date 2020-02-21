@@ -1,7 +1,6 @@
 import { meta } from './meta';
-import { ClearNoticeAction, CLEAR_NOTICE, CourseAction, TOGGLE_WEB_STREAM, SET_META_DATA, MetaAction } from '../actions';
+import { ClearNoticeAction, CLEAR_NOTICE, SET_META_DATA, MetaAction } from '../actions';
 import { baseState } from '../state';
-import { CourseId } from '../state/Course';
 import { Meta } from '../state/Meta';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
