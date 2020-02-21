@@ -11,7 +11,7 @@ import { Options } from '../state/Options';
 import { CourseId } from '../state/Course';
 import { AllActions } from '../actions';
 
-export function events (state: AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
+export function events (state: readonly AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
   switch (action.type) {
     case TOGGLE_EVENT:
       if (!state.includes(action.event)) {
@@ -37,7 +37,7 @@ export function events (state: AdditionalEvent[] = [], action: AllActions): Addi
       break;
   }
 
-  return state;
+  return state as AdditionalEvent[];
 };
 
 export function options (
