@@ -258,21 +258,27 @@ class CreateCustom extends PureComponent<Props, State> {
   componentDidUpdate (prevProps: Props) {
     const editing = this.props.editing;
     if (editing && editing !== prevProps.editing) {
-      const streams = editing.streams;
-      const { end, start } = getSessions(editing, streams[0])[0];
-      const options: CustomTimeOption[] = streams.map(stream => {
-        const { day, start } = getSessions(editing, stream)[0];
-        return { day, start };
-      });
-      options.push(getBlankOption());
-
-      this.setState({
-        open: true,
-        name: editing.name,
-        duration: end - start,
-        options,
-      });
+      this.loadCourse(editing);
     }
+  }
+
+  loadCourse = (course: CourseData) => {
+    const name = course.name;
+    const streams = course.streams;
+    const { end, start } = getSessions(course, streams[0])[0];
+    const duration = end - start;
+    const options: CustomTimeOption[] = streams.map(stream => {
+      const { day, start } = getSessions(course, stream)[0];
+      return { day, start };
+    });
+    options.push(getBlankOption());
+
+    this.setState({
+      open: true,
+      name,
+      duration,
+      options,
+    });
   }
 
   handleClickOpen = () => {
