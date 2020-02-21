@@ -1,4 +1,4 @@
-import { StreamData, StreamId, getStreamId } from "./Stream";
+import { StreamData } from "./Stream";
 import { Colour } from "./Colours";
 
 export type CourseId = string;

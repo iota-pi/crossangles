@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { RootState, AdditionalEvent, StateHistory } from '../state';
+import { RootState, AdditionalEvent } from '../state';
+import { StateHistory } from '../state/StateHistory';
 import { WithDispatch } from '../typeHelpers';
 
 // Styles

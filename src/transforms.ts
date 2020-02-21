@@ -1,5 +1,5 @@
-import { createTransform } from "redux-persist";
-import { StateHistory } from "./state";
+import { createTransform } from 'redux-persist';
+import { StateHistory } from './state/StateHistory';
 
 export const historyTransform = createTransform(
   (inboundState: StateHistory) => {
