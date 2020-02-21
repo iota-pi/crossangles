@@ -1,0 +1,68 @@
+import { TimetableState } from ".";
+
+export interface StateHistory {
+  past: TimetableState[],
+  present: TimetableState,
+  future: TimetableState[],
+}
+
+export const undo = (history: StateHistory): StateHistory => {
+  const { past, present, future } = history;
+  return {
+    past: [...past.slice(0, past.length - 1)],
+    present: past[past.length - 1],
+    future: [present, ...future],
+  };
+}
+
+export const redo = (history: StateHistory): StateHistory => {
+  const { past, present, future } = history;
+  return {
+    past: [...past, present],
+    present: future[0],
+    future: future.slice(1),
+  };
+}
+
+export const push = (history: StateHistory, next: TimetableState): StateHistory => {
+  const { past, present } = history;
+
+  if (noStateChange(present, next)) {
+    return history;
+  }
+
+  return {
+    past: [...past, present],
+    present: next,
+    future: [],
+  };
+}
+
+const noStateChange = (current: TimetableState, next: TimetableState) => {
+  if (current.custom !== next.custom) {
+    return false;
+  }
+  if (current.additional !== next.additional) {
+    return false;
+  }
+  if (current.chosen !== next.chosen) {
+    return false;
+  }
+  if (current.events !== next.events) {
+    return false;
+  }
+  if (current.options !== next.options) {
+    return false;
+  }
+  if (current.colours !== next.colours) {
+    return false;
+  }
+  if (current.webStreams !== next.webStreams) {
+    return false;
+  }
+  if (JSON.stringify(current.timetable.map) !== JSON.stringify(next.timetable.map)) {
+    return false;
+  }
+
+  return true;
+}

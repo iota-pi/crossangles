@@ -1,4 +1,5 @@
 import { CourseId, CourseMap } from './Course';
+import { StateHistory } from './StateHistory';
 import { ColourMap } from './Colours';
 import { Options } from './Options';
 import { Notice } from './Notice';
@@ -17,12 +18,6 @@ export interface TimetableState {
   timetable: SessionManagerData,
   colours: ColourMap,
   webStreams: CourseId[],
-}
-
-export interface StateHistory {
-  past: TimetableState[],
-  present: TimetableState,
-  future: TimetableState[],
 }
 
 export interface RootState extends TimetableState {
