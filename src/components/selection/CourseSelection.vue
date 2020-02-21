@@ -108,7 +108,7 @@
         data.sort((a, b) => {
           let aCode = a.code.toLowerCase()
           let bCode = b.code.toLowerCase()
-          let search = (this.searchText || '').toLowerCase()
+          let search = (this.searchText || '').toLowerCase().trim()
 
           let alphaOrder = (aCode > bCode) - (aCode < bCode)
 
@@ -163,12 +163,12 @@
         }
 
         // Check for a match in the course code
-        if (course.code.toLowerCase().indexOf(queryText.toLowerCase()) !== -1) {
+        if (course.code.toLowerCase().indexOf(queryText.toLowerCase().trim()) !== -1) {
           return true
         }
 
         // Check for a match in the course name
-        if (course.title.toLowerCase().indexOf(queryText.toLowerCase()) !== -1) {
+        if (course.title.toLowerCase().indexOf(queryText.toLowerCase().trim()) !== -1) {
           return true
         }
 
@@ -176,7 +176,7 @@
       },
       highlight (haystack, needle) {
         haystack = haystack.replace(/[<>]/gi, '')
-        needle = needle || this.searchText
+        needle = needle || this.searchText.trim()
 
         if (needle) {
           let re = new RegExp('(' + escapeRegExp(needle) + ')', 'gi')
