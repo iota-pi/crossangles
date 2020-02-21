@@ -8,7 +8,7 @@ export interface Props {
 
 export class HighlightedText extends PureComponent<Props> {
   render () {
-    const search = this.props.search.toLowerCase();
+    const search = this.props.search.toLowerCase().trim();
     const classes = this.props.classes;
 
     if (this.props.text && search) {

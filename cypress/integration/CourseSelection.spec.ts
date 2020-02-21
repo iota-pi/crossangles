@@ -13,7 +13,7 @@ context('Course selection', () => {
       .click()
     cy.dataCy('autocomplete-option')
     cy.get('#course-selection-autocomplete input')
-      .type('comp1511')
+      .type('comp1511 ')
     cy.dataCy('autocomplete-option')
       .should('have.length', 1)
       .should('contain.text', 'COMP1511')
