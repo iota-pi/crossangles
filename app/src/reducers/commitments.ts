@@ -56,7 +56,7 @@ export function options (
 };
 
 export function hiddenEvents (
-  state: CourseId[] = baseState.hiddenEvents,
+  state: readonly CourseId[] = baseState.hiddenEvents,
   action: AllActions,
 ): CourseId[] {
   switch (action.type) {
@@ -75,5 +75,5 @@ export function hiddenEvents (
       }
   }
 
-  return state;
+  return state as CourseId[];
 }
