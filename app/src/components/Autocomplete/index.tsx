@@ -194,7 +194,7 @@ class Autocomplete extends PureComponent<Props, State> {
 
   private get options (): CourseOption[] {
     // Filter out courses which don't match the search
-    const search = this.state.search.toLowerCase();
+    const search = this.state.search.toLowerCase().trim();
     const options: CourseOption[] = this.props.courses.filter(course => this.optionFilter(course, search));
 
     // Sort courses with matching course codes first
