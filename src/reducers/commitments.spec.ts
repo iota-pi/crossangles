@@ -1,5 +1,5 @@
 import { events, options, hiddenEvents } from './commitments';
-import { ClearNoticeAction, CLEAR_NOTICE, EventAction, TOGGLE_EVENT, CourseAction, ADD_COURSE, ToggleOptionAction, TOGGLE_OPTION } from '../actions';
+import { ClearNoticeAction, CLEAR_NOTICE, EventAction, TOGGLE_EVENT, CourseAction, ADD_COURSE, ToggleOptionAction, TOGGLE_OPTION, ToggleShowEventsAction, TOGGLE_SHOW_EVENTS } from '../actions';
 import { baseState } from '../state';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
@@ -167,5 +167,58 @@ describe('options reducer', () => {
     };
     const result = options(state, action);
     expect(result['includeFull']).toEqual(false);
+  })
+})
+
+describe('hiddenEvents reducer', () => {
+  it('initialises correctly', () => {
+    const state = hiddenEvents(undefined, otherAction);
+    expect(state).toEqual(baseState.hiddenEvents);
+  })
+
+  it('doesn\'t change on no-op actions', () => {
+    const state = Object.freeze([...baseState.hiddenEvents]);
+    const result = hiddenEvents(state, otherAction);
+    expect(result).toBe(state);
+  })
+
+  it('allows toggling on for one course', () => {
+    const state = Object.freeze([]);
+    const action: ToggleShowEventsAction = {
+      type: TOGGLE_SHOW_EVENTS,
+      course: 'a',
+    };
+    const result = hiddenEvents(state, action);
+    expect(result).toEqual(['a']);
+  })
+
+  it('allows toggling off for one course', () => {
+    const state = Object.freeze(['a']);
+    const action: ToggleShowEventsAction = {
+      type: TOGGLE_SHOW_EVENTS,
+      course: 'a',
+    };
+    const result = hiddenEvents(state, action);
+    expect(result).toEqual([]);
+  })
+
+  it('allows toggling on with other courses', () => {
+    const state = Object.freeze(['a', 'b']);
+    const action: ToggleShowEventsAction = {
+      type: TOGGLE_SHOW_EVENTS,
+      course: 'c',
+    };
+    const result = hiddenEvents(state, action);
+    expect(result).toEqual(['a', 'b', 'c']);
+  })
+
+  it('allows toggling off with other courses', () => {
+    const state = Object.freeze(['a', 'b', 'c']);
+    const action: ToggleShowEventsAction = {
+      type: TOGGLE_SHOW_EVENTS,
+      course: 'c',
+    };
+    const result = hiddenEvents(state, action);
+    expect(result).toEqual(['a', 'b']);
   })
 })
