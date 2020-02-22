@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-COMMAND_LIST="install|test"
+COMMAND_LIST="install|test|scrape"
 COMMAND=$1
-shift
 
 if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
   echo "Usage: $0 $COMMAND_LIST [...args]"
@@ -18,4 +17,9 @@ fi
 if [[ $COMMAND == test ]]; then
   (cd app; npm test)
   (cd scraper; ./test.sh)
+fi
+
+if [[ $COMMAND == scrape ]]; then
+  mkdir -p app/public/unsw
+  (cd scraper; npm start ${@:2})
 fi
