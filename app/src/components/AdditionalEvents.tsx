@@ -7,6 +7,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import { CourseData } from '../state/Course';
 import { AdditionalEvent } from '../state';
+import { getEvents } from '../state/Events';
 
 const styles = (theme: Theme) => createStyles({
   lessSpaceAbove: {
@@ -29,8 +30,7 @@ export const AdditionalEvents = ({
   onToggleEvent,
   classes,
 }: Props) => {
-  const components = course.streams.map(s => s.component);
-  const eventList = components.filter((c, i) => components.indexOf(c) === i);
+  const eventList = getEvents(course);
   const eventCount = eventList.length;
 
   return (

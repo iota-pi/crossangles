@@ -26,6 +26,7 @@ import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ActionButtons } from './components/ActionButtons';
+import { getAutoSelectedEvents } from './state/Events';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -46,6 +47,7 @@ export interface OwnProps extends WithStyles<typeof styles> {
 }
 
 export interface StateProps {
+  showSignup: boolean,
   notice: Notice | null,
   meta: Meta,
 }
@@ -76,6 +78,7 @@ class App extends Component<Props> {
 
             <ActionButtons
               meta={this.props.meta}
+              showSignup={this.props.showSignup}
               className={classes.spaceAbove}
             />
 
@@ -106,10 +109,14 @@ class App extends Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const events = getAutoSelectedEvents(state.courses, state.additional);
+  const chosenEvents = state.events.filter(e => events.includes(e));
+
   return {
+    showSignup: chosenEvents.length > 0,
     notice: state.notice,
     meta: state.meta,
-  }
+  };
 }
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): DispatchProps => {

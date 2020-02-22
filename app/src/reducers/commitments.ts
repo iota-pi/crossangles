@@ -10,6 +10,7 @@ import {
 import { Options } from '../state/Options';
 import { CourseId } from '../state/Course';
 import { AllActions } from '../actions';
+import { getEvents } from '../state/Events';
 
 export function events (state: readonly AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
   switch (action.type) {
@@ -28,8 +29,7 @@ export function events (state: readonly AdditionalEvent[] = [], action: AllActio
       }
     case ADD_COURSE:
       if (action.course.isAdditional && !action.course.autoSelect) {
-        const components = action.course.streams.map(s => s.component);
-        const eventList = components.filter((c, i) => components.indexOf(c) === i);
+        const eventList = getEvents(action.course);
         if (eventList.length === 1) {
           return [ ...state, eventList[0] ];
         }
