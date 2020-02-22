@@ -4567,6 +4567,7 @@ Array [
   Object {
     "autoSelect": true,
     "code": "CBS",
+    "defaultColour": "#303F9F",
     "isAdditional": true,
     "name": "Campus Bible Study",
     "streams": Array [
