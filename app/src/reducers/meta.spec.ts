@@ -21,8 +21,8 @@ describe('meta reducer', () => {
   it('can be set', () => {
     const testMeta = { ...baseState.meta };
     const newMeta: Meta = {
-      linkText: 'abc',
-      linkURL: 'abc',
+      ministryName: 'abc',
+      ministryWebsite: 'abc',
       promoText: 'abc',
       signup: '',
       source: '',
@@ -30,6 +30,8 @@ describe('meta reducer', () => {
       updateDate: '',
       updateTime: '',
       year: 1984,
+      signupURL: '',
+      signupValidFor: [],
     };
     const action: MetaAction = {
       type: SET_META_DATA,
