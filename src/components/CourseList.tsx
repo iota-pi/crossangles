@@ -21,6 +21,7 @@ import ColourPicker from './ColourPicker';
 import ColourControl from './Colour';
 import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course';
 import { Collapse } from '@material-ui/core';
+import { getEvents } from '../state/Events';
 
 const styles = (theme: Theme) => {
   const transition = {
@@ -256,8 +257,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
   onRemoveCourse,
   onToggleShowEvents,
 }: CourseProps) => {
-  const components = course.streams.map(s => s.component);
-  const eventList = components.filter((c, i) => components.indexOf(c) === i);
+  const eventList = getEvents(course);
 
   const courseId = getCourseId(course);
   const minimiseEvents = hiddenEvents.includes(courseId);

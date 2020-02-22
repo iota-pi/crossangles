@@ -32,11 +32,13 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   meta: Meta,
+  showSignup: boolean,
   className?: string,
 }
 
 export const ActionButtons = withStyles(styles)(({
   meta,
+  showSignup,
   className,
   classes,
 }: Props) => {
@@ -46,24 +48,25 @@ export const ActionButtons = withStyles(styles)(({
 
   return (
     <div className={rootClasses}>
-      <Button
-        // color="secondary"
-        variant="outlined"
-        className={classes.roundedButton}
-        size="large"
-        href={meta.signupURL}
-        endIcon={<OpenInNewIcon />}
-        target="_blank"
-      >
-        <div className={classes.centredText}>
-          <div className={classes.fontNormal}>
-            Sign Up for Term {meta.term}
+      {showSignup && (
+        <Button
+          variant="outlined"
+          className={classes.roundedButton}
+          size="large"
+          href={meta.signupURL}
+          endIcon={<OpenInNewIcon />}
+          target="_blank"
+        >
+          <div className={classes.centredText}>
+            <div className={classes.fontNormal}>
+              Sign Up for Term {meta.term}
+            </div>
+            <div className={classes.fontLight}>
+              {meta.ministryName}
+            </div>
           </div>
-          <div className={classes.fontLight}>
-            {meta.ministryName}
-          </div>
-        </div>
-      </Button>
+        </Button>
+      )}
     </div>
   )
 });
