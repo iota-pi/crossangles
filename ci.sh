@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-COMMAND_LIST="install|test|scrape"
+COMMAND_LIST="install|test|run|scrape"
 COMMAND=$1
 
 if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
@@ -15,8 +15,19 @@ if [[ $COMMAND == install ]]; then
 fi
 
 if [[ $COMMAND == test ]]; then
-  (cd app; npm test)
-  (cd scraper; ./test.sh)
+  if [[ -n "${2:-}" ]]; then
+    (cd $2; npm test)
+  else
+    (
+      export CI=${CI:-1}
+      (cd app; npm test)
+      (cd scraper; ./test.sh)
+    )
+  fi
+fi
+
+if [[ $COMMAND == run ]]; then
+  (cd app; npm start)
 fi
 
 if [[ $COMMAND == scrape ]]; then
