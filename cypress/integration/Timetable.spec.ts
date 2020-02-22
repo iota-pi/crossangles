@@ -6,7 +6,7 @@ const TEST_CODE = 'TEST1010'
 context('Timetable interaction', () => {
   beforeEach(() => {
     cy.server()
-    cy.route('/data.json', 'fixture:data.json')
+    cy.route('/unsw/data.json', 'fixture:data.json')
     cy.clearLocalStorage() // TODO: this shouldn't be necessary?!?!
     cy.visit('/')
 
@@ -200,7 +200,7 @@ context('Timetable interaction', () => {
 context('Timetable controls', () => {
   beforeEach(() => {
     cy.server()
-    cy.route('/data.json', 'fixture:data-with-cbs.json')
+    cy.route('/unsw/data.json', 'fixture:data-with-cbs.json')
     cy.visit('/')
 
     // Add test course

@@ -10,7 +10,7 @@ export interface CampusConfig {
 
 export const campusConfig: AllCampusConfig = {
   "unsw": {
-    "dataURI": "/data.json",
+    "dataURI": "/unsw/data.json",
     "name": "UNSW",
     "longname": "University of New South Wales",
   },
