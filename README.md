@@ -5,14 +5,23 @@ Welcome to CrossAngles!
 ## Getting started
 
 To get started with developing locally, clone the repository, then in the
-repository root directory, run:
+repository root directory, run the following commands to build and run the
+scraper:
 
 ```bash
+./ci.sh build scraper
 ./ci.sh scrape unsw
 ```
 
-This will run the UNSW scraper and get you the current course data which you can
-then test your site with.
+This will run the UNSW scraper and get you up-to-date course data which you can
+use when running locally.
+
+If you're making frequent changes to the scraper, you can run the build in
+watch-mode, which means you don't have to manually build it after each change.
+
+```bash
+./ci.sh build scraper -w
+```
 
 To run the web app, run:
 
