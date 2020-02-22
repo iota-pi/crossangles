@@ -2,8 +2,9 @@ import React, { PureComponent, CSSProperties } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Position, Dimensions } from './timetableTypes';
+import Fade from '@material-ui/core/Fade';
 import { DraggableCore, DraggableData } from 'react-draggable';
+import { Position, Dimensions } from './timetableTypes';
 import { CourseData } from '../../state/Course';
 import { Options } from '../../state/Options';
 import { StreamData } from '../../state/Stream';
@@ -135,11 +136,15 @@ class TimetableSession extends PureComponent<Props, State> {
               <span>{this.sessionComponent}</span>
             </div>
 
-            {this.details.map((detail, i) => (
-              <div className={classes.details} key={`detail-${i}`}>
-                {detail}
+            <Fade in={!this.props.isDragging}>
+              <div>
+                {this.details.map((detail, i) => (
+                  <div className={classes.details} key={`detail-${i}`}>
+                    {detail}
+                  </div>
+                ))}
               </div>
-            ))}
+            </Fade>
           </div>
         </div>
       </DraggableCore>
