@@ -21,7 +21,7 @@ const InfoText = ({
   const items: ReactNode[] = [textParts.shift() || ''];
   for (let [i, textPart] of textParts.entries()) {
     const linkEl = link ? (
-      <a href={meta.linkURL} key={`linkPart-${i}`}>{meta.linkText}</a>
+      <a href={meta.ministryWebsite} key={`linkPart-${i}`}>{meta.ministryName}</a>
     ) : (
       <React.Fragment key={`linkPart-${i}`}>meta.linkText</React.Fragment>
     );

@@ -25,6 +25,7 @@ import TimetableContainer from './containers/TimetableContainer';
 import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ActionButtons } from './components/ActionButtons';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -72,6 +73,11 @@ class App extends Component<Props> {
             <CourseSelection />
 
             <TimetableContainer />
+
+            <ActionButtons
+              meta={this.props.meta}
+              className={classes.spaceAbove}
+            />
 
             <InfoText
               meta={this.props.meta}
