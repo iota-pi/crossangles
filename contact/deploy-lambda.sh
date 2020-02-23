@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Test and build scraper
-npx jest
+# Build contact script
 npm run build
 ./node_modules/.bin/webpack
 

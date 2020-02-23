@@ -1,0 +1,20 @@
+{
+  "name": "contact",
+  "version": "1.0.0",
+  "description": "Send email from contact form",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/tsc"
+  },
+  "author": "David Adams",
+  "dependencies": {
+    "mailgun-js": "^0.22.0"
+  },
+  "devDependencies": {
+    "@types/mailgun-js": "^0.22.4",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.8.2",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}

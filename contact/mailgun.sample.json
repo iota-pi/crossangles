@@ -1,0 +1,6 @@
+{
+  "apiKey": "key-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+  "domain": "mydomain.com",
+  "from": "me@mydomain.com",
+  "to": "me@gmail.com"
+}
