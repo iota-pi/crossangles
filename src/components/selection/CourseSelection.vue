@@ -176,9 +176,10 @@
       },
       highlight (haystack, needle) {
         haystack = haystack.replace(/[<>]/gi, '')
-        needle = needle || this.searchText.trim()
+        needle = needle || this.searchText
 
         if (needle) {
+          needle = needle.trim()
           let re = new RegExp('(' + escapeRegExp(needle) + ')', 'gi')
 
           let parts = haystack.split(re).map(x => ({
