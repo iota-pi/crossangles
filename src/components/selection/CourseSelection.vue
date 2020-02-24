@@ -103,12 +103,12 @@
       },
       courses () {
         let data = Object.values(this.$store.getters.courses)
-        data = data.filter(c => this.courseFilter(c, ''))
+        data = data.filter(c => !this.chosen.includes(c))
+        let search = (this.searchText || '').toLowerCase().trim()
 
         data.sort((a, b) => {
           let aCode = a.code.toLowerCase()
           let bCode = b.code.toLowerCase()
-          let search = (this.searchText || '').toLowerCase().trim()
 
           let alphaOrder = (aCode > bCode) - (aCode < bCode)
 
@@ -157,18 +157,20 @@
         }
       },
       courseFilter (course, queryText) {
+        queryText = queryText.toLowerCase().trim()
+
         // Don't show courses we've already chosen
         if (this.chosen.includes(course)) {
           return false
         }
 
         // Check for a match in the course code
-        if (course.code.toLowerCase().indexOf(queryText.toLowerCase().trim()) !== -1) {
+        if (course.code.toLowerCase().indexOf(queryText) !== -1) {
           return true
         }
 
         // Check for a match in the course name
-        if (course.title.toLowerCase().indexOf(queryText.toLowerCase().trim()) !== -1) {
+        if (course.title.toLowerCase().indexOf(queryText) !== -1) {
           return true
         }
 
