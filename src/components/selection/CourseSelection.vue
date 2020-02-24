@@ -15,9 +15,9 @@
           ref="courseSelect"
           v-model="course"
           label="Select your courses"
-          :filter="courseFilter"
+          :filter="() => true"
           :search-input.sync="searchText"
-          :items="courses"
+          :items="items"
           item-value="key"
           return-object
           hide-selected
@@ -33,7 +33,7 @@
             <v-list-tile-content>
               <v-list-tile-title>
                 <span
-                  v-for="(part, i) in highlight(data.item.code)"
+                  v-for="(part, i) in highlight(data.item.code, queryString)"
                   :key="'codePart' + i"
                   :class="{ 'highlight': part.em }"
                   v-text="part.text"
@@ -42,7 +42,7 @@
                 <span class="font-weight-light mx-1">—</span>
 
                 <span
-                  v-for="(part, i) in highlight(data.item.title)"
+                  v-for="(part, i) in highlight(data.item.title, queryString)"
                   :key="'titlePart' + i"
                   class="font-weight-light"
                   :class="{ 'highlight': part.em }"
@@ -94,35 +94,16 @@
     data () {
       return {
         course: null,
-        searchText: null
+        searchText: null,
+        items: []
       }
     },
     computed: {
       chosen () {
         return this.$store.state.chosen
       },
-      courses () {
-        let data = Object.values(this.$store.getters.courses)
-        data = data.filter(c => !this.chosen.includes(c))
-        let search = (this.searchText || '').toLowerCase().trim()
-
-        data.sort((a, b) => {
-          let aCode = a.code.toLowerCase()
-          let bCode = b.code.toLowerCase()
-
-          let alphaOrder = (aCode > bCode) - (aCode < bCode)
-
-          if (search) {
-            let matchesA = aCode.indexOf(search) === 0
-            let matchesB = bCode.indexOf(search) === 0
-
-            return (matchesB - matchesA) || alphaOrder
-          }
-
-          return alphaOrder
-        })
-
-        return data
+      queryString () {
+        return (this.searchText || '').toLowerCase().trim()
       },
       loading () {
         return this.$store.state.loading
@@ -131,8 +112,14 @@
     watch: {
       loading () {
         if (!this.loading) {
-          window.setTimeout(() => this.$refs.courseSelect.focus(), 100)
+          window.setTimeout(() => {
+            this.$refs.courseSelect.focus()
+            this.updateItems()
+          }, 100)
         }
+      },
+      queryString () {
+        this.updateItems()
       }
     },
     mounted () {
@@ -156,9 +143,30 @@
           this.$refs.courseSelect.blur()
         }
       },
-      courseFilter (course, queryText) {
-        queryText = queryText.toLowerCase().trim()
+      updateItems () {
+        let data = Object.values(this.$store.getters.courses)
+        data = data.filter(c => this.courseFilter(c, this.queryString))
 
+        data.sort((a, b) => {
+          let aCode = a.code.toLowerCase()
+          let bCode = b.code.toLowerCase()
+
+          let alphaOrder = (aCode > bCode) - (aCode < bCode)
+
+          if (this.queryString) {
+            let matchesA = aCode.indexOf(this.queryString) === 0
+            let matchesB = bCode.indexOf(this.queryString) === 0
+
+            return (matchesB - matchesA) || alphaOrder
+          }
+
+          return alphaOrder
+        })
+
+        data.length = Math.min(data.length, 20)
+        this.items = data;
+      },
+      courseFilter (course, queryText) {
         // Don't show courses we've already chosen
         if (this.chosen.includes(course)) {
           return false
@@ -178,10 +186,8 @@
       },
       highlight (haystack, needle) {
         haystack = haystack.replace(/[<>]/gi, '')
-        needle = needle || this.searchText
 
         if (needle) {
-          needle = needle.trim()
           let re = new RegExp('(' + escapeRegExp(needle) + ')', 'gi')
 
           let parts = haystack.split(re).map(x => ({
