@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "test": "./ci.sh test"
+    "test": "./ci.sh test",
+    "build": "./ci.sh build"
   }
 }
