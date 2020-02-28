@@ -12,6 +12,7 @@ fi
 if [[ $COMMAND == install ]]; then
   (cd app; npm i)
   (cd scraper; npm i)
+  (cd contact; npm i)
 fi
 
 if [[ $COMMAND == build ]]; then
@@ -20,6 +21,7 @@ if [[ $COMMAND == build ]]; then
   else
     (cd app; npm run build)
     (cd scraper; npm run build)
+    (cd contact; npm run build)
   fi
 fi
 
@@ -31,6 +33,7 @@ if [[ $COMMAND == test ]]; then
       export CI=${CI:-1}
       (cd app; npm test)
       (cd scraper; ./test.sh)
+      (cd contact; ./test.sh)
     )
   fi
 fi
