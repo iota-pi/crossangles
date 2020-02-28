@@ -1,16 +1,9 @@
 import mailgun from 'mailgun-js';
 import { apiKey, domain, from, to } from './mailgun.json';
+import { RequestBody } from './parseBody.js';
 const mg = mailgun({ apiKey, domain });
 
-const sendMail = ({
-  email,
-  name,
-  message,
-}: {
-  email: string,
-  name: string,
-  message: string,
-}) => {
+export const sendMail = ({ email, name, message }: RequestBody): Promise<mailgun.messages.SendResponse> => {
   return mg.messages().send({
     to,
     from,
@@ -24,7 +17,7 @@ Sender name: ${name}
 Email address: ${email}
 This is an automated message generated from the contact form on https://crossangles.app
 `,
-  })
+  });
 }
 
 export default sendMail;

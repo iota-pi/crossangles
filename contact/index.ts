@@ -1,28 +1,36 @@
+import { APIGatewayEvent, Context, APIGatewayProxyResult } from 'aws-lambda';
 import sendMail from './sendMail';
+import { parseBody } from './parseBody';
+import { getResponse } from './getResponse';
 
-const MAX_LENGTH = 10000;
+export const MAX_BODY_LENGTH = 10000;
 
-export const handler = async (event: any = {}, context: any) => {
+export const handler = async (event: APIGatewayEvent, context?: Context): Promise<APIGatewayProxyResult> => {
   if (!event.body) {
-    throw new Error(`No event body received`);
+    return getResponse({
+      statusCode: 400,
+      message: 'No event body received',
+    });
   }
 
-  if (event.body.length > MAX_LENGTH) {
-    throw new Error(`Event body too long. (${event.body.length} > ${MAX_LENGTH})`);
+  if (event.body.length > MAX_BODY_LENGTH) {
+    return getResponse({
+      statusCode: 400,
+      message: `Event body too long. (${event.body.length} > ${MAX_BODY_LENGTH})`,
+    });
   }
 
-  let body: { email?: string, message?: string, name?: string };
-  try {
-    body = JSON.parse(event.body);
-  } catch (err) {
-    throw new Error('Could not parse body as JSON');
+  const body = parseBody(event);
+  if (body === null) {
+    return getResponse({
+      statusCode: 400,
+      message: 'Invalid body data received',
+    });
   }
 
-  if (body && body.email && body.message && body.name) {
-    const promise = sendMail({ email: body.email, message: body.message, name: body.name });
+  await sendMail(body);
 
-    return promise;
-  } else {
-    throw new Error(`Invalid request body received`);
-  }
+  return getResponse({
+    message: 'Thanks, your message has been received.',
+  });
 }
