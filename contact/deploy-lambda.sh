@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build contact script
+# Test and build contact us script
+NO_WATCH=1 npm test
 npm run build
 ./node_modules/.bin/webpack
 

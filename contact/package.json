@@ -4,6 +4,7 @@
   "description": "Send email from contact form",
   "main": "index.js",
   "scripts": {
+    "test": "./test.sh",
     "build": "./node_modules/.bin/tsc"
   },
   "author": "David Adams",

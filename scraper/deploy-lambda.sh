@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Test and build scraper
-npx jest
+NO_WATCH=1 npm test
 npm run build
 ./node_modules/.bin/webpack
 
