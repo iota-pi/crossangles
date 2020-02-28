@@ -15,5 +15,6 @@ export const campusConfig: AllCampusConfig = {
     "longname": "University of New South Wales",
   },
 };
+campusConfig.next = campusConfig.unsw;
 
 export default campusConfig;
