@@ -27,6 +27,8 @@ import { store, persistor } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ActionButtons } from './components/ActionButtons';
 import { getAutoSelectedEvents } from './state/Events';
+import ContactUs from './components/ContactUs';
+import { submitContact } from './submitContact';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -58,7 +60,11 @@ export interface DispatchProps {
 
 export type Props = OwnProps & StateProps & DispatchProps;
 
-class App extends Component<Props> {
+export interface State {
+  showContact: boolean,
+}
+
+class App extends Component<Props, State> {
   render () {
     const classes = this.props.classes;
     return (
@@ -98,6 +104,12 @@ class App extends Component<Props> {
             notice={this.props.notice}
             onSnackbarClose={this.handleSnackbarClose}
           />
+
+          <ContactUs
+            open={true}
+            onSend={this.handleSend}
+            onClose={this.handleClose}
+          />
         </div>
       </ThemeProvider>
     );
@@ -105,6 +117,18 @@ class App extends Component<Props> {
 
   handleSnackbarClose = () => {
     this.props.clearNotice();
+  }
+
+  private handleSend = async (name: string, email: string, message: string) => {
+    const result = await submitContact(name, email, message);
+
+    if (result) {
+      console.log(result);
+    }
+  }
+
+  private handleClose = () => {
+    this.setState({ showContact: false });
   }
 }
 
