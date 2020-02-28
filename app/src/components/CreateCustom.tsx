@@ -245,7 +245,8 @@ class CreateCustom extends PureComponent<Props, State> {
               variant="contained"
               fullWidth
               disabled={!this.canSubmit()}
-              onClick={this.handleClickSave}data-cy="custom-event-submit"
+              onClick={this.handleClickSave}
+              data-cy="custom-event-submit"
             >
               {!this.props.editing ? "Add Event" : "Save Event"}
             </Button>
@@ -262,7 +263,7 @@ class CreateCustom extends PureComponent<Props, State> {
     }
   }
 
-  loadCourse = (course: CourseData) => {
+  private loadCourse = (course: CourseData) => {
     const name = course.name;
     const streams = course.streams;
     const { end, start } = getSessions(course, streams[0])[0];
