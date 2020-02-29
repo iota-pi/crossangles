@@ -106,28 +106,10 @@ resource "aws_api_gateway_resource" "contact_proxy" {
   path_part   = "{proxy+}"
 }
 
-resource "aws_api_gateway_method" "contact_proxy" {
-  rest_api_id   = aws_api_gateway_rest_api.contact_gateway.id
-  resource_id   = aws_api_gateway_resource.contact_proxy.id
-  http_method   = "POST"
-  authorization = "NONE"
-}
-
-resource "aws_api_gateway_integration" "contact_lambda" {
-  rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
-  resource_id = aws_api_gateway_method.contact_proxy.resource_id
-  http_method = aws_api_gateway_method.contact_proxy.http_method
-
-  integration_http_method = "POST"
-
-  type = "AWS_PROXY"
-  uri  = aws_lambda_function.contact.invoke_arn
-}
-
 resource "aws_api_gateway_method" "contact_proxy_root" {
   rest_api_id   = aws_api_gateway_rest_api.contact_gateway.id
   resource_id   = aws_api_gateway_rest_api.contact_gateway.root_resource_id
-  http_method   = "POST"
+  http_method   = "ANY"
   authorization = "NONE"
 }
 
@@ -140,14 +122,79 @@ resource "aws_api_gateway_integration" "contact_lambda_root" {
 
   type = "AWS_PROXY"
   uri  = aws_lambda_function.contact.invoke_arn
+
+#   request_templates = {
+#     "application/json" = <<EOF
+# {
+#   "body": $input.json('$')
+# }
+# EOF
+#   }
 }
 
 resource "aws_api_gateway_deployment" "contact_deployment" {
   depends_on = [
-    aws_api_gateway_integration.contact_lambda,
     aws_api_gateway_integration.contact_lambda_root,
+    aws_cloudwatch_log_group.debugging,
   ]
 
   rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
   stage_name  = "test"
+}
+
+
+
+resource "aws_cloudwatch_log_group" "debugging" {
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/test"
+  retention_in_days = 7
+}
+
+resource "aws_api_gateway_account" "contact_api_account" {
+  cloudwatch_role_arn = aws_iam_role.cloudwatch.arn
+}
+
+resource "aws_iam_role" "cloudwatch" {
+  name = "api_gateway_cloudwatch_global"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "apigateway.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "cloudwatch" {
+  name = "default"
+  role = aws_iam_role.cloudwatch.id
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:DescribeLogGroups",
+                "logs:DescribeLogStreams",
+                "logs:PutLogEvents",
+                "logs:GetLogEvents",
+                "logs:FilterLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
 }

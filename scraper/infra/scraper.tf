@@ -82,6 +82,12 @@ resource "aws_s3_bucket" "scraper_output" {
     Name        = "CrossAngles Data"
     Environment = "Staging"
   }
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "HEAD"]
+    allowed_origins = ["*"]
+  }
 }
 
 locals {
@@ -110,6 +116,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     forwarded_values {
       query_string = false
+      headers      = ["Origin"]
 
       cookies {
         forward = "none"
