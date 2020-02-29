@@ -85,7 +85,7 @@ resource "aws_s3_bucket" "scraper_output" {
 }
 
 locals {
-  s3_origin_id = "scraper_s3_origin"
+  scraper_s3_origin_id = "scraper_s3_origin"
 }
 
 resource "aws_cloudfront_origin_access_identity" "scraper_oai" {}
@@ -93,7 +93,7 @@ resource "aws_cloudfront_origin_access_identity" "scraper_oai" {}
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_s3_bucket.scraper_output.bucket_regional_domain_name
-    origin_id   = local.s3_origin_id
+    origin_id   = local.scraper_s3_origin_id
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.scraper_oai.cloudfront_access_identity_path
@@ -106,7 +106,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.s3_origin_id
+    target_origin_id = local.scraper_s3_origin_id
 
     forwarded_values {
       query_string = false
@@ -132,4 +132,28 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+}
+
+
+resource "aws_cloudwatch_event_rule" "scraper_trigger" {
+  name        = "scraper_trigger"
+  description = "Run scraper on schedule"
+
+  # Below times are in UTC and correspond to 5:05am, 12:05pm, 6:05pm each day (no DST)
+  # TODO: change to run every hour and have scraper check if data has been updated
+  schedule_expression = "cron(5 17,0,6 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "scraper_target" {
+  rule      = aws_cloudwatch_event_rule.scraper_trigger.name
+  target_id = "check_foo"
+  arn       = aws_lambda_function.scraper.arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_scraper" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.scraper.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.scraper_trigger.arn
 }
