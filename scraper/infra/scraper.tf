@@ -61,7 +61,7 @@ resource "aws_iam_policy" "scraper_policy" {
     {
       "Sid": "PutObjectActions",
       "Effect": "Allow",
-      "Action": "s3:PutObject",
+      "Action": ["s3:PutObject", "s3:PutObjectAcl"],
       "Resource": ["arn:aws:s3:::${aws_s3_bucket.scraper_output.bucket}/*"]
     }
   ]

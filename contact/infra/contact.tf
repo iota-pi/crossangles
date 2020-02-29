@@ -122,14 +122,10 @@ resource "aws_api_gateway_integration" "contact_lambda_root" {
 
   type = "AWS_PROXY"
   uri  = aws_lambda_function.contact.invoke_arn
+}
 
-#   request_templates = {
-#     "application/json" = <<EOF
-# {
-#   "body": $input.json('$')
-# }
-# EOF
-#   }
+locals {
+  stage_name = "test"
 }
 
 resource "aws_api_gateway_deployment" "contact_deployment" {
@@ -139,13 +135,14 @@ resource "aws_api_gateway_deployment" "contact_deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
-  stage_name  = "test"
+  stage_name  = local.stage_name
 }
 
 
 
 resource "aws_cloudwatch_log_group" "debugging" {
-  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/test"
+  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/${local.stage_name}"
+
   retention_in_days = 7
 }
 
