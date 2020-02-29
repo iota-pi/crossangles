@@ -3,16 +3,18 @@ export interface AllCampusConfig {
 }
 
 export interface CampusConfig {
-  dataURI: string,
+  dataPath: string,
   name: string,
   longname: string,
 }
 
+export const dataDomain = process.env.NODE_ENV === 'production' ? 'd1aa8o4hf8f3x4.cloudfront.net/' : '/';
+
 export const campusConfig: AllCampusConfig = {
   "unsw": {
-    "dataURI": "/unsw/data.json",
-    "name": "UNSW",
-    "longname": "University of New South Wales",
+    dataPath: "unsw/data.json",
+    name: "UNSW",
+    longname: "University of New South Wales",
   },
 };
 campusConfig.next = campusConfig.unsw;
