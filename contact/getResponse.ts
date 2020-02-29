@@ -1,5 +1,7 @@
 import { APIGatewayProxyResult } from "aws-lambda";
 
+export const logging = process.env.NODE_ENV !== 'test';
+
 interface ResponseHeaders {
   [header: string]: boolean | number | string
 }
@@ -18,7 +20,7 @@ export const getResponse = ({
   message?: string,
   headers?: ResponseHeaders,
 }): APIGatewayProxyResult => {
-  return {
+  const result: APIGatewayProxyResult = {
     statusCode,
     headers: {
       ...defaultHeaders,
@@ -28,5 +30,8 @@ export const getResponse = ({
       error: statusCode >= 400,
       message,
     }),
-  }
+  };
+
+  if (logging) console.log(result);
+  return result;
 }
