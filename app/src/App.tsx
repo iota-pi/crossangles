@@ -100,6 +100,7 @@ class App extends Component<Props, State> {
                 variant: "body2",
                 style: { fontWeight: 300 },
               }}
+              onShowContact={this.handleContactShow}
               link
               disclaimer
             />
@@ -122,6 +123,10 @@ class App extends Component<Props, State> {
 
   handleSnackbarClose = () => {
     this.props.clearNotice();
+  }
+
+  private handleContactShow = () => {
+    this.setState({ showContact: true });
   }
 
   private handleContactSend = async (name: string, email: string, message: string) => {

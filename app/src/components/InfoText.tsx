@@ -8,6 +8,7 @@ export interface Props {
   disclaimer?: boolean,
   typographyProps?: TypographyProps,
   className?: string,
+  onShowContact: () => void,
 }
 
 const InfoText = ({
@@ -16,6 +17,7 @@ const InfoText = ({
   link = true,
   disclaimer = false,
   className,
+  onShowContact,
 }: Props) => {
   const textParts = meta.promoText.split('{link}');
   const items: ReactNode[] = [textParts.shift() || ''];
@@ -40,8 +42,10 @@ const InfoText = ({
           <span style={{ fontWeight: 400 }}> {meta.updateTime} ({meta.updateDate}) </span>
           from <a href={meta.source}>{meta.source}</a>.
           CrossAngles comes without any guarantee of data accuracy or of optimality.
-          We also collect anonymous information about how people tend to use this tool to help us make improvements.
-          {/* If you have any questions or suggestions, please contact us. */}
+          If you have any questions or suggestions,
+          please <a onClick={(event) => { event.preventDefault(); onShowContact() }} href="#">
+            contact us
+          </a>.
         </Typography>
       )}
     </div>
