@@ -5,7 +5,7 @@ import getCampus from './getCampus';
 
 export const fetchData = async () => {
   const campus = getCampus(window.location.hostname);
-  const uri = 'https://' + dataDomain + config[campus].dataPath;
+  const uri = dataDomain + config[campus].dataPath;
   await store.dispatch(fetchDataThunk(uri));
 }
 

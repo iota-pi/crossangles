@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { connect, Provider } from 'react-redux';
 import { RootState } from './state';
 import { ThunkDispatch } from 'redux-thunk';
 import { Meta } from './state/Meta';
 import { Notice } from './state/Notice';
-import { clearNotice } from './actions/notice';
+import { clearNotice, setNotice } from './actions/notice';
 import loadable from '@loadable/component';
 
 // Theme
@@ -55,6 +55,7 @@ export interface StateProps {
 }
 
 export interface DispatchProps {
+  setNotice: (message: string, actions?: ReactNode[]) => void,
   clearNotice: () => void,
 }
 
@@ -65,6 +66,10 @@ export interface State {
 }
 
 class App extends Component<Props, State> {
+  state: State = {
+    showContact: false,
+  }
+
   render () {
     const classes = this.props.classes;
     return (
@@ -106,9 +111,9 @@ class App extends Component<Props, State> {
           />
 
           <ContactUs
-            open={true}
-            onSend={this.handleSend}
-            onClose={this.handleClose}
+            open={this.state.showContact}
+            onSend={this.handleContactSend}
+            onClose={this.handleContactClose}
           />
         </div>
       </ThemeProvider>
@@ -119,15 +124,19 @@ class App extends Component<Props, State> {
     this.props.clearNotice();
   }
 
-  private handleSend = async (name: string, email: string, message: string) => {
+  private handleContactSend = async (name: string, email: string, message: string) => {
     const result = await submitContact(name, email, message);
 
-    if (result) {
-      console.log(result);
+    if (result && result.status === 200 && result.data.error !== true) {
+      this.props.setNotice('Success! Thanks for contacting us');
+    } else {
+      this.props.setNotice('Could not submit contact form');
     }
+
+    this.setState({ showContact: false });
   }
 
-  private handleClose = () => {
+  private handleContactClose = () => {
     this.setState({ showContact: false });
   }
 }
@@ -145,6 +154,7 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): DispatchProps => {
   return {
+    setNotice: async (message: string, actions?: ReactNode[]) => await dispatch(setNotice(message, actions)),
     clearNotice: async () => await dispatch(clearNotice()),
   }
 }
