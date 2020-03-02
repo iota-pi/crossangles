@@ -71,12 +71,9 @@ class TimetableContainer extends PureComponent<Props> {
         />
 
         <TimetableTable
-          courses={this.props.courses}
           options={this.props.options}
-          allChosenIds={this.chosenIds}
           streams={this.timetableStreams}
           colours={this.props.colours}
-          webStreams={this.props.webStreams}
           timetable={this.state.timetable}
         />
       </div>
@@ -136,10 +133,6 @@ class TimetableContainer extends PureComponent<Props> {
     const { chosen, custom, additional } = this.props;
 
     return chosen.concat(custom, additional);
-  }
-
-  private get chosenIds (): CourseId[] {
-    return this.allChosenCourses.map(c => getCourseId(c));
   }
 
   private get timetableStreams (): LinkedStream[] {

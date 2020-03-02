@@ -11,7 +11,7 @@ import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
 import { ColourMap } from '../../state/Colours';
 import { Options } from '../../state/Options';
-import { CourseId, CourseMap, getCourseId, CourseData } from '../../state/Course';
+import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedStream } from '../../state/Stream';
 import { LinkedSession } from '../../state/Session';
 
@@ -83,12 +83,9 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  courses: CourseMap,
   options: Options,
-  allChosenIds: CourseId[],
   streams: LinkedStream[],
   colours: ColourMap,
-  webStreams: CourseId[],
   timetable: SessionManager,
 }
 
