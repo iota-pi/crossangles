@@ -49,13 +49,17 @@ export interface Props extends WithStyles<typeof styles> {
 export interface State {
   name: string,
   email: string,
+  showEmailError: boolean,
   message: string,
 }
+
+const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 
 class CreateCustom extends PureComponent<Props, State> {
   state: State = {
     name: '',
     email: '',
+    showEmailError: false,
     message: '',
   }
 
@@ -107,7 +111,13 @@ class CreateCustom extends PureComponent<Props, State> {
             placeholder="joe.bloggs@example.com"
             value={this.state.email}
             onChange={this.handleChangeEmail}
-            helperText={'We only use your email address to reply to you'}
+            onBlur={this.handleBlurEmail}
+            helperText={
+              !this.state.showEmailError
+                ? 'We only use your email address to reply to you'
+                : 'Please enter a valid email address'
+            }
+            error={this.state.showEmailError}
             className={classes.paddingBottom}
             fullWidth
             data-cy="contact-us-email"
@@ -141,7 +151,7 @@ class CreateCustom extends PureComponent<Props, State> {
     );
   }
 
-  handleClickSave = () => {
+  private handleClickSave = () => {
     this.props.onSend(
       this.state.name,
       this.state.email,
@@ -150,28 +160,46 @@ class CreateCustom extends PureComponent<Props, State> {
     this.handleClose();
   }
 
-  handleClose = () => {
+  private handleClose = () => {
     this.props.onClose();
   }
 
-  handleExited = () => {
+  private handleExited = () => {
     this.setState({
       name: '',
       email: '',
+      showEmailError: false,
       message: '',
     });
   }
 
-  handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
+  private handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
     this.setState({ name: event.target.value as string });
   }
 
-  handleChangeEmail = (event: ChangeEvent<{value: unknown}>) => {
-    this.setState({ email: event.target.value as string });
+  private handleChangeEmail = (event: ChangeEvent<{value: unknown}>) => {
+    const email = event.target.value as string;
+    let showEmailError = this.state.showEmailError;
+    if (this.isValidEmail(email)) {
+      showEmailError = false;
+    }
+
+    this.setState({ email, showEmailError });
   }
 
-  handleChangeMessage = (event: ChangeEvent<{value: unknown}>) => {
+  private handleBlurEmail = () => {
+    const email = this.state.email;
+    this.setState({
+      showEmailError: !this.isValidEmail(email) && email.length > 0,
+    });
+  }
+
+  private handleChangeMessage = (event: ChangeEvent<{value: unknown}>) => {
     this.setState({ message: event.target.value as string });
+  }
+
+  private isValidEmail (email: string) {
+    return emailRegex.test(email);
   }
 
   private canSubmit = (): boolean => {
