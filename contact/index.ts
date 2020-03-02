@@ -26,6 +26,8 @@ const handleOptions = async (event: APIGatewayEvent) => {
   });
 }
 
+const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+
 const handlePost = async (event: APIGatewayEvent) => {
   if (!event.body) {
     return getResponse({
@@ -49,9 +51,16 @@ const handlePost = async (event: APIGatewayEvent) => {
     });
   }
 
+  if (!emailRegex.test(body.email)) {
+    return getResponse({
+      statusCode: 400,
+      message: 'Invalid email address',
+    });
+  }
+
   await sendMail(body);
 
   return getResponse({
-    message: 'Thanks, your message has been received.',
+    message: 'Thanks, your message has been received',
   });
 }

@@ -18,7 +18,7 @@ export const parseBody = (event: APIGatewayEvent): RequestBody | null => {
     return null;
   }
 
-  if (body.email && body.message && body.name) {
+  if (body && body.email && body.message && body.name) {
     return body as RequestBody;
   } else {
     return null;
