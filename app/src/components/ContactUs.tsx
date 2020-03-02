@@ -107,7 +107,7 @@ class CreateCustom extends PureComponent<Props, State> {
             placeholder="joe.bloggs@example.com"
             value={this.state.email}
             onChange={this.handleChangeEmail}
-            autoFocus
+            helperText={'We only use your email address to reply to you'}
             className={classes.paddingBottom}
             fullWidth
             data-cy="contact-us-email"
@@ -117,9 +117,10 @@ class CreateCustom extends PureComponent<Props, State> {
             label="Message"
             value={this.state.message}
             onChange={this.handleChangeMessage}
-            autoFocus
             className={classes.paddingBottom}
             fullWidth
+            multiline
+            rows={5}
             data-cy="contact-us-email"
           />
         </DialogContent>
