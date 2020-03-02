@@ -47,12 +47,14 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {
   meta: Meta,
   showSignup: boolean,
+  onSaveAsImage: () => void,
   className?: string,
 }
 
 export const ActionButtons = withStyles(styles)(({
   meta,
   showSignup,
+  onSaveAsImage,
   className,
   classes,
 }: Props) => {
@@ -69,6 +71,7 @@ export const ActionButtons = withStyles(styles)(({
           size="large"
           color="primary"
           endIcon={<CameraAltIcon />}
+          onClick={onSaveAsImage}
         >
           Save as Image
         </Button>
