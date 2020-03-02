@@ -1,20 +1,19 @@
 import React, { Component, ReactNode } from 'react';
-import { connect, Provider } from 'react-redux';
+import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import { RootState } from './state';
-import { ThunkDispatch } from 'redux-thunk';
 import { Meta } from './state/Meta';
 import { Notice } from './state/Notice';
 import { clearNotice, setNotice } from './actions/notice';
 import loadable from '@loadable/component';
 
 // Theme
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import ThemeProvider from "@material-ui/styles/ThemeProvider";
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './theme';
 
 // Styles
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -29,6 +28,8 @@ import { ActionButtons } from './components/ActionButtons';
 import { getAutoSelectedEvents } from './state/Events';
 import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
+import { SessionManagerData } from './components/Timetable/SessionManager';
+import { getBaseTimetableURI, getQueryString } from './saveAsImage';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -52,6 +53,7 @@ export interface StateProps {
   showSignup: boolean,
   notice: Notice | null,
   meta: Meta,
+  timetable: SessionManagerData,
 }
 
 export interface DispatchProps {
@@ -90,6 +92,7 @@ class App extends Component<Props, State> {
             <ActionButtons
               meta={this.props.meta}
               showSignup={this.props.showSignup}
+              onSaveAsImage={this.handleSaveAsImage}
               className={classes.spaceAbove}
             />
 
@@ -121,7 +124,12 @@ class App extends Component<Props, State> {
     );
   }
 
-  handleSnackbarClose = () => {
+  private handleSaveAsImage = () => {
+    const uri = getBaseTimetableURI() + getQueryString(this.props.timetable);
+    console.log(uri);
+  }
+
+  private handleSnackbarClose = () => {
     this.props.clearNotice();
   }
 
@@ -154,10 +162,11 @@ const mapStateToProps = (state: RootState): StateProps => {
     showSignup: chosenEvents.length > 0,
     notice: state.notice,
     meta: state.meta,
+    timetable: state.timetable,
   };
 }
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, any>): DispatchProps => {
+const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => {
   return {
     setNotice: async (message: string, actions?: ReactNode[]) => await dispatch(setNotice(message, actions)),
     clearNotice: async () => await dispatch(clearNotice()),
