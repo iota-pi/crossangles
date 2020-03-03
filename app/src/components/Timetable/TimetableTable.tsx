@@ -13,7 +13,7 @@ import { ColourMap } from '../../state/Colours';
 import { Options } from '../../state/Options';
 import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';
-import { linkStream } from '../../state/Stream';
+import { linkStream, LinkedStream } from '../../state/Stream';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -86,6 +86,7 @@ export interface Props extends WithStyles<typeof styles> {
   options: Options,
   colours: ColourMap,
   timetable: SessionManager,
+  minimalHours?: boolean,
 }
 
 export interface State {
@@ -264,7 +265,16 @@ class TimetableTable extends Component<Props, State> {
     let start = 11;
     let end = 18;
 
-    const streams = this.props.timetable.orderSessions.map(s => s.stream);
+    let streams: LinkedStream[];
+
+    if (this.props.minimalHours) {
+      streams = this.props.timetable.orderSessions.map(s => s.stream);
+    } else {
+      const sessions = this.props.timetable.orderSessions;
+      const courses = sessions.map(s => s.course);
+      streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
+    }
+
     for (let stream of streams) {
       for (let session of stream.sessions) {
         if (session.start < start) {
