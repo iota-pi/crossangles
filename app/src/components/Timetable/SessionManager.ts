@@ -78,7 +78,7 @@ export class SessionManager {
     return this._order;
   }
 
-  get orderSessions () {
+  get orderSessions (): LinkedSession[] {
     return this._order.map(sid => this.getSession(sid));
   }
 
