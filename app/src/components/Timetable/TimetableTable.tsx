@@ -101,10 +101,12 @@ class TimetableTable extends Component<Props, State> {
   }
 
   timetableRef: RefObject<HTMLDivElement>;
+  hours = { start: 11, end: 18 };
 
   constructor (props: Props) {
     super(props);
     this.timetableRef = createRef();
+    this.updateHours();
   }
 
   render() {
@@ -178,17 +180,23 @@ class TimetableTable extends Component<Props, State> {
     )
   }
 
-  shouldComponentUpdate (prevProps: Props, prevState: State) {
+  shouldComponentUpdate () {
     // TODO: can I do anything more efficient?
     return true;
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps: Props) {
     // Update dimensions
     const dimensions = this.getTimetableDimensions();
     const { width, height } = this.state.dimensions;
     if (dimensions.width !== width || dimensions.height !== height) {
       this.setState({ dimensions });
+    }
+
+    const prevCourseIds = this.getCourses(prevProps.timetable).sort();
+    const courseIds = this.getCourses(this.props.timetable).sort();
+    if (courseIds.length !== prevCourseIds.length || !prevCourseIds.some((id, i) => id === courseIds[i])) {
+      this.updateHours();
     }
   }
 
@@ -261,7 +269,13 @@ class TimetableTable extends Component<Props, State> {
     return nearest;
   }
 
-  private get hours () {
+  private getCourses (timetable: SessionManager) {
+    const sessions = timetable.orderSessions;
+    const courses = sessions.map(s => s.course);
+    return courses;
+  }
+
+  private updateHours () {
     let start = 11;
     let end = 18;
 
@@ -270,8 +284,7 @@ class TimetableTable extends Component<Props, State> {
     if (this.props.minimalHours) {
       streams = this.props.timetable.orderSessions.map(s => s.stream);
     } else {
-      const sessions = this.props.timetable.orderSessions;
-      const courses = sessions.map(s => s.course);
+      const courses = this.getCourses(this.props.timetable);
       streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
     }
 
@@ -286,7 +299,7 @@ class TimetableTable extends Component<Props, State> {
       }
     }
 
-    return { start, end };
+    this.hours = { start, end };
   }
 
   private get hoursArray () {
