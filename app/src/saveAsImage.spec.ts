@@ -1,14 +1,66 @@
-import { getQueryString, parseQueryString, parseJSONQueryString } from './saveAsImage';
+import { buildQueryString, parseQueryString, parseJSONQueryString, SaveAsImageData } from './saveAsImage';
 import { getSessionManager } from './test_util';
+import { ColourMap } from './state/Colours';
+import { Options } from './state/Options';
 
 const testTimetable = Object.freeze(getSessionManager().data);
+const testColours: ColourMap = Object.freeze({
+  RING9731: '#00796B',
+});
+const testOptions: Options = Object.freeze({
+  showEnrolments: true,
+  showWeeks: true,
+});
 
 
-describe('getQueryString and parseQueryString', () => {
+describe('buildQueryString and parseQueryString', () => {
   it('can round trip values', () => {
-    const queryString = getQueryString(testTimetable)
+    const data: SaveAsImageData = Object.freeze({
+      timetable: testTimetable,
+      colours: testColours,
+      options: testOptions,
+    });
+    const queryString = buildQueryString(data);
     const result = parseQueryString(queryString);
-    expect(result).toEqual(testTimetable);
+    expect(result).toEqual(data);
+  })
+
+  it('fails if missing timetable', () => {
+    const data = Object.freeze({
+      colours: testColours,
+      options: testOptions,
+    } as SaveAsImageData);
+    const queryString = buildQueryString(data);
+    expect(() => parseQueryString(queryString)).toThrow();
+  })
+
+  it('fails if missing colours', () => {
+    const data = Object.freeze({
+      timetable: testTimetable,
+      options: testOptions,
+    } as SaveAsImageData);
+    const queryString = buildQueryString(data);
+    expect(() => parseQueryString(queryString)).toThrow();
+  })
+
+  it('fails if missing options', () => {
+    const data = Object.freeze({
+      timetable: testTimetable,
+      colours: testColours,
+    } as SaveAsImageData);
+    const queryString = buildQueryString(data);
+    expect(() => parseQueryString(queryString)).toThrow();
+  })
+
+  it('strips out excess values', () => {
+    const data: SaveAsImageData = Object.freeze({
+      timetable: testTimetable,
+      colours: testColours,
+      options: testOptions,
+    });
+    const queryString = buildQueryString({ ...data, abc: 123 } as SaveAsImageData);
+    const result = parseQueryString(queryString);
+    expect(result).toEqual(data);
   })
 })
 
