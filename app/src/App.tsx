@@ -8,8 +8,6 @@ import loadable from '@loadable/component';
 
 // Theme
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import ThemeProvider from '@material-ui/styles/ThemeProvider';
-import theme from './theme';
 
 // Styles
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
@@ -82,52 +80,50 @@ class App extends Component<Props, State> {
   render () {
     const classes = this.props.classes;
     return (
-      <ThemeProvider theme={theme}>
-        <div>
-          <CssBaseline/>
-          <AppBar/>
-          <div className={classes.appBarSpacer} />
+      <div>
+        <CssBaseline/>
+        <AppBar/>
+        <div className={classes.appBarSpacer} />
 
-          <Container
-            maxWidth="md"
-            className={classes.spaceBelow}
-          >
-            <CourseSelection />
+        <Container
+          maxWidth="md"
+          className={classes.spaceBelow}
+        >
+          <CourseSelection />
 
-            <TimetableContainer />
+          <TimetableContainer />
 
-            <ActionButtons
-              meta={this.props.meta}
-              showSignup={this.props.showSignup}
-              onSaveAsImage={this.handleSaveAsImage}
-              className={classes.spaceAbove}
-            />
-
-            <InfoText
-              meta={this.props.meta}
-              className={classes.spaceAbove}
-              typographyProps={{
-                variant: "body2",
-                style: { fontWeight: 300 },
-              }}
-              onShowContact={this.handleContactShow}
-              link
-              disclaimer
-            />
-          </Container>
-
-          <NoticeDisplay
-            notice={this.props.notice}
-            onSnackbarClose={this.handleSnackbarClose}
+          <ActionButtons
+            meta={this.props.meta}
+            showSignup={this.props.showSignup}
+            onSaveAsImage={this.handleSaveAsImage}
+            className={classes.spaceAbove}
           />
 
-          <ContactUs
-            open={this.state.showContact}
-            onSend={this.handleContactSend}
-            onClose={this.handleContactClose}
+          <InfoText
+            meta={this.props.meta}
+            className={classes.spaceAbove}
+            typographyProps={{
+              variant: "body2",
+              style: { fontWeight: 300 },
+            }}
+            onShowContact={this.handleContactShow}
+            link
+            disclaimer
           />
-        </div>
-      </ThemeProvider>
+        </Container>
+
+        <NoticeDisplay
+          notice={this.props.notice}
+          onSnackbarClose={this.handleSnackbarClose}
+        />
+
+        <ContactUs
+          open={this.state.showContact}
+          onSend={this.handleContactSend}
+          onClose={this.handleContactClose}
+        />
+      </div>
     );
   }
 
