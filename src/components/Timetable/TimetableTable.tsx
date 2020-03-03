@@ -12,8 +12,8 @@ import { SessionManager } from './SessionManager';
 import { ColourMap } from '../../state/Colours';
 import { Options } from '../../state/Options';
 import { getCourseId, CourseData } from '../../state/Course';
-import { LinkedStream } from '../../state/Stream';
 import { LinkedSession } from '../../state/Session';
+import { linkStream } from '../../state/Stream';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -84,7 +84,6 @@ const styles = (theme: Theme) => createStyles({
 
 export interface Props extends WithStyles<typeof styles> {
   options: Options,
-  streams: LinkedStream[],
   colours: ColourMap,
   timetable: SessionManager,
 }
@@ -183,7 +182,7 @@ class TimetableTable extends Component<Props, State> {
     return true;
   }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate () {
     // Update dimensions
     const dimensions = this.getTimetableDimensions();
     const { width, height } = this.state.dimensions;
@@ -265,7 +264,8 @@ class TimetableTable extends Component<Props, State> {
     let start = 11;
     let end = 18;
 
-    for (let stream of this.props.streams) {
+    const streams = this.props.timetable.orderSessions.map(s => s.stream);
+    for (let stream of streams) {
       for (let session of stream.sessions) {
         if (session.start < start) {
           start = Math.floor(session.start);
@@ -301,20 +301,18 @@ class TimetableTable extends Component<Props, State> {
 
     if (this.state.dragging) {
       const { course, stream: { component }, index } = this.state.dragging;
+      const courseStreams = course.streams.map(s => linkStream(course, s));
+      const componentStreams = courseStreams.filter(s => s.component === component);
 
-      for (let stream of this.props.streams) {
-        // Check for stream with course and component matching the dragged session's
-        const courseId = getCourseId(course);
-        const streamCourseId = getCourseId(stream.course);
-        if (courseId === streamCourseId && stream.component === component) {
-          if (stream.sessions.length > index) {
-            const session = stream.sessions[index];
-            if (!stream.full || this.props.options.includeFull) {
-              dropzones.push(new DropzonePlacement(session));
-            }
-          }
+      for (let stream of componentStreams) {
+        if (stream.sessions.length <= index) {
+          // Skip streams which don't have a session corresponding to this one
+          continue;
+        }
 
-          // TODO: can we break here?
+        const session = stream.sessions[index];
+        if (!stream.full || this.props.options.includeFull) {
+          dropzones.push(new DropzonePlacement(session));
         }
       }
     }
