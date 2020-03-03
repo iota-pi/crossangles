@@ -14,8 +14,7 @@ import TimetableControls from '../components/TimetableControls';
 import TimetableTable from '../components/Timetable';
 
 // General
-import { CourseData, CourseId, CourseMap, getCourseId, courseSort, customSort } from '../state/Course';
-import { linkStream, LinkedStream } from '../state/Stream';
+import { CourseData, CourseId, CourseMap, courseSort, customSort } from '../state/Course';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
@@ -72,7 +71,6 @@ class TimetableContainer extends PureComponent<Props> {
 
         <TimetableTable
           options={this.props.options}
-          streams={this.timetableStreams}
           colours={this.props.colours}
           timetable={this.state.timetable}
         />
@@ -87,12 +85,14 @@ class TimetableContainer extends PureComponent<Props> {
       // TODO: is this going to be too slow?
       const { timetableData, courses } = props;
       timetable = SessionManager.from(timetableData, courses);
+
+      return {
+        ...state,
+        timetable,
+      };
     }
 
-    return {
-      ...state,
-      timetable,
-    }
+    return state;
   }
 
   componentDidUpdate () {
@@ -127,17 +127,6 @@ class TimetableContainer extends PureComponent<Props> {
       this.props.dispatch,
       { chosen, additional, custom, events, options, webStreams },
     );
-  }
-
-  private get allChosenCourses (): CourseData[] {
-    const { chosen, custom, additional } = this.props;
-
-    return chosen.concat(custom, additional);
-  }
-
-  private get timetableStreams (): LinkedStream[] {
-    // Get all streams of chosen courses
-    return this.allChosenCourses.flatMap(c => c.streams.map(s => linkStream(c, s)));
   }
 
   private get suggestionImprovementScore () {
