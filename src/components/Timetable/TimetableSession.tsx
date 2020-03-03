@@ -136,7 +136,7 @@ class TimetableSession extends PureComponent<Props, State> {
               <span>{this.sessionComponent}</span>
             </div>
 
-            <Fade in={!this.props.isDragging}>
+            <Fade in={this.props.isSnapped}>
               <div>
                 {this.details.map((detail, i) => (
                   <div className={classes.details} key={`detail-${i}`}>
