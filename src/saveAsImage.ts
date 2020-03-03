@@ -1,12 +1,21 @@
 import { SessionManagerData } from './components/Timetable/SessionManager';
+import { ColourMap } from './state/Colours';
+import { Options } from './state/Options';
+
+
+export interface SaveAsImageData {
+  timetable: SessionManagerData,
+  colours: ColourMap,
+  options: Options,
+}
 
 
 export const getBaseTimetableURI = () => {
   return window.location.origin + '/timetable';
 }
 
-export const getQueryString = (timetable: SessionManagerData) => {
-  const pairs = Object.entries(timetable).map(x => {
+export const buildQueryString = (data: SaveAsImageData) => {
+  const pairs = Object.entries(data).map(x => {
     const key = x[0];
     const value = encodeURIComponent(JSON.stringify(x[1]));
     return `${key}=${value}`;
@@ -41,7 +50,11 @@ export const parseJSONQueryString = (queryString: string) => {
   return results;
 }
 
-export const parseQueryString = (queryString: string): SessionManagerData => {
-  const timetable = parseJSONQueryString(queryString) as SessionManagerData;
-  return timetable;
+export const parseQueryString = (queryString: string): SaveAsImageData => {
+  const data = parseJSONQueryString(queryString);
+  const { timetable, colours, options } = data;
+  if (!timetable || !colours || !options) {
+    throw new Error(`Missing some attributes in ${data}`);
+  }
+  return { timetable, colours, options };
 }

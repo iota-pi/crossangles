@@ -29,7 +29,9 @@ import { getAutoSelectedEvents } from './state/Events';
 import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManager';
-import { getBaseTimetableURI, getQueryString } from './saveAsImage';
+import { getBaseTimetableURI, buildQueryString, SaveAsImageData } from './saveAsImage';
+import { Options } from './state/Options';
+import { ColourMap } from './state/Colours';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -54,6 +56,8 @@ export interface StateProps {
   notice: Notice | null,
   meta: Meta,
   timetable: SessionManagerData,
+  colours: ColourMap,
+  options: Options,
 }
 
 export interface DispatchProps {
@@ -125,7 +129,12 @@ class App extends Component<Props, State> {
   }
 
   private handleSaveAsImage = () => {
-    const uri = getBaseTimetableURI() + getQueryString(this.props.timetable);
+    const imageData: SaveAsImageData = {
+      timetable: this.props.timetable,
+      colours: this.props.colours,
+      options: this.props.options,
+    };
+    const uri = getBaseTimetableURI() + buildQueryString(imageData);
     console.log(uri);
   }
 
@@ -163,6 +172,8 @@ const mapStateToProps = (state: RootState): StateProps => {
     notice: state.notice,
     meta: state.meta,
     timetable: state.timetable,
+    colours: state.colours,
+    options: state.options,
   };
 }
 
