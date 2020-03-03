@@ -1,6 +1,6 @@
 import { Action, AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { requestData } from '../fetchData';
+import { requestData } from '../requestData';
 import { Meta } from '../state/Meta';
 import { CourseData } from '../state/Course';
 
