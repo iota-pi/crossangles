@@ -32,6 +32,7 @@ import { SessionManagerData } from './components/Timetable/SessionManager';
 import { getBaseTimetableURI, buildQueryString, SaveAsImageData } from './saveAsImage';
 import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
+import { fetchData } from './actions';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -70,6 +71,8 @@ export type Props = OwnProps & StateProps & DispatchProps;
 export interface State {
   showContact: boolean,
 }
+
+store.dispatch(fetchData());
 
 class App extends Component<Props, State> {
   state: State = {

@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { Action, AnyAction } from 'redux';
-import { ThunkDispatch, ThunkAction } from "redux-thunk";
+import { ThunkAction } from 'redux-thunk';
+import { requestData } from '../fetchData';
 import { Meta } from '../state/Meta';
 import { CourseData } from '../state/Course';
 
@@ -17,9 +17,9 @@ export interface MetaAction extends Action {
   meta: Meta;
 }
 
-export function fetchData (uri: string): ThunkAction<Promise<void>, {}, undefined, AnyAction> {
-  return (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
-    return axios.get(uri).then(async ({ data }) => {
+export function fetchData (): ThunkAction<Promise<void>, {}, undefined, AnyAction> {
+  return async dispatch => {
+    return requestData().then(async data => {
       const setCourseAction: CourseListAction = {
         type: SET_COURSE_DATA,
         courses: data.courses,
