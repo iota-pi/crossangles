@@ -10,14 +10,16 @@ const StandaloneTimetable = loadable(() => import('./containers/StandaloneTimeta
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
-  <Router>
-    <Switch>
-      <Route path="/">
-        <App />
-      </Route>
-    </Switch>
+    <Router>
+      <Switch>
+        <Route path="/timetable">
+          <StandaloneTimetable />
+        </Route>
+        <Route path="/">
+          <App />
+        </Route>
+      </Switch>
     </Router>
   </ThemeProvider>,
   document.getElementById('root')
 );
-
