@@ -13,6 +13,7 @@ if [[ $COMMAND == install ]]; then
   (cd app; npm i)
   (cd scraper; npm i)
   (cd contact; npm i)
+  (cd lambda-shared; npm i)
 fi
 
 if [[ $COMMAND == build ]]; then
@@ -34,6 +35,7 @@ if [[ $COMMAND == test ]]; then
       (cd app; npm test)
       (cd scraper; ./test.sh)
       (cd contact; ./test.sh)
+      (cd lambda-shared; ./test.sh)
     )
   fi
 fi

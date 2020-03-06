@@ -1,7 +1,7 @@
 import { handler, MAX_BODY_LENGTH } from '.';
 import { sendMail } from './sendMail';
-import { parseBody, RequestBody } from './parseBody';
-import { fakeEvent } from './test/util';
+import { RequestBody } from './parseBody';
+import { fakeEvent } from '../lambda-shared/test/util';
 import Mailgun = require('mailgun-js');
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
@@ -11,14 +11,16 @@ const mock_sendMail = <jest.Mock<Promise<Mailgun.messages.SendResponse>>>sendMai
 
 describe('HTTP methods', () => {
   it('responds to OPTIONS requests with exit code 200', async () => {
+    const origin = 'https://theshire.crossangles.app';
     const event: APIGatewayProxyEvent = {
       ...fakeEvent,
       httpMethod: 'OPTIONS',
       body: null,
+      headers: { origin },
     };
     const result = await handler(event);
     expect(result.statusCode).toBe(200);
-    expect(result.headers!['Access-Control-Allow-Origin']).toBe('*');
+    expect(result.headers!['Access-Control-Allow-Origin']).toBe(origin);
     expect(result.headers!['Access-Control-Allow-Headers']).toBe('*');
   })
 

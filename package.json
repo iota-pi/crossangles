@@ -2,5 +2,6 @@
   "scripts": {
     "test": "./ci.sh test",
     "build": "./ci.sh build"
-  }
+  },
+  "dependencies": {}
 }

@@ -1,43 +1,41 @@
-import { APIGatewayEvent, Context, APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
+import { LambdaResponder } from '../lambda-shared/LambdaResponder';
 import sendMail from './sendMail';
 import { parseBody } from './parseBody';
-import { getResponse } from './getResponse';
 
 export const MAX_BODY_LENGTH = 10000;
 
-export const handler = async (event: APIGatewayEvent, context?: Context): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const responder = new LambdaResponder(event);
   const method = event.httpMethod.toUpperCase();
+
   switch (method) {
     case 'OPTIONS':
-      return handleOptions(event);
+        return responder.getResponse({
+          headers: { 'Access-Control-Allow-Headers': '*' },
+        });
     case 'POST':
-      return handlePost(event);
+      return handlePost(event, responder);
   }
 
-  return getResponse({
+  return responder.getResponse({
     statusCode: 405,
     message: `Got unexpected HTTP method "${event.httpMethod}"`,
   });
 }
 
-const handleOptions = async (event: APIGatewayEvent) => {
-  return getResponse({
-    headers: { 'Access-Control-Allow-Headers': '*' },
-  });
-}
-
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 
-const handlePost = async (event: APIGatewayEvent) => {
+const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponder) => {
   if (!event.body) {
-    return getResponse({
+    return responder.getResponse({
       statusCode: 400,
       message: 'No event body received',
     });
   }
 
   if (event.body.length > MAX_BODY_LENGTH) {
-    return getResponse({
+    return responder.getResponse({
       statusCode: 400,
       message: `Event body too long. (${event.body.length} > ${MAX_BODY_LENGTH})`,
     });
@@ -45,14 +43,14 @@ const handlePost = async (event: APIGatewayEvent) => {
 
   const body = parseBody(event);
   if (body === null) {
-    return getResponse({
+    return responder.getResponse({
       statusCode: 400,
       message: 'Invalid body data received',
     });
   }
 
   if (!emailRegex.test(body.email)) {
-    return getResponse({
+    return responder.getResponse({
       statusCode: 400,
       message: 'Invalid email address',
     });
@@ -60,7 +58,7 @@ const handlePost = async (event: APIGatewayEvent) => {
 
   await sendMail(body);
 
-  return getResponse({
+  return responder.getResponse({
     message: 'Thanks, your message has been received',
   });
 }
