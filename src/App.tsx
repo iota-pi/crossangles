@@ -27,7 +27,7 @@ import { getAutoSelectedEvents } from './state/Events';
 import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManager';
-import { getBaseTimetableURI, buildQueryString, SaveAsImageData } from './saveAsImage';
+import { SaveAsImageData, saveAsImage } from './saveAsImage';
 import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
 import { fetchData } from './actions';
@@ -133,8 +133,7 @@ class App extends Component<Props, State> {
       colours: this.props.colours,
       options: this.props.options,
     };
-    const uri = getBaseTimetableURI() + buildQueryString(imageData);
-    console.log(uri);
+    saveAsImage(imageData);
   }
 
   private handleSnackbarClose = () => {
