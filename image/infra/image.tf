@@ -3,14 +3,11 @@ provider "aws" {
   version = "~> 2.52"
 }
 
-provider "archive" {
-  version = "~> 1.3"
-}
-
-data "archive_file" "image_code" {
-  type        = "zip"
-  source_file = "../build/bundled/lambda.js"
-  output_path = "../build/bundled/image.zip"
+resource "aws_s3_bucket_object" "image_code" {
+  bucket = var.code_bucket
+  key    = var.code_key
+  source = "../build/image.zip"
+  etag   = filemd5("../build/image.zip")
 }
 
 resource "aws_lambda_function" "image" {
@@ -24,8 +21,8 @@ resource "aws_lambda_function" "image" {
   memory_size = 1536
   timeout     = 30
 
-  filename         = data.archive_file.image_code.output_path
-  source_code_hash = data.archive_file.image_code.output_base64sha256
+  s3_bucket = var.code_bucket
+  s3_key    = var.code_key
 
   role = aws_iam_role.image_role.arn
 }
@@ -141,7 +138,7 @@ resource "aws_api_gateway_integration" "image_lambda_root" {
 }
 
 locals {
-  stage_name = "test"
+  stage_name = "production"
 }
 
 resource "aws_api_gateway_deployment" "image_deployment" {
@@ -153,8 +150,6 @@ resource "aws_api_gateway_deployment" "image_deployment" {
   rest_api_id = aws_api_gateway_rest_api.image_gateway.id
   stage_name  = local.stage_name
 }
-
-
 
 resource "aws_cloudwatch_log_group" "debugging" {
   name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${local.stage_name}"

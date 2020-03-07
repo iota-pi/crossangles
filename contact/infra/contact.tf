@@ -125,7 +125,7 @@ resource "aws_api_gateway_integration" "contact_lambda_root" {
 }
 
 locals {
-  stage_name = "test"
+  stage_name = "production"
 }
 
 resource "aws_api_gateway_deployment" "contact_deployment" {

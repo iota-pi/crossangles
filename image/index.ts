@@ -40,8 +40,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
 
   try {
     const data = JSON.parse(event.body);
-    const referrer = event.headers.referer;
-    const baseURI = referrer.replace(/\/$/, '') + '/timetable';
+    const baseURI = event.headers.origin + '/timetable';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
 
