@@ -1,7 +1,8 @@
 import { SessionManagerData } from './components/Timetable/SessionManager';
 import { ColourMap } from './state/Colours';
 import { Options } from './state/Options';
-
+import axios from 'axios';
+import download from 'downloadjs';
 
 export interface SaveAsImageData {
   timetable: SessionManagerData,
@@ -10,17 +11,14 @@ export interface SaveAsImageData {
 }
 
 
-export const getBaseTimetableURI = () => {
-  return window.location.origin + '/timetable';
-}
-
-export const buildQueryString = (data: SaveAsImageData) => {
-  const pairs = Object.entries(data).map(x => {
-    const key = x[0];
-    const value = encodeURIComponent(JSON.stringify(x[1]));
-    return `${key}=${value}`;
-  });
-  return ((pairs.length > 0) ? '?' : '') + pairs.join('&');
+export const saveAsImage = async (imageData: SaveAsImageData) => {
+  const result = await axios.post(process.env.REACT_APP_SAVE_IMAGE_ENDPOINT!, imageData);
+  const type = result.headers['Content-Type'];
+  if (type === 'image/png') {
+    download(result.data.data, 'timetable.png', type);
+  } else {
+    console.error(result.data);
+  }
 }
 
 export const parseJSONQueryString = (queryString: string) => {

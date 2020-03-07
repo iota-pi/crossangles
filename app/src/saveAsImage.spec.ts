@@ -1,7 +1,8 @@
-import { buildQueryString, parseQueryString, parseJSONQueryString, SaveAsImageData } from './saveAsImage';
+import { parseQueryString, parseJSONQueryString, SaveAsImageData } from './saveAsImage';
 import { getSessionManager } from './test_util';
 import { ColourMap } from './state/Colours';
 import { Options } from './state/Options';
+import { buildQueryString } from '../../image';
 
 const testTimetable = Object.freeze(getSessionManager().data);
 const testColours: ColourMap = Object.freeze({

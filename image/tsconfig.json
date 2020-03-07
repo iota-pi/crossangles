@@ -22,11 +22,9 @@
   },
   "include": [
     "**/*",
-    "../lambda-shared/**/*"
   ],
   "exclude": [
     "node_modules",
-    "../lambda-shared/node_modules",
     "build",
     "**/*.js",
   ],

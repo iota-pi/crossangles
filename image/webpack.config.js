@@ -1,5 +1,5 @@
 module.exports = {
-  entry: ['./build/index.js'],
+  entry: ['./build/image/index.js'],
   target: 'node',
   mode: 'production',
   output: {

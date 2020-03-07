@@ -4,6 +4,7 @@ export interface ResponseOptions {
   statusCode?: number,
   message?: string,
   headers?: ResponseHeaders,
+  data?: string,
 }
 
 export interface ResponseHeaders {
@@ -21,17 +22,20 @@ export class LambdaResponder {
   }
 
   getResponse = (options?: ResponseOptions): APIGatewayProxyResult => {
-    const { statusCode = 200, message, headers } = options || {};
+    const { statusCode = 200, message, headers, data } = options || {};
+    const body = JSON.stringify({
+      error: statusCode >= 400,
+      message,
+      data,
+    });
+
     const result: APIGatewayProxyResult = {
       statusCode,
       headers: {
         ...this.baseHeaders,
         ...headers,
       },
-      body: JSON.stringify({
-        error: statusCode >= 400,
-        message,
-      }),
+      body,
     };
 
     if (this.shouldLog) console.log(result);

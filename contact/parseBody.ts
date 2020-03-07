@@ -1,4 +1,4 @@
-import { APIGatewayEvent } from "aws-lambda";
+import { APIGatewayEvent } from 'aws-lambda';
 
 export interface RequestBody {
   email: string,

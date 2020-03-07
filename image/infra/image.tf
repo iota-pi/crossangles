@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "ap-southeast-2"
-  version = "~> 2.48"
+  version = "~> 2.52"
 }
 
 provider "archive" {
@@ -50,16 +50,26 @@ resource "aws_iam_role" "image_role" {
 EOF
 }
 
+resource "aws_s3_bucket" "timetables" {
+  bucket = "crossangles-timetables"
+  acl    = "private"
+
+  tags = {
+    Name        = "CrossAngles Data"
+    Environment = "Staging"
+  }
+}
+
 resource "aws_iam_policy" "image_policy" {
   name        = "image-policy"
-  description = "Lambda policy to allow writing to S3 bucket"
+  description = "Lambda policy to allow writing logs and to S3"
 
   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "PutObjectActions",
+      "Sid": "LoggingActions",
       "Effect": "Allow",
       "Action": [
         "logs:CreateLogGroup",
@@ -67,6 +77,12 @@ resource "aws_iam_policy" "image_policy" {
         "logs:PutLogEvents"
       ],
       "Resource": ["arn:aws:logs:*:*:*"]
+    },
+    {
+      "Sid": "PutObjectActions",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject", "s3:PutObjectAcl"],
+      "Resource": ["arn:aws:s3:::${aws_s3_bucket.timetables.bucket}/*"]
     }
   ]
 }
@@ -144,54 +160,4 @@ resource "aws_cloudwatch_log_group" "debugging" {
   name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${local.stage_name}"
 
   retention_in_days = 7
-}
-
-resource "aws_api_gateway_account" "image_api_account" {
-  cloudwatch_role_arn = aws_iam_role.cloudwatch.arn
-}
-
-resource "aws_iam_role" "cloudwatch" {
-  name = "api_gateway_cloudwatch_global"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "apigateway.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "cloudwatch" {
-  name = "default"
-  role = aws_iam_role.cloudwatch.id
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:PutLogEvents",
-                "logs:GetLogEvents",
-                "logs:FilterLogEvents"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-EOF
 }

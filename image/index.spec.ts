@@ -29,7 +29,7 @@ describe('HTTP methods', () => {
   })
 })
 
-describe('POST method responses', () => {
+describe('GET method responses', () => {
   it('gives error & message when no body received', async () => {
     const event = { ...fakeEvent };
     delete event.body;
