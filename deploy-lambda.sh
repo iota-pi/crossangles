@@ -11,7 +11,6 @@ cd $1
   # Test and build
   NO_WATCH=1 npm test
   npm run build
-  ./node_modules/.bin/webpack
 
   # Apply infra changes
   (

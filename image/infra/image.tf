@@ -21,8 +21,9 @@ resource "aws_lambda_function" "image" {
   memory_size = 1536
   timeout     = 30
 
-  s3_bucket = var.code_bucket
-  s3_key    = var.code_key
+  s3_bucket        = aws_s3_bucket_object.image_code.bucket
+  s3_key           = aws_s3_bucket_object.image_code.key
+  source_code_hash = aws_s3_bucket_object.image_code.etag
 
   role = aws_iam_role.image_role.arn
 }

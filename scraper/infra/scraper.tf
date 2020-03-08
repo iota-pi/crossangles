@@ -3,14 +3,11 @@ provider "aws" {
   version = "~> 2.48"
 }
 
-provider "archive" {
-  version = "~> 1.3"
-}
-
-data "archive_file" "scraper_code" {
-  type        = "zip"
-  source_file = "../build/bundled/lambda.js"
-  output_path = "../build/bundled/scraper.zip"
+resource "aws_s3_bucket_object" "scraper_code" {
+  bucket = var.code_bucket
+  key    = var.code_key
+  source = "../build/scraper.zip"
+  etag   = filemd5("../build/scraper.zip")
 }
 
 resource "aws_lambda_function" "scraper" {
@@ -24,8 +21,9 @@ resource "aws_lambda_function" "scraper" {
   memory_size = 1024
   timeout     = 60
 
-  filename         = data.archive_file.scraper_code.output_path
-  source_code_hash = data.archive_file.scraper_code.output_base64sha256
+  s3_bucket        = aws_s3_bucket_object.scraper_code.bucket
+  s3_key           = aws_s3_bucket_object.scraper_code.key
+  source_code_hash = aws_s3_bucket_object.scraper_code.etag
 
   role = aws_iam_role.scraper_role.arn
 }

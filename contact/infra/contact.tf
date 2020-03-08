@@ -3,14 +3,11 @@ provider "aws" {
   version = "~> 2.48"
 }
 
-provider "archive" {
-  version = "~> 1.3"
-}
-
-data "archive_file" "contact_code" {
-  type        = "zip"
-  source_file = "../build/bundled/lambda.js"
-  output_path = "../build/bundled/contact.zip"
+resource "aws_s3_bucket_object" "contact_code" {
+  bucket = var.code_bucket
+  key    = var.code_key
+  source = "../build/contact.zip"
+  etag   = filemd5("../build/contact.zip")
 }
 
 resource "aws_lambda_function" "contact" {
@@ -24,8 +21,9 @@ resource "aws_lambda_function" "contact" {
   memory_size = 128
   timeout     = 10
 
-  filename         = data.archive_file.contact_code.output_path
-  source_code_hash = data.archive_file.contact_code.output_base64sha256
+  s3_bucket        = aws_s3_bucket_object.contact_code.bucket
+  s3_key           = aws_s3_bucket_object.contact_code.key
+  source_code_hash = aws_s3_bucket_object.contact_code.etag
 
   role = aws_iam_role.contact_role.arn
 }

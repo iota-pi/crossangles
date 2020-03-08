@@ -2,4 +2,4 @@
 
 ./node_modules/.bin/tsc
 ./node_modules/.bin/webpack
-(cd build/bundled; zip -r ../image.zip .)
+(cd build/bundled; zip -r ../contact.zip .)

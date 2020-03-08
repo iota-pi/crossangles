@@ -5,5 +5,5 @@ variable code_bucket {
 
 variable code_key {
   type    = string
-  default = "scraper/scraper.zip"
+  default = "contact/contact.zip"
 }
