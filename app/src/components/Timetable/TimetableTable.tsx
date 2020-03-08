@@ -14,6 +14,7 @@ import { Options } from '../../state/Options';
 import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';
 import { linkStream, LinkedStream } from '../../state/Stream';
+import getHours from './getHours';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -276,30 +277,14 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private updateHours () {
-    let start = 11;
-    let end = 18;
-
-    let streams: LinkedStream[];
-
     if (this.props.minimalHours) {
-      streams = this.props.timetable.orderSessions.map(s => s.stream);
+      this.hours = this.props.timetable.hours;
     } else {
       const courses = this.getCourses(this.props.timetable);
-      streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
+      const streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
+      const sessions = streams.flatMap(s => s.sessions);
+      this.hours = getHours(sessions);
     }
-
-    for (let stream of streams) {
-      for (let session of stream.sessions) {
-        if (session.start < start) {
-          start = Math.floor(session.start);
-        }
-        if (session.end > end) {
-          end = Math.ceil(session.end);
-        }
-      }
-    }
-
-    this.hours = { start, end };
   }
 
   private get hoursArray () {
