@@ -25,6 +25,11 @@ resource "aws_lambda_function" "image" {
   s3_key           = aws_s3_bucket_object.image_code.key
   source_code_hash = aws_s3_bucket_object.image_code.etag
 
+  layers = [
+    # this layer includes the chromium binary
+    "arn:aws:lambda:ap-southeast-2:764866452798:layer:chrome-aws-lambda:8",
+  ]
+
   role = aws_iam_role.image_role.arn
 }
 
