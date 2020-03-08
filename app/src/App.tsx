@@ -27,7 +27,7 @@ import { getAutoSelectedEvents } from './state/Events';
 import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManager';
-import { SaveAsImageData, saveAsImage } from './saveAsImage';
+import { saveAsImage, SaveAsImageRequest, getScreenshotViewport } from './saveAsImage';
 import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
 import { fetchData } from './actions';
@@ -128,10 +128,11 @@ class App extends Component<Props, State> {
   }
 
   private handleSaveAsImage = () => {
-    const imageData: SaveAsImageData = {
+    const imageData: SaveAsImageRequest = {
       timetable: this.props.timetable,
       colours: this.props.colours,
       options: this.props.options,
+      viewport: getScreenshotViewport(this.props.timetable),
     };
     saveAsImage(imageData);
   }

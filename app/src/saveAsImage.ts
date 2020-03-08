@@ -10,8 +10,24 @@ export interface SaveAsImageData {
   options: Options,
 }
 
+export interface Viewport {
+  width: number,
+  height: number,
+}
 
-export const saveAsImage = async (imageData: SaveAsImageData) => {
+export interface SaveAsImageRequest extends SaveAsImageData {
+  viewport: Viewport,
+}
+
+
+export const getScreenshotViewport = (timetable: SessionManagerData): Viewport => {
+  return {
+    width: 1920,
+    height: 1080,
+  };
+}
+
+export const saveAsImage = async (imageData: SaveAsImageRequest) => {
   const { data } = await axios.post(process.env.REACT_APP_SAVE_IMAGE_ENDPOINT!, imageData);
   if (!data.error) {
     const mime = 'image/png';
