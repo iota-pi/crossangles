@@ -7,6 +7,7 @@ import { sessionClashLength } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
 import { AdditionalEvent } from '../../state';
 import { getSessionManagerScore } from '../../timetable/scoreSessionManager';
+import { getHours } from './getHours';
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
@@ -64,6 +65,16 @@ export class SessionManager {
     sm._version = data.version;
     sm._score = data.score;
     return sm;
+  }
+
+  static getHours (data: SessionManagerData) {
+    const sessions = data.map.map(([_, sp]) => sp.session);
+    return getHours(sessions);
+  }
+
+  get hours () {
+    const sessions = Array.from(this.map.values()).map(sp => sp.session);
+    return getHours(sessions);
   }
 
   get version () {
