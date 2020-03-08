@@ -1,12 +1,12 @@
-import { notUndefined } from "../../typeHelpers";
-import { SessionPlacement, SessionPlacementData } from "./SessionPlacement";
-import { Position } from "./timetableTypes";
-import { SessionId, LinkedSession } from "../../state/Session";
-import { CourseMap, CourseData, getCourseId } from "../../state/Course";
-import { sessionClashLength } from "../../timetable/getClashInfo";
-import { DropzonePlacement } from "./DropzonePlacement";
-import { AdditionalEvent } from "../../state";
-import { getSessionManagerScore } from "../../timetable/scoreSessionManager";
+import { notUndefined } from '../../typeHelpers';
+import { SessionPlacement, SessionPlacementData } from './SessionPlacement';
+import { Position } from './timetableTypes';
+import { SessionId, LinkedSession } from '../../state/Session';
+import { CourseMap, CourseData, getCourseId } from '../../state/Course';
+import { sessionClashLength } from '../../timetable/getClashInfo';
+import { DropzonePlacement } from './DropzonePlacement';
+import { AdditionalEvent } from '../../state';
+import { getSessionManagerScore } from '../../timetable/scoreSessionManager';
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
