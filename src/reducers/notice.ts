@@ -4,7 +4,7 @@ import { baseState } from '../state';
 
 export function notice (
   state = baseState.notice,
-  action: AllActions
+  action: AllActions,
 ): Notice | null {
   switch (action.type) {
     case SET_NOTICE:

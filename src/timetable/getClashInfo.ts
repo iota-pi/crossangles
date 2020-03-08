@@ -37,7 +37,7 @@ export const streamClashLength = (a: LinkedStream, b: LinkedStream) => {
 
 export const sessionClashLength = (
   a: LinkedSession | SessionData,
-  b: LinkedSession | SessionData
+  b: LinkedSession | SessionData,
 ): number => {
   if (a.day === b.day) {
     const length = Math.max(Math.min(a.end, b.end) - Math.max(a.start, b.start), 0);

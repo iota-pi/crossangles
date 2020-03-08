@@ -42,7 +42,7 @@ export function events (state: readonly AdditionalEvent[] = [], action: AllActio
 
 export function options (
   state: Options = baseState.options,
-  action: AllActions
+  action: AllActions,
 ): Options {
   switch (action.type) {
     case TOGGLE_OPTION:

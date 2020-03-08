@@ -59,7 +59,7 @@ export const baseState: RootState = {
   history: {
     past: [],
     present: baseTimetableState,
-    future: []
+    future: [],
   },
   notice: null,
   suggestionScore: null,

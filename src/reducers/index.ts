@@ -11,7 +11,7 @@ import { UNDO, REDO } from '../actions/history';
 import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA, AllActions } from '../actions';
 import { undo, redo, push } from '../state/StateHistory';
 
-type NoHistoryState = Omit<RootState, 'history'>
+type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<NoHistoryState>({
   courses,
   custom,

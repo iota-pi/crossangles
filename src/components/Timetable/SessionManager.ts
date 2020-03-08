@@ -137,7 +137,7 @@ export class SessionManager {
     if (index !== -1) {
       this._order = [
         ...this._order.slice(0, index),
-        ...this._order.slice(index + 1)
+        ...this._order.slice(index + 1),
       ];
     }
 

@@ -13,12 +13,12 @@ export const historyTransform = createTransform(
     return outboundState;
   },
   { whitelist: ['history'] },
-)
+);
 
 export const noticeTransform = createTransform(
   () => null,
   () => null,
   { whitelist: ['notice'] },
-)
+);
 
 export default [historyTransform, noticeTransform];

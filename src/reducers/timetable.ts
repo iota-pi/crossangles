@@ -4,7 +4,7 @@ import { baseState } from '../state';
 
 export function timetable (
   state: SessionManagerData = baseState.timetable,
-  action: AllActions
+  action: AllActions,
 ): SessionManagerData {
   if (action.type === UPDATE_SESSION_MANAGER) {
     return action.sessionManager;

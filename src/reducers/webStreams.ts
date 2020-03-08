@@ -4,7 +4,8 @@ import { AllActions } from '../actions';
 import { baseState } from '../state';
 
 export function webStreams (
-  state: CourseId[] | undefined, action: AllActions
+  state: CourseId[] | undefined,
+  action: AllActions,
 ): CourseId[] {
   switch (action.type) {
     case TOGGLE_WEB_STREAM:

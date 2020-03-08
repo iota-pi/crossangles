@@ -46,7 +46,7 @@ export function courses (
 
 export function chosen (
   state: CourseId[] = [],
-  action: AllActions
+  action: AllActions,
 ): CourseId[] {
   switch (action.type) {
     case ADD_COURSE:

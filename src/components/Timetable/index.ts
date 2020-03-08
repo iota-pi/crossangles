@@ -1,3 +1,3 @@
-import TimetableTable from './TimetableTable'
+import TimetableTable from './TimetableTable';
 export { TimetableTable };
 export default TimetableTable;
