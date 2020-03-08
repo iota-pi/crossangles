@@ -12,7 +12,7 @@ export const getCourse = (): CourseData => ({
       enrols: [50, 100],
       times: [
         { time: 'M9', location: 'Morder', canClash: true },
-        { time: 'H19', location: 'Helm\'s Deep', weeks: '1,3,7-9' }],
+        { time: 'H12', location: 'Helm\'s Deep', weeks: '1,3,7-9' }],
     },
     {
       component: 'TUT',
@@ -25,7 +25,7 @@ export const getCourse = (): CourseData => ({
       component: 'TUT',
       enrols: [9, 9],
       times: [
-        { time: 'F12', location: 'Fangorn' },
+        { time: 'F19', location: 'Fangorn' },
       ],
     },
   ],
