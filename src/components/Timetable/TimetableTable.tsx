@@ -277,14 +277,18 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private updateHours () {
+    let sessions: LinkedSession[];
+
     if (this.props.minimalHours) {
-      this.hours = this.props.timetable.hours;
+      sessions = this.props.timetable.orderSessions;
     } else {
+      // Consider times for all sessions in the chosen courses
       const courses = this.getCourses(this.props.timetable);
       const streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
-      const sessions = streams.flatMap(s => s.sessions);
-      this.hours = getHours(sessions);
+      sessions = streams.flatMap(s => s.sessions);
     }
+
+    this.hours = getHours(sessions);
   }
 
   private get hoursArray () {
