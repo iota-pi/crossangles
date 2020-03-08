@@ -8,9 +8,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
   switch (method) {
     case 'OPTIONS':
-        return responder.getResponse({
-          headers: { 'Access-Control-Allow-Headers': '*' },
-        });
+      return responder.getResponse({
+        headers: { 'Access-Control-Allow-Headers': '*' },
+      });
     case 'POST':
       return handlePost(event, responder);
   }

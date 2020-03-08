@@ -11,9 +11,9 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
 
   switch (method) {
     case 'OPTIONS':
-        return responder.getResponse({
-          headers: { 'Access-Control-Allow-Headers': '*' },
-        });
+      return responder.getResponse({
+        headers: { 'Access-Control-Allow-Headers': '*' },
+      });
     case 'POST':
       return handlePost(event, responder);
   }
@@ -52,7 +52,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
   if (!emailRegex.test(body.email)) {
     return responder.getResponse({
       statusCode: 400,
-      message: 'Invalid email address',
+      message: `Invalid email address, received: "${body.email}"`,
     });
   }
 
