@@ -12,8 +12,12 @@ export const screenshot = async (uri: string): Promise<string> => {
     });
     const page = await browser.newPage();
     await page.goto(uri);
+    await Promise.race([
+      page.waitForSelector('[data-cy="timetable-session"]', { timeout: 5000 }),
+      page.waitForSelector('[data-session]', { timeout: 5000 }),
+    ]);
 
-    const result = await page.screenshot({ encoding: 'base64', fullPage: true });
+    const result = await page.screenshot({ encoding: 'base64' });
     return result;
   } finally {
     if (browser !== undefined) {
