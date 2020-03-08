@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-export const submitContact = async (
-  email: string,
+export const submitContact = async ({ name, email, message }: {
   name: string,
+  email: string,
   message: string,
-) => {
+}) => {
   const url = process.env.REACT_APP_CONTACT_ENDPOINT;
   if (!url) {
     throw new Error('No submission endpoint provided for contact us form');

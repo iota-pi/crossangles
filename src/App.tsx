@@ -145,7 +145,7 @@ class App extends Component<Props, State> {
   }
 
   private handleContactSend = async (name: string, email: string, message: string) => {
-    const result = await submitContact(name, email, message);
+    const result = await submitContact({ name, email, message });
 
     if (result && result.status === 200 && result.data.error !== true) {
       this.props.setNotice('Success! Thanks for contacting us');
