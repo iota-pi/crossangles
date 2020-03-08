@@ -67,16 +67,6 @@ export class SessionManager {
     return sm;
   }
 
-  static getHours (data: SessionManagerData) {
-    const sessions = data.map.map(([_, sp]) => sp.session);
-    return getHours(sessions);
-  }
-
-  get hours () {
-    const sessions = Array.from(this.map.values()).map(sp => sp.session);
-    return getHours(sessions);
-  }
-
   get version () {
     return this._version;
   }
