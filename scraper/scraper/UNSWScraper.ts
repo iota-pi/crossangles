@@ -241,7 +241,7 @@ export class Parser {
         return [];
       }
 
-      const commaIndex = otherDetails.indexOf(', ')
+      const commaIndex = otherDetails.indexOf(', ');
       let location = '';
       if (commaIndex !== -1) {
         location = otherDetails.slice(commaIndex + 2);
@@ -279,7 +279,7 @@ export class Parser {
     }
 
     // Use decimal notation for half-hours
-    time = time.replace(':30', '.5')
+    time = time.replace(':30', '.5');
 
     // Remove leading zeros
     time = time.replace(/(?<=[MTWHFSs])0(?=[0-9])/, '');
@@ -328,7 +328,7 @@ export function removeDuplicateStreams (course: CourseData) {
     const emptiest = emptiestStream(streamGroup);
     for (let stream of streamGroup) {
       if (stream !== emptiest) {
-        const index = course.streams.indexOf(stream)
+        const index = course.streams.indexOf(stream);
         course.streams.splice(index, 1);
       }
     }

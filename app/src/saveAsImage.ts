@@ -15,7 +15,7 @@ export const saveAsImage = async (imageData: SaveAsImageData) => {
   const { data } = await axios.post(process.env.REACT_APP_SAVE_IMAGE_ENDPOINT!, imageData);
   if (!data.error) {
     const mime = 'image/png';
-    const image = `data:${mime};base64,${data.data}`
+    const image = `data:${mime};base64,${data.data}`;
     const filename = 'timetable.png';
     download(image, filename, mime);
   } else {

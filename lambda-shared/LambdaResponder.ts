@@ -8,7 +8,7 @@ export interface ResponseOptions {
 }
 
 export interface ResponseHeaders {
-  [header: string]: boolean | number | string
+  [header: string]: boolean | number | string,
 }
 
 export class LambdaResponder {

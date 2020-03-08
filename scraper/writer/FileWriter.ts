@@ -19,7 +19,7 @@ export class FileWriter implements Writer {
   }
 
   toString () {
-    return `<FileWriter { destination: "${this.destination}" }>`
+    return `<FileWriter { destination: "${this.destination}" }>`;
   }
 
   private getBackupFilePath () {

@@ -57,7 +57,7 @@ export const getSessions = (course: CourseData, stream: StreamData): SessionData
 }
 
 export const linkStream = (course: CourseData, stream: StreamData): LinkedStream => {
-  const sessionData = getSessions(course, stream)
+  const sessionData = getSessions(course, stream);
   const linkedStream: LinkedStream = {
     ...stream,
     course,

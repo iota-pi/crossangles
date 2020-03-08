@@ -12,135 +12,135 @@ const unsw: CourseData[] = [
         "component": "The Bible Talks",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T12" }]
+        "times": [{ "time": "T12" }],
       },
       {
         "component": "The Bible Talks",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T13" }]
+        "times": [{ "time": "T13" }],
       },
       {
         "component": "The Bible Talks",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "W12" }]
+        "times": [{ "time": "W12" }],
       },
       {
         "component": "The Bible Talks",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "H12" }]
+        "times": [{ "time": "H12" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "M11" }]
+        "times": [{ "time": "M11" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "M12" }]
+        "times": [{ "time": "M12" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "M13" }]
+        "times": [{ "time": "M13" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "M14" }]
+        "times": [{ "time": "M14" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T11" }]
+        "times": [{ "time": "T11" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T14" }]
+        "times": [{ "time": "T14" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "W11" }]
+        "times": [{ "time": "W11" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "W13" }]
+        "times": [{ "time": "W13" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "H11" }]
+        "times": [{ "time": "H11" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "H13" }]
+        "times": [{ "time": "H13" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "F12" }]
+        "times": [{ "time": "F12" }],
       },
       {
         "component": "Bible Study",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "F13" }]
+        "times": [{ "time": "F13" }],
       },
       {
         "component": "Core Theology",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T16" }]
+        "times": [{ "time": "T16" }],
       },
       {
         "component": "Core Theology",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "W14" }]
+        "times": [{ "time": "W14" }],
       },
       {
         "component": "Core Training",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T15" }]
+        "times": [{ "time": "T15" }],
       },
       {
         "component": "Core Training",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T17" }]
+        "times": [{ "time": "T17" }],
       },
       {
         "component": "Core Training",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "W15" }]
+        "times": [{ "time": "W15" }],
       },
       {
         "component": "Core Training",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "H14" }]
-      }
-    ]
+        "times": [{ "time": "H14" }],
+      },
+    ],
   },
   {
     "code": "Street Talk",
@@ -151,34 +151,34 @@ const unsw: CourseData[] = [
         "component": "Street Talk",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "M15" }]
+        "times": [{ "time": "M15" }],
       },
       {
         "component": "Street Talk",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "T15" }]
+        "times": [{ "time": "T15" }],
       },
       {
         "component": "Street Talk",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "W15" }]
+        "times": [{ "time": "W15" }],
       },
       {
         "component": "Street Talk",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "H15" }]
+        "times": [{ "time": "H15" }],
       },
       {
         "component": "Street Talk",
         "full": false,
         "enrols": [0, 0],
-        "times": [{ "time": "F15" }]
-      }
-    ]
-  }
+        "times": [{ "time": "F15" }],
+      },
+    ],
+  },
 ];
 
 const additional = {

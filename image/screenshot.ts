@@ -1,12 +1,15 @@
 import chromium from 'chrome-aws-lambda';
 import { Browser } from 'puppeteer';
 
-export const screenshot = async (uri: string): Promise<string> => {
+export const screenshot = async (
+  uri: string,
+  viewport?: { width: number, height: number },
+): Promise<string> => {
   let browser: Browser | undefined;
   try {
     browser = await chromium.puppeteer.launch({
       args: chromium.args,
-      defaultViewport: chromium.defaultViewport,
+      defaultViewport: { ...chromium.defaultViewport, ...viewport },
       executablePath: await chromium.executablePath,
       headless: chromium.headless,
     });

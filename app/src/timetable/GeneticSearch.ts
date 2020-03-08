@@ -68,14 +68,14 @@ export class GeneticSearch<T> {
         this.cullParents(parents);
 
         if (performance.now() - startTime >= this.config.maxTime) {
-          console.warn(`search(): max search time exceeded after ${i} iterations`)
+          console.warn(`search(): max search time exceeded after ${i} iterations`);
           break;
         }
       }
     }
 
     // Give best result
-    return parents[0]
+    return parents[0];
   }
 
   abiogenesis (data: T[][]): Parent<T>[] {
@@ -92,7 +92,7 @@ export class GeneticSearch<T> {
 
   evolve (parents: Parent<T>[], data: T[][]): Parent<T>[] {
     // Create new parents
-    const numParents = parents.length
+    const numParents = parents.length;
     for (let i = 0; i < numParents; ++i) {
       parents.push(this.mutate(parents[i], data));
     }

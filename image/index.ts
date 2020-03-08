@@ -40,11 +40,14 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
 
   try {
     const data = JSON.parse(event.body);
+    const viewport = data.viewport;
+    delete data.viewport;
+
     const baseURI = event.headers.origin + '/timetable';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
 
-    const image = await screenshot(uri);
+    const image = await screenshot(uri, viewport);
     return responder.getResponse({
       data: image,
     });
