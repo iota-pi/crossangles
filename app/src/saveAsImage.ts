@@ -12,12 +12,14 @@ export interface SaveAsImageData {
 
 
 export const saveAsImage = async (imageData: SaveAsImageData) => {
-  const result = await axios.post(process.env.REACT_APP_SAVE_IMAGE_ENDPOINT!, imageData);
-  const type = result.headers['Content-Type'];
-  if (type === 'image/png') {
-    download(result.data.data, 'timetable.png', type);
+  const { data } = await axios.post(process.env.REACT_APP_SAVE_IMAGE_ENDPOINT!, imageData);
+  if (!data.error) {
+    const mime = 'image/png';
+    const image = `data:${mime};base64,${data.data}`
+    const filename = 'timetable.png';
+    download(image, filename, mime);
   } else {
-    console.error(result.data);
+    console.error(data);
   }
 }
 
