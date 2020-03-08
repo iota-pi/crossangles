@@ -1,4 +1,4 @@
-import { parseQueryString, parseJSONQueryString, SaveAsImageData } from './saveAsImage';
+import { parseQueryString, parseJSONQueryString, SaveAsImageData, getScreenshotHeight } from './saveAsImage';
 import { getSessionManager } from './test_util';
 import { ColourMap } from './state/Colours';
 import { Options } from './state/Options';
@@ -88,5 +88,13 @@ describe('parseGenericQueryString', () => {
       hello: false,
       undefined: null,
     })
+  })
+})
+
+
+describe('getScreenshotHeight', () => {
+  it('gives expected result', () => {
+    const timetable = getSessionManager().data;
+    expect(getScreenshotHeight(timetable)).toBe(602);
   })
 })

@@ -3,6 +3,8 @@ import { ColourMap } from './state/Colours';
 import { Options } from './state/Options';
 import axios from 'axios';
 import download from 'downloadjs';
+import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './components/Timetable/timetableUtil';
+import getHours from './components/Timetable/getHours';
 
 export interface SaveAsImageData {
   timetable: SessionManagerData,
@@ -22,9 +24,28 @@ export interface SaveAsImageRequest extends SaveAsImageData {
 
 export const getScreenshotViewport = (timetable: SessionManagerData): Viewport => {
   return {
-    width: 1920,
-    height: 1080,
+    width: getScreenshotWidth(),
+    height: getScreenshotHeight(timetable),
   };
+}
+
+export const getScreenshotWidth = (): number => {
+  // Match width in screenshot to the width in the actual timetable
+  const borderSpace = TIMETABLE_BORDER_WIDTH * 2;
+  const timetable = document.getElementById('timetable-display');
+  const width = timetable ? timetable.scrollWidth + borderSpace : 912;
+  return width;
+}
+
+export const getScreenshotHeight = (timetable: SessionManagerData): number => {
+  // Get height based off number of timetable rows
+  const borderSpace = TIMETABLE_BORDER_WIDTH * 2;
+  const sessions = timetable.map.map(([_, s]) => s.session);
+  const hours = getHours(sessions);
+  const duration = hours.end - hours.start;
+  const rows = 1 + duration;
+  const height = rows * TIMETABLE_CELL_HEIGHT + borderSpace;
+  return height;
 }
 
 export const saveAsImage = async (imageData: SaveAsImageRequest) => {

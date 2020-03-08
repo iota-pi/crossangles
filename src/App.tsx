@@ -128,11 +128,13 @@ class App extends Component<Props, State> {
   }
 
   private handleSaveAsImage = () => {
+    const viewport = getScreenshotViewport(this.props.timetable);
+
     const imageData: SaveAsImageRequest = {
       timetable: this.props.timetable,
       colours: this.props.colours,
       options: this.props.options,
-      viewport: getScreenshotViewport(this.props.timetable),
+      viewport,
     };
     saveAsImage(imageData);
   }
