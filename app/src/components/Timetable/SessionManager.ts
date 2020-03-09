@@ -170,10 +170,6 @@ export class SessionManager {
       }
     }
 
-    // Bump dragged stream, keeping the dragged session on top
-    this.bumpStream(sessionId);
-    this.bumpSession(sessionId);
-
     this.stopChange(shouldCallback);
   }
 
