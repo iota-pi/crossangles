@@ -11,7 +11,7 @@ import { StreamData } from '../../state/Stream';
 import { LinkedSession } from '../../state/Session';
 
 const styles = (theme: Theme) => createStyles({
-  root: {
+  main: {
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
@@ -97,7 +97,7 @@ class TimetableSession extends PureComponent<Props, State> {
   render() {
     const { classes, session } = this.props;
     const rootClasses = [
-      classes.root,
+      classes.main,
       this.props.isDragging ? classes.dragging : '',
       this.props.isSnapped ? classes.snapped : '',
       this.props.clashDepth > 0 ? classes.hovering : '',
