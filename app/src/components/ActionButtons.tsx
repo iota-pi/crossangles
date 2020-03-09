@@ -1,9 +1,10 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import { Meta } from '../state/Meta';
 import { Theme, createStyles, WithStyles, withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import { Meta } from '../state/Meta';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -13,6 +14,9 @@ const styles = (theme: Theme) => createStyles({
   buttonHolder: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  wrapper: {
+    position: 'relative',
   },
   baseButton: {
     flexGrow: 1,
@@ -31,6 +35,14 @@ const styles = (theme: Theme) => createStyles({
   saveImageButton: {
 
   },
+  buttonProgress: {
+    // color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
   fontNormal: {
     fontWeight: 500,
   },
@@ -47,6 +59,7 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {
   meta: Meta,
   showSignup: boolean,
+  isSavingImage: boolean,
   onSaveAsImage: () => void,
   className?: string,
 }
@@ -54,6 +67,7 @@ export interface Props extends WithStyles<typeof styles> {
 export const ActionButtons = withStyles(styles)(({
   meta,
   showSignup,
+  isSavingImage,
   onSaveAsImage,
   className,
   classes,
@@ -72,8 +86,15 @@ export const ActionButtons = withStyles(styles)(({
           color="primary"
           endIcon={<CameraAltIcon />}
           onClick={onSaveAsImage}
+          disabled={isSavingImage}
         >
           Save as Image
+          {isSavingImage && (
+            <CircularProgress
+              size={24}
+              className={classes.buttonProgress}
+            />
+          )}
         </Button>
 
         {showSignup && (

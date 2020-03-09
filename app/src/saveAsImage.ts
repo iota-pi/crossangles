@@ -54,9 +54,10 @@ export const saveAsImage = async (imageData: SaveAsImageRequest) => {
     const mime = 'image/png';
     const image = `data:${mime};base64,${data.data}`;
     const filename = 'timetable.png';
-    download(image, filename, mime);
+    return download(image, filename, mime) === true;
   } else {
     console.error(data);
+    return false;
   }
 }
 
