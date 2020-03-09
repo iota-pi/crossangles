@@ -142,15 +142,23 @@ class TimetableTable extends Component<Props, State> {
     // Don't drag if something else is being dragged already
     if (this.state.dragging) return;
 
-    // Update session placement with dragging state
-    this.props.timetable.drag(session.id);
+    // Bump dragged stream, keeping the dragged session on top
+    this.props.timetable.bumpStream(session.id);
+    this.props.timetable.bumpSession(session.id);
 
-    this.props.timetable.updateClashDepths();
+    // Start drag in next tick so transitions aren't interrupted by the order changing
+    this.forceUpdate(() => {
+      // Update session placement with dragging state
+      this.props.timetable.drag(session.id);
 
-    // Mark this session as being dragged
-    this.setState({
-      dragging: session,
+      this.props.timetable.updateClashDepths();
+
+      // Mark this session as being dragged
+      this.setState({
+        dragging: session,
+      });
     });
+
   }
 
   private handleMove = (session: LinkedSession, delta: Position) => {
