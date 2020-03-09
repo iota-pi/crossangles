@@ -68,6 +68,7 @@ export type Props = OwnProps & StateProps & DispatchProps;
 
 export interface State {
   showContact: boolean,
+  isSavingImage: boolean,
 }
 
 store.dispatch(fetchData());
@@ -75,6 +76,7 @@ store.dispatch(fetchData());
 class App extends Component<Props, State> {
   state: State = {
     showContact: false,
+    isSavingImage: false,
   }
 
   render () {
@@ -96,6 +98,7 @@ class App extends Component<Props, State> {
           <ActionButtons
             meta={this.props.meta}
             showSignup={this.props.showSignup}
+            isSavingImage={this.state.isSavingImage}
             onSaveAsImage={this.handleSaveAsImage}
             className={classes.spaceAbove}
           />
@@ -127,16 +130,26 @@ class App extends Component<Props, State> {
     );
   }
 
-  private handleSaveAsImage = () => {
-    const viewport = getScreenshotViewport(this.props.timetable);
+  private handleSaveAsImage = async () => {
+    this.setState({ isSavingImage: true });
 
     const imageData: SaveAsImageRequest = {
       timetable: this.props.timetable,
       colours: this.props.colours,
       options: this.props.options,
-      viewport,
+      viewport: getScreenshotViewport(this.props.timetable),
     };
-    saveAsImage(imageData);
+
+    saveAsImage(imageData).then(success => {
+      if (!success) {
+        this.props.setNotice('Could not save as image');
+      }
+    }).catch(err => {
+      this.props.setNotice('Could not send request, please try again later');
+      console.error(err);
+    }).finally(() => {
+      this.setState({ isSavingImage: false });
+    });
   }
 
   private handleSnackbarClose = () => {
