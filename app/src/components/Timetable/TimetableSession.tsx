@@ -33,9 +33,6 @@ const styles = (theme: Theme) => createStyles({
       transition: 'box-shadow 0.3s',
       boxShadow: theme.shadows[8],
     },
-    '&$new': {
-      transition: 'none',
-    },
   },
   background: {
     transition: 'background-color 0.3s',
@@ -46,7 +43,6 @@ const styles = (theme: Theme) => createStyles({
     height: '100%',
     zIndex: 0,
   },
-  new: {},
   dragging: {},
   snapped: {},
   hovering: {},

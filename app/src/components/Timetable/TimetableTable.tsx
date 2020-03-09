@@ -13,7 +13,7 @@ import { ColourMap } from '../../state/Colours';
 import { Options } from '../../state/Options';
 import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';
-import { linkStream, LinkedStream } from '../../state/Stream';
+import { linkStream } from '../../state/Stream';
 import getHours from './getHours';
 
 const noSelect: CSSProperties = {

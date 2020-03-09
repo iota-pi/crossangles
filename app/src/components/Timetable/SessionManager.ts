@@ -7,7 +7,6 @@ import { sessionClashLength } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
 import { AdditionalEvent } from '../../state';
 import { getSessionManagerScore } from '../../timetable/scoreSessionManager';
-import { getHours } from './getHours';
 
 export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
 
@@ -17,6 +16,7 @@ export interface SessionManagerData {
   version: number,
   score: number,
 }
+
 
 export class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
