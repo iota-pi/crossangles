@@ -1,6 +1,11 @@
 import { LinkedSession, SessionData } from '../../state/Session';
 
-export const getHours = (sessions: Array<LinkedSession | SessionData>) => {
+export interface HourSpan {
+  start: number,
+  end: number,
+}
+
+export const getHours = (sessions: Array<LinkedSession | SessionData>): HourSpan => {
   let start = 11;
   let end = 18;
 
