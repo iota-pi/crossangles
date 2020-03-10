@@ -94,7 +94,8 @@ describe('POST method responses', () => {
     expect(result.statusCode).toBe(400);
     const resultBody = JSON.parse(result.body);
     expect(resultBody.error).toBe(true);
-    expect(resultBody.message).toBe('Invalid email address');
+    expect(resultBody.message).toContain('Invalid email address');
+    expect(resultBody.message).toContain(email);
   })
 
   it('sends mail successfully', async () => {
