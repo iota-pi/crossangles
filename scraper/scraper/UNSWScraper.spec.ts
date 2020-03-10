@@ -17,7 +17,7 @@ describe('UNSWScraper', () => {
     const data = await s.scrape();
 
     // Verify
-    expect(data.courses).toMatchSnapshot();
+    expect(data!.courses).toMatchSnapshot();
   })
 
   it('skips terms with insufficient data', async () => {
@@ -32,7 +32,7 @@ describe('UNSWScraper', () => {
     s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
                             .mockImplementationOnce(async () => [courseData]);
     const result = await s.scrape();
-    expect(result.courses).toEqual([courseData]);
+    expect(result!.courses).toEqual([courseData]);
   })
 
   it('throws if no terms have sufficient data', async () => {

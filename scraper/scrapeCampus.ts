@@ -10,15 +10,15 @@ export const scrapeCampus = async (campus: string, outputPrefix?: string, cacheF
 
   const data = await scraper.scrape().catch(() => {});
 
-  if (cacheFile) await scraper.cache.write(cacheFile);
-
   if (data) {
+    if (cacheFile) await scraper.cache.write(cacheFile);
+
     const destination = (outputPrefix || '') + scraper.output;
     const output = getWriter(destination);
     await output.write(data);
     scraper.log(`written to ${output}`);
   } else {
-    scraper.log(`no data written`);
+    scraper.log('no data written');
   }
 }
 

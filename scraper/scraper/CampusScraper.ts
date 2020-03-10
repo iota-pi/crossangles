@@ -4,6 +4,7 @@ import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
 import cheerio from 'cheerio';
 import axios from 'axios';
+import StateManager from '../state/StateManager';
 
 export interface CampusData {
   courses: CourseData[],
@@ -13,6 +14,7 @@ export interface CampusData {
 export abstract class CampusScraper {
   protected abstract readonly additional: CourseData[];
   protected abstract readonly meta: MinistryMeta;
+  protected abstract readonly state: StateManager;
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
@@ -20,7 +22,7 @@ export abstract class CampusScraper {
   cache?: HTMLCache;
   logging = true;
 
-  abstract async scrape (): Promise<CampusData>;
+  abstract async scrape (): Promise<CampusData | null>;
 
   generateMetaData (term: number): Meta {
     const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');
@@ -52,7 +54,7 @@ export abstract class CampusScraper {
     let content: string;
     let loadedFromCache = false;
     if (this.cache && this.cache.has(url)) {
-      content = this.cache.get(url);
+      content = this.cache.get(url)!;
       loadedFromCache = true;
     } else {
       const response = await axios.get<string>(url);

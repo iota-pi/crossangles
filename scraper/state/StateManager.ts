@@ -58,7 +58,7 @@ export class StateManager {
         TableName: this.tableName,
         Key: { campus, key },
       }).promise();
-      const result = response.Item.value;
+      const result = response.Item?.value;
       return result;
     } catch (err) {
       return undefined;

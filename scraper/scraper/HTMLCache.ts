@@ -16,7 +16,7 @@ export class HTMLCache {
     return this.data.has(key);
   }
 
-  get (key: string): string {
+  get (key: string): string | undefined {
     return this.data.get(key);
   }
 

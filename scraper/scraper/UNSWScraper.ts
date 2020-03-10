@@ -1,8 +1,10 @@
 import { CampusScraper, CampusData } from './CampusScraper';
+import StateManager from '../state/StateManager';
 import { CourseData } from '../../app/src/state/Course';
 import { ClassTime, StreamData } from '../../app/src/state/Stream';
 import additional from '../data/additional';
 import info from '../data/info';
+import getStateManager from '../state/getStateManager';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -11,6 +13,9 @@ const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
 const DATA_THRESHOLD = 0.2;
 
+const CAMPUS_KEY = 'unsw';
+const UPDATE_TIME_KEY = 'data_update_time';
+
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   protected readonly meta = info.unsw;
@@ -18,19 +23,30 @@ export class UNSWScraper extends CampusScraper {
   readonly output = 'unsw/data.json';
   readonly name = 'UNSW';
   readonly parser: Parser;
+  readonly state: StateManager;
   maxFaculties = Infinity;
 
-  constructor (parser?: Parser) {
+  protected dataUpdateTime: string | undefined;
+
+
+  constructor (parser?: Parser, state?: StateManager) {
     super();
     this.parser = parser || new Parser();
+    this.state = state || getStateManager();
   }
 
-  async scrape (): Promise<CampusData> {
+  async scrape (): Promise<CampusData | null> {
     let courses: CourseData[] = [];
     let term: number;
 
+    const facultyPages = await this.findFacultyPages();
+    if (!await this.checkIfDataUpdated()) {
+      this.log('data has not been updated yet; nothing to do');
+      return null;
+    }
+
     for (term = 3; term > 0; term--) {
-      const termResult = await this.scrapeTerm(term);
+      const termResult = await this.scrapeTerm(term, facultyPages);
 
       // Assume that the current term is the latest one with stream data available for enough of their courses
       const hasStreamData = termResult.filter(c => c.streams.length > 0);
@@ -39,6 +55,8 @@ export class UNSWScraper extends CampusScraper {
         break;
       }
     }
+
+    this.state.set(CAMPUS_KEY, UPDATE_TIME_KEY, this.dataUpdateTime);
 
     if (courses.length === 0) {
       this.log('no term found with sufficient course data');
@@ -49,20 +67,35 @@ export class UNSWScraper extends CampusScraper {
     return { courses, meta };
   }
 
-  async scrapeTerm (term: number) {
+  async scrapeTerm (term: number, facultyPages: string[]) {
     this.log(`scraping term ${term} from ${this.source}`);
-    const facultyPages = await this.findFacultyPages(term);
+    facultyPages = facultyPages.filter(l => l.endsWith(`${term}.html`));
+
     const courses = await this.scrapeFacultyPages(facultyPages);
     return courses;
   }
 
-  private async findFacultyPages (term: number) {
+  private async checkIfDataUpdated () {
+    const lastUpdateTime = await this.state.get(CAMPUS_KEY, UPDATE_TIME_KEY);
+    return lastUpdateTime !== this.dataUpdateTime;
+  }
+
+  private getUpdateTime ($: CheerioStatic) {
+    const timeText = $('p>strong').text();
+    // Remove timezone because it is inconsistent and confuses parsers
+    const withoutTZ = timeText.replace(/\bA?E[SD]T\b/, '');
+    this.dataUpdateTime = withoutTZ;
+  }
+
+  private async findFacultyPages () {
     const links: string[] = [];
-    const linkRegex = new RegExp(`[A-Y][A-Z]{3}_[ST]${term}.html$`);
+    const linkRegex = /[A-Y][A-Z]{3}_[ST][0-9].html$/i;
     await this.scrapePages([this.source, this.source], async ($) => {
-      const allLinks = Array.from($('a')).map(e => $(e).attr('href'));
+      const allLinks = Array.from($('a')).map(e => $(e).attr('href') || '');
       const matchingLinks = allLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);
+
+      this.getUpdateTime($);
     });
 
     links.length = Math.min(links.length, this.maxFaculties);

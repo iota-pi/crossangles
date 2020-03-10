@@ -11,9 +11,11 @@
   },
   "author": "David Adams",
   "dependencies": {
+    "@types/moment-timezone": "^0.5.12",
     "@types/node": "^13.7.1",
     "axios": "^0.19.2",
-    "cheerio": "^1.0.0-rc.3"
+    "cheerio": "^1.0.0-rc.3",
+    "moment-timezone": "^0.5.28"
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.16",

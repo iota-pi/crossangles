@@ -9,7 +9,7 @@ describe('AsyncQueue', () => {
     let highestConcurrency = 0;
 
     const func = (result: number) => {
-      return new Promise(resolve => {
+      return new Promise<number>(resolve => {
         highestConcurrency = Math.max(highestConcurrency, ++concurrentCount);
 
         setTimeout(() => {
@@ -20,7 +20,7 @@ describe('AsyncQueue', () => {
       });
     };
 
-    const queue = new AsyncQueue(maxConcurrent);
+    const queue = new AsyncQueue<number, number>(maxConcurrent);
     const items = new Array(itemCount).fill(0).map((_, i) => i);
     queue.enqueue(items);
     const result = await queue.run(func);
