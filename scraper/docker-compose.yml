@@ -8,6 +8,11 @@ services:
     #  - dynamodb-data:/home/dynamodblocal/data
     ports:
       - 8000:8000
+    networks:
+      - env_default
 
 volumes:
   dynamodb-data:
+
+networks:
+  env_default:
