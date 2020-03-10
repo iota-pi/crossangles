@@ -9,10 +9,10 @@ class CampusError extends Error {
   }
 }
 
-export const getCampusScraper = (campus: string): CampusScraper => {
+export const getCampusScraper = async (campus: string): Promise<CampusScraper> => {
   switch (campus.toLowerCase()) {
     case 'unsw':
-      return new UNSWScraper();
+      return await UNSWScraper.create();
   }
 
   throw new CampusError(`No scraper found for ${campus}`);

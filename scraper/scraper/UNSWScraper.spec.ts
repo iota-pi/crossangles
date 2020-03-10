@@ -2,11 +2,22 @@ import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
 import { CourseData } from '../../app/src/state/Course';
 import { StreamData } from '../../app/src/state/Stream';
 import HTMLCache from './HTMLCache';
+import { cleanStateManager } from '../state/getStateManager';
+import StateManager from '../state/StateManager';
+
+const mockStateManager: StateManager = {
+  get: jest.fn(),
+  set: jest.fn(),
+} as any;
 
 describe('UNSWScraper', () => {
+  beforeEach(async () => {
+    cleanStateManager();
+  })
+
   it('gives consistent results', async () => {
     // Setup
-    const s = new UNSWScraper();
+    const s = await UNSWScraper.create({ state: mockStateManager });
     s.maxFaculties = 3;
     s.logging = false;
     s.cache = new HTMLCache();
@@ -21,7 +32,7 @@ describe('UNSWScraper', () => {
   })
 
   it('skips terms with insufficient data', async () => {
-    const s = new UNSWScraper();
+    const s = await UNSWScraper.create({ state: mockStateManager });
     s.logging = false;
 
     const courseData: CourseData = {
@@ -36,7 +47,7 @@ describe('UNSWScraper', () => {
   })
 
   it('throws if no terms have sufficient data', async () => {
-    const s = new UNSWScraper();
+    const s = await UNSWScraper.create({ state: mockStateManager });
     s.logging = false;
     s.scrapeTerm = jest.fn().mockImplementation(() => []);
     await expect(s.scrape()).rejects.toThrow();

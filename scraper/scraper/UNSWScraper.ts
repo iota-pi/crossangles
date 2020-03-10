@@ -22,17 +22,29 @@ export class UNSWScraper extends CampusScraper {
   readonly source = 'http://classutil.unsw.edu.au';
   readonly output = 'unsw/data.json';
   readonly name = 'UNSW';
+  protected state: StateManager;
   readonly parser: Parser;
-  readonly state: StateManager;
   maxFaculties = Infinity;
 
   protected dataUpdateTime: string | undefined;
 
 
-  constructor (parser?: Parser, state?: StateManager) {
+  constructor (parser: Parser, state: StateManager) {
     super();
-    this.parser = parser || new Parser();
-    this.state = state || getStateManager();
+    this.parser = parser;
+    this.state = state;
+  }
+
+  static async create ({
+    parser,
+    state,
+  }: {
+    parser?: Parser,
+    state?: StateManager,
+  } = {}) {
+    parser = parser || new Parser();
+    state = state || await getStateManager();
+    return new UNSWScraper(parser, state);
   }
 
   async scrape (): Promise<CampusData | null> {
@@ -56,7 +68,9 @@ export class UNSWScraper extends CampusScraper {
       }
     }
 
-    this.state.set(CAMPUS_KEY, UPDATE_TIME_KEY, this.dataUpdateTime);
+    if (this.state) {
+      this.state.set(CAMPUS_KEY, UPDATE_TIME_KEY, this.dataUpdateTime);
+    }
 
     if (courses.length === 0) {
       this.log('no term found with sufficient course data');

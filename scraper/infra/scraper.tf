@@ -122,7 +122,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
 
     min_ttl                = 0
-    default_ttl            = 300
+    default_ttl            = 600
     max_ttl                = 1800
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
@@ -144,14 +144,13 @@ resource "aws_cloudwatch_event_rule" "scraper_trigger" {
   name        = "scraper_trigger"
   description = "Run scraper on schedule"
 
-  # Below times are in UTC and correspond to 5:05am, 12:05pm, 6:05pm each day (no DST)
-  # TODO: change to run every hour and have scraper check if data has been updated
-  schedule_expression = "cron(5 17,0,6 * * ? *)"
+  # Run every 15 minutes from 5:05am to 12:05am the next day (non-DST)
+  schedule_expression = "cron(5,20,35,50 17-23,0-12 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
   rule      = aws_cloudwatch_event_rule.scraper_trigger.name
-  target_id = "check_foo"
+  target_id = "scraper_target"
   arn       = aws_lambda_function.scraper.arn
 }
 

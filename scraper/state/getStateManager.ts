@@ -13,10 +13,15 @@ const dynamoParams = {
 const ddb = new AWS.DynamoDB(dynamoParams);
 const client = new AWS.DynamoDB.DocumentClient(dynamoParams);
 
-const getStateManager = () => {
+export const getStateManager = async () => {
   const state = new StateManager(client);
-  state.init(ddb);
+  await state.init(ddb);
   return state;
+}
+
+export const cleanStateManager = async () => {
+  const state = new StateManager(client);
+  await state.drop(ddb);
 }
 
 export default getStateManager;

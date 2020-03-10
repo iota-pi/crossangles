@@ -7,18 +7,18 @@ import Writer from './writer/Writer';
 import FileWriter from './writer/FileWriter';
 
 jest.mock('./scraper');
-const mock_getCampusScraper = <jest.Mock<CampusScraper>>getCampusScraper;
+const mock_getCampusScraper = <jest.Mock<Promise<CampusScraper>>>getCampusScraper;
 jest.mock('./writer');
 const mock_getWriter = <jest.Mock<Writer>>getWriter;
 
 describe('scrapeCampus', () => {
   it('only writes out if it finds data', async () => {
-    const scraper = new UNSWScraper();
+    const scraper = await UNSWScraper.create();
     scraper.logging = false;
 
     const scrapeResult: CampusData = { courses: [], meta: scraper.generateMetaData(1) };
     scraper.scrape = jest.fn().mockImplementation(async () => scrapeResult);
-    mock_getCampusScraper.mockImplementation(() => scraper);
+    mock_getCampusScraper.mockImplementation(async () => scraper);
 
     const writer = new FileWriter('abc.json');
     writer.write = jest.fn().mockImplementation(async () => {});

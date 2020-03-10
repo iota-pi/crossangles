@@ -3,7 +3,7 @@ import { getWriter } from './writer';
 import HTMLCache from './scraper/HTMLCache';
 
 export const scrapeCampus = async (campus: string, outputPrefix?: string, cacheFile?: string) => {
-  const scraper = getCampusScraper(campus);
+  const scraper = await getCampusScraper(campus);
   scraper.cache = new HTMLCache();
 
   if (cacheFile) await scraper.cache.load(cacheFile).catch(() => {});

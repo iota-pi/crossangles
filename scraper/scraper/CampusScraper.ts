@@ -14,13 +14,14 @@ export interface CampusData {
 export abstract class CampusScraper {
   protected abstract readonly additional: CourseData[];
   protected abstract readonly meta: MinistryMeta;
-  protected abstract readonly state: StateManager;
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
   maxRequests: number = 5;
-  cache?: HTMLCache;
   logging = true;
+
+  protected abstract state: StateManager;
+  cache?: HTMLCache;
 
   abstract async scrape (): Promise<CampusData | null>;
 
