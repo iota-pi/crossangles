@@ -14,6 +14,7 @@ jobs:
       - node/with-cache:
           steps:
             - run: ./ci.sh install
+      - setup_remote_docker
       - run: ./ci.sh test
 workflows:
   build:
