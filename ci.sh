@@ -9,22 +9,27 @@ if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
   exit 1
 fi
 
+run_for_each () {
+  for module in app scraper contact image lambda-shared
+  do
+    (cd $module; $1 ${@:2})
+  done
+}
+
+
+if [[ $COMMAND == ci-install ]]; then
+  run_for_each npm ci
+fi
+
 if [[ $COMMAND == install ]]; then
-  (cd app; npm i)
-  (cd scraper; npm i)
-  (cd contact; npm i)
-  (cd image; npm i)
-  (cd lambda-shared; npm i)
+  run_for_each npm install
 fi
 
 if [[ $COMMAND == build ]]; then
   if [[ -n "${2:-}" ]]; then
     (cd $2; npm run build -- ${@:3})
   else
-    (cd app; npm run build)
-    (cd scraper; npm run build)
-    (cd contact; npm run build)
-    (cd image; npm run build)
+    run_for_each npm build
   fi
 fi
 
@@ -34,11 +39,7 @@ if [[ $COMMAND == test ]]; then
   else
     (
       export CI=${CI:-1}
-      (cd app; npm test)
-      (cd scraper; ./test.sh)
-      (cd contact; ./test.sh)
-      (cd image; ./test.sh)
-      (cd lambda-shared; ./test.sh)
+      run_for_each npm test
     )
   fi
 fi

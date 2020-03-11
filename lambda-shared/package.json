@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "test": "./test.sh"
+    "test": "./test.sh",
+    "build": "true"
   },
   "dependencies": {
     "aws-lambda": "^1.0.5",
