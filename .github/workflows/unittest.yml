@@ -23,8 +23,5 @@ jobs:
     - name: Install dependencies
       run: ./ci.sh ci-install
 
-    - name: Run dependent services
-      run: docker-compose up -d
-
     - name: Run tests
       run: ./ci.sh test
