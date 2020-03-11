@@ -6,7 +6,7 @@ orbs:
   cypress: cypress-io/cypress@1
   node: circleci/node@1.1.6
 workflows:
-  build:
+  cypress:
     jobs:
       # "cypress" is the name of the imported orb
       # "run" is the name of the job defined in Cypress orb
