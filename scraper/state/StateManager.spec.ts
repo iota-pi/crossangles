@@ -62,6 +62,7 @@ describe('StateManager integration', () => {
   it('copes with multiple drops and inits', async () => {
     const ddb = new DynamoDB({
       endpoint: 'http://localhost:8000',
+      credentials: { accessKeyId: 'foo', secretAccessKey: 'bar' },
       region: 'ap-southeast-2',
     });
     const sm = await getStateManager();

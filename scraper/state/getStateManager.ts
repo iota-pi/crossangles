@@ -1,11 +1,12 @@
 import AWS from 'aws-sdk';
 import StateManager from './StateManager';
 
-const testArgs = process.env.NODE_ENV === 'test' ? {
+const testArgs: AWS.DynamoDB.ClientConfiguration | undefined = process.env.NODE_ENV === 'test' ? {
   endpoint: 'http://localhost:8000',
+  credentials: { accessKeyId: 'foo', secretAccessKey: 'bar' },
 } : undefined;
 
-const dynamoParams = {
+const dynamoParams: AWS.DynamoDB.ClientConfiguration = {
   region: 'ap-southeast-2',
   ...testArgs,
 }
