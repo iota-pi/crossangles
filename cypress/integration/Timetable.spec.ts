@@ -77,7 +77,7 @@ context('Timetable interaction', () => {
       })
   })
 
-  it('raises and lowers linked sessions', () => {
+  it.skip('raises and lowers linked sessions', () => {
     cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`).as('session')
     cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`).as('linked')
 
@@ -107,7 +107,7 @@ context('Timetable interaction', () => {
       .expectData('snapped', 1)
   })
 
-  it('moves linked sessions', () => {
+  it.skip('moves linked sessions', () => {
     cy.get(`[data-session=${TEST_CODE}-LEC-T10-12]`)
       .dragAndDrop({ x: 0, y: -50 })
     cy.get(`[data-session=${TEST_CODE}-LEC-M9-10]`)
@@ -136,9 +136,9 @@ context('Timetable interaction', () => {
     cy.get('@session')
       .expectData('snapped', 1)
     cy.get(`[data-session=${TEST_CODE}-LEC-M10-11]`)
-      .should('not.exist');
+      .should('not.exist')
     cy.get(`[data-session=${TEST_CODE}-LEC-M11-12]`)
-      .should('exist');
+      .should('exist')
     cy.get(`[data-session=${TEST_CODE}-LEC-T11-13]`)
       .should('exist')
       .expectData('snapped', 1)
