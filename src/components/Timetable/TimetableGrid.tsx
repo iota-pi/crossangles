@@ -15,18 +15,6 @@ const noSelect: CSSProperties = {
 }
 
 const styles = (theme: Theme) => createStyles({
-  root: {
-    position: 'relative',
-    overflowX: 'auto',
-    overflowY: 'hidden',
-    zIndex: 0,
-    backgroundColor: theme.palette.background.paper,
-
-    // Outside border
-    borderStyle: 'solid',
-    borderColor: 'rgba(0, 0, 0, 0.2)',
-    borderWidth: TIMETABLE_BORDER_WIDTH,
-  },
   grid: {
     position: 'relative',
     overflowX: 'visible',
