@@ -11,7 +11,8 @@ export interface CourseData {
   isCustom?: boolean,
   isAdditional?: boolean,
   autoSelect?: boolean,
-  defaultColour?: Colour;
+  defaultColour?: Colour,
+  description?: string,
 }
 
 export interface CourseMap {
