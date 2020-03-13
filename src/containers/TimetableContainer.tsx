@@ -49,11 +49,13 @@ export type Props = WithDispatch<OwnProps & StateProps>;
 
 export interface State {
   timetable: SessionManager,
+  isUpdating: boolean,
 }
 
 class TimetableContainer extends PureComponent<Props> {
   state: State = {
     timetable: new SessionManager(),
+    isUpdating: false,
   }
 
   render () {
@@ -67,12 +69,14 @@ class TimetableContainer extends PureComponent<Props> {
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
           improvementScore={this.suggestionImprovementScore}
+          isUpdating={this.state.isUpdating}
         />
 
         <TimetableTable
           options={this.props.options}
           colours={this.props.colours}
           timetable={this.state.timetable}
+          isUpdating={this.state.isUpdating}
         />
       </div>
     );
@@ -113,12 +117,22 @@ class TimetableContainer extends PureComponent<Props> {
 
   private handleUpdate = async () => {
     const { chosen, additional, custom, events, options, webStreams } = this.props;
-    updateTimetable({
-      dispatch: this.props.dispatch,
-      sessionManager: new SessionManager(this.state.timetable),
-      selection: { chosen, additional, custom, events, options, webStreams },
-      cleanUpdate: true,
-    })
+
+    this.setState({ isUpdating: true });
+    try {
+      await updateTimetable({
+        dispatch: this.props.dispatch,
+        sessionManager: new SessionManager(this.state.timetable),
+        selection: { chosen, additional, custom, events, options, webStreams },
+        cleanUpdate: true,
+        searchConfig: {
+          timeout: 5000,
+          maxIterations: 500000,
+        },
+      });
+    } finally {
+      this.setState({ isUpdating: false });
+    }
   }
 
   private recommendTimetable = async () => {
