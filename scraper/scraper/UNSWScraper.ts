@@ -2,7 +2,7 @@ import { CampusScraper, CampusData } from './CampusScraper';
 import StateManager from '../state/StateManager';
 import { CourseData } from '../../app/src/state/Course';
 import { ClassTime, StreamData } from '../../app/src/state/Stream';
-import additional from '../data/additional';
+import additional, { checkHash, hashData } from '../data/additional';
 import info from '../data/info';
 import getStateManager from '../state/getStateManager';
 
@@ -15,6 +15,7 @@ const DATA_THRESHOLD = 0.2;
 
 const CAMPUS_KEY = 'unsw';
 const UPDATE_TIME_KEY = 'data_update_time';
+const ADDITIONAL_DATA_HASH = 'additional_data_hash';
 
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
@@ -70,6 +71,7 @@ export class UNSWScraper extends CampusScraper {
 
     if (this.state) {
       this.state.set(CAMPUS_KEY, UPDATE_TIME_KEY, this.dataUpdateTime);
+      this.state.set(CAMPUS_KEY, ADDITIONAL_DATA_HASH, hashData(this.additional));
     }
 
     if (courses.length === 0) {
@@ -90,8 +92,19 @@ export class UNSWScraper extends CampusScraper {
   }
 
   private async checkIfDataUpdated () {
+    // Update data if source has changed
     const lastUpdateTime = await this.state.get(CAMPUS_KEY, UPDATE_TIME_KEY);
-    return lastUpdateTime !== this.dataUpdateTime;
+    if (lastUpdateTime !== this.dataUpdateTime) {
+      return true;
+    }
+
+    // Update data if additional data has changed
+    const oldAdditionalHash = await this.state.get(CAMPUS_KEY, ADDITIONAL_DATA_HASH);
+    if (!checkHash(this.additional, oldAdditionalHash)) {
+      return true;
+    }
+
+    return false;
   }
 
   private getUpdateTime ($: CheerioStatic) {
