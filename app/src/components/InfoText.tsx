@@ -43,9 +43,16 @@ const InfoText = ({
           from <a href={meta.source}>{meta.source}</a>.
           CrossAngles comes without any guarantee of data accuracy or of optimality.
           If you have any questions or suggestions,
-          please <a onClick={(event) => { event.preventDefault(); onShowContact() }} href="#">
+          please <span
+            style={{
+              color: 'rgb(0, 0, 238)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
+            }}
+            onClick={(event) => { event.preventDefault(); onShowContact() }}
+          >
             contact us
-          </a>.
+          </span>.
         </Typography>
       )}
     </div>
