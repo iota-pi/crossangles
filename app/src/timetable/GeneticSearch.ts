@@ -9,7 +9,7 @@
  */
 
 export interface GeneticSearchOptionalConfig {
-  maxTime?: number,  // max execution time in milliseconds
+  timeout?: number,  // max execution time in milliseconds
   maxIterations?: number,
   checkIters?: number,
   initialParents?: number,
@@ -24,7 +24,7 @@ export interface GeneticSearchRequiredConfig<T> {
 export type GeneticSearchConfig<T> = GeneticSearchOptionalConfig & GeneticSearchRequiredConfig<T>;
 
 const defaultConfig: Required<GeneticSearchOptionalConfig> = {
-  maxTime: 500,
+  timeout: 500,
   maxIterations: 5000,
   checkIters: 10,
   initialParents: 100,
@@ -67,7 +67,7 @@ export class GeneticSearch<T> {
         // Re-sort parents then remove the worst ones
         this.cullParents(parents);
 
-        if (performance.now() - startTime >= this.config.maxTime) {
+        if (performance.now() - startTime >= this.config.timeout) {
           console.warn(`search(): max search time exceeded after ${i} iterations`);
           break;
         }

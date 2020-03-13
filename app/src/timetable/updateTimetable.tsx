@@ -55,7 +55,7 @@ export const updateTimetable = async (
     fixedSessions = sessionManager.getTouchedSessions(courses, events);
   }
 
-  const newTimetable = doTimetableSearch({
+  const newTimetable = await doTimetableSearch({
     fixedSessions,
     courses,
     events,
@@ -126,11 +126,11 @@ export const recommendTimetable = async (
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
   selection: Selection,
   maxSpawn = 1,
-  searchConfig: GeneticSearchOptionalConfig = { maxTime: 100 },
+  searchConfig: GeneticSearchOptionalConfig = { timeout: 100 },
 ) => {
   const { chosen, custom, additional, events, webStreams, options } = selection;
   const courses = [ ...chosen, ...custom, ...additional ];
-  const newTimetable = doTimetableSearch({
+  const newTimetable = await doTimetableSearch({
     fixedSessions: [],
     courses,
     events,
@@ -145,7 +145,7 @@ export const recommendTimetable = async (
   }
 }
 
-export function doTimetableSearch ({
+export async function doTimetableSearch ({
   fixedSessions,
   courses,
   events,
@@ -154,7 +154,7 @@ export function doTimetableSearch ({
   maxSpawn,
   ignoreCache,
   searchConfig,
-}: TimetableSearchConfig): TimetableSearchResult | null {
+}: TimetableSearchConfig): Promise<TimetableSearchResult | null> {
   // Remove fixed sessions from full streams
   let includeFull = options.includeFull || false;
   const fixed = fixedSessions.filter(s => includeFull || !s.stream.full);
@@ -173,12 +173,12 @@ export function doTimetableSearch ({
   const fullComponents = components.filter(c => c.streams.length === 0);
   components = components.filter(c => c.streams.length > 0);
 
-  let result: ReturnType<typeof search>;
+  let result: TimetableSearchResult;
   try {
     // Search for a new timetable
     // NB: scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered to be 'unplaced'
-    result = search(components, fixed, maxSpawn, ignoreCache, searchConfig);
+    result = await search(components, fixed, maxSpawn, ignoreCache, searchConfig);
   } catch (err) {
     console.error(err);
     return null;
