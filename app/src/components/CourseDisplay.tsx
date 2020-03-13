@@ -3,6 +3,7 @@ import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 import { AdditionalEvent } from '../state';
+import Tooltip from '@material-ui/core/Tooltip';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -55,6 +56,13 @@ const styles = (theme: Theme) => {
     },
     marginRight: {
       marginRight: theme.spacing(1),
+    },
+    description: {
+      color: 'rgb(0, 0, 238)',
+      fontWeight: 300,
+      fontSize: '0.7rem',
+      marginLeft: theme.spacing(1),
+      cursor: 'pointer',
     },
   });
 };
@@ -185,6 +193,19 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
       <ListItem className={rootClasses.join(' ')}>
         <ListItemText>
           <span>{course.name}</span>
+          {course.description && (
+            <Tooltip
+              title={course.description}
+              aria-hidden="true"
+              placement="right"
+            >
+              <span
+                className={classes.description}
+              >
+                what?
+              </span>
+            </Tooltip>
+          )}
         </ListItemText>
 
         <div className={classes.marginRight}>
