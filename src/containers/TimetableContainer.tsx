@@ -126,8 +126,8 @@ class TimetableContainer extends PureComponent<Props> {
         selection: { chosen, additional, custom, events, options, webStreams },
         cleanUpdate: true,
         searchConfig: {
-          timeout: 5000,
-          maxIterations: 500000,
+          timeout: 1000,
+          maxIterations: 100000,
         },
       });
     } finally {
