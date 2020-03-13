@@ -68,6 +68,9 @@ class TimetableSearch {
       }));
     }
     const results = await Promise.all(promises);
+    for (const worker of workers) {
+      worker.terminate();
+    }
 
     // Find best result
     const best = results.sort((a, b) => b.score - a.score)[0];
