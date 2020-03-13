@@ -4,10 +4,11 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import { Dimensions, Position } from './timetableTypes';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Fade from '@material-ui/core/Fade';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import { TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableUtil';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
@@ -108,9 +109,9 @@ class TimetableTable extends Component<Props, State> {
           />
         ))}
 
-        {this.props.isUpdating && (
-          <LinearProgress className={classes.progress} />
-        )}
+        <Fade in={this.props.isUpdating} mountOnEnter unmountOnExit>
+          <LinearProgress className={classes.progress} color="secondary" />
+        </Fade>
 
         <TimetableGrid
           timetableRef={this.timetableRef}
