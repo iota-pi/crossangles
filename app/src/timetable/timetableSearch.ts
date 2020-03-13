@@ -20,7 +20,7 @@ class TimetableSearch {
   async search (
     components: Component[],
     fixedSessions: LinkedSession[],
-    maxSpawn = 3,
+    maxSpawn = 5,
     ignoreCache = false,
     config: GeneticSearchOptionalConfig = {},
   ): Promise<TimetableSearchResult> {
@@ -41,23 +41,12 @@ class TimetableSearch {
     // Break components into streams
     const streams = components.map(c => c.streams);
 
-    // Set up scorer and searcher
-    // TODO: could improve performance by spawning in multiple web workers
-    // const scorer = new TimetableScorer(clashInfo, fixedSessions);
-    // const searchers = new Array(maxSpawn).fill(0).map(_ => new GeneticSearch({
-    //   ...config,
-    //   timeout: (config.timeout || 500) / maxSpawn,
-    //   scoreFunction: scorer.score.bind(scorer),
-    // }));
-
-    // // Perform search
-    // const results = searchers.map(s => s.search(streams));
-
     const workers: Workerized<typeof searchWorker>[] = [];
     for (let i = 0; i < maxSpawn; ++i) {
       const worker = createSearchWorker<typeof searchWorker>();
       workers.push(worker);
     }
+
     const promises: Promise<Parent<LinkedStream>>[] = [];
     for (const worker of workers) {
       promises.push(worker.runSearch({
@@ -68,6 +57,7 @@ class TimetableSearch {
       }));
     }
     const results = await Promise.all(promises);
+
     for (const worker of workers) {
       worker.terminate();
     }
