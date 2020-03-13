@@ -7,6 +7,7 @@ import { Dimensions, Position } from './timetableTypes';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableUtil';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
@@ -31,6 +32,12 @@ const styles = (theme: Theme) => createStyles({
     borderColor: 'rgba(0, 0, 0, 0.2)',
     borderWidth: TIMETABLE_BORDER_WIDTH,
   },
+  progress: {
+    position: 'absolute',
+    zIndex: 10,
+    width: '100%',
+    height: 2,
+  },
 });
 
 export interface Props extends WithStyles<typeof styles> {
@@ -38,6 +45,7 @@ export interface Props extends WithStyles<typeof styles> {
   colours: ColourMap,
   timetable: SessionManager,
   minimalHours?: boolean,
+  isUpdating?: boolean,
 }
 
 export interface State {
@@ -100,10 +108,16 @@ class TimetableTable extends Component<Props, State> {
           />
         ))}
 
+        {this.props.isUpdating && (
+          <LinearProgress className={classes.progress} />
+        )}
+
         <TimetableGrid
           timetableRef={this.timetableRef}
           hours={this.hours}
         />
+
+        {this.props.isUpdating + ''}
       </div>
     )
   }

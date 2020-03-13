@@ -27,6 +27,7 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {
   history: StateHistory,
   improvementScore: number,
+  isUpdating: boolean,
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
@@ -39,6 +40,7 @@ export const TimetableControls = ({
   onRedo,
   onUpdate,
   improvementScore,
+  isUpdating,
 }: Props) => {
   let updateClass = classes.primary;
   if (improvementScore > 100) {
@@ -73,7 +75,7 @@ export const TimetableControls = ({
       )}
       {onUpdate && (
         <IconButton
-          onClick={onUpdate}
+          onClick={!isUpdating ? onUpdate : undefined}
           className={updateClass}
           data-cy="update-button"
         >
