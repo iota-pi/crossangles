@@ -1,6 +1,6 @@
 import { notUndefined } from '../../typeHelpers';
 import { SessionPlacement, SessionPlacementData } from './SessionPlacement';
-import { Position } from './timetableTypes';
+import { Position, Dimensions } from './timetableTypes';
 import { SessionId, LinkedSession } from '../../state/Session';
 import { CourseMap, CourseData, getCourseId } from '../../state/Course';
 import { sessionClashLength } from '../../timetable/getClashInfo';
@@ -182,13 +182,15 @@ export class SessionManager {
   drop (
     sessionId: SessionId,
     dropzone: DropzonePlacement | null,
+    timetableDimensions: Dimensions,
+    firsttHour: number,
     shouldCallback=true,
   ): void {
     this.startChange();
 
     // Drop this placement
     const session = this.get(sessionId);
-    session.drop();
+    session.drop(timetableDimensions, firsttHour);
 
     // Lower all linked placements
     const stream = session.session.stream;
