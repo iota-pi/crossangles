@@ -13,7 +13,6 @@ export interface CampusData {
 
 export abstract class CampusScraper {
   protected abstract readonly additional: CourseData[];
-  protected abstract readonly meta: MinistryMeta;
   abstract readonly source: string;
   abstract readonly output: string;
   abstract readonly name: string;
@@ -39,7 +38,6 @@ export abstract class CampusScraper {
       updateTime: `${zfill(now.getHours())}:${zfill(now.getMinutes())}`,
       source: this.source,
       signup: process.env.SIGN_UP || '',
-      ...this.meta,
     };
   }
 

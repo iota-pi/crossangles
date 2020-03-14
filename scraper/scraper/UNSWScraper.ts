@@ -3,7 +3,6 @@ import StateManager from '../state/StateManager';
 import { CourseData } from '../../app/src/state/Course';
 import { ClassTime, StreamData } from '../../app/src/state/Stream';
 import additional, { checkHash, hashData } from '../data/additional';
-import info from '../data/info';
 import getStateManager from '../state/getStateManager';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
@@ -19,7 +18,6 @@ const ADDITIONAL_DATA_HASH = 'additional_data_hash';
 
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
-  protected readonly meta = info.unsw;
   readonly source = 'http://classutil.unsw.edu.au';
   readonly output = 'unsw/data.json';
   readonly name = 'UNSW';
