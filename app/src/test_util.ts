@@ -2,6 +2,7 @@ import { CourseData } from './state/Course';
 import { linkStream } from './state/Stream';
 import SessionPlacement from './components/Timetable/SessionPlacement';
 import SessionManager from './components/Timetable/SessionManager';
+import { Dimensions } from './components/Timetable/timetableTypes';
 
 export const getCourse = (): CourseData => ({
   code: 'RING9731',
@@ -12,7 +13,9 @@ export const getCourse = (): CourseData => ({
       enrols: [50, 100],
       times: [
         { time: 'M9', location: 'Morder', canClash: true },
-        { time: 'H12', location: 'Helm\'s Deep', weeks: '1,3,7-9' }],
+        { time: 'H12', location: 'Helm\'s Deep', weeks: '1,3,7-9' },
+        { time: 'T12', location: 'Tol Brandir', weeks: '1,3,7-9' },
+      ],
     },
     {
       component: 'TUT',
@@ -55,4 +58,12 @@ export const getSessionManager = () => {
   manager.set(p2.session.id, p2);
   manager.set(p3.session.id, p3);
   return manager;
+}
+
+export const getDimensions = () => {
+  const dimensions: Dimensions = {
+    width: 800,
+    height: 500,
+  };
+  return dimensions;
 }

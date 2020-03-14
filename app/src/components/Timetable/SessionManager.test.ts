@@ -1,5 +1,8 @@
 import SessionManager from './SessionManager';
 import SessionPlacement from './SessionPlacement';
+import { getSessionPlacement, getDimensions } from '../../test_util';
+import { LinkedSession } from '../../state/Session';
+import { LinkedStream } from '../../state/Stream';
 
 describe('SessionManager basic functionality', () => {
   test('get throws if not found', () => {
@@ -14,21 +17,21 @@ describe('SessionManager basic functionality', () => {
 
   test('get returns found placement', () => {
     const s = new SessionManager();
-    const p = {};
-    s.set('a', p);
-    expect(s.get('a')).toBe(p);
+    const p = getSessionPlacement();
+    s.set(p.session.id, p);
+    expect(s.get(p.session.id)).toBe(p);
   })
 
   test('getMaybe returns found placement', () => {
     const s = new SessionManager();
-    const p = {};
-    s.set('a', p);
-    expect(s.getMaybe('a')).toBe(p);
+    const p = getSessionPlacement();
+    s.set(p.session.id, p);
+    expect(s.getMaybe(p.session.id)).toBe(p);
   })
 
   test('has returns true when found', () => {
     const s = new SessionManager();
-    s.set('a', {});
+    s.set('a', getSessionPlacement());
     expect(s.has('a')).toBe(true);
   })
 
@@ -42,30 +45,30 @@ describe('SessionManager basic functionality', () => {
     const v = s.version;
     const cb = jest.fn();
     s.callback = cb;
-    s.set('a', {});
+    s.set('a', getSessionPlacement());
     expect(s.version).toBe(v + 1);
     expect(cb).toHaveBeenCalledTimes(0);
   })
 
   test('set adds items in expected order', () => {
     const s = new SessionManager();
-    s.set('o', {});
-    s.set('r', {});
-    s.set('d', {});
+    s.set('o', getSessionPlacement(0));
+    s.set('r', getSessionPlacement(1));
+    s.set('d', getSessionPlacement(2));
     expect(s.order).toEqual(['o', 'r', 'd']);
   })
 
   test('order is not mutated by set', () => {
     const s = new SessionManager();
-    s.set('a', {});
+    s.set('a', getSessionPlacement(0));
     const initialOrder = s.order;
-    s.set('b', {});
+    s.set('b', getSessionPlacement(1));
     expect(s.order).not.toBe(initialOrder);
   })
 
   test('order is not mutated by remove', () => {
     const s = new SessionManager();
-    s.set('a', {});
+    s.set('a', getSessionPlacement());
     const initialOrder = s.order;
     s.remove('a');
     expect(s.order).not.toBe(initialOrder);
@@ -73,9 +76,9 @@ describe('SessionManager basic functionality', () => {
 
   test('getOrder returns expected values', () => {
     const s = new SessionManager();
-    s.set('o', {});
-    s.set('r', {});
-    s.set('d', {});
+    s.set('o', getSessionPlacement(0));
+    s.set('r', getSessionPlacement(1));
+    s.set('d', getSessionPlacement(2));
     expect(s.getOrder('o')).toBe(0);
     expect(s.getOrder('r')).toBe(1);
     expect(s.getOrder('d')).toBe(2);
@@ -84,40 +87,45 @@ describe('SessionManager basic functionality', () => {
 
   test('getSession doesn\'t affect the version', () => {
     const s = new SessionManager();
-    s.set('a', {});
+    const p = getSessionPlacement();
+    s.set(p.session.id, p);
     const v = s.version;
-    s.getSession('a');
+    s.getSession(p.session.id);
     expect(s.version).toBe(v);
   })
 
   test('getSession returns session', () => {
     const s = new SessionManager();
-    const session = {};
-    s.set('a', { session });
-    expect(s.getSession('a')).toBe(session);
+    const p = getSessionPlacement();
+    s.set(p.session.id, p);
+    expect(s.getSession(p.session.id)).toBe(p.session);
   })
 
   test('getSession throws if session id doesn\'t exist', () => {
     const s = new SessionManager();
-    expect(() => s.getSession('a')).toThrowError(TypeError);
+    expect(() => s.getSession('a')).toThrow();
   })
 
   test('orderSessions gives expected result', () => {
     const s = new SessionManager();
-    const sessions = [{}, {}, {}];
-    s.set('a', { session: sessions[0] });
-    s.set('b', { session: sessions[1] });
-    s.set('c', { session: sessions[2] });
+    const placements = [
+      getSessionPlacement(0),
+      getSessionPlacement(1),
+      getSessionPlacement(2),
+    ];
+    s.set('a', placements[0]);
+    s.set('b', placements[1]);
+    s.set('c', placements[2]);
     const v = s.version;
-    expect(s.orderSessions).toEqual(sessions);
+    expect(s.orderSessions).toEqual(placements.map(p => p.session));
     expect(s.version).toBe(v);
   })
 
   test('remove removes from order', () => {
     const s = new SessionManager();
-    s.set('o', {});
-    s.set('r', {});
-    s.set('d', {});
+    s.set('o', getSessionPlacement(0));
+    s.set('r', getSessionPlacement(1));
+    s.set('d', getSessionPlacement(2));
     const v = s.version;
     const cb = jest.fn();
     s.callback = cb;
@@ -139,7 +147,7 @@ describe('SessionManager basic functionality', () => {
 
   test('update clash depth', () => {
     const s = new SessionManager();
-    const p = {};
+    const p = getSessionPlacement();
     p.clashDepth = 0;
     s.set('a', p);
     const v = s.version;
@@ -150,12 +158,14 @@ describe('SessionManager basic functionality', () => {
 
   test('can drag a session', () => {
     const s = new SessionManager();
-    const p1 = { drag: jest.fn(), session: { stream: { sessions: [] } } };
-    const p2 = { drag: jest.fn() };
-    s.set('a', p1);
-    s.set('b', p2);
+    let p1 = getSessionPlacement(1);
+    let p2 = getSessionPlacement(2);
+    p1.drag = jest.fn();
+    p2.drag = jest.fn();
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
     const v = s.version;
-    s.drag('a');
+    s.drag(p1.session.id);
     expect(p1.drag).toHaveBeenCalledTimes(1);
     expect(p2.drag).not.toHaveBeenCalled();
     expect(s.version).toBe(v + 1);
@@ -163,34 +173,36 @@ describe('SessionManager basic functionality', () => {
 
   test('dragging raises linked sessions', () => {
     const s = new SessionManager();
-    jest.spyOn(s, 'bumpStream');
-    jest.spyOn(s, 'bumpSession');
-    const sessions = [
-      { id: 'a-0' },
-      { id: 'a-1' },
-      { id: 'a-2' },
-    ];
-    const p1 = { drag: jest.fn(), raise: jest.fn(), session: { stream: { sessions } } };
-    const p2 = { raise: jest.fn() };
-    const p3 = { raise: jest.fn() };
-    s.set('a-0', p1);
-    s.set('a-1', p2);
-    s.set('a-2', p3);
+    const p1 = getSessionPlacement(0);
+    const p2 = getSessionPlacement(0, 1);
+    const p3 = getSessionPlacement(0, 2);
+    const p4 = getSessionPlacement(1);
+    p1.drag = jest.fn();
+    p1.raise = jest.fn();
+    p2.raise = jest.fn();
+    p3.raise = jest.fn();
+    p4.raise = jest.fn();
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
     const v = s.version;
-    s.drag('a-0');
+    s.drag(p1.session.id);
     expect(p1.raise).not.toHaveBeenCalled();
     expect(p2.raise).toHaveBeenCalledTimes(1);
     expect(p3.raise).toHaveBeenCalledTimes(1);
+    expect(p4.raise).toHaveBeenCalledTimes(0);
     expect(s.version).toBe(v + 1);
   })
 
   test('can move session with given delta', () => {
     const s = new SessionManager();
-    const p = { move: jest.fn() };
-    s.set('a', p);
+    const p = getSessionPlacement();
+    p.move = jest.fn();
+    s.set(p.session.id, p);
     const v = s.version;
     const delta = { x: -10, y: 10 };
-    s.move('a', delta);
+    s.move(p.session.id, delta);
     expect(p.move).toHaveBeenCalledTimes(1);
     expect(p.move).toHaveBeenCalledWith(delta);
     expect(s.version).toBe(v + 1);
@@ -198,13 +210,15 @@ describe('SessionManager basic functionality', () => {
 
   test('can drop a session', () => {
     const s = new SessionManager();
-    const updateScore = jest.spyOn(s, 'updateScore').mockImplementation();
-    const p1 = { drop: jest.fn(), session: { stream: { sessions: [] } } };
-    const p2 = { drop: jest.fn() };
-    s.set('a', p1);
-    s.set('b', p2);
+    const updateScore = jest.spyOn(s as any, 'updateScore').mockImplementation();
+    const p1 = getSessionPlacement(1);
+    const p2 = getSessionPlacement(2);
+    p1.drop = jest.fn();
+    p2.drop = jest.fn();
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
     const v = s.version;
-    s.drop('a');
+    s.drop(p1.session.id, null, getDimensions(), 10);
     expect(p1.drop).toHaveBeenCalledTimes(1);
     expect(p2.drop).not.toHaveBeenCalled();
     expect(updateScore).toHaveBeenCalledTimes(1);
@@ -213,20 +227,19 @@ describe('SessionManager basic functionality', () => {
 
   test('dropping lowers linked sessions', () => {
     const s = new SessionManager();
-    const updateScore = jest.spyOn(s, 'updateScore').mockImplementation();
-    const sessions = [
-      { id: 'a-0' },
-      { id: 'a-1' },
-      { id: 'a-2' },
-    ];
-    const p1 = { drop: jest.fn(), lower: jest.fn(), session: { stream: { sessions } } };
-    const p2 = { lower: jest.fn() };
-    const p3 = { lower: jest.fn() };
-    s.set('a-0', p1);
-    s.set('a-1', p2);
-    s.set('a-2', p3);
+    const updateScore = jest.spyOn(s as any, 'updateScore').mockImplementation();
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(0, 1);
+    const p3 = getSessionPlacement(0, 2);
+    p1.drop = jest.fn();
+    p1.lower = jest.fn();
+    p2.lower = jest.fn();
+    p3.lower = jest.fn();
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
     const v = s.version;
-    s.drop('a-0');
+    s.drop(p1.session.id, null, getDimensions(), 10);
     expect(p1.lower).not.toHaveBeenCalled();
     expect(p2.lower).toHaveBeenCalledTimes(1);
     expect(p3.lower).toHaveBeenCalledTimes(1);
@@ -236,39 +249,40 @@ describe('SessionManager basic functionality', () => {
 
   test('can raise a session', () => {
     const s = new SessionManager();
-    const p = { raise: jest.fn() };
-    s.set('a', p);
+    const p = getSessionPlacement();
+    p.raise = jest.fn();
+    s.set(p.session.id, p);
     const v = s.version;
-    s.raise('a');
+    s['raise'](p.session.id);
     expect(p.raise).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
 
   test('can lower a session', () => {
     const s = new SessionManager();
-    const p = { lower: jest.fn() };
-    s.set('a', p);
+    const p = getSessionPlacement();
+    p.lower = jest.fn();
+    s.set(p.session.id, p);
     const v = s.version;
-    s.lower('a');
+    s['lower'](p.session.id);
     expect(p.lower).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
 
   test('can snap all sessions in a stream', () => {
     const s = new SessionManager();
-    const sessions = [
-      { id: 'a-0' },
-      { id: 'a-1' },
-      { id: 'a-2' },
-    ];
-    const p1 = { snap: jest.fn(), session: { stream: { sessions } } };
-    const p2 = { snap: jest.fn() };
-    const p3 = { snap: jest.fn() };
-    s.set('a-0', p1);
-    s.set('a-1', p2);
-    s.set('a-2', p3);
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(0, 1);
+    const p3 = getSessionPlacement(0, 2);
+    p1.snap = jest.fn();
+    p2.snap = jest.fn();
+    p3.snap = jest.fn();
+
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
     const v = s.version;
-    s.snapStream('a-0');
+    s.snapStream(p1.session.id);
     expect(p1.snap).toHaveBeenCalledTimes(1);
     expect(p2.snap).toHaveBeenCalledTimes(1);
     expect(p3.snap).toHaveBeenCalledTimes(1);
@@ -277,20 +291,22 @@ describe('SessionManager basic functionality', () => {
 
   test('can snap one session', () => {
     const s = new SessionManager();
-    const p = { snap: jest.fn() };
-    s.set('a', p);
+    const p = getSessionPlacement();
+    p.snap = jest.fn();
+    s.set(p.session.id, p);
     const v = s.version;
-    s.snap('a');
+    s.snap(p.session.id);
     expect(p.snap).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
 
   test('can displace one session', () => {
     const s = new SessionManager();
-    const p = { displace: jest.fn() };
-    s.set('a', p);
+    const p = getSessionPlacement();
+    p.displace = jest.fn();
+    s.set(p.session.id, p);
     const v = s.version;
-    s.displace('a');
+    s.displace(p.session.id);
     expect(p.displace).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
@@ -300,51 +316,72 @@ describe('SessionManager basic functionality', () => {
 describe('bumping sessions and streams', () => {
   test('can bump a stream', () => {
     const s = new SessionManager();
-    const sessions = [
-      { id: 'a-0' },
-      { id: 'a-1' },
-      { id: 'a-2' },
-    ];
-    s.set('a-0', {});
-    s.set('b-0', {});
-    s.set('a-2', { session: { stream: { sessions } } });
-    s.set('b-1', {});
-    s.set('a-1', {});
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(1);
+    const p3 = getSessionPlacement(0, 2);
+    const p4 = getSessionPlacement(2);
+    const p5 = getSessionPlacement(0, 1);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
+    s.set(p5.session.id, p5);
     const v = s.version;
-    s.bumpStream('a-2');
-    expect(s.order).toEqual(['b-0', 'b-1', 'a-0', 'a-1', 'a-2']);
+
+    s.bumpStream(p3.session.id);
+
+    const expectedOrder = [p2, p4, p1, p5, p3];
+    expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
     expect(s.version).toBe(v + 1);
   })
 
   test('can bump a session from the start and change version', () => {
     const s = new SessionManager();
-    s.set('a', {});
-    s.set('b', {});
-    s.set('c', {});
+    const p1 = getSessionPlacement(0);
+    const p2 = getSessionPlacement(1);
+    const p3 = getSessionPlacement(2);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+
     const v = s.version;
-    s.bumpSession('a');
-    expect(s.order).toEqual(['b', 'c', 'a']);
+    const o = s.order;
+    s.bumpSession(p1.session.id);
+
+    const expectedOrder = [p2, p3, p1];
+    expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
+    expect(s.order).not.toBe(o);
     expect(s.version).toBe(v + 1);
   })
 
   test('can bump a session from the middle without mutating order', () => {
     const s = new SessionManager();
-    s.set('a', {});
-    s.set('b', {});
-    s.set('c', {});
-    const o = s.order;
-    s.bumpSession('b');
-    expect(s.order).not.toBe(o);
-    expect(s.order).toEqual(['a', 'c', 'b']);
+    const p1 = getSessionPlacement(0);
+    const p2 = getSessionPlacement(1);
+    const p3 = getSessionPlacement(2);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+
+    s.bumpSession(p2.session.id);
+
+    const expectedOrder = [p1, p3, p2];
+    expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
   })
 
   test('can bump a session from the end', () => {
     const s = new SessionManager();
-    s.set('a', {});
-    s.set('b', {});
-    s.set('c', {});
-    s.bumpSession('c');
-    expect(s.order).toEqual(['a', 'b', 'c']);
+    const p1 = getSessionPlacement(0);
+    const p2 = getSessionPlacement(1);
+    const p3 = getSessionPlacement(2);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+
+    s.bumpSession(p3.session.id);
+
+    const expectedOrder = [p1, p2, p3];
+    expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
   })
 
   test('bumping non-existent session throws', () => {
@@ -366,75 +403,46 @@ describe('bumping sessions and streams', () => {
 describe('constructor, data, and from', () => {
   test('can copy using constructor', () => {
     const s1 = new SessionManager();
-    const placements = [{}, {}, {}]
-    s1.set('a', placements[0]);
-    s1.set('b', placements[1]);
+    const p1 = getSessionPlacement(0);
+    const p2 = getSessionPlacement(1);
+    const p3 = getSessionPlacement(2);
+    s1.set(p1.session.id, p1);
+    s1.set(p2.session.id, p2);
     const v = s1.version;
+
     const s2 = new SessionManager(s1);
-    s1.set('c', placements[2]);
-    expect(s2._order).toEqual(['a', 'b']);
-    expect(Array.from(s2.map.entries())).toEqual(
-      [['a', placements[0]], ['b', placements[1]]]
+    s1.set(p3.session.id, p3);
+
+    expect(s2['_order']).toEqual([p1.session.id, p2.session.id]);
+    expect(Array.from(s2['map'].entries())).toEqual(
+      [[p1.session.id, p1], [p2.session.id, p2]]
     );
     expect(s2.version).toBe(v);
   })
-
-  test('data gives expected values', () => {
-    const s = new SessionManager();
-    const placements = [{ data: {} }, { data: {} }, { data: {} }];
-    s.set('a', placements[0]);
-    s.set('b', placements[1]);
-    const v = s.version;
-    const data = s.data;
-    s.set('c', placements[2]);
-    expect(data.order).toEqual(['a', 'b']);
-    expect(data.map).toEqual(
-      [['a', placements[0].data], ['b', placements[1].data]]
-    );
-    expect(data.version).toBe(v);
-  })
-
-  // test('can convert back from data', () => {
-  //   const s1 = new SessionManager();
-  //   const stream = { times: [] };
-  //   const course = { code: 'TEST1000', streams: [stream] };
-  //   const placements = [
-  //     { data: { abc: 'def', session: { course, stream } } },
-  //     { data: { foo: 'bar', session: { course, stream } } },
-  //   ];
-  //   s1.set('a', placements[0]);
-  //   s1.set('b', placements[1]);
-  //   const s2 = SessionManager.from(s1.data, course);
-  //   expect(s2.get('a')).toEqual(placements[0]);
-  //   expect(s2.get('b')).toEqual(placements[1]);
-  //   expect(s2.order).toEqual(s1.order);
-  //   expect(s2.version).toBe(2);
-  // })
 })
 
 
 describe('snapSessionTo', () => {
   const oldSessions = [
-    { id: 'a-0', stream: { id: 'a' } },
+    { id: 'a-0' },
     { id: 'b-0' },
-  ];
+  ] as LinkedSession[];
+  oldSessions[0].stream = { sessions: oldSessions, id: 'a' } as LinkedStream;
   const newSessions = [
     { id: 'c-0', stream: { id: 'c' } },
     { id: 'd-0' },
-  ];
-  let s;
+  ] as LinkedSession[];
+  let s: SessionManager;
 
   beforeEach(() => {
     s = new SessionManager();
-    s.set('a-0', new SessionPlacement({
-      stream: { sessions: oldSessions, id: 'a' },
-    }));
-    s.set('b-0', new SessionPlacement({}));
+    s.set('a-0', new SessionPlacement(oldSessions[0]));
+    s.set('b-0', new SessionPlacement(oldSessions[1]));
   })
 
   test('increments version', () => {
     const v = s.version;
-    s.snapSessionTo(
+    s['snapSessionTo'](
       'a-0',
       newSessions,
     );
@@ -443,7 +451,7 @@ describe('snapSessionTo', () => {
   })
 
   test('replaces old sessions with new', () => {
-    s.snapSessionTo(
+    s['snapSessionTo'](
       'a-0',
       newSessions,
     );
@@ -455,7 +463,7 @@ describe('snapSessionTo', () => {
   })
 
   test('touches new sessions', () => {
-    s.snapSessionTo(
+    s['snapSessionTo'](
       'a-0',
       newSessions,
     );
@@ -465,7 +473,7 @@ describe('snapSessionTo', () => {
   })
 
   test('doesn\'t touch sessions if unchanged', () => {
-    s.snapSessionTo(
+    s['snapSessionTo'](
       'a-0',
       oldSessions,
     );
@@ -475,20 +483,20 @@ describe('snapSessionTo', () => {
   })
 
   test('new sessions are snapped', () => {
-    const c = new SessionPlacement({});
-    const d = new SessionPlacement({});
-    c._offset = { x: 10, y: 10 };
-    d._offset = { x: 20, y: 0 };
+    const c = new SessionPlacement(oldSessions[0]);
+    const d = new SessionPlacement(oldSessions[1]);
+    c['_offset'] = { x: 10, y: 10 };
+    d['_offset'] = { x: 20, y: 0 };
     s.set('c-0', c);
     s.set('d-0', d);
 
-    s.snapSessionTo(
+    s['snapSessionTo'](
       'a-0',
       newSessions,
     );
 
-    expect(s.get('c-0')._offset).toEqual({ x: 0, y: 0 });
-    expect(s.get('d-0')._offset).toEqual({ x: 0, y: 0 });
+    expect(s.get('c-0')['_offset']).toEqual({ x: 0, y: 0 });
+    expect(s.get('d-0')['_offset']).toEqual({ x: 0, y: 0 });
   })
 })
 
