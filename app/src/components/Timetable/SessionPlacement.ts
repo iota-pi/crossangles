@@ -1,7 +1,7 @@
 import { Position, Dimensions } from './timetableTypes';
 import { TimetablePlacement } from './Placement';
 import * as tt from './timetableUtil';
-import SessionPosition from './SessionPosition';
+import * as SessionPosition from './SessionPosition';
 import { LinkedSession, SessionData, unlinkSession, linkSession } from '../../state/Session';
 import { CourseData } from '../../state/Course';
 import { getStreamId, linkStream } from '../../state/Stream';
@@ -86,8 +86,15 @@ export class SessionPlacement extends TimetablePlacement {
     this._offset.y += delta.y;
   }
 
-  drop (): void {
+  drop (timetableDimensions: Dimensions, firstHour: number): void {
     this._isDragging = false;
+
+    // Update offset based on current (rendered) position and base position
+    // NB: this is done to ensure the offset stays bounded within the timetable element
+    const base = this.basePlacement(timetableDimensions, firstHour);
+    const current = this.getPosition(timetableDimensions, firstHour);
+    this._offset.x = current.x - base.x;
+    this._offset.y = current.y - base.y;
   }
 
   snap (): void {
@@ -132,7 +139,7 @@ export class SessionPlacement extends TimetablePlacement {
     return this._touched;
   }
 
-  touch () {
+  touch (): void {
     this._touched = true;
   }
 

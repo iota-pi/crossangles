@@ -1,5 +1,4 @@
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y } from './timetableUtil';
-import SessionPosition from './SessionPosition';
+import { CLASH_OFFSET_X, CLASH_OFFSET_Y, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './timetableUtil';
 import SessionPlacement from './SessionPlacement';
 
 const session = {
@@ -13,7 +12,6 @@ const dimensions = {
   height: 1000,
 };
 
-jest.mock('./SessionPosition');
 
 describe('SessionPlacement', () => {
   test('can initialise instance with expected base position', () => {
@@ -21,7 +19,7 @@ describe('SessionPlacement', () => {
     expect(p.session).toBe(session);
 
     const basePlacement = p.basePlacement(dimensions, startHour);
-    const cellWidth = (1000 - 60) / 5;
+    const cellWidth = (1000 - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
     const expectedX = 61 + cellWidth * 2;
     const expectedY = 51 + 50;
     expect(basePlacement.x).toBe(expectedX);
@@ -62,7 +60,7 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     p.drag();
 
-    p.drop();
+    p.drop({ width: 500, height: 500 }, session.start);
 
     expect(p._isDragging).toBe(false);
     expect(p._isSnapped).toBe(false);
@@ -145,34 +143,35 @@ describe('SessionPlacement', () => {
     expect(p.touched).toBe(true);
   });
 
-  test('position calculations are correct', () => {
-    const getClashOffset = jest.spyOn(SessionPosition, 'getClashOffset').mockReturnValue({ x: 2, y: 3 });
-    const getRaisedOffset = jest.spyOn(SessionPosition, 'getRaisedOffset').mockReturnValue({ x: 3, y: 4 });
-    const getZ = jest.spyOn(SessionPosition, 'getZ').mockReturnValue(5);
-    const p = new SessionPlacement(session);
-    const basePlacement = jest.spyOn(p, 'basePlacement').mockReturnValue({ x: 1, y: 2, width: 0, height: 0 });
-    p.clashDepth = 7;
-    p._isRaised = true;
-    p._offset = { x: 4, y: 5 };
-    const position = p.getPosition(dimensions, startHour);
-
-    expect(basePlacement).toHaveBeenCalledTimes(1);
-    expect(basePlacement).toHaveBeenLastCalledWith(dimensions, startHour);
-    expect(position).toEqual({ x: 10, y: 14, z: 5 });
-
-    expect(getClashOffset).toHaveBeenCalledTimes(1);
-    expect(getClashOffset).toHaveBeenLastCalledWith(p.clashDepth);
-
-    expect(getRaisedOffset).toHaveBeenCalledTimes(1);
-    expect(getRaisedOffset).toHaveBeenLastCalledWith(p.isRaised);
-
-    expect(getZ).toHaveBeenCalledTimes(1);
-    expect(getZ).toHaveBeenLastCalledWith(p.isSnapped, p.clashDepth);
-  });
-
   test('position object always changes', () => {
     const p = new SessionPlacement(session);
     const pos1 = p.getPosition(dimensions, startHour);
     expect(p.getPosition(dimensions, startHour)).not.toBe(pos1);
+  });
+
+  test('position can\'t be negative after drag', () => {
+    const p = new SessionPlacement(session);
+    p.drag();
+    p.move({ x: -1000, y: -1000 });
+    const dimensions = { width: 500, height: 500 }
+    p.drop(dimensions, session.start);
+    const { x, y } = p.getPosition(dimensions, session.start);
+    expect({ x, y }).toEqual({ x: 0, y: 0});
+  });
+
+  test('offset can\'t be too large after drag', () => {
+    const p = new SessionPlacement(session);
+    const dimensions = { width: 500, height: 500 }
+    const cellWidth = (dimensions.width - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
+
+    p.drag();
+    p.move({ x: 1000, y: 1000 });
+    p.drop(dimensions, session.start);
+
+    const { x, y } = p.getPosition(dimensions, session.start);
+    expect({ x, y }).toEqual({
+      x: dimensions.width - cellWidth + TIMETABLE_BORDER_WIDTH,
+      y: dimensions.height - TIMETABLE_CELL_HEIGHT + TIMETABLE_BORDER_WIDTH,
+    });
   });
 });

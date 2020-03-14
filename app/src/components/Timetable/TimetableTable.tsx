@@ -189,7 +189,7 @@ class TimetableTable extends Component<Props, State> {
     const startHour = this.hours.start;
     const position = sessionPlacement.getPosition(dimensions, startHour);
     const dropzone = this.getNearestDropzone(position);
-    this.props.timetable.drop(session.id, dropzone);
+    this.props.timetable.drop(session.id, dropzone, this.getTimetableDimensions(), this.hours.start);
 
     // No longer dragging anything
     this.setState({

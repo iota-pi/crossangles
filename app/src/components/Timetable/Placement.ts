@@ -13,28 +13,33 @@ export abstract class TimetablePlacement {
     return this._session;
   }
 
-  basePlacement (timetableDimensions: Dimensions, startHour: number): Placement {
-    const dayIndex = this.dayOfWeek;
-    const hourIndex = this._session.start - startHour;
+  basePlacement (timetableDimensions: Dimensions, firstHour: number): Placement {
+    const { width, height } = this.baseDimensions(timetableDimensions);
+
+    const hourIndex = this._session.start - firstHour;
 
     const sessionWidth = this.calculateWidth(timetableDimensions.width);
-    const sessionHeight = this.calculateHeight();
 
     const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
     const baseY = TIMETABLE_CELL_HEIGHT + TIMETABLE_BORDER_WIDTH;
-    const dayOffsetX = sessionWidth * dayIndex;
+    const dayOffsetX = sessionWidth * this.dayIndex;
     const hourOffsetY = TIMETABLE_CELL_HEIGHT * hourIndex;
 
     const x = baseX + dayOffsetX;
     const y = baseY + hourOffsetY;
 
-    const width = sessionWidth - TIMETABLE_BORDER_WIDTH;
-    const height = sessionHeight - TIMETABLE_BORDER_WIDTH;
-
     return { x, y, width, height };
   }
 
-  private get dayOfWeek (): number {
+  baseDimensions (timetableDimensions: Dimensions): Dimensions {
+    const sessionWidth = this.calculateWidth(timetableDimensions.width);
+    const sessionHeight = this.calculateHeight();
+    const width = sessionWidth - TIMETABLE_BORDER_WIDTH;
+    const height = sessionHeight - TIMETABLE_BORDER_WIDTH;
+    return { width, height };
+  }
+
+  private get dayIndex (): number {
     return ['M', 'T', 'W', 'H', 'F'].indexOf(this._session.day);
   }
 
