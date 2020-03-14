@@ -5,9 +5,9 @@ export interface Options {
   includeFull?: boolean;
 }
 export type OptionName = keyof Options;
-export const OptionList = new Map<OptionName, string>([
-  ['showEnrolments', 'Show Enrolments'],
+export const optionList: [OptionName, string][] = [
   ['showLocations', 'Show Locations'],
+  ['showEnrolments', 'Show Enrolments'],
   ['showWeeks', 'Show Weeks'],
   ['includeFull', 'Include full classes'],
-]);
+];
