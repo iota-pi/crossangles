@@ -1,13 +1,19 @@
 import { CLASH_OFFSET_X, CLASH_OFFSET_Y, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './timetableUtil';
 import SessionPlacement from './SessionPlacement';
+import { LinkedSession } from '../../state/Session';
+import { Dimensions } from './timetableTypes';
 
-const session = {
+const session: LinkedSession = {
   start: 10,
   end: 11,
   day: 'W',
+  course: {} as any,
+  stream: {} as any,
+  id: '',
+  index: 0,
 };
 const startHour = 9;
-const dimensions = {
+const dimensions: Dimensions = {
   width: 1000,
   height: 1000,
 };
@@ -42,7 +48,7 @@ describe('SessionPlacement', () => {
     expect(p.isSnapped).toBe(false);
     expect(p.isDragging).toBe(true);
     expect(p.isRaised).toBe(false);
-    expect(p._offset).toEqual(
+    expect(p['_offset']).toEqual(
       { x: CLASH_OFFSET_X * 2, y: CLASH_OFFSET_Y * 2 }
     );
   });
@@ -53,7 +59,7 @@ describe('SessionPlacement', () => {
     p.move({ x: 10, y: -10 });
     p.move({ x: 5, y: 10 });
 
-    expect(p._offset).toEqual({ x: 15, y: 0 });
+    expect(p['_offset']).toEqual({ x: 15, y: 0 });
   });
 
   test('drop', () => {
@@ -62,20 +68,20 @@ describe('SessionPlacement', () => {
 
     p.drop({ width: 500, height: 500 }, session.start);
 
-    expect(p._isDragging).toBe(false);
-    expect(p._isSnapped).toBe(false);
-    expect(p._isRaised).toBe(false);
+    expect(p['_isDragging']).toBe(false);
+    expect(p['_isSnapped']).toBe(false);
+    expect(p['_isRaised']).toBe(false);
   });
 
   test('snap', () => {
     const p = new SessionPlacement(session);
-    p._offset = { x: 15, y: 0};
-    p._isSnapped = false;
-    p._isRaised = true;
+    p['_offset'] = { x: 15, y: 0};
+    p['_isSnapped'] = false;
+    p['_isRaised'] = true;
 
     p.snap();
 
-    expect(p._offset).toEqual({ x: 0, y: 0 });
+    expect(p['_offset']).toEqual({ x: 0, y: 0 });
     expect(p.isSnapped).toBe(true);
     expect(p.isRaised).toBe(false);
   });
@@ -85,7 +91,7 @@ describe('SessionPlacement', () => {
 
     p.snap();
 
-    expect(p._offset).toEqual({ x: 0, y: 0 });
+    expect(p['_offset']).toEqual({ x: 0, y: 0 });
     expect(p.isSnapped).toBe(true);
     expect(p.isRaised).toBe(false);
   });
@@ -100,7 +106,7 @@ describe('SessionPlacement', () => {
 
   test('lower', () => {
     const p = new SessionPlacement(session);
-    p._isRaised = true;
+    p['_isRaised'] = true;
 
     p.lower();
 
@@ -111,17 +117,17 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     p.displace();
     expect(p.isSnapped).toBe(false);
-    expect(p._offset).not.toEqual({ x: 0, y: 0 });
+    expect(p['_offset']).not.toEqual({ x: 0, y: 0 });
   });
 
   test('shouldDisplace', () => {
     const p = new SessionPlacement(session);
 
-    p.session.stream = { full: false };
+    p.session.stream.full = false;
     expect(p.shouldDisplace(false)).toBe(false);
     expect(p.shouldDisplace(true)).toBe(false);
 
-    p._isSnapped = false;
+    p['_isSnapped'] = false;
     expect(p.shouldDisplace(false)).toBe(false);
     expect(p.shouldDisplace(true)).toBe(false);
 
@@ -129,7 +135,7 @@ describe('SessionPlacement', () => {
     expect(p.shouldDisplace(false)).toBe(false);
     expect(p.shouldDisplace(true)).toBe(false);
 
-    p._isSnapped = true;
+    p['_isSnapped'] = true;
     expect(p.shouldDisplace(false)).toBe(true);
     expect(p.shouldDisplace(true)).toBe(false);
   });
