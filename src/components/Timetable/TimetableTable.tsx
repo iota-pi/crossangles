@@ -174,7 +174,6 @@ class TimetableTable extends Component<Props, State> {
         dragging: session,
       });
     });
-
   }
 
   private handleMove = (session: LinkedSession, delta: Position) => {
