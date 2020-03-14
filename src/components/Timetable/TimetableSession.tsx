@@ -3,12 +3,14 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Fade from '@material-ui/core/Fade';
+import Collapse from '@material-ui/core/Collapse';
 import { DraggableCore, DraggableData } from 'react-draggable';
 import { Position, Dimensions } from './timetableTypes';
 import { CourseData } from '../../state/Course';
 import { Options } from '../../state/Options';
 import { StreamData } from '../../state/Stream';
 import { LinkedSession } from '../../state/Session';
+import { TransitionGroup } from 'react-transition-group';
 
 const styles = (theme: Theme) => createStyles({
   main: {
@@ -87,13 +89,10 @@ export interface Props extends WithStyles<typeof styles> {
   onDrop: (session: LinkedSession) => void,
 }
 
-export interface State {
-}
 
-class TimetableSession extends PureComponent<Props, State> {
-  state: State = {
-  }
+type Detail = { key: string, text: string };
 
+class TimetableSession extends PureComponent<Props> {
   render() {
     const { classes, session } = this.props;
     const rootClasses = [
@@ -132,13 +131,17 @@ class TimetableSession extends PureComponent<Props, State> {
               <span>{this.sessionComponent}</span>
             </div>
 
-            <Fade in={this.props.isSnapped}>
+            <Fade in={this.props.isSnapped} appear={false}>
               <div>
-                {this.details.map((detail, i) => (
-                  <div className={classes.details} key={`detail-${i}`}>
-                    {detail}
-                  </div>
-                ))}
+                <TransitionGroup appear={false}>
+                  {this.details.map((detail, i) => (
+                    <Collapse key={detail.key}>
+                      <div className={classes.details}>
+                        {detail.text}
+                      </div>
+                    </Collapse>
+                  ))}
+                </TransitionGroup>
               </div>
             </Fade>
           </div>
@@ -189,13 +192,13 @@ class TimetableSession extends PureComponent<Props, State> {
     return this.stream.component;
   }
 
-  private get details (): string[] {
-    const details: string[] = [];
+  private get details (): Detail[] {
+    const details: Detail[] = [];
 
     if (this.props.options.showLocations) {
       const location = this.props.session.location;
       if (location) {
-        details.push(location);
+        details.push({ key: 'location-enrols', text: location});
       }
     }
 
@@ -204,9 +207,9 @@ class TimetableSession extends PureComponent<Props, State> {
       if (enrols[1] > 0) {
         const enrolsText = enrols.join('/');
         if (details.length > 0) {
-          details[0] += ` (${enrolsText})`;
+          details[0].text += ` (${enrolsText})`;
         } else {
-          details.push(enrolsText);
+          details.push({ key: 'location-enrols', text: enrolsText });
         }
       }
     }
@@ -214,7 +217,8 @@ class TimetableSession extends PureComponent<Props, State> {
     if (this.props.options.showWeeks) {
       const weeks = this.props.session.weeks;
       if (weeks) {
-        details.push('Weeks: ' + weeks.replace('-', '–'));
+        const weeksText = 'Weeks: ' + weeks.replace('-', '–');
+        details.push({ key: 'weeks', text: weeksText });
       }
     }
 
