@@ -81,10 +81,11 @@ class TimetableTable extends Component<Props, State> {
           if (!placement) return null;
           const session = placement.session;
           const courseId = getCourseId(session.course);
+          const key = `${courseId}-${session.stream.component}-${session.index}`;
 
           return (
             <TimetableSession
-              key={`${courseId}-${session.stream.component}-${session.index}`}
+              key={key}
               session={session}
               colour={this.getColour(session.course)}
               position={placement.getPosition(dimensions, startHour)}
