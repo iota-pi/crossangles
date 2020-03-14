@@ -1,5 +1,6 @@
 import { StreamData } from "./Stream";
 import { Colour } from "./Colours";
+import { MinistryMeta } from "./Meta";
 
 export type CourseId = string;
 
@@ -13,6 +14,7 @@ export interface CourseData {
   autoSelect?: boolean,
   defaultColour?: Colour,
   description?: string,
+  metadata?: MinistryMeta,
 }
 
 export interface CourseMap {

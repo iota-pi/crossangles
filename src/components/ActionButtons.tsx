@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Theme, createStyles, WithStyles, withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { Meta } from '../state/Meta';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { CourseData } from '../state/Course';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -57,6 +58,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
+  additional: CourseData[],
   meta: Meta,
   showSignup: boolean,
   isSavingImage: boolean,
@@ -65,6 +67,7 @@ export interface Props extends WithStyles<typeof styles> {
 }
 
 export const ActionButtons = withStyles(styles)(({
+  additional,
   meta,
   showSignup,
   isSavingImage,
@@ -72,6 +75,34 @@ export const ActionButtons = withStyles(styles)(({
   className,
   classes,
 }: Props) => {
+  // Assumption: only one additional course will be auto-selected and has metadata
+  const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
+
+  let signupButton: ReactNode = null;
+  if (ministry && showSignup) {
+    const ministryMeta = ministry.metadata!;
+
+    signupButton = (
+      <Button
+        variant="outlined"
+        className={classes.baseButton + ' ' + classes.signUpButton}
+        size="large"
+        endIcon={<OpenInNewIcon />}
+        href={ministryMeta.signupURL}
+        target="_blank"
+      >
+        <div className={classes.centredText}>
+          <div className={classes.fontNormal}>
+            Sign Up for Term {meta.term}
+          </div>
+          <div className={classes.fontLight}>
+            {ministry.name}
+          </div>
+        </div>
+      </Button>
+    );
+  }
+
   const rootClassList = [classes.root];
   if (className) rootClassList.push(className);
   const rootClasses = rootClassList.join(' ');
@@ -97,25 +128,7 @@ export const ActionButtons = withStyles(styles)(({
           )}
         </Button>
 
-        {showSignup && (
-          <Button
-            variant="outlined"
-            className={classes.baseButton + ' ' + classes.signUpButton}
-            size="large"
-            endIcon={<OpenInNewIcon />}
-            href={meta.signupURL}
-            target="_blank"
-          >
-            <div className={classes.centredText}>
-              <div className={classes.fontNormal}>
-                Sign Up for Term {meta.term}
-              </div>
-              <div className={classes.fontLight}>
-                {meta.ministryName}
-              </div>
-            </div>
-          </Button>
-        )}
+        {signupButton}
       </div>
     </div>
   )

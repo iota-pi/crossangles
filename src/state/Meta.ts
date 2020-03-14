@@ -3,17 +3,17 @@ export interface YearAndTerm {
   term: number,
 }
 
-export interface MinistryMeta {
-  promoText: string,
-  ministryName: string,
-  ministryWebsite: string,
-  signupURL: string,
-  signupValidFor: YearAndTerm[],
-}
-
-export interface Meta extends YearAndTerm, MinistryMeta {
+export interface Meta extends YearAndTerm {
   updateDate: string,
   updateTime: string,
   signup: string,
   source: string,
+}
+
+// Ministry-specific metadata, to be attached to additional courses
+export interface MinistryMeta {
+  promoText: string,
+  website: string,
+  signupURL: string,
+  signupValidFor: YearAndTerm[],
 }

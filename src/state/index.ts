@@ -49,12 +49,7 @@ export const baseState: RootState = {
     updateDate: '',
     updateTime: '',
     signup: '',
-    promoText: '',
-    ministryName: '',
-    ministryWebsite: '',
     source: '',
-    signupURL: '',
-    signupValidFor: [],
   },
   history: {
     past: [],

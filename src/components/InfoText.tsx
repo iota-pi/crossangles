@@ -1,8 +1,10 @@
 import React, { ReactNode } from 'react';
 import { Meta } from '../state/Meta'
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
+import { CourseData } from '../state/Course';
 
 export interface Props {
+  additional: CourseData[],
   meta: Meta,
   link?: boolean,
   disclaimer?: boolean,
@@ -12,6 +14,7 @@ export interface Props {
 }
 
 const InfoText = ({
+  additional,
   meta,
   typographyProps,
   link = true,
@@ -19,23 +22,37 @@ const InfoText = ({
   className,
   onShowContact,
 }: Props) => {
-  const textParts = meta.promoText.split('{link}');
-  const items: ReactNode[] = [textParts.shift() || ''];
-  for (let [i, textPart] of textParts.entries()) {
-    const linkEl = link ? (
-      <a href={meta.ministryWebsite} key={`linkPart-${i}`}>{meta.ministryName}</a>
-    ) : (
-      <React.Fragment key={`linkPart-${i}`}>meta.linkText</React.Fragment>
-    );
-    const textEl = <React.Fragment key={`textPart-${i}`}>{textPart}</React.Fragment>;
-    items.push(linkEl, textEl);
-  }
+  // Assumption: only one additional course will be auto-selected and has metadata
+  const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
 
-  return (
-    <div className={className}>
+  let ministryPromo: ReactNode = null;
+  if (ministry) {
+    const ministryMeta = ministry.metadata!;
+
+    const textParts = ministryMeta.promoText.split('{link}');
+    const items: ReactNode[] = [textParts.shift() || ''];
+    for (let [i, textPart] of textParts.entries()) {
+      const linkEl = link ? (
+        <a href={ministryMeta.website} key={`linkPart-${i}`}>{ministry.name}</a>
+      ) : (
+        <React.Fragment key={`linkPart-${i}`}>{ministry.name}</React.Fragment>
+      );
+      const textEl = <React.Fragment key={`textPart-${i}`}>{textPart}</React.Fragment>;
+      items.push(linkEl, textEl);
+    }
+
+    ministryPromo = (
       <Typography {...typographyProps} paragraph>
         {items}
       </Typography>
+    );
+  }
+
+
+  return (
+    <div className={className}>
+      {ministryPromo}
+
       {disclaimer && (
         <Typography {...typographyProps} paragraph>
           The data was last updated at

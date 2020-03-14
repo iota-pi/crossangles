@@ -31,6 +31,7 @@ import { saveAsImage, SaveAsImageRequest, getScreenshotViewport } from './saveAs
 import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
 import { fetchData } from './actions';
+import { CourseData } from './state/Course';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -53,6 +54,7 @@ export interface OwnProps extends WithStyles<typeof styles> {
 export interface StateProps {
   showSignup: boolean,
   notice: Notice | null,
+  additional: CourseData[],
   meta: Meta,
   timetable: SessionManagerData,
   colours: ColourMap,
@@ -96,6 +98,7 @@ class App extends Component<Props, State> {
           <TimetableContainer />
 
           <ActionButtons
+            additional={this.props.additional}
             meta={this.props.meta}
             showSignup={this.props.showSignup}
             isSavingImage={this.state.isSavingImage}
@@ -104,6 +107,7 @@ class App extends Component<Props, State> {
           />
 
           <InfoText
+            additional={this.props.additional}
             meta={this.props.meta}
             className={classes.spaceAbove}
             typographyProps={{
@@ -184,6 +188,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   return {
     showSignup: chosenEvents.length > 0,
     notice: state.notice,
+    additional: state.additional.map(cid => state.courses[cid]),
     meta: state.meta,
     timetable: state.timetable,
     colours: state.colours,
