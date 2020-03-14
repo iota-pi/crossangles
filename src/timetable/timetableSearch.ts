@@ -1,4 +1,4 @@
-import { getClashInfo } from './getClashInfo';
+import { getClashInfo, ClashInfo } from './getClashInfo';
 import { GeneticSearchOptionalConfig, Parent } from './GeneticSearch';
 import { Component } from './coursesToComponents';
 import { LinkedStream } from '../state/Stream';
@@ -8,11 +8,14 @@ import { LinkedSession } from '../state/Session';
 import createSearchWorker, { Workerized } from 'workerize-loader!./search.worker';
 import * as searchWorker from './search.worker';
 
+export type Worker = Workerized<typeof searchWorker>;
+
 export interface TimetableSearchResult {
   timetable: LinkedSession[],
   score: number,
   unplaced?: LinkedSession[],
 }
+
 
 class TimetableSearch {
   private cache = new Map<string, TimetableSearchResult>();
@@ -24,9 +27,7 @@ class TimetableSearch {
     ignoreCache = false,
     config: GeneticSearchOptionalConfig = {},
   ): Promise<TimetableSearchResult> {
-    const componentIds = components.map(c => c.id).join('~~~');
-    const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
-    const cacheKey = `${componentIds}//${fixedSessionsIds}`;
+    const cacheKey = this.getCacheKey(components, fixedSessions);
     if (!ignoreCache) {
       const cachedTimetable = this.cache.get(cacheKey);
       if (cachedTimetable !== undefined) {
@@ -34,33 +35,23 @@ class TimetableSearch {
       }
     }
 
-    // Pre-compute clash info and set of previous timetable's sessions
-    const allStreams = components.reduce((all, c) => all.concat(c.streams), [] as LinkedStream[]);
-    const clashInfo = getClashInfo(allStreams);
+    const spawnWorkersPromise = this.spawnWorkers(maxSpawn);
 
-    // Break components into streams
+    const clashInfo = await this.getClashInfo(components);
     const streams = components.map(c => c.streams);
 
-    const workers: Workerized<typeof searchWorker>[] = [];
-    for (let i = 0; i < maxSpawn; ++i) {
-      const worker = createSearchWorker<typeof searchWorker>();
-      workers.push(worker);
-    }
+    const workers = await spawnWorkersPromise;
 
-    const promises: Promise<Parent<LinkedStream>>[] = [];
-    for (const worker of workers) {
-      promises.push(worker.runSearch({
-        clashInfo,
-        config,
-        fixedSessions,
-        streams,
-      }));
-    }
-    const results = await Promise.all(promises);
+    const results = await this.runSearchInWorkers({
+      workers,
+      fixedSessions,
+      clashInfo,
+      streams,
+      config,
+    });
 
-    for (const worker of workers) {
-      worker.terminate();
-    }
+    // Asynchronously terminate workers
+    this.terminateWorkers(workers);
 
     // Find best result
     const best = results.sort((a, b) => b.score - a.score)[0];
@@ -71,6 +62,59 @@ class TimetableSearch {
     const result = { timetable, score };
     this.cache.set(cacheKey, result);
     return result;
+  }
+
+  private getCacheKey (components: Component[], fixedSessions: LinkedSession[]) {
+    const componentIds = components.map(c => c.id).join('~~~');
+    const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
+    const cacheKey = `${componentIds}//${fixedSessionsIds}`;
+    return cacheKey;
+  }
+
+  private async getClashInfo (components: Component[]): Promise<ClashInfo> {
+    const allStreams = components.reduce((all, c) => all.concat(c.streams), [] as LinkedStream[]);
+    const clashInfo = getClashInfo(allStreams);
+    return clashInfo;
+  }
+
+  private async spawnWorkers (count: number) {
+    const workers: Worker[] = [];
+    for (let i = 0; i < count; ++i) {
+      const worker = createSearchWorker<typeof searchWorker>();
+      workers.push(worker);
+    }
+    return workers;
+  }
+
+  private async runSearchInWorkers ({
+    workers,
+    fixedSessions,
+    clashInfo,
+    streams,
+    config,
+  }: {
+    workers: Worker[],
+    fixedSessions: LinkedSession[],
+    clashInfo: ClashInfo,
+    streams: LinkedStream[][],
+    config: GeneticSearchOptionalConfig,
+  }): Promise<Parent<LinkedStream>[]> {
+    const promises: Promise<Parent<LinkedStream>>[] = [];
+    for (const worker of workers) {
+      promises.push(worker.runSearch({
+        fixedSessions,
+        clashInfo,
+        streams,
+        config,
+      }));
+    }
+    return await Promise.all(promises);
+  }
+
+  private async terminateWorkers (workers: Worker[]) {
+    for (const worker of workers) {
+      worker.terminate();
+    }
   }
 }
 
