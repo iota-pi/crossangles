@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
 import Expand from '@material-ui/icons/ExpandMore';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 import AdditionalEvents from './AdditionalEvents';
 import WebStream from './WebStream';
 import { ColourMap } from '../state/Colours';
@@ -53,6 +54,18 @@ const styles = (theme: Theme) => {
     },
     termText: {
       fontWeight: 400,
+    },
+    plainLink: {
+      textDecoration: 'none',
+      color: 'inherit',
+      display: 'inline-flex',
+      alignItems: 'center',
+    },
+    externalLinkIcon: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      color: 'rgba(0, 0, 0, 0.3)',
+      verticalAlign: 'baseline',
     },
     marginRight: {
       marginRight: theme.spacing(1),
@@ -192,7 +205,15 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
     <React.Fragment>
       <ListItem className={rootClasses.join(' ')}>
         <ListItemText>
-          <span>{course.name}</span>
+          {course.metadata ? (
+            <a href={course.metadata.website} className={classes.plainLink}>
+              <span>{course.name}</span>
+              <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
+            </a>
+          ) : (
+            <span>{course.name}</span>
+          )}
+
           {course.description && (
             <Tooltip
               title={course.description}
