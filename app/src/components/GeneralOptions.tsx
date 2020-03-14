@@ -1,5 +1,5 @@
-import React, { PureComponent } from 'react';
-import { OptionList, Options, OptionName } from '../state/Options';
+import React from 'react';
+import { optionList, Options, OptionName } from '../state/Options';
 
 // Styles
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -30,33 +30,33 @@ export interface Props extends WithStyles<typeof styles> {
   onToggleOption: (option: OptionName) => void,
 }
 
-class GeneralOptions extends PureComponent<Props> {
-  render() {
-    const classes = this.props.classes;
-
-    return (
-      <Grid container spacing={0} className={classes.root}>
-        {Array.from(OptionList.entries()).map(([optionName, label]) => (
-          <Grid item xs={12} sm={6} md={3} key={optionName}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={this.props.options[optionName] || false}
-                  onChange={() => this.props.onToggleOption(optionName)}
-                  value={optionName}
-                  classes={{
-                    track: classes.selectTrack,
-                  }}
-                />
-              }
-              className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
-              label={label}
-            />
-          </Grid>
-        ))}
-      </Grid>
-    )
-  }
+const GeneralOptions = ({
+  classes,
+  options,
+  onToggleOption,
+}: Props) => {
+  return (
+    <Grid container spacing={0} className={classes.root}>
+      {optionList.map(([optionName, label]) => (
+        <Grid item xs={12} sm={6} md={3} key={optionName}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={options[optionName] || false}
+                onChange={() => onToggleOption(optionName)}
+                value={optionName}
+                classes={{
+                  track: classes.selectTrack,
+                }}
+              />
+            }
+            className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
+            label={label}
+          />
+        </Grid>
+      ))}
+    </Grid>
+  );
 }
 
 export default withStyles(styles)(GeneralOptions);
