@@ -118,8 +118,6 @@ class TimetableTable extends Component<Props, State> {
           timetableRef={this.timetableRef}
           hours={this.hours}
         />
-
-        {this.props.isUpdating + ''}
       </div>
     )
   }
