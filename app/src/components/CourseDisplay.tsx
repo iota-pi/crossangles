@@ -20,6 +20,7 @@ import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course
 import { Collapse } from '@material-ui/core';
 import { getEvents } from '../state/Events';
 import { Meta } from '../state/Meta';
+import getCampus from '../getCampus';
 
 
 const styles = (theme: Theme) => {
@@ -109,7 +110,12 @@ export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
 
 
 const getHandbookLink = (course: CourseData, meta: Meta) => {
-  return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`
+  const campus = getCampus(window.location.hostname);
+  if (campus === 'unsw') {
+    return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`;
+  }
+
+  return null;
 }
 
 
@@ -124,25 +130,33 @@ export const CourseDisplay = withStyles(styles)(({
   onToggleWeb,
   onShowPopover,
 }: CourseDisplayProps) => {
+  const handbookLink = getHandbookLink(course, meta);
+  const courseTitle = (
+    <>
+      <span>{course.code}</span>
+      <span className={classes.lightText}> — {course.name}</span>
+      {course.term ? (
+        <span className={classes.termText}> ({course.term})</span>
+      ) : null}
+    </>
+  );
+
   return (
     <React.Fragment>
       <ListItem className={hasWebStream(course) ? classes.compactSpaceBelow : undefined}>
         {!course.isCustom ? (
           <ListItemText>
-            <a
-              href={getHandbookLink(course, meta)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes.plainLink}
-            >
-              <span>{course.code}</span>
-              <span className={classes.lightText}> — {course.name}</span>
-              {course.term ? (
-                <span className={classes.termText}> ({course.term})</span>
-              ) : null}
-
-              <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
-            </a>
+            {handbookLink ? (
+              <a
+                href={handbookLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classes.plainLink}
+              >
+                {courseTitle}
+                <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
+              </a>
+            ) : courseTitle}
           </ListItemText>
         ) : (
           <ListItemText>

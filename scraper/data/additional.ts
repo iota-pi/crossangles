@@ -1,5 +1,5 @@
-import { CourseData } from '../../app/src/state/Course';
 import { createHash } from 'crypto';
+import { CourseData } from '../../app/src/state/Course';
 
 const unsw: CourseData[] = [
   {
