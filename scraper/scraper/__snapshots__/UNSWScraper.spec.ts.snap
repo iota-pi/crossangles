@@ -2352,6 +2352,17 @@ Array [
     "defaultColour": "#303F9F",
     "description": "Campus Bible Study is a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
     "isAdditional": true,
+    "metadata": Object {
+      "promoText": "This tool is provided by {link} — a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
+      "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/605/responses/new",
+      "signupValidFor": Array [
+        Object {
+          "term": 1,
+          "year": 2020,
+        },
+      ],
+      "website": "https://www.campusbiblestudy.org",
+    },
     "name": "Campus Bible Study",
     "streams": Array [
       Object {
