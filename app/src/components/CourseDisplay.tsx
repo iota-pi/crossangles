@@ -19,6 +19,7 @@ import ColourControl from './Colour';
 import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course';
 import { Collapse } from '@material-ui/core';
 import { getEvents } from '../state/Events';
+import { Meta } from '../state/Meta';
 
 
 const styles = (theme: Theme) => {
@@ -90,6 +91,7 @@ export interface BaseCourseDisplayProps extends WithStyles<typeof styles> {
 
 export interface CourseDisplayProps extends BaseCourseDisplayProps {
   webStreams: CourseId[],
+  meta: Meta,
   onEditCustomCourse: (course: CourseData) => void,
   onToggleWeb: (course: CourseData) => void,
 }
@@ -105,11 +107,18 @@ export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
   onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
 }
 
+
+const getHandbookLink = (course: CourseData, meta: Meta) => {
+  return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`
+}
+
+
 export const CourseDisplay = withStyles(styles)(({
   classes,
   course,
   colours,
   webStreams,
+  meta,
   onEditCustomCourse,
   onRemoveCourse,
   onToggleWeb,
@@ -120,11 +129,20 @@ export const CourseDisplay = withStyles(styles)(({
       <ListItem className={hasWebStream(course) ? classes.compactSpaceBelow : undefined}>
         {!course.isCustom ? (
           <ListItemText>
-            <span>{course.code}</span>
-            <span className={classes.lightText}> — {course.name}</span>
-            {course.term ? (
-              <span className={classes.termText}> ({course.term})</span>
-            ) : null}
+            <a
+              href={getHandbookLink(course, meta)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={classes.plainLink}
+            >
+              <span>{course.code}</span>
+              <span className={classes.lightText}> — {course.name}</span>
+              {course.term ? (
+                <span className={classes.termText}> ({course.term})</span>
+              ) : null}
+
+              <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
+            </a>
           </ListItemText>
         ) : (
           <ListItemText>

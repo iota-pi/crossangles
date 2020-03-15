@@ -18,9 +18,9 @@ import {
 import { WithDispatch } from '../typeHelpers';
 
 // Styles
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import Autocomplete from '../components/Autocomplete';
@@ -34,6 +34,7 @@ import { Options, OptionName } from '../state/Options';
 import { ColourMap, Colour } from '../state/Colours';
 import { ClassTime } from '../state/Stream';
 import { updateTimetable } from '../timetable/updateTimetable';
+import { Meta } from '../state/Meta';
 
 const styles = (theme: Theme) => createStyles({
   spaceAbove: {
@@ -61,6 +62,7 @@ export interface StateProps {
   colours: ColourMap,
   webStreams: CourseId[],
   hiddenEvents: CourseId[],
+  meta: Meta,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -106,6 +108,7 @@ class CourseSelection extends Component<Props, State> {
             colours={this.props.colours}
             webStreams={this.props.webStreams}
             hiddenEvents={this.props.hiddenEvents}
+            meta={this.props.meta}
             onEditCustomCourse={this.editCustomCourse}
             onRemoveCourse={this.removeCourse}
             onToggleShowEvents={this.toggleShowEvents}
@@ -239,6 +242,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     colours: state.colours,
     webStreams: state.webStreams,
     hiddenEvents: state.hiddenEvents,
+    meta: state.meta,
   }
 }
 
