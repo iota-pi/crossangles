@@ -81,7 +81,7 @@ const filterOutWebStreams = (
 
     for (const [ component, streams ] of streamGroupsEntries) {
       // Remove component if web stream has been requested for this course AND this component has a web stream
-      if (streams.filter(s => s.web).length > 0) {
+      if (streams.some(s => s.web)) {
         streamGroups.delete(component);
       }
     }
@@ -115,7 +115,7 @@ const addComponentsTo = (
 
   for (const [component, streams] of streamGroupsEntries) {
     const courseId = getCourseId(course);
-    if (!webStreams.includes(courseId) || streams.filter(s => s.web).length === 0) {
+    if (!webStreams.includes(courseId) || streams.every(s => !s.web)) {
       const idParts: string[] = [courseId, component];
       const streamSessions: SessionData[] = [];
       for (let stream of streams) {

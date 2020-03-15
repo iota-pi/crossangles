@@ -183,10 +183,9 @@ class App extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const events = getAutoSelectedEvents(state.courses, state.additional);
-  const chosenEvents = state.events.filter(e => events.includes(e));
 
   return {
-    showSignup: chosenEvents.length > 0,
+    showSignup: state.events.some(e => events.includes(e)),
     notice: state.notice,
     additional: state.additional.map(cid => state.courses[cid]),
     meta: state.meta,
