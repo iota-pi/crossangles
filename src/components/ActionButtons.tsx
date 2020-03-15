@@ -81,26 +81,31 @@ export const ActionButtons = withStyles(styles)(({
   let signupButton: ReactNode = null;
   if (ministry && showSignup) {
     const ministryMeta = ministry.metadata!;
-
-    signupButton = (
-      <Button
-        variant="outlined"
-        className={classes.baseButton + ' ' + classes.signUpButton}
-        size="large"
-        endIcon={<OpenInNewIcon />}
-        href={ministryMeta.signupURL}
-        target="_blank"
-      >
-        <div className={classes.centredText}>
-          <div className={classes.fontNormal}>
-            Sign Up for Term {meta.term}
-          </div>
-          <div className={classes.fontLight}>
-            {ministry.name}
-          </div>
-        </div>
-      </Button>
+    const isValid = ministryMeta.signupValidFor.some(
+      ({year, term}) => meta.year === year && meta.term === term
     );
+
+    if (isValid) {
+      signupButton = (
+        <Button
+          variant="outlined"
+          className={classes.baseButton + ' ' + classes.signUpButton}
+          size="large"
+          endIcon={<OpenInNewIcon />}
+          href={ministryMeta.signupURL}
+          target="_blank"
+        >
+          <div className={classes.centredText}>
+            <div className={classes.fontNormal}>
+              Sign Up for Term {meta.term}
+            </div>
+            <div className={classes.fontLight}>
+              {ministry.name}
+            </div>
+          </div>
+        </Button>
+      );
+    }
   }
 
   const rootClassList = [classes.root];
