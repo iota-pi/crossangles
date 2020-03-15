@@ -388,10 +388,10 @@ class CreateCustom extends PureComponent<Props, State> {
     const noOptionsError = this.state.options.length <= 1;
 
     // Don't allow an option to have a day OR a time but not both
-    const emptyCellError = this.state.options.filter(o => (!o.day !== !o.start)).length > 0;
+    const emptyCellError = this.state.options.some(o => (!o.day !== !o.start));
 
     // Don't allow multiple options to have the same day and start time
-    const startTimeError = this.state.options.filter(o => this.startTimeError(o)).length > 0;
+    const startTimeError = this.state.options.some(o => this.startTimeError(o));
 
     return !nameError && !durationError && !emptyCellError && !noOptionsError && !startTimeError;
   }
