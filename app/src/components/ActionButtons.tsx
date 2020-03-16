@@ -60,6 +60,7 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {
   additional: CourseData[],
   meta: Meta,
+  disabled?: boolean,
   showSignup: boolean,
   isSavingImage: boolean,
   onSaveAsImage: () => void,
@@ -69,6 +70,7 @@ export interface Props extends WithStyles<typeof styles> {
 export const ActionButtons = withStyles(styles)(({
   additional,
   meta,
+  disabled,
   showSignup,
   isSavingImage,
   onSaveAsImage,
@@ -93,6 +95,7 @@ export const ActionButtons = withStyles(styles)(({
           size="large"
           endIcon={<OpenInNewIcon />}
           href={ministryMeta.signupURL}
+          disabled={disabled}
           target="_blank"
         >
           <div className={classes.centredText}>
@@ -122,7 +125,7 @@ export const ActionButtons = withStyles(styles)(({
           color="primary"
           endIcon={<CameraAltIcon />}
           onClick={onSaveAsImage}
-          disabled={isSavingImage}
+          disabled={disabled || isSavingImage}
         >
           Save as Image
           {isSavingImage && (
