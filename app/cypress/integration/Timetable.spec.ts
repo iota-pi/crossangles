@@ -237,7 +237,7 @@ context('Timetable controls', () => {
       .click()
 
     // Add the Bible talks
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .click()
 
     // Should not be able to redo
@@ -247,14 +247,14 @@ context('Timetable controls', () => {
     // Undo adding the Bible talks
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
     cy.dataCy('undo-button')
       .click()
     cy.dataCy('timetable-session')
       .should('not.contain.text', 'The Bible Talks')
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('not.be.checked')
 
@@ -265,7 +265,7 @@ context('Timetable controls', () => {
       .click()
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
 
@@ -309,7 +309,7 @@ context('Timetable controls', () => {
       .click()
     cy.dataCy('timetable-session')
       .should('not.contain.text', 'The Bible Talks')
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('not.be.checked')
 
@@ -335,7 +335,7 @@ context('Timetable controls', () => {
       .should('exist')
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
     cy.get(`[data-session^="${TEST_CODE}"]`)
@@ -344,7 +344,7 @@ context('Timetable controls', () => {
 
   it('can undo after dragging', () => {
     // Add TBT
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .click()
 
     // Move the Bible talk
