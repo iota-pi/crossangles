@@ -3,7 +3,8 @@
 context('General app flow', () => {
   beforeEach(() => {
     cy.server()
-    cy.route('/unsw/data.json', 'fixture:data-s2-2019.json')
+    cy.route('/unsw/data.json', 'fixture:data-t1-2020.json')
+    cy.clearLocalStorage() // TODO: this shouldn't be necessary?!?!
     cy.visit('/')
   })
 
@@ -76,41 +77,25 @@ context('General app flow', () => {
     cy.dataCy('autocomplete-option')
       .first().click()
     cy.get('#course-selection-autocomplete')
-      .type('COMP2511')
+      .type('COMP1531')
     cy.dataCy('autocomplete-option')
       .first().click()
 
     cy.dataCy('web-stream-toggle')
       .first().click()
     cy.dataCy('timetable-session')
-      .should('not.contain.text', 'COMP1511 LEC')
-      .should('contain.text', 'COMP2511 LEC')
+      .should('not.contain.text', 'COMP1531 LEC')
+      .should('contain.text', 'COMP1511 LEC')
       .should('contain.text', 'COMP1511 TLB')
-      .should('contain.text', 'COMP2511 TLB')
+      .should('contain.text', 'COMP1531 TLB')
 
     cy.dataCy('web-stream-toggle')
       .first().click()
     cy.dataCy('timetable-session')
       .should('contain.text', 'COMP1511 LEC')
-      .should('contain.text', 'COMP2511 LEC')
+      .should('contain.text', 'COMP1531 LEC')
       .should('contain.text', 'COMP1511 TLB')
-      .should('contain.text', 'COMP2511 TLB')
-
-    cy.dataCy('web-stream-toggle')
-      .last().click()
-    cy.dataCy('timetable-session')
-      .should('contain.text', 'COMP1511 LEC')
-      .should('not.contain.text', 'COMP2511 LEC')
-      .should('contain.text', 'COMP1511 TLB')
-      .should('contain.text', 'COMP2511 TLB')
-
-    cy.dataCy('web-stream-toggle')
-      .first().click()
-    cy.dataCy('timetable-session')
-      .should('not.contain.text', 'COMP1511 LEC')
-      .should('not.contain.text', 'COMP2511 LEC')
-      .should('contain.text', 'COMP1511 TLB')
-      .should('contain.text', 'COMP2511 TLB')
+      .should('contain.text', 'COMP1531 TLB')
   })
 
   it('can add and remove additional events', () => {
