@@ -35,8 +35,11 @@ import { updateTimetable } from '../timetable/updateTimetable';
 import { Meta } from '../state/Meta';
 
 const styles = (theme: Theme) => createStyles({
-  spaceAbove: {
+  slightSpaceAbove: {
     paddingTop: theme.spacing(2),
+  },
+  spaceAbove: {
+    paddingTop: theme.spacing(4),
   },
   flex: {
     display: 'flex',
@@ -97,7 +100,7 @@ class CourseSelection extends Component<Props, State> {
           />
         </div>
 
-        <div className={classes.spaceAbove}>
+        <div className={classes.slightSpaceAbove}>
           <CourseList
             chosen={this.props.chosen}
             custom={this.props.custom}
