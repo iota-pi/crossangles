@@ -100,6 +100,7 @@ class App extends Component<Props, State> {
           <ActionButtons
             additional={this.props.additional}
             meta={this.props.meta}
+            disabled={this.props.timetable.order.length === 0}
             showSignup={this.props.showSignup}
             isSavingImage={this.state.isSavingImage}
             onSaveAsImage={this.handleSaveAsImage}
