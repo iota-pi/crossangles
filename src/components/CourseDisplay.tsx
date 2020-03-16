@@ -2,7 +2,6 @@ import React, { MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { AdditionalEvent } from '../state';
 import Tooltip from '@material-ui/core/Tooltip';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -18,7 +17,7 @@ import { ColourMap } from '../state/Colours';
 import ColourControl from './Colour';
 import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course';
 import { Collapse } from '@material-ui/core';
-import { getEvents } from '../state/Events';
+import { getEvents, AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
 import getCampus from '../getCampus';
 

@@ -1,15 +1,15 @@
 import React from 'react';
-
-import { AdditionalEvent } from '../state';
-import { search, TimetableSearchResult } from './timetableSearch';
-import { coursesToComponents, Component } from './coursesToComponents';
-import { LinkedSession } from '../state/Session';
-import { CourseData, CourseId } from '../state/Course';
-import { Options } from '../state/Options';
-import { GeneticSearchOptionalConfig } from './GeneticSearch';
-import { linkStream } from '../state/Stream';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
+import { search, TimetableSearchResult } from './timetableSearch';
+import { coursesToComponents, Component } from './coursesToComponents';
+import { CourseData, CourseId } from '../state/Course';
+import { linkStream } from '../state/Stream';
+import { LinkedSession } from '../state/Session';
+import { Options } from '../state/Options';
+import { AdditionalEvent } from '../state/Events';
+import { GeneticSearchOptionalConfig } from './GeneticSearch';
 import SessionManager from '../components/Timetable/SessionManager';
 import { setNotice, setTimetable, setSuggestionScore, clearNotice, toggleOption } from '../actions';
 

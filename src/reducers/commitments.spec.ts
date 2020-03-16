@@ -18,42 +18,55 @@ describe('events reducer', () => {
 
   it('allows toggling one event on', () => {
     const state = Object.freeze([...baseState.events]);
+    const event = { id: 'TEST9731~abc', name: 'abc' };
     const action: EventAction = {
       type: TOGGLE_EVENT,
-      event: 'abc',
+      event,
     };
     const result = events(state, action);
-    expect(result).toContain('abc');
+    expect(result).toContain(event);
   })
 
-  it('allows toggling one events off', () => {
-    const state = Object.freeze(['abc']);
+  it('allows toggling one event off', () => {
+    const event = { id: 'TEST9731~abc', name: 'abc' };
+    const state = Object.freeze([event]);
     const action: EventAction = {
       type: TOGGLE_EVENT,
-      event: 'abc',
+      event: { ...event },
     };
     const result = events(state, action);
     expect(result).toEqual([]);
   })
 
   it('allows toggling one of many events on', () => {
-    const state = Object.freeze(['a', 'b']);
+    const state = Object.freeze([
+      { id: 'TEST9731~a', name: 'a' },
+      { id: 'TEST9731~b', name: 'b' },
+    ]);
+    const event = { id: 'TEST9731~abc', name: 'abc' };
     const action: EventAction = {
       type: TOGGLE_EVENT,
-      event: 'c',
+      event,
     };
     const result = events(state, action);
-    expect(result).toEqual(['a', 'b', 'c']);
+    expect(result).toEqual([
+      ...state,
+      event,
+    ]);
   })
 
-  it('allows toggling one of many events of', () => {
-    const state = Object.freeze(['a', 'b', 'c']);
+  it('allows toggling one of many events off', () => {
+    const state = Object.freeze([
+      { id: 'TEST9731~a', name: 'a' },
+      { id: 'TEST9731~b', name: 'b' },
+      { id: 'TEST9731~c', name: 'c' },
+    ]);
     const action: EventAction = {
       type: TOGGLE_EVENT,
-      event: 'c',
+      event: state[2],
     };
     const result = events(state, action);
-    expect(result).toEqual(['a', 'b']);
+    expect(result).toEqual(state.slice(0, 2));
   })
 
   it('selects event if the course only has one event', () => {
@@ -61,7 +74,7 @@ describe('events reducer', () => {
     const action: CourseAction = {
       type: ADD_COURSE,
       course: {
-        code: '',
+        code: 'TEST9731',
         name: '',
         isAdditional: true,
         streams: [
@@ -71,7 +84,7 @@ describe('events reducer', () => {
       },
     };
     const result = events(state, action);
-    expect(result).toEqual(['a']);
+    expect(result).toEqual([{ id: 'TEST9731~a', name: 'a' }]);
   })
 
   it('doesn\'t select event if the course has more than one', () => {
@@ -79,7 +92,7 @@ describe('events reducer', () => {
     const action: CourseAction = {
       type: ADD_COURSE,
       course: {
-        code: '',
+        code: 'TEST9731',
         name: '',
         isAdditional: true,
         streams: [

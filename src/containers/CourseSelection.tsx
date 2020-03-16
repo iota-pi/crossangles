@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  RootState,
-  AdditionalEvent,
-} from '../state';
+import { RootState } from '../state';
+import { AdditionalEvent } from '../state/Events';
 import {
   addCourse,
   removeCourse,

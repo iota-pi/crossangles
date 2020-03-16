@@ -4,24 +4,24 @@ import {
   TOGGLE_OPTION,
   TOGGLE_SHOW_EVENTS,
 } from '../actions/selection';
-import {
-  AdditionalEvent, baseState,
-} from '../state';
+import { baseState } from '../state';
 import { Options } from '../state/Options';
 import { CourseId } from '../state/Course';
 import { AllActions } from '../actions';
-import { getEvents } from '../state/Events';
+import { getEvents, AdditionalEvent } from '../state/Events';
 
 export function events (state: readonly AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
   switch (action.type) {
     case TOGGLE_EVENT:
-      if (!state.includes(action.event)) {
+      const stateIds = state.map(e => e.id);
+      const id = action.event.id;
+      if (!stateIds.includes(id)) {
         return [
           ...state,
           action.event,
         ];
       } else {
-        const i = state.indexOf(action.event);
+        const i = stateIds.indexOf(id);
         return [
           ...state.slice(0, i),
           ...state.slice(i + 1),
