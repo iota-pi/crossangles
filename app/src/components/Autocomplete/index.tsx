@@ -136,6 +136,7 @@ class Autocomplete extends PureComponent<Props, State> {
         TextFieldProps={{
           label: 'Select your courses…',
           value: this.state.search,
+          placeholder: 'COMP1511'
         }}
         OptionProps={{
           search: this.state.search,
@@ -196,51 +197,56 @@ class Autocomplete extends PureComponent<Props, State> {
     // Filter out courses which don't match the search
     const search = this.state.search.toLowerCase().trim();
     const options: CourseOption[] = this.props.courses.filter(course => this.optionFilter(course, search));
+    const chosen = [...this.props.chosen, ...this.props.additional];
+    const availableOptions = options.filter(course => !chosen.includes(course));
 
     // Sort courses with matching course codes first
-    options.sort(this.optionSort);
+    const optionSort = this.getOptionSort(search);
+    availableOptions.sort(optionSort);
 
     const maxItems = this.state.currentMaxItems;
-    if (options.length > maxItems) {
+    if (availableOptions.length > maxItems) {
       // Limit number of returned courses
-      return options.slice(0, maxItems).concat([{
-        code: 'See more results...',
-        name: '',
-        streams: [],
-        isDisabled: true,
-      }]);
+      return [
+        ...availableOptions.slice(0, maxItems),
+        {
+          code: 'See more results...',
+          name: '',
+          streams: [],
+          isDisabled: true,
+        },
+      ];
     }
 
-    return options;
+    return availableOptions;
   }
 
   private optionFilter = (course: CourseData, search: string): boolean => {
-    // Pre: search is lowercase
-
-    // Don't include already chosen courses
-    if (this.props.chosen.includes(course) || this.props.additional.includes(course)) {
-      return false;
-    }
-
     // Include any courses which match the search in either their code or name
     const code = course.code.toLowerCase();
-    const name = course.name.toLowerCase();
-    return code.includes(search) || name.includes(search);
-  }
-
-  private optionSort = (a: CourseData, b: CourseData): number => {
-    let search = this.state.search.toLowerCase();
-
-    let alphaOrder = +(a.code > b.code) - +(a.code < b.code);
-
-    if (search) {
-      let matchesA = +a.code.toLowerCase().startsWith(search);
-      let matchesB = +b.code.toLowerCase().startsWith(search);
-
-      return (matchesB - matchesA) || alphaOrder;
+    if (code.includes(search)) {
+      return true;
     }
 
-    return alphaOrder;
+    const name = course.name.toLowerCase();
+    return name.includes(search);
+  }
+
+  private getOptionSort = (search: string) => {
+    return (a: CourseData, b: CourseData): number => {
+      if (search) {
+        const matchesA = +a.code.toLowerCase().startsWith(search);
+        const matchesB = +b.code.toLowerCase().startsWith(search);
+        const order = (matchesB - matchesA);
+
+        if (order !== 0) {
+          return order;
+        }
+      }
+
+      const alphabetical = +(a.code > b.code) - +(a.code < b.code);
+      return alphabetical;
+    }
   }
 }
 
