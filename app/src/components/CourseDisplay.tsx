@@ -237,7 +237,12 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
       <ListItem className={rootClasses.join(' ')}>
         <ListItemText>
           {course.metadata ? (
-            <a href={course.metadata.website} className={classes.plainLink}>
+            <a
+              href={course.metadata.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={classes.plainLink}
+            >
               <span>{course.name}</span>
               <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
             </a>
