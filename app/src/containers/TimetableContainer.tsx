@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { RootState, AdditionalEvent } from '../state';
+import { RootState } from '../state';
 import { StateHistory } from '../state/StateHistory';
 import { WithDispatch } from '../typeHelpers';
 
@@ -17,6 +17,7 @@ import TimetableTable from '../components/Timetable';
 import { CourseData, CourseId, CourseMap, courseSort, customSort } from '../state/Course';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
+import { AdditionalEvent } from '../state/Events';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { setTimetable } from '../actions';
 import { undoTimetable, redoTimetable } from '../actions/history';

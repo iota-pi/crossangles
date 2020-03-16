@@ -1,8 +1,8 @@
-import { AdditionalEvent } from '../state';
 import { notUndefined } from '../typeHelpers';
 import { CourseData, CourseId, getCourseId } from '../state/Course';
 import { getSessions, getStreamId, LinkedStream, linkStream } from '../state/Stream';
 import { SessionData, LinkedSession } from '../state/Session';
+import { AdditionalEvent, getEventId } from '../state/Events';
 
 export interface Component {
   course: CourseData,
@@ -39,10 +39,12 @@ const groupStreamsByComponent = (
   allowFull: boolean,
 ) => {
   let streamGroups = new Map<string, LinkedStream[]>();
+  const eventIds = events.map(e => e.id);
 
   for (let stream of course.streams) {
     // Skip any additional events which have been deselected
-    if (course.isAdditional && !events.includes(stream.component as AdditionalEvent)) {
+    const eventId = getEventId(course, stream.component)
+    if (course.isAdditional && !eventIds.includes(eventId)) {
       continue;
     }
 

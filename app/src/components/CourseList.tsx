@@ -2,16 +2,16 @@ import React, { PureComponent, MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { AdditionalEvent } from '../state';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
-import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
-import { notNull } from '../typeHelpers';
-import ColourPicker from './ColourPicker';
-import { CourseData, CourseId, getCourseId } from '../state/Course';
 import { CourseDisplay, AdditionalCourseDisplay } from './CourseDisplay';
+import ColourPicker from './ColourPicker';
+import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
+import { CourseData, CourseId, getCourseId } from '../state/Course';
+import { AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
+import { notNull } from '../typeHelpers';
 
 const styles = (theme: Theme) => createStyles({
   root: {

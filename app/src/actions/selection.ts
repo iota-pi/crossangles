@@ -1,5 +1,5 @@
-import { AdditionalEvent } from '../state';
 import { CourseData, CourseId } from '../state/Course';
+import { AdditionalEvent } from '../state/Events';
 import { OptionName } from '../state/Options';
 import { Action } from 'redux';
 

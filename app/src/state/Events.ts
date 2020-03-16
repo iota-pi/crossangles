@@ -1,13 +1,27 @@
-import { CourseMap, CourseId, CourseData } from "./Course";
+import { CourseMap, CourseId, CourseData, getCourseId } from './Course';
 
-export const getEvents = (course: CourseData) => {
+export interface AdditionalEvent {
+  id: string,
+  name: string,
+}
+
+
+export const getEvents = (course: CourseData): AdditionalEvent[] => {
   if (!course.isAdditional) {
     return [];
   }
 
-  const components = course.streams.map(s => s.component);
-  const events = components.filter((c, i) => components.indexOf(c) === i);
-  return events;
+  const events = course.streams.map(s => ({
+    id: getEventId(course, s.component),
+    name: s.component,
+  }));
+  const eventIds = events.map(e => e.id);
+  const uniqueEvents = events.filter((e, i) => eventIds.indexOf(e.id) === i);
+  return uniqueEvents;
+}
+
+export const getEventId = (course: CourseData, component: string) => {
+  return `${getCourseId(course)}~${component}`;
 }
 
 export const getAutoSelectedEvents = (

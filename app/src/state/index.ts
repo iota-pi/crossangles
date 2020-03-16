@@ -1,12 +1,11 @@
 import { CourseId, CourseMap } from './Course';
 import { StateHistory } from './StateHistory';
+import { AdditionalEvent } from './Events';
 import { ColourMap } from './Colours';
 import { Options } from './Options';
 import { Notice } from './Notice';
 import { Meta } from './Meta';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-
-export type AdditionalEvent = string;
 
 export interface TimetableState {
   courses: CourseMap,
