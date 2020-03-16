@@ -38,7 +38,7 @@ const NoticeDisplay = loadable(() => import('./components/Notice'));
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
     ...theme.mixins.toolbar,
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(4),
   },
   spaceAbove: {
     marginTop: theme.spacing(8),
