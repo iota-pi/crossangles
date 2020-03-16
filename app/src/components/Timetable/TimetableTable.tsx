@@ -75,7 +75,11 @@ class TimetableTable extends Component<Props, State> {
     const startHour = this.hours.start;
 
     return (
-      <div className={classes.root} data-cy="timetable" id="timetable-display">
+      <div
+        className={classes.root}
+        data-cy="timetable"
+        id="timetable-display"
+      >
         {dimensions.width ? this.props.timetable.order.map(sid => {
           const placement = this.props.timetable.getMaybe(sid);
           if (!placement) return null;
