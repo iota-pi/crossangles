@@ -47,6 +47,7 @@ class Colour extends PureComponent<Props> {
           backgroundColor: this.props.colour,
           width: this.props.size,
           height: this.props.size,
+          cursor: this.props.onClick ? 'pointer' : undefined,
         }}
         onClick={this.props.onClick}
         data-cy="colour-selector"
