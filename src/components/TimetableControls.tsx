@@ -28,6 +28,7 @@ export interface Props extends WithStyles<typeof styles> {
   history: StateHistory,
   improvementScore: number,
   isUpdating: boolean,
+  disabled: boolean,
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
@@ -36,11 +37,12 @@ export interface Props extends WithStyles<typeof styles> {
 export const TimetableControls = ({
   classes,
   history,
+  improvementScore,
+  isUpdating,
+  disabled,
   onUndo,
   onRedo,
   onUpdate,
-  improvementScore,
-  isUpdating,
 }: Props) => {
   let updateClass = classes.primary;
   if (improvementScore > 100) {
@@ -57,7 +59,7 @@ export const TimetableControls = ({
         <IconButton
           onClick={onUndo}
           color="primary"
-          disabled={history.past.length === 0}
+          disabled={disabled || history.past.length === 0}
           data-cy="undo-button"
         >
           <Undo />
@@ -67,7 +69,7 @@ export const TimetableControls = ({
         <IconButton
           onClick={onRedo}
           color="primary"
-          disabled={history.future.length === 0}
+          disabled={disabled || history.future.length === 0}
           data-cy="redo-button"
         >
           <Redo />
@@ -76,6 +78,7 @@ export const TimetableControls = ({
       {onUpdate && (
         <IconButton
           onClick={!isUpdating ? onUpdate : undefined}
+          disabled={disabled}
           className={updateClass}
           data-cy="update-button"
         >
