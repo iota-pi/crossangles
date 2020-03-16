@@ -223,6 +223,9 @@ class CourseSelection extends Component<Props, State> {
       dispatch: this.props.dispatch,
       sessionManager,
       selection: { chosen, additional, custom, events, options, webStreams },
+      searchConfig: {
+        timeout: 100,
+      },
     });
   }
 }
