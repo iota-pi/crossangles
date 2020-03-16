@@ -99,15 +99,15 @@ context('General app flow', () => {
   })
 
   it('can add and remove additional events', () => {
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .click()
     cy.dataCy('timetable-session')
       .should('contain.text', 'The Bible Talks')
-    cy.dataCy('event-Bible Study')
+    cy.dataCy('event-CBS~Bible Study')
       .click()
-    cy.dataCy('event-Core Theology')
+    cy.dataCy('event-CBS~Core Theology')
       .click()
-    cy.dataCy('event-Core Training')
+    cy.dataCy('event-CBS~Core Training')
       .click()
 
     cy.dataCy('timetable-session')
@@ -116,9 +116,9 @@ context('General app flow', () => {
       .should('contain.text', 'Core Theology')
       .should('contain.text', 'Core Training')
 
-    cy.dataCy('event-The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .click()
-    cy.dataCy('event-Core Theology')
+    cy.dataCy('event-CBS~Core Theology')
       .click()
     cy.dataCy('timetable-session')
       .should('not.contain.text', 'The Bible Talks')
