@@ -27,6 +27,7 @@ const styles = (theme: Theme) => createStyles({
     overflowY: 'hidden',
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
+    transition: 'opacity 0.3s ease',
 
     // Outside border
     borderStyle: 'solid',
@@ -38,6 +39,9 @@ const styles = (theme: Theme) => createStyles({
     zIndex: 10,
     width: '100%',
     height: 2,
+  },
+  faded: {
+    opacity: 0.65,
   },
 });
 
@@ -73,10 +77,14 @@ class TimetableTable extends Component<Props, State> {
     const classes = this.props.classes;
     const dimensions = this.state.dimensions;
     const startHour = this.hours.start;
+    const rootClasses = [classes.root];
+    if (this.props.timetable.order.length === 0) {
+      rootClasses.push(classes.faded);
+    }
 
     return (
       <div
-        className={classes.root}
+        className={rootClasses.join(' ')}
         data-cy="timetable"
         id="timetable-display"
       >
