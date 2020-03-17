@@ -18,7 +18,6 @@ const ADDITIONAL_DATA_HASH = 'additional_data_hash';
 export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   readonly source = 'http://classutil.unsw.edu.au';
-  readonly output = 'unsw/data.json';
   readonly campus = 'unsw';
   protected state: StateManager;
   readonly parser: Parser;

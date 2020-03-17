@@ -2,7 +2,7 @@ import { getCampusScraper } from './scraper';
 import { getWriter } from './writer';
 import HTMLCache from './scraper/HTMLCache';
 
-export const scrapeCampus = async (campus: string, outputPrefix?: string, cacheFile?: string) => {
+export const scrapeCampus = async (campus: string, outputPrefix: string = '', cacheFile?: string) => {
   const scraper = await getCampusScraper(campus);
   scraper.cache = new HTMLCache();
 
@@ -13,7 +13,7 @@ export const scrapeCampus = async (campus: string, outputPrefix?: string, cacheF
   if (data) {
     if (cacheFile) await scraper.cache.write(cacheFile);
 
-    const destination = (outputPrefix || '') + scraper.output;
+    const destination = `${outputPrefix}${scraper.campus}/data.json`;
     const output = getWriter(destination);
     await output.write(data);
     scraper.log(`written to ${output}`);

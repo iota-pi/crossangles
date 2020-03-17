@@ -15,7 +15,6 @@ export interface CampusData {
 export abstract class CampusScraper {
   protected abstract readonly additional: CourseData[];
   abstract readonly source: string;
-  abstract readonly output: string;
   abstract readonly campus: string;
   maxRequests: number = 5;
   logging = true;
