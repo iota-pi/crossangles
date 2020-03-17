@@ -1,4 +1,3 @@
-import { createHash } from 'crypto';
 import { CourseData } from '../../app/src/state/Course';
 
 const unsw: CourseData[] = [
@@ -192,14 +191,5 @@ const unsw: CourseData[] = [
 const additional = {
   unsw,
 };
-
-export const hashData = (data: any) => {
-  return createHash('md5').update(JSON.stringify(data)).digest('hex');
-}
-
-export const checkHash = (data: any, oldHash: string) => {
-  const hash = hashData(data);
-  return hash === oldHash;
-}
 
 export default additional;

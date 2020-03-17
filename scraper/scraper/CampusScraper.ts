@@ -13,7 +13,6 @@ export interface CampusData {
 }
 
 export abstract class CampusScraper {
-  protected abstract readonly additional: CourseData[];
   abstract readonly source: string;
   abstract readonly campus: string;
   maxRequests: number = 5;

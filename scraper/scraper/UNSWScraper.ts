@@ -2,8 +2,9 @@ import { CampusScraper, CampusData } from './CampusScraper';
 import StateManager from '../state/StateManager';
 import { CourseData } from '../../app/src/state/Course';
 import { ClassTime, StreamData } from '../../app/src/state/Stream';
-import additional, { checkHash, hashData } from '../data/additional';
 import getStateManager from '../state/getStateManager';
+import additional from '../data/additional';
+import { hashData } from '../data/util';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -13,10 +14,12 @@ const REGULAR_CELL_COUNT = 8;
 const DATA_THRESHOLD = 0.2;
 
 const UPDATE_TIME_KEY = 'data_update_time';
-const ADDITIONAL_DATA_HASH = 'additional_data_hash';
+const ADDITIONAL_HASH_KEY = 'additional_data_hash';
+
+const ADDITIONAL_DATA = additional.unsw;
+const ADDITIONAL_DATA_HASH = hashData(ADDITIONAL_DATA);
 
 export class UNSWScraper extends CampusScraper {
-  protected readonly additional = additional.unsw;
   readonly source = 'http://classutil.unsw.edu.au';
   readonly campus = 'unsw';
   protected state: StateManager;
@@ -67,7 +70,7 @@ export class UNSWScraper extends CampusScraper {
 
     if (this.state) {
       this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-      this.state.set(this.campus, ADDITIONAL_DATA_HASH, hashData(this.additional));
+      this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
     }
 
     if (courses.length === 0) {
@@ -95,8 +98,8 @@ export class UNSWScraper extends CampusScraper {
     }
 
     // Update data if additional data has changed
-    const oldAdditionalHash = await this.state.get(this.campus, ADDITIONAL_DATA_HASH);
-    if (!checkHash(this.additional, oldAdditionalHash)) {
+    const oldAdditionalHash = await this.state.get(this.campus, ADDITIONAL_HASH_KEY);
+    if (ADDITIONAL_DATA !== oldAdditionalHash) {
       return true;
     }
 
@@ -139,7 +142,7 @@ export class UNSWScraper extends CampusScraper {
     }
 
     // Add (campus-specific) additional events
-    allCourses.push(...this.additional);
+    allCourses.push(...ADDITIONAL_DATA);
 
     // Sort courses for consistency
     allCourses.sort(courseSort);
