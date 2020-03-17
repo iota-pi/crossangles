@@ -1,5 +1,5 @@
 import { CourseData } from '../../app/src/state/Course';
-import { MinistryMeta, Meta } from '../../app/src/state/Meta';
+import { Meta } from '../../app/src/state/Meta';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
 import cheerio from 'cheerio';
@@ -16,7 +16,7 @@ export abstract class CampusScraper {
   protected abstract readonly additional: CourseData[];
   abstract readonly source: string;
   abstract readonly output: string;
-  abstract readonly name: string;
+  abstract readonly campus: string;
   maxRequests: number = 5;
   logging = true;
 
@@ -72,7 +72,7 @@ export abstract class CampusScraper {
 
   log (...args: any[]) {
     if (this.logging) {
-      console.log(`${this.name}:`, ...args);
+      console.log(`${this.campus.toUpperCase()}:`, ...args);
     }
   }
 }

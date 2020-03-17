@@ -12,7 +12,6 @@ const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
 const DATA_THRESHOLD = 0.2;
 
-const CAMPUS_KEY = 'unsw';
 const UPDATE_TIME_KEY = 'data_update_time';
 const ADDITIONAL_DATA_HASH = 'additional_data_hash';
 
@@ -20,7 +19,7 @@ export class UNSWScraper extends CampusScraper {
   protected readonly additional = additional.unsw;
   readonly source = 'http://classutil.unsw.edu.au';
   readonly output = 'unsw/data.json';
-  readonly name = 'UNSW';
+  readonly campus = 'unsw';
   protected state: StateManager;
   readonly parser: Parser;
   maxFaculties = Infinity;
@@ -68,8 +67,8 @@ export class UNSWScraper extends CampusScraper {
     }
 
     if (this.state) {
-      this.state.set(CAMPUS_KEY, UPDATE_TIME_KEY, this.dataUpdateTime);
-      this.state.set(CAMPUS_KEY, ADDITIONAL_DATA_HASH, hashData(this.additional));
+      this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+      this.state.set(this.campus, ADDITIONAL_DATA_HASH, hashData(this.additional));
     }
 
     if (courses.length === 0) {
@@ -91,13 +90,13 @@ export class UNSWScraper extends CampusScraper {
 
   private async checkIfDataUpdated () {
     // Update data if source has changed
-    const lastUpdateTime = await this.state.get(CAMPUS_KEY, UPDATE_TIME_KEY);
+    const lastUpdateTime = await this.state.get(this.campus, UPDATE_TIME_KEY);
     if (lastUpdateTime !== this.dataUpdateTime) {
       return true;
     }
 
     // Update data if additional data has changed
-    const oldAdditionalHash = await this.state.get(CAMPUS_KEY, ADDITIONAL_DATA_HASH);
+    const oldAdditionalHash = await this.state.get(this.campus, ADDITIONAL_DATA_HASH);
     if (!checkHash(this.additional, oldAdditionalHash)) {
       return true;
     }
