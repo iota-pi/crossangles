@@ -13,7 +13,6 @@ export interface CampusData {
 }
 
 export abstract class CampusScraper {
-  abstract readonly source: string;
   abstract readonly campus: string;
   maxRequests: number = 5;
   logging = true;
@@ -23,7 +22,7 @@ export abstract class CampusScraper {
 
   abstract async scrape (): Promise<CampusData | null>;
 
-  generateMetaData (term: number): Meta {
+  generateMetaData (term: number, source: string): Meta {
     const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');
     const now = getAEST();
     const currentYear = now.getFullYear();
@@ -31,11 +30,11 @@ export abstract class CampusScraper {
     const currentDay = now.getDate();
 
     return {
-      term,
       year: term === 1 && currentMonth >= 6 ? currentYear + 1 : currentYear,
+      term,
+      source,
       updateDate: `${zfill(currentDay)}/${zfill(currentMonth + 1)}/${currentYear}`,
       updateTime: `${zfill(now.getHours())}:${zfill(now.getMinutes())}`,
-      source: this.source,
       signup: process.env.SIGN_UP || '',
     };
   }

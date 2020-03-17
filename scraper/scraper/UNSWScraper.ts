@@ -19,8 +19,9 @@ const ADDITIONAL_HASH_KEY = 'additional_data_hash';
 const ADDITIONAL_DATA = additional.unsw;
 const ADDITIONAL_DATA_HASH = hashData(ADDITIONAL_DATA);
 
+const CLASSUTIL = 'http://classutil.unsw.edu.au';
+
 export class UNSWScraper extends CampusScraper {
-  readonly source = 'http://classutil.unsw.edu.au';
   readonly campus = 'unsw';
   protected state: StateManager;
   readonly parser: Parser;
@@ -78,12 +79,12 @@ export class UNSWScraper extends CampusScraper {
       throw new Error();
     }
 
-    const meta = this.generateMetaData(term);
+    const meta = this.generateMetaData(term, CLASSUTIL);
     return { courses, meta };
   }
 
   async scrapeTerm (term: number, facultyPages: string[]) {
-    this.log(`scraping term ${term} from ${this.source}`);
+    this.log(`scraping term ${term} from ${CLASSUTIL}`);
     facultyPages = facultyPages.filter(l => l.endsWith(`${term}.html`));
 
     const courses = await this.scrapeFacultyPages(facultyPages);
@@ -116,7 +117,7 @@ export class UNSWScraper extends CampusScraper {
   private async findFacultyPages () {
     const links: string[] = [];
     const linkRegex = /[A-Y][A-Z]{3}_[ST][0-9].html$/i;
-    await this.scrapePages([this.source, this.source], async ($) => {
+    await this.scrapePages([CLASSUTIL, CLASSUTIL], async ($) => {
       const allLinks = Array.from($('a')).map(e => $(e).attr('href') || '');
       const matchingLinks = allLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);
@@ -131,8 +132,7 @@ export class UNSWScraper extends CampusScraper {
   }
 
   private async scrapeFacultyPages (pages: string[]) {
-    // const allCourses: CourseData[] = [];
-    const urls = pages.map(page => `${this.source}/${page}`);
+    const urls = pages.map(page => `${CLASSUTIL}/${page}`);
     const results = await this.scrapePages(urls, page => this.parser.parseFacultyPage(page));
     const allCourses = results.flat();
 
