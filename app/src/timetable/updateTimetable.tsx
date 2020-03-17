@@ -178,7 +178,7 @@ export async function doTimetableSearch ({
     // Search for a new timetable
     // NB: scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered to be 'unplaced'
-    result = await search(components, fixed, maxSpawn, ignoreCache, searchConfig);
+    result = await search(components, fixed, ignoreCache, searchConfig, maxSpawn);
   } catch (err) {
     console.error(err);
     return null;

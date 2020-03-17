@@ -1,8 +1,8 @@
-import { getClashInfo, ClashInfo } from './getClashInfo';
 import { GeneticSearchOptionalConfig, Parent } from './GeneticSearch';
 import { Component } from './coursesToComponents';
 import { LinkedStream } from '../state/Stream';
 import { LinkedSession } from '../state/Session';
+import { getClashInfo, ClashInfo } from './getClashInfo';
 
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import createSearchWorker, { Workerized } from 'workerize-loader!./search.worker';
@@ -19,13 +19,18 @@ export interface TimetableSearchResult {
 
 class TimetableSearch {
   private cache = new Map<string, TimetableSearchResult>();
+  private workers: Worker[] = [];
+
+  constructor (workerCount = 5) {
+    this.spawnWorkers(workerCount);
+  }
 
   async search (
     components: Component[],
     fixedSessions: LinkedSession[],
-    maxSpawn = 5,
-    ignoreCache = false,
+    ignoreCache = true,
     config: GeneticSearchOptionalConfig = {},
+    maxSpawn?: number,
   ): Promise<TimetableSearchResult> {
     const cacheKey = this.getCacheKey(components, fixedSessions);
     if (!ignoreCache) {
@@ -35,23 +40,15 @@ class TimetableSearch {
       }
     }
 
-    const spawnWorkersPromise = this.spawnWorkers(maxSpawn);
-
-    const clashInfo = await this.getClashInfo(components);
+    const clashInfo = this.clashInfoFromComponents(components);
     const streams = components.map(c => c.streams);
-
-    const workers = await spawnWorkersPromise;
-
     const results = await this.runSearchInWorkers({
-      workers,
       fixedSessions,
       clashInfo,
       streams,
       config,
+      maxSpawn,
     });
-
-    // Asynchronously terminate workers
-    this.terminateWorkers(workers);
 
     // Find best result
     const best = results.sort((a, b) => b.score - a.score)[0];
@@ -71,35 +68,29 @@ class TimetableSearch {
     return cacheKey;
   }
 
-  private async getClashInfo (components: Component[]): Promise<ClashInfo> {
-    const allStreams = components.reduce((all, c) => all.concat(c.streams), [] as LinkedStream[]);
-    const clashInfo = getClashInfo(allStreams);
-    return clashInfo;
-  }
-
   private async spawnWorkers (count: number) {
-    const workers: Worker[] = [];
     for (let i = 0; i < count; ++i) {
       const worker = createSearchWorker<typeof searchWorker>();
-      workers.push(worker);
+      this.workers.push(worker);
     }
-    return workers;
   }
 
   private async runSearchInWorkers ({
-    workers,
     fixedSessions,
     clashInfo,
     streams,
     config,
+    maxSpawn,
   }: {
-    workers: Worker[],
     fixedSessions: LinkedSession[],
     clashInfo: ClashInfo,
     streams: LinkedStream[][],
     config: GeneticSearchOptionalConfig,
+    maxSpawn?: number,
   }): Promise<Parent<LinkedStream>[]> {
     const promises: Promise<Parent<LinkedStream>>[] = [];
+    console.log('calling', Date.now());
+    const workers = maxSpawn ? this.workers.slice(0, maxSpawn) : this.workers;
     for (const worker of workers) {
       promises.push(worker.runSearch({
         fixedSessions,
@@ -111,10 +102,16 @@ class TimetableSearch {
     return await Promise.all(promises);
   }
 
-  private async terminateWorkers (workers: Worker[]) {
-    for (const worker of workers) {
+  private clashInfoFromComponents (components: Component[]) {
+    const allStreams = components.reduce((all, c) => all.concat(c.streams), [] as LinkedStream[]);
+    return getClashInfo(allStreams);
+  }
+
+  private async terminateWorkers () {
+    for (const worker of this.workers) {
       worker.terminate();
     }
+    this.workers = [];
   }
 }
 
