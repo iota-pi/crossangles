@@ -14,11 +14,11 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
   if (data) {
     if (cacheFile) await scraper.cache.write(cacheFile);
 
-    for (const termData of data) {
-      writeTermData(scraper, outputPrefix, termData);
+    for (const term of data) {
+      writeTermData(scraper, outputPrefix, term);
 
-      if (termData.current) {
-        writeTermData(scraper, outputPrefix, termData, true);
+      if (term.current) {
+        writeTermData(scraper, outputPrefix, term, true);
       }
     }
   } else {
