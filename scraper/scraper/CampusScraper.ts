@@ -5,6 +5,7 @@ import HTMLCache from './HTMLCache';
 import cheerio from 'cheerio';
 import axios from 'axios';
 import StateManager from '../state/StateManager';
+import getAEST from '../getAEST';
 
 export interface CampusData {
   courses: CourseData[],
@@ -26,7 +27,7 @@ export abstract class CampusScraper {
 
   generateMetaData (term: number): Meta {
     const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');
-    const now = new Date();
+    const now = getAEST();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const currentDay = now.getDate();
