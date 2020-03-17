@@ -18,14 +18,11 @@ export const runSearch = ({
   streams,
   config,
 }: RunSearchOptions) => {
-  console.log(Date.now())
-  const time = performance.now();
   const scorer = new TimetableScorer(clashInfo, fixedSessions);
   const searcher = new GeneticSearch({
     ...config,
     scoreFunction: scorer.score.bind(scorer),
   });
   const result = searcher.search(streams)
-  console.log('worker', performance.now() - time, Date.now());
   return result;
 }

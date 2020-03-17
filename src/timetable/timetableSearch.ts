@@ -89,7 +89,6 @@ class TimetableSearch {
     maxSpawn?: number,
   }): Promise<Parent<LinkedStream>[]> {
     const promises: Promise<Parent<LinkedStream>>[] = [];
-    console.log('calling', Date.now());
     const workers = maxSpawn ? this.workers.slice(0, maxSpawn) : this.workers;
     for (const worker of workers) {
       promises.push(worker.runSearch({
