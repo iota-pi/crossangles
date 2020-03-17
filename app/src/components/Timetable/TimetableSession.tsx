@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
-import { DraggableCore, DraggableData } from 'react-draggable';
+import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
 import { Position, Dimensions } from './timetableTypes';
 import { CourseData } from '../../state/Course';
 import { Options } from '../../state/Options';
@@ -89,8 +89,8 @@ export interface Props extends WithStyles<typeof styles> {
   onDrop: (session: LinkedSession) => void,
 }
 
-
 type Detail = { key: string, text: string };
+
 
 class TimetableSession extends PureComponent<Props> {
   render() {
@@ -150,14 +150,16 @@ class TimetableSession extends PureComponent<Props> {
     )
   }
 
-  private handleStart = () => {
+  private handleStart = (e: DraggableEvent) => {
     this.props.onDrag(this.props.session);
   }
 
-  private handleDrag = (_: any, data: DraggableData) => {
-    let x = data.deltaX;
-    let y = data.deltaY;
-    this.props.onMove(this.props.session, { x, y });
+  private handleDrag = (e: DraggableEvent, data: DraggableData) => {
+    if (this.props.isDragging) {
+      let x = data.deltaX;
+      let y = data.deltaY;
+      this.props.onMove(this.props.session, { x, y });
+    }
   }
 
   private handleStop = () => {
