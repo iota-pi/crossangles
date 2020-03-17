@@ -50,7 +50,7 @@ EOF
 
 resource "aws_iam_policy" "scraper_policy" {
   name        = "scraper-policy"
-  description = "Lambda policy to allow writing to S3 bucket"
+  description = "Lambda policy to allow writing to S3 bucket, DynamoDB, and logging"
 
   policy = <<EOF
 {
@@ -61,6 +61,31 @@ resource "aws_iam_policy" "scraper_policy" {
       "Effect": "Allow",
       "Action": ["s3:PutObject", "s3:PutObjectAcl"],
       "Resource": ["arn:aws:s3:::${aws_s3_bucket.scraper_output.bucket}/*"]
+    },
+    {
+      "Sid": "PutLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": ["arn:aws:logs:*:*:*"]
+    },
+    {
+      "Sid": "ReadWriteCreateTable",
+      "Effect": "Allow",
+      "Action": [
+          "dynamodb:BatchGetItem",
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:BatchWriteItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:CreateTable"
+      ],
+      "Resource": "arn:aws:dynamodb:*:*:table/ScraperData"
     }
   ]
 }

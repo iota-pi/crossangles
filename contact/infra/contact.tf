@@ -50,14 +50,14 @@ EOF
 
 resource "aws_iam_policy" "contact_policy" {
   name        = "contact-policy"
-  description = "Lambda policy to allow writing to S3 bucket"
+  description = "Lambda policy to allow logging"
 
   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "PutObjectActions",
+      "Sid": "PutLogs",
       "Effect": "Allow",
       "Action": [
         "logs:CreateLogGroup",
