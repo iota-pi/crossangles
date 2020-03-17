@@ -72,6 +72,7 @@ export class UNSWScraper extends CampusScraper {
     if (this.state) {
       this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
       this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
+      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
     }
 
     if (courses.length === 0) {
@@ -109,7 +110,7 @@ export class UNSWScraper extends CampusScraper {
 
   private getUpdateTime ($: CheerioStatic) {
     const timeText = $('p>strong').text();
-    // Remove timezone because it is inconsistent and confuses parsers
+    // Remove timezone because it confuses parsers and is inconsistent
     const withoutTZ = timeText.replace(/\bA?E[SD]T\b/, '');
     this.dataUpdateTime = withoutTZ;
   }
