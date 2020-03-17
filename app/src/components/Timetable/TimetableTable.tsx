@@ -50,6 +50,7 @@ export interface Props extends WithStyles<typeof styles> {
   colours: ColourMap,
   timetable: SessionManager,
   minimalHours?: boolean,
+  isStandalone?: boolean,
   isUpdating?: boolean,
 }
 
@@ -78,7 +79,7 @@ class TimetableTable extends Component<Props, State> {
     const dimensions = this.state.dimensions;
     const startHour = this.hours.start;
     const rootClasses = [classes.root];
-    if (this.props.timetable.order.length === 0) {
+    if (this.props.timetable.order.length === 0 && !this.props.isStandalone) {
       rootClasses.push(classes.faded);
     }
 

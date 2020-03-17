@@ -39,6 +39,7 @@ export const StandaloneTimetable = () => {
         colours={queryData.colours}
         timetable={timetable}
         minimalHours
+        isStandalone
       />
     </div>
   );
