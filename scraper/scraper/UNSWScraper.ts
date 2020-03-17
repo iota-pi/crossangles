@@ -117,7 +117,7 @@ export class UNSWScraper extends CampusScraper {
   private async findFacultyPages () {
     const links: string[] = [];
     const linkRegex = /[A-Y][A-Z]{3}_[ST][0-9].html$/i;
-    await this.scrapePages([CLASSUTIL, CLASSUTIL], async ($) => {
+    await this.scrapePages([CLASSUTIL], async ($) => {
       const allLinks = Array.from($('a')).map(e => $(e).attr('href') || '');
       const matchingLinks = allLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);
