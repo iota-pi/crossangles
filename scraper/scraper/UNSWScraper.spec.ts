@@ -43,12 +43,31 @@ describe('UNSWScraper', () => {
     };
     s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
                             .mockImplementationOnce(async () => [courseData])
-                            .mockImplementationOnce(async () => [courseData]);
+                            .mockImplementationOnce(async () => []);
     const result = await s.scrape();
-    const resultData = result?.map(t => t.courses);
-    expect(resultData).toEqual([[], [courseData], [courseData]]);
+    const resultTerm = result?.map(t => t.meta.term);
+    expect(resultTerm).toEqual([1, 2, 3]);
     const resultCurrent = result?.map(t => t.current);
     expect(resultCurrent).toEqual([false, true, false]);
+  })
+
+  it('picks latest term with sufficient data as current term', async () => {
+    const s = await UNSWScraper.create({ state: mockStateManager });
+    s.logging = false;
+
+    const courseData: CourseData = {
+      code: 'COMP9876',
+      name: 'Theory of Practical Blockchain',
+      streams: [{ component: 'LEC', enrols: [0, 0], times: [] }],
+    };
+    s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [courseData])
+                            .mockImplementationOnce(async () => [courseData])
+                            .mockImplementationOnce(async () => [courseData]);
+    const result = await s.scrape();
+    const resultTerm = result?.map(t => t.meta.term);
+    expect(resultTerm).toEqual([1, 2, 3]);
+    const resultCurrent = result?.map(t => t.current);
+    expect(resultCurrent).toEqual([false, false, true]);
   })
 
   it('gives empty results when no data is found', async () => {

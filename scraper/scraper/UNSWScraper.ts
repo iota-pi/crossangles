@@ -59,25 +59,29 @@ export class UNSWScraper extends CampusScraper {
     }
 
     let results: CampusData[] = [];
-    let currentTerm: number | null = null;
     for (let term = START_TERM; term <= END_TERM; term++) {
       const courses = await this.scrapeTerm(term, facultyPages);
-
-      // Assume that the current term is the latest one with stream data available for enough of their courses
-      if (currentTerm === null) {
-        const hasStreamData = courses.filter(c => c.streams.length > 0);
-        if (hasStreamData.length > courses.length * DATA_THRESHOLD) {
-          currentTerm = term;
-        }
-      }
 
       const meta = this.generateMetaData(term, CLASSUTIL);
       results.push({
         campus: this.campus,
         courses,
         meta,
-        current: term === currentTerm,
+        current: false,
       });
+    }
+
+    // Nominate latest stream with sufficient data as being "current"
+    let currentTerm: number | null = null;
+    for (let i = 0; i < results.length; i++) {
+      const courses = results[i].courses;
+      const hasStreamData = courses.filter(c => c.streams.length > 0);
+      if (hasStreamData.length > courses.length * DATA_THRESHOLD) {
+        currentTerm = i;
+      }
+    }
+    if (currentTerm) {
+      results[currentTerm].current = true;
     }
 
     if (this.state) {
