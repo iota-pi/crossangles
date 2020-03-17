@@ -80,7 +80,7 @@ export class UNSWScraper extends CampusScraper {
         currentTerm = i;
       }
     }
-    if (currentTerm) {
+    if (currentTerm !== null) {
       results[currentTerm].current = true;
     }
 

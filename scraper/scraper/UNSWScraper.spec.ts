@@ -15,6 +15,12 @@ describe('UNSWScraper', () => {
     cleanStateManager();
   })
 
+  const courseData: CourseData = {
+    code: 'COMP9876',
+    name: 'Theory of Practical Blockchain',
+    streams: [{ component: 'LEC', enrols: [0, 0], times: [] }],
+  };
+
   it('gives consistent results', async () => {
     // Setup
     const s = await UNSWScraper.create({ state: mockStateManager });
@@ -36,11 +42,6 @@ describe('UNSWScraper', () => {
     const s = await UNSWScraper.create({ state: mockStateManager });
     s.logging = false;
 
-    const courseData: CourseData = {
-      code: 'COMP9876',
-      name: 'Theory of Practical Blockchain',
-      streams: [{ component: 'LEC', enrols: [0, 0], times: [] }],
-    };
     s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
                             .mockImplementationOnce(async () => [courseData])
                             .mockImplementationOnce(async () => []);
@@ -55,11 +56,6 @@ describe('UNSWScraper', () => {
     const s = await UNSWScraper.create({ state: mockStateManager });
     s.logging = false;
 
-    const courseData: CourseData = {
-      code: 'COMP9876',
-      name: 'Theory of Practical Blockchain',
-      streams: [{ component: 'LEC', enrols: [0, 0], times: [] }],
-    };
     s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [courseData])
                             .mockImplementationOnce(async () => [courseData])
                             .mockImplementationOnce(async () => [courseData]);
@@ -68,6 +64,20 @@ describe('UNSWScraper', () => {
     expect(resultTerm).toEqual([1, 2, 3]);
     const resultCurrent = result?.map(t => t.current);
     expect(resultCurrent).toEqual([false, false, true]);
+  })
+
+  it('can correctly pick first term as current term', async () => {
+    const s = await UNSWScraper.create({ state: mockStateManager });
+    s.logging = false;
+
+    s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [courseData])
+                            .mockImplementationOnce(async () => [])
+                            .mockImplementationOnce(async () => []);
+    const result = await s.scrape();
+    const resultTerm = result?.map(t => t.meta.term);
+    expect(resultTerm).toEqual([1, 2, 3]);
+    const resultCurrent = result?.map(t => t.current);
+    expect(resultCurrent).toEqual([true, false, false]);
   })
 
   it('gives empty results when no data is found', async () => {
