@@ -21,6 +21,9 @@ const ADDITIONAL_DATA_HASH = hashData(ADDITIONAL_DATA);
 
 const CLASSUTIL = 'http://classutil.unsw.edu.au';
 
+const START_TERM = 1;
+const END_TERM = 3;
+
 export class UNSWScraper extends CampusScraper {
   readonly campus = 'unsw';
   protected state: StateManager;
@@ -48,25 +51,33 @@ export class UNSWScraper extends CampusScraper {
     return new UNSWScraper(parser, state);
   }
 
-  async scrape (): Promise<CampusData | null> {
-    let courses: CourseData[] = [];
-    let term: number;
-
+  async scrape (): Promise<CampusData[] | null> {
     const facultyPages = await this.findFacultyPages();
     if (!await this.checkIfDataUpdated()) {
       this.log('data has not been updated yet; nothing to do');
       return null;
     }
 
-    for (term = 3; term > 0; term--) {
-      const termResult = await this.scrapeTerm(term, facultyPages);
+    let results: CampusData[] = [];
+    let currentTerm: number | null = null;
+    for (let term = START_TERM; term <= END_TERM; term++) {
+      const courses = await this.scrapeTerm(term, facultyPages);
 
       // Assume that the current term is the latest one with stream data available for enough of their courses
-      const hasStreamData = termResult.filter(c => c.streams.length > 0);
-      if (hasStreamData.length > termResult.length * DATA_THRESHOLD) {
-        courses = termResult;
-        break;
+      if (currentTerm === null) {
+        const hasStreamData = courses.filter(c => c.streams.length > 0);
+        if (hasStreamData.length > courses.length * DATA_THRESHOLD) {
+          currentTerm = term;
+        }
       }
+
+      const meta = this.generateMetaData(term, CLASSUTIL);
+      results.push({
+        campus: this.campus,
+        courses,
+        meta,
+        current: term === currentTerm,
+      });
     }
 
     if (this.state) {
@@ -75,13 +86,7 @@ export class UNSWScraper extends CampusScraper {
       this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
     }
 
-    if (courses.length === 0) {
-      this.log('no term found with sufficient course data');
-      throw new Error();
-    }
-
-    const meta = this.generateMetaData(term, CLASSUTIL);
-    return { courses, meta };
+    return results;
   }
 
   async scrapeTerm (term: number, facultyPages: string[]) {

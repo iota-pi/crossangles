@@ -8,8 +8,10 @@ import StateManager from '../state/StateManager';
 import getAEST from '../getAEST';
 
 export interface CampusData {
+  campus: string,
   courses: CourseData[],
   meta: Meta,
+  current: boolean,
 }
 
 export abstract class CampusScraper {
@@ -20,7 +22,7 @@ export abstract class CampusScraper {
   protected abstract state: StateManager;
   cache?: HTMLCache;
 
-  abstract async scrape (): Promise<CampusData | null>;
+  abstract async scrape (): Promise<CampusData[] | null>;
 
   generateMetaData (term: number, source: string): Meta {
     const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');

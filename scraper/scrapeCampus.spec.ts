@@ -12,12 +12,17 @@ jest.mock('./writer');
 const mock_getWriter = <jest.Mock<Writer>>getWriter;
 
 describe('scrapeCampus', () => {
-  it('only writes out if it finds data', async () => {
+  it('only writes out once if it finds no data', async () => {
     const scraper = await UNSWScraper.create();
     scraper.logging = false;
 
-    const scrapeResult: CampusData = { courses: [], meta: scraper.generateMetaData(1) };
-    scraper.scrape = jest.fn().mockImplementation(async () => scrapeResult);
+    const scrapeResult: CampusData = {
+      campus: 'unsw',
+      courses: [],
+      meta: scraper.generateMetaData(1, 'http://classutil.unsw.edu.au'),
+      current: false,
+    };
+    scraper.scrape = jest.fn().mockImplementation(async () => [scrapeResult]);
     mock_getCampusScraper.mockImplementation(async () => scraper);
 
     const writer = new FileWriter('abc.json');
@@ -27,6 +32,29 @@ describe('scrapeCampus', () => {
     await scrapeCampus('unsw');
 
     expect(writer.write).toBeCalledTimes(1);
+    expect(writer.write).toBeCalledWith(scrapeResult);
+  })
+
+  it('only writes out twice for current data', async () => {
+    const scraper = await UNSWScraper.create();
+    scraper.logging = false;
+
+    const scrapeResult: CampusData = {
+      campus: 'unsw',
+      courses: [],
+      meta: scraper.generateMetaData(1, 'http://classutil.unsw.edu.au'),
+      current: true,
+    };
+    scraper.scrape = jest.fn().mockImplementation(async () => [scrapeResult]);
+    mock_getCampusScraper.mockImplementation(async () => scraper);
+
+    const writer = new FileWriter('abc.json');
+    writer.write = jest.fn().mockImplementation(async () => {});
+    mock_getWriter.mockImplementation(() => writer);
+
+    await scrapeCampus('unsw');
+
+    expect(writer.write).toBeCalledTimes(2);
     expect(writer.write).toBeCalledWith(scrapeResult);
   })
 })

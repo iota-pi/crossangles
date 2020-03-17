@@ -28,7 +28,8 @@ describe('UNSWScraper', () => {
     const data = await s.scrape();
 
     // Verify
-    expect(data!.courses).toMatchSnapshot();
+    const courseData = data?.map(t => t.courses);
+    expect(courseData).toMatchSnapshot();
   })
 
   it('skips terms with insufficient data', async () => {
@@ -41,16 +42,31 @@ describe('UNSWScraper', () => {
       streams: [{ component: 'LEC', enrols: [0, 0], times: [] }],
     };
     s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
+                            .mockImplementationOnce(async () => [courseData])
                             .mockImplementationOnce(async () => [courseData]);
     const result = await s.scrape();
-    expect(result!.courses).toEqual([courseData]);
+    const resultData = result?.map(t => t.courses);
+    expect(resultData).toEqual([[], [courseData], [courseData]]);
+    const resultCurrent = result?.map(t => t.current);
+    expect(resultCurrent).toEqual([false, true, false]);
   })
 
-  it('throws if no terms have sufficient data', async () => {
+  it('gives empty results when no data is found', async () => {
     const s = await UNSWScraper.create({ state: mockStateManager });
     s.logging = false;
     s.scrapeTerm = jest.fn().mockImplementation(() => []);
-    await expect(s.scrape()).rejects.toThrow();
+    const result = await s.scrape();
+    expect(result?.map(r => r.campus)).toEqual(['unsw', 'unsw', 'unsw']);
+    expect(result?.map(r => r.courses)).toEqual([[], [], []]);
+    expect(result?.map(r => r.current)).toEqual([false, false, false]);
+  })
+
+  it('gives expected term results', async () => {
+    const s = await UNSWScraper.create({ state: mockStateManager });
+    s.logging = false;
+    s.scrapeTerm = jest.fn().mockImplementation(() => []);
+    const result = await s.scrape();
+    expect(result?.map(r => r.meta.term)).toEqual([1, 2, 3]);
   })
 })
 
