@@ -15,10 +15,10 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
     if (cacheFile) await scraper.cache.write(cacheFile);
 
     for (const term of data) {
-      writeTermData(scraper, outputPrefix, term);
+      await writeTermData(scraper, outputPrefix, term);
 
       if (term.current) {
-        writeTermData(scraper, outputPrefix, term, true);
+        await writeTermData(scraper, outputPrefix, term, true);
       }
     }
   } else {
