@@ -100,7 +100,7 @@ export class UNSWScraper extends CampusScraper {
 
     // Update data if additional data has changed
     const oldAdditionalHash = await this.state.get(this.campus, ADDITIONAL_HASH_KEY);
-    if (ADDITIONAL_DATA !== oldAdditionalHash) {
+    if (ADDITIONAL_DATA_HASH !== oldAdditionalHash) {
       return true;
     }
 
