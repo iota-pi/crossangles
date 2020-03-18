@@ -17,7 +17,7 @@ export interface CampusData {
 export abstract class CampusScraper {
   abstract readonly campus: string;
   maxRequests: number = 5;
-  logging = true;
+  logging = process.env.NODE_ENV !== 'test';
 
   protected abstract state: StateManager;
   cache?: HTMLCache;

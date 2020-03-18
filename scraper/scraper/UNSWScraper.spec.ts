@@ -11,7 +11,10 @@ const mockStateManager: StateManager = {
 } as any;
 
 describe('UNSWScraper', () => {
+  let s: UNSWScraper;
+
   beforeEach(async () => {
+    s = await UNSWScraper.create({ state: mockStateManager });
     cleanStateManager();
   })
 
@@ -23,9 +26,7 @@ describe('UNSWScraper', () => {
 
   it('gives consistent results', async () => {
     // Setup
-    const s = await UNSWScraper.create({ state: mockStateManager });
     s.maxFaculties = 3;
-    s.logging = false;
     s.cache = new HTMLCache();
     const cacheFile = './unsw-snapshot.json.br';
     await s.cache.load(cacheFile);
@@ -38,64 +39,43 @@ describe('UNSWScraper', () => {
     expect(courseData).toMatchSnapshot();
   })
 
-  it('skips terms with insufficient data', async () => {
-    const s = await UNSWScraper.create({ state: mockStateManager });
-    s.logging = false;
-
-    s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
-                            .mockImplementationOnce(async () => [courseData])
-                            .mockImplementationOnce(async () => []);
+  it('returns terms in ascending order', async () => {
+    s.scrapeTerm = jest.fn().mockImplementation(() => []);
     const result = await s.scrape();
-    const resultTerm = result?.map(t => t.meta.term);
-    expect(resultTerm).toEqual([1, 2, 3]);
-    const resultCurrent = result?.map(t => t.current);
-    expect(resultCurrent).toEqual([false, true, false]);
+    expect(result?.map(r => r.meta.term)).toEqual([1, 2, 3]);
   })
 
   it('picks latest term with sufficient data as current term', async () => {
-    const s = await UNSWScraper.create({ state: mockStateManager });
-    s.logging = false;
-
-    s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [courseData])
-                            .mockImplementationOnce(async () => [courseData])
-                            .mockImplementationOnce(async () => [courseData]);
+    s.scrapeTerm = jest.fn().mockImplementation(async () => [courseData])
     const result = await s.scrape();
-    const resultTerm = result?.map(t => t.meta.term);
-    expect(resultTerm).toEqual([1, 2, 3]);
     const resultCurrent = result?.map(t => t.current);
     expect(resultCurrent).toEqual([false, false, true]);
   })
 
-  it('can correctly pick first term as current term', async () => {
-    const s = await UNSWScraper.create({ state: mockStateManager });
-    s.logging = false;
+  it('skips terms with insufficient data', async () => {
+    s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [])
+                            .mockImplementationOnce(async () => [courseData])
+                            .mockImplementationOnce(async () => []);
+    const result = await s.scrape();
+    const resultCurrent = result?.map(t => t.current);
+    expect(resultCurrent).toEqual([false, true, false]);
+  })
 
+  it('can correctly pick first term as current term', async () => {
     s.scrapeTerm = jest.fn().mockImplementationOnce(async () => [courseData])
                             .mockImplementationOnce(async () => [])
                             .mockImplementationOnce(async () => []);
     const result = await s.scrape();
-    const resultTerm = result?.map(t => t.meta.term);
-    expect(resultTerm).toEqual([1, 2, 3]);
     const resultCurrent = result?.map(t => t.current);
     expect(resultCurrent).toEqual([true, false, false]);
   })
 
   it('gives empty results when no data is found', async () => {
-    const s = await UNSWScraper.create({ state: mockStateManager });
-    s.logging = false;
     s.scrapeTerm = jest.fn().mockImplementation(() => []);
     const result = await s.scrape();
     expect(result?.map(r => r.campus)).toEqual(['unsw', 'unsw', 'unsw']);
     expect(result?.map(r => r.courses)).toEqual([[], [], []]);
     expect(result?.map(r => r.current)).toEqual([false, false, false]);
-  })
-
-  it('gives expected term results', async () => {
-    const s = await UNSWScraper.create({ state: mockStateManager });
-    s.logging = false;
-    s.scrapeTerm = jest.fn().mockImplementation(() => []);
-    const result = await s.scrape();
-    expect(result?.map(r => r.meta.term)).toEqual([1, 2, 3]);
   })
 })
 
