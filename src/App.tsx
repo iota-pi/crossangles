@@ -32,6 +32,7 @@ import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
 import { fetchData } from './actions';
 import { CourseData } from './state/Course';
+import getCampus from './getCampus';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -143,6 +144,7 @@ class App extends Component<Props, State> {
       colours: this.props.colours,
       options: this.props.options,
       viewport: getScreenshotViewport(this.props.timetable),
+      campus: getCampus(window.location.hostname),
     };
 
     saveAsImage(imageData).then(success => {
