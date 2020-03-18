@@ -19,6 +19,7 @@ export interface Viewport {
 
 export interface SaveAsImageRequest extends SaveAsImageData {
   viewport: Viewport,
+  campus: string,
 }
 
 
