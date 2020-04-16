@@ -1,6 +1,7 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { LambdaResponder } from '../lambda-shared/LambdaResponder';
 import { screenshot } from './screenshot';
+import { saveForDebug } from './dumpDebugData';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const responder = new LambdaResponder(event);
@@ -47,6 +48,12 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const baseURI = event.headers.origin + '/timetable';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
+
+    try {
+      saveForDebug({ data });
+    } catch (error) {
+      console.error('failed to save debug info', error);
+    }
 
     const image = await screenshot(uri, viewport);
     return responder.getResponse({
