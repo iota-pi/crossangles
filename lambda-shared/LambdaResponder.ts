@@ -48,12 +48,15 @@ export class LambdaResponder {
     };
     if (this.originIsAllowed) {
       headers['Access-Control-Allow-Origin'] = this.origin;
+      headers['Access-Control-Allow-Headers'] = '*';
+      headers['Access-Control-Allow-Methods'] = '*';
     }
     return headers;
   }
 
   private checkOrigin = (origin: string): boolean => {
     const allowedOrigins = [
+      /^http:\/\/localhost:3000$/,
       /^https:\/\/([a-z0-9]+\.)?crossangles\.(app|com)$/,
       /^https:\/\/([a-f0-9]{24}--)?crossangles2.netlify.com$/,
     ];
