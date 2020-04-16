@@ -6,6 +6,11 @@ if [[ ! -d $1 ]]; then
   exit 1
 fi
 
+(
+  cd lambda-shared
+  NO_WATCH=1 npm test
+)
+
 cd $1
 (
   # Test and build
