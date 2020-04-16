@@ -232,37 +232,33 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
     rootClasses.push(classes.minimised);
   }
 
+  const courseLabel = course.metadata ? (
+    <a
+      href={course.metadata.website}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={classes.plainLink}
+    >
+      <span>{course.name}</span>
+      <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
+    </a>
+  ) : (
+    <span>{course.name}</span>
+  );
+
   return (
     <React.Fragment>
       <ListItem className={rootClasses.join(' ')}>
         <ListItemText>
-          {course.metadata ? (
-            <a
-              href={course.metadata.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes.plainLink}
-            >
-              <span>{course.name}</span>
-              <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
-            </a>
-          ) : (
-            <span>{course.name}</span>
-          )}
-
-          {course.description && (
+          {course.description ? (
             <Tooltip
               title={course.description}
               aria-hidden="true"
-              placement="right"
+              // placement="right"
             >
-              <span
-                className={classes.description}
-              >
-                what?
-              </span>
+              {courseLabel}
             </Tooltip>
-          )}
+          ) : courseLabel}
         </ListItemText>
 
         <div className={classes.marginRight}>
