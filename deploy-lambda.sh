@@ -15,6 +15,6 @@ cd $1
   # Apply infra changes
   (
     cd infra
-    terraform apply -auto-approve
+    terraform apply
   )
 )
