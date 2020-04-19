@@ -90,12 +90,18 @@ class TimetableContainer extends PureComponent<Props> {
     if (props.timetableData.version > timetable.version) {
       // TODO: is this going to be too slow?
       const { timetableData, courses } = props;
-      timetable = SessionManager.from(timetableData, courses);
 
-      return {
-        ...state,
-        timetable,
-      };
+      try {
+        timetable = SessionManager.from(timetableData, courses);
+
+        return {
+          ...state,
+          timetable,
+        };
+      } catch (error) {
+        console.error('An error occurred while generating timetable');
+        console.error(error);
+      }
     }
 
     return state;
