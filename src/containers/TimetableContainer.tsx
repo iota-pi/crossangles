@@ -88,10 +88,10 @@ class TimetableContainer extends PureComponent<Props> {
     // Update session manager if timetable data has been updated
     let timetable = state.timetable;
     if (props.timetableData.version > timetable.version) {
-      // TODO: is this going to be too slow?
       const { timetableData, courses } = props;
 
       try {
+        // TODO: is this going to be too slow?
         timetable = SessionManager.from(timetableData, courses);
 
         return {
