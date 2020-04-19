@@ -58,7 +58,8 @@ export class SessionManager {
   static from (data: SessionManagerData, courses: CourseMap): SessionManager {
     const sm = new SessionManager();
     const mapData: [SessionId, SessionPlacement][] = [];
-    for (const [_, [sid, s]] of data.map.entries()) {
+    for (const item of data.map.entries()) {
+      const [sid, s] = item[1];
       const course = courses[s.session.course];
       const placement = SessionPlacement.from(s, course);
       if (placement !== null) {
