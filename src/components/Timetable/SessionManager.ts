@@ -56,18 +56,21 @@ export class SessionManager {
   }
 
   static from (data: SessionManagerData, courses: CourseMap): SessionManager {
-    const sm = new SessionManager();
     const mapData: [SessionId, SessionPlacement][] = [];
+    const order: SessionId[] = [];
     for (const item of data.map.entries()) {
       const [sid, s] = item[1];
       const course = courses[s.session.course];
       const placement = SessionPlacement.from(s, course);
       if (placement !== null) {
         mapData.push([sid, placement]);
+        order.push(sid);
       }
     }
+
+    const sm = new SessionManager();
     sm.map = new Map(mapData);
-    sm._order = data.order;
+    sm._order = [];
     sm._version = data.version;
     sm._score = data.score;
     return sm;
