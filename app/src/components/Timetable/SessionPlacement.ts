@@ -45,7 +45,7 @@ export class SessionPlacement extends TimetablePlacement {
     // Get linked session
     const streamId = data.session.stream;
     const stream = course.streams.filter(s => getStreamId(course, s) === streamId)[0];
-    if (stream !== undefined) {
+    if (stream === undefined) {
       return null;
     }
 
