@@ -7,6 +7,7 @@ import { Action } from 'redux';
 export const ADD_COURSE = 'ADD_COURSE';
 export const REMOVE_COURSE = 'REMOVE_COURSE';
 export const TOGGLE_WEB_STREAM = 'TOGGLE_WEB_STREAM';
+
 export interface CourseAction extends Action {
   type: typeof ADD_COURSE | typeof REMOVE_COURSE | typeof TOGGLE_WEB_STREAM;
   course: CourseData;
@@ -38,6 +39,7 @@ export function toggleWebStream (course: CourseData): CourseAction {
 export const ADD_CUSTOM = 'ADD_CUSTOM';
 export const UPDATE_CUSTOM = 'UPDATE_CUSTOM';
 export const REMOVE_CUSTOM = 'REMOVE_CUSTOM';
+
 export interface SimpleCustomAction extends Action {
   type: typeof ADD_CUSTOM | typeof REMOVE_CUSTOM;
   custom: CourseData;
@@ -71,6 +73,7 @@ export function updateCustom (custom: CourseData): CustomAction {
 
 // Events
 export const TOGGLE_EVENT = 'TOGGLE_EVENT';
+
 export interface EventAction extends Action {
   type: typeof TOGGLE_EVENT;
   event: AdditionalEvent;
@@ -84,6 +87,7 @@ export function toggleEvent (event: AdditionalEvent): EventAction {
 }
 
 export const TOGGLE_SHOW_EVENTS = 'TOGGLE_SHOW_EVENTS';
+
 export interface ToggleShowEventsAction extends Action {
   type: typeof TOGGLE_SHOW_EVENTS;
   course: CourseId;
