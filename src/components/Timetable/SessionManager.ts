@@ -70,7 +70,7 @@ export class SessionManager {
 
     const sm = new SessionManager();
     sm.map = new Map(mapData);
-    sm._order = [];
+    sm._order = order;
     sm._version = data.version;
     sm._score = data.score;
     return sm;
