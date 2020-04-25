@@ -1,6 +1,6 @@
 import { colours } from './colours';
 import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA } from '../actions';
-import { baseState } from '../state';
+import { initialState } from '../state';
 import { ColourMap, COURSE_COLOURS } from '../state/Colours';
 import { CourseData } from '../state/Course';
 
@@ -9,7 +9,7 @@ const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 describe('colours reducer', () => {
   it('initialises correctly', () => {
     const result = colours(undefined, otherAction);
-    expect(result).toBe(baseState.colours);
+    expect(result).toBe(initialState.colours);
   })
 
   it('doesn\'t change on no-op actions', () => {
@@ -28,9 +28,9 @@ describe('colours reducer', () => {
       course: { code: 'b', name: '', streams: [], defaultColour: COURSE_COLOURS[3] },
     };
 
-    const prevState = { ...baseState.colours };
+    const prevState = { ...initialState.colours };
     let state = colours(prevState, action1);
-    expect(prevState).toEqual(baseState.colours);
+    expect(prevState).toEqual(initialState.colours);
     state = colours(state, action2);
 
     expect(state['a']).toBe(COURSE_COLOURS[2]);
@@ -38,7 +38,7 @@ describe('colours reducer', () => {
   })
 
   it('picks non-duplicate colours for ADD_COURSE', () => {
-    let state = baseState.colours;
+    let state = initialState.colours;
     for (let i = 0; i < COURSE_COLOURS.length; ++i) {
       const action: CourseAction = {
         type: ADD_COURSE,
@@ -75,7 +75,7 @@ describe('colours reducer', () => {
   })
 
   it('chooses non-duplicate colours for SET_COLOUR', () => {
-    let currentState = baseState.colours;
+    let currentState = initialState.colours;
     for (let i = 0; i < COURSE_COLOURS.length; ++i) {
       const action: ColourAction = {
         type: SET_COLOUR,
@@ -123,9 +123,9 @@ describe('colours reducer', () => {
       courses,
     };
 
-    const prevState = { ...baseState.colours };
+    const prevState = { ...initialState.colours };
     const state = colours(prevState, action);
-    expect(prevState).toEqual(baseState.colours);
+    expect(prevState).toEqual(initialState.colours);
 
     for (let i = 0; i < COURSE_COLOURS.length - 2; ++i) {
       expect(state['' + i]).toBe(COURSE_COLOURS[i]);

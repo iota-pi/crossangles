@@ -1,15 +1,15 @@
 import { createTransform } from 'redux-persist';
-import { StateHistory } from './state/StateHistory';
+import { HistoryData } from './state/StateHistory';
 
 export const historyTransform = createTransform(
-  (inboundState: StateHistory) => {
+  (inboundState: HistoryData) => {
     return {
       past: [],
       present: inboundState.present,
       future: [],
     };
   },
-  (outboundState: StateHistory) => {
+  (outboundState: HistoryData) => {
     return outboundState;
   },
   { whitelist: ['history'] },

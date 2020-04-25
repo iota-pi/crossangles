@@ -1,23 +1,23 @@
 import { events, options, hiddenEvents } from './commitments';
 import { ClearNoticeAction, CLEAR_NOTICE, EventAction, TOGGLE_EVENT, CourseAction, ADD_COURSE, ToggleOptionAction, TOGGLE_OPTION, ToggleShowEventsAction, TOGGLE_SHOW_EVENTS } from '../actions';
-import { baseState } from '../state';
+import { initialState } from '../state';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 
 describe('events reducer', () => {
   it('initialises correctly', () => {
     const state = events(undefined, otherAction);
-    expect(state).toEqual(baseState.events);
+    expect(state).toEqual(initialState.events);
   })
 
   it('doesn\'t change on no-op actions', () => {
-    const state = Object.freeze([...baseState.events]);
+    const state = Object.freeze([...initialState.events]);
     const result = events(state, otherAction);
     expect(result).toBe(state);
   })
 
   it('allows toggling one event on', () => {
-    const state = Object.freeze([...baseState.events]);
+    const state = Object.freeze([...initialState.events]);
     const event = { id: 'TEST9731~abc', name: 'abc' };
     const action: EventAction = {
       type: TOGGLE_EVENT,
@@ -143,11 +143,11 @@ describe('events reducer', () => {
 describe('options reducer', () => {
   it('initialises correctly', () => {
     const state = options(undefined, otherAction);
-    expect(state).toEqual(baseState.options);
+    expect(state).toEqual(initialState.options);
   })
 
   it('doesn\'t change on no-op actions', () => {
-    const state = Object.freeze({ ...baseState.options });
+    const state = Object.freeze({ ...initialState.options });
     const result = options(state, otherAction);
     expect(result).toBe(state);
   })
@@ -186,11 +186,11 @@ describe('options reducer', () => {
 describe('hiddenEvents reducer', () => {
   it('initialises correctly', () => {
     const state = hiddenEvents(undefined, otherAction);
-    expect(state).toEqual(baseState.hiddenEvents);
+    expect(state).toEqual(initialState.hiddenEvents);
   })
 
   it('doesn\'t change on no-op actions', () => {
-    const state = Object.freeze([...baseState.hiddenEvents]);
+    const state = Object.freeze([...initialState.hiddenEvents]);
     const result = hiddenEvents(state, otherAction);
     expect(result).toBe(state);
   })

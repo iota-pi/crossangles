@@ -1,7 +1,8 @@
 import { getTimetableState } from '../reducers';
-import { baseState, TimetableState } from '.';
+import { initialState, TimetableHistoryState } from '.';
 import { CourseMap } from './Course';
-import { undo, redo, push, StateHistory } from './StateHistory';
+import { undo, redo, push, HistoryData } from './StateHistory';
+import SessionManager from '../components/Timetable/SessionManager';
 
 const courses: CourseMap = {
   a: { code: 'a', name: '', streams: [{ component: 'e', enrols: [0, 0], times: [] }], isAdditional: true },
@@ -9,8 +10,8 @@ const courses: CourseMap = {
   c: { code: 'c', name: '', streams: [] },
   d: { code: 'd', name: '', streams: [] },
 };
-const timetableStates: TimetableState[] = [
-  getTimetableState(baseState),
+const timetableStates: TimetableHistoryState[] = [
+  getTimetableState(initialState),
   {
     courses,
     additional: [],
@@ -19,7 +20,7 @@ const timetableStates: TimetableState[] = [
     custom: [],
     events: [],
     options: {},
-    timetable: baseState.timetable,
+    timetable: new SessionManager().data,
     webStreams: [],
   },
   {
@@ -30,7 +31,7 @@ const timetableStates: TimetableState[] = [
     custom: [],
     events: [],
     options: {},
-    timetable: baseState.timetable,
+    timetable: new SessionManager().data,
     webStreams: [],
   },
   {
@@ -39,9 +40,9 @@ const timetableStates: TimetableState[] = [
     chosen: ['b'],
     colours: {},
     custom: [],
-    events: ['e'],
+    events: [{ id: 'e', name: 'f' }],
     options: {},
-    timetable: baseState.timetable,
+    timetable: new SessionManager().data,
     webStreams: [],
   },
   {
@@ -50,9 +51,9 @@ const timetableStates: TimetableState[] = [
     chosen: [],
     colours: {},
     custom: [],
-    events: ['e'],
+    events: [{ id: 'e', name: 'f' }],
     options: {},
-    timetable: baseState.timetable,
+    timetable: new SessionManager().data,
     webStreams: [],
   },
 ];
@@ -63,8 +64,8 @@ describe('test history utilities', () => {
     const past = Object.freeze([...timetableStates.slice(0, 1)]);
     const present = timetableStates[1];
     const future = Object.freeze([...timetableStates.slice(2)]);
-    const state = <StateHistory>Object.freeze({ past, present, future });
-    const expected: StateHistory = {
+    const state = <HistoryData>Object.freeze({ past, present, future });
+    const expected: HistoryData = {
       past: [],
       present: timetableStates[0],
       future: timetableStates.slice(1),
@@ -76,9 +77,9 @@ describe('test history utilities', () => {
   test('undo works correctly with empty future', () => {
     const past = Object.freeze([...timetableStates.slice(0, 4)]);
     const present = timetableStates[4];
-    const future: TimetableState[] = [];
-    const state = <StateHistory>Object.freeze({ past, present, future });
-    const expected: StateHistory = {
+    const future: TimetableHistoryState[] = [];
+    const state = <HistoryData>Object.freeze({ past, present, future });
+    const expected: HistoryData = {
       past: timetableStates.slice(0, 3),
       present: timetableStates[3],
       future: timetableStates.slice(4),
@@ -92,8 +93,8 @@ describe('test history utilities', () => {
     const past = Object.freeze([...timetableStates.slice(0, 3)]);
     const present = timetableStates[3];
     const future = Object.freeze([...timetableStates.slice(4)]);
-    const state = <StateHistory>Object.freeze({ past, present, future });
-    const expected: StateHistory = {
+    const state = <HistoryData>Object.freeze({ past, present, future });
+    const expected: HistoryData = {
       past: timetableStates.slice(0, 4),
       present: timetableStates[4],
       future: [],
@@ -103,11 +104,11 @@ describe('test history utilities', () => {
   })
 
   test('redo works correctly with empty past', () => {
-    const past: TimetableState[] = [];
+    const past: TimetableHistoryState[] = [];
     const present = timetableStates[0];
     const future = Object.freeze([...timetableStates.slice(1)]);
-    const state = <StateHistory>Object.freeze({ past, present, future });
-    const expected: StateHistory = {
+    const state = <HistoryData>Object.freeze({ past, present, future });
+    const expected: HistoryData = {
       past: timetableStates.slice(0, 1),
       present: timetableStates[1],
       future: timetableStates.slice(2),
@@ -118,9 +119,9 @@ describe('test history utilities', () => {
 
   // Push
   const firstState = Object.freeze(timetableStates[0])
-  const history: StateHistory = { past: [], present: firstState, future: [] };
+  const history: HistoryData = { past: [], present: firstState, future: [] };
 
-  const doPushTest = (nextState: TimetableState) => {
+  const doPushTest = (nextState: TimetableHistoryState) => {
     const originalHistory = { ...history };
     const result = push(history, nextState);
     expect(result).not.toBe(history);
@@ -136,53 +137,53 @@ describe('test history utilities', () => {
   })
 
   test('push history changes when additional courses change', () => {
-    const nextState: TimetableState = { ...firstState, additional: [ ...firstState.additional ] };
+    const nextState: TimetableHistoryState = { ...firstState, additional: [ ...firstState.additional ] };
     doPushTest(nextState);
   })
 
   test('push history changes when chosen courses change', () => {
-    const nextState: TimetableState = { ...firstState, chosen: [ ...firstState.chosen ] };
+    const nextState: TimetableHistoryState = { ...firstState, chosen: [ ...firstState.chosen ] };
     doPushTest(nextState);
   })
 
   test('push history changes when custom courses change', () => {
-    const nextState: TimetableState = { ...firstState, custom: [ ...firstState.custom ] };
+    const nextState: TimetableHistoryState = { ...firstState, custom: [ ...firstState.custom ] };
     doPushTest(nextState);
   })
 
   test('push history changes when events change', () => {
-    const nextState: TimetableState = { ...firstState, events: [ ...firstState.events ] };
+    const nextState: TimetableHistoryState = { ...firstState, events: [ ...firstState.events ] };
     doPushTest(nextState);
   })
 
   test('push history changes when webStreams change', () => {
-    const nextState: TimetableState = { ...firstState, webStreams: [ ...firstState.webStreams ] };
+    const nextState: TimetableHistoryState = { ...firstState, webStreams: [ ...firstState.webStreams ] };
     doPushTest(nextState);
   })
 
   test('push history changes when options change', () => {
-    const nextState: TimetableState = { ...firstState, options: { ...firstState.options } };
+    const nextState: TimetableHistoryState = { ...firstState, options: { ...firstState.options } };
     doPushTest(nextState);
   })
 
   test('push history changes when colours change', () => {
-    const nextState: TimetableState = { ...firstState, colours: { ...firstState.colours } };
+    const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
     doPushTest(nextState);
   })
 
   test('push history changes when colours change', () => {
-    const nextState: TimetableState = { ...firstState, colours: { ...firstState.colours } };
+    const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
     doPushTest(nextState);
   })
 
   test('push history changes when colours change', () => {
-    const nextState: TimetableState = { ...firstState, colours: { ...firstState.colours } };
+    const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
     doPushTest(nextState);
   })
 
   test('push clears future array', () => {
-    const newHistory: StateHistory = { ...history, future: timetableStates.slice(1) };
-    const nextState: TimetableState = { ...firstState, colours: { ...firstState.colours } };
+    const newHistory: HistoryData = { ...history, future: timetableStates.slice(1) };
+    const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
     const result = push(newHistory, nextState);
     expect(result.future).toEqual([]);
     expect(result.future).not.toEqual(newHistory.future);

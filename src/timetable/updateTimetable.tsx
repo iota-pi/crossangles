@@ -9,6 +9,7 @@ import { linkStream } from '../state/Stream';
 import { LinkedSession } from '../state/Session';
 import { Options } from '../state/Options';
 import { AdditionalEvent } from '../state/Events';
+import { Meta } from '../state/Meta';
 import { GeneticSearchOptionalConfig } from './GeneticSearch';
 import SessionManager from '../components/Timetable/SessionManager';
 import { setNotice, setTimetable, setSuggestionScore, clearNotice, toggleOption } from '../actions';
@@ -30,6 +31,7 @@ export interface Selection {
   events: AdditionalEvent[],
   webStreams: CourseId[],
   options: Options,
+  meta: Meta,
 }
 
 export interface TimetableSearchConfig {
@@ -48,7 +50,7 @@ export const updateTimetable = async (
   args: UpdateTimetableArgs,
 ) => {
   let { dispatch, sessionManager, selection, searchConfig, cleanUpdate } = args;
-  const { chosen, custom, additional, events, webStreams, options } = selection;
+  const { chosen, custom, additional, events, webStreams, options, meta } = selection;
   const courses = [ ...chosen, ...custom, ...additional ];
   let fixedSessions: LinkedSession[] = [];
   if (!cleanUpdate) {
@@ -70,7 +72,7 @@ export const updateTimetable = async (
     await dispatch(setNotice('There was a problem generating a timetable'));
   } else {
     sessionManager.update(newTimetable.timetable, fixedSessions, newTimetable.score);
-    await dispatch(setTimetable(sessionManager.data));
+    await dispatch(setTimetable(sessionManager.data, meta));
 
     await notifyUnplaced(args, newTimetable.unplaced || []);
 

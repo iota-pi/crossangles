@@ -17,3 +17,7 @@ export interface MinistryMeta {
   signupURL: string,
   signupValidFor: YearAndTerm[],
 }
+
+export const getCurrentTerm = (meta: YearAndTerm) => {
+  return `${meta.year}~${meta.term}`;
+}

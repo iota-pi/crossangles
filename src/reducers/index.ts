@@ -1,15 +1,16 @@
 import { combineReducers } from 'redux';
 import { meta } from "./meta";
-import { RootState, baseState, TimetableState } from '../state';
+import { RootState, initialState, TimetableHistoryState } from '../state';
 import { courses, chosen, custom, additional } from './courses';
 import { events, options, hiddenEvents } from './commitments';
-import { timetable, suggestionScore } from './timetable';
+import { timetables, suggestionScore } from './timetables';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
 import { UNDO, REDO } from '../actions/history';
 import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA, AllActions } from '../actions';
 import { undo, redo, push } from '../state/StateHistory';
+import { getCurrentTimetable } from '../state/Timetable';
 
 type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<NoHistoryState>({
@@ -20,7 +21,7 @@ const basicReducer = combineReducers<NoHistoryState>({
   chosen,
   events,
   options,
-  timetable,
+  timetables,
   suggestionScore,
   colours,
   webStreams,
@@ -35,7 +36,7 @@ const removeHistory = (state: RootState): NoHistoryState | undefined => {
   return state;
 }
 
-export const getTimetableState = <T extends TimetableState>(state: T): TimetableState => {
+export const getTimetableState = (state: NoHistoryState): TimetableHistoryState => {
   const {
     courses,
     custom,
@@ -43,10 +44,10 @@ export const getTimetableState = <T extends TimetableState>(state: T): Timetable
     chosen,
     events,
     options,
-    timetable,
     colours,
     webStreams,
   } = state;
+  const timetable = getCurrentTimetable(state);
   return {
     courses,
     custom,
@@ -61,14 +62,15 @@ export const getTimetableState = <T extends TimetableState>(state: T): Timetable
 }
 
 const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
-  state = state || baseState;
+  state = state || initialState;
   const nextState = basicReducer(removeHistory(state), action);
   let history = state.history;
+  const nextTimetable = getCurrentTimetable(nextState);
 
   switch (action.type) {
     case UNDO:
       history = undo(history);
-      history.present.timetable.version = nextState.timetable.version + 1;
+      history.present.timetable.version = nextTimetable.version + 1;
       return {
         ...nextState,
         ...history.present,
@@ -76,7 +78,7 @@ const rootReducer = (state: RootState | undefined, action: AllActions): RootStat
       };
     case REDO:
       history = redo(history);
-      history.present.timetable.version = nextState.timetable.version + 1;
+      history.present.timetable.version = nextTimetable.version + 1;
       return {
         ...nextState,
         ...history.present,
