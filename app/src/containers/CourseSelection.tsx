@@ -33,6 +33,7 @@ import { ColourMap, Colour } from '../state/Colours';
 import { ClassTime } from '../state/Stream';
 import { updateTimetable } from '../timetable/updateTimetable';
 import { Meta } from '../state/Meta';
+import { getCurrentTimetable } from '../state/Timetable';
 
 const styles = (theme: Theme) => createStyles({
   slightSpaceAbove: {
@@ -221,11 +222,11 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private updateTimetable = async (sessionManager: SessionManager) => {
-    const { chosen, additional, custom, events, options, webStreams } = this.props;
+    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
-      selection: { chosen, additional, custom, events, options, webStreams },
+      selection: { chosen, additional, custom, events, options, webStreams, meta },
       searchConfig: {
         timeout: 100,
       },
@@ -242,7 +243,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     additional: state.additional.map(c => state.courses[c]).sort(courseSort),
     events: state.events,
     options: state.options,
-    timetable: state.timetable,
+    timetable: getCurrentTimetable(state),
     colours: state.colours,
     webStreams: state.webStreams,
     hiddenEvents: state.hiddenEvents,

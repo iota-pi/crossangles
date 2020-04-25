@@ -33,6 +33,7 @@ import { ColourMap } from './state/Colours';
 import { fetchData } from './actions';
 import { CourseData } from './state/Course';
 import getCampus from './getCampus';
+import { getCurrentTimetable } from './state/Timetable';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -192,7 +193,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     notice: state.notice,
     additional: state.additional.map(cid => state.courses[cid]),
     meta: state.meta,
-    timetable: state.timetable,
+    timetable: getCurrentTimetable(state),
     colours: state.colours,
     options: state.options,
   };

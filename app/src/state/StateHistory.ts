@@ -1,12 +1,12 @@
-import { TimetableState } from ".";
+import { TimetableHistoryState } from '.';
 
-export interface StateHistory {
-  past: TimetableState[],
-  present: TimetableState,
-  future: TimetableState[],
+export interface HistoryData {
+  past: TimetableHistoryState[],
+  present: TimetableHistoryState,
+  future: TimetableHistoryState[],
 }
 
-export const undo = (history: StateHistory): StateHistory => {
+export const undo = (history: HistoryData): HistoryData => {
   const { past, present, future } = history;
   return {
     past: [...past.slice(0, past.length - 1)],
@@ -15,7 +15,7 @@ export const undo = (history: StateHistory): StateHistory => {
   };
 }
 
-export const redo = (history: StateHistory): StateHistory => {
+export const redo = (history: HistoryData): HistoryData => {
   const { past, present, future } = history;
   return {
     past: [...past, present],
@@ -24,7 +24,7 @@ export const redo = (history: StateHistory): StateHistory => {
   };
 }
 
-export const push = (history: StateHistory, next: TimetableState): StateHistory => {
+export const push = (history: HistoryData, next: TimetableHistoryState): HistoryData => {
   const { past, present } = history;
 
   if (noStateChange(present, next)) {
@@ -38,7 +38,7 @@ export const push = (history: StateHistory, next: TimetableState): StateHistory 
   };
 }
 
-const noStateChange = (current: TimetableState, next: TimetableState) => {
+const noStateChange = (current: TimetableHistoryState, next: TimetableHistoryState) => {
   if (current.custom !== next.custom) {
     return false;
   }

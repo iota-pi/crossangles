@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../state';
-import { StateHistory } from '../state/StateHistory';
+import { HistoryData } from '../state/StateHistory';
 import { WithDispatch } from '../typeHelpers';
 
 // Styles
@@ -22,6 +22,8 @@ import SessionManager, { SessionManagerData } from '../components/Timetable/Sess
 import { setTimetable } from '../actions';
 import { undoTimetable, redoTimetable } from '../actions/history';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
+import { getCurrentTimetable } from '../state/Timetable';
+import { Meta } from '../state/Meta';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -42,8 +44,9 @@ export interface StateProps {
   colours: ColourMap,
   webStreams: CourseId[],
   timetableData: SessionManagerData,
-  timetableHistory: StateHistory,
+  timetableHistory: HistoryData,
   suggestionScore: number | null,
+  meta: Meta,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -124,14 +127,14 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   private handleUpdate = async () => {
-    const { chosen, additional, custom, events, options, webStreams } = this.props;
+    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
 
     this.setState({ isUpdating: true });
     try {
       await updateTimetable({
         dispatch: this.props.dispatch,
         sessionManager: new SessionManager(this.state.timetable),
-        selection: { chosen, additional, custom, events, options, webStreams },
+        selection: { chosen, additional, custom, events, options, webStreams, meta },
         cleanUpdate: true,
         searchConfig: {
           timeout: 1000,
@@ -144,10 +147,10 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   private recommendTimetable = async () => {
-    const { chosen, additional, custom, events, options, webStreams } = this.props;
+    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
     recommendTimetable(
       this.props.dispatch,
-      { chosen, additional, custom, events, options, webStreams },
+      { chosen, additional, custom, events, options, webStreams, meta },
     );
   }
 
@@ -161,7 +164,7 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   private async handleTimetableCallback (timetable: SessionManagerData) {
-    await this.props.dispatch(setTimetable(timetable));
+    await this.props.dispatch(setTimetable(timetable, this.props.meta));
     this.recommendTimetable();
   }
 }
@@ -176,9 +179,10 @@ const mapStateToProps = (state: RootState): StateProps => {
     options: state.options,
     colours: state.colours,
     webStreams: state.webStreams,
-    timetableData: state.timetable,
+    timetableData: getCurrentTimetable(state),
     timetableHistory: state.history,
     suggestionScore: state.suggestionScore,
+    meta: state.meta,
   };
 }
 

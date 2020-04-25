@@ -1,6 +1,6 @@
 import { notice } from './notice';
 import { ClearNoticeAction, CLEAR_NOTICE, SetNoticeAction, SET_NOTICE, CourseAction, TOGGLE_WEB_STREAM } from '../actions';
-import { baseState } from '../state';
+import { initialState } from '../state';
 import { Notice } from '../state/Notice';
 
 const otherAction: CourseAction = { type: TOGGLE_WEB_STREAM, course: { code: '', name: '', streams: [] } };
@@ -8,12 +8,12 @@ const otherAction: CourseAction = { type: TOGGLE_WEB_STREAM, course: { code: '',
 describe('notice reducer', () => {
   it('initialises correctly', () => {
     const state = notice(undefined, otherAction);
-    expect(state).toEqual(baseState.notice);
+    expect(state).toEqual(initialState.notice);
   })
 
   it('doesn\'t change on no-op actions when null', () => {
-    const result = notice(baseState.notice, otherAction);
-    expect(result).toBe(baseState.notice);
+    const result = notice(initialState.notice, otherAction);
+    expect(result).toBe(initialState.notice);
   })
 
   it('doesn\'t change on no-op actions', () => {

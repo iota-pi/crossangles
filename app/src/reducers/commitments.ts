@@ -4,7 +4,7 @@ import {
   TOGGLE_OPTION,
   TOGGLE_SHOW_EVENTS,
 } from '../actions/selection';
-import { baseState } from '../state';
+import { initialState } from '../state';
 import { Options } from '../state/Options';
 import { CourseId } from '../state/Course';
 import { AllActions } from '../actions';
@@ -41,7 +41,7 @@ export function events (state: readonly AdditionalEvent[] = [], action: AllActio
 };
 
 export function options (
-  state: Options = baseState.options,
+  state: Options = initialState.options,
   action: AllActions,
 ): Options {
   switch (action.type) {
@@ -56,7 +56,7 @@ export function options (
 };
 
 export function hiddenEvents (
-  state: readonly CourseId[] = baseState.hiddenEvents,
+  state: readonly CourseId[] = initialState.hiddenEvents,
   action: AllActions,
 ): CourseId[] {
   switch (action.type) {

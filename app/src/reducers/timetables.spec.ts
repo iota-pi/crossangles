@@ -1,49 +1,46 @@
-import { timetable, suggestionScore } from './timetable';
-import { ClearNoticeAction, CLEAR_NOTICE, SET_META_DATA, MetaAction, UPDATE_SESSION_MANAGER, SessionManagerAction, UPDATE_SUGGESTED_TIMETABLE, SuggestionAction } from '../actions';
-import { baseState } from '../state';
-import { Meta } from '../state/Meta';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import SessionPlacement from '../components/Timetable/SessionPlacement';
+import { timetables, suggestionScore } from './timetables';
+import { ClearNoticeAction, CLEAR_NOTICE, UPDATE_SESSION_MANAGER, SessionManagerAction, UPDATE_SUGGESTED_TIMETABLE, SuggestionAction } from '../actions';
+import { initialState } from '../state';
+import SessionManager from '../components/Timetable/SessionManager';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 
-describe('timetable reducer', () => {
+describe('timetables reducer', () => {
   it('initialises correctly', () => {
-    const state = timetable(undefined, otherAction);
-    expect(state).toEqual(baseState.timetable);
+    const state = timetables(undefined, otherAction);
+    expect(state).toEqual(initialState.timetables);
   })
 
   it('doesn\'t change on no-op actions', () => {
-    const state = { ...baseState.timetable };
-    const result = timetable(state, otherAction);
+    const state = { ...initialState.timetables };
+    const result = timetables(state, otherAction);
     expect(result).toBe(state);
-    expect(state).toEqual(baseState.timetable);
+    expect(state).toEqual(initialState.timetables);
   })
 
   it('can be set', () => {
-    const initialTimetable = { ...baseState.timetable };
+    const initialTimetable = { ...initialState.timetables };
     const s = new SessionManager();
     s.update([], [], 10);
-    const newData = s.data;
     const action: SessionManagerAction = {
       type: UPDATE_SESSION_MANAGER,
-      sessionManager: newData,
+      sessionManager: s.data,
+      term: 'a',
     };
-    const state = timetable(initialTimetable, action);
-    expect(initialTimetable).toEqual(baseState.timetable);
-    expect(state).toBe(newData);
-    expect(state).toEqual(s.data);
+    const state = timetables(initialTimetable, action);
+    expect(initialTimetable).toEqual(initialState.timetables);
+    expect(state).toEqual({ 'a': s.data });
   })
 })
 
 describe('suggestionScore reducer', () => {
   it('initialises correctly', () => {
     const state = suggestionScore(undefined, otherAction);
-    expect(state).toEqual(baseState.suggestionScore);
+    expect(state).toEqual(initialState.suggestionScore);
   })
 
   it('doesn\'t change on no-op actions', () => {
-    const states = [baseState.suggestionScore, null, 0, -1, 1000];
+    const states = [initialState.suggestionScore, null, 0, -1, 1000];
     for (const state of states) {
       const result = suggestionScore(state, otherAction);
       expect(result).toBe(state);
