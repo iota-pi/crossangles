@@ -28,7 +28,7 @@ export interface Props extends WithStyles<typeof styles> {
   history: HistoryData,
   improvementScore: number,
   isUpdating: boolean,
-  disabled: boolean,
+  timetableIsEmpty: boolean,
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
@@ -39,7 +39,7 @@ export const TimetableControls = ({
   history,
   improvementScore,
   isUpdating,
-  disabled,
+  timetableIsEmpty,
   onUndo,
   onRedo,
   onUpdate,
@@ -59,7 +59,7 @@ export const TimetableControls = ({
         <IconButton
           onClick={onUndo}
           color="primary"
-          disabled={disabled || history.past.length === 0}
+          disabled={history.past.length === 0}
           data-cy="undo-button"
         >
           <Undo />
@@ -69,7 +69,7 @@ export const TimetableControls = ({
         <IconButton
           onClick={onRedo}
           color="primary"
-          disabled={disabled || history.future.length === 0}
+          disabled={history.future.length === 0}
           data-cy="redo-button"
         >
           <Redo />
@@ -78,7 +78,7 @@ export const TimetableControls = ({
       {onUpdate && (
         <IconButton
           onClick={!isUpdating ? onUpdate : undefined}
-          disabled={disabled}
+          disabled={timetableIsEmpty}
           className={updateClass}
           data-cy="update-button"
         >
