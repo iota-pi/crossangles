@@ -9,8 +9,10 @@ import { webStreams } from './webStreams';
 import { notice } from './notice';
 import { UNDO, REDO } from '../actions/history';
 import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA, AllActions } from '../actions';
-import { undo, redo, push } from '../state/StateHistory';
+import { undo, redo, push, HistoryData } from '../state/StateHistory';
 import { getCurrentTimetable } from '../state/Timetable';
+import { getCurrentTerm } from '../state/Meta';
+import { SessionManagerData } from '../components/Timetable/SessionManager';
 
 type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<NoHistoryState>({
@@ -61,43 +63,43 @@ export const getTimetableState = (state: NoHistoryState): TimetableHistoryState 
   };
 }
 
+function getNextState(history: HistoryData, nextTimetable: SessionManagerData, nextState: NoHistoryState): RootState {
+  const { timetable, ...otherHistory } = history.present;
+  timetable.version = nextTimetable.version + 1;
+  return {
+    ...nextState,
+    ...otherHistory,
+    timetables: { ...nextState.timetables, [getCurrentTerm(nextState.meta)]: timetable },
+    history,
+  };
+}
+
 const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
   state = state || initialState;
   const nextState = basicReducer(removeHistory(state), action);
   let history = state.history;
   const nextTimetable = getCurrentTimetable(nextState);
 
-  switch (action.type) {
-    case UNDO:
-      history = undo(history);
-      history.present.timetable.version = nextTimetable.version + 1;
-      return {
-        ...nextState,
-        ...history.present,
-        history,
-      };
-    case REDO:
-      history = redo(history);
-      history.present.timetable.version = nextTimetable.version + 1;
-      return {
-        ...nextState,
-        ...history.present,
-        history,
-      };
-    case UPDATE_SESSION_MANAGER:
-      history = push(history, getTimetableState(nextState));
-      return {
-        ...nextState,
-        history,
-      };
-    case SET_COURSE_DATA:
-      return {
-        ...nextState,
-        history: {
-          ...history,
-          present: getTimetableState(nextState),
-        }
-      };
+  if (action.type === UNDO) {
+    history = undo(history);
+    return getNextState(history, nextTimetable, nextState);
+  } else if (action.type === REDO) {
+    history = redo(history);
+    return getNextState(history, nextTimetable, nextState);
+  } else if (action.type === UPDATE_SESSION_MANAGER) {
+    history = push(history, getTimetableState(nextState));
+    return {
+      ...nextState,
+      history,
+    };
+  } else if (action.type === SET_COURSE_DATA) {
+    return {
+      ...nextState,
+      history: {
+        ...history,
+        present: getTimetableState(nextState),
+      },
+    };
   }
 
   return {
