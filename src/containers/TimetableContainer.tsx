@@ -69,7 +69,7 @@ class TimetableContainer extends PureComponent<Props> {
       <div className={classes.spaceAbove}>
         <TimetableControls
           history={this.props.timetableHistory}
-          disabled={this.props.timetableData.order.length === 0}
+          timetableIsEmpty={this.props.timetableData.order.length === 0}
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
