@@ -22,14 +22,15 @@ describe('timetables reducer', () => {
     const initialTimetable = { ...initialState.timetables };
     const s = new SessionManager();
     s.update([], [], 10);
+    const term = 'a';
     const action: SessionManagerAction = {
       type: UPDATE_SESSION_MANAGER,
       sessionManager: s.data,
-      term: 'a',
+      term,
     };
     const state = timetables(initialTimetable, action);
     expect(initialTimetable).toEqual(initialState.timetables);
-    expect(state).toEqual({ 'a': s.data });
+    expect(state[term]).toEqual(s.data);
   })
 })
 
