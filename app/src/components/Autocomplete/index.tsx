@@ -14,9 +14,21 @@ import DropdownIndicator from './DropdownIndicator';
 import Menu from './Menu';
 import { Option, NoOptionsMessage } from './Option';
 import { InputActionMeta } from 'react-select/lib/types';
+import { TextFieldProps } from '@material-ui/core/TextField';
+import Search from '@material-ui/icons/Search';
 
 
 const styles = (theme: Theme) => createStyles({
+  root: {
+    display: 'flex',
+  },
+  iconContainer: {
+    marginTop: theme.spacing(1.5),
+    padding: theme.spacing(1),
+  },
+  selectContainer: {
+    flexGrow: 1,
+  },
   input: {
     display: 'flex',
     padding: 0,
@@ -90,6 +102,8 @@ export interface State {
 const DEFAULT_MAX_ITEMS = 10;
 
 class Autocomplete extends PureComponent<Props, State> {
+  inputRef = React.createRef<any>();
+
   constructor (props: Props) {
     super(props);
 
@@ -113,41 +127,52 @@ class Autocomplete extends PureComponent<Props, State> {
   }
 
   render () {
+    const classes = this.props.classes;
     const separator = this.props.separator || ' — ';
 
     return (
-      <Select
-        components={this.components}
-        onChange={this.handleChange as (course: any) => void}
-        onInputChange={this.handleInputChange}
-        onFocus={this.handleFocus}
-        onBlur={this.handleBlur}
-        onMenuOpen={this.handleMenuOpen}
-        onMenuClose={this.handleMenuClose}
-        options={this.options}
-        filterOption={() => true}
-        value={null}
-        label={null}
-        inputValue={this.state.search}
-        noOptionsMessage={() => 'No matching courses found'}
-        autoFocus
-        classes={this.props.classes}
-        id="course-selection-autocomplete"
-        TextFieldProps={{
-          label: 'Select your courses…',
-          value: this.state.search,
-          placeholder: 'COMP1511'
-        }}
-        OptionProps={{
-          search: this.state.search,
-          onLoadMoreItems: this.handleLoadMoreItems,
-          separator,
-        }}
-        DropdownIndicatorProps={{
-          open: this.state.menuOpen,
-          focused: this.state.focused,
-        }}
-      />
+      <div className={classes.root}>
+        <div className={classes.iconContainer} onClick={this.focusInput}>
+          <Search color={this.state.focused ? "primary" : undefined} />
+        </div>
+
+        <div className={classes.selectContainer}>
+          <Select
+            ref={this.inputRef}
+            components={this.components}
+            onChange={this.handleChange as (course: any) => void}
+            onInputChange={this.handleInputChange}
+            onFocus={this.handleFocus}
+            onBlur={this.handleBlur}
+            onMenuOpen={this.handleMenuOpen}
+            onMenuClose={this.handleMenuClose}
+            options={this.options}
+            filterOption={() => true}
+            value={null}
+            label={null}
+            inputValue={this.state.search}
+            noOptionsMessage={() => 'No matching courses found'}
+            autoFocus
+            menuIsOpen={this.state.menuOpen}
+            classes={this.props.classes}
+            id="course-selection-autocomplete"
+            TextFieldProps={{
+              label: 'Tap to select your courses…',
+              value: this.state.search,
+              placeholder: 'COMP1511',
+            } as TextFieldProps}
+            OptionProps={{
+              search: this.state.search,
+              onLoadMoreItems: this.handleLoadMoreItems,
+              separator,
+            }}
+            DropdownIndicatorProps={{
+              open: this.state.menuOpen,
+              focused: this.state.focused,
+            }}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -170,8 +195,8 @@ class Autocomplete extends PureComponent<Props, State> {
   }
 
   private handleBlur = () => {
-    this.resetMaxItems();
     this.setState({ focused: false });
+    this.resetMaxItems();
   }
 
   private handleMenuOpen = () => {
@@ -191,6 +216,13 @@ class Autocomplete extends PureComponent<Props, State> {
     this.setState({
       currentMaxItems: this.props.maxItems || DEFAULT_MAX_ITEMS,
     });
+  }
+
+  private focusInput = () => {
+    if (this.inputRef.current) {
+      this.inputRef.current.focus();
+      this.setState({ menuOpen: true });
+    }
   }
 
   private get options (): CourseOption[] {
