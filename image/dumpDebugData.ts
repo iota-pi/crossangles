@@ -28,5 +28,5 @@ const upload = (content: string, campus: string, additionalParams?: Partial<S3.P
 const getHash = (content: string): string => {
   const buffer = Buffer.from(content);
   const md5 = crypto.createHash('md5').update(buffer);
-  return md5.digest('base64');
+  return md5.digest('base64').replace(/\//g, '_');
 }
