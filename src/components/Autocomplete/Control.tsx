@@ -24,6 +24,7 @@ export class Control extends Component<Props> {
     return (
       <TextField
         fullWidth
+        {...TextFieldProps}
         InputProps={{
           inputComponent,
           inputProps: {
@@ -32,8 +33,8 @@ export class Control extends Component<Props> {
             children,
             ...innerProps,
           },
+          ...TextFieldProps.InputProps,
         }}
-        {...TextFieldProps}
       />
     );
   }
