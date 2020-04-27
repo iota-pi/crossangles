@@ -1,4 +1,7 @@
 const campusRegex = /\b([a-z]+)\.crossangles.app$/;
+const campusMapping: { [subdomain: string]: string } = {
+  'next': 'unsw',
+};
 let cache: string | null = null;
 
 export const getCampus = (hostname: string): string => {
@@ -14,6 +17,8 @@ export const getCampus = (hostname: string): string => {
   if (matches) {
     result = matches[1];
   }
+
+  result = campusMapping[result] || result;
 
   cache = result;
   return result;
