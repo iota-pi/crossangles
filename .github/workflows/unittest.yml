@@ -25,3 +25,23 @@ jobs:
 
     - name: Run tests
       run: ./ci.sh test
+
+  cypress:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Install dependencies
+      run: ./ci.sh ci-install
+
+    - name: Run server
+      run: ./ci.sh run
+
+    - name: Run Cypress e2e tests
+      run: (cd app; npx cypress run)
