@@ -53,7 +53,12 @@ export interface State {
   message: string,
 }
 
+
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+function isValidEmail (email: string) {
+  return emailRegex.test(email);
+}
+
 
 class CreateCustom extends PureComponent<Props, State> {
   state: State = {
@@ -188,7 +193,7 @@ class CreateCustom extends PureComponent<Props, State> {
   private handleChangeEmail = (event: ChangeEvent<{value: unknown}>) => {
     const email = event.target.value as string;
     let showEmailError = this.state.showEmailError;
-    if (this.isValidEmail(email)) {
+    if (isValidEmail(email)) {
       showEmailError = false;
     }
 
@@ -198,7 +203,7 @@ class CreateCustom extends PureComponent<Props, State> {
   private handleBlurEmail = () => {
     const email = this.state.email;
     this.setState({
-      showEmailError: !this.isValidEmail(email) && email.length > 0,
+      showEmailError: !isValidEmail(email) && email.length > 0,
     });
   }
 
@@ -206,13 +211,9 @@ class CreateCustom extends PureComponent<Props, State> {
     this.setState({ message: event.target.value as string });
   }
 
-  private isValidEmail (email: string) {
-    return emailRegex.test(email);
-  }
-
   private canSubmit = (): boolean => {
     const nameError = !this.state.name;
-    const emailError = !this.state.email;
+    const emailError = !this.state.email || !isValidEmail(this.state.email);
     const messageError = !this.state.message;
 
     return !nameError && !emailError && !messageError;
