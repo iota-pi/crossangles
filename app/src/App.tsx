@@ -88,7 +88,7 @@ class App extends Component<Props, State> {
     return (
       <div>
         <CssBaseline/>
-        <AppBar/>
+        <AppBar onShowContact={this.handleContactShow} />
         <div className={classes.appBarSpacer} />
 
         <Container

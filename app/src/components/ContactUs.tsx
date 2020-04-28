@@ -87,7 +87,7 @@ class CreateCustom extends PureComponent<Props, State> {
             className={classes.moveRight}
             data-cy="close-dialog"
           >
-            <CloseIcon></CloseIcon>
+            <CloseIcon />
           </IconButton>
         </DialogTitle>
 
