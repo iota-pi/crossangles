@@ -69,8 +69,9 @@ class CreateCustom extends PureComponent<Props, State> {
     return (
       <Dialog
         open={this.props.open}
-        onClose={this.handleClose}
         onExited={this.handleExited}
+        onEscapeKeyDown={this.handleClose}
+        onBackdropClick={this.handleBackdropClick}
         aria-labelledby="contact-us-title"
         className={classes.dialog}
         fullWidth
@@ -162,6 +163,13 @@ class CreateCustom extends PureComponent<Props, State> {
 
   private handleClose = () => {
     this.props.onClose();
+  }
+
+  private handleBackdropClick = () => {
+    const partiallyCompleted = this.state.name || this.state.email || this.state.message;
+    if (!partiallyCompleted) {
+      this.handleClose();
+    }
   }
 
   private handleExited = () => {
