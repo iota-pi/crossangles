@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
