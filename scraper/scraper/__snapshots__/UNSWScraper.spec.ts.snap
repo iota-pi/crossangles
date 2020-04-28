@@ -2355,10 +2355,10 @@ Array [
       "isAdditional": true,
       "metadata": Object {
         "promoText": "This tool is provided by {link} — a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
-        "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/605/responses/new",
+        "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/640/responses/new",
         "signupValidFor": Array [
           Object {
-            "term": 1,
+            "term": 2,
             "year": 2020,
           },
         ],
@@ -2367,111 +2367,7 @@ Array [
       "name": "Campus Bible Study",
       "streams": Array [
         Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T12",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T13",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W12",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M14",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
+          "component": "Growth Groups",
           "enrols": Array [
             0,
             0,
@@ -2484,7 +2380,33 @@ Array [
           ],
         },
         Object {
-          "component": "Bible Study",
+          "component": "Growth Groups",
+          "enrols": Array [
+            0,
+            0,
+          ],
+          "full": false,
+          "times": Array [
+            Object {
+              "time": "W12",
+            },
+          ],
+        },
+        Object {
+          "component": "Growth Groups",
+          "enrols": Array [
+            0,
+            0,
+          ],
+          "full": false,
+          "times": Array [
+            Object {
+              "time": "H10",
+            },
+          ],
+        },
+        Object {
+          "component": "Training",
           "enrols": Array [
             0,
             0,
@@ -2497,46 +2419,7 @@ Array [
           ],
         },
         Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
+          "component": "Training",
           "enrols": Array [
             0,
             0,
@@ -2545,110 +2428,6 @@ Array [
           "times": Array [
             Object {
               "time": "H13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "F12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "F13",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Theology",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T16",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Theology",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W14",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T15",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T17",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W15",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H14",
             },
           ],
         },
@@ -2952,10 +2731,10 @@ Array [
       "isAdditional": true,
       "metadata": Object {
         "promoText": "This tool is provided by {link} — a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
-        "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/605/responses/new",
+        "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/640/responses/new",
         "signupValidFor": Array [
           Object {
-            "term": 1,
+            "term": 2,
             "year": 2020,
           },
         ],
@@ -2964,111 +2743,7 @@ Array [
       "name": "Campus Bible Study",
       "streams": Array [
         Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T12",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T13",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W12",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M14",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
+          "component": "Growth Groups",
           "enrols": Array [
             0,
             0,
@@ -3081,7 +2756,33 @@ Array [
           ],
         },
         Object {
-          "component": "Bible Study",
+          "component": "Growth Groups",
+          "enrols": Array [
+            0,
+            0,
+          ],
+          "full": false,
+          "times": Array [
+            Object {
+              "time": "W12",
+            },
+          ],
+        },
+        Object {
+          "component": "Growth Groups",
+          "enrols": Array [
+            0,
+            0,
+          ],
+          "full": false,
+          "times": Array [
+            Object {
+              "time": "H10",
+            },
+          ],
+        },
+        Object {
+          "component": "Training",
           "enrols": Array [
             0,
             0,
@@ -3094,46 +2795,7 @@ Array [
           ],
         },
         Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
+          "component": "Training",
           "enrols": Array [
             0,
             0,
@@ -3142,110 +2804,6 @@ Array [
           "times": Array [
             Object {
               "time": "H13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "F12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "F13",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Theology",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T16",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Theology",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W14",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T15",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T17",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W15",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H14",
             },
           ],
         },
@@ -3519,10 +3077,10 @@ Array [
       "isAdditional": true,
       "metadata": Object {
         "promoText": "This tool is provided by {link} — a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
-        "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/605/responses/new",
+        "signupURL": "https://campusbiblestudy.ccbchurch.com/goto/forms/640/responses/new",
         "signupValidFor": Array [
           Object {
-            "term": 1,
+            "term": 2,
             "year": 2020,
           },
         ],
@@ -3531,111 +3089,7 @@ Array [
       "name": "Campus Bible Study",
       "streams": Array [
         Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T12",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T13",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W12",
-            },
-          ],
-        },
-        Object {
-          "component": "The Bible Talks",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "M14",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
+          "component": "Growth Groups",
           "enrols": Array [
             0,
             0,
@@ -3648,7 +3102,33 @@ Array [
           ],
         },
         Object {
-          "component": "Bible Study",
+          "component": "Growth Groups",
+          "enrols": Array [
+            0,
+            0,
+          ],
+          "full": false,
+          "times": Array [
+            Object {
+              "time": "W12",
+            },
+          ],
+        },
+        Object {
+          "component": "Growth Groups",
+          "enrols": Array [
+            0,
+            0,
+          ],
+          "full": false,
+          "times": Array [
+            Object {
+              "time": "H10",
+            },
+          ],
+        },
+        Object {
+          "component": "Training",
           "enrols": Array [
             0,
             0,
@@ -3661,46 +3141,7 @@ Array [
           ],
         },
         Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H11",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
+          "component": "Training",
           "enrols": Array [
             0,
             0,
@@ -3709,110 +3150,6 @@ Array [
           "times": Array [
             Object {
               "time": "H13",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "F12",
-            },
-          ],
-        },
-        Object {
-          "component": "Bible Study",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "F13",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Theology",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T16",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Theology",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W14",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T15",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "T17",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "W15",
-            },
-          ],
-        },
-        Object {
-          "component": "Core Training",
-          "enrols": Array [
-            0,
-            0,
-          ],
-          "full": false,
-          "times": Array [
-            Object {
-              "time": "H14",
             },
           ],
         },
