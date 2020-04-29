@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-COMMAND_LIST="ci-install|install|build|test|run|scrape"
+COMMAND_LIST="ci-install|install|build|test|run|scrape|cypress"
 COMMAND=$1
 
 if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
@@ -42,6 +42,13 @@ if [[ $COMMAND == test ]]; then
       run_for_each npm test
     )
   fi
+fi
+
+if [[ $COMMAND == cypress ]]; then
+  (
+    cd app
+    npx cypress ${2:-}
+  )
 fi
 
 if [[ $COMMAND == run ]]; then
