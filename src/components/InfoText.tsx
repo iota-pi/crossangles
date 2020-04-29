@@ -55,9 +55,12 @@ const InfoText = ({
 
       {disclaimer && (
         <Typography {...typographyProps} paragraph>
-          The data was last updated at
-          <span style={{ fontWeight: 400 }}> {meta.updateTime} ({meta.updateDate}) </span>
-          from <a href={meta.source} target="_blank" rel="noopener noreferrer">{meta.source}</a>.
+          The data was last updated
+          at <span style={{ fontWeight: 400 }}>
+            {meta.updateTime} ({meta.updateDate})
+          </span> from <a href={meta.source} target="_blank" rel="noopener noreferrer">
+            {meta.source}
+          </a>.
           CrossAngles comes without any guarantee of data accuracy or of optimality.
           If you have any questions or suggestions,
           please <span
