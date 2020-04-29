@@ -19,19 +19,19 @@ const unsw: CourseData[] = [
         component: 'Growth Groups',
         full: false,
         enrols: [0, 0],
-        times: [{ 'time': 'T11' }],
+        times: [{ 'time': 'T11-13' }],
       },
       {
         component: 'Growth Groups',
         full: false,
         enrols: [0, 0],
-        times: [{ 'time': 'W12' }],
+        times: [{ 'time': 'W12-14' }],
       },
       {
         component: 'Growth Groups',
         full: false,
         enrols: [0, 0],
-        times: [{ 'time': 'H10' }],
+        times: [{ 'time': 'H10-12' }],
       },
       {
         component: 'Training',
