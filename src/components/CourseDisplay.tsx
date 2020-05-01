@@ -14,7 +14,7 @@ import AdditionalEvents from './AdditionalEvents';
 import WebStream from './WebStream';
 import { ColourMap } from '../state/Colours';
 import ColourControl from './Colour';
-import { CourseData, CourseId, getCourseId, hasWebStream } from '../state/Course';
+import { CourseData, CourseId, getCourseId, hasWebStream, getWebStream } from '../state/Course';
 import { Collapse } from '@material-ui/core';
 import { getEvents, AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
@@ -91,6 +91,7 @@ export interface BaseCourseDisplayProps extends WithStyles<typeof styles> {
 export interface CourseDisplayProps extends BaseCourseDisplayProps {
   webStreams: CourseId[],
   meta: Meta,
+  includeFull: boolean,
   onEditCustomCourse: (course: CourseData) => void,
   onToggleWeb: (course: CourseData) => void,
 }
@@ -123,6 +124,7 @@ export const CourseDisplay = withStyles(styles)(({
   colours,
   webStreams,
   meta,
+  includeFull,
   onEditCustomCourse,
   onRemoveCourse,
   onToggleWeb,
@@ -138,6 +140,7 @@ export const CourseDisplay = withStyles(styles)(({
       ) : null}
     </>
   );
+  const webStream = getWebStream(course);
 
   return (
     <React.Fragment>
@@ -196,10 +199,12 @@ export const CourseDisplay = withStyles(styles)(({
         </ListItemIcon>
       </ListItem>
 
-      {hasWebStream(course) ? (
+      {webStream !== null ? (
         <ListItem className={classes.noVertPadding}>
           <WebStream
             checked={webStreams.includes(getCourseId(course))}
+            stream={webStream}
+            includeFull={includeFull}
             onChange={() => onToggleWeb(course)}
           />
         </ListItem>
