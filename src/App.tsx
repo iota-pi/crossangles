@@ -153,7 +153,7 @@ class App extends Component<Props, State> {
         this.props.setNotice('Could not save as image');
       }
     }).catch(err => {
-      this.props.setNotice('Could not send request, please try again later');
+      this.props.setNotice('Error while saving as image, please try again later');
       console.error(err);
     }).finally(() => {
       this.setState({ isSavingImage: false });
