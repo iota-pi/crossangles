@@ -147,8 +147,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
 
     min_ttl                = 0
-    default_ttl            = 600
-    max_ttl                = 1800
+    default_ttl            = 300
+    max_ttl                = 600
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
@@ -169,8 +169,8 @@ resource "aws_cloudwatch_event_rule" "scraper_trigger" {
   name        = "scraper_trigger"
   description = "Run scraper on schedule"
 
-  # Run every 15 minutes from 5:05am to 12:05am the next day (non-DST)
-  schedule_expression = "cron(5,20,35,50 17-23,0-12 * * ? *)"
+  # Run every 15 minutes
+  schedule_expression = "cron(5,20,35,50 * * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
