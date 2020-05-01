@@ -25,10 +25,4 @@ jobs:
       run: ./ci.sh ci-install
 
     - name: Run tests
-      run: ./ci.sh test
-
-    - name: Run server
-      run: ./ci.sh run &
-
-    - name: Run Cypress e2e tests
-      run: (cd app; npx cypress run)
+      run: ./ci-test.sh
