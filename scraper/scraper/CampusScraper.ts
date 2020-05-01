@@ -27,16 +27,16 @@ export abstract class CampusScraper {
   generateMetaData (term: number, source: string): Meta {
     const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');
     const now = getAEST();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
-    const currentDay = now.getDate();
+    const currentYear = now.year();
+    const currentMonth = now.month();
+    const currentDay = now.date();
 
     return {
       year: term === 1 && currentMonth >= 6 ? currentYear + 1 : currentYear,
       term,
       source,
       updateDate: `${zfill(currentDay)}/${zfill(currentMonth + 1)}/${currentYear}`,
-      updateTime: `${zfill(now.getHours())}:${zfill(now.getMinutes())}`,
+      updateTime: `${zfill(now.hour())}:${zfill(now.minute())}`,
       signup: process.env.SIGN_UP || '',
     };
   }
