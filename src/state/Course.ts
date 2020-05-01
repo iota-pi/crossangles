@@ -27,14 +27,18 @@ export const getCourseId = (course: CourseData): CourseId => {
 }
 
 export const hasWebStream = (course: CourseData): boolean => {
+  return getWebStream(course) !== null;
+}
+
+export const getWebStream = (course: CourseData): StreamData | null => {
   const streams = course.streams;
   for (let i = 0; i < streams.length; ++i) {
     if (streams[i].web) {
-      return true;
+      return streams[i];
     }
   }
 
-  return false;
+  return null;
 }
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
