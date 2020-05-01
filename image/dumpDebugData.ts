@@ -6,7 +6,10 @@ const s3 = new S3();
 const TIMETABLE_BUCKET = 'crossangles-timetables';
 
 export const saveForDebug = (data: any) => {
-  const content = JSON.stringify(data);
+  const content = JSON.stringify({
+    data,
+    timestamp: new Date().getTime(),
+  });
   const campus = data.campus || 'unknown';
   return upload(content, campus);
 }
