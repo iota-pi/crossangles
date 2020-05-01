@@ -12,6 +12,7 @@ import { CourseData, CourseId, getCourseId } from '../state/Course';
 import { AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
 import { notNull } from '../typeHelpers';
+import { Options } from '../state/Options';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -28,6 +29,7 @@ export interface Props extends WithStyles<typeof styles> {
   webStreams: CourseId[],
   hiddenEvents: CourseId[],
   meta: Meta,
+  options: Options,
   onEditCustomCourse: (course: CourseData) => void,
   onRemoveCourse: (course: CourseData) => void,
   onToggleShowEvents: (course: CourseData) => void,
@@ -66,6 +68,7 @@ class CourseList extends PureComponent<Props, State> {
                 colours={this.props.colours}
                 webStreams={this.props.webStreams}
                 meta={this.props.meta}
+                includeFull={this.props.options.includeFull || false}
                 onToggleWeb={this.props.onToggleWeb}
                 onRemoveCourse={this.props.onRemoveCourse}
                 onEditCustomCourse={this.props.onEditCustomCourse}
