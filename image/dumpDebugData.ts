@@ -13,9 +13,10 @@ export const saveForDebug = (data: any) => {
 
 const upload = (content: string, campus: string, additionalParams?: Partial<S3.PutObjectRequest>) => {
   const hash = getHash(content);
+  const filename = `${hash.replace(/\//g, '_')}.json`;
   return s3.upload({
     Bucket: TIMETABLE_BUCKET,
-    Key: `${campus}/${hash}.json`,
+    Key: `${campus}/${filename}`,
     ContentType: 'application/json',
     Body: content,
     ContentMD5: hash,
@@ -28,5 +29,5 @@ const upload = (content: string, campus: string, additionalParams?: Partial<S3.P
 const getHash = (content: string): string => {
   const buffer = Buffer.from(content);
   const md5 = crypto.createHash('md5').update(buffer);
-  return md5.digest('base64').replace(/\//g, '_');
+  return md5.digest('base64');
 }
