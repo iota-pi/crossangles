@@ -47,13 +47,16 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
 
+    const debugPromise = saveForDebug(data);
+    const imagePromise = screenshot(uri, viewport);
+
     try {
-      await saveForDebug(data);
+      await debugPromise;
     } catch (error) {
       console.error('failed to save debug info', error);
     }
 
-    const image = await screenshot(uri, viewport);
+    const image = await imagePromise;
     return responder.getResponse({
       data: image,
     });
