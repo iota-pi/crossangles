@@ -18,7 +18,7 @@ resource "aws_lambda_function" "image" {
   # exported in that file.
   handler     = "lambda.handler"
   runtime     = "nodejs12.x"
-  memory_size = 1536
+  memory_size = 1024
   timeout     = 30
 
   s3_bucket        = aws_s3_bucket_object.image_code.bucket
