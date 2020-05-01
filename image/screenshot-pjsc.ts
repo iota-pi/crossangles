@@ -6,7 +6,6 @@ export const screenshot = async (
   viewport?: { width: number, height: number },
 ): Promise<string> => {
   const endpoint = `https://phantomjscloud.com/api/browser/v2/${secrets.pjsc_key}/`;
-  console.log(`hello, ${endpoint}`);
 
   const data = {
     url: uri,
