@@ -48,7 +48,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const uri = baseURI + queryString;
 
     try {
-      saveForDebug(data);
+      await saveForDebug(data);
     } catch (error) {
       console.error('failed to save debug info', error);
     }
