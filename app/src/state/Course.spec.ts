@@ -1,4 +1,4 @@
-import { getCourseId, hasWebStream, CourseData } from './Course';
+import { getCourseId, hasWebStream, CourseData, getWebStream } from './Course';
 import { StreamData } from './Stream';
 
 const code = 'TPBC1234';
@@ -19,6 +19,7 @@ describe('course state util functions', () => {
     const course: CourseData = { code, name, streams };
     const result = hasWebStream(course);
     expect(result).toBe(true);
+    expect(getWebStream(course)).toBe(streams[0]);
   })
 
   it('detects a web stream at the end', () => {
@@ -30,6 +31,7 @@ describe('course state util functions', () => {
     const course: CourseData = { code, name, streams };
     const result = hasWebStream(course);
     expect(result).toBe(true);
+    expect(getWebStream(course)).toBe(streams[2]);
   })
 
   it('detects a web stream in the middle', () => {
@@ -41,6 +43,7 @@ describe('course state util functions', () => {
     const course: CourseData = { code, name, streams };
     const result = hasWebStream(course);
     expect(result).toBe(true);
+    expect(getWebStream(course)).toBe(streams[1]);
   })
 
   it('detects a web stream on tutorials', () => {
@@ -50,6 +53,7 @@ describe('course state util functions', () => {
     const course: CourseData = { code, name, streams };
     const result = hasWebStream(course);
     expect(result).toBe(true);
+    expect(getWebStream(course)).toBe(streams[0]);
   })
 
   it('detects no web stream', () => {
@@ -59,5 +63,6 @@ describe('course state util functions', () => {
     const course: CourseData = { code, name, streams };
     const result = hasWebStream(course);
     expect(result).toBe(false);
+    expect(getWebStream(course)).toBe(null);
   })
 })
