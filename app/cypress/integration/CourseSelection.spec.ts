@@ -40,29 +40,6 @@ context('Course selection', () => {
       .should('contain.text', 'MATH1231')
   })
 
-  it('can add and remove courses by clicking', () => {
-    // Add COMP1511 and COMP1521
-    cy.get('#course-selection-autocomplete').type('comp15')
-    cy.dataCy('autocomplete-option')
-      .first().should('contain.text', 'COMP1511')
-      .click()
-    cy.get('#course-selection-autocomplete').type('comp15')
-    cy.dataCy('autocomplete-option')
-      .first().should('contain.text', 'COMP1521')
-      .click()
-    cy.get('#course-display')
-      .should('contain.text', 'COMP1511')
-      .should('contain.text', 'COMP1521')
-
-    // Can remove a course
-    cy.dataCy('remove-course')
-      .eq(1)
-      .click()
-    cy.get('#course-display')
-      .should('not.contain.text', 'COMP1521')
-      .should('contain.text', 'COMP1511')
-  })
-
   it('can add/edit/remove a custom event', () => {
     cy.dataCy('create-custom-event')
       .click()
