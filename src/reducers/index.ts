@@ -32,9 +32,7 @@ const basicReducer = combineReducers<NoHistoryState>({
 });
 
 const removeHistory = (state: RootState): NoHistoryState | undefined => {
-  state = { ...state };
   delete state.history;
-
   return state;
 }
 
@@ -74,10 +72,7 @@ function getNextState(history: HistoryData, nextTimetable: SessionManagerData, n
   };
 }
 
-const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
-  state = state || initialState;
-  const nextState = basicReducer(removeHistory(state), action);
-  let history = state.history;
+const historyReducer = (nextState: NoHistoryState, history: HistoryData, action: AllActions) => {
   const nextTimetable = getCurrentTimetable(nextState);
 
   if (action.type === UNDO) {
@@ -100,6 +95,21 @@ const rootReducer = (state: RootState | undefined, action: AllActions): RootStat
         present: getTimetableState(nextState),
       },
     };
+  }
+
+  return nextState;
+}
+
+const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
+  state = state || { ...initialState };
+  const history = state.history;
+  const noHistory = removeHistory(state);
+  let nextState = basicReducer(noHistory, action);
+  nextState = historyReducer(nextState, history, action);
+
+  if (nextState === state) {
+    state.history = history;
+    return state;
   }
 
   return {
