@@ -3,7 +3,7 @@ set -e
 ./ci.sh test &
 unit_test=$!
 
-./ci.sh run &
+NODE_ENV=test ./ci.sh run &
 (
   cd app
   npx cypress run
