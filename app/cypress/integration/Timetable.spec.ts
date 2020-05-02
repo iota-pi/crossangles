@@ -342,7 +342,7 @@ context('Timetable controls', () => {
       .should('have.length', 3)
   })
 
-  it('can undo after dragging', () => {
+  it.skip('can undo after dragging', () => {
     // Add TBT
     cy.dataCy('event-CBS~The Bible Talks')
       .click()
