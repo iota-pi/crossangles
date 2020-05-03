@@ -65,7 +65,11 @@ export function chosen (
       // NB: this should only be necessary if a course stops being offered for a particular term
       //     after timetable data has been released (very unlikely)
       const newIds = new Set(action.courses.map(c => getCourseId(c)));
-      return state.filter(id => newIds.has(id));
+      const newState = state.filter(id => newIds.has(id));
+      if (newState.length === state.length) {
+        return state;
+      }
+      return newState;
   }
 
   return state;
