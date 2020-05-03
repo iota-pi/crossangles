@@ -85,6 +85,7 @@ class App extends Component<Props, State> {
 
   render () {
     const classes = this.props.classes;
+
     return (
       <div>
         <CssBaseline/>
@@ -186,10 +187,8 @@ class App extends Component<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const events = getAutoSelectedEvents(state.courses, state.additional);
-
   return {
-    showSignup: state.events.some(e => events.includes(e)),
+    showSignup: getShowSignup(state),
     notice: state.notice,
     additional: state.additional.map(cid => state.courses[cid]),
     meta: state.meta,
@@ -197,6 +196,12 @@ const mapStateToProps = (state: RootState): StateProps => {
     colours: state.colours,
     options: state.options,
   };
+}
+
+const getShowSignup = (state: Pick<RootState, 'courses' | 'additional' | 'events'>): boolean => {
+  let events = getAutoSelectedEvents(state.courses, state.additional);
+  const eventNames = events.map(e => e.id);
+  return state.events.some(e => eventNames.includes(e.id))
 }
 
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => {
