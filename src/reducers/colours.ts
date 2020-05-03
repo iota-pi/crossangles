@@ -5,34 +5,38 @@ import { initialState } from '../state';
 
 export function colours (state = initialState.colours, action: AllActions): ColourMap {
   const chosenColours = Object.values(state);
-  switch (action.type) {
-    case ADD_COURSE:
-      const courseId = getCourseId(action.course);
-      const colour = action.course.defaultColour || pickColour(chosenColours);
-      return {
-        ...state,
-        [courseId]: colour,
-      };
-    case SET_COLOUR:
-      const newColour = action.colour ? action.colour : pickColour(chosenColours);
-      return {
-        ...state,
-        [action.course]: newColour,
-      };
-    case SET_COURSE_DATA:
-      const additional = action.courses.filter(c => c.isAdditional && c.autoSelect);
-      const colourPool = [...COURSE_COLOURS];
-      state = Object.assign(
-        {},
-        ...additional.map(c => {
-          const colour = c.defaultColour || pickColour(chosenColours, colourPool);
-          colourPool.splice(colourPool.indexOf(colour), 1);
-          return { [getCourseId(c)]: colour };
-        }),
-        state,
-      );
 
-      return state;
+  if (action.type === ADD_COURSE) {
+    const courseId = getCourseId(action.course);
+    const colour = action.course.defaultColour || pickColour(chosenColours);
+    return {
+      ...state,
+      [courseId]: colour,
+    };
+  }
+
+  if (action.type === SET_COLOUR) {
+    const newColour = action.colour ? action.colour : pickColour(chosenColours);
+    return {
+      ...state,
+      [action.course]: newColour,
+    };
+  }
+
+  if (action.type === SET_COURSE_DATA) {
+    const additional = action.courses.filter(c => c.isAdditional && c.autoSelect);
+    const colourPool = [...COURSE_COLOURS];
+    state = Object.assign(
+      {},
+      ...additional.map(c => {
+        const colour = c.defaultColour || pickColour(chosenColours, colourPool);
+        colourPool.splice(colourPool.indexOf(colour), 1);
+        return { [getCourseId(c)]: colour };
+      }),
+      state,
+    );
+
+    return state;
   }
 
   return state;
