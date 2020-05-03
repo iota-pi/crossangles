@@ -3,10 +3,7 @@ set -e
 ./ci.sh test &
 unit_test=$!
 
-(
-  export LOCAL_DATA=1
-  ./ci.sh run &
-)
+./ci.sh run &
 (
   cd app
   npx cypress run

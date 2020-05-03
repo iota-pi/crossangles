@@ -197,7 +197,7 @@ context('Timetable interaction', () => {
   })
 })
 
-context('Timetable controls', () => {
+context.skip('Timetable controls', () => {
   beforeEach(() => {
     cy.server()
     cy.route('/unsw/data.json', 'fixture:data-with-cbs.json')
@@ -209,8 +209,6 @@ context('Timetable controls', () => {
     cy.dataCy('autocomplete-option')
       .click()
   })
-
-  const cbsEvent = 'Growth Groups';
 
   it('can use undo/redo buttons', () => {
     // Add custom course
