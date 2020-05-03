@@ -8,7 +8,7 @@ export interface CampusConfig {
   longname: string,
 }
 
-export const dataDomain = process.env.NODE_ENV === 'test' ? '/' : 'https://d1aa8o4hf8f3x4.cloudfront.net/';
+export const dataDomain = process.env.LOCAL_DATA === '1' ? '/' : 'https://d1aa8o4hf8f3x4.cloudfront.net/';
 
 export const campusConfig: AllCampusConfig = {
   unsw: {
