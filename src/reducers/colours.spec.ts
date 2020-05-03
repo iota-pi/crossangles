@@ -2,7 +2,8 @@ import { colours } from './colours';
 import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA } from '../actions';
 import { initialState } from '../state';
 import { ColourMap, COURSE_COLOURS } from '../state/Colours';
-import { CourseData } from '../state/Course';
+import { CourseData, getCourseId } from '../state/Course';
+import { getCourse } from '../test_util';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 
@@ -72,6 +73,31 @@ describe('colours reducer', () => {
     expect(Object.keys(newState)).toContain(course);
     expect(COURSE_COLOURS).toContain(newState[course]);
     expect(new Set(Object.values(newState))).toEqual(new Set(COURSE_COLOURS));
+  })
+
+  it('picks a colour for a new custom course', () => {
+    const course: CourseData = { ...getCourse(), isCustom: true };
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
+    };
+    const state: ColourMap = {};
+    const result = colours(state, action);
+    expect(result).not.toBe(state);
+    expect(Object.keys(result)).toEqual([getCourseId(course)]);
+  })
+
+  it('doesn\'t pick a colour when updating a custom course', () => {
+    const course: CourseData = { ...getCourse(), isCustom: true };
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
+    };
+    const originalState: ColourMap = { [getCourseId(course)]: '#00796B' };
+    const state: ColourMap = { ...originalState };
+    const result = colours(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual(originalState);
   })
 
   it('chooses non-duplicate colours for SET_COLOUR', () => {

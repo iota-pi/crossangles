@@ -35,42 +35,6 @@ export function toggleWebStream (course: CourseData): CourseAction {
   }
 }
 
-// Custom courses
-export const ADD_CUSTOM = 'ADD_CUSTOM';
-export const UPDATE_CUSTOM = 'UPDATE_CUSTOM';
-export const REMOVE_CUSTOM = 'REMOVE_CUSTOM';
-
-export interface SimpleCustomAction extends Action {
-  type: typeof ADD_CUSTOM | typeof REMOVE_CUSTOM;
-  custom: CourseData;
-}
-export interface UpdateCustomAction extends Action {
-  type: typeof UPDATE_CUSTOM;
-  custom: CourseData;
-}
-export type CustomAction = SimpleCustomAction | UpdateCustomAction;
-
-export function addCustom (custom: CourseData): CustomAction {
-  return {
-    type: ADD_CUSTOM,
-    custom,
-  }
-}
-
-export function removeCustom (custom: CourseData): CustomAction {
-  return {
-    type: REMOVE_CUSTOM,
-    custom,
-  }
-}
-
-export function updateCustom (custom: CourseData): CustomAction {
-  return {
-    type: UPDATE_CUSTOM,
-    custom,
-  }
-}
-
 // Events
 export const TOGGLE_EVENT = 'TOGGLE_EVENT';
 

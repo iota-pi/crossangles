@@ -1,4 +1,4 @@
-import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM, AllActions } from '../actions';
+import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, AllActions } from '../actions';
 import { CourseMap, CourseId, getCourseId } from '../state/Course';
 import { initialState } from '../state';
 
@@ -18,16 +18,16 @@ export function courses (
     return { ...state, ...allCourses };
   }
 
-  if (action.type === ADD_CUSTOM || action.type === UPDATE_CUSTOM) {
+  if (action.type === ADD_COURSE && action.course.isCustom) {
     return {
       ...state,
-      [getCourseId(action.custom)]: action.custom,
+      [getCourseId(action.course)]: action.course,
     };
   }
 
-  if (action.type === REMOVE_CUSTOM) {
+  if (action.type === REMOVE_COURSE && action.course.isCustom) {
     state = { ...state };
-    delete state[getCourseId(action.custom)];
+    delete state[getCourseId(action.course)];
     return state;
   }
 
@@ -38,14 +38,14 @@ export function chosen (
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
-  if (action.type === ADD_COURSE) {
+  if (action.type === ADD_COURSE && !action.course.isCustom) {
     return [
       ...state,
       getCourseId(action.course),
     ];
   }
 
-  if (action.type === REMOVE_COURSE) {
+  if (action.type === REMOVE_COURSE && !action.course.isCustom) {
     const i = state.indexOf(getCourseId(action.course));
     return [
       ...state.slice(0, i),
@@ -72,12 +72,19 @@ export function custom (
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
-  if (action.type === ADD_CUSTOM) {
-    return [...state, getCourseId(action.custom)];
+  if (action.type === ADD_COURSE && action.course.isCustom) {
+    const courseId = getCourseId(action.course);
+
+    // Don't need to change state for an update event
+    if (state.includes(courseId)) {
+      return state;
+    }
+
+    return [...state, courseId];
   }
 
-  if (action.type === REMOVE_CUSTOM) {
-    const i = state.indexOf(getCourseId(action.custom));
+  if (action.type === REMOVE_COURSE && action.course.isCustom) {
+    const i = state.indexOf(getCourseId(action.course));
     return [...state.slice(0, i), ...state.slice(i + 1)];
   }
 

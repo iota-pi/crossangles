@@ -8,6 +8,12 @@ export function colours (state = initialState.colours, action: AllActions): Colo
 
   if (action.type === ADD_COURSE) {
     const courseId = getCourseId(action.course);
+
+    // Return state without modifications if there is already a colour for this course
+    if (state[courseId]) {
+      return state;
+    }
+
     const colour = action.course.defaultColour || pickColour(chosenColours);
     return {
       ...state,

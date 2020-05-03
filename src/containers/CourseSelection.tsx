@@ -8,9 +8,6 @@ import {
   toggleWebStream,
   toggleEvent,
   toggleOption,
-  addCustom,
-  removeCustom,
-  updateCustom,
   toggleShowEvents,
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
@@ -163,16 +160,14 @@ class CourseSelection extends Component<Props, State> {
         ...this.state.editingCourse,
         ...updatedValues,
       };
-      await this.props.dispatch(updateCustom(course));
     } else {
       course = {
         code: 'custom_' + Math.random(),
         isCustom: true,
         ...updatedValues,
       };
-      await this.props.dispatch(addCustom(course));
-      await this.props.dispatch(setColour(getCourseId(course)));
     }
+    await this.props.dispatch(addCourse(course));
 
     await this.updateTimetable(sessionManager);
     this.setState({ editingCourse: null }); // TODO replace with after close in CreateCustom
@@ -180,11 +175,7 @@ class CourseSelection extends Component<Props, State> {
 
   private removeCourse = async (course: CourseData) => {
     const sessionManager = this.getSessionManager();
-    if (course.isCustom) {
-      await this.props.dispatch(removeCustom(course));
-    } else {
-      await this.props.dispatch(removeCourse(course));
-    }
+    await this.props.dispatch(removeCourse(course));
     await this.updateTimetable(sessionManager);
   }
 
