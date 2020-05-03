@@ -3,7 +3,7 @@ set -e
 ./ci.sh test &
 unit_test=$!
 
-NODE_ENV=test ./ci.sh run &
+LOCAL_DATA=1 ./ci.sh run &
 (
   cd app
   npx cypress run
