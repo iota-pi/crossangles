@@ -25,18 +25,18 @@ export abstract class CampusScraper {
   abstract async scrape (): Promise<CampusData[] | null>;
 
   generateMetaData (term: number, source: string): Meta {
-    const zfill = (x: string | number, n = 2) => x.toString().padStart(n, '0');
     const now = getAEST();
     const currentYear = now.year();
     const currentMonth = now.month();
-    const currentDay = now.date();
+    const updateDate = now.format('DD/MM/YYYY');
+    const updateTime = now.format('h:mm a');
 
     return {
       year: term === 1 && currentMonth >= 6 ? currentYear + 1 : currentYear,
       term,
       source,
-      updateDate: `${zfill(currentDay)}/${zfill(currentMonth + 1)}/${currentYear}`,
-      updateTime: `${zfill(now.hour())}:${zfill(now.minute())}`,
+      updateDate,
+      updateTime,
       signup: process.env.SIGN_UP || '',
     };
   }
