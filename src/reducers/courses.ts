@@ -91,15 +91,12 @@ export function additional (
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
-  switch (action.type) {
-    case SET_COURSE_DATA:
-      return action.courses.filter(c => c.isAdditional && c.autoSelect).map(c => getCourseId(c));
-    case REMOVE_COURSE:
-      if (action.course.isAdditional) {
-        return state.filter(c => c !== getCourseId(action.course));
-      } else {
-        return state;
-      }
+  if (action.type === SET_COURSE_DATA) {
+    return action.courses.filter(c => c.isAdditional && c.autoSelect).map(c => getCourseId(c));
+  } else if (action.type === REMOVE_COURSE) {
+    if (action.course.isAdditional) {
+      return state.filter(c => c !== getCourseId(action.course));
+    }
   }
 
   return state;
