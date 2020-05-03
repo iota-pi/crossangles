@@ -1,6 +1,6 @@
-import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM, AllActions } from "../actions";
-import { CourseMap, CourseId, getCourseId } from "../state/Course";
-import { initialState } from "../state";
+import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, ADD_CUSTOM, REMOVE_CUSTOM, UPDATE_CUSTOM, AllActions } from '../actions';
+import { CourseMap, CourseId, getCourseId } from '../state/Course';
+import { initialState } from '../state';
 
 export function courses (
   state: CourseMap = initialState.courses,
