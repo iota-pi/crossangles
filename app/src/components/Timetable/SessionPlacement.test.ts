@@ -26,12 +26,12 @@ describe('SessionPlacement', () => {
 
     const basePlacement = p.basePlacement(dimensions, startHour);
     const cellWidth = (1000 - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
-    const expectedX = 61 + cellWidth * 2;
-    const expectedY = 51 + 50;
+    const expectedX = 1 + TIMETABLE_FIRST_CELL_WIDTH + cellWidth * 2;
+    const expectedY = 1 + TIMETABLE_CELL_HEIGHT * 2;
     expect(basePlacement.x).toBe(expectedX);
     expect(basePlacement.y).toBe(expectedY);
     expect(basePlacement.width).toBe(cellWidth - 1);
-    expect(basePlacement.height).toBe(49);
+    expect(basePlacement.height).toBe(TIMETABLE_CELL_HEIGHT - 1);
   });
 
   test('getters return expected initial values', () => {
