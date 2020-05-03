@@ -34,7 +34,7 @@ const styles = (theme: Theme) => {
     },
     compactSpaceBelow: {
       transition: theme.transitions.create('paddingBottom', transition),
-      '&:not(&$minimised)': {
+      '&:not($minimised)': {
         paddingBottom: theme.spacing(0.5),
       },
     },
