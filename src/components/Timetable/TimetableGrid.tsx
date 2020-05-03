@@ -41,6 +41,8 @@ const styles = (theme: Theme) => createStyles({
       '&:first-child': {
         minWidth: TIMETABLE_FIRST_CELL_WIDTH,
         flex: `0 0 ${TIMETABLE_FIRST_CELL_WIDTH}px`,
+        paddingRight: theme.spacing(1.5),
+        justifyContent: 'flex-end',
 
         // Remove left border on first cell
         borderLeftWidth: 0,
@@ -58,6 +60,10 @@ const styles = (theme: Theme) => createStyles({
     },
   },
   header: {},
+  timeSuffix: {
+    fontWeight: 300,
+    marginLeft: 2,
+  },
 });
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -68,15 +74,26 @@ const daysToLetters: {[key: string]: string} = {
 export interface Props extends WithStyles<typeof styles> {
   timetableRef: RefObject<HTMLDivElement>,
   hours: HourSpan,
+  twentyFourHours?: boolean,
 }
 
 export const TimetableGrid = withStyles(styles)(({
   classes,
   timetableRef,
   hours,
+  twentyFourHours = false,
 }: Props) => {
   const duration = hours.end - hours.start;
-  const hoursArray = new Array(duration).fill(0).map((_, i) => hours.start + i);
+  const hoursArray = new Array(duration).fill(0).map((_, i) => {
+    let hour = hours.start + i;
+    if (twentyFourHours) {
+      return [hour.toString().padStart(2, '0'), ':00'];
+    } else {
+      const suffix = hour < 12 ? 'am' : 'pm';
+      hour = (hour % 12) || 12;
+      return [hour, suffix];
+    }
+  });
 
   return (
     <div className={classes.grid} ref={timetableRef}>
@@ -87,9 +104,16 @@ export const TimetableGrid = withStyles(styles)(({
         ))}
       </div>
 
-      {hoursArray.map(hour => (
+      {hoursArray.map(([hour, am]) => (
         <div className={classes.row} key={hour}>
-          <div>{hour}:00</div>
+          <div>
+            <span>
+              {hour}
+            </span>
+            <span className={twentyFourHours ? undefined : classes.timeSuffix}>
+              {am}
+            </span>
+          </div>
           {days.map(day => (
             <div
               key={day}
