@@ -1,7 +1,7 @@
 import { additional, custom, chosen, courses } from './courses';
 import { initialState } from '../state';
-import { CourseListAction, CourseAction, REMOVE_COURSE, SET_COURSE_DATA, CustomAction, ADD_CUSTOM, REMOVE_CUSTOM, ADD_COURSE, UPDATE_CUSTOM } from '../actions';
-import { CourseData, getCourseId, CourseMap } from '../state/Course';
+import { CourseListAction, CourseAction, REMOVE_COURSE, SET_COURSE_DATA, ADD_COURSE } from '../actions';
+import { CourseData, getCourseId, CourseMap, CourseId } from '../state/Course';
 import { getCourse } from '../test_util';
 
 
@@ -56,14 +56,27 @@ describe('courses', () => {
     expect(result[getCourseId(courseList[0])].name).toBe(courseList[0].name);
   })
 
+  it('isn\'t affected by choosing non-custom courses', () => {
+    const course = getCourse();
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
+    };
+    const originalState = { [getCourseId(course)]: course };
+    const state = { ...originalState };
+    const result = courses(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual(originalState);
+  })
+
   it('handles new custom course', () => {
     const course: CourseData = {
       ...getCourse(),
       isCustom: true,
     };
-    const action: CustomAction = {
-      type: ADD_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
     };
     const state = {};
     const result = courses(state, action);
@@ -82,9 +95,9 @@ describe('courses', () => {
       ...course,
       name: 'New Ring Theory Name',
     };
-    const action: CustomAction = {
-      type: UPDATE_CUSTOM,
-      custom: updatedCourse,
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course: updatedCourse,
     };
     const state = { [getCourseId(course)]: course };
     const result = courses(state, action);
@@ -99,9 +112,9 @@ describe('courses', () => {
       ...getCourse(),
       isCustom: true,
     };
-    const action: CustomAction = {
-      type: REMOVE_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
     };
     const state = { [getCourseId(course)]: course };
     const result = courses(state, action);
@@ -118,9 +131,9 @@ describe('courses', () => {
       name: 'observer',
       streams: [],
     };
-    const action: CustomAction = {
-      type: REMOVE_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
     };
     const state = {
       [getCourseId(course)]: course,
@@ -130,6 +143,18 @@ describe('courses', () => {
     expect(result).toEqual({
       [getCourseId(observerCourse)]: observerCourse,
     });
+  })
+
+  it('isn\'t affected by unselecting a non-custom course', () => {
+    const course = getCourse();
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
+    };
+    const state: CourseMap = { [getCourseId(course)]: course };
+    const result = courses(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual({ [getCourseId(course)]: course });
   })
 })
 
@@ -164,6 +189,18 @@ describe('chosen', () => {
     };
     const result = chosen(['observer'], action);
     expect(result).toEqual(['observer', getCourseId(course)]);
+  })
+
+  it('isn\'t affected by adding a custom course', () => {
+    const course: CourseData = { ...getCourse(), isCustom: true };
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
+    };
+    const state: CourseId[] = [];
+    const result = chosen(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual([]);
   })
 
   it('allows removing the only chosen course', () => {
@@ -216,6 +253,18 @@ describe('chosen', () => {
     expect(result).toBe(state);
     expect(result).toEqual(courseIds);
   })
+
+  it('isn\'t affected by removing a custom course', () => {
+    const course: CourseData = { ...getCourse(), isCustom: true };
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
+    };
+    const state: CourseId[] = [getCourseId(course)];
+    const result = chosen(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual([getCourseId(course)]);
+  })
 })
 
 
@@ -236,9 +285,9 @@ describe('custom', () => {
       ...getCourse(),
       isCustom: true,
     };
-    const action: CustomAction = {
-      type: ADD_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
     };
     const result = custom([], action);
     expect(result).toEqual([getCourseId(course)]);
@@ -249,12 +298,38 @@ describe('custom', () => {
       ...getCourse(),
       isCustom: true,
     };
-    const action: CustomAction = {
-      type: ADD_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
     };
     const result = custom(['observer'], action);
     expect(result).toEqual(['observer', getCourseId(course)]);
+  })
+
+  it('allows updating existing custom course', () => {
+    const course: CourseData = {
+      ...getCourse(),
+      isCustom: true,
+    };
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
+    };
+    const state = [getCourseId(course)]
+    const result = custom(state, action);
+    expect(result).toBe(state);
+  })
+
+  it('isn\'t affected by selecting a non-custom course', () => {
+    const course = getCourse();
+    const action: CourseAction = {
+      type: ADD_COURSE,
+      course,
+    };
+    const state: CourseId[] = [];
+    const result = custom(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual([]);
   })
 
   it('allows removing the only custom course', () => {
@@ -262,9 +337,9 @@ describe('custom', () => {
       ...getCourse(),
       isCustom: true,
     };
-    const action: CustomAction = {
-      type: REMOVE_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
     };
     const result = custom([getCourseId(course)], action);
     expect(result).toEqual([]);
@@ -275,12 +350,24 @@ describe('custom', () => {
       ...getCourse(),
       isCustom: true,
     };
-    const action: CustomAction = {
-      type: REMOVE_CUSTOM,
-      custom: course,
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
     };
     const result = custom(['observerA', getCourseId(course), 'observerB'], action);
     expect(result).toEqual(['observerA', 'observerB']);
+  })
+
+  it('isn\'t affected by unselecting a non-custom course', () => {
+    const course = getCourse();
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
+    };
+    const state: CourseId[] = [getCourseId(course)];
+    const result = custom(state, action);
+    expect(result).toBe(state);
+    expect(result).toEqual([getCourseId(course)]);
   })
 })
 
