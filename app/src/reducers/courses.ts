@@ -10,14 +10,6 @@ export function courses (
     case SET_COURSE_DATA:
       const allCourses: CourseMap = {};
 
-      // Add in previously existing custom courses
-      // TODO: is this necessary?
-      for (const [id, course] of Object.entries(state)) {
-        if (course.isCustom) {
-          allCourses[id] = course;
-        }
-      }
-
       // Return with new course data
       for (const course of action.courses) {
         const id = getCourseId(course);
