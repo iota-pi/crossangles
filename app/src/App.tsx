@@ -201,8 +201,8 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => {
   return {
-    setNotice: async (message: string, actions?: ReactNode[]) => await dispatch(setNotice(message, actions)),
-    clearNotice: async () => await dispatch(clearNotice()),
+    setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
+    clearNotice: () => dispatch(clearNotice()),
   }
 }
 
