@@ -6,31 +6,29 @@ export function courses (
   state: CourseMap = initialState.courses,
   action: AllActions,
 ): CourseMap {
-  switch (action.type) {
-    case SET_COURSE_DATA:
-      const allCourses: CourseMap = {};
+  if (action.type === SET_COURSE_DATA) {
+    const allCourses: CourseMap = {};
 
-      // Return with new course data
-      for (const course of action.courses) {
-        const id = getCourseId(course);
-        allCourses[id] = course;
-      }
+    // Return with new course data
+    for (const course of action.courses) {
+      const id = getCourseId(course);
+      allCourses[id] = course;
+    }
 
-      return { ...state, ...allCourses };
-    case ADD_CUSTOM:
-      return {
-        ...state,
-        [getCourseId(action.custom)]: action.custom,
-      }
-    case REMOVE_CUSTOM:
-      const clonedState = Object.assign({}, state);
-      delete clonedState[getCourseId(action.custom)];
-      return clonedState;
-    case UPDATE_CUSTOM:
-      return {
-        ...state,
-        [getCourseId(action.custom)]: action.custom,
-      }
+    return { ...state, ...allCourses };
+  }
+
+  if (action.type === ADD_CUSTOM || action.type === UPDATE_CUSTOM) {
+    return {
+      ...state,
+      [getCourseId(action.custom)]: action.custom,
+    };
+  }
+
+  if (action.type === REMOVE_CUSTOM) {
+    state = { ...state };
+    delete state[getCourseId(action.custom)];
+    return state;
   }
 
   return state;
@@ -40,28 +38,31 @@ export function chosen (
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
-  switch (action.type) {
-    case ADD_COURSE:
-      return [
-        ...state,
-        getCourseId(action.course),
-      ];
-    case REMOVE_COURSE:
-      const i = state.indexOf(getCourseId(action.course));
-      return [
-        ...state.slice(0, i),
-        ...state.slice(i + 1),
-      ];
-    case SET_COURSE_DATA:
-      // Only keep chosen courses which have current data
-      // NB: this should only be necessary if a course stops being offered for a particular term
-      //     after timetable data has been released (very unlikely)
-      const newIds = new Set(action.courses.map(c => getCourseId(c)));
-      const newState = state.filter(id => newIds.has(id));
-      if (newState.length === state.length) {
-        return state;
-      }
-      return newState;
+  if (action.type === ADD_COURSE) {
+    return [
+      ...state,
+      getCourseId(action.course),
+    ];
+  }
+
+  if (action.type === REMOVE_COURSE) {
+    const i = state.indexOf(getCourseId(action.course));
+    return [
+      ...state.slice(0, i),
+      ...state.slice(i + 1),
+    ];
+  }
+
+  if (action.type === SET_COURSE_DATA) {
+    // Only keep chosen courses which have current data
+    // NB: this would be necessary if a course stops being offered for a particular term
+    //     after the timetable data has already been released (fairly unlikely)
+    const newIds = new Set(action.courses.map(c => getCourseId(c)));
+    const newState = state.filter(id => newIds.has(id));
+    if (newState.length === state.length) {
+      return state;
+    }
+    return newState;
   }
 
   return state;
@@ -71,13 +72,13 @@ export function custom (
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
-  let i: number;
-  switch (action.type) {
-    case ADD_CUSTOM:
-      return [...state, getCourseId(action.custom)];
-    case REMOVE_CUSTOM:
-      i = state.indexOf(getCourseId(action.custom));
-      return [...state.slice(0, i), ...state.slice(i + 1)];
+  if (action.type === ADD_CUSTOM) {
+    return [...state, getCourseId(action.custom)];
+  }
+
+  if (action.type === REMOVE_CUSTOM) {
+    const i = state.indexOf(getCourseId(action.custom));
+    return [...state.slice(0, i), ...state.slice(i + 1)];
   }
 
   return state;
