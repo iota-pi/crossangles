@@ -1,4 +1,4 @@
-import { getStreamId, getSessions, StreamData } from './Stream';
+import { getStreamId, getSessions, StreamData, linkStream } from './Stream';
 import { getCourse } from '../test_util';
 import { CourseData, getCourseId } from './Course';
 import { SessionData } from './Session';
@@ -49,5 +49,15 @@ describe('getSessions', () => {
       { ...common, index: 2, day: 'H', start: 8, end: 9 },
     ];
     expect(getSessions(course, stream)).toEqual(expected);
+  })
+})
+
+
+describe('linkStream', () => {
+  it('gives consistent output', () => {
+    const course = getCourse();
+    for (const stream of course.streams) {
+      expect(linkStream(course, stream)).toMatchSnapshot();
+    }
   })
 })
