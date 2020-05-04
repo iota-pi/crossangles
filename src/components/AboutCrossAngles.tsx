@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import CloseIcon from '@material-ui/icons/Close';
+import { modalview } from 'react-ga';
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,7 +29,10 @@ export function AboutCrossAngles ({ onShowContact }: { onShowContact: () => void
   const [showDialog, setShowDialog] = React.useState(false);
   const classes = useStyles()
 
-  const handleOpen = () => setShowDialog(true);
+  const handleOpen = () => {
+    setShowDialog(true);
+    modalview('about-crossangles');
+  }
   const handleClose = () => setShowDialog(false);
 
   return (
@@ -45,7 +49,7 @@ export function AboutCrossAngles ({ onShowContact }: { onShowContact: () => void
         onClose={handleClose}
       >
         <DialogTitle disableTypography className={classes.dialogTitle}>
-          <Typography variant="h6" id="contact-us-title" className={classes.flexGrow}>
+          <Typography variant="h6" className={classes.flexGrow}>
             About CrossAngles
           </Typography>
 

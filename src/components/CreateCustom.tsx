@@ -23,6 +23,7 @@ import AccessTime from '@material-ui/icons/AccessTime';
 import { DayLetter } from '../state/Session';
 import { CourseData } from '../state/Course';
 import { ClassTime, getSessions } from '../state/Stream';
+import { modalview } from 'react-ga';
 
 const styles = (theme: Theme) => createStyles({
   dialog: {
@@ -274,6 +275,7 @@ class CreateCustom extends PureComponent<Props, State> {
     });
     options.push(getBlankOption());
 
+    modalview('create-custom');
     this.setState({
       open: true,
       name,
@@ -283,6 +285,7 @@ class CreateCustom extends PureComponent<Props, State> {
   }
 
   handleClickOpen = () => {
+    modalview('create-custom');
     this.setState({
       open: true,
       placeholderName: this.pickPlaceholderName(),
