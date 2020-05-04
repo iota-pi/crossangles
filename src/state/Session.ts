@@ -10,7 +10,7 @@ export interface SessionCommon {
   start: number,
   end: number,
   day: DayLetter,
-  component?: string,
+  component: string,
   canClash?: boolean,
   location?: string,
   weeks?: string,
