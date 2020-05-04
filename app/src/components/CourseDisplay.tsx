@@ -2,6 +2,8 @@ import React, { MouseEvent } from 'react';
 import { Theme } from "@material-ui/core/styles/createMuiTheme";
 import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
+import ReactGA from 'react-ga';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -19,6 +21,7 @@ import { Collapse } from '@material-ui/core';
 import { getEvents, AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
 import getCampus from '../getCampus';
+import { CATEGORY } from '../analytics';
 
 
 const styles = (theme: Theme) => {
@@ -142,6 +145,14 @@ export const CourseDisplay = withStyles(styles)(({
   );
   const webStream = getWebStream(course);
 
+  const handleLinkClick = (destination?: string) => {
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'Handbook Link',
+      label: destination,
+    });
+  }
+
   return (
     <React.Fragment>
       <ListItem className={hasWebStream(course) ? classes.compactSpaceBelow : undefined}>
@@ -153,6 +164,7 @@ export const CourseDisplay = withStyles(styles)(({
                 target="_blank"
                 rel="noopener noreferrer"
                 className={classes.plainLink}
+                onClick={() => handleLinkClick(handbookLink)}
               >
                 {courseTitle}
                 <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
@@ -236,6 +248,14 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
     rootClasses.push(classes.minimised);
   }
 
+  const handleLinkClick = (destination?: string) => {
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'Additional Link',
+      label: destination,
+    });
+  }
+
   return (
     <React.Fragment>
       <ListItem className={rootClasses.join(' ')}>
@@ -246,6 +266,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
               target="_blank"
               rel="noopener noreferrer"
               className={classes.plainLink}
+              onClick={() => handleLinkClick(course.metadata!.website)}
             >
               <span>{course.name}</span>
               <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />

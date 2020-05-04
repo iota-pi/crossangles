@@ -1,7 +1,9 @@
 import React, { ReactNode } from 'react';
+import ReactGA from 'react-ga';
 import { Meta } from '../state/Meta'
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import { CourseData } from '../state/Course';
+import { CATEGORY } from '../analytics';
 
 export interface Props {
   additional: CourseData[],
@@ -48,6 +50,14 @@ const InfoText = ({
     );
   }
 
+  const handleLinkClick = (destination?: string) => {
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'ClassUtil Link',
+      label: destination,
+    });
+  }
+
 
   return (
     <div className={className}>
@@ -58,7 +68,12 @@ const InfoText = ({
           The data was last updated
           at <span style={{ fontWeight: 400 }}>
             {meta.updateTime} ({meta.updateDate})
-          </span> from <a href={meta.source} target="_blank" rel="noopener noreferrer">
+          </span> from <a
+            href={meta.source}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => handleLinkClick(meta.source)}
+          >
             {meta.source}
           </a>.
           CrossAngles comes without any guarantee of data accuracy or of optimality.

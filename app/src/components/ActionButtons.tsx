@@ -1,11 +1,14 @@
 import React, { ReactNode } from 'react';
 import { Theme, createStyles, WithStyles, withStyles } from '@material-ui/core/styles';
+import ReactGA from 'react-ga';
+
 import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import { Meta } from '../state/Meta';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { CourseData } from '../state/Course';
+import { CATEGORY } from '../analytics';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -80,6 +83,14 @@ export const ActionButtons = withStyles(styles)(({
   // Assumption: only one additional course will be auto-selected and has metadata
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
 
+  const handleLinkClick = (destination?: string) => {
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'Signup Link',
+      label: destination,
+    });
+  }
+
   let signupButton: ReactNode = null;
   if (ministry && showSignup) {
     const ministryMeta = ministry.metadata!;
@@ -97,6 +108,7 @@ export const ActionButtons = withStyles(styles)(({
           href={ministryMeta.signupURL}
           disabled={disabled}
           target="_blank"
+          onClick={() => handleLinkClick(ministryMeta.signupURL)}
         >
           <div className={classes.centredText}>
             <div className={classes.fontNormal}>
