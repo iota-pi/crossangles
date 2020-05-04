@@ -34,6 +34,8 @@ import { fetchData } from './actions';
 import { CourseData } from './state/Course';
 import getCampus from './getCampus';
 import { getCurrentTimetable } from './state/Timetable';
+import { initialiseGA, pageView } from './analytics';
+import { modalview } from 'react-ga';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -138,6 +140,11 @@ class App extends Component<Props, State> {
     );
   }
 
+  componentDidMount () {
+    initialiseGA();
+    pageView();
+  }
+
   private handleSaveAsImage = async () => {
     this.setState({ isSavingImage: true });
 
@@ -167,6 +174,7 @@ class App extends Component<Props, State> {
 
   private handleContactShow = () => {
     this.setState({ showContact: true });
+    modalview('contact-us');
   }
 
   private handleContactSend = async (name: string, email: string, message: string) => {
