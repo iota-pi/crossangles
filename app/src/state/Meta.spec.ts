@@ -1,7 +1,10 @@
 import { getCurrentTerm } from './Meta';
 
-it('getCurrentTerm gives correct result', () => {
-  expect(getCurrentTerm({ term: 1, year: 1980 })).toBe('1980~1');
-  expect(getCurrentTerm({ term: 2, year: 2000 })).toBe('2000~2');
-  expect(getCurrentTerm({ term: 3, year: 2222 })).toBe('2222~3');
+it.each`
+  term | year    | expected
+  ${1} | ${1980} | ${'1980~1'}
+  ${2} | ${2000} | ${'2000~2'}
+  ${3} | ${2222} | ${'2222~3'}
+`('getCurrentTerm({term:$term, year:$year}) = $expected', ({ term, year, expected }) => {
+  expect(getCurrentTerm({ term, year })).toBe(expected);
 });
