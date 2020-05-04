@@ -1,5 +1,5 @@
 import { colours } from './colours';
-import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA } from '../actions';
+import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA, REMOVE_COURSE } from '../actions';
 import { initialState } from '../state';
 import { ColourMap, COURSE_COLOURS } from '../state/Colours';
 import { CourseData, getCourseId } from '../state/Course';
@@ -98,6 +98,19 @@ describe('colours reducer', () => {
     const result = colours(state, action);
     expect(result).toBe(state);
     expect(result).toEqual(originalState);
+  })
+
+  it('frees colour when course is deselected', () => {
+    const course: CourseData = { ...getCourse(), isCustom: true };
+    const action: CourseAction = {
+      type: REMOVE_COURSE,
+      course,
+    };
+    const originalState: ColourMap = { [getCourseId(course)]: '#00796B' };
+    const state: ColourMap = { ...originalState };
+    const result = colours(state, action);
+    expect(result).not.toBe(state);
+    expect(result).toEqual({});
   })
 
   it('chooses non-duplicate colours for SET_COLOUR', () => {

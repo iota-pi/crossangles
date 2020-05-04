@@ -1,5 +1,5 @@
 import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
-import { ADD_COURSE, SET_COLOUR, AllActions, SET_COURSE_DATA } from '../actions';
+import { ADD_COURSE, SET_COLOUR, AllActions, SET_COURSE_DATA, REMOVE_COURSE } from '../actions';
 import { getCourseId } from '../state/Course';
 import { initialState } from '../state';
 
@@ -19,6 +19,14 @@ export function colours (state = initialState.colours, action: AllActions): Colo
       ...state,
       [courseId]: colour,
     };
+  }
+
+  if (action.type === REMOVE_COURSE) {
+    const courseId = getCourseId(action.course);
+
+    state = { ...state };
+    delete state[courseId];
+    return state;
   }
 
   if (action.type === SET_COLOUR) {
