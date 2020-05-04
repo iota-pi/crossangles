@@ -170,7 +170,6 @@ class CourseSelection extends Component<Props, State> {
     await this.props.dispatch(addCourse(course));
 
     await this.updateTimetable(sessionManager);
-    this.setState({ editingCourse: null }); // TODO replace with after close in CreateCustom
   }
 
   private removeCourse = async (course: CourseData) => {
