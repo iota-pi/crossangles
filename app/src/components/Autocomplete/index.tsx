@@ -44,7 +44,7 @@ const styles = (theme: Theme) => createStyles({
     paddingBottom: theme.spacing(0.5),
   },
   dropDown: {
-    transition: 'all 0.3s',
+    transition: theme.transitions.create('all'),
   },
   dropDownUp: {
     transform: 'rotate(180deg)',

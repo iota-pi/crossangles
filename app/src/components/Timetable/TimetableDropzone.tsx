@@ -13,7 +13,7 @@ const styles = (theme: Theme) => createStyles({
     zIndex: DROPZONE_Z,
   },
   background: {
-    transition: 'background-color 0.3s',
+    transition: theme.transitions.create('background-color'),
     position: 'absolute',
     left: 0,
     top: 0,

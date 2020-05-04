@@ -10,7 +10,7 @@ const styles = (theme: Theme) => createStyles({
     alignItems: 'center',
     justifyContent: 'center',
     color: 'white',
-    transition: 'background-color 0.3s',
+    transition: theme.transitions.create('background-color'),
 
     '&$selected': {
       border: '1px solid white',
