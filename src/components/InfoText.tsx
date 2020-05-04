@@ -27,6 +27,14 @@ const InfoText = ({
   // Assumption: only one additional course will be auto-selected and has metadata
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
 
+  const handleLinkClick = (action: string, destination?: string) => {
+    ReactGA.event({
+      category: CATEGORY,
+      action,
+      label: destination,
+    });
+  }
+
   let ministryPromo: ReactNode = null;
   if (ministry) {
     const ministryMeta = ministry.metadata!;
@@ -35,7 +43,13 @@ const InfoText = ({
     const items: ReactNode[] = [textParts.shift() || ''];
     for (let [i, textPart] of textParts.entries()) {
       const linkEl = link ? (
-        <a href={ministryMeta.website} key={`linkPart-${i}`}>{ministry.name}</a>
+        <a
+          key={`linkPart-${i}`}
+          href={ministryMeta.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => handleLinkClick('Ministry Link', ministryMeta.website)}
+        >{ministry.name}</a>
       ) : (
         <React.Fragment key={`linkPart-${i}`}>{ministry.name}</React.Fragment>
       );
@@ -48,14 +62,6 @@ const InfoText = ({
         {items}
       </Typography>
     );
-  }
-
-  const handleLinkClick = (destination?: string) => {
-    ReactGA.event({
-      category: CATEGORY,
-      action: 'ClassUtil Link',
-      label: destination,
-    });
   }
 
 
@@ -72,7 +78,7 @@ const InfoText = ({
             href={meta.source}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => handleLinkClick(meta.source)}
+            onClick={() => handleLinkClick('ClassUtil Link', meta.source)}
           >
             {meta.source}
           </a>.
