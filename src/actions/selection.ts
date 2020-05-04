@@ -86,7 +86,7 @@ export interface ToggleShowEventsAction extends Action {
 export function toggleShowEvents (courseId: CourseId): ToggleShowEventsAction {
   ReactGA.event({
     category: CATEGORY_COURSE_SELECTION,
-    action: 'toggle_event',
+    action: 'toggle_show_events',
     label: courseId,
   });
 
