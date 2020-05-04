@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { RootState } from '../state';
-import { HistoryData } from '../state/StateHistory';
-import { WithDispatch } from '../typeHelpers';
+import ReactGA from 'react-ga';
 
 // Styles
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -14,6 +12,7 @@ import TimetableControls from '../components/TimetableControls';
 import TimetableTable from '../components/Timetable';
 
 // General
+import { RootState } from '../state';
 import { CourseData, CourseId, CourseMap, courseSort, customSort } from '../state/Course';
 import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
@@ -24,8 +23,9 @@ import { undoTimetable, redoTimetable } from '../actions/history';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import { getCurrentTimetable } from '../state/Timetable';
 import { Meta } from '../state/Meta';
-import { CATEGORY_TIMETABLE } from '../analytics';
-import ReactGA from 'react-ga';
+import { HistoryData } from '../state/StateHistory';
+import { WithDispatch } from '../typeHelpers';
+import { CATEGORY } from '../analytics';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -132,9 +132,8 @@ class TimetableContainer extends PureComponent<Props> {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
 
     ReactGA.event({
-      category: CATEGORY_TIMETABLE,
-      action: 'update_timetable',
-      label: 'refresh',
+      category: CATEGORY,
+      action: 'Update Timetable',
     });
 
     this.setState({ isUpdating: true });
