@@ -1,6 +1,22 @@
-import { getAutoSelectedEvents, getEvents } from './Events';
+import { getAutoSelectedEvents, getEvents, getEventId } from './Events';
 import { CourseMap, CourseId, CourseData } from './Course';
 import { ClassTime } from './Stream';
+
+
+describe('getEventId', () => {
+  it('gives expected result', () => {
+    const course: CourseData = {
+      code: 'RING1379',
+      name: 'Ring Theory 1A',
+      streams: [
+        { component: 'Secret Forging', times: [{ time: 'M8', location: 'Mount Doom' }], enrols: [0, 0] },
+      ],
+      isAdditional: true,
+    }
+    const result = getEventId(course, 'Secret Forging');
+    expect(result).toBe('RING1379~Secret Forging');
+  })
+})
 
 
 describe('getEvents', () => {
