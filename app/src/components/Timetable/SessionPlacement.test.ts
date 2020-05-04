@@ -162,7 +162,7 @@ describe('SessionPlacement', () => {
     const dimensions = { width: 500, height: 500 }
     p.drop(dimensions, session.start);
     const { x, y } = p.getPosition(dimensions, session.start);
-    expect({ x, y }).toEqual({ x: 0, y: 0});
+    expect({ x, y }).toEqual({ x: TIMETABLE_BORDER_WIDTH, y: TIMETABLE_BORDER_WIDTH});
   });
 
   test('offset can\'t be too large after drag', () => {
