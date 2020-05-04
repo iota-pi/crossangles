@@ -1,10 +1,19 @@
 import React, { Component, ReactNode } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
+import loadable from '@loadable/component';
+import ReactGA from 'react-ga';
 import { RootState } from './state';
 import { Meta } from './state/Meta';
 import { Notice } from './state/Notice';
+import { getAutoSelectedEvents } from './state/Events';
+import { Options } from './state/Options';
+import { ColourMap } from './state/Colours';
+import { CourseData } from './state/Course';
+import { getCurrentTimetable } from './state/Timetable';
+import { fetchData } from './actions';
 import { clearNotice, setNotice } from './actions/notice';
-import loadable from '@loadable/component';
+import getCampus from './getCampus';
+import { initialiseGA, pageView, CATEGORY } from './analytics';
 
 // Theme
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -23,19 +32,10 @@ import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ActionButtons } from './components/ActionButtons';
-import { getAutoSelectedEvents } from './state/Events';
 import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManager';
-import { saveAsImage, SaveAsImageRequest, getScreenshotViewport } from './saveAsImage';
-import { Options } from './state/Options';
-import { ColourMap } from './state/Colours';
-import { fetchData } from './actions';
-import { CourseData } from './state/Course';
-import getCampus from './getCampus';
-import { getCurrentTimetable } from './state/Timetable';
-import { initialiseGA, pageView } from './analytics';
-import { modalview } from 'react-ga';
+import { saveAsImage, getScreenshotViewport } from './saveAsImage';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -148,15 +148,18 @@ class App extends Component<Props, State> {
   private handleSaveAsImage = async () => {
     this.setState({ isSavingImage: true });
 
-    const imageData: SaveAsImageRequest = {
-      timetable: this.props.timetable,
-      colours: this.props.colours,
-      options: this.props.options,
-      viewport: getScreenshotViewport(this.props.timetable),
-      campus: getCampus(window.location.hostname),
-    };
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'Save as Image',
+    });
 
-    saveAsImage(imageData).then(success => {
+    const { timetable, colours, options } = this.props;
+    const campus = getCampus(window.location.hostname);
+    const viewport = getScreenshotViewport(this.props.timetable);
+
+    const promise = saveAsImage({ timetable, colours, options, viewport, campus });
+
+    promise.then(success => {
       if (!success) {
         this.props.setNotice('Could not save as image');
       }
@@ -174,7 +177,7 @@ class App extends Component<Props, State> {
 
   private handleContactShow = () => {
     this.setState({ showContact: true });
-    modalview('contact-us');
+    ReactGA.modalview('contact-us');
   }
 
   private handleContactSend = async (name: string, email: string, message: string) => {

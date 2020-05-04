@@ -1,8 +1,8 @@
+import ReactGA from 'react-ga';
+import { Action } from 'redux';
 import { CourseId } from '../state/Course';
 import { Colour } from '../state/Colours';
-import { Action } from 'redux';
-import ReactGA from 'react-ga';
-import { CATEGORY_COURSE_SELECTION } from '../analytics';
+import { CATEGORY } from '../analytics';
 
 // Chosen courses
 export const SET_COLOUR = 'SET_COLOUR';
@@ -15,8 +15,8 @@ export interface ColourAction extends Action {
 
 export function setColour (course: CourseId, colour?: Colour): ColourAction {
   ReactGA.event({
-    category: CATEGORY_COURSE_SELECTION,
-    action: 'change_color',
+    category: CATEGORY,
+    action: 'Change Colour',
     label: colour,
   });
 

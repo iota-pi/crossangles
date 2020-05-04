@@ -19,7 +19,7 @@ import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';
 import { linkStream } from '../../state/Stream';
 import getHours, { HourSpan } from './getHours';
-import { CATEGORY_TIMETABLE } from '../../analytics';
+import { CATEGORY } from '../../analytics';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -172,8 +172,8 @@ class TimetableTable extends Component<Props, State> {
     if (this.state.dragging) return;
 
     ReactGA.event({
-      category: CATEGORY_TIMETABLE,
-      action: 'drag_session',
+      category: CATEGORY,
+      action: 'Drag Session',
       label: session.stream.id,
     });
 
