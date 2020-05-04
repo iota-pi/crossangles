@@ -39,7 +39,6 @@ describe('getSessions', () => {
     const common: Omit<SessionData, 'index' | 'day' | 'start' | 'end'> = {
       course: courseId,
       stream: streamId,
-      component: 'LEC',
       canClash: undefined,
       weeks: undefined,
       location: undefined,
