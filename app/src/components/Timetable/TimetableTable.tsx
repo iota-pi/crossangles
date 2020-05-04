@@ -30,11 +30,6 @@ const styles = (theme: Theme) => createStyles({
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
     transition: theme.transitions.create('opacity'),
-
-    // Outside border
-    borderStyle: 'solid',
-    borderColor: 'rgba(0, 0, 0, 0.2)',
-    borderWidth: TIMETABLE_BORDER_WIDTH,
   },
   progress: {
     position: 'absolute',

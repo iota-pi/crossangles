@@ -158,8 +158,8 @@ export class SessionPlacement extends TimetablePlacement {
     const maxX = timetableDimensions.width  - base.width;
     const maxY = timetableDimensions.height - base.height;
 
-    x = Math.min(Math.max(x, 0), maxX);
-    y = Math.min(Math.max(y, 0), maxY);
+    x = Math.min(Math.max(x, tt.TIMETABLE_BORDER_WIDTH), maxX);
+    y = Math.min(Math.max(y, tt.TIMETABLE_BORDER_WIDTH), maxY);
 
     return { x, y, z };
   }
