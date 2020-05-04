@@ -24,6 +24,8 @@ import { undoTimetable, redoTimetable } from '../actions/history';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import { getCurrentTimetable } from '../state/Timetable';
 import { Meta } from '../state/Meta';
+import { CATEGORY_TIMETABLE } from '../analytics';
+import ReactGA from 'react-ga';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -128,6 +130,12 @@ class TimetableContainer extends PureComponent<Props> {
 
   private handleUpdate = async () => {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
+
+    ReactGA.event({
+      category: CATEGORY_TIMETABLE,
+      action: 'update_timetable',
+      label: 'refresh',
+    });
 
     this.setState({ isUpdating: true });
     try {

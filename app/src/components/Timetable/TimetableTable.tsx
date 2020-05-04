@@ -2,7 +2,7 @@ import React, { Component, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Dimensions, Position } from './timetableTypes';
+import ReactGA from 'react-ga';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fade from '@material-ui/core/Fade';
@@ -10,6 +10,7 @@ import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
 import { TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableUtil';
+import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
 import { ColourMap } from '../../state/Colours';
@@ -18,6 +19,7 @@ import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';
 import { linkStream } from '../../state/Stream';
 import getHours, { HourSpan } from './getHours';
+import { CATEGORY_TIMETABLE } from '../../analytics';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -168,6 +170,12 @@ class TimetableTable extends Component<Props, State> {
   private handleDrag = (session: LinkedSession): void => {
     // Don't drag if something else is being dragged already
     if (this.state.dragging) return;
+
+    ReactGA.event({
+      category: CATEGORY_TIMETABLE,
+      action: 'drag_session',
+      label: session.stream.id,
+    });
 
     // Bump dragged stream, keeping the dragged session on top
     this.props.timetable.bumpStream(session.id);
