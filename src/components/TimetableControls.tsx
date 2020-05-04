@@ -11,15 +11,15 @@ import Refresh from '@material-ui/icons/Refresh';
 
 const styles = (theme: Theme) => createStyles({
   primary: {
-    transition: 'color ease 0.3s',
+    transition: theme.transitions.create('color'),
     color: theme.palette.primary.main,
   },
   amber: {
-    transition: 'color ease 0.3s',
+    transition: theme.transitions.create('color'),
     color: theme.palette.warning.main,
   },
   red: {
-    transition: 'color ease 0.3s',
+    transition: theme.transitions.create('color'),
     color: theme.palette.error.main,
   },
 });

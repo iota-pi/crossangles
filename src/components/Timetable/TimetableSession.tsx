@@ -23,7 +23,7 @@ const styles = (theme: Theme) => createStyles({
     cursor: 'grab',
     overflow: 'hidden',
 
-    transition: 'box-shadow 0.3s, transform 0.3s',
+    transition: theme.transitions.create(['box-shadow', 'transform']),
     boxShadow: theme.shadows[3],
 
     '&$snapped:not($hovering)': {
@@ -32,12 +32,12 @@ const styles = (theme: Theme) => createStyles({
 
     '&$dragging': {
       cursor: 'grabbing',
-      transition: 'box-shadow 0.3s',
+      transition: theme.transitions.create(['box-shadow']),
       boxShadow: theme.shadows[8],
     },
   },
   background: {
-    transition: 'background-color 0.3s',
+    transition: theme.transitions.create(['background-color']),
     position: 'absolute',
     left: 0,
     top: 0,

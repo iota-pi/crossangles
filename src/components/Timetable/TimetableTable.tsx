@@ -27,7 +27,7 @@ const styles = (theme: Theme) => createStyles({
     overflowY: 'hidden',
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
-    transition: 'opacity 0.3s ease',
+    transition: theme.transitions.create('opacity'),
 
     // Outside border
     borderStyle: 'solid',
