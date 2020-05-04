@@ -47,6 +47,7 @@ export const getSessions = (course: CourseData, stream: StreamData): SessionData
         location: t.location,
         index: i,
         weeks: t.weeks,
+        component: stream.component,
         stream: streamId,
         course: courseId,
       };
