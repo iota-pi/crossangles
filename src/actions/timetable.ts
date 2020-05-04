@@ -24,12 +24,12 @@ export function setTimetable (newTimetable: SessionManagerData, meta: YearAndTer
     type: UPDATE_SESSION_MANAGER,
     sessionManager: newTimetable,
     term: getCurrentTerm(meta),
-  }
+  };
 }
 
 export function setSuggestionScore (score: number | null): SuggestionAction {
   return {
     type: UPDATE_SUGGESTED_TIMETABLE,
     score,
-  }
+  };
 }
