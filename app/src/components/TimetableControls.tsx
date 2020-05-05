@@ -23,6 +23,9 @@ const styles = (theme: Theme) => createStyles({
     transition: theme.transitions.create('color'),
     color: theme.palette.error.main,
   },
+  spacer: {
+    flexGrow: 1,
+  },
 });
 
 export interface Props extends WithStyles<typeof styles> {
@@ -88,6 +91,8 @@ export const TimetableControls = ({
           <Refresh />
         </IconButton>
       )}
+
+      <div className={classes.spacer}></div>
 
       {onCreateCustom && (
         <IconButton
