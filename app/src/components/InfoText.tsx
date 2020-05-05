@@ -4,6 +4,7 @@ import { Meta } from '../state/Meta'
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import { CourseData } from '../state/Course';
 import { CATEGORY } from '../analytics';
+import { makeStyles } from '@material-ui/core';
 
 export interface Props {
   additional: CourseData[],
@@ -15,6 +16,14 @@ export interface Props {
   onShowContact: () => void,
 }
 
+const useStyles = makeStyles(theme => ({
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
+}));
+
 const InfoText = ({
   additional,
   meta,
@@ -24,6 +33,8 @@ const InfoText = ({
   className,
   onShowContact,
 }: Props) => {
+  const classes = useStyles();
+
   // Assumption: only one additional course will be auto-selected and has metadata
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
 
@@ -48,6 +59,7 @@ const InfoText = ({
           href={ministryMeta.website}
           target="_blank"
           rel="noopener noreferrer"
+          className={classes.link}
           onClick={() => handleLinkClick('Ministry Link', ministryMeta.website)}
         >{ministry.name}</a>
       ) : (
@@ -78,6 +90,7 @@ const InfoText = ({
             href={meta.source}
             target="_blank"
             rel="noopener noreferrer"
+            className={classes.link}
             onClick={() => handleLinkClick('ClassUtil Link', meta.source)}
           >
             {meta.source}
@@ -85,11 +98,7 @@ const InfoText = ({
           CrossAngles comes without any guarantee of data accuracy or of optimality.
           If you have any questions or suggestions,
           please <span
-            style={{
-              color: 'rgb(0, 0, 238)',
-              textDecoration: 'underline',
-              cursor: 'pointer',
-            }}
+            className={classes.link}
             onClick={(event) => { event.preventDefault(); onShowContact() }}
           >
             contact us
