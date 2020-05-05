@@ -121,7 +121,7 @@ class TimetableTable extends Component<Props, State> {
         ))}
 
         <Fade in={this.props.isUpdating} mountOnEnter unmountOnExit>
-          <LinearProgress className={classes.progress} color="secondary" />
+          <LinearProgress className={classes.progress} color="primary" />
         </Fade>
 
         <TimetableGrid
