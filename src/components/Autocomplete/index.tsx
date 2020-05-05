@@ -33,6 +33,7 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     padding: 0,
     height: 'auto',
+    color: theme.palette.text.primary,
   },
   valueContainer: {
     display: 'flex',
@@ -42,6 +43,11 @@ const styles = (theme: Theme) => createStyles({
     overflow: 'hidden',
     lineHeight: '20px',
     paddingBottom: theme.spacing(0.5),
+
+    // This hack is needed to force react-select to use correct colour in dark mode
+    '& div': {
+      color: theme.palette.text.primary,
+    },
   },
   dropDown: {
     transition: theme.transitions.create('all'),
