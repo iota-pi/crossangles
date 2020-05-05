@@ -395,17 +395,16 @@ class CreateCustom extends PureComponent<Props, State> {
 
   private pickPlaceholderName () {
     const choices = [
+      'Spikeball',
       'Coffee break',
       'Watch Netflix',
-      'Play spikeball',
+      'Online lecture',
+      'Sit in the Quad',
       'Assignment work',
       'Finish lab report',
-      'Sitting in the Quad',
-      'Sleep in the library',
-      'Watch online lecture',
+      'Supervisor meeting',
+      'Line up for CSESoc BBQ',
       'Wonder where Rex Vowels is',
-      'Line up for the CSESoc BBQ',
-      'Meet with thesis supervisor',
     ];
     return choices[Math.floor(Math.random() * choices.length)];
   }
