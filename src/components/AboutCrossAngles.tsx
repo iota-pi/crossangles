@@ -22,6 +22,11 @@ const useStyles = makeStyles(theme => ({
   moveRight: {
     marginRight: theme.spacing(-1),
   },
+  link: {
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
 }))
 
 
@@ -76,6 +81,7 @@ export function AboutCrossAngles ({ onShowContact }: { onShowContact: () => void
               href="https://www.campusbiblestudy.org"
               rel="noopener noreferrer"
               target="_blank"
+              className={classes.link}
             >
               Campus Bible Study
             </a> —
@@ -88,11 +94,7 @@ export function AboutCrossAngles ({ onShowContact }: { onShowContact: () => void
           <Typography paragraph>
             If you have any questions or suggestions,
             please <span
-              style={{
-                color: 'rgb(0, 0, 238)',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-              }}
+              className={classes.link}
               onClick={(event) => { event.preventDefault(); onShowContact(); }}
             >
               contact us
