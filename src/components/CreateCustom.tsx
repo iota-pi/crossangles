@@ -1,4 +1,5 @@
 import React, { PureComponent, ChangeEvent } from 'react';
+import ReactGA from 'react-ga';
 
 // Styles
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -15,7 +16,6 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import EventIcon from '@material-ui/icons/Event';
 import CloseIcon from '@material-ui/icons/Close';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
 import CalendarToday from '@material-ui/icons/CalendarToday';
@@ -23,7 +23,6 @@ import AccessTime from '@material-ui/icons/AccessTime';
 import { DayLetter } from '../state/Session';
 import { CourseData } from '../state/Course';
 import { ClassTime, getSessions, StreamData } from '../state/Stream';
-import { modalview } from 'react-ga';
 
 const styles = (theme: Theme) => createStyles({
   dialog: {
@@ -61,13 +60,14 @@ export const getBlankOption = (): CustomTimeOption => {
 };
 
 export interface Props extends WithStyles<typeof styles> {
-  editing: CourseData | null,
-  onClearEditing: () => void,
+  open: boolean,
+  editing?: CourseData | null,
   onSave: (courseData: Omit<CourseData, 'code'>) => void,
+  onClose: () => void,
+  onExited?: () => void,
 }
 
 export interface State {
-  open: boolean,
   placeholderName: string,
   name: string,
   duration: number,
@@ -133,9 +133,9 @@ const timeOptions = [
   { text: '08:00 PM', time: 20 }
 ];
 
+
 class CreateCustom extends PureComponent<Props, State> {
   state: State = {
-    open: false,
     placeholderName: '',
     name: '',
     duration: 1,
@@ -146,114 +146,104 @@ class CreateCustom extends PureComponent<Props, State> {
     const classes = this.props.classes;
 
     return (
-      <div>
-        <IconButton
-          color="primary"
-          onClick={this.handleClickOpen}
-          data-cy="create-custom-event"
-        >
-          <EventIcon/>
-        </IconButton>
+      <Dialog
+        open={this.props.open}
+        onClose={this.handleClose}
+        onExited={this.handleExited}
+        aria-labelledby="custom-event-title"
+        className={classes.dialog}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle disableTypography className={classes.dialogTitle}>
+          <Typography variant="h6" id="custom-event-title" className={classes.flexGrow}>
+            Add Personal Event
+          </Typography>
 
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          onExited={this.handleExited}
-          aria-labelledby="custom-event-title"
-          className={classes.dialog}
-          fullWidth
-          maxWidth="sm"
-        >
-          <DialogTitle disableTypography className={classes.dialogTitle}>
-            <Typography variant="h6" id="custom-event-title" className={classes.flexGrow}>
-              Add Personal Event
-            </Typography>
+          <IconButton
+            aria-label="close"
+            onClick={this.handleClose}
+            className={classes.moveRight}
+            data-cy="close-dialog"
+          >
+            <CloseIcon></CloseIcon>
+          </IconButton>
+        </DialogTitle>
 
-            <IconButton
-              aria-label="close"
-              onClick={this.handleClose}
-              className={classes.moveRight}
-              data-cy="close-dialog"
-            >
-              <CloseIcon></CloseIcon>
-            </IconButton>
-          </DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Event Name"
+            placeholder={this.state.placeholderName}
+            value={this.state.name}
+            onChange={this.handleChangeName}
+            inputProps={{ maxLength: 40 }}
+            helperText={`${this.state.name.length} / 40`}
+            autoFocus
+            className={classes.paddingBottom}
+            fullWidth
+            data-cy="custom-event-name"
+          />
 
-          <DialogContent>
-            <TextField
-              label="Event Name"
-              placeholder={this.state.placeholderName}
-              value={this.state.name}
-              onChange={this.handleChangeName}
-              inputProps={{ maxLength: 40 }}
-              helperText={`${this.state.name.length} / 40`}
-              autoFocus
-              className={classes.paddingBottom}
-              fullWidth
-              data-cy="custom-event-name"
-            />
-
-            <Grid container spacing={1} className={classes.paddingBottom}>
-              <Grid item>
-                <TimelapseIcon className={classes.marginTop} />
-              </Grid>
-              <Grid item className={classes.flexGrow}>
-                <TextField
-                  label="Duration"
-                  select
-                  fullWidth
-                  value={this.state.duration}
-                  error={this.durationError()}
-                  onChange={this.handleChangeDuration}
-                  helperText={this.durationError() ? "Events cannot be timetabled past midnight" : ""}
-                  data-cy="custom-event-duration"
-                >
-                  {durationOptions.map(item => (
-                    <MenuItem
-                      value={item.duration}
-                      key={item.text}
-                      data-cy="custom-event-duration-item"
-                    >
-                      {item.text}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+          <Grid container spacing={1} className={classes.paddingBottom}>
+            <Grid item>
+              <TimelapseIcon className={classes.marginTop} />
             </Grid>
+            <Grid item className={classes.flexGrow}>
+              <TextField
+                label="Duration"
+                select
+                fullWidth
+                value={this.state.duration}
+                error={this.durationError()}
+                onChange={this.handleChangeDuration}
+                helperText={this.durationError() ? "Events cannot be timetabled past midnight" : ""}
+                data-cy="custom-event-duration"
+              >
+                {durationOptions.map(item => (
+                  <MenuItem
+                    value={item.duration}
+                    key={item.text}
+                    data-cy="custom-event-duration-item"
+                  >
+                    {item.text}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
 
-            <Typography paragraph>
-              You may enter multiple possible times below, your event will be able to be scheduled in any one of them.
-            </Typography>
+          <Typography paragraph>
+            You may enter multiple possible times below, your event will be able to be scheduled in any one of them.
+          </Typography>
 
-            {this.state.options.map((option, index) => (
-              <TimeOption
-                classes={classes}
-                option={option}
-                index={index}
-                hasStartTimeError={this.startTimeError(option)}
-                onChangeDay={this.handleChangeDay}
-                onClickClearDay={this.handleClickClearDay}
-                onChangeTime={this.handleChangeTime}
-                onClickClearTime={this.handleClickClearTime}
-                key={`option-${index}`}
-              />
-            ))}
-          </DialogContent>
+          {this.state.options.map((option, index) => (
+            <TimeOption
+              classes={classes}
+              option={option}
+              index={index}
+              hasStartTimeError={this.startTimeError(option)}
+              onChangeDay={this.handleChangeDay}
+              onClickClearDay={this.handleClickClearDay}
+              onChangeTime={this.handleChangeTime}
+              onClickClearTime={this.handleClickClearTime}
+              key={`option-${index}`}
+            />
+          ))}
+        </DialogContent>
 
-          <DialogActions>
-            <Button
-              color="primary"
-              variant="contained"
-              fullWidth
-              disabled={!this.canSubmit()}
-              onClick={this.handleClickSave}
-              data-cy="custom-event-submit"
-            >
-              {!this.props.editing ? "Add Event" : "Save Event"}
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+        <DialogActions>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            disabled={!this.canSubmit()}
+            onClick={this.handleClickSave}
+            data-cy="custom-event-submit"
+          >
+            {!this.props.editing ? "Add Event" : "Save Event"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
 
@@ -261,6 +251,11 @@ class CreateCustom extends PureComponent<Props, State> {
     const editing = this.props.editing;
     if (editing && editing !== prevProps.editing) {
       this.loadCourse(editing);
+    }
+
+    if (this.props.open && !prevProps.open) {
+      ReactGA.modalview('create-custom');
+      this.setState({ placeholderName: this.pickPlaceholderName() });
     }
   }
 
@@ -275,20 +270,10 @@ class CreateCustom extends PureComponent<Props, State> {
     });
     options.push(getBlankOption());
 
-    modalview('create-custom');
     this.setState({
-      open: true,
       name,
       duration,
       options,
-    });
-  }
-
-  handleClickOpen = () => {
-    modalview('create-custom');
-    this.setState({
-      open: true,
-      placeholderName: this.pickPlaceholderName(),
     });
   }
 
@@ -312,7 +297,7 @@ class CreateCustom extends PureComponent<Props, State> {
   }
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.props.onClose();
   }
 
   handleExited = () => {
@@ -321,7 +306,10 @@ class CreateCustom extends PureComponent<Props, State> {
       duration: 1,
       options: [getBlankOption()],
     });
-    this.props.onClearEditing();
+
+    if (this.props.onExited) {
+      this.props.onExited();
+    }
   }
 
   handleChangeName = (event: ChangeEvent<{value: unknown}>) => {

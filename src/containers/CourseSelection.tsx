@@ -67,11 +67,13 @@ export type Props = WithDispatch<OwnProps & StateProps>;
 
 export interface State {
   editingCourse: CourseData | null,
+  showCreateCustom: boolean,
 }
 
 class CourseSelection extends Component<Props, State> {
   state: State = {
     editingCourse: null,
+    showCreateCustom: false,
   }
 
   render () {
@@ -89,12 +91,6 @@ class CourseSelection extends Component<Props, State> {
               maxItems={20}
             />
           </div>
-
-          <CreateCustom
-            editing={this.state.editingCourse}
-            onClearEditing={this.handleClearEditing}
-            onSave={this.addCustom}
-          />
         </div>
 
         <div className={classes.slightSpaceAbove}>
@@ -123,48 +119,52 @@ class CourseSelection extends Component<Props, State> {
             onToggleOption={this.toggleOption}
           />
         </div>
+
+        <CreateCustom
+          open={this.state.showCreateCustom}
+          editing={this.state.editingCourse}
+          onSave={this.addCustom}
+          onClose={this.handleCloseCustom}
+          onExited={this.handleExitedCustom}
+        />
       </React.Fragment>
     );
   }
 
   private editCustomCourse = (course: CourseData) => {
-    this.setState({ editingCourse: course });
+    this.setState({ editingCourse: course, showCreateCustom: true });
   }
 
-  private handleClearEditing = () => {
+  private handleCloseCustom = () => {
+    this.setState({ showCreateCustom: false });
+  }
+
+  private handleExitedCustom = () => {
     this.setState({ editingCourse: null });
   }
 
   private chooseCourse = async (course: CourseData) => {
+    // NB: getSessionManager should come *before* any dispatches in these methods
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(addCourse(course));
     await this.updateTimetable(sessionManager);
   }
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
-    let course: CourseData;
+    const sessionManager = this.getSessionManager();
 
-    if (this.state.editingCourse) {
-      course = {
-        ...this.state.editingCourse,
-        ...courseData,
-      };
-    } else {
-      course = {
-        code: 'custom_' + Math.random(),
-        isCustom: true,
-        ...courseData,
-      };
-    }
+    let course: CourseData = {
+      ...this.state.editingCourse!,
+      ...courseData,
+    };
     await this.props.dispatch(addCourse(course));
 
-    const sessionManager = this.getSessionManager();
     await this.updateTimetable(sessionManager);
   }
 
   private removeCourse = async (course: CourseData) => {
-    await this.props.dispatch(removeCourse(course));
     const sessionManager = this.getSessionManager();
+    await this.props.dispatch(removeCourse(course));
     await this.updateTimetable(sessionManager);
   }
 
@@ -173,8 +173,8 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private toggleWebStream = async (course: CourseData) => {
-    await this.props.dispatch(toggleWebStream(course));
     const sessionManager = this.getSessionManager();
+    await this.props.dispatch(toggleWebStream(course));
     await this.updateTimetable(sessionManager);
   }
 
@@ -183,17 +183,21 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private toggleEvent = async (event: AdditionalEvent) => {
-    await this.props.dispatch(toggleEvent(event));
     const sessionManager = this.getSessionManager();
+    await this.props.dispatch(toggleEvent(event));
     await this.updateTimetable(sessionManager);
   }
 
   private toggleOption = async (option: OptionName) => {
+    const generationOptions: OptionName[] = ['includeFull'];
+    let sessionManager: SessionManager | null = null;
+    if (generationOptions.includes(option)) {
+      sessionManager = this.getSessionManager();
+    }
+
     await this.props.dispatch(toggleOption(option));
 
-    const generationOptions: OptionName[] = ['includeFull']
-    if (generationOptions.includes(option)) {
-      const sessionManager = this.getSessionManager();
+    if (sessionManager) {
       await this.updateTimetable(sessionManager);
     }
   }

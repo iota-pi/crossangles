@@ -18,7 +18,7 @@ import { Options } from '../state/Options';
 import { ColourMap } from '../state/Colours';
 import { AdditionalEvent } from '../state/Events';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { setTimetable } from '../actions';
+import { setTimetable, addCourse } from '../actions';
 import { undoTimetable, redoTimetable } from '../actions/history';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import { getCurrentTimetable } from '../state/Timetable';
@@ -26,6 +26,7 @@ import { Meta } from '../state/Meta';
 import { HistoryData } from '../state/StateHistory';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
+import CreateCustom from '../components/CreateCustom';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -55,12 +56,14 @@ export type Props = WithDispatch<OwnProps & StateProps>;
 
 export interface State {
   timetable: SessionManager,
+  showCreateCustom: boolean,
   isUpdating: boolean,
 }
 
 class TimetableContainer extends PureComponent<Props> {
   state: State = {
     timetable: new SessionManager(),
+    showCreateCustom: false,
     isUpdating: false,
   }
 
@@ -75,8 +78,15 @@ class TimetableContainer extends PureComponent<Props> {
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
+          onCreateCustom={this.handleClickCreateCustom}
           improvementScore={this.suggestionImprovementScore}
           isUpdating={this.state.isUpdating}
+        />
+
+        <CreateCustom
+          open={this.state.showCreateCustom}
+          onSave={this.addCustom}
+          onClose={this.handleCloseCreateCustom}
         />
 
         <TimetableTable
@@ -151,6 +161,46 @@ class TimetableContainer extends PureComponent<Props> {
     } finally {
       this.setState({ isUpdating: false });
     }
+  }
+
+  private handleClickCreateCustom = () => {
+    this.setState({
+      showCreateCustom: true,
+    });
+  }
+
+  private handleCloseCreateCustom = () => {
+    this.setState({
+      showCreateCustom: false,
+    });
+  }
+
+  private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
+    const sessionManager = this.getSessionManager();
+
+    let course: CourseData = {
+      code: 'custom_' + Math.random(),
+      isCustom: true,
+      ...courseData,
+    };
+    await this.props.dispatch(addCourse(course));
+    await this.updateTimetable(sessionManager);
+  }
+
+  private getSessionManager = () => {
+    return SessionManager.from(this.props.timetableData, this.props.courses);
+  }
+
+  private updateTimetable = async (sessionManager: SessionManager) => {
+    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
+    await updateTimetable({
+      dispatch: this.props.dispatch,
+      sessionManager,
+      selection: { chosen, additional, custom, events, options, webStreams, meta },
+      searchConfig: {
+        timeout: 100,
+      },
+    });
   }
 
   private recommendTimetable = async () => {

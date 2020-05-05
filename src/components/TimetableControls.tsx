@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Undo from '@material-ui/icons/Undo';
 import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
+import Event from '@material-ui/icons/Event';
 
 const styles = (theme: Theme) => createStyles({
   primary: {
@@ -32,6 +33,7 @@ export interface Props extends WithStyles<typeof styles> {
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
+  onCreateCustom?: () => void,
 }
 
 export const TimetableControls = ({
@@ -43,6 +45,7 @@ export const TimetableControls = ({
   onUndo,
   onRedo,
   onUpdate,
+  onCreateCustom,
 }: Props) => {
   let updateClass = classes.primary;
   if (improvementScore > 100) {
@@ -83,6 +86,16 @@ export const TimetableControls = ({
           data-cy="update-button"
         >
           <Refresh />
+        </IconButton>
+      )}
+
+      {onCreateCustom && (
+        <IconButton
+          color="primary"
+          onClick={onCreateCustom}
+          data-cy="create-custom-event"
+        >
+          <Event />
         </IconButton>
       )}
     </Toolbar>
