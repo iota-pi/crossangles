@@ -22,7 +22,7 @@ import CalendarToday from '@material-ui/icons/CalendarToday';
 import AccessTime from '@material-ui/icons/AccessTime';
 import { DayLetter } from '../state/Session';
 import { CourseData } from '../state/Course';
-import { ClassTime, getSessions } from '../state/Stream';
+import { ClassTime, getSessions, StreamData } from '../state/Stream';
 import { modalview } from 'react-ga';
 
 const styles = (theme: Theme) => createStyles({
@@ -63,7 +63,7 @@ export const getBlankOption = (): CustomTimeOption => {
 export interface Props extends WithStyles<typeof styles> {
   editing: CourseData | null,
   onClearEditing: () => void,
-  onSave: (name: string, times: ClassTime[]) => void,
+  onSave: (courseData: Omit<CourseData, 'code'>) => void,
 }
 
 export interface State {
@@ -293,15 +293,21 @@ class CreateCustom extends PureComponent<Props, State> {
   }
 
   handleClickSave = () => {
-    const cleanOptions = this.state.options.filter(o => o.day && o.start);
+    const name = this.state.name;
     const duration = this.state.duration || 1;
+    const cleanOptions = this.state.options.filter(o => o.day && o.start);
+    const times = cleanOptions.map((option): ClassTime => ({
+      time: `${option.day}${option.start}` + ((duration !== 1) ? `-${option.start! + duration}` : ''),
+    }));
+    const streams = times.map((time): StreamData => ({
+      component: name,
+      enrols: [0, 0],
+      full: false,
+      times: [time],
+    }));
+    const courseData: Omit<CourseData, 'code'> = { name, streams };
 
-    this.props.onSave(
-      this.state.name,
-      cleanOptions.map(option => ({
-        time: `${option.day}${option.start}` + ((duration !== 1) ? `-${option.start! + duration}` : ''),
-      })),
-    );
+    this.props.onSave(courseData);
     this.handleClose();
   }
 

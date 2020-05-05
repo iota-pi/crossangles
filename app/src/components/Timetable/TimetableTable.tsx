@@ -9,7 +9,7 @@ import Fade from '@material-ui/core/Fade';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { TIMETABLE_BORDER_WIDTH, SNAP_DIST } from './timetableUtil';
+import { SNAP_DIST } from './timetableUtil';
 import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
