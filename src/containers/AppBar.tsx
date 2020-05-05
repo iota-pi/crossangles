@@ -4,7 +4,10 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import { AboutCrossAngles } from '../components/AboutCrossAngles';
+import InvertColors from '@material-ui/icons/InvertColors';
+import InvertColorsOff from '@material-ui/icons/InvertColorsOff';
 
 const styles = () => {
   return createStyles({
@@ -15,8 +18,11 @@ const styles = () => {
 };
 
 export interface Props extends WithStyles<typeof styles> {
+  darkMode: boolean,
   onShowContact: () => void,
+  onToggleDarkMode: (darkMode?: boolean) => void,
 };
+
 
 class CrossAnglesAppBar extends PureComponent<Props> {
   render() {
@@ -30,10 +36,17 @@ class CrossAnglesAppBar extends PureComponent<Props> {
             CrossAngles
           </Typography>
 
+          <IconButton onClick={() => this.props.onToggleDarkMode()} color="inherit">
+            {this.props.darkMode ? (
+              <InvertColorsOff />
+            ) : (
+              <InvertColors />
+            )}
+          </IconButton>
           <AboutCrossAngles onShowContact={this.props.onShowContact} />
         </Toolbar>
       </AppBar>
-    )
+    );
   }
 };
 

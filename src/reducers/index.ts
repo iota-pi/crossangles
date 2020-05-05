@@ -7,6 +7,7 @@ import { timetables, suggestionScore } from './timetables';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
+import { darkMode } from './darkMode';
 import { UNDO, REDO } from '../actions/history';
 import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA, AllActions } from '../actions';
 import { undo, redo, push, HistoryData } from '../state/StateHistory';
@@ -29,6 +30,7 @@ const basicReducer = combineReducers<NoHistoryState>({
   webStreams,
   notice,
   hiddenEvents,
+  darkMode,
 });
 
 const removeHistory = (state: RootState): NoHistoryState | undefined => {

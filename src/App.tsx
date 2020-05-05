@@ -36,6 +36,7 @@ import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManager';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
+import { setDarkMode } from './actions/darkMode';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 
@@ -63,11 +64,13 @@ export interface StateProps {
   timetable: SessionManagerData,
   colours: ColourMap,
   options: Options,
+  darkMode: boolean,
 }
 
 export interface DispatchProps {
   setNotice: (message: string, actions?: ReactNode[]) => void,
   clearNotice: () => void,
+  setDarkMode: (darkMode?: boolean) => void,
 }
 
 export type Props = OwnProps & StateProps & DispatchProps;
@@ -91,7 +94,11 @@ class App extends Component<Props, State> {
     return (
       <div>
         <CssBaseline/>
-        <AppBar onShowContact={this.handleContactShow} />
+        <AppBar
+          darkMode={this.props.darkMode}
+          onShowContact={this.handleContactShow}
+          onToggleDarkMode={this.props.setDarkMode}
+        />
         <div className={classes.appBarSpacer} />
 
         <Container
@@ -206,6 +213,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     timetable: getCurrentTimetable(state),
     colours: state.colours,
     options: state.options,
+    darkMode: state.darkMode,
   };
 }
 
@@ -219,6 +227,7 @@ const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> =
   return {
     setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
     clearNotice: () => dispatch(clearNotice()),
+    setDarkMode: (darkMode?: boolean) => dispatch(setDarkMode(darkMode)),
   }
 }
 
