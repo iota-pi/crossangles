@@ -16,7 +16,7 @@ import AdditionalEvents from './AdditionalEvents';
 import WebStream from './WebStream';
 import { ColourMap } from '../state/Colours';
 import ColourControl from './Colour';
-import { CourseData, CourseId, getCourseId, hasWebStream, getWebStream } from '../state/Course';
+import { CourseData, CourseId, getCourseId, getWebStream } from '../state/Course';
 import { Collapse } from '@material-ui/core';
 import { getEvents, AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
@@ -35,17 +35,12 @@ const styles = (theme: Theme) => {
         transform: 'rotate(180deg)',
       },
     },
-    compactSpaceBelow: {
-      transition: theme.transitions.create('paddingBottom', transition),
-      '&:not($minimised)': {
-        paddingBottom: theme.spacing(0.5),
-      },
-    },
     expandIcon: {
       transform: 'rotate(0deg)',
       transition: theme.transitions.create('transform', transition),
     },
     noVertPadding: {
+      marginTop: -theme.spacing(0.5),
       paddingTop: 0,
       paddingBottom: 0,
     },
@@ -157,7 +152,7 @@ export const CourseDisplay = withStyles(styles)(({
 
   return (
     <React.Fragment>
-      <ListItem className={hasWebStream(course) ? classes.compactSpaceBelow : undefined}>
+      <ListItem>
         {!course.isCustom ? (
           <ListItemText>
             {handbookLink ? (
@@ -247,11 +242,6 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
   const showEvents = eventList.length > 1 || course.autoSelect;
   const colour = colours[courseId];
 
-  const rootClasses = [classes.compactSpaceBelow];
-  if (minimiseEvents) {
-    rootClasses.push(classes.minimised);
-  }
-
   const handleLinkClick = (destination?: string) => {
     ReactGA.event({
       category: CATEGORY,
@@ -262,7 +252,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
 
   return (
     <React.Fragment>
-      <ListItem className={rootClasses.join(' ')}>
+      <ListItem className={minimiseEvents ? classes.minimised : undefined}>
         <ListItemText>
           {course.metadata ? (
             <a
