@@ -14,67 +14,69 @@ const noSelect: CSSProperties = {
   userSelect: 'none',
 }
 
-const STANDARD_BORDER = 'rgba(0, 0, 0, 0.12)';
-const DARKER_BORDER = 'rgba(0, 0, 0, 0.25)';
+const styles = (theme: Theme) => {
+  const STANDARD_BORDER = theme.palette.divider;
+  const DARKER_BORDER = theme.palette.action.disabled;
 
-const styles = (theme: Theme) => createStyles({
-  grid: {
-    position: 'relative',
-    overflowX: 'visible',
-    ...noSelect,
+  return createStyles({
+    grid: {
+      position: 'relative',
+      overflowX: 'visible',
+      ...noSelect,
 
-    // Outside border
-    borderStyle: 'solid',
-    borderColor: DARKER_BORDER,
-    borderWidth: TIMETABLE_BORDER_WIDTH,
-    borderRightWidth: 0,
-    borderBottomWidth: 0,
-  },
-  row: {
-    display: 'flex',
-    height: TIMETABLE_CELL_HEIGHT,
+      // Outside border
+      borderStyle: 'solid',
+      borderColor: DARKER_BORDER,
+      borderWidth: TIMETABLE_BORDER_WIDTH,
+      borderRightWidth: 0,
+      borderBottomWidth: 0,
+    },
+    row: {
+      display: 'flex',
+      height: TIMETABLE_CELL_HEIGHT,
 
-    borderStyle: 'solid',
-    borderColor: STANDARD_BORDER,
-    borderWidth: 0,
-    borderBottomWidth: TIMETABLE_BORDER_WIDTH,
-    '&:last-child': {
+      borderStyle: 'solid',
+      borderColor: STANDARD_BORDER,
+      borderWidth: 0,
+      borderBottomWidth: TIMETABLE_BORDER_WIDTH,
+      '&:last-child': {
+        borderBottomColor: DARKER_BORDER,
+      },
+    },
+    header: {
+      fontWeight: 500,
+      fontSize: '120%',
       borderBottomColor: DARKER_BORDER,
     },
-  },
-  header: {
-    fontWeight: 500,
-    fontSize: '120%',
-    borderBottomColor: DARKER_BORDER,
-  },
-  cell: {
-    flex: '1 1 100%',
-    minWidth: 120,
+    cell: {
+      flex: '1 1 100%',
+      minWidth: 120,
 
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
 
-    borderStyle: 'solid',
-    borderColor: STANDARD_BORDER,
-    borderWidth: 0,
-    borderRightWidth: TIMETABLE_BORDER_WIDTH,
-    '&:last-child': {
+      borderStyle: 'solid',
+      borderColor: STANDARD_BORDER,
+      borderWidth: 0,
+      borderRightWidth: TIMETABLE_BORDER_WIDTH,
+      '&:last-child': {
+        borderRightColor: DARKER_BORDER,
+      },
+    },
+    time: {
+      minWidth: TIMETABLE_FIRST_CELL_WIDTH,
+      flex: `0 0 ${TIMETABLE_FIRST_CELL_WIDTH}px`,
+      paddingRight: theme.spacing(1.5),
+      justifyContent: 'flex-end',
       borderRightColor: DARKER_BORDER,
     },
-  },
-  time: {
-    minWidth: TIMETABLE_FIRST_CELL_WIDTH,
-    flex: `0 0 ${TIMETABLE_FIRST_CELL_WIDTH}px`,
-    paddingRight: theme.spacing(1.5),
-    justifyContent: 'flex-end',
-    borderRightColor: DARKER_BORDER,
-  },
-  timeSuffix: {
-    fontWeight: 300,
-    marginLeft: 2,
-  },
-});
+    timeSuffix: {
+      fontWeight: 300,
+      marginLeft: 2,
+    },
+  });
+}
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const daysToLetters: {[key: string]: string} = {
