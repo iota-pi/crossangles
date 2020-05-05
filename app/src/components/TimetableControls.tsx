@@ -5,6 +5,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import { HistoryData } from '../state/StateHistory';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import Undo from '@material-ui/icons/Undo';
 import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
@@ -62,46 +63,60 @@ export const TimetableControls = ({
   return (
     <Toolbar>
       {onUndo && (
-        <IconButton
-          onClick={onUndo}
-          color="primary"
-          disabled={history.past.length === 0}
-          data-cy="undo-button"
-        >
-          <Undo />
-        </IconButton>
+        <Tooltip title="Undo">
+          <span>
+            <IconButton
+              onClick={onUndo}
+              color="primary"
+              disabled={history.past.length === 0}
+              data-cy="undo-button"
+              >
+              <Undo />
+            </IconButton>
+          </span>
+        </Tooltip>
       )}
       {onRedo && (
-        <IconButton
-          onClick={onRedo}
-          color="primary"
-          disabled={history.future.length === 0}
-          data-cy="redo-button"
-        >
-          <Redo />
-        </IconButton>
+        <Tooltip title="Redo">
+          <span>
+            <IconButton
+              onClick={onRedo}
+              color="primary"
+              disabled={history.future.length === 0}
+              data-cy="redo-button"
+            >
+              <Redo />
+            </IconButton>
+          </span>
+        </Tooltip>
       )}
       {onUpdate && (
-        <IconButton
-          onClick={!isUpdating ? onUpdate : undefined}
-          disabled={timetableIsEmpty}
-          className={updateClass}
-          data-cy="update-button"
-        >
-          <Refresh />
-        </IconButton>
+        <Tooltip title="Generate New Timetable">
+          <span>
+            <IconButton
+              onClick={!isUpdating ? onUpdate : undefined}
+              disabled={timetableIsEmpty}
+              className={updateClass}
+              data-cy="update-button"
+            >
+              <Refresh />
+            </IconButton>
+          </span>
+        </Tooltip>
       )}
 
       <div className={classes.spacer}></div>
 
       {onCreateCustom && (
-        <IconButton
-          color="primary"
-          onClick={onCreateCustom}
-          data-cy="create-custom-event"
-        >
-          <Event />
-        </IconButton>
+        <Tooltip title="Create Personal Event">
+          <IconButton
+            color="primary"
+            onClick={onCreateCustom}
+            data-cy="create-custom-event"
+          >
+            <Event />
+          </IconButton>
+        </Tooltip>
       )}
     </Toolbar>
   )
