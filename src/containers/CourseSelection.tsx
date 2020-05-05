@@ -27,7 +27,6 @@ import { SessionManager, SessionManagerData } from '../components/Timetable/Sess
 import { CourseMap, CourseData, CourseId, getCourseId, courseSort, customSort } from '../state/Course';
 import { Options, OptionName } from '../state/Options';
 import { ColourMap, Colour } from '../state/Colours';
-import { ClassTime } from '../state/Stream';
 import { updateTimetable } from '../timetable/updateTimetable';
 import { Meta } from '../state/Meta';
 import { getCurrentTimetable } from '../state/Timetable';
@@ -142,39 +141,30 @@ class CourseSelection extends Component<Props, State> {
     await this.updateTimetable(sessionManager);
   }
 
-  private addCustom = async (name: string, times: ClassTime[]) => {
-    const sessionManager = this.getSessionManager();
+  private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
     let course: CourseData;
-    const updatedValues: Omit<CourseData, 'code'> = {
-      name,
-      streams: times.map(time => ({
-        component: name,
-        enrols: [0, 0],
-        full: false,
-        times: [time],
-      })),
-    }
 
     if (this.state.editingCourse) {
       course = {
         ...this.state.editingCourse,
-        ...updatedValues,
+        ...courseData,
       };
     } else {
       course = {
         code: 'custom_' + Math.random(),
         isCustom: true,
-        ...updatedValues,
+        ...courseData,
       };
     }
     await this.props.dispatch(addCourse(course));
 
+    const sessionManager = this.getSessionManager();
     await this.updateTimetable(sessionManager);
   }
 
   private removeCourse = async (course: CourseData) => {
-    const sessionManager = this.getSessionManager();
     await this.props.dispatch(removeCourse(course));
+    const sessionManager = this.getSessionManager();
     await this.updateTimetable(sessionManager);
   }
 
@@ -183,8 +173,8 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private toggleWebStream = async (course: CourseData) => {
-    const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleWebStream(course));
+    const sessionManager = this.getSessionManager();
     await this.updateTimetable(sessionManager);
   }
 
@@ -193,17 +183,17 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private toggleEvent = async (event: AdditionalEvent) => {
-    const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleEvent(event));
+    const sessionManager = this.getSessionManager();
     await this.updateTimetable(sessionManager);
   }
 
   private toggleOption = async (option: OptionName) => {
-    const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleOption(option));
 
     const generationOptions: OptionName[] = ['includeFull']
     if (generationOptions.includes(option)) {
+      const sessionManager = this.getSessionManager();
       await this.updateTimetable(sessionManager);
     }
   }
