@@ -67,7 +67,7 @@ const styles = (theme: Theme) => {
     externalLinkIcon: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      color: 'rgba(0, 0, 0, 0.3)',
+      color: theme.palette.text.disabled,
       verticalAlign: 'baseline',
     },
     marginRight: {
