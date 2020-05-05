@@ -20,12 +20,14 @@ const styles = (theme: Theme) => createStyles({
 export interface Props extends WithStyles<typeof styles> {
   course: CourseData,
   events: AdditionalEvent[],
+  darkMode: boolean,
   onToggleEvent: (event: AdditionalEvent) => void,
 }
 
 export const AdditionalEvents = ({
   course,
   events,
+  darkMode,
   onToggleEvent,
   classes,
 }: Props) => {
@@ -48,6 +50,7 @@ export const AdditionalEvents = ({
               <Checkbox
                 checked={eventIds.includes(event.id)}
                 onChange={() => onToggleEvent(event)}
+                color={darkMode ? 'primary' : 'secondary'}
                 value={event.id}
                 data-cy={`event-${event.id}`}
               />

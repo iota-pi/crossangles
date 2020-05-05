@@ -60,6 +60,7 @@ export interface StateProps {
   colours: ColourMap,
   webStreams: CourseId[],
   hiddenEvents: CourseId[],
+  darkMode: boolean,
   meta: Meta,
 }
 
@@ -104,6 +105,7 @@ class CourseSelection extends Component<Props, State> {
             hiddenEvents={this.props.hiddenEvents}
             meta={this.props.meta}
             options={this.props.options}
+            darkMode={this.props.darkMode}
             onEditCustomCourse={this.editCustomCourse}
             onRemoveCourse={this.removeCourse}
             onToggleShowEvents={this.toggleShowEvents}
@@ -116,6 +118,7 @@ class CourseSelection extends Component<Props, State> {
         <div className={classes.spaceAbove}>
           <GeneralOptions
             options={this.props.options}
+            darkMode={this.props.darkMode}
             onToggleOption={this.toggleOption}
           />
         </div>
@@ -233,6 +236,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     webStreams: state.webStreams,
     hiddenEvents: state.hiddenEvents,
     meta: state.meta,
+    darkMode: state.darkMode,
   }
 }
 

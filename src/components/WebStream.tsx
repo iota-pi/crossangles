@@ -23,6 +23,7 @@ export interface Props extends WithStyles<typeof styles> {
   checked: boolean,
   stream: StreamData,
   includeFull: boolean,
+  darkMode: boolean,
   onChange: () => void,
 }
 
@@ -43,6 +44,7 @@ class WebStream extends PureComponent<Props> {
           <Checkbox
             checked={this.props.checked && !disabled}
             onChange={this.props.onChange}
+            color={this.props.darkMode ? 'primary' : 'secondary'}
             disabled={disabled}
             value={true}
           />
