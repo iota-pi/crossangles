@@ -87,6 +87,7 @@ const styles = (theme: Theme) => {
 export interface BaseCourseDisplayProps extends WithStyles<typeof styles> {
   course: CourseData,
   colours: ColourMap,
+  darkMode: boolean,
   onRemoveCourse: (course: CourseData) => void,
   onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
 }
@@ -125,8 +126,9 @@ export const CourseDisplay = withStyles(styles)(({
   classes,
   course,
   colours,
-  webStreams,
   meta,
+  darkMode,
+  webStreams,
   includeFull,
   onEditCustomCourse,
   onRemoveCourse,
@@ -217,6 +219,7 @@ export const CourseDisplay = withStyles(styles)(({
             checked={webStreams.includes(getCourseId(course))}
             stream={webStream}
             includeFull={includeFull}
+            darkMode={darkMode}
             onChange={() => onToggleWeb(course)}
           />
         </ListItem>
@@ -230,6 +233,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
   course,
   events,
   colours,
+  darkMode,
   hiddenEvents,
   onShowPopover,
   onToggleEvent,
@@ -299,6 +303,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
             <AdditionalEvents
               course={course}
               events={events}
+              darkMode={darkMode}
               onToggleEvent={onToggleEvent}
             />
           </ListItem>

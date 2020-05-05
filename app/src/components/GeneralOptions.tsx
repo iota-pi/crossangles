@@ -2,14 +2,12 @@ import React from 'react';
 import { optionList, Options, OptionName } from '../state/Options';
 
 // Styles
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Grid from '@material-ui/core/Grid';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(3),
@@ -23,18 +21,21 @@ const styles = (theme: Theme) => createStyles({
   selectTrack: {
     opacity: 0.6 * 0.38,
   },
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   options: Options,
+  darkMode: boolean,
   onToggleOption: (option: OptionName) => void,
 }
 
 const GeneralOptions = ({
-  classes,
   options,
+  darkMode,
   onToggleOption,
 }: Props) => {
+  const classes = useStyles();
+
   return (
     <Grid container spacing={0} className={classes.root}>
       {optionList.map(([optionName, label]) => (
@@ -44,6 +45,7 @@ const GeneralOptions = ({
               <Switch
                 checked={options[optionName] || false}
                 onChange={() => onToggleOption(optionName)}
+                color={darkMode ? 'primary' : 'secondary'}
                 value={optionName}
                 classes={{
                   track: classes.selectTrack,
@@ -59,4 +61,4 @@ const GeneralOptions = ({
   );
 }
 
-export default withStyles(styles)(GeneralOptions);
+export default GeneralOptions;

@@ -34,6 +34,7 @@ export function CrossAnglesAppBar({
   return (
     <AppBar
       position="absolute"
+      color={darkMode ? "secondary" : "primary"}
     >
       <Toolbar>
         <Typography variant="h6" color="inherit" className={classes.grow}>
