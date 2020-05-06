@@ -10,23 +10,22 @@ import createStyles from '@material-ui/core/styles/createStyles';
 // Components
 import TimetableControls from '../components/TimetableControls';
 import TimetableTable from '../components/Timetable';
+import CreateCustom from '../components/CreateCustom';
 
 // General
 import { RootState } from '../state';
-import { CourseData, CourseId, CourseMap, courseSort, customSort } from '../state/Course';
-import { Options } from '../state/Options';
-import { ColourMap } from '../state/Colours';
+import { CourseData, CourseId, CourseMap } from '../state/Course';
 import { AdditionalEvent } from '../state/Events';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { setTimetable, addCourse } from '../actions';
-import { undoTimetable, redoTimetable } from '../actions/history';
-import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
-import { getCurrentTimetable } from '../state/Timetable';
+import { ColourMap } from '../state/Colours';
+import { Options } from '../state/Options';
 import { Meta } from '../state/Meta';
 import { HistoryData } from '../state/StateHistory';
+import { getCurrentTimetable, getChosenCourses, getCustomCourses, getAdditionalCourses } from '../state/selectors';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
+import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
+import { setTimetable, addCourse, undoTimetable, redoTimetable } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
-import CreateCustom from '../components/CreateCustom';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -231,9 +230,9 @@ class TimetableContainer extends PureComponent<Props> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     courses: state.courses,
-    chosen: state.chosen.map(cid => state.courses[cid]).sort(courseSort),
-    custom: state.custom.map(c => state.courses[c]).sort(customSort),
-    additional: state.additional.map(c => state.courses[c]).sort(courseSort),
+    chosen: getChosenCourses(state),
+    custom: getCustomCourses(state),
+    additional: getAdditionalCourses(state),
     events: state.events,
     options: state.options,
     colours: state.colours,

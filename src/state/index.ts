@@ -6,7 +6,8 @@ import { Options } from './Options';
 import { Notice } from './Notice';
 import { Meta, getCurrentTerm } from './Meta';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { Timetables, getCurrentTimetable } from './Timetable';
+import { Timetables } from './Timetable';
+import { getCurrentTimetable } from './selectors';
 
 export interface TimetableState {
   courses: CourseMap,

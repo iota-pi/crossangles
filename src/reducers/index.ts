@@ -11,9 +11,9 @@ import { darkMode } from './darkMode';
 import { UNDO, REDO } from '../actions/history';
 import { UPDATE_SESSION_MANAGER, SET_COURSE_DATA, AllActions } from '../actions';
 import { undo, redo, push, HistoryData } from '../state/StateHistory';
-import { getCurrentTimetable } from '../state/Timetable';
 import { getCurrentTerm } from '../state/Meta';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
+import { getCurrentTimetable } from '../state/selectors';
 
 type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<NoHistoryState>({

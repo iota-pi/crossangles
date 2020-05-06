@@ -2,14 +2,13 @@ import React, { Component, ReactNode } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import loadable from '@loadable/component';
 import ReactGA from 'react-ga';
+import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
 import { RootState } from './state';
 import { Meta } from './state/Meta';
 import { Notice } from './state/Notice';
-import { getAutoSelectedEvents } from './state/Events';
 import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
 import { CourseData } from './state/Course';
-import { getCurrentTimetable } from './state/Timetable';
 import { fetchData } from './actions';
 import { clearNotice, setNotice } from './actions/notice';
 import getCampus from './getCampus';
@@ -24,7 +23,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from './containers/AppBar';
+import AppBar from './components/AppBar';
 import Container from '@material-ui/core/Container';
 import CourseSelection from './containers/CourseSelection';
 import TimetableContainer from './containers/TimetableContainer';
@@ -208,19 +207,13 @@ const mapStateToProps = (state: RootState): StateProps => {
   return {
     showSignup: getShowSignup(state),
     notice: state.notice,
-    additional: state.additional.map(cid => state.courses[cid]),
+    additional: getAdditionalCourses(state),
     meta: state.meta,
     timetable: getCurrentTimetable(state),
     colours: state.colours,
     options: state.options,
     darkMode: state.darkMode,
   };
-}
-
-const getShowSignup = (state: Pick<RootState, 'courses' | 'additional' | 'events'>): boolean => {
-  let events = getAutoSelectedEvents(state.courses, state.additional);
-  const eventNames = events.map(e => e.id);
-  return state.events.some(e => eventNames.includes(e.id))
 }
 
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => {

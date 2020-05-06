@@ -147,22 +147,43 @@ export class SessionPlacement extends TimetablePlacement {
     this._touched = true;
   }
 
-  getPosition (timetableDimensions: Dimensions, startHour: number): Required<Position> {
-    const base = this.basePlacement(timetableDimensions, startHour);
-    const clash = SessionPosition.getClashOffset(this.clashDepth);
-    const raised = SessionPosition.getRaisedOffset(this.isRaised);
-    let x = base.x + clash.x + raised.x + this._offset.x;
-    let y = base.y + clash.y + raised.y + this._offset.y;
-    let z = SessionPosition.getZ(this.isSnapped, this.clashDepth);
+  getPosition = (() => {
+    let cachedDeps: (Dimensions | number | boolean)[] = [];
+    let cachedResult: Required<Position>;
 
-    const maxX = timetableDimensions.width  - base.width;
-    const maxY = timetableDimensions.height - base.height;
+    return (timetableDimensions: Dimensions, startHour: number): Required<Position> => {
+      const base = this.basePlacement(timetableDimensions, startHour);
+      const dependencies = [
+        timetableDimensions,
+        startHour,
+        base,
+        this.clashDepth,
+        this.isRaised,
+        this.isSnapped,
+        this._offset.x,
+        this._offset.y,
+      ];
+      if (dependencies.every((dep, i) => cachedDeps[i] === dep)) {
+        return cachedResult;
+      }
 
-    x = Math.min(Math.max(x, tt.TIMETABLE_BORDER_WIDTH), maxX);
-    y = Math.min(Math.max(y, tt.TIMETABLE_BORDER_WIDTH), maxY);
+      const clash = SessionPosition.getClashOffset(this.clashDepth);
+      const raised = SessionPosition.getRaisedOffset(this.isRaised);
+      let x = base.x + clash.x + raised.x + this._offset.x;
+      let y = base.y + clash.y + raised.y + this._offset.y;
+      let z = SessionPosition.getZ(this.isSnapped, this.clashDepth);
 
-    return { x, y, z };
-  }
+      const maxX = timetableDimensions.width  - base.width;
+      const maxY = timetableDimensions.height - base.height;
+
+      x = Math.min(Math.max(x, tt.TIMETABLE_BORDER_WIDTH), maxX);
+      y = Math.min(Math.max(y, tt.TIMETABLE_BORDER_WIDTH), maxY);
+
+      cachedDeps = dependencies;
+      cachedResult = { x, y, z };
+      return cachedResult;
+    }
+  })();
 }
 
 export default SessionPlacement;

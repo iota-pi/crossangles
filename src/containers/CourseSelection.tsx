@@ -1,7 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from '../state';
+import { CourseMap, CourseData, CourseId, getCourseId } from '../state/Course';
+import { Options, OptionName } from '../state/Options';
+import { ColourMap, Colour } from '../state/Colours';
 import { AdditionalEvent } from '../state/Events';
+import { Meta } from '../state/Meta';
+import {
+  getAdditionalCourses,
+  getChosenCourses,
+  getCourseList,
+  getCustomCourses,
+  getCurrentTimetable,
+} from '../state/selectors';
 import {
   addCourse,
   removeCourse,
@@ -9,6 +20,7 @@ import {
   toggleEvent,
   toggleOption,
   toggleShowEvents,
+  setColour,
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 
@@ -21,16 +33,10 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import Autocomplete from '../components/Autocomplete';
 import CourseList from '../components/CourseList';
 import GeneralOptions from '../components/GeneralOptions';
-import { setColour } from '../actions';
 import CreateCustom from '../components/CreateCustom';
 import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
-import { CourseMap, CourseData, CourseId, getCourseId, courseSort, customSort } from '../state/Course';
-import { Options, OptionName } from '../state/Options';
-import { ColourMap, Colour } from '../state/Colours';
 import { updateTimetable } from '../timetable/updateTimetable';
-import { Meta } from '../state/Meta';
-import { getCurrentTimetable } from '../state/Timetable';
-import { getAdditionalCourses, getChosenCourses, getCourseList, getCustomCourses } from '../state/selectors';
+
 
 const styles = (theme: Theme) => createStyles({
   slightSpaceAbove: {
