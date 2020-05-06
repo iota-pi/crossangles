@@ -152,7 +152,7 @@ class Autocomplete extends PureComponent<Props, State> {
             onBlur={this.handleBlur}
             onMenuOpen={this.handleMenuOpen}
             onMenuClose={this.handleMenuClose}
-            options={this.options}
+            options={this.getOptions()}
             filterOption={() => true}
             value={null}
             label={null}
@@ -231,33 +231,51 @@ class Autocomplete extends PureComponent<Props, State> {
     }
   }
 
-  private get options (): CourseOption[] {
-    // Filter out courses which don't match the search
-    const search = this.state.search.toLowerCase().trim();
-    const options: CourseOption[] = this.props.courses.filter(course => this.optionFilter(course, search));
-    const chosen = [...this.props.chosen, ...this.props.additional];
-    const availableOptions = options.filter(course => !chosen.includes(course));
+  private getOptions = (() => {
+    let cachedDeps: (string | CourseData[])[] = [];
+    let cachedResult: CourseOption[] = [];
 
-    // Sort courses with matching course codes first
-    const optionSort = this.getOptionSort(search);
-    availableOptions.sort(optionSort);
-
-    const maxItems = this.state.currentMaxItems;
-    if (availableOptions.length > maxItems) {
-      // Limit number of returned courses
-      return [
-        ...availableOptions.slice(0, maxItems),
-        {
-          code: 'See more results...',
-          name: '',
-          streams: [],
-          isDisabled: true,
-        },
+    return (): CourseOption[] => {
+      const search = this.state.search.toLowerCase().trim();
+      const { courses, chosen, additional } = this.props;
+      const dependencies: typeof cachedDeps = [
+        search,
+        courses,
+        chosen,
+        additional,
       ];
-    }
+      if (dependencies.every((dep, i) => cachedDeps[i] === dep)) {
+        return cachedResult;
+      }
 
-    return availableOptions;
-  }
+      // Filter out courses which don't match the search
+      const options: CourseOption[] = courses.filter(course => this.optionFilter(course, search));
+      const allChosen = [...chosen, ...additional];
+      let availableOptions = options.filter(course => !allChosen.includes(course));
+
+      // Sort courses with matching course codes first
+      const optionSort = this.getOptionSort(search);
+      availableOptions.sort(optionSort);
+
+      const maxItems = this.state.currentMaxItems;
+      if (availableOptions.length > maxItems) {
+        // Limit number of returned courses
+        availableOptions = [
+          ...availableOptions.slice(0, maxItems),
+          {
+            code: 'See more results...',
+            name: '',
+            streams: [],
+            isDisabled: true,
+          },
+        ];
+      }
+
+      cachedDeps = dependencies;
+      cachedResult = availableOptions;
+      return availableOptions;
+    }
+  })();
 
   private optionFilter = (course: CourseData, search: string): boolean => {
     // Include any courses which match the search in either their code or name
