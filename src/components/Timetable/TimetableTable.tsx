@@ -13,7 +13,7 @@ import { SNAP_DIST } from './timetableUtil';
 import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
-import { ColourMap } from '../../state/Colours';
+import { ColourMap, FALLBACK_COLOUR, Colour, getColour } from '../../state/Colours';
 import { Options } from '../../state/Options';
 import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';
@@ -46,6 +46,7 @@ export interface Props extends WithStyles<typeof styles> {
   options: Options,
   colours: ColourMap,
   timetable: SessionManager,
+  darkMode?: boolean,
   minimalHours?: boolean,
   isStandalone?: boolean,
   isUpdating?: boolean,
@@ -157,9 +158,10 @@ class TimetableTable extends Component<Props, State> {
   }
 
   private getColour (course: CourseData): string {
-    const black = '#000000';
     const courseId = getCourseId(course);
-    return this.props.colours[courseId] || black;
+    console.log(this.props.colours, courseId);
+    const colourName = this.props.colours[courseId] || FALLBACK_COLOUR;
+    return getColour(colourName, this.props.darkMode);
   }
 
   private handleDrag = (session: LinkedSession): void => {

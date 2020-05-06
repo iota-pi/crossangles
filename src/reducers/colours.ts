@@ -43,7 +43,7 @@ export function colours (state = initialState.colours, action: AllActions): Colo
     state = Object.assign(
       {},
       ...additional.map(c => {
-        const colour = c.defaultColour || pickColour(chosenColours, colourPool);
+        let colour = c.defaultColour || pickColour(chosenColours, colourPool);
         colourPool.splice(colourPool.indexOf(colour), 1);
         return { [getCourseId(c)]: colour };
       }),

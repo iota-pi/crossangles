@@ -109,9 +109,10 @@ class CourseList extends PureComponent<Props, State> {
           <ColourPicker
             colours={COURSE_COLOURS}
             value={this.state.showPopover ? this.props.colours[getCourseId(this.state.showPopover.course)] : null}
-            onChange={this.handleChange}
             size={40}
             columns={4}
+            darkMode={this.props.darkMode}
+            onChange={this.handleChange}
           />
         </Popover>
       </List>
