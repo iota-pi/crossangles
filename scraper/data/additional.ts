@@ -6,7 +6,7 @@ const unsw: CourseData[] = [
     name: 'Campus Bible Study',
     isAdditional: true,
     autoSelect: true,
-    defaultColour: '#303F9F',
+    defaultColour: 'indigo',
     description: "Campus Bible Study is a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
     metadata: {
       promoText: "This tool is provided by {link} — a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
