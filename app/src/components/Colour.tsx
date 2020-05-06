@@ -1,7 +1,7 @@
 import React, { MouseEvent } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Check from '@material-ui/icons/Check';
-import { Colour, getColour } from '../state/Colours';
+import { Colour, getColourObject } from '../state/Colours';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,7 +43,7 @@ function ColourComponent ({ colour, size, darkMode, isSelected, isCircle, onClic
     <div
       className={appliedClasses}
       style={{
-        backgroundColor: getColour(colour, darkMode),
+        backgroundColor: getColourObject(colour, darkMode),
         width: size,
         height: size,
         cursor: onClick ? 'pointer' : undefined,
