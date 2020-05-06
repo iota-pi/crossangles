@@ -1,58 +1,56 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 // Styles
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { StreamData } from '../state/Stream';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state';
 
-const styles = (theme: Theme) => createStyles({
-  root: {
-  },
+const useStyles = makeStyles((theme: Theme) => ({
   lessSpaceAbove: {
     marginTop: -theme.spacing(1),
   },
   secondaryText: {
     color: theme.palette.text.secondary,
   },
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   checked: boolean,
   stream: StreamData,
   includeFull: boolean,
-  darkMode: boolean,
   onChange: () => void,
 }
 
-class WebStream extends PureComponent<Props> {
-  render() {
-    const classes = this.props.classes;
-    const disabled = this.props.stream.full && !this.props.includeFull;
-    let label = 'Choose online-only lecture stream';
-    if (this.props.stream.full) {
-      label += ' (full)';
-    }
+function WebStream ({ checked, stream, includeFull, onChange }: Props) {
+  const classes = useStyles();
+  const darkMode = useSelector((state: RootState) => state.darkMode);
 
-    return (
-      <FormControlLabel
-        label={label}
-        className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
-        control={
-          <Checkbox
-            checked={this.props.checked && !disabled}
-            onChange={this.props.onChange}
-            color={this.props.darkMode ? 'primary' : 'secondary'}
-            disabled={disabled}
-            value={true}
-          />
-        }
-        data-cy="web-stream-toggle"
-      />
-    )
+  const disabled = stream.full && !includeFull;
+  let label = 'Choose online-only lecture stream';
+  if (stream.full) {
+    label += ' (full)';
   }
+
+  return (
+    <FormControlLabel
+      label={label}
+      className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
+      control={
+        <Checkbox
+          checked={checked && !disabled}
+          onChange={onChange}
+          color={darkMode ? 'primary' : 'secondary'}
+          disabled={disabled}
+          value={true}
+        />
+      }
+      data-cy="web-stream-toggle"
+    />
+  );
 }
 
-export default withStyles(styles)(WebStream);
+export default WebStream;

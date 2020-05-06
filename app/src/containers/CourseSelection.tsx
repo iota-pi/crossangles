@@ -30,6 +30,7 @@ import { ColourMap, Colour } from '../state/Colours';
 import { updateTimetable } from '../timetable/updateTimetable';
 import { Meta } from '../state/Meta';
 import { getCurrentTimetable } from '../state/Timetable';
+import { getAdditionalCourses, getChosenCourses, getCourseList, getCustomCourses } from '../state/selectors';
 
 const styles = (theme: Theme) => createStyles({
   slightSpaceAbove: {
@@ -105,7 +106,6 @@ class CourseSelection extends Component<Props, State> {
             hiddenEvents={this.props.hiddenEvents}
             meta={this.props.meta}
             options={this.props.options}
-            darkMode={this.props.darkMode}
             onEditCustomCourse={this.editCustomCourse}
             onRemoveCourse={this.removeCourse}
             onToggleShowEvents={this.toggleShowEvents}
@@ -225,10 +225,10 @@ class CourseSelection extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     courses: state.courses,
-    courseList: Object.values(state.courses),
-    chosen: state.chosen.map(c => state.courses[c]).sort(courseSort),
-    custom: state.custom.map(c => state.courses[c]).sort(customSort),
-    additional: state.additional.map(c => state.courses[c]).sort(courseSort),
+    courseList: getCourseList(state),
+    chosen: getChosenCourses(state),
+    custom: getCustomCourses(state),
+    additional: getAdditionalCourses(state),
     events: state.events,
     options: state.options,
     timetable: getCurrentTimetable(state),
@@ -237,7 +237,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     hiddenEvents: state.hiddenEvents,
     meta: state.meta,
     darkMode: state.darkMode,
-  }
+  };
 }
 
 const connection = connect(mapStateToProps);

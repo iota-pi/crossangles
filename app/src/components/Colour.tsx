@@ -2,6 +2,8 @@ import React, { MouseEvent } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Check from '@material-ui/icons/Check';
 import { Colour, getColourObject } from '../state/Colours';
+import { useSelector } from 'react-redux';
+import { RootState } from '../state';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,14 +27,14 @@ const useStyles = makeStyles(theme => ({
 export interface Props {
   colour: Colour,
   size: number,
-  darkMode: boolean,
   isSelected?: boolean,
   isCircle?: boolean,
   onClick: (event: MouseEvent<HTMLDivElement>) => void,
 }
 
-function ColourComponent ({ colour, size, darkMode, isSelected, isCircle, onClick }: Props) {
+function ColourComponent ({ colour, size, isSelected, isCircle, onClick }: Props) {
   const classes = useStyles();
+  const darkMode = useSelector((state: RootState) => state.darkMode);
   const appliedClasses = [
     classes.root,
     isSelected ? classes.selected : '',
