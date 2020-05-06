@@ -159,7 +159,6 @@ class TimetableTable extends Component<Props, State> {
 
   private getColour (course: CourseData): string {
     const courseId = getCourseId(course);
-    console.log(this.props.colours, courseId);
     const colourName = this.props.colours[courseId] || FALLBACK_COLOUR;
     return getColour(colourName, this.props.darkMode);
   }
