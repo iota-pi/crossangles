@@ -3,7 +3,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import ColourControl from './Colour';
-import { Colour, getColourObject } from '../state/Colours';
+import { Colour } from '../state/Colours';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -31,14 +31,13 @@ export interface Props extends WithStyles<typeof styles> {
   colours: Colour[],
   columns: number,
   size: number,
-  darkMode: boolean,
   value?: Colour | null,
   onChange: (colour: Colour) => void,
 }
 
 class ColourPicker extends PureComponent<Props> {
   render() {
-    const { classes, darkMode, value } = this.props;
+    const { classes, value } = this.props;
 
     return (
       <div
@@ -52,16 +51,14 @@ class ColourPicker extends PureComponent<Props> {
           }}
         >
           {this.props.colours.map(colour => {
-            const simpleColour = getColourObject(colour, darkMode);
-            const isSelected = !!value && simpleColour === getColourObject(value, darkMode);
+            const isSelected = !!value && colour === value;
 
             return (
               <ColourControl
-                key={simpleColour}
+                key={colour}
                 colour={colour}
                 onClick={() => this.props.onChange(colour)}
                 size={this.props.size}
-                darkMode={darkMode}
                 isSelected={isSelected}
               />
             );

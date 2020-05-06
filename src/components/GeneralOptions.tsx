@@ -5,12 +5,29 @@ import { optionList, Options, OptionName } from '../state/Options';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
   root: {
+    width: '100%',
+    display: 'flex',
+    flexWrap: 'wrap',
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(3),
+  },
+  optionContainer: {
+    margin: 0,
+    flexGrow: 0,
+    maxWidth: '100%',
+    flexBasis: '100%',
+
+    [theme.breakpoints.only('sm')]: {
+      maxWidth: '50%',
+      flexBasis: '50%',
+    },
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '25%',
+      flexBasis: '25%',
+    },
   },
   lessSpaceAbove: {
     marginTop: -theme.spacing(0.5),
@@ -37,9 +54,9 @@ const GeneralOptions = ({
   const classes = useStyles();
 
   return (
-    <Grid container spacing={0} className={classes.root}>
+    <div className={classes.root}>
       {optionList.map(([optionName, label]) => (
-        <Grid item xs={12} sm={6} md={3} key={optionName}>
+        <div className={classes.optionContainer} key={optionName}>
           <FormControlLabel
             control={
               <Switch
@@ -55,9 +72,9 @@ const GeneralOptions = ({
             className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
             label={label}
           />
-        </Grid>
+        </div>
       ))}
-    </Grid>
+    </div>
   );
 }
 

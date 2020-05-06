@@ -13,7 +13,7 @@ import { SNAP_DIST } from './timetableUtil';
 import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
-import { ColourMap, FALLBACK_COLOUR, Colour, getColourObject } from '../../state/Colours';
+import { ColourMap, FALLBACK_COLOUR, getColourObject } from '../../state/Colours';
 import { Options } from '../../state/Options';
 import { getCourseId, CourseData } from '../../state/Course';
 import { LinkedSession } from '../../state/Session';

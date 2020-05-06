@@ -30,7 +30,6 @@ export interface Props extends WithStyles<typeof styles> {
   hiddenEvents: CourseId[],
   meta: Meta,
   options: Options,
-  darkMode: boolean,
   onEditCustomCourse: (course: CourseData) => void,
   onRemoveCourse: (course: CourseData) => void,
   onToggleShowEvents: (course: CourseData) => void,
@@ -70,7 +69,6 @@ class CourseList extends PureComponent<Props, State> {
                 webStreams={this.props.webStreams}
                 meta={this.props.meta}
                 includeFull={this.props.options.includeFull || false}
-                darkMode={this.props.darkMode}
                 onToggleWeb={this.props.onToggleWeb}
                 onRemoveCourse={this.props.onRemoveCourse}
                 onEditCustomCourse={this.props.onEditCustomCourse}
@@ -82,7 +80,6 @@ class CourseList extends PureComponent<Props, State> {
                 events={this.props.events}
                 colours={this.props.colours}
                 hiddenEvents={this.props.hiddenEvents}
-                darkMode={this.props.darkMode}
                 onToggleEvent={this.props.onToggleEvent}
                 onToggleShowEvents={this.props.onToggleShowEvents}
                 onRemoveCourse={this.props.onRemoveCourse}
@@ -111,7 +108,6 @@ class CourseList extends PureComponent<Props, State> {
             value={this.state.showPopover ? this.props.colours[getCourseId(this.state.showPopover.course)] : null}
             size={40}
             columns={4}
-            darkMode={this.props.darkMode}
             onChange={this.handleChange}
           />
         </Popover>
