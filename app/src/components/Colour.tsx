@@ -1,7 +1,7 @@
 import React, { MouseEvent } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Check from '@material-ui/icons/Check';
-import { Colour, getColourObject } from '../state/Colours';
+import { Colour, getColour } from '../state/Colours';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state';
 
@@ -45,7 +45,7 @@ function ColourComponent ({ colour, size, isSelected, isCircle, onClick }: Props
     <div
       className={appliedClasses}
       style={{
-        backgroundColor: getColourObject(colour, darkMode),
+        backgroundColor: getColour(colour, darkMode),
         width: size,
         height: size,
         cursor: onClick ? 'pointer' : undefined,

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import TimetableTable from '../components/Timetable';
-import { parseQueryString } from '../saveAsImage';
-import SessionManager from '../components/Timetable/SessionManager';
 import { CourseMap, getCourseId } from '../state/Course';
+import SessionManager from '../components/Timetable/SessionManager';
 import requestData from '../requestData';
-import { CssBaseline } from '@material-ui/core';
+import { parseQueryString } from '../saveAsImage';
 
 
 export interface Props {

@@ -17,7 +17,7 @@ export const FALLBACK_COLOUR = lime;
 
 export type Colour = keyof typeof COLOUR_MAP;
 
-export const getColourObject = (colourName: Colour, dark?: boolean) => {
+export const getColour = (colourName: Colour, dark?: boolean) => {
   const colour = COLOUR_MAP[colourName] || FALLBACK_COLOUR;
   const variant = dark ? DARK_VARIANT : LIGHT_VARIANT;
   return colour[variant];

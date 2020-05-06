@@ -157,7 +157,7 @@ class Autocomplete extends PureComponent<Props, State> {
             value={null}
             label={null}
             inputValue={this.state.search}
-            noOptionsMessage={() => 'No matching courses found'}
+            noOptionsMessage={this.getNoOptionsMessage}
             autoFocus
             menuIsOpen={this.state.menuOpen}
             classes={this.props.classes}
@@ -304,6 +304,8 @@ class Autocomplete extends PureComponent<Props, State> {
       return alphabetical;
     }
   }
+
+  private getNoOptionsMessage = () => 'No matching courses found';
 }
 
 export default withStyles(styles)(Autocomplete);

@@ -11,5 +11,6 @@ export * from './selection';
 export * from './timetable';
 export * from './colours';
 export * from './notice';
+export * from './history';
 
 export type AllActions = ColourAction | CourseListAction | MetaAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | SetDarkModeAction;
