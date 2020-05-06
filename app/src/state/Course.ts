@@ -1,6 +1,6 @@
-import { StreamData } from "./Stream";
-import { Colour } from "./Colours";
-import { MinistryMeta } from "./Meta";
+import { StreamData } from './Stream';
+import { MinistryMeta } from './Meta';
+import { Colour } from './Colours';
 
 export type CourseId = string;
 

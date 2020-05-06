@@ -50,6 +50,7 @@ export interface StateProps {
   timetableHistory: HistoryData,
   suggestionScore: number | null,
   meta: Meta,
+  darkMode: boolean,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -92,6 +93,7 @@ class TimetableContainer extends PureComponent<Props> {
         <TimetableTable
           options={this.props.options}
           colours={this.props.colours}
+          darkMode={this.props.darkMode}
           timetable={this.state.timetable}
           isUpdating={this.state.isUpdating}
         />
@@ -240,6 +242,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     timetableHistory: state.history,
     suggestionScore: state.suggestionScore,
     meta: state.meta,
+    darkMode: state.darkMode,
   };
 }
 

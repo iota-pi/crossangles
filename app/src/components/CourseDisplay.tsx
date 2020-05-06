@@ -191,6 +191,7 @@ export const CourseDisplay = withStyles(styles)(({
             colour={colours[getCourseId(course)]!}
             size={32}
             isCircle
+            darkMode={darkMode}
             onClick={e => onShowPopover(e, course)}
           />
         </div>
@@ -275,6 +276,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
             colour={colour}
             size={32}
             isCircle
+            darkMode={darkMode}
             onClick={e => onShowPopover(e, course)}
           />
         </div>

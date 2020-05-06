@@ -1,10 +1,9 @@
-import React, { PureComponent, MouseEvent } from 'react';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import React, { MouseEvent } from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Check from '@material-ui/icons/Check';
+import { Colour, getColour } from '../state/Colours';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -21,41 +20,40 @@ const styles = (theme: Theme) => createStyles({
   },
   selected: {},
   rounded: {},
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
-  colour: string,
+export interface Props {
+  colour: Colour,
   size: number,
+  darkMode: boolean,
   isSelected?: boolean,
   isCircle?: boolean,
   onClick: (event: MouseEvent<HTMLDivElement>) => void,
 }
 
-class Colour extends PureComponent<Props> {
-  render() {
-    const classes = this.props.classes;
-    const appliedClasses = [
-      classes.root,
-      this.props.isSelected ? classes.selected : '',
-      this.props.isCircle ? classes.rounded : '',
-    ].join(' ');
+function ColourComponent ({ colour, size, darkMode, isSelected, isCircle, onClick }: Props) {
+  const classes = useStyles();
+  const appliedClasses = [
+    classes.root,
+    isSelected ? classes.selected : '',
+    isCircle ? classes.rounded : '',
+  ].join(' ');
 
-    return (
-      <div
-        className={appliedClasses}
-        style={{
-          backgroundColor: this.props.colour,
-          width: this.props.size,
-          height: this.props.size,
-          cursor: this.props.onClick ? 'pointer' : undefined,
-        }}
-        onClick={this.props.onClick}
-        data-cy="colour-selector"
-      >
-        {this.props.isSelected ? <Check/> : null}
-      </div>
-    )
-  }
+  return (
+    <div
+      className={appliedClasses}
+      style={{
+        backgroundColor: getColour(colour, darkMode),
+        width: size,
+        height: size,
+        cursor: onClick ? 'pointer' : undefined,
+      }}
+      onClick={onClick}
+      data-cy="colour-selector"
+    >
+      {isSelected ? <Check/> : null}
+    </div>
+  )
 }
 
-export default withStyles(styles)(Colour);
+export default ColourComponent;

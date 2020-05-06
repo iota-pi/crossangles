@@ -3,7 +3,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import ColourControl from './Colour';
-import { Colour } from '../state/Colours';
+import { Colour, getColour } from '../state/Colours';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -31,13 +31,14 @@ export interface Props extends WithStyles<typeof styles> {
   colours: Colour[],
   columns: number,
   size: number,
-  value?: string | null,
+  darkMode: boolean,
+  value?: Colour | null,
   onChange: (colour: Colour) => void,
 }
 
 class ColourPicker extends PureComponent<Props> {
   render() {
-    const classes = this.props.classes;
+    const { classes, darkMode, value } = this.props;
 
     return (
       <div
@@ -50,15 +51,21 @@ class ColourPicker extends PureComponent<Props> {
             width: this.props.size * this.props.columns,
           }}
         >
-          {this.props.colours.map(colour => (
-            <ColourControl
-              key={colour}
-              colour={colour}
-              onClick={() => this.props.onChange(colour)}
-              size={this.props.size}
-              isSelected={colour === this.props.value}
-            />
-          ))}
+          {this.props.colours.map(colour => {
+            const simpleColour = getColour(colour, darkMode);
+            const isSelected = !!value && simpleColour === getColour(value, darkMode);
+
+            return (
+              <ColourControl
+                key={simpleColour}
+                colour={colour}
+                onClick={() => this.props.onChange(colour)}
+                size={this.props.size}
+                darkMode={darkMode}
+                isSelected={isSelected}
+              />
+            );
+          })}
         </div>
       </div>
     )

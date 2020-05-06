@@ -1,11 +1,12 @@
 import { colours } from './colours';
 import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA, REMOVE_COURSE } from '../actions';
 import { initialState } from '../state';
-import { ColourMap, COURSE_COLOURS } from '../state/Colours';
+import { ColourMap, COURSE_COLOURS, Colour } from '../state/Colours';
 import { CourseData, getCourseId } from '../state/Course';
 import { getCourse } from '../test_util';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
+const CBS_COLOUR: Colour = 'indigo';
 
 describe('colours reducer', () => {
   it('initialises correctly', () => {
@@ -14,7 +15,7 @@ describe('colours reducer', () => {
   })
 
   it('doesn\'t change on no-op actions', () => {
-    const currentState: ColourMap = { 'a': '#00796B' };
+    const currentState: ColourMap = { 'a': CBS_COLOUR };
     const result = colours(currentState, otherAction);
     expect(result).toBe(currentState);
   })
@@ -93,7 +94,7 @@ describe('colours reducer', () => {
       type: ADD_COURSE,
       course,
     };
-    const originalState: ColourMap = { [getCourseId(course)]: '#00796B' };
+    const originalState: ColourMap = { [getCourseId(course)]: CBS_COLOUR };
     const state: ColourMap = { ...originalState };
     const result = colours(state, action);
     expect(result).toBe(state);
@@ -106,7 +107,7 @@ describe('colours reducer', () => {
       type: REMOVE_COURSE,
       course,
     };
-    const originalState: ColourMap = { [getCourseId(course)]: '#00796B' };
+    const originalState: ColourMap = { [getCourseId(course)]: CBS_COLOUR };
     const state: ColourMap = { ...originalState };
     const result = colours(state, action);
     expect(result).not.toBe(state);

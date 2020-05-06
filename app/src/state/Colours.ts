@@ -1,15 +1,29 @@
-export type Colour =  '#C2185B' | '#512DA8' | '#303F9F' | '#1976D2' | '#00796B' | '#689F38' | '#FFA000' | '#E64A19';
+import { pink, deepPurple, indigo, blue, teal, lightGreen, amber, deepOrange, lime } from '@material-ui/core/colors';
 
-export const COURSE_COLOURS: Colour[] = [
-  '#C2185B',
-  '#512DA8',
-  '#303F9F',
-  '#1976D2',
-  '#00796B',
-  '#689F38',
-  '#FFA000',
-  '#E64A19',
-];
+const LIGHT_VARIANT = 700;
+const DARK_VARIANT = 500;
+
+const COLOUR_MAP = {
+  pink,
+  deepPurple,
+  indigo,
+  blue,
+  teal,
+  lightGreen,
+  amber,
+  deepOrange,
+};
+export const FALLBACK_COLOUR = lime;
+
+export type Colour = keyof typeof COLOUR_MAP;
+
+export const getColour = (colourName: Colour, dark?: boolean) => {
+  const colour = COLOUR_MAP[colourName] || FALLBACK_COLOUR;
+  const variant = dark ? DARK_VARIANT : LIGHT_VARIANT;
+  return colour[variant];
+}
+
+export const COURSE_COLOURS = Object.keys(COLOUR_MAP) as Colour[];
 
 export interface ColourMap {
   [course: string]: Colour,
