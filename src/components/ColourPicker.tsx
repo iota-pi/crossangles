@@ -3,7 +3,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import ColourControl from './Colour';
-import { Colour, getColour } from '../state/Colours';
+import { Colour, getColourObject } from '../state/Colours';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -52,8 +52,8 @@ class ColourPicker extends PureComponent<Props> {
           }}
         >
           {this.props.colours.map(colour => {
-            const simpleColour = getColour(colour, darkMode);
-            const isSelected = !!value && simpleColour === getColour(value, darkMode);
+            const simpleColour = getColourObject(colour, darkMode);
+            const isSelected = !!value && simpleColour === getColourObject(value, darkMode);
 
             return (
               <ColourControl
