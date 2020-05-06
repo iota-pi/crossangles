@@ -1,7 +1,6 @@
 import React from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { HistoryData } from '../state/StateHistory';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -11,7 +10,7 @@ import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 import Event from '@material-ui/icons/Event';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
   primary: {
     transition: theme.transitions.create('color'),
     color: theme.palette.primary.main,
@@ -27,9 +26,9 @@ const styles = (theme: Theme) => createStyles({
   spacer: {
     flexGrow: 1,
   },
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   history: HistoryData,
   improvementScore: number,
   isUpdating: boolean,
@@ -41,7 +40,6 @@ export interface Props extends WithStyles<typeof styles> {
 }
 
 export const TimetableControls = ({
-  classes,
   history,
   improvementScore,
   isUpdating,
@@ -51,6 +49,7 @@ export const TimetableControls = ({
   onUpdate,
   onCreateCustom,
 }: Props) => {
+  const classes = useStyles()
   let updateClass = classes.primary;
   if (improvementScore > 100) {
     if (improvementScore < 800) {
@@ -122,4 +121,4 @@ export const TimetableControls = ({
   )
 }
 
-export default withStyles(styles)(TimetableControls);
+export default TimetableControls;
