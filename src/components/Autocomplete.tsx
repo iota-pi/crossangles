@@ -71,6 +71,7 @@ const AutocompleteControl = ({
 
   return (
     <Autocomplete
+      id="course-selection-autocomplete"
       options={options}
       filterOptions={filterOptions}
       ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
@@ -106,7 +107,7 @@ const AutocompleteControl = ({
         const nameParts = parse(name, nameMatches);
 
         return (
-          <div>
+          <div data-cy="autocomplete-option">
             {codeParts.map((part, index) => (
               <span key={index} style={{ fontWeight: part.highlight ? 500 : 400 }}>
                 {part.text}
