@@ -1,7 +1,4 @@
 import React from 'react';
-
-// Styles
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -9,7 +6,8 @@ import { StreamData } from '../state/Stream';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state';
 
-const useStyles = makeStyles((theme: Theme) => ({
+
+const useStyles = makeStyles(theme => ({
   lessSpaceAbove: {
     marginTop: -theme.spacing(1),
   },
