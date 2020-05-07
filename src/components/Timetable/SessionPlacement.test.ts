@@ -149,10 +149,11 @@ describe('SessionPlacement', () => {
     expect(p.touched).toBe(true);
   });
 
-  test('position object always changes', () => {
+  test('result object doesn\'t change if position is the same', () => {
     const p = new SessionPlacement(session);
     const pos1 = p.getPosition(dimensions, startHour);
-    expect(p.getPosition(dimensions, startHour)).not.toBe(pos1);
+    expect(p.getPosition(dimensions, startHour)).toBe(pos1);
+    expect(p.getPosition(dimensions, startHour)).toBe(pos1);
   });
 
   test('position can\'t be negative after drag', () => {
