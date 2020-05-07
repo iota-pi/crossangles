@@ -1,5 +1,4 @@
 import React from 'react';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { HistoryData } from '../state/StateHistory';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,7 +9,7 @@ import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 import Event from '@material-ui/icons/Event';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   primary: {
     transition: theme.transitions.create('color'),
     color: theme.palette.primary.main,
