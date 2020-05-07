@@ -1,4 +1,4 @@
-import { getCurrentTimetable } from './Timetable';
+import { getCurrentTimetable } from './selectors';
 import { initialState } from '.';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 
