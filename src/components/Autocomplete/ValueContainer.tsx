@@ -20,6 +20,10 @@ class ValueContainer extends Component<Props> {
       return true;
     }
 
+    if (this.props.selectProps.classes.valueContainer !== nextProps.selectProps.classes.valueContainer) {
+      return true;
+    }
+
     return false;
   }
 }

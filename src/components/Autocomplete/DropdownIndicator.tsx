@@ -1,23 +1,23 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
-import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import { CourseData } from '../../state/Course';
 
 export interface Props extends IndicatorProps<CourseData> {}
 
-class Menu extends PureComponent<Props> {
-  render () {
-    const { DropdownIndicatorProps, classes } = this.props.selectProps;
-    const { open, focused } = DropdownIndicatorProps;
-    const classList: string[] = [
-      classes.dropDown,
-      open ? classes.dropDownUp : '',
-      focused ? classes.dropDownFocus : '',
-    ].filter((c: string) => !!c);
-    return (
-      <ArrowDropDown className={classList.join(' ')} />
-    );
-  }
+const DropdownIndicator = ({ selectProps }: Props) => {
+  const { DropdownIndicatorProps, classes } = selectProps;
+  const { open, focused } = DropdownIndicatorProps;
+
+  const classList: string[] = [
+    classes.dropDown,
+    open ? classes.dropDownUp : '',
+    focused ? classes.dropDownFocus : '',
+  ].filter((c: string) => !!c);
+
+  return (
+    <ArrowDropDown className={classList.join(' ')} />
+  );
 }
 
-export default Menu;
+export default DropdownIndicator;
