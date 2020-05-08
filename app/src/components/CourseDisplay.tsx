@@ -1,7 +1,5 @@
 import React, { MouseEvent } from 'react';
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import ReactGA from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -24,12 +22,12 @@ import getCampus from '../getCampus';
 import { CATEGORY } from '../analytics';
 
 
-const styles = (theme: Theme) => {
+const useStyles = makeStyles(theme => {
   const transition = {
     duration: theme.transitions.duration.shorter,
   };
 
-  return createStyles({
+  return {
     minimised: {
       '& $expandIcon': {
         transform: 'rotate(180deg)',
@@ -75,11 +73,11 @@ const styles = (theme: Theme) => {
       marginLeft: theme.spacing(1),
       cursor: 'pointer',
     },
-  });
-};
+  };
+});
 
 
-export interface BaseCourseDisplayProps extends WithStyles<typeof styles> {
+export interface BaseCourseDisplayProps {
   course: CourseData,
   colours: ColourMap,
   onRemoveCourse: (course: CourseData) => void,
@@ -116,8 +114,7 @@ const getHandbookLink = (course: CourseData, meta: Meta) => {
 }
 
 
-export const CourseDisplay = withStyles(styles)(({
-  classes,
+export const CourseDisplay = ({
   course,
   colours,
   meta,
@@ -128,6 +125,7 @@ export const CourseDisplay = withStyles(styles)(({
   onToggleWeb,
   onShowPopover,
 }: CourseDisplayProps) => {
+  const classes = useStyles();
   const handbookLink = getHandbookLink(course, meta);
   const courseTitle = (
     <>
@@ -218,10 +216,9 @@ export const CourseDisplay = withStyles(styles)(({
       ) : <React.Fragment/>}
     </React.Fragment>
   )
-});
+};
 
-export const AdditionalCourseDisplay = withStyles(styles)(({
-  classes,
+export const AdditionalCourseDisplay = ({
   course,
   events,
   colours,
@@ -231,6 +228,7 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
   onRemoveCourse,
   onToggleShowEvents,
 }: AdditionalCourseDisplayProps) => {
+  const classes = useStyles();
   const eventList = getEvents(course);
 
   const courseId = getCourseId(course);
@@ -276,7 +274,6 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
         </div>
 
         <CourseActionButton
-          classes={classes}
           course={course}
           onRemoveCourse={onRemoveCourse}
           onToggleShowEvents={onToggleShowEvents}
@@ -296,44 +293,46 @@ export const AdditionalCourseDisplay = withStyles(styles)(({
       )}
     </React.Fragment>
   )
-});
+};
 
-interface CourseActionButtonProps extends WithStyles<typeof styles> {
+interface CourseActionButtonProps {
   course: CourseData,
   onRemoveCourse: (course: CourseData) => void,
   onToggleShowEvents: (course: CourseData) => void,
 }
 
 const CourseActionButton = ({
-  classes,
   course,
   onToggleShowEvents,
   onRemoveCourse,
-}: CourseActionButtonProps) => (course.isAdditional && course.autoSelect) ? (
-  <ListItemIcon
-    className={classes.listIcon}
-  >
-    <IconButton
-      size="small"
-      onClick={() => onToggleShowEvents(course)}
-      data-cy="hide-events"
-      className={classes.expandIcon}
+}: CourseActionButtonProps) => {
+  const classes = useStyles();
+  return (course.isAdditional && course.autoSelect) ? (
+    <ListItemIcon
+      className={classes.listIcon}
     >
-      <Expand />
-    </IconButton>
-  </ListItemIcon>
-) : (
-  <ListItemIcon
-    className={classes.listIcon}
-  >
-    <IconButton
-      size="small"
-      onClick={() => onRemoveCourse(course)}
-      data-cy="remove-course"
+      <IconButton
+        size="small"
+        onClick={() => onToggleShowEvents(course)}
+        data-cy="hide-events"
+        className={classes.expandIcon}
+      >
+        <Expand />
+      </IconButton>
+    </ListItemIcon>
+  ) : (
+    <ListItemIcon
+      className={classes.listIcon}
     >
-      <Close />
-    </IconButton>
-  </ListItemIcon>
-);
+      <IconButton
+        size="small"
+        onClick={() => onRemoveCourse(course)}
+        data-cy="remove-course"
+      >
+        <Close />
+      </IconButton>
+    </ListItemIcon>
+  );
+}
 
 export default CourseDisplay;
