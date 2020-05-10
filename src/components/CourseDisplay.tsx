@@ -134,9 +134,8 @@ export const CourseDisplay = ({
             size="small"
             className={classes.marginRight}
             onClick={() => onEditCustomCourse(course)}
-            data-cy="edit-custom"
           >
-            <Edit />
+            <Edit data-cy="edit-custom" />
           </IconButton>
         )}
 
@@ -151,9 +150,8 @@ export const CourseDisplay = ({
 
         <CourseActionButton
           onClick={() => onRemoveCourse(course)}
-          data-cy="remove-course"
         >
-          <Close />
+          <Close data-cy="remove-course" />
         </CourseActionButton>
       </ListItem>
 
