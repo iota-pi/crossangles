@@ -52,7 +52,14 @@ if [[ $COMMAND == cypress ]]; then
 fi
 
 if [[ $COMMAND == run ]]; then
-  (cd app; npm start)
+  if [[ ${2:-} == --build ]]; then
+    cd app
+    npm run build
+    npx serve build
+  else
+    cd app
+    npm start
+  fi
 fi
 
 if [[ $COMMAND == scrape ]]; then
