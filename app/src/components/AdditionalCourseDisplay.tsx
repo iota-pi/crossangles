@@ -114,10 +114,13 @@ export const AdditionalCourseDisplay = ({
 
         <CourseActionButton
           onClick={() => course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course)}
-          data-cy={course.autoSelect ? 'hide-events' : 'remove-course'}
           flipped={minimiseEvents}
         >
-          {course.autoSelect ? <Expand /> : <Close />}
+          {course.autoSelect ? (
+            <Expand data-cy="hide-events" />
+          ) : (
+            <Close data-cy="remove-course" />
+          )}
         </CourseActionButton>
       </ListItem>
 
