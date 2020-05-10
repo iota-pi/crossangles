@@ -1,9 +1,10 @@
 import React, { RefObject } from 'react';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles, CSSProperties } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH } from './timetableUtil';
 import { HourSpan } from './getHours';
+import IconButton from '@material-ui/core/IconButton';
+import Schedule from '@material-ui/icons/Schedule';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -14,11 +15,11 @@ const noSelect: CSSProperties = {
   userSelect: 'none',
 }
 
-const styles = (theme: Theme) => {
+const useStyles = makeStyles(theme => {
   const STANDARD_BORDER = theme.palette.divider;
   const DARKER_BORDER = theme.palette.action.disabled;
 
-  return createStyles({
+  return {
     grid: {
       position: 'relative',
       overflowX: 'visible',
@@ -70,47 +71,73 @@ const styles = (theme: Theme) => {
       paddingRight: theme.spacing(1.5),
       justifyContent: 'flex-end',
       borderRightColor: DARKER_BORDER,
+      '&$timeCentred': {
+        justifyContent: 'center',
+        paddingRight: 0,
+      },
     },
+    timeCentred: {},
     timeSuffix: {
       fontWeight: 300,
       marginLeft: 2,
     },
-  });
-}
+  };
+});
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const daysToLetters: {[key: string]: string} = {
   'Monday': 'M', 'Tuesday': 'T', 'Wednesday': 'W', 'Thursday': 'H', 'Friday': 'F'
 };
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
+  disabled: boolean,
   timetableRef: RefObject<HTMLDivElement>,
   hours: HourSpan,
   twentyFourHours?: boolean,
+  onToggleTwentyFourHours?: () => void,
 }
 
-export const TimetableGrid = withStyles(styles)(({
-  classes,
+export const TimetableGrid: React.FC<Props> = ({
+  disabled,
   timetableRef,
   hours,
   twentyFourHours = false,
-}: Props) => {
-  const duration = hours.end - hours.start;
-  const hoursArray = new Array(duration).fill(0).map((_, i) => {
-    let hour = hours.start + i;
-    if (twentyFourHours) {
-      return [hour.toString().padStart(2, '0'), ':00'];
-    } else {
-      const suffix = hour < 12 ? 'am' : 'pm';
-      hour = (hour % 12) || 12;
-      return [hour, suffix];
-    }
-  });
+  onToggleTwentyFourHours,
+}) => {
+  const classes = useStyles();
+  const hoursArray = React.useMemo(
+    () => {
+      const duration = hours.end - hours.start;
+      return new Array(duration).fill(0).map((_, i) => {
+        let hour = hours.start + i;
+        if (twentyFourHours) {
+          return [hour.toString().padStart(2, '0'), ':00'];
+        } else {
+          const suffix = hour < 12 ? 'am' : 'pm';
+          hour = (hour % 12) || 12;
+          return [hour, suffix];
+        }
+      });
+    },
+    [hours, twentyFourHours],
+  );
+
 
   return (
     <div className={classes.grid} ref={timetableRef}>
       <div className={`${classes.row} ${classes.header}`}>
-        <div className={`${classes.cell} ${classes.time}`}></div>
+        <div className={`${classes.cell} ${classes.time} ${classes.timeCentred}`}>
+          {onToggleTwentyFourHours && (
+            <IconButton
+              onClick={onToggleTwentyFourHours}
+              size="small"
+              disabled={disabled}
+            >
+              <Schedule />
+            </IconButton>
+          )}
+        </div>
+
         {days.map(day => (
           <div key={day} className={classes.cell}>{day}</div>
         ))}
@@ -140,6 +167,6 @@ export const TimetableGrid = withStyles(styles)(({
       ))}
     </div>
   );
-});
+};
 
 export default TimetableGrid;

@@ -55,6 +55,8 @@ export interface Props extends WithStyles<typeof styles> {
   minimalHours?: boolean,
   isStandalone?: boolean,
   isUpdating?: boolean,
+  twentyFourHours?: boolean,
+  onToggleTwentyFourHours?: () => void,
 }
 
 export interface State {
@@ -82,7 +84,8 @@ class TimetableTable extends Component<Props, State> {
     const dimensions = this.state.dimensions;
     const startHour = this.hours.start;
     const rootClasses = [classes.root];
-    if (this.props.timetable.order.length === 0 && !this.props.isStandalone) {
+    const disabled = this.props.timetable.order.length === 0 && !this.props.isStandalone;
+    if (disabled) {
       rootClasses.push(classes.faded);
     }
 
@@ -104,7 +107,6 @@ class TimetableTable extends Component<Props, State> {
               key={key}
               session={session}
               colour={this.getColour(session.course)}
-              // TODO: memoise these to reduce re-renderings
               position={placement.getPosition(dimensions, startHour)}
               dimensions={placement.basePlacement(dimensions, startHour)}
               isDragging={placement.isDragging}
@@ -134,6 +136,9 @@ class TimetableTable extends Component<Props, State> {
         <TimetableGrid
           timetableRef={this.timetableRef}
           hours={this.hours}
+          disabled={disabled}
+          twentyFourHours={this.props.twentyFourHours}
+          onToggleTwentyFourHours={this.props.onToggleTwentyFourHours}
         />
       </div>
     )
