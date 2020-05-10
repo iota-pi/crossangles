@@ -152,3 +152,5 @@ export const ActionButtons = withStyles(styles)(({
     </div>
   )
 });
+
+export default ActionButtons;
