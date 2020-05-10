@@ -16,19 +16,6 @@ export interface TimetableSearchResult {
 }
 
 
-export const getWorkerFunc = (worker: Worker) => {
-  if (worker.hasOwnProperty('runSearch')) {
-    return worker.runSearch;
-  }
-
-  // In case of mangled names, find any other function name to use
-  const funcs = Object.keys(worker).filter(funcName => !['onerror', 'onmessage'].includes(funcName));
-  const funcName = funcs[0];
-  const result = worker[funcName as keyof typeof worker];
-  return result as typeof worker.runSearch;
-}
-
-
 class TimetableSearch {
   private cache = new Map<string, TimetableSearchResult>();
   private workers: Worker[] = [];
@@ -103,9 +90,7 @@ class TimetableSearch {
     const promises: Promise<Parent<LinkedStream>>[] = [];
     const workers = maxSpawn ? this.workers.slice(0, maxSpawn) : this.workers;
     for (const worker of workers) {
-      console.log(worker);
-      const workerFunc = getWorkerFunc(worker);
-      promises.push(workerFunc({
+      promises.push(worker.runSearch({
         fixedSessions,
         clashInfo,
         streams,
