@@ -25,22 +25,22 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
+import { PersistGate } from 'redux-persist/integration/react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
-import AppBar from './components/AppBar';
 import CourseSelection from './containers/CourseSelection';
 import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
-import { PersistGate } from 'redux-persist/integration/react';
-import { ActionButtons } from './components/ActionButtons';
-import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
 
-const NoticeDisplay = loadable(() => import('./components/Notice'));
+const AppBar = loadable(() => import('./components/AppBar'));
 const TimetableContainer = lazy(() => import('./containers/TimetableContainer'));
+const ActionButtons = loadable(() => import('./components/ActionButtons'));
+const NoticeDisplay = loadable(() => import('./components/Notice'));
+const ContactUs = loadable(() => import('./components/ContactUs'));
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
