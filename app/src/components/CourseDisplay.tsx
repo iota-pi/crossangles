@@ -1,80 +1,51 @@
 import React, { MouseEvent } from 'react';
-import makeStyles from "@material-ui/core/styles/makeStyles";
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import ReactGA from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
-import Expand from '@material-ui/icons/ExpandMore';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-import AdditionalEvents from './AdditionalEvents';
 import WebStream from './WebStream';
 import { ColourMap } from '../state/Colours';
 import ColourControl from './Colour';
 import { CourseData, CourseId, getCourseId, getWebStream } from '../state/Course';
-import { Collapse } from '@material-ui/core';
-import { getEvents, AdditionalEvent } from '../state/Events';
 import { Meta } from '../state/Meta';
 import getCampus from '../getCampus';
 import { CATEGORY } from '../analytics';
+import CourseActionButton from './CourseActionButton';
 
 
-const useStyles = makeStyles(theme => {
-  const transition = {
-    duration: theme.transitions.duration.shorter,
-  };
-
-  return {
-    minimised: {
-      '& $expandIcon': {
-        transform: 'rotate(180deg)',
-      },
-    },
-    expandIcon: {
-      transform: 'rotate(0deg)',
-      transition: theme.transitions.create('transform', transition),
-    },
-    noVertPadding: {
-      marginTop: -theme.spacing(0.5),
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-    listIcon: {
-      minWidth: 'initial',
-    },
-    lightText: {
-      fontWeight: 300,
-    },
-    termText: {
-      fontWeight: 400,
-    },
-    plainLink: {
-      textDecoration: 'none',
-      color: 'inherit',
-      display: 'inline-flex',
-      alignItems: 'center',
-    },
-    externalLinkIcon: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      color: theme.palette.text.disabled,
-      verticalAlign: 'baseline',
-    },
-    marginRight: {
-      marginRight: theme.spacing(1),
-    },
-    description: {
-      color: 'rgb(0, 0, 238)',
-      fontWeight: 300,
-      fontSize: '0.7rem',
-      marginLeft: theme.spacing(1),
-      cursor: 'pointer',
-    },
-  };
-});
+const useStyles = makeStyles(theme => ({
+  noVertPadding: {
+    marginTop: -theme.spacing(0.5),
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  lightText: {
+    fontWeight: 300,
+  },
+  termText: {
+    fontWeight: 400,
+  },
+  plainLink: {
+    textDecoration: 'none',
+    color: 'inherit',
+    display: 'inline-flex',
+    alignItems: 'center',
+  },
+  externalLinkIcon: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    color: theme.palette.text.disabled,
+    verticalAlign: 'baseline',
+  },
+  marginRight: {
+    marginRight: theme.spacing(1),
+  },
+}));
 
 
 export interface BaseCourseDisplayProps {
@@ -90,17 +61,6 @@ export interface CourseDisplayProps extends BaseCourseDisplayProps {
   includeFull: boolean,
   onEditCustomCourse: (course: CourseData) => void,
   onToggleWeb: (course: CourseData) => void,
-}
-
-export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
-  course: CourseData,
-  events: AdditionalEvent[],
-  colours: ColourMap,
-  hiddenEvents: CourseId[],
-  onToggleEvent: (event: AdditionalEvent) => void,
-  onRemoveCourse: (course: CourseData) => void,
-  onToggleShowEvents: (course: CourseData) => void,
-  onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
 }
 
 
@@ -191,17 +151,12 @@ export const CourseDisplay = ({
           />
         </div>
 
-        <ListItemIcon
-          className={classes.listIcon}
+        <CourseActionButton
+          onClick={() => onRemoveCourse(course)}
+          data-cy="remove-course"
         >
-          <IconButton
-            size="small"
-            onClick={() => onRemoveCourse(course)}
-            data-cy="remove-course"
-          >
-            <Close />
-          </IconButton>
-        </ListItemIcon>
+          <Close />
+        </CourseActionButton>
       </ListItem>
 
       {webStream !== null ? (
@@ -217,122 +172,3 @@ export const CourseDisplay = ({
     </React.Fragment>
   )
 };
-
-export const AdditionalCourseDisplay = ({
-  course,
-  events,
-  colours,
-  hiddenEvents,
-  onShowPopover,
-  onToggleEvent,
-  onRemoveCourse,
-  onToggleShowEvents,
-}: AdditionalCourseDisplayProps) => {
-  const classes = useStyles();
-  const eventList = getEvents(course);
-
-  const courseId = getCourseId(course);
-  const minimiseEvents = hiddenEvents.includes(courseId);
-  const showEvents = eventList.length > 1 || course.autoSelect;
-  const colour = colours[courseId];
-
-  const handleLinkClick = (destination?: string) => {
-    ReactGA.event({
-      category: CATEGORY,
-      action: 'Additional Link',
-      label: destination,
-    });
-  }
-
-  return (
-    <React.Fragment>
-      <ListItem className={minimiseEvents ? classes.minimised : undefined}>
-        <ListItemText>
-          {course.metadata ? (
-            <a
-              href={course.metadata.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes.plainLink}
-              onClick={() => handleLinkClick(course.metadata!.website)}
-            >
-              <span>{course.name}</span>
-              <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
-            </a>
-          ) : (
-            <span>{course.name}</span>
-          )}
-        </ListItemText>
-
-        <div className={classes.marginRight}>
-          <ColourControl
-            colour={colour}
-            size={32}
-            isCircle
-            onClick={e => onShowPopover(e, course)}
-          />
-        </div>
-
-        <CourseActionButton
-          course={course}
-          onRemoveCourse={onRemoveCourse}
-          onToggleShowEvents={onToggleShowEvents}
-        />
-      </ListItem>
-
-      {showEvents && (
-        <Collapse in={!minimiseEvents}>
-          <ListItem className={classes.noVertPadding}>
-            <AdditionalEvents
-              course={course}
-              events={events}
-              onToggleEvent={onToggleEvent}
-            />
-          </ListItem>
-        </Collapse>
-      )}
-    </React.Fragment>
-  )
-};
-
-interface CourseActionButtonProps {
-  course: CourseData,
-  onRemoveCourse: (course: CourseData) => void,
-  onToggleShowEvents: (course: CourseData) => void,
-}
-
-const CourseActionButton = ({
-  course,
-  onToggleShowEvents,
-  onRemoveCourse,
-}: CourseActionButtonProps) => {
-  const classes = useStyles();
-  return (course.isAdditional && course.autoSelect) ? (
-    <ListItemIcon
-      className={classes.listIcon}
-    >
-      <IconButton
-        size="small"
-        onClick={() => onToggleShowEvents(course)}
-        data-cy="hide-events"
-        className={classes.expandIcon}
-      >
-        <Expand />
-      </IconButton>
-    </ListItemIcon>
-  ) : (
-    <ListItemIcon
-      className={classes.listIcon}
-    >
-      <IconButton
-        size="small"
-        onClick={() => onRemoveCourse(course)}
-        data-cy="remove-course"
-      >
-        <Close />
-      </IconButton>
-    </ListItemIcon>
-  );
-}
-
-export default CourseDisplay;
