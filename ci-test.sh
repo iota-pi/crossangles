@@ -3,7 +3,7 @@ set -e
 ./ci.sh test &
 unit_test=$!
 
-./ci.sh build
+./ci.sh build app
 ./ci.sh run --prod &
 (
   cd app
