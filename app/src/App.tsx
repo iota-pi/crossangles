@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, Suspense } from 'react';
+import React, { Component, ReactNode, Suspense, ErrorInfo } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
 import loadable, { lazy } from '@loadable/component';
@@ -161,6 +161,16 @@ class App extends Component<Props, State> {
   componentDidMount () {
     initialiseGA();
     pageView();
+  }
+
+  componentDidCatch (error: Error, info: ErrorInfo) {
+    const infoText = info.componentStack;
+
+    ReactGA.exception({
+      description: `Unhandled error catch by error boundary in App.\n${error.message}\n${error.stack}\n${infoText}`,
+    });
+    console.error(error);
+    console.error(info);
   }
 
   private handleSaveAsImage = async () => {
