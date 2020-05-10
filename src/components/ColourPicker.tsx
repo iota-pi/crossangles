@@ -1,11 +1,9 @@
-import React, { PureComponent } from 'react';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import React from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import ColourControl from './Colour';
 import { Colour } from '../state';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(1),
   },
@@ -25,9 +23,9 @@ const styles = (theme: Theme) => createStyles({
     }
   },
   selected: {},
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   colours: Colour[],
   columns: number,
   size: number,
@@ -35,38 +33,36 @@ export interface Props extends WithStyles<typeof styles> {
   onChange: (colour: Colour) => void,
 }
 
-class ColourPicker extends PureComponent<Props> {
-  render() {
-    const { classes, value } = this.props;
+export const ColourPicker: React.FC<Props> = ({ colours, columns, onChange, size, value }) => {
+  const classes = useStyles();
 
-    return (
+  return (
+    <div
+      className={classes.root}
+      data-cy="colour-picker"
+    >
       <div
-        className={classes.root}
-        data-cy="colour-picker"
+        className={classes.colourContainer}
+        style={{
+          width: size * columns,
+        }}
       >
-        <div
-          className={classes.colourContainer}
-          style={{
-            width: this.props.size * this.props.columns,
-          }}
-        >
-          {this.props.colours.map(colour => {
-            const isSelected = !!value && colour === value;
+        {colours.map(colour => {
+          const isSelected = !!value && colour === value;
 
-            return (
-              <ColourControl
-                key={colour}
-                colour={colour}
-                onClick={() => this.props.onChange(colour)}
-                size={this.props.size}
-                isSelected={isSelected}
-              />
-            );
-          })}
-        </div>
+          return (
+            <ColourControl
+              key={colour}
+              colour={colour}
+              onClick={() => onChange(colour)}
+              size={size}
+              isSelected={isSelected}
+            />
+          );
+        })}
       </div>
-    )
-  }
+    </div>
+  );
 }
 
-export default withStyles(styles)(ColourPicker);
+export default ColourPicker;
