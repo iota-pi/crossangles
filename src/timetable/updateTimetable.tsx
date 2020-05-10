@@ -1,6 +1,7 @@
 import React from 'react';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import ReactGA from 'react-ga';
 
 import { search, TimetableSearchResult } from './timetableSearch';
 import { coursesToComponents, Component } from './coursesToComponents';
@@ -60,21 +61,35 @@ export const updateTimetable = async (
     fixedSessions = sessionManager.getTouchedSessions(courses, events);
   }
 
-  const newTimetable = await doTimetableSearch({
-    fixedSessions,
-    courses,
-    events,
-    webStreams,
-    options,
-    searchConfig,
-    ignoreCache: cleanUpdate,
-  });
+  let newTimetable: TimetableSearchResult | null = null;
+  try {
+    newTimetable = await doTimetableSearch({
+      fixedSessions,
+      courses,
+      events,
+      webStreams,
+      options,
+      searchConfig,
+      ignoreCache: cleanUpdate,
+    });
+  } catch (error) {
+    ReactGA.exception({ description: 'Unexpected error in doTimetableSearch. ' + error });
+    console.error(error);
+  }
 
   if (newTimetable === null) {
     // Displace some classes and display a warning
     await dispatch(setNotice('There was a problem generating a timetable'));
   } else {
-    sessionManager.update(newTimetable.timetable, newTimetable.score);
+    try {
+      sessionManager.update(newTimetable.timetable, newTimetable.score);
+    } catch (error) {
+      ReactGA.exception({ description: 'Unexpected error when updating SessionManager. ' + error });
+      console.error(error);
+      await dispatch(setNotice('There was a problem generating a timetable'));
+      return;
+    }
+
     await dispatch(setTimetable(sessionManager.data, meta));
 
     await notifyUnplaced(args, newTimetable.unplaced || []);
@@ -184,8 +199,9 @@ export async function doTimetableSearch ({
     // NB: scoring should take fixed sessions into account too
     // NB: full sessions don't matter here, since they can be considered to be 'unplaced'
     result = await search(components, fixed, ignoreCache, searchConfig, maxSpawn);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
+    ReactGA.exception({ description: 'Unexpected error in search. ' + error });
     return null;
   }
 

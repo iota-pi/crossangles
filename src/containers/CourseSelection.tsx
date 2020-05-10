@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactGA from 'react-ga';
 import {
   AdditionalEvent,
   ColourMap,
@@ -217,7 +218,15 @@ class CourseSelection extends Component<Props, State> {
   }
 
   private getSessionManager = () => {
-    return SessionManager.from(this.props.timetable, this.props.courses);
+    try {
+      return SessionManager.from(this.props.timetable, this.props.courses);
+    } catch (error) {
+      ReactGA.exception({
+        description: 'Could not process timetable data. ' + error,
+      });
+      console.error('Could not process timetable data', this.props.timetable, this.props.courses);
+      return new SessionManager();
+    }
   }
 
   private updateTimetable = async (sessionManager: SessionManager) => {
