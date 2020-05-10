@@ -1,12 +1,10 @@
-import React, { PureComponent, CSSProperties } from 'react';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import React from 'react';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
 import { LinkedSession, SessionData } from '../../state';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     position: 'absolute',
     overflow: 'hidden',
@@ -21,44 +19,44 @@ const styles = (theme: Theme) => createStyles({
     height: '100%',
     zIndex: 0,
   },
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   position: Placement,
   session: LinkedSession | SessionData,
   colour: string,
 }
 
-class TimetableDropzone extends PureComponent<Props> {
-  render() {
-    const { classes, colour, session } = this.props;
+export const TimetableDropzone: React.FC<Props> = ({ colour, session, position }) => {
+  const classes = useStyles();
+  const styles = React.useMemo(
+    () => {
+      const { width, height, x, y } = position;
 
-    return (
+      return {
+        left: x,
+        top: y,
+        width,
+        height,
+      };
+    },
+    [position],
+  );
+
+  return (
+    <div
+      className={classes.root}
+      style={styles}
+      data-cy={`timetable-dropzone-${session.day}${session.start}`}
+    >
       <div
-        className={classes.root}
-        style={this.styles}
-        data-cy={`timetable-dropzone-${session.day}${session.start}`}
-      >
-        <div
-          className={classes.background}
-          style={{
-            backgroundColor: colour + 'A0',
-          }}
-        />
-      </div>
-    )
-  }
-
-  private get styles (): CSSProperties {
-    const { width, height, x, y } = this.props.position;
-
-    return {
-      left: x,
-      top: y,
-      width,
-      height,
-    };
-  }
+        className={classes.background}
+        style={{
+          backgroundColor: colour + 'A0',
+        }}
+      />
+    </div>
+  );
 }
 
-export default withStyles(styles)(TimetableDropzone);
+export default TimetableDropzone;
