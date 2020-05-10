@@ -3,7 +3,8 @@ set -e
 ./ci.sh test &
 unit_test=$!
 
-./ci.sh run --build &
+./ci.sh build
+./ci.sh run --prod &
 (
   cd app
   CYPRESS_BASE_URL=http://localhost:5000 \

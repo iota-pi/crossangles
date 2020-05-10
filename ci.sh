@@ -52,9 +52,8 @@ if [[ $COMMAND == cypress ]]; then
 fi
 
 if [[ $COMMAND == run ]]; then
-  if [[ ${2:-} == --build ]]; then
+  if [[ ${2:-} == --prod ]]; then
     cd app
-    npm run build
     npx serve build
   else
     cd app
