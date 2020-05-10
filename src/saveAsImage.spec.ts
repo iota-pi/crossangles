@@ -1,7 +1,6 @@
 import { parseQueryString, parseJSONQueryString, SaveAsImageData, getScreenshotHeight } from './saveAsImage';
 import { getSessionManager } from './test_util';
-import { ColourMap } from './state/Colours';
-import { Options } from './state/Options';
+import { ColourMap, Options } from './state';
 import { buildQueryString } from '../../image';
 
 const testTimetable = Object.freeze(getSessionManager().data);

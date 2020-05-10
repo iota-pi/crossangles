@@ -1,7 +1,5 @@
-import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
+import { COURSE_COLOURS, ColourMap, Colour, getCourseId, initialState } from '../state';
 import { ADD_COURSE, SET_COLOUR, AllActions, SET_COURSE_DATA, REMOVE_COURSE } from '../actions';
-import { getCourseId } from '../state/Course';
-import { initialState } from '../state';
 
 export function colours (state = initialState.colours, action: AllActions): ColourMap {
   const chosenColours = Object.values(state);

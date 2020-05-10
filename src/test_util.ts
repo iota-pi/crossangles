@@ -1,5 +1,4 @@
-import { CourseData } from './state/Course';
-import { linkStream } from './state/Stream';
+import { CourseData, linkStream } from './state';
 import SessionPlacement from './components/Timetable/SessionPlacement';
 import SessionManager from './components/Timetable/SessionManager';
 import { Dimensions } from './components/Timetable/timetableTypes';

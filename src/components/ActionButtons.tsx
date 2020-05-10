@@ -5,9 +5,8 @@ import ReactGA from 'react-ga';
 import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
-import { Meta } from '../state/Meta';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { CourseData } from '../state/Course';
+import { CourseData, Meta } from '../state';
 import { CATEGORY } from '../analytics';
 
 const styles = (theme: Theme) => createStyles({

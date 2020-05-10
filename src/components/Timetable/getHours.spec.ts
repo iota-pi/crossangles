@@ -1,4 +1,4 @@
-import { SessionData } from '../../state/Session';
+import { SessionData } from '../../state';
 import { getHours } from './getHours';
 
 const baseSession: Omit<SessionData, 'start' | 'end'> = {

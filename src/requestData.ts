@@ -1,8 +1,7 @@
 import axios from 'axios';
 import config, { dataDomain } from './campusConfig';
 import getCampus from './getCampus';
-import { CourseData } from './state/Course';
-import { Meta } from './state/Meta';
+import { CourseData, Meta } from './state';
 
 
 export interface CampusData {

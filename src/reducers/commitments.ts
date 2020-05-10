@@ -1,6 +1,3 @@
-import { initialState } from '../state';
-import { Options } from '../state/Options';
-import { CourseId } from '../state/Course';
 import {
   AllActions,
   ADD_COURSE,
@@ -8,7 +5,7 @@ import {
   TOGGLE_OPTION,
   TOGGLE_SHOW_EVENTS,
 } from '../actions';
-import { getEvents, AdditionalEvent } from '../state/Events';
+import { AdditionalEvent, CourseId, getEvents, initialState, Options } from '../state';
 
 export function events (state: readonly AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
   switch (action.type) {

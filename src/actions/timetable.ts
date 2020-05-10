@@ -1,6 +1,6 @@
-import { SessionManagerData } from '../components/Timetable/SessionManager';
 import { Action } from 'redux';
-import { YearAndTerm, getCurrentTerm } from '../state/Meta';
+import { YearAndTerm, getCurrentTerm } from '../state';
+import { SessionManagerData } from '../components/Timetable/SessionManager';
 
 export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER';
 

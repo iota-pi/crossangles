@@ -9,6 +9,19 @@ import SessionManager, { SessionManagerData } from '../components/Timetable/Sess
 import { Timetables } from './Timetable';
 import { getCurrentTimetable } from './selectors';
 
+export * from './Colours';
+export * from './Course';
+export * from './Events';
+export * from './Meta';
+export * from './Notice';
+export * from './Options';
+export * from './selectors';
+export * from './Session';
+export * from './StateHistory';
+export * from './Stream';
+export * from './Timetable';
+
+
 export interface TimetableState {
   courses: CourseMap,
   custom: CourseId[],

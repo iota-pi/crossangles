@@ -3,7 +3,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import ColourControl from './Colour';
-import { Colour } from '../state/Colours';
+import { Colour } from '../state';
 
 const styles = (theme: Theme) => createStyles({
   root: {

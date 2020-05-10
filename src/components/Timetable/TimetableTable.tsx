@@ -13,11 +13,16 @@ import { SNAP_DIST } from './timetableUtil';
 import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
-import { ColourMap, FALLBACK_COLOUR, getColour } from '../../state/Colours';
-import { Options } from '../../state/Options';
-import { getCourseId, CourseData } from '../../state/Course';
-import { LinkedSession } from '../../state/Session';
-import { linkStream } from '../../state/Stream';
+import {
+  ColourMap,
+  FALLBACK_COLOUR,
+  getColour,
+  Options,
+  getCourseId,
+  CourseData,
+  LinkedSession,
+  linkStream,
+} from '../../state';
 import getHours, { HourSpan } from './getHours';
 import { CATEGORY } from '../../analytics';
 

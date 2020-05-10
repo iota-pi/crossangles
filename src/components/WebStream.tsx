@@ -1,10 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { StreamData } from '../state/Stream';
-import { useSelector } from 'react-redux';
-import { RootState } from '../state';
+import { RootState, StreamData } from '../state';
 
 
 const useStyles = makeStyles(theme => ({

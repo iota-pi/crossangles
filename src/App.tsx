@@ -1,14 +1,18 @@
 import React, { Component, ReactNode } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
-import loadable from '@loadable/component';
 import ReactGA from 'react-ga';
-import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
-import { RootState } from './state';
-import { Meta } from './state/Meta';
-import { Notice } from './state/Notice';
-import { Options } from './state/Options';
-import { ColourMap } from './state/Colours';
-import { CourseData } from './state/Course';
+import loadable from '@loadable/component';
+import {
+  RootState,
+  Meta,
+  Notice,
+  Options,
+  ColourMap,
+  CourseData,
+  getCurrentTimetable,
+  getShowSignup,
+  getAdditionalCourses,
+} from './state';
 import { fetchData, clearNotice, setNotice, setDarkMode } from './actions';
 import getCampus from './getCampus';
 import { initialiseGA, pageView, CATEGORY } from './analytics';

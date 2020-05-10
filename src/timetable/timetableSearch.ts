@@ -1,7 +1,6 @@
 import { GeneticSearchOptionalConfig, Parent } from './GeneticSearch';
 import { Component } from './coursesToComponents';
-import { LinkedStream } from '../state/Stream';
-import { LinkedSession } from '../state/Session';
+import { LinkedSession, LinkedStream } from '../state';
 import { getClashInfo, ClashInfo } from './getClashInfo';
 
 // eslint-disable-next-line import/no-webpack-loader-syntax

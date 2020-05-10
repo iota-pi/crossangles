@@ -1,5 +1,5 @@
 import React from 'react';
-import { optionList, Options, OptionName } from '../state/Options';
+import { optionList, Options, OptionName } from '../state';
 
 // Styles
 import makeStyles from '@material-ui/core/styles/makeStyles';

@@ -1,8 +1,7 @@
 import SessionManager from './SessionManager';
 import SessionPlacement from './SessionPlacement';
 import { getSessionPlacement, getDimensions } from '../../test_util';
-import { LinkedSession } from '../../state/Session';
-import { LinkedStream } from '../../state/Stream';
+import { LinkedStream, LinkedSession } from '../../state';
 
 describe('SessionManager basic functionality', () => {
   test('get throws if not found', () => {

@@ -2,9 +2,15 @@ import { Position, Dimensions } from './timetableTypes';
 import { TimetablePlacement } from './Placement';
 import * as tt from './timetableUtil';
 import * as SessionPosition from './SessionPosition';
-import { LinkedSession, SessionData, unlinkSession, linkSession } from '../../state/Session';
-import { CourseData } from '../../state/Course';
-import { getStreamId, linkStream } from '../../state/Stream';
+import {
+  CourseData,
+  getStreamId,
+  linkStream,
+  LinkedSession,
+  SessionData,
+  unlinkSession,
+  linkSession,
+} from '../../state';
 
 export interface SessionPlacementData {
   offset: Position,

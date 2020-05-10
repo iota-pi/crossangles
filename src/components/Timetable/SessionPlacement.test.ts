@@ -1,6 +1,6 @@
 import { CLASH_OFFSET_X, CLASH_OFFSET_Y, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './timetableUtil';
 import SessionPlacement from './SessionPlacement';
-import { LinkedSession } from '../../state/Session';
+import { LinkedSession } from '../../state';
 import { Dimensions } from './timetableTypes';
 
 const session: LinkedSession = {

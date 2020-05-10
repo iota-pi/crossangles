@@ -1,6 +1,5 @@
-import { Notice } from '../state/Notice';
 import { SET_NOTICE, CLEAR_NOTICE, AllActions } from '../actions';
-import { initialState } from '../state';
+import { initialState, Notice } from '../state';
 
 export function notice (
   state = initialState.notice,

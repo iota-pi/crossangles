@@ -1,8 +1,7 @@
 import { Action, AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { requestData } from '../requestData';
-import { Meta } from '../state/Meta';
-import { CourseData } from '../state/Course';
+import { CourseData, Meta } from '../state';
 
 export const SET_COURSE_DATA = 'SET_COURSE_DATA';
 export const SET_COURSE_MANAGER = 'SET_COURSE_MANAGER';

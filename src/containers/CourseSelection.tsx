@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { RootState } from '../state';
-import { CourseMap, CourseData, CourseId, getCourseId } from '../state/Course';
-import { Options, OptionName } from '../state/Options';
-import { ColourMap, Colour } from '../state/Colours';
-import { AdditionalEvent } from '../state/Events';
-import { Meta } from '../state/Meta';
 import {
+  AdditionalEvent,
+  ColourMap,
+  Colour,
+  CourseMap,
+  CourseData,
+  CourseId,
+  getCourseId,
   getAdditionalCourses,
   getChosenCourses,
   getCourseList,
   getCustomCourses,
   getCurrentTimetable,
-} from '../state/selectors';
+  Meta,
+  Options,
+  OptionName,
+  RootState,
+} from '../state';
 import {
   addCourse,
   removeCourse,

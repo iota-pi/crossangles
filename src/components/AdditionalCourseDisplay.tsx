@@ -9,13 +9,18 @@ import Close from '@material-ui/icons/Close';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import AdditionalEvents from './AdditionalEvents';
 import ColourControl from './Colour';
-import { getCourseId, CourseData, CourseId } from '../state/Course';
+import {
+  getCourseId,
+  CourseData,
+  CourseId,
+  getEvents,
+  AdditionalEvent,
+  ColourMap,
+} from '../state';
 import { Collapse } from '@material-ui/core';
-import { getEvents, AdditionalEvent } from '../state/Events';
 import { CATEGORY } from '../analytics';
 import CourseActionButton from './CourseActionButton';
 import { BaseCourseDisplayProps } from './CourseDisplay';
-import { ColourMap } from '../state/Colours';
 
 export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
   course: CourseData,

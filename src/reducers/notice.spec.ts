@@ -1,7 +1,6 @@
 import { notice } from './notice';
 import { ClearNoticeAction, CLEAR_NOTICE, SetNoticeAction, SET_NOTICE, CourseAction, TOGGLE_WEB_STREAM } from '../actions';
-import { initialState } from '../state';
-import { Notice } from '../state/Notice';
+import { initialState, Notice } from '../state';
 
 const otherAction: CourseAction = { type: TOGGLE_WEB_STREAM, course: { code: '', name: '', streams: [] } };
 

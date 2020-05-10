@@ -20,9 +20,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import AccessTime from '@material-ui/icons/AccessTime';
-import { DayLetter } from '../state/Session';
-import { CourseData } from '../state/Course';
-import { ClassTime, getSessions, StreamData } from '../state/Stream';
+import { CourseData, DayLetter, ClassTime, getSessions, StreamData } from '../state';
 
 const styles = (theme: Theme) => createStyles({
   dialog: {

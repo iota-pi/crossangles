@@ -1,6 +1,6 @@
 import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
-import { Notice } from '../state/Notice';
+import { Notice } from '../state';
 
 export interface Props {
   notice: Notice | null,

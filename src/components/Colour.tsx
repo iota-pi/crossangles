@@ -1,9 +1,8 @@
 import React, { MouseEvent } from 'react';
+import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Check from '@material-ui/icons/Check';
-import { Colour, getColour } from '../state/Colours';
-import { useSelector } from 'react-redux';
-import { RootState } from '../state';
+import { RootState, Colour, getColour } from '../state';
 
 const useStyles = makeStyles(theme => ({
   root: {

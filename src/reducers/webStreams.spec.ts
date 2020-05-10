@@ -1,7 +1,6 @@
 import { webStreams } from './webStreams';
 import { ClearNoticeAction, CLEAR_NOTICE, CourseAction, TOGGLE_WEB_STREAM } from '../actions';
-import { initialState } from '../state';
-import { CourseId } from '../state/Course';
+import { initialState, CourseId } from '../state';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 

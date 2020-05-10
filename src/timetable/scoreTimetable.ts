@@ -1,8 +1,7 @@
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 import TimetableScorerCache from './TimetableScorerCache';
-import { LinkedSession } from '../state/Session';
-import { LinkedStream } from '../state/Stream';
+import { LinkedSession, LinkedStream } from '../state';
 
 export interface TimetableScore {
   score: number,

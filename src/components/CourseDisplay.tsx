@@ -9,13 +9,11 @@ import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import WebStream from './WebStream';
-import { ColourMap } from '../state/Colours';
+import CourseActionButton from './CourseActionButton';
 import ColourControl from './Colour';
-import { CourseData, CourseId, getCourseId, getWebStream } from '../state/Course';
-import { Meta } from '../state/Meta';
+import { ColourMap, CourseData, CourseId, getCourseId, getWebStream, Meta } from '../state';
 import getCampus from '../getCampus';
 import { CATEGORY } from '../analytics';
-import CourseActionButton from './CourseActionButton';
 
 
 const useStyles = makeStyles(theme => ({
@@ -172,3 +170,5 @@ export const CourseDisplay = ({
     </React.Fragment>
   )
 };
+
+export default CourseDisplay;
