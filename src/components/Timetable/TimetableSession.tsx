@@ -1,20 +1,14 @@
-import React, { PureComponent, CSSProperties } from 'react';
+import React from 'react';
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
 import { TransitionGroup } from 'react-transition-group';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { Position, Dimensions } from './timetableTypes';
-import {
-  CourseData,
-  Options,
-  StreamData,
-  LinkedSession,
-} from '../../state';
+import { Options, LinkedSession } from '../../state';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles(theme => ({
   main: {
     position: 'absolute',
     display: 'flex',
@@ -69,15 +63,10 @@ const styles = (theme: Theme) => createStyles({
   details: {
     lineHeight: 1.15,
     fontSize: '82%',
-
-    '& > $moreSpace': {
-      lineHeight: 1.2,
-    },
   },
-  moreSpace: {},
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   session: LinkedSession,
   colour: string,
   dimensions: Dimensions,
@@ -94,153 +83,130 @@ export interface Props extends WithStyles<typeof styles> {
 type Detail = { key: string, text: string };
 
 
-class TimetableSession extends PureComponent<Props> {
-  render() {
-    const { classes, session } = this.props;
-    const rootClasses = [
-      classes.main,
-      this.props.isDragging ? classes.dragging : '',
-      this.props.isSnapped ? classes.snapped : '',
-      this.props.clashDepth > 0 ? classes.hovering : '',
-    ].join(' ');
-    const { course, stream, day, start, end } = session;
+const TimetableSession: React.FC<Props> = props => {
+  const classes = useStyles();
+  const rootClasses = [
+    classes.main,
+    props.isDragging ? classes.dragging : '',
+    props.isSnapped ? classes.snapped : '',
+    props.clashDepth > 0 ? classes.hovering : '',
+  ].join(' ');
+  const { dimensions, options, position, session } = props;
+  const { course, stream, day, start, end } = session;
+  const isSpecialCourse = course.isAdditional || course.isCustom || false;
+  const sessionTitle = isSpecialCourse ? stream.component : course.code;
+  const sessionComponent = isSpecialCourse ? '' : stream.component;
 
-    return (
-      <DraggableCore
-        onStart={this.handleStart}
-        onDrag={this.handleDrag}
-        onStop={this.handleStop}
-      >
-        <div
-          className={rootClasses}
-          style={this.styles}
-          data-cy="timetable-session"
-          data-session={`${course.code}-${stream.component}-${day}${start}-${end}`}
-          data-snapped={+this.props.isSnapped}
-          data-dragging={+this.props.isDragging}
-        >
-          <div
-            className={classes.background}
-            style={{
-              backgroundColor: this.props.colour,
-            }}
-            data-cy="timetable-session-background"
-          />
+  const details: Detail[] = React.useMemo(
+    () => {
+      const details: Detail[] = [];
 
-          <div className={classes.sessionText}>
-            <div className={classes.label}>
-              <span className={classes.em}>{this.sessionTitle} </span>
-              <span>{this.sessionComponent}</span>
-            </div>
-
-            <Fade in={this.props.isSnapped} appear={false}>
-              <div>
-                <TransitionGroup appear={false}>
-                  {this.details.map((detail, i) => (
-                    <Collapse key={detail.key}>
-                      <div className={classes.details}>
-                        {detail.text}
-                      </div>
-                    </Collapse>
-                  ))}
-                </TransitionGroup>
-              </div>
-            </Fade>
-          </div>
-        </div>
-      </DraggableCore>
-    )
-  }
-
-  private handleStart = (e: DraggableEvent) => {
-    this.props.onDrag(this.props.session);
-  }
-
-  private handleDrag = (e: DraggableEvent, data: DraggableData) => {
-    if (this.props.isDragging) {
-      let x = data.deltaX;
-      let y = data.deltaY;
-      this.props.onMove(this.props.session, { x, y });
-    }
-  }
-
-  private handleStop = () => {
-    return this.props.onDrop(this.props.session);
-  }
-
-  private get course (): CourseData {
-    return this.props.session.course;
-  }
-
-  private get stream (): StreamData {
-    return this.props.session.stream;
-  }
-
-  private get isSpecialCourse (): boolean {
-    return this.course.isAdditional || this.course.isCustom || false;
-  }
-
-  private get sessionTitle (): string {
-    if (this.isSpecialCourse) {
-      return this.stream.component;
-    }
-
-    return this.course.code;
-  }
-
-  private get sessionComponent (): string {
-    if (this.isSpecialCourse) {
-      return '';
-    }
-
-    return this.stream.component;
-  }
-
-  private get details (): Detail[] {
-    const details: Detail[] = [];
-
-    if (this.props.options.showLocations) {
-      const location = this.props.session.location;
-      if (location) {
-        details.push({ key: 'location-enrols', text: location});
-      }
-    }
-
-    if (this.props.options.showEnrolments) {
-      const enrols = this.stream.enrols;
-      if (enrols[1] > 0) {
-        const enrolsText = enrols.join('/');
-        if (details.length > 0) {
-          details[0].text += ` (${enrolsText})`;
-        } else {
-          details.push({ key: 'location-enrols', text: enrolsText });
+      if (options.showLocations) {
+        const location = session.location;
+        if (location) {
+          details.push({ key: 'location-enrols', text: location});
         }
       }
-    }
 
-    if (this.props.options.showWeeks) {
-      const weeks = this.props.session.weeks;
-      if (weeks) {
-        const weeksText = 'Weeks: ' + weeks.replace('-', '–');
-        details.push({ key: 'weeks', text: weeksText });
+      if (options.showEnrolments) {
+        const enrols = stream.enrols;
+        if (enrols[1] > 0) {
+          const enrolsText = enrols.join('/');
+          if (details.length > 0) {
+            details[0].text += ` (${enrolsText})`;
+          } else {
+            details.push({ key: 'location-enrols', text: enrolsText });
+          }
+        }
       }
+
+      if (options.showWeeks) {
+        const weeks = session.weeks;
+        if (weeks) {
+          const weeksText = 'Weeks: ' + weeks.replace('-', '–');
+          details.push({ key: 'weeks', text: weeksText });
+        }
+      }
+
+      return details;
+    },
+    [options, session, stream],
+  );
+
+  const styles: CSSProperties = React.useMemo(
+    () => {
+      const { width, height } = dimensions;
+      const { x, y, z } = position;
+
+      return {
+        transform: `translate(${x}px, ${y}px)`,
+        width,
+        height,
+        zIndex: z,
+      };
+    },
+    [dimensions, position],
+  );
+
+  const handleStart = (e: DraggableEvent) => {
+    props.onDrag(props.session);
+  }
+  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
+    if (props.isDragging) {
+      let x = data.deltaX;
+      let y = data.deltaY;
+      props.onMove(props.session, { x, y });
     }
-
-    return details;
+  }
+  const handleStop = () => {
+    return props.onDrop(props.session);
   }
 
-  private get styles (): CSSProperties {
-    const { dimensions, position } = this.props;
-    const { width, height } = dimensions;
-    const { x, y, z } = position;
+  return (
+    <DraggableCore
+      onStart={handleStart}
+      onDrag={handleDrag}
+      onStop={handleStop}
+    >
+      <div
+        className={rootClasses}
+        style={styles}
+        data-cy="timetable-session"
+        data-session={`${course.code}-${stream.component}-${day}${start}-${end}`}
+        data-snapped={+props.isSnapped}
+        data-dragging={+props.isDragging}
+      >
+        <div
+          className={classes.background}
+          style={{
+            backgroundColor: props.colour,
+          }}
+          data-cy="timetable-session-background"
+        />
 
-    return {
-      transform: `translate(${x}px, ${y}px)`,
-      width,
-      height,
-      zIndex: z,
-    };
-  }
+        <div className={classes.sessionText}>
+          <div className={classes.label}>
+            <span className={classes.em}>{sessionTitle} </span>
+            <span>{sessionComponent}</span>
+          </div>
+
+          <Fade in={props.isSnapped} appear={false}>
+            <div>
+              <TransitionGroup appear={false}>
+                {details.map(detail => (
+                  <Collapse key={detail.key}>
+                    <div className={classes.details}>
+                      {detail.text}
+                    </div>
+                  </Collapse>
+                ))}
+              </TransitionGroup>
+            </div>
+          </Fade>
+        </div>
+      </div>
+    </DraggableCore>
+  );
 }
 
-export default withStyles(styles)(TimetableSession);
+export default TimetableSession;
