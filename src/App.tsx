@@ -113,7 +113,7 @@ class App extends Component<Props, State> {
           <CourseSelection />
 
           <div className={classes.moderateSpaceAbove}>
-            <Suspense fallback={<Skeleton variant="rect" height={515} />}>
+            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
               <TimetableContainer />
             </Suspense>
           </div>
