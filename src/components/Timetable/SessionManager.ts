@@ -383,13 +383,12 @@ export class SessionManager {
 
   update (
     newSessions: LinkedSession[],
-    fixedSessions: LinkedSession[],
     score: number,
   ) {
     this.startChange();
 
-    // TODO: calculate fixed sessions from newSessions via s.get(id).touched
     // Get placements of fixed sessions
+    const fixedSessions = newSessions.filter(s => this.get(s.id).touched);
     const fixedSessionIds = fixedSessions.map(s => s.id);
     const fixedPlacements = fixedSessionIds.map(id => this.get(id));
 

@@ -100,6 +100,7 @@ class App extends Component<Props, State> {
     return (
       <div>
         <CssBaseline/>
+
         <AppBar
           darkMode={this.props.darkMode}
           onShowContact={this.handleContactShow}

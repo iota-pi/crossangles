@@ -21,7 +21,7 @@ describe('timetables reducer', () => {
   it('can be set', () => {
     const initialTimetable = { ...initialState.timetables };
     const s = new SessionManager();
-    s.update([], [], 10);
+    s.update([], 10);
     const term = 'a';
     const action: SessionManagerAction = {
       type: UPDATE_SESSION_MANAGER,

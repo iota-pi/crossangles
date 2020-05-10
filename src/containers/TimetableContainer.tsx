@@ -106,7 +106,6 @@ class TimetableContainer extends PureComponent<Props> {
       const { timetableData, courses } = props;
 
       try {
-        // TODO: is this going to be too slow?
         timetable = SessionManager.from(timetableData, courses);
 
         return {
