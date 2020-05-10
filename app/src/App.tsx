@@ -1,7 +1,7 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, ReactNode, Suspense } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
-import loadable from '@loadable/component';
+import loadable, { lazy } from '@loadable/component';
 import {
   RootState,
   Meta,
@@ -26,10 +26,10 @@ import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from './components/AppBar';
 import Container from '@material-ui/core/Container';
+import Skeleton from '@material-ui/lab/Skeleton';
+import AppBar from './components/AppBar';
 import CourseSelection from './containers/CourseSelection';
-import TimetableContainer from './containers/TimetableContainer';
 import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -40,6 +40,7 @@ import { SessionManagerData } from './components/Timetable/SessionManager';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
+const TimetableContainer = lazy(() => import('./containers/TimetableContainer'));
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
@@ -48,6 +49,9 @@ const styles = (theme: Theme) => createStyles({
   },
   spaceAbove: {
     marginTop: theme.spacing(8),
+  },
+  moderateSpaceAbove: {
+    paddingTop: theme.spacing(4),
   },
   spaceBelow: {
     marginBottom: theme.spacing(8),
@@ -108,7 +112,11 @@ class App extends Component<Props, State> {
         >
           <CourseSelection />
 
-          <TimetableContainer />
+          <div className={classes.moderateSpaceAbove}>
+            <Suspense fallback={<Skeleton variant="rect" height={515} />}>
+              <TimetableContainer />
+            </Suspense>
+          </div>
 
           <ActionButtons
             additional={this.props.additional}

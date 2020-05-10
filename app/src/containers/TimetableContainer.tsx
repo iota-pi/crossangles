@@ -2,11 +2,6 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
 
-// Styles
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
-
 // Components
 import TimetableControls from '../components/TimetableControls';
 import TimetableTable from '../components/Timetable';
@@ -35,13 +30,9 @@ import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
 
 
-const styles = (theme: Theme) => createStyles({
-  spaceAbove: {
-    paddingTop: theme.spacing(4),
-  },
-});
-
-export interface OwnProps extends WithStyles<typeof styles> {}
+export interface OwnProps {
+  className?: string,
+}
 
 export interface StateProps {
   courses: CourseMap,
@@ -75,10 +66,8 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   render () {
-    const classes = this.props.classes;
-
     return (
-      <div className={classes.spaceAbove}>
+      <div className={this.props.className}>
         <TimetableControls
           history={this.props.timetableHistory}
           timetableIsEmpty={this.props.timetableData.order.length === 0}
@@ -253,4 +242,4 @@ const mapStateToProps = (state: RootState): StateProps => {
 }
 
 const connected = connect(mapStateToProps);
-export default withStyles(styles)(connected(TimetableContainer));
+export default connected(TimetableContainer);
