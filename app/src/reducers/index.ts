@@ -7,6 +7,7 @@ import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
 import { darkMode } from './darkMode';
+import { twentyFourHours } from './twentyFourHours';
 import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions';
 import {
   RootState,
@@ -37,6 +38,7 @@ const basicReducer = combineReducers<NoHistoryState>({
   notice,
   hiddenEvents,
   darkMode,
+  twentyFourHours,
 });
 
 const removeHistory = (state: RootState): NoHistoryState | undefined => {

@@ -5,6 +5,7 @@ import { HistoryAction } from './history';
 import { NoticeAction } from './notice';
 import { CourseAction, EventAction, ToggleShowEventsAction, ToggleOptionAction } from './selection';
 import { SessionManagerAction, SuggestionAction } from './timetable';
+import { SetTwentyFourHoursAction } from './twentyFourHours';
 
 export * from './colours';
 export * from './darkMode';
@@ -13,5 +14,6 @@ export * from './history';
 export * from './notice';
 export * from './selection';
 export * from './timetable';
+export * from './twentyFourHours';
 
-export type AllActions = ColourAction | CourseListAction | MetaAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | SetDarkModeAction;
+export type AllActions = ColourAction | CourseListAction | MetaAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | SetDarkModeAction | SetTwentyFourHoursAction;

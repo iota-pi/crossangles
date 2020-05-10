@@ -25,7 +25,7 @@ import {
 } from '../state';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
-import { setTimetable, addCourse, undoTimetable, redoTimetable } from '../actions';
+import { setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
 
@@ -48,6 +48,7 @@ export interface StateProps {
   suggestionScore: number | null,
   meta: Meta,
   darkMode: boolean,
+  twentyFourHours: boolean,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -91,6 +92,8 @@ class TimetableContainer extends PureComponent<Props> {
           darkMode={this.props.darkMode}
           timetable={this.state.timetable}
           isUpdating={this.state.isUpdating}
+          twentyFourHours={this.props.twentyFourHours}
+          onToggleTwentyFourHours={this.handleToggleTwentyFourHours}
         />
       </div>
     );
@@ -172,6 +175,10 @@ class TimetableContainer extends PureComponent<Props> {
     });
   }
 
+  private handleToggleTwentyFourHours = () => {
+    this.props.dispatch(setTwentyFourHours());
+  }
+
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
     const sessionManager = this.getSessionManager();
 
@@ -238,6 +245,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     suggestionScore: state.suggestionScore,
     meta: state.meta,
     darkMode: state.darkMode,
+    twentyFourHours: state.twentyFourHours,
   };
 }
 
