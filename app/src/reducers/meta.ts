@@ -1,5 +1,4 @@
-import { SET_META_DATA } from '../actions/fetchData';
-import { AllActions } from '../actions';
+import { AllActions, SET_META_DATA } from '../actions';
 import { initialState } from '../state';
 import { Meta } from '../state/Meta';
 

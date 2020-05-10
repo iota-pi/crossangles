@@ -9,8 +9,7 @@ import { Notice } from './state/Notice';
 import { Options } from './state/Options';
 import { ColourMap } from './state/Colours';
 import { CourseData } from './state/Course';
-import { fetchData } from './actions';
-import { clearNotice, setNotice } from './actions/notice';
+import { fetchData, clearNotice, setNotice, setDarkMode } from './actions';
 import getCampus from './getCampus';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
 
@@ -35,7 +34,6 @@ import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManager';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
-import { setDarkMode } from './actions/darkMode';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 

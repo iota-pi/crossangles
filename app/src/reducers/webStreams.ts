@@ -1,6 +1,5 @@
+import { AllActions, TOGGLE_WEB_STREAM } from '../actions';
 import { CourseId, getCourseId } from '../state/Course';
-import { TOGGLE_WEB_STREAM } from '../actions/selection';
-import { AllActions } from '../actions';
 import { initialState } from '../state';
 
 export function webStreams (
