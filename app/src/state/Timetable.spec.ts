@@ -1,6 +1,6 @@
 import { getCurrentTimetable } from './selectors';
 import { initialState } from '.';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
+import { getEmptySessionManagerData, SessionManagerData } from '../components/Timetable/SessionManagerTypes';
 
 
 describe('getCurrentTimetable', () => {
@@ -30,6 +30,6 @@ describe('getCurrentTimetable', () => {
       timetables: {},
       meta: initialState.meta,
     };
-    expect(getCurrentTimetable(state)).toEqual(new SessionManager().data);
+    expect(getCurrentTimetable(state)).toEqual(getEmptySessionManagerData());
   });
 });

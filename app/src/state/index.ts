@@ -5,7 +5,7 @@ import { ColourMap } from './Colours';
 import { Options } from './Options';
 import { Notice } from './Notice';
 import { Meta, getCurrentTerm } from './Meta';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
+import { SessionManagerData, getEmptySessionManagerData } from '../components/Timetable/SessionManagerTypes';
 import { Timetables } from './Timetable';
 import { getCurrentTimetable } from './selectors';
 
@@ -69,7 +69,7 @@ export const meta: Meta = {
 };
 
 export const timetables: Timetables = {
-  [getCurrentTerm(meta)]: new SessionManager().data,
+  [getCurrentTerm(meta)]: getEmptySessionManagerData(),
 };
 
 export const history: HistoryData = {

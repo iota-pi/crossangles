@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { RootState } from '.';
 import { courseSort, customSort } from './Course';
-import SessionManager from '../components/Timetable/SessionManager';
+import { getEmptySessionManagerData } from '../components/Timetable/SessionManagerTypes';
 import { getCurrentTerm } from './Meta';
 import { getAutoSelectedEvents } from './Events';
 
@@ -19,7 +19,7 @@ export const getCurrentTimetable = ({ timetables, meta }: Pick<RootState, 'timet
   if (timetable) {
     return timetable;
   } else {
-    return new SessionManager().data;
+    return getEmptySessionManagerData();
   }
 };
 

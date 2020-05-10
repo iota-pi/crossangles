@@ -39,7 +39,7 @@ import Autocomplete from '../components/Autocomplete';
 import CourseList from '../components/CourseList';
 import GeneralOptions from '../components/GeneralOptions';
 import CreateCustom from '../components/CreateCustom';
-import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../timetable/updateTimetable';
 
 
