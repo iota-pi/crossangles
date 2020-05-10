@@ -74,7 +74,7 @@ export const updateTimetable = async (
     // Displace some classes and display a warning
     await dispatch(setNotice('There was a problem generating a timetable'));
   } else {
-    sessionManager.update(newTimetable.timetable, fixedSessions, newTimetable.score);
+    sessionManager.update(newTimetable.timetable, newTimetable.score);
     await dispatch(setTimetable(sessionManager.data, meta));
 
     await notifyUnplaced(args, newTimetable.unplaced || []);
