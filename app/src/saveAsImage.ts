@@ -9,6 +9,7 @@ export interface SaveAsImageData {
   timetable: SessionManagerData,
   colours: ColourMap,
   options: Options,
+  twentyFourHours: boolean,
 }
 
 export interface Viewport {
@@ -90,9 +91,9 @@ export const parseJSONQueryString = (queryString: string) => {
 
 export const parseQueryString = (queryString: string): SaveAsImageData => {
   const data = parseJSONQueryString(queryString);
-  const { timetable, colours, options } = data;
+  const { timetable, colours, options, twentyFourHours } = data;
   if (!timetable || !colours || !options) {
     throw new Error(`Missing some attributes in ${data}`);
   }
-  return { timetable, colours, options };
+  return { timetable, colours, options, twentyFourHours };
 }
