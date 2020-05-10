@@ -70,6 +70,7 @@ export interface StateProps {
   colours: ColourMap,
   options: Options,
   darkMode: boolean,
+  twentyFourHours: boolean,
 }
 
 export interface DispatchProps {
@@ -169,11 +170,18 @@ class App extends Component<Props, State> {
       action: 'Save as Image',
     });
 
-    const { timetable, colours, options } = this.props;
+    const { timetable, colours, options, twentyFourHours } = this.props;
     const campus = getCampus(window.location.hostname);
     const viewport = getScreenshotViewport(this.props.timetable);
 
-    const promise = saveAsImage({ timetable, colours, options, viewport, campus });
+    const promise = saveAsImage({
+      timetable,
+      colours,
+      options,
+      viewport,
+      campus,
+      twentyFourHours,
+    });
 
     promise.then(success => {
       if (!success) {
@@ -223,6 +231,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     colours: state.colours,
     options: state.options,
     darkMode: state.darkMode,
+    twentyFourHours: state.twentyFourHours,
   };
 }
 

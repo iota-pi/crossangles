@@ -5,7 +5,7 @@ import { buildQueryString } from '../../image';
 
 const testTimetable = Object.freeze(getSessionManager().data);
 const testColours: ColourMap = Object.freeze({
-  RING9731: '#00796B',
+  RING9731: 'indigo',
 });
 const testOptions: Options = Object.freeze({
   showEnrolments: true,
@@ -19,6 +19,7 @@ describe('buildQueryString and parseQueryString', () => {
       timetable: testTimetable,
       colours: testColours,
       options: testOptions,
+      twentyFourHours: false,
     });
     const queryString = buildQueryString(data);
     const result = parseQueryString(queryString);
@@ -57,6 +58,7 @@ describe('buildQueryString and parseQueryString', () => {
       timetable: testTimetable,
       colours: testColours,
       options: testOptions,
+      twentyFourHours: false,
     });
     const queryString = buildQueryString({ ...data, abc: 123 } as SaveAsImageData);
     const result = parseQueryString(queryString);
