@@ -5,14 +5,21 @@ import createStyles from "@material-ui/core/styles/createStyles";
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
-import { CourseDisplay, AdditionalCourseDisplay } from './CourseDisplay';
+import CourseDisplay from './CourseDisplay';
+import AdditionalCourseDisplay from './AdditionalCourseDisplay';
 import ColourPicker from './ColourPicker';
-import { COURSE_COLOURS, ColourMap, Colour } from '../state/Colours';
-import { CourseData, CourseId, getCourseId } from '../state/Course';
-import { AdditionalEvent } from '../state/Events';
-import { Meta } from '../state/Meta';
+import {
+  COURSE_COLOURS,
+  ColourMap,
+  Colour,
+  CourseData,
+  CourseId,
+  getCourseId,
+  Meta,
+  Options,
+  AdditionalEvent,
+} from '../state';
 import { notNull } from '../typeHelpers';
-import { Options } from '../state/Options';
 
 const styles = (theme: Theme) => createStyles({
   root: {

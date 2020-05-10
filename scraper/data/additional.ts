@@ -1,4 +1,4 @@
-import { CourseData } from '../../app/src/state/Course';
+import { CourseData } from '../../app/src/state';
 
 const unsw: CourseData[] = [
   {

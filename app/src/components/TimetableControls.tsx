@@ -1,6 +1,5 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { HistoryData } from '../state/StateHistory';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -8,6 +7,7 @@ import Undo from '@material-ui/icons/Undo';
 import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 import Event from '@material-ui/icons/Event';
+import { HistoryData } from '../state';
 
 const useStyles = makeStyles(theme => ({
   primary: {

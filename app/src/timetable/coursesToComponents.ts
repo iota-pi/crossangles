@@ -1,8 +1,17 @@
 import { notUndefined } from '../typeHelpers';
-import { CourseData, CourseId, getCourseId } from '../state/Course';
-import { getSessions, getStreamId, LinkedStream, linkStream } from '../state/Stream';
-import { SessionData, LinkedSession } from '../state/Session';
-import { AdditionalEvent, getEventId } from '../state/Events';
+import {
+  AdditionalEvent,
+  CourseData,
+  CourseId,
+  getCourseId,
+  getEventId,
+  getSessions,
+  getStreamId,
+  LinkedSession,
+  LinkedStream,
+  linkStream,
+  SessionData,
+} from '../state';
 
 export interface Component {
   course: CourseData,

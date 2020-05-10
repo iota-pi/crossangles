@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
-import { meta } from "./meta";
-import { RootState, initialState, TimetableHistoryState } from '../state';
+import { meta } from './meta';
 import { courses, chosen, custom, additional } from './courses';
 import { events, options, hiddenEvents } from './commitments';
 import { timetables, suggestionScore } from './timetables';
@@ -9,10 +8,18 @@ import { webStreams } from './webStreams';
 import { notice } from './notice';
 import { darkMode } from './darkMode';
 import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions';
-import { undo, redo, push, HistoryData } from '../state/StateHistory';
-import { getCurrentTerm } from '../state/Meta';
+import {
+  RootState,
+  HistoryData,
+  getCurrentTerm,
+  getCurrentTimetable,
+  initialState,
+  TimetableHistoryState,
+  push,
+  redo,
+  undo,
+} from '../state';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
-import { getCurrentTimetable } from '../state/selectors';
 
 type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<NoHistoryState>({

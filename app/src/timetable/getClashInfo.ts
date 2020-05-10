@@ -1,5 +1,4 @@
-import { LinkedStream } from "../state/Stream";
-import { LinkedSession, SessionData } from "../state/Session";
+import { LinkedSession, LinkedStream, SessionData } from '../state';
 
 export type ClashInfo = Map<LinkedStream, Map<LinkedStream, number>>;
 

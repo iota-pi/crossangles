@@ -1,8 +1,7 @@
-import { SessionManagerData } from './components/Timetable/SessionManager';
-import { ColourMap } from './state/Colours';
-import { Options } from './state/Options';
 import axios from 'axios';
 import download from 'downloadjs';
+import { ColourMap, Options } from './state';
+import { SessionManagerData } from './components/Timetable/SessionManager';
 import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './components/Timetable/timetableUtil';
 import getHours from './components/Timetable/getHours';
 

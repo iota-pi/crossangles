@@ -3,9 +3,7 @@ import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { RootState } from '../state';
-import { CourseData } from '../state/Course';
-import { getEvents, AdditionalEvent } from '../state/Events';
+import { RootState, CourseData, getEvents, AdditionalEvent } from '../state';
 
 const useStyles = makeStyles(theme => ({
   root: {

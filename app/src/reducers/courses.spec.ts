@@ -1,7 +1,6 @@
 import { additional, custom, chosen, courses } from './courses';
-import { initialState } from '../state';
 import { CourseListAction, CourseAction, REMOVE_COURSE, SET_COURSE_DATA, ADD_COURSE } from '../actions';
-import { CourseData, getCourseId, CourseMap, CourseId } from '../state/Course';
+import { CourseData, CourseMap, CourseId, getCourseId, initialState } from '../state';
 import { getCourse } from '../test_util';
 
 

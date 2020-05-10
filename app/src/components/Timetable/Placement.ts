@@ -1,6 +1,6 @@
-import { LinkedSession } from "../../state/Session";
-import { Dimensions, Placement } from "./timetableTypes";
-import { TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH } from "./timetableUtil";
+import { LinkedSession } from '../../state';
+import { Dimensions, Placement } from './timetableTypes';
+import { TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH } from './timetableUtil';
 
 export abstract class TimetablePlacement {
   private _session: LinkedSession;

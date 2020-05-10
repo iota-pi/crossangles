@@ -13,14 +13,21 @@ import TimetableTable from '../components/Timetable';
 import CreateCustom from '../components/CreateCustom';
 
 // General
-import { RootState } from '../state';
-import { CourseData, CourseId, CourseMap } from '../state/Course';
-import { AdditionalEvent } from '../state/Events';
-import { ColourMap } from '../state/Colours';
-import { Options } from '../state/Options';
-import { Meta } from '../state/Meta';
-import { HistoryData } from '../state/StateHistory';
-import { getCurrentTimetable, getChosenCourses, getCustomCourses, getAdditionalCourses } from '../state/selectors';
+import {
+  AdditionalEvent,
+  ColourMap,
+  CourseData,
+  CourseId,
+  CourseMap,
+  getCurrentTimetable,
+  getChosenCourses,
+  getCustomCourses,
+  getAdditionalCourses,
+  HistoryData,
+  Meta,
+  Options,
+  RootState,
+} from '../state';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import { setTimetable, addCourse, undoTimetable, redoTimetable } from '../actions';

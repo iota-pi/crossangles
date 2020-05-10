@@ -1,8 +1,23 @@
 import { colours } from './colours';
-import { ClearNoticeAction, CLEAR_NOTICE, ColourAction, SET_COLOUR, ADD_COURSE, CourseAction, CourseListAction, SET_COURSE_DATA, REMOVE_COURSE } from '../actions';
-import { initialState } from '../state';
-import { ColourMap, COURSE_COLOURS, Colour } from '../state/Colours';
-import { CourseData, getCourseId } from '../state/Course';
+import {
+  ADD_COURSE,
+  ClearNoticeAction,
+  CLEAR_NOTICE,
+  ColourAction,
+  CourseAction,
+  CourseListAction,
+  REMOVE_COURSE,
+  SET_COLOUR,
+  SET_COURSE_DATA,
+} from '../actions';
+import {
+  ColourMap,
+  Colour,
+  COURSE_COLOURS,
+  CourseData,
+  getCourseId,
+  initialState,
+} from '../state';
 import { getCourse } from '../test_util';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };

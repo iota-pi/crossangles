@@ -1,7 +1,6 @@
 import ReactGA from 'react-ga';
 import { Action } from 'redux';
-import { CourseId } from '../state/Course';
-import { Colour } from '../state/Colours';
+import { Colour, CourseId } from '../state';
 import { CATEGORY } from '../analytics';
 
 // Chosen courses

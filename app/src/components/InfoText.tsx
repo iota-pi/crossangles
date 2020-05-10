@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react';
 import ReactGA from 'react-ga';
-import { Meta } from '../state/Meta'
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import { CourseData } from '../state/Course';
+import { CourseData, Meta } from '../state'
 import { CATEGORY } from '../analytics';
-import { makeStyles } from '@material-ui/core';
 
 export interface Props {
   additional: CourseData[],

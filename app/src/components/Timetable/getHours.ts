@@ -1,4 +1,4 @@
-import { LinkedSession, SessionData } from '../../state/Session';
+import { LinkedSession, SessionData } from '../../state';
 
 export interface HourSpan {
   start: number,

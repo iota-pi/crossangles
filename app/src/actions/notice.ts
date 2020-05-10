@@ -1,6 +1,6 @@
-import { Action } from "redux";
-import { Notice } from "../state/Notice";
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
+import { Action } from 'redux';
+import { Notice } from '../state';
 
 // Chosen courses
 export const SET_NOTICE = 'SET_NOTICE';

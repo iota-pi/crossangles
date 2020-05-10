@@ -4,12 +4,15 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { search, TimetableSearchResult } from './timetableSearch';
 import { coursesToComponents, Component } from './coursesToComponents';
-import { CourseData, CourseId } from '../state/Course';
-import { linkStream } from '../state/Stream';
-import { LinkedSession } from '../state/Session';
-import { Options } from '../state/Options';
-import { AdditionalEvent } from '../state/Events';
-import { Meta } from '../state/Meta';
+import {
+  AdditionalEvent,
+  CourseData,
+  CourseId,
+  LinkedSession,
+  linkStream,
+  Meta,
+  Options,
+} from '../state';
 import { GeneticSearchOptionalConfig } from './GeneticSearch';
 import SessionManager from '../components/Timetable/SessionManager';
 import { setNotice, setTimetable, setSuggestionScore, clearNotice, toggleOption } from '../actions';

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TimetableTable from '../components/Timetable';
-import { CourseMap, getCourseId } from '../state/Course';
+import { CourseMap, getCourseId } from '../state';
 import SessionManager from '../components/Timetable/SessionManager';
 import requestData from '../requestData';
 import { parseQueryString } from '../saveAsImage';

@@ -1,6 +1,5 @@
 import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, AllActions } from '../actions';
-import { CourseMap, CourseId, getCourseId } from '../state/Course';
-import { initialState } from '../state';
+import { CourseMap, CourseId, getCourseId, initialState } from '../state';
 
 export function courses (
   state: CourseMap = initialState.courses,

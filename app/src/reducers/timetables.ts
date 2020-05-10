@@ -1,6 +1,5 @@
 import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions } from '../actions';
-import { initialState } from '../state';
-import { Timetables } from '../state/Timetable';
+import { initialState, Timetables } from '../state';
 
 export function timetables (
   state: Timetables = initialState.timetables,

@@ -4,7 +4,7 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
-import { LinkedSession, SessionData } from '../../state/Session';
+import { LinkedSession, SessionData } from '../../state';
 
 const styles = (theme: Theme) => createStyles({
   root: {

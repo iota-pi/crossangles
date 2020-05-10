@@ -2,13 +2,13 @@ import React, { ChangeEvent } from 'react';
 import matchSorter from 'match-sorter';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { FilterOptionsState } from '@material-ui/lab/useAutocomplete';
 import SearchIcon from '@material-ui/icons/Search';
-import { makeStyles } from '@material-ui/core';
 import ListboxComponent from './ListboxComponent';
-import { CourseData } from '../state/Course';
+import { CourseData } from '../state';
 
 export interface Props {
   maxItems?: number,

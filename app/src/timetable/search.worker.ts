@@ -1,5 +1,4 @@
-import { LinkedStream } from '../state/Stream';
-import { LinkedSession } from '../state/Session';
+import { LinkedSession, LinkedStream } from '../state';
 import { TimetableScorer } from './scoreTimetable';
 import { GeneticSearch, GeneticSearchOptionalConfig } from './GeneticSearch';
 import { ClashInfo } from './getClashInfo';

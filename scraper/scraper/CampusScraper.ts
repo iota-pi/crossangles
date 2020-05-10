@@ -1,9 +1,8 @@
-import { CourseData } from '../../app/src/state/Course';
-import { Meta } from '../../app/src/state/Meta';
+import axios from 'axios';
+import cheerio from 'cheerio';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
-import cheerio from 'cheerio';
-import axios from 'axios';
+import { CourseData, Meta } from '../../app/src/state';
 import StateManager from '../state/StateManager';
 import getAEST from '../getAEST';
 

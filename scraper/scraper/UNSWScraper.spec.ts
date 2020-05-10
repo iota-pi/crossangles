@@ -1,7 +1,6 @@
 import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
-import { CourseData } from '../../app/src/state/Course';
-import { StreamData } from '../../app/src/state/Stream';
 import HTMLCache from './HTMLCache';
+import { CourseData, StreamData } from '../../app/src/state';
 import { cleanStateManager } from '../state/getStateManager';
 import StateManager from '../state/StateManager';
 

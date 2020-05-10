@@ -1,7 +1,6 @@
 import { CampusScraper, CampusData } from './CampusScraper';
+import { ClassTime, CourseData, StreamData } from '../../app/src/state';
 import StateManager from '../state/StateManager';
-import { CourseData } from '../../app/src/state/Course';
-import { ClassTime, StreamData } from '../../app/src/state/Stream';
 import getStateManager from '../state/getStateManager';
 import additional from '../data/additional';
 import { hashData } from '../data/util';
