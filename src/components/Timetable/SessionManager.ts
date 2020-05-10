@@ -1,19 +1,13 @@
 import { notUndefined } from '../../typeHelpers';
-import { SessionPlacement, SessionPlacementData } from './SessionPlacement';
+import { SessionPlacement } from './SessionPlacement';
 import { Position, Dimensions } from './timetableTypes';
 import { CourseMap, CourseData, getCourseId, AdditionalEvent, getEventId, SessionId, LinkedSession } from '../../state';
 import { sessionClashLength } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
 import { getSessionManagerScore } from '../../timetable/scoreSessionManager';
+import { SessionManagerData, SessionManagerEntriesData } from './SessionManagerTypes';
 
-export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
-
-export interface SessionManagerData {
-  map: SessionManagerEntriesData,
-  order: SessionId[],
-  version: number,
-  score: number,
-}
+export * from './SessionManagerTypes';
 
 
 export class SessionManager {

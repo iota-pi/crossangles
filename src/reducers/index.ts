@@ -19,7 +19,7 @@ import {
   redo,
   undo,
 } from '../state';
-import { SessionManagerData } from '../components/Timetable/SessionManager';
+import { SessionManagerData } from '../components/Timetable/SessionManagerTypes';
 
 type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<NoHistoryState>({

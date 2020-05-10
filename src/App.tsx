@@ -36,7 +36,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ActionButtons } from './components/ActionButtons';
 import ContactUs from './components/ContactUs';
 import { submitContact } from './submitContact';
-import { SessionManagerData } from './components/Timetable/SessionManager';
+import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
 
 const NoticeDisplay = loadable(() => import('./components/Notice'));
