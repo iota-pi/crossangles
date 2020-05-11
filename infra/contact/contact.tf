@@ -83,10 +83,6 @@ resource "aws_lambda_permission" "apigw" {
   source_arn = "${aws_api_gateway_rest_api.contact_gateway.execution_arn}/*/*"
 }
 
-output "base_url" {
-  value = aws_api_gateway_deployment.contact_deployment.invoke_url
-}
-
 
 resource "aws_api_gateway_rest_api" "contact_gateway" {
   name        = "crossangles_contact_gateway"
@@ -187,4 +183,8 @@ resource "aws_iam_role_policy" "cloudwatch" {
     ]
 }
 EOF
+}
+
+output "invoke_url" {
+  value = aws_api_gateway_deployment.contact_deployment.invoke_url
 }

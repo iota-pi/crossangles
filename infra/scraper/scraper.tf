@@ -186,3 +186,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_scraper" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.scraper_trigger.arn
 }
+
+output "cloudfront_url" {
+  value = aws_cloudfront_distribution.s3_distribution.domain_name
+}

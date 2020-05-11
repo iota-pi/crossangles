@@ -109,11 +109,6 @@ resource "aws_lambda_permission" "apigw" {
   source_arn = "${aws_api_gateway_rest_api.image_gateway.execution_arn}/*/*"
 }
 
-output "base_url" {
-  value = aws_api_gateway_deployment.image_deployment.invoke_url
-}
-
-
 resource "aws_api_gateway_rest_api" "image_gateway" {
   name        = "crossangles_image_gateway"
   description = "CrossAngles Gateway for Save as Image"
@@ -161,4 +156,8 @@ resource "aws_cloudwatch_log_group" "debugging" {
   name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${local.stage_name}"
 
   retention_in_days = 7
+}
+
+output "invoke_url" {
+  value = aws_api_gateway_deployment.image_deployment.invoke_url
 }
