@@ -1,13 +1,8 @@
-provider "aws" {
-  region  = "ap-southeast-2"
-  version = "~> 2.48"
-}
-
 resource "aws_s3_bucket_object" "contact_code" {
   bucket = var.code_bucket
   key    = var.code_key
-  source = "../build/contact.zip"
-  etag   = filemd5("../build/contact.zip")
+  source = "contact/build/contact.zip"
+  etag   = filemd5("contact/build/contact.zip")
 }
 
 resource "aws_lambda_function" "contact" {

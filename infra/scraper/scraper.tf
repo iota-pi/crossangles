@@ -6,8 +6,8 @@ provider "aws" {
 resource "aws_s3_bucket_object" "scraper_code" {
   bucket = var.code_bucket
   key    = var.code_key
-  source = "../build/scraper.zip"
-  etag   = filemd5("../build/scraper.zip")
+  source = "scraper/build/scraper.zip"
+  etag   = filemd5("scraper/build/scraper.zip")
 }
 
 resource "aws_lambda_function" "scraper" {

@@ -1,0 +1,3 @@
+module "crossangles" {
+  source = "./infra"
+}

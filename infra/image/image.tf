@@ -6,8 +6,8 @@ provider "aws" {
 resource "aws_s3_bucket_object" "image_code" {
   bucket = var.code_bucket
   key    = var.code_key
-  source = "../build/image.zip"
-  etag   = filemd5("../build/image.zip")
+  source = "image/build/image.zip"
+  etag   = filemd5("image/build/image.zip")
 }
 
 resource "aws_lambda_function" "image" {
