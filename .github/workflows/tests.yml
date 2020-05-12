@@ -40,4 +40,7 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Plan
+      run: terraform init -input=false
+
+    - name: Terraform Plan
       run: terraform plan -input=false
