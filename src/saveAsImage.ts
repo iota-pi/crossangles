@@ -50,7 +50,9 @@ export const getScreenshotHeight = (timetable: SessionManagerData): number => {
 }
 
 export const saveAsImage = async (imageData: SaveAsImageRequest) => {
-  const { data } = await axios.post(process.env.REACT_APP_SAVE_IMAGE_ENDPOINT!, imageData);
+  const url = `${process.env.REACT_APP_SAVE_IMAGE_ENDPOINT}${process.env.REACT_APP_STAGE_NAME}/`;
+
+  const { data } = await axios.post(url, imageData);
   if (!data.error) {
     const mime = 'image/png';
     const image = `data:${mime};base64,${data.data}`;
