@@ -42,5 +42,8 @@ jobs:
     - name: Terraform Init
       run: terraform init -input=false
 
+    - name: Create placeholder files
+      run: touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
+
     - name: Terraform Validate
-      run: terraform validate
+      run: terraform plan -input=false
