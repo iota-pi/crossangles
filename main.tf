@@ -1,5 +1,12 @@
+variable "endpoints" {
+  type = map(string)
+  default = {}
+}
+
 module "crossangles" {
   source = "./infra"
+
+  endpoints = var.endpoints
 }
 
 output "scraper_endpoint" {
