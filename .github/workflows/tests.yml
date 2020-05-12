@@ -43,7 +43,9 @@ jobs:
       run: terraform init -input=false
 
     - name: Create placeholder files
-      run: touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
+      run: |
+        mkdir -p contact/build image/build scraper/build
+        touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
 
     - name: Terraform Validate
       run: terraform plan -input=false
