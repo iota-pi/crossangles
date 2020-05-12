@@ -1,17 +1,16 @@
-provider "aws" {
-  region  = "ap-southeast-2"
-  version = "~> 2.52"
+locals {
+  environment = terraform.workspace == "default" ? "production" : terraform.workspace
 }
 
 resource "aws_s3_bucket_object" "image_code" {
   bucket = var.code_bucket
-  key    = var.code_key
+  key    = "${local.environment}/${var.code_key}"
   source = "image/build/image.zip"
   etag   = filemd5("image/build/image.zip")
 }
 
 resource "aws_lambda_function" "image" {
-  function_name = "crossangles-image"
+  function_name = "crossangles-image-${local.environment}"
 
   # "lambda" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
@@ -34,8 +33,6 @@ resource "aws_lambda_function" "image" {
 }
 
 resource "aws_iam_role" "image_role" {
-  name = "iam_for_image_lambda"
-
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -54,7 +51,7 @@ EOF
 }
 
 resource "aws_s3_bucket" "timetables" {
-  bucket = "crossangles-timetables"
+  bucket = "crossangles-timetables${terraform.workspace == "default" ? "" : "-${terraform.workspace}"}"
   acl    = "private"
 
   tags = {
@@ -64,7 +61,6 @@ resource "aws_s3_bucket" "timetables" {
 }
 
 resource "aws_iam_policy" "image_policy" {
-  name        = "image-policy"
   description = "Lambda policy to allow writing logs and to S3"
 
   policy = <<EOF
@@ -110,7 +106,7 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 resource "aws_api_gateway_rest_api" "image_gateway" {
-  name        = "crossangles_image_gateway"
+  name        = "crossangles_image_gateway_${local.environment}"
   description = "CrossAngles Gateway for Save as Image"
 }
 
@@ -138,9 +134,6 @@ resource "aws_api_gateway_integration" "image_lambda_root" {
   uri  = aws_lambda_function.image.invoke_arn
 }
 
-locals {
-  stage_name = "production"
-}
 
 resource "aws_api_gateway_deployment" "image_deployment" {
   depends_on = [
@@ -149,11 +142,11 @@ resource "aws_api_gateway_deployment" "image_deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.image_gateway.id
-  stage_name  = local.stage_name
+  stage_name  = local.environment
 }
 
 resource "aws_cloudwatch_log_group" "debugging" {
-  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${local.stage_name}"
+  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${local.environment}"
 
   retention_in_days = 7
 }

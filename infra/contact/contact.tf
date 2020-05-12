@@ -1,12 +1,16 @@
+locals {
+  environment = terraform.workspace == "default" ? "production" : terraform.workspace
+}
+
 resource "aws_s3_bucket_object" "contact_code" {
   bucket = var.code_bucket
-  key    = var.code_key
+  key    = "${local.environment}/${var.code_key}"
   source = "contact/build/contact.zip"
   etag   = filemd5("contact/build/contact.zip")
 }
 
 resource "aws_lambda_function" "contact" {
-  function_name = "crossangles-contact"
+  function_name = "crossangles-contact-${local.environment}"
 
   # "lambda" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
@@ -24,8 +28,6 @@ resource "aws_lambda_function" "contact" {
 }
 
 resource "aws_iam_role" "contact_role" {
-  name = "iam_for_contact_lambda"
-
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -44,7 +46,6 @@ EOF
 }
 
 resource "aws_iam_policy" "contact_policy" {
-  name        = "contact-policy"
   description = "Lambda policy to allow logging"
 
   policy = <<EOF
@@ -85,7 +86,7 @@ resource "aws_lambda_permission" "apigw" {
 
 
 resource "aws_api_gateway_rest_api" "contact_gateway" {
-  name        = "crossangles_contact_gateway"
+  name        = "crossangles_contact_gateway_${local.environment}"
   description = "CrossAngles Gateway for Contact Us form"
 }
 
@@ -113,10 +114,6 @@ resource "aws_api_gateway_integration" "contact_lambda_root" {
   uri  = aws_lambda_function.contact.invoke_arn
 }
 
-locals {
-  stage_name = "production"
-}
-
 resource "aws_api_gateway_deployment" "contact_deployment" {
   depends_on = [
     aws_api_gateway_integration.contact_lambda_root,
@@ -124,13 +121,12 @@ resource "aws_api_gateway_deployment" "contact_deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
-  stage_name  = local.stage_name
+  stage_name  = local.environment
 }
 
 
-
 resource "aws_cloudwatch_log_group" "debugging" {
-  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/${local.stage_name}"
+  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/${local.environment}"
 
   retention_in_days = 7
 }
@@ -140,8 +136,6 @@ resource "aws_api_gateway_account" "contact_api_account" {
 }
 
 resource "aws_iam_role" "cloudwatch" {
-  name = "api_gateway_cloudwatch_global"
-
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -160,7 +154,6 @@ EOF
 }
 
 resource "aws_iam_role_policy" "cloudwatch" {
-  name = "default"
   role = aws_iam_role.cloudwatch.id
 
   policy = <<EOF
