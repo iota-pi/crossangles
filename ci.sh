@@ -26,7 +26,9 @@ if [[ $COMMAND == install ]]; then
 fi
 
 if [[ $COMMAND == build ]]; then
-  if [[ -n "${2:-}" ]]; then
+  if [[ ${2:-} == app ]]; then
+    ./build-app.sh
+  elif [[ -n "${2:-}" ]]; then
     (cd $2; npm run build -- ${@:3})
   else
     run_for_each npm run build

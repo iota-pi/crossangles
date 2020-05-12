@@ -180,5 +180,5 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_scraper" {
 }
 
 output "cloudfront_url" {
-  value = aws_cloudfront_distribution.s3_distribution.domain_name
+  value = "https://${aws_cloudfront_distribution.s3_distribution.domain_name}"
 }
