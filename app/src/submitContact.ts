@@ -5,10 +5,7 @@ export const submitContact = async ({ name, email, message }: {
   email: string,
   message: string,
 }) => {
-  const url = process.env.REACT_APP_CONTACT_ENDPOINT;
-  if (!url) {
-    throw new Error('No submission endpoint provided for contact us form');
-  }
+  const url = `${process.env.REACT_APP_CONTACT_ENDPOINT}${process.env.REACT_APP_STAGE_NAME}/`;
 
   const response = await axios.post(url, {
     email,
