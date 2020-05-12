@@ -8,11 +8,11 @@ export interface CampusConfig {
   longname: string,
 }
 
-export const dataDomain = process.env.LOCAL_DATA === '1' ? '/' : 'https://d26ecwk4wivd8z.cloudfront.net/';
+export const DATA_ROOT_URI = process.env.REACT_APP_DATA_ROOT_URI!;
 
 export const campusConfig: AllCampusConfig = {
   unsw: {
-    dataPath: 'unsw/data.json',
+    dataPath: `${DATA_ROOT_URI}/unsw/data.json`,
     name: 'UNSW',
     longname: 'University of New South Wales',
   },
