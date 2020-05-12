@@ -11,7 +11,7 @@ export const NoticeDisplay = ({
   notice,
   onSnackbarClose,
 }: Props) => {
-  const { message = '', actions = null } = notice || {};
+  const { message = '', actions = null, timeout = 6000 } = notice || {};
   const paragraphs = message.split(/\n/g);
   return (
     <Snackbar
@@ -22,7 +22,7 @@ export const NoticeDisplay = ({
       ContentProps={{
         'aria-describedby': 'message-id',
       }}
-      autoHideDuration={6000}
+      autoHideDuration={timeout}
       message={(
         <div id="message-id">
           {paragraphs.map((text, i) => (

@@ -7,8 +7,8 @@ export function notice (
 ): Notice | null {
   switch (action.type) {
     case SET_NOTICE:
-      const { message, actions } = action;
-      return { message, actions };
+      const { message, actions, timeout } = action;
+      return { message, actions, timeout };
     case CLEAR_NOTICE:
       return null;
   }
