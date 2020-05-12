@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Action } from 'redux';
-import { Notice } from '../state';
+import { Notice, DEFAULT_NOTICE_TIMEOUT } from '../state';
 
 // Chosen courses
 export const SET_NOTICE = 'SET_NOTICE';
@@ -16,11 +16,16 @@ export interface ClearNoticeAction extends Action {
 
 export type NoticeAction = SetNoticeAction | ClearNoticeAction;
 
-export function setNotice (message: string, actions?: ReactNode[]): NoticeAction {
+export function setNotice (
+  message: string,
+  actions?: ReactNode[],
+  timeout: number | null = DEFAULT_NOTICE_TIMEOUT,
+): NoticeAction {
   return {
     type: SET_NOTICE,
     message,
     actions: actions || [],
+    timeout,
   };
 }
 

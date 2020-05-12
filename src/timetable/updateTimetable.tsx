@@ -138,7 +138,7 @@ const notifyUnplaced = async (
     )];
 
     const message = messages.join('\n');
-    await dispatch(setNotice(message, actions));
+    await dispatch(setNotice(message, actions, 15000));
   }
 }
 
