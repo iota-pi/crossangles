@@ -8,7 +8,7 @@ export interface CampusConfig {
   longname: string,
 }
 
-export const DATA_ROOT_URI = process.env.REACT_APP_DATA_ROOT_URI!;
+export const DATA_ROOT_URI = process.env.REACT_APP_DATA_ROOT_URI || '';
 
 export const campusConfig: AllCampusConfig = {
   unsw: {
