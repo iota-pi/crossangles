@@ -23,7 +23,7 @@ resource "aws_lambda_function" "scraper" {
 
   s3_bucket        = aws_s3_bucket_object.scraper_code.bucket
   s3_key           = aws_s3_bucket_object.scraper_code.key
-  source_code_hash = aws_s3_bucket_object.scraper_code.etag
+  source_code_hash = filebase64sha256(aws_s3_bucket_object.scraper_code.source)
 
   role = aws_iam_role.scraper_role.arn
 

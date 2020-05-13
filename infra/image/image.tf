@@ -22,7 +22,7 @@ resource "aws_lambda_function" "image" {
 
   s3_bucket        = aws_s3_bucket_object.image_code.bucket
   s3_key           = aws_s3_bucket_object.image_code.key
-  source_code_hash = aws_s3_bucket_object.image_code.etag
+  source_code_hash = filebase64sha256(aws_s3_bucket_object.image_code.source)
 
   layers = [
     # this layer includes the chromium binary
