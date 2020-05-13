@@ -1,16 +1,12 @@
-locals {
-  environment = terraform.workspace == "default" ? "production" : terraform.workspace
-}
-
 resource "aws_s3_bucket_object" "contact_code" {
   bucket = var.code_bucket
-  key    = "${local.environment}/${var.code_key}"
+  key    = "${var.environment}/${var.code_key}"
   source = "contact/build/contact.zip"
   etag   = filemd5("contact/build/contact.zip")
 }
 
 resource "aws_lambda_function" "contact" {
-  function_name = "crossangles-contact-${local.environment}"
+  function_name = "crossangles-contact-${var.environment}"
 
   # "lambda" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
@@ -86,7 +82,7 @@ resource "aws_lambda_permission" "apigw" {
 
 
 resource "aws_api_gateway_rest_api" "contact_gateway" {
-  name        = "crossangles_contact_gateway_${local.environment}"
+  name        = "crossangles_contact_gateway_${var.environment}"
   description = "CrossAngles Gateway for Contact Us form"
 }
 
@@ -121,12 +117,12 @@ resource "aws_api_gateway_deployment" "contact_deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
-  stage_name  = local.environment
+  stage_name  = var.environment
 }
 
 
 resource "aws_cloudwatch_log_group" "debugging" {
-  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/${local.environment}"
+  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.contact_gateway.id}/${var.environment}"
 
   retention_in_days = 7
 }

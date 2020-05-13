@@ -1,16 +1,12 @@
-locals {
-  environment = terraform.workspace == "default" ? "production" : terraform.workspace
-}
-
 resource "aws_s3_bucket_object" "image_code" {
   bucket = var.code_bucket
-  key    = "${local.environment}/${var.code_key}"
+  key    = "${var.environment}/${var.code_key}"
   source = "image/build/image.zip"
   etag   = filemd5("image/build/image.zip")
 }
 
 resource "aws_lambda_function" "image" {
-  function_name = "crossangles-image-${local.environment}"
+  function_name = "crossangles-image-${var.environment}"
 
   # "lambda" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
@@ -106,7 +102,7 @@ resource "aws_lambda_permission" "apigw" {
 }
 
 resource "aws_api_gateway_rest_api" "image_gateway" {
-  name        = "crossangles_image_gateway_${local.environment}"
+  name        = "crossangles_image_gateway_${var.environment}"
   description = "CrossAngles Gateway for Save as Image"
 }
 
@@ -142,11 +138,11 @@ resource "aws_api_gateway_deployment" "image_deployment" {
   ]
 
   rest_api_id = aws_api_gateway_rest_api.image_gateway.id
-  stage_name  = local.environment
+  stage_name  = var.environment
 }
 
 resource "aws_cloudwatch_log_group" "debugging" {
-  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${local.environment}"
+  name = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api.image_gateway.id}/${var.environment}"
 
   retention_in_days = 7
 }

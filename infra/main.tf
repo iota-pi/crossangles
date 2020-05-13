@@ -33,16 +33,26 @@ provider "aws" {
   }
 }
 
+locals {
+  environment = terraform.workspace == "default" ? "production" : terraform.workspace
+}
+
 module "scraper" {
   source = "./scraper"
+
+  environment = environment
 }
 
 module "image" {
   source = "./image"
+
+  environment = environment
 }
 
 module "contact" {
   source = "./contact"
+
+  environment = environment
 }
 
 # Outputs

@@ -1,17 +1,16 @@
 locals {
-  environment = terraform.workspace == "default" ? "production" : terraform.workspace
   scraper_s3_origin_id = "scraper_s3_origin"
 }
 
 resource "aws_s3_bucket_object" "scraper_code" {
   bucket = var.code_bucket
-  key    = "${local.environment}/${var.code_key}"
+  key    = "${var.environment}/${var.code_key}"
   source = "scraper/build/scraper.zip"
   etag   = filemd5("scraper/build/scraper.zip")
 }
 
 resource "aws_lambda_function" "scraper" {
-  function_name = "crossangles-scraper-${local.environment}"
+  function_name = "crossangles-scraper-${var.environment}"
 
   # "lambda" is the filename within the zip file (main.js) and "handler"
   # is the name of the property under which the handler function was
@@ -97,7 +96,7 @@ EOF
 }
 
 resource "aws_dynamodb_table" "scraper_state_table" {
-  name = "ScraperState_${local.environment}"
+  name = "ScraperState_${var.environment}"
   billing_mode = "PAY_PER_REQUEST"
   hash_key = "campus"
   range_key = "key"
@@ -124,7 +123,7 @@ resource "aws_s3_bucket" "scraper_output" {
 
   tags = {
     Name        = "CrossAngles Data"
-    Environment = local.environment
+    Environment = var.environment
   }
 
   cors_rule {
