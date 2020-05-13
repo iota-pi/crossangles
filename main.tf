@@ -9,6 +9,14 @@ module "crossangles" {
   endpoints = var.endpoints
 }
 
+output "app_uri" {
+  value = module.crossangles.app_uri
+}
+
+output "app_bucket" {
+  value = module.crossangles.app_bucket
+}
+
 output "scraper_endpoint" {
   value = module.crossangles.scraper_endpoint
 }
