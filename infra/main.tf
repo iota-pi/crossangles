@@ -77,3 +77,6 @@ output "image_endpoint" {
 output "contact_endpoint" {
   value = module.contact.invoke_url
 }
+output "environment" {
+  value = local.environment
+}
