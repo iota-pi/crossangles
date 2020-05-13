@@ -30,6 +30,7 @@ resource "aws_lambda_function" "scraper" {
   environment {
     variables = {
       S3_OUTPUT_BUCKET = aws_s3_bucket.scraper_output.bucket
+      STATE_TABLE = aws_dynamodb_table.scraper_state_table.name
     }
   }
 }
@@ -88,11 +89,28 @@ resource "aws_iam_policy" "scraper_policy" {
           "dynamodb:UpdateItem",
           "dynamodb:CreateTable"
       ],
-      "Resource": "arn:aws:dynamodb:*:*:table/ScraperData"
+      "Resource": "arn:aws:dynamodb:*:*:table/${aws_dynamodb_table.scraper_state_table.name}"
     }
   ]
 }
 EOF
+}
+
+resource "aws_dynamodb_table" "scraper_state_table" {
+  name = "ScraperState_${local.environment}"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "campus"
+  range_key = "key"
+
+  attribute {
+    name = "campus"
+    type = "S"
+  }
+
+  attribute {
+    name = "key"
+    type = "S"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "scraper_policy_attach" {
