@@ -26,6 +26,12 @@ resource "aws_lambda_function" "scraper" {
   source_code_hash = aws_s3_bucket_object.scraper_code.etag
 
   role = aws_iam_role.scraper_role.arn
+
+  environment {
+    variables = {
+      S3_OUTPUT_BUCKET = aws_s3_bucket.scraper_output.bucket
+    }
+  }
 }
 
 resource "aws_iam_role" "scraper_role" {
