@@ -1,7 +1,6 @@
 import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
 import HTMLCache from './HTMLCache';
 import { CourseData, StreamData } from '../../app/src/state';
-import { cleanStateManager } from '../state/getStateManager';
 import StateManager from '../state/StateManager';
 
 const mockStateManager: StateManager = {
@@ -14,7 +13,6 @@ describe('UNSWScraper', () => {
 
   beforeEach(async () => {
     s = await UNSWScraper.create({ state: mockStateManager });
-    cleanStateManager();
   })
 
   const courseData: CourseData = {
