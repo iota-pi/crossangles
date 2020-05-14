@@ -38,7 +38,7 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Init
-      run: terraform init -input=false
+      run: terraform init -input=false && terraform refresh -input=false
 
     - name: Select Terraform Workspace
       if: github.ref != 'refs/heads/release'
