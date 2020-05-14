@@ -1,8 +1,8 @@
 name: Deploy
 
-# on:
-#   push:
-#     branches: [ master, release ]
+on:
+  push:
+    branches: [ master, release ]
 
 jobs:
   build_and_deploy:
