@@ -187,8 +187,8 @@ export class Parser {
         break;
       } else if (cells.length === COURSE_HEADING_COUNT) {
         const course = this.parseCourse(
-          $(cells.get(0)).text(),
-          $(cells.get(1)).text(),
+          $(cells.get(0)).text().trim(),
+          $(cells.get(1)).text().trim(),
         );
         courses.push(course);
       } else if (cells.length === REGULAR_CELL_COUNT) {
@@ -209,10 +209,8 @@ export class Parser {
     return courses;
   }
 
-  parseCourse (rawCode: string, rawName: string): CourseData {
-    const code = rawCode.trim();
-    rawName = rawName.trim();
-    const term = (/ \(([A-Z][A-Z0-9]{2})\)$/.exec(rawName) || [])[1];
+  parseCourse (code: string, rawName: string): CourseData {
+    const term = this.extractTerm(rawName);
     const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
     const name = this.courseNames[code] || rawName.replace(termRegex, '');
     return {
@@ -269,7 +267,12 @@ export class Parser {
     };
   }
 
-  private parseTimeStr (timeString: string): ClassTime[] | null {
+  extractTerm (name: string) {
+    const matches = / \(([A-Z][A-Z0-9]{2})\)$/.exec(name) || [];
+    return matches[1];
+  }
+
+  parseTimeStr (timeString: string): ClassTime[] | null {
     // Basic string sanitisation
     timeString = timeString.replace(/\/odd|\/even|Comb\/w.*/g, '').trim();
 
@@ -280,7 +283,7 @@ export class Parser {
 
     if (timeString.indexOf('; ') !== -1) {
       const timeParts = timeString.split('; ');
-      const times = timeParts.reduce((a: ClassTime[], t) => a.concat(this._parseDataStr(t)), []);
+      const times = timeParts.reduce((a: ClassTime[], t) => a.concat(this._parseTimeStringData(t)), []);
 
       // Remove any duplicate times
       const timeSet = new Set();
@@ -294,11 +297,11 @@ export class Parser {
 
       return finalTimes;
     } else {
-      return this._parseDataStr(timeString);
+      return this._parseTimeStringData(timeString);
     }
   }
 
-  private _parseDataStr (data: string): ClassTime[] {
+  private _parseTimeStringData (data: string): ClassTime[] {
     const openBracketIndex = data.indexOf('(');
     if (openBracketIndex !== -1) {
       const tidiedTime = this.tidyUpTime(data.slice(0, openBracketIndex).trim());
