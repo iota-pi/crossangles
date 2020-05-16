@@ -5,7 +5,7 @@ Array [
   Array [
     Object {
       "code": "ACCT1501",
-      "name": "Accounting and Financial Management 1A",
+      "name": "Accounting & Financial Mgt 1A",
       "streams": Array [
         Object {
           "component": "LEC",
@@ -607,7 +607,7 @@ Array [
     },
     Object {
       "code": "ACCT1511",
-      "name": "Accounting and Financial Management 1B",
+      "name": "Accounting & Financial Mgt 1B",
       "streams": Array [
         Object {
           "component": "LEC",
@@ -1370,7 +1370,7 @@ Array [
     },
     Object {
       "code": "ACCT3563",
-      "name": "Issues in Financial Reporting and Analysis",
+      "name": "Issues in Financial Reporting",
       "streams": Array [
         Object {
           "component": "SEM",
@@ -1537,7 +1537,7 @@ Array [
     },
     Object {
       "code": "ACCT3610",
-      "name": "Business Analysis and Valuation",
+      "name": "Business Analysis & Valuation",
       "streams": Array [
         Object {
           "component": "LEC",
@@ -1561,7 +1561,7 @@ Array [
     },
     Object {
       "code": "ACCT3708",
-      "name": "Auditing and Assurance Services",
+      "name": "Auditing & Assurance Services",
       "streams": Array [
         Object {
           "component": "SEM",
@@ -1699,19 +1699,19 @@ Array [
     },
     Object {
       "code": "ACCT4809",
-      "name": "Current Developments in Auditing Research",
+      "name": "Current Develop in Audit Res",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT4851",
-      "name": "Current Developments in Accounting Research - Financial",
+      "name": "Current Develop in Acc Res Fin",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT4897",
-      "name": "Seminar in Research Methodology",
+      "name": "Seminar in Research Methodolog",
       "streams": Array [],
       "term": undefined,
     },
@@ -2509,7 +2509,7 @@ Array [
   Array [
     Object {
       "code": "ACCT1501",
-      "name": "Accounting and Financial Management 1A",
+      "name": "Accounting & Financial Mgt 1A",
       "streams": Array [
         Object {
           "component": "LEC",
@@ -2856,7 +2856,7 @@ Array [
     },
     Object {
       "code": "ACCT1511",
-      "name": "Accounting and Financial Management 1B",
+      "name": "Accounting & Financial Mgt 1B",
       "streams": Array [
         Object {
           "component": "LEC",
@@ -3414,7 +3414,7 @@ Array [
     },
     Object {
       "code": "ACCT2542",
-      "name": "Corporate Financial Reporting and Analysis",
+      "name": "Corporate Financial Reporting",
       "streams": Array [
         Object {
           "component": "LEC",
@@ -3875,7 +3875,7 @@ Array [
     },
     Object {
       "code": "ACCT3563",
-      "name": "Issues in Financial Reporting and Analysis",
+      "name": "Issues in Financial Reporting",
       "streams": Array [
         Object {
           "component": "SEM",
@@ -3940,7 +3940,7 @@ Array [
     },
     Object {
       "code": "ACCT3610",
-      "name": "Business Analysis and Valuation",
+      "name": "Business Analysis & Valuation",
       "streams": Array [
         Object {
           "component": "SEM",
@@ -4015,7 +4015,7 @@ Array [
     },
     Object {
       "code": "ACCT3708",
-      "name": "Auditing and Assurance Services",
+      "name": "Auditing & Assurance Services",
       "streams": Array [
         Object {
           "component": "SEM",
@@ -4068,13 +4068,13 @@ Array [
     },
     Object {
       "code": "ACCT4851",
-      "name": "Current Developments in Accounting Research - Financial",
+      "name": "Current Develop in Acc Res Fin",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT4852",
-      "name": "Current Developments in Accounting Research - Managerial",
+      "name": "Current Develop  Acct Res Mana",
       "streams": Array [],
       "term": undefined,
     },
@@ -4887,19 +4887,19 @@ Array [
   Array [
     Object {
       "code": "ACCT1501",
-      "name": "Accounting and Financial Management 1A",
+      "name": "Accounting & Financial Mgt 1A",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT1511",
-      "name": "Accounting and Financial Management 1B",
+      "name": "Accounting & Financial Mgt 1B",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT2507",
-      "name": "Introduction to Accounting Research",
+      "name": "Intro to Accounting Research",
       "streams": Array [],
       "term": undefined,
     },
@@ -4917,7 +4917,7 @@ Array [
     },
     Object {
       "code": "ACCT3563",
-      "name": "Issues in Financial Reporting and Analysis",
+      "name": "Issues in Financial Reporting",
       "streams": Array [],
       "term": undefined,
     },
@@ -4929,19 +4929,19 @@ Array [
     },
     Object {
       "code": "ACCT3601",
-      "name": "Global Financial Reporting and Analysis",
+      "name": "Global Financial Reporting &",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT3625",
-      "name": "Integrated Reporting, Integrated Thinking and Value Creation",
+      "name": "Integrated Reporting",
       "streams": Array [],
       "term": undefined,
     },
     Object {
       "code": "ACCT3708",
-      "name": "Auditing and Assurance Services",
+      "name": "Auditing & Assurance Services",
       "streams": Array [],
       "term": undefined,
     },

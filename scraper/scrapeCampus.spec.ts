@@ -1,7 +1,7 @@
 import scrapeCampus from './scrapeCampus';
 import { getCampusScraper } from './scraper';
 import { CampusScraper, CampusData } from './scraper/CampusScraper';
-import UNSWScraper from './scraper/UNSWScraper';
+import ClassUtilScraper from './scraper/UNSW/ClassUtilScraper';
 import { getWriter } from './writer';
 import Writer from './writer/Writer';
 import FileWriter from './writer/FileWriter';
@@ -13,7 +13,7 @@ const mock_getWriter = <jest.Mock<Writer>>getWriter;
 
 describe('scrapeCampus', () => {
   it('only writes out once if it finds no data', async () => {
-    const scraper = await UNSWScraper.create();
+    const scraper = await ClassUtilScraper.create();
     scraper.logging = false;
 
     const scrapeResult: CampusData = {
@@ -36,7 +36,7 @@ describe('scrapeCampus', () => {
   })
 
   it('only writes out twice for current data', async () => {
-    const scraper = await UNSWScraper.create();
+    const scraper = await ClassUtilScraper.create();
     scraper.logging = false;
 
     const scrapeResult: CampusData = {

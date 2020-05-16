@@ -1,9 +1,10 @@
-import { CampusScraper, CampusData } from './CampusScraper';
-import { ClassTime, CourseData, StreamData } from '../../app/src/state';
-import StateManager from '../state/StateManager';
-import getStateManager from '../state/getStateManager';
-import additional from '../data/additional';
-import { hashData } from '../data/util';
+import { CampusScraper, CampusData } from '../CampusScraper';
+import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
+import StateManager from '../../state/StateManager';
+import getStateManager from '../../state/getStateManager';
+import additional from '../../data/additional';
+import { hashData } from '../../data/util';
+import { fetchHandbookNames, CourseNameMap } from './Handbook';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -23,11 +24,13 @@ const CLASSUTIL = 'http://classutil.unsw.edu.au';
 const START_TERM = 1;
 const END_TERM = 3;
 
-export class UNSWScraper extends CampusScraper {
+export class ClassUtilScraper extends CampusScraper {
   readonly campus = 'unsw';
   protected state: StateManager;
   readonly parser: Parser;
+  private courseNamesMap: CourseNameMap = {};
   maxFaculties = Infinity;
+  useFullCourseNames = true;
 
   protected dataUpdateTime: string | undefined;
 
@@ -47,7 +50,7 @@ export class UNSWScraper extends CampusScraper {
   } = {}) {
     parser = parser || new Parser();
     state = state || await getStateManager();
-    return new UNSWScraper(parser, state);
+    return new ClassUtilScraper(parser, state);
   }
 
   async scrape (): Promise<CampusData[] | null> {
@@ -55,6 +58,11 @@ export class UNSWScraper extends CampusScraper {
     if (!await this.checkIfDataUpdated()) {
       this.log('data has not been updated yet; nothing to do');
       return null;
+    }
+
+    let courseNamesPromise;
+    if (this.useFullCourseNames) {
+      courseNamesPromise = fetchHandbookNames();
     }
 
     let results: CampusData[] = [];
@@ -68,6 +76,15 @@ export class UNSWScraper extends CampusScraper {
         meta,
         current: false,
       });
+    }
+
+    const fullCourseNames = await courseNamesPromise;
+    if (fullCourseNames) {
+      this.courseNamesMap = fullCourseNames;
+    }
+
+    for (const term of results) {
+      term.courses = this.mapCourseNames(term.courses);
     }
 
     // Nominate latest stream with sufficient data as being "current"
@@ -97,6 +114,14 @@ export class UNSWScraper extends CampusScraper {
     facultyPages = facultyPages.filter(l => l.endsWith(`${term}.html`));
 
     const courses = await this.scrapeFacultyPages(facultyPages);
+    return courses;
+  }
+
+  private mapCourseNames (courses: CourseData[]) {
+    for (const course of courses) {
+      course.name = this.courseNamesMap[course.code] || course.name;
+    }
+
     return courses;
   }
 
@@ -161,12 +186,10 @@ export class UNSWScraper extends CampusScraper {
   }
 }
 
-export default UNSWScraper;
+export default ClassUtilScraper;
 
 
 export class Parser {
-  courseNames: { [code: string]: string } = require('../data/courses-unsw.json');
-
   async parseFacultyPage ($: CheerioStatic): Promise<CourseData[]> {
     // Get all rows of the table
     const rows = Array.from($($('table').get(2)).find('tr'));
@@ -208,9 +231,8 @@ export class Parser {
     const code = rawCode.trim();
     rawName = rawName.trim();
     const term = (/ \(([A-Z][A-Z0-9]{2})\)$/.exec(rawName) || [])[1];
-    const fullName = this.courseNames[code];
     const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
-    const name = fullName || rawName.replace(termRegex, '');
+    const name = rawName.replace(termRegex, '');
     return {
       code,
       name,

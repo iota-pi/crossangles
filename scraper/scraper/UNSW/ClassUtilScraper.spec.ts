@@ -1,7 +1,7 @@
-import UNSWScraper, { Parser, removeDuplicateStreams } from './UNSWScraper';
-import HTMLCache from './HTMLCache';
-import { CourseData, StreamData } from '../../app/src/state';
-import StateManager from '../state/StateManager';
+import ClassUtilScraper, { Parser, removeDuplicateStreams } from './ClassUtilScraper';
+import HTMLCache from '../HTMLCache';
+import { CourseData, StreamData } from '../../../app/src/state';
+import StateManager from '../../state/StateManager';
 
 const mockStateManager: StateManager = {
   get: jest.fn(),
@@ -9,11 +9,12 @@ const mockStateManager: StateManager = {
 } as any;
 
 describe('UNSWScraper', () => {
-  let s: UNSWScraper;
+  let s: ClassUtilScraper;
 
   beforeEach(async () => {
-    s = await UNSWScraper.create({ state: mockStateManager });
-  })
+    s = await ClassUtilScraper.create({ state: mockStateManager });
+    s.useFullCourseNames = false;
+  });
 
   const courseData: CourseData = {
     code: 'COMP9876',
@@ -81,13 +82,10 @@ describe('Parser', () => {
     rawCode         | rawName                   | code          | name                     | term
     ${'  COMP1511'} | ${'Computing 1A (T3A)'}   | ${'COMP1511'} | ${'Computing 1A'}        | ${'T3A'}
     ${' BLAH9870 '} | ${'Thesis (Full-time)'}   | ${'BLAH9870'} | ${'Thesis (Full-time)'}  | ${undefined}
-    ${'BLAH9876\t'} | ${'Hist. Foobar'}         | ${'BLAH9876'} | ${'A History of Foobar'} | ${undefined}
-    ${'BLAH9876'}   | ${'Hist. Foobar  (UE2) '} | ${'BLAH9876'} | ${'A History of Foobar'} | ${'UE2'}
+    ${'BLAH9876\t'} | ${'Hist. Foobar'}         | ${'BLAH9876'} | ${'Hist. Foobar'} | ${undefined}
+    ${'BLAH9876'}   | ${'Hist. Foobar  (UE2) '} | ${'BLAH9876'} | ${'Hist. Foobar'} | ${'UE2'}
   `('parseCourse("$code", "$name") give term "$term"', ({ rawCode, rawName, code, name, term }) => {
     const p = new Parser();
-    p.courseNames = {
-      BLAH9876: 'A History of Foobar',
-    };
 
     const result = p.parseCourse(rawCode, rawName);
     expect(result).toEqual({

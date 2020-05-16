@@ -1,4 +1,4 @@
-import { UNSWScraper } from './UNSWScraper';
+import { ClassUtilScraper } from './UNSW/ClassUtilScraper';
 import { CampusScraper } from './CampusScraper';
 
 class CampusError extends Error {
@@ -12,7 +12,7 @@ class CampusError extends Error {
 export const getCampusScraper = async (campus: string): Promise<CampusScraper> => {
   switch (campus.toLowerCase()) {
     case 'unsw':
-      return await UNSWScraper.create();
+      return await ClassUtilScraper.create();
   }
 
   throw new CampusError(`No scraper found for ${campus}`);
