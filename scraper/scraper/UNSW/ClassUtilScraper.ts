@@ -4,7 +4,7 @@ import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';
 import { hashData } from '../../data/util';
-import { fetchHandbookNames, CourseNameMap } from './Handbook';
+import { fetchHandbookNames, CourseNameMap } from './handbook';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -28,9 +28,7 @@ export class ClassUtilScraper extends CampusScraper {
   readonly campus = 'unsw';
   protected state: StateManager;
   readonly parser: Parser;
-  private courseNamesMap: CourseNameMap = {};
   maxFaculties = Infinity;
-  useFullCourseNames = true;
 
   protected dataUpdateTime: string | undefined;
 
@@ -53,16 +51,15 @@ export class ClassUtilScraper extends CampusScraper {
     return new ClassUtilScraper(parser, state);
   }
 
+  async setup () {
+    this.parser.courseNames = await fetchHandbookNames();
+  }
+
   async scrape (): Promise<CampusData[] | null> {
     const facultyPages = await this.findFacultyPages();
     if (!await this.checkIfDataUpdated()) {
       this.log('data has not been updated yet; nothing to do');
       return null;
-    }
-
-    let courseNamesPromise;
-    if (this.useFullCourseNames) {
-      courseNamesPromise = fetchHandbookNames();
     }
 
     let results: CampusData[] = [];
@@ -76,15 +73,6 @@ export class ClassUtilScraper extends CampusScraper {
         meta,
         current: false,
       });
-    }
-
-    const fullCourseNames = await courseNamesPromise;
-    if (fullCourseNames) {
-      this.courseNamesMap = fullCourseNames;
-    }
-
-    for (const term of results) {
-      term.courses = this.mapCourseNames(term.courses);
     }
 
     // Nominate latest stream with sufficient data as being "current"
@@ -114,14 +102,6 @@ export class ClassUtilScraper extends CampusScraper {
     facultyPages = facultyPages.filter(l => l.endsWith(`${term}.html`));
 
     const courses = await this.scrapeFacultyPages(facultyPages);
-    return courses;
-  }
-
-  private mapCourseNames (courses: CourseData[]) {
-    for (const course of courses) {
-      course.name = this.courseNamesMap[course.code] || course.name;
-    }
-
     return courses;
   }
 
@@ -190,6 +170,8 @@ export default ClassUtilScraper;
 
 
 export class Parser {
+  courseNames: CourseNameMap = {};
+
   async parseFacultyPage ($: CheerioStatic): Promise<CourseData[]> {
     // Get all rows of the table
     const rows = Array.from($($('table').get(2)).find('tr'));
@@ -232,7 +214,7 @@ export class Parser {
     rawName = rawName.trim();
     const term = (/ \(([A-Z][A-Z0-9]{2})\)$/.exec(rawName) || [])[1];
     const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
-    const name = rawName.replace(termRegex, '');
+    const name = this.courseNames[code] || rawName.replace(termRegex, '');
     return {
       code,
       name,

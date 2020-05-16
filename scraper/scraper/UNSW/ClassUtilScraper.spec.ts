@@ -13,7 +13,6 @@ describe('UNSWScraper', () => {
 
   beforeEach(async () => {
     s = await ClassUtilScraper.create({ state: mockStateManager });
-    s.useFullCourseNames = false;
   });
 
   const courseData: CourseData = {
@@ -82,10 +81,13 @@ describe('Parser', () => {
     rawCode         | rawName                   | code          | name                     | term
     ${'  COMP1511'} | ${'Computing 1A (T3A)'}   | ${'COMP1511'} | ${'Computing 1A'}        | ${'T3A'}
     ${' BLAH9870 '} | ${'Thesis (Full-time)'}   | ${'BLAH9870'} | ${'Thesis (Full-time)'}  | ${undefined}
-    ${'BLAH9876\t'} | ${'Hist. Foobar'}         | ${'BLAH9876'} | ${'Hist. Foobar'} | ${undefined}
-    ${'BLAH9876'}   | ${'Hist. Foobar  (UE2) '} | ${'BLAH9876'} | ${'Hist. Foobar'} | ${'UE2'}
-  `('parseCourse("$code", "$name") give term "$term"', ({ rawCode, rawName, code, name, term }) => {
+    ${'BLAH9876\t'} | ${'Hist. Foobar'}         | ${'BLAH9876'} | ${'A History of Foobar'} | ${undefined}
+    ${'BLAH9876'}   | ${'Hist. Foobar  (UE2) '} | ${'BLAH9876'} | ${'A History of Foobar'} | ${'UE2'}
+  `('parseCourse("$code", "$name")"', ({ rawCode, rawName, code, name, term }) => {
     const p = new Parser();
+    p.courseNames = {
+      BLAH9876: 'A History of Foobar',
+    };
 
     const result = p.parseCourse(rawCode, rawName);
     expect(result).toEqual({

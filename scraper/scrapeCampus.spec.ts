@@ -22,6 +22,7 @@ describe('scrapeCampus', () => {
       meta: scraper.generateMetaData(1, 'http://classutil.unsw.edu.au'),
       current: false,
     };
+    scraper.setup = jest.fn().mockImplementation(async () => undefined);
     scraper.scrape = jest.fn().mockImplementation(async () => [scrapeResult]);
     mock_getCampusScraper.mockImplementation(async () => scraper);
 
@@ -45,6 +46,7 @@ describe('scrapeCampus', () => {
       meta: scraper.generateMetaData(1, 'http://classutil.unsw.edu.au'),
       current: true,
     };
+    scraper.setup = jest.fn().mockImplementation(async () => undefined);
     scraper.scrape = jest.fn().mockImplementation(async () => [scrapeResult]);
     mock_getCampusScraper.mockImplementation(async () => scraper);
 

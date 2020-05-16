@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import handbookPayload from './HandbookRequest';
+import handbookPayload from './handbookRequest';
 
 export type CourseNameMap = { [code: string]: string };
 
