@@ -21,6 +21,10 @@ export abstract class CampusScraper {
   protected abstract state: StateManager;
   cache?: HTMLCache;
 
+  async setup (): Promise<any> {
+    return undefined;
+  };
+
   abstract async scrape (): Promise<CampusData[] | null>;
 
   generateMetaData (term: number, source: string): Meta {

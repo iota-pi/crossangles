@@ -9,7 +9,9 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
 
   if (cacheFile) await scraper.cache.load(cacheFile).catch(() => {});
 
-  const data = await scraper.scrape().catch(() => {});
+  await scraper.setup().catch(error => { console.error(error); })
+
+  const data = await scraper.scrape().catch(error => { console.error(error); });
 
   if (data) {
     if (cacheFile) await scraper.cache.write(cacheFile);
