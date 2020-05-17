@@ -7,7 +7,7 @@ export interface Meta extends YearAndTerm {
   updateDate: string,
   updateTime: string,
   signup: string,
-  source: string,
+  sources: string[],
 }
 
 // Ministry-specific metadata, to be attached to additional courses

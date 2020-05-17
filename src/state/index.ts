@@ -66,7 +66,7 @@ export const meta: Meta = {
   updateDate: '',
   updateTime: '',
   signup: '',
-  source: '',
+  sources: [],
 };
 
 export const timetables: Timetables = {

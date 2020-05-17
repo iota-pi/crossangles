@@ -25,4 +25,13 @@ export const migrations = {
       colours,
     };
   },
+  1: (state: any) => {
+    const meta = { ...state.meta };
+    meta.sources = [meta.source];
+    delete meta.source;
+    return {
+      ...state,
+      meta,
+    };
+  },
 }

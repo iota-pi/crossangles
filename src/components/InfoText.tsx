@@ -75,6 +75,26 @@ const InfoText = ({
     );
   }
 
+  const sources = (
+    <React.Fragment>
+      {meta.sources.map((source, i) => (
+        <React.Fragment>
+          <a
+            href={source}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={classes.link}
+            onClick={() => handleLinkClick('ClassUtil Link', source)}
+          >
+            {source}
+          </a>
+
+          {i < meta.sources.length - 1 && ' and '}
+        </React.Fragment>
+      ))}
+    </React.Fragment>
+  );
+
 
   return (
     <div className={className}>
@@ -85,15 +105,7 @@ const InfoText = ({
           The data was last updated
           at <span style={{ fontWeight: 400 }}>
             {meta.updateTime} ({meta.updateDate})
-          </span> from <a
-            href={meta.source}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={classes.link}
-            onClick={() => handleLinkClick('ClassUtil Link', meta.source)}
-          >
-            {meta.source}
-          </a>.
+          </span> from {sources}.
           CrossAngles comes without any guarantee of data accuracy or of optimality.
           If you have any questions or suggestions,
           please <span
