@@ -1,5 +1,5 @@
-import { ClassUtilScraper } from './UNSW/ClassUtilScraper';
-import { CampusScraper } from './CampusScraper';
+import { ClassUtilScraper } from './unsw/ClassUtilScraper';
+import { Scraper } from './Scraper';
 
 class CampusError extends Error {
   readonly name = 'CampusError';
@@ -9,7 +9,7 @@ class CampusError extends Error {
   }
 }
 
-export const getCampusScraper = async (campus: string): Promise<CampusScraper> => {
+export const getCampusScraper = async (campus: string): Promise<Scraper> => {
   switch (campus.toLowerCase()) {
     case 'unsw':
       return await ClassUtilScraper.create();

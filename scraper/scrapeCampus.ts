@@ -1,35 +1,34 @@
-import { getCampusScraper } from './scraper';
 import { getWriter } from './writer';
-import HTMLCache from './scraper/HTMLCache';
-import { CampusData, CampusScraper } from './scraper/CampusScraper';
+import { CampusData, Scraper } from './scraper/Scraper';
+import { UNSW, scrapeUNSW } from './scraper/unsw';
 
 export const scrapeCampus = async (campus: string, outputPrefix: string = '', cacheFile?: string) => {
-  const scraper = await getCampusScraper(campus);
-  scraper.cache = new HTMLCache();
+  const scraper = new Scraper();
+  const cache = scraper.cache;
+  if (cacheFile) await cache.load(cacheFile).catch(() => {});
 
-  if (cacheFile) await scraper.cache.load(cacheFile).catch(() => {});
-
-  await scraper.setup().catch(error => { console.error(error); })
-
-  const data = await scraper.scrape().catch(error => { console.error(error); });
+  let data: CampusData[] | null = null;
+  switch (campus) {
+    case UNSW:
+      data = await scrapeUNSW(scraper);
+  }
 
   if (data) {
-    if (cacheFile) await scraper.cache.write(cacheFile);
+    if (cacheFile) await cache.write(cacheFile);
 
     for (const term of data) {
-      await writeTermData(scraper, outputPrefix, term);
+      await writeTermData(outputPrefix, term);
 
       if (term.current) {
-        await writeTermData(scraper, outputPrefix, term, true);
+        await writeTermData(outputPrefix, term, true);
       }
     }
   } else {
-    scraper.log('no data written');
+    console.log(`${UNSW}: no data written`);
   }
 }
 
 const writeTermData = async (
-  scraper: CampusScraper,
   outputPrefix: string,
   termData: CampusData,
   current?: boolean,
@@ -37,13 +36,13 @@ const writeTermData = async (
   const { term, year } = termData.meta;
   let destination: string;
   if (current) {
-    destination = `${outputPrefix}${scraper.campus}/data.json`;
+    destination = `${outputPrefix}${UNSW}/data.json`;
   } else {
-    destination = `${outputPrefix}${scraper.campus}/data-${year}T${term}.json`;
+    destination = `${outputPrefix}${UNSW}/data-${year}T${term}.json`;
   }
   const output = getWriter(destination);
   await output.write(termData);
-  scraper.log(`written term ${term} to ${output}`);
+  console.log(`${UNSW.toUpperCase()}: no data written`);
 }
 
 export default scrapeCampus;

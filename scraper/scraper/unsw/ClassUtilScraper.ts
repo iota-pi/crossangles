@@ -1,111 +1,77 @@
-import { CampusScraper, CampusData } from '../CampusScraper';
+import { Scraper } from '../Scraper';
 import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';
 import { hashData } from '../../data/util';
-import { fetchHandbookNames, CourseNameMap } from './handbook';
+import { CourseNameMap } from './handbook';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
 const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
-const DATA_THRESHOLD = 0.2;
 
-const UPDATE_TIME_KEY = 'data_update_time';
+const UPDATE_TIME_KEY = 'classutil_update_time';
 const ADDITIONAL_HASH_KEY = 'additional_data_hash';
 
 const ADDITIONAL_DATA = additional.unsw;
 const ADDITIONAL_DATA_HASH = hashData(ADDITIONAL_DATA);
 
-const CLASSUTIL = 'http://classutil.unsw.edu.au';
+export const CLASSUTIL = 'http://classutil.unsw.edu.au';
 
-const START_TERM = 1;
-const END_TERM = 3;
-
-export class ClassUtilScraper extends CampusScraper {
-  readonly campus = 'unsw';
+export class ClassUtilScraper {
+  scraper: Scraper;
+  parser: Parser;
   protected state: StateManager;
-  readonly parser: Parser;
+  readonly campus = 'unsw';
   maxFaculties = Infinity;
+  facultyPages: string[] = [];
+  logging = process.env.NODE_ENV !== 'test';
 
   protected dataUpdateTime: string | undefined;
 
-
-  constructor (parser: Parser, state: StateManager) {
-    super();
+  constructor (scraper: Scraper, parser: Parser, state: StateManager) {
+    this.scraper = scraper;
     this.parser = parser;
     this.state = state;
   }
 
   static async create ({
+    scraper,
     parser,
     state,
   }: {
+    scraper?: Scraper,
     parser?: Parser,
     state?: StateManager,
   } = {}) {
+    scraper = scraper || new Scraper();
     parser = parser || new Parser();
     state = state || await getStateManager();
-    return new ClassUtilScraper(parser, state);
+    return new ClassUtilScraper(scraper, parser, state);
   }
 
   async setup () {
-    this.parser.courseNames = await fetchHandbookNames();
-  }
+    this.facultyPages = await this.findFacultyPages();
 
-  async scrape (): Promise<CampusData[] | null> {
-    const facultyPages = await this.findFacultyPages();
-    if (!await this.checkIfDataUpdated()) {
+    if (await this.checkIfDataUpdated()) {
       this.log('data has not been updated yet; nothing to do');
-      return null;
+      return false;
     }
 
-    let results: CampusData[] = [];
-    for (let term = START_TERM; term <= END_TERM; term++) {
-      const courses = await this.scrapeTerm(term, facultyPages);
-
-      const meta = this.generateMetaData(term, CLASSUTIL);
-      results.push({
-        campus: this.campus,
-        courses,
-        meta,
-        current: false,
-      });
-    }
-
-    // Nominate latest stream with sufficient data as being "current"
-    let currentTerm: number | null = null;
-    for (let i = 0; i < results.length; i++) {
-      const courses = results[i].courses;
-      const hasStreamData = courses.filter(c => c.streams.length > 0);
-      if (hasStreamData.length > courses.length * DATA_THRESHOLD) {
-        currentTerm = i;
-      }
-    }
-    if (currentTerm !== null) {
-      results[currentTerm].current = true;
-    }
-
-    if (this.state) {
-      this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-      this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
-      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-    }
-
-    return results;
+    return true;
   }
 
-  async scrapeTerm (term: number, facultyPages: string[]) {
+  async scrape (term: number) {
     this.log(`scraping term ${term} from ${CLASSUTIL}`);
-    facultyPages = facultyPages.filter(l => l.endsWith(`${term}.html`));
+    const termLinkEnd = `${term}.html`;
+    const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
 
-    const courses = await this.scrapeFacultyPages(facultyPages);
-    return courses;
+    return await this.scrapeFacultyPages(facultyPages);
   }
 
-  private async checkIfDataUpdated () {
+  async checkIfDataUpdated () {
     // Update data if source has changed
     const lastUpdateTime = await this.state.get(this.campus, UPDATE_TIME_KEY);
     if (lastUpdateTime !== this.dataUpdateTime) {
@@ -121,6 +87,14 @@ export class ClassUtilScraper extends CampusScraper {
     return false;
   }
 
+  async persistState () {
+    if (this.state) {
+      this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+      this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
+      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
+    }
+  }
+
   private getUpdateTime ($: CheerioStatic) {
     const timeText = $('p>strong').text();
     // Remove timezone because it confuses parsers and is inconsistent
@@ -131,7 +105,7 @@ export class ClassUtilScraper extends CampusScraper {
   private async findFacultyPages () {
     const links: string[] = [];
     const linkRegex = /[A-Y][A-Z]{3}_[ST][0-9].html$/i;
-    await this.scrapePages([CLASSUTIL], async ($) => {
+    await this.scraper.scrapePages([CLASSUTIL], async ($) => {
       const allLinks = Array.from($('a')).map(e => $(e).attr('href') || '');
       const matchingLinks = allLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);
@@ -147,7 +121,7 @@ export class ClassUtilScraper extends CampusScraper {
 
   private async scrapeFacultyPages (pages: string[]) {
     const urls = pages.map(page => `${CLASSUTIL}/${page}`);
-    const results = await this.scrapePages(urls, page => this.parser.parseFacultyPage(page));
+    const results = await this.scraper.scrapePages(urls, page => this.parser.parseFacultyPage(page));
     const allCourses = results.flat();
 
     // Remove duplicate streams from each course
@@ -163,6 +137,12 @@ export class ClassUtilScraper extends CampusScraper {
 
     this.log(`parsed ${allCourses.length} courses`);
     return allCourses;
+  }
+
+  log (...args: any[]) {
+    if (this.logging) {
+      console.log(`${this.campus.toUpperCase()}:`, ...args);
+    }
   }
 }
 
