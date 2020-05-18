@@ -2,14 +2,15 @@ import ClassUtilScraper, { CLASSUTIL } from './ClassUtilScraper';
 import { generateMetaData } from '../meta';
 import { CampusData, Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state';
+import StateManager from '../../state/StateManager';
 
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 
-export async function scrapeUNSW (scraper: Scraper): Promise<CampusData[]> {
+export async function scrapeUNSW (scraper: Scraper, state: StateManager): Promise<CampusData[]> {
   const terms = [1, 2, 3];
 
-  const classutil = await ClassUtilScraper.create({ scraper });
+  const classutil = await ClassUtilScraper.create({ scraper, state });
   const classutilPromise = classutil.setup();
   const useClassUtil = await classutilPromise;
 

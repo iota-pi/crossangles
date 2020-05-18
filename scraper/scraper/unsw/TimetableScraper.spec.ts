@@ -1,10 +1,15 @@
-import { parseTimeString } from './TimetableScraper';
+import { splitLocation, getShortActivity } from './TimetableScraper';
 
 describe('parsing utilities', () => {
+  it('splitLocation', () => {
+    const location = 'Science Theatre (K-F13-G09)';
+    expect(splitLocation(location)).toEqual(['Science Theatre', '(K-F13-G09)'])
+  })
+
   it.each`
-    times | expected
-    ${''} | ${[]}
-  `('parseTimeString($times) === $expected', ({ times, expected }) => {
-    expect(parseTimeString(times)).toEqual(expected);
+    long                     | short
+    ${'Tutorial-Laboratory'} | ${'TLB'}
+  `('getShortActivity($long) = $short', ({ long, short }) => {
+    expect(getShortActivity(long)).toEqual(short);
   })
 })

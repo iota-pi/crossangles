@@ -1,4 +1,4 @@
-import scrapeCampus from "./scrapeCampus";
+import scrapeCampus from './scrapeCampus';
 
 const main = async () => {
   const args = process.argv.slice(2);
