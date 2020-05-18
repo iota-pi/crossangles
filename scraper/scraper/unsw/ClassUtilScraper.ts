@@ -115,7 +115,7 @@ export class ClassUtilScraper {
 
     links.length = Math.min(links.length, this.maxFaculties);
 
-    this.log(`found ${links.length} faculy pages`);
+    this.log(`found ${links.length} faculty pages`);
     return links;
   }
 
