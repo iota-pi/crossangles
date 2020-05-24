@@ -1,8 +1,9 @@
 import { Scraper } from '../Scraper';
-import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
+import { ClassTime, CourseData, StreamData, DayLetter } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import $ from 'cheerio';
+import { removeDuplicateStreams } from './commonUtils';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -14,6 +15,22 @@ export interface TimetableScraperConfig {
   scraper?: Scraper,
   state?: StateManager,
   year?: number,
+}
+
+export interface StreamTableData {
+  'Class Nbr': string,
+  'Section': string,
+  'Teaching Period': string,
+  'Activity': string,
+  'Status': string,
+  'Enrols/Capacity': string,
+  'Offering Period': string,
+  'Meeting Dates': string,
+  'Census Date': string,
+  'Instruction Mode': string,
+  'Consent': string,
+  'Meeting Information': string,
+  'Class Notes': string,
 }
 
 export class TimetableScraper {
@@ -32,7 +49,7 @@ export class TimetableScraper {
     this.scraper = scraper || new Scraper();
     this.state = state || getStateManager();
     this.year = year || new Date().getFullYear();
-    this.baseURL = `${TIMETABLE_UNSW}/2020`;
+    this.baseURL = `${TIMETABLE_UNSW}/${this.year}`;
   }
 
   async setup () {
@@ -110,33 +127,29 @@ export class TimetableScraper {
 
     const uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
 
-    uniqueLinks.length = 1;
-
     this.log(`found ${uniqueLinks.length} courses`);
     return uniqueLinks;
   }
 
   private async scrapeCoursePages (pages: string[]) {
     const urls = pages.map(page => `${this.baseURL}/${page}`);
-    const courses: CourseData[] = [];
+    const allCourses: CourseData[][] = [[], [], []];
     const courseCodeRegex = /([A-Z]{4}[0-9]{4})/i;
     await this.scraper.scrapePages(urls, async ($, url) => {
       const code = (courseCodeRegex.exec(url) || [])[1];
-      const course: CourseData = {
-        code,
-        name: '',
-        streams: [],
-      };
+      const name = getCourseName($, code);
+      const courses: CourseData[] = [
+        { code, name, streams: [] },
+        { code, name, streams: [] },
+        { code, name, streams: [] },
+      ];
 
-      const table_selector = 'body > table tr > td > table tr:nth-child(6) > td > table td.formBody > table';
-      const term_tables = $(table_selector).filter(':has(:contains("Class Nbr"))').toArray();
-
-      for (const term_table of term_tables) {
-        const data = await this.parseTable($(term_table));
-        if (shouldSkipStream(data['Status'])) {
-
+      const streamTables = $('td.label:contains("Class Nbr")').parent().parent().toArray();
+      for (const streamTable of streamTables) {
+        const data = this.parseTable($(streamTable));
+        if (shouldSkipStream(data)) {
+          continue;
         }
-
         const stream: StreamData = {
           component: getShortActivity(data['Activity']),
           enrols: getEnrols(data['Enrols/Capacity']),
@@ -144,23 +157,49 @@ export class TimetableScraper {
           web: getIsWeb(data['Section']),
           times: [],
         };
+
+        const timesRows = $(streamTable).find('table tr:has(td.data)').toArray();
+        for (const row of timesRows) {
+          const cells = $(row).children('td.data').toArray().map(e => $(e).text().trim());
+          const [day, time, location, weeks, instructor] = cells;
+          const timeStr = abbreviateDay(day) + shortenTime(time);
+          const locationName = splitLocation(location)[0];
+          const timeObject: ClassTime = {
+            time: timeStr,
+            location: locationName || undefined,
+            weeks,
+          };
+
+          if (!shouldSkipTime(timeObject)) {
+            stream.times!.push(timeObject);
+          }
+        }
+
+        if (stream.times!.length === 0 && !stream.web) {
+          continue;
+        }
+
+        const term = getTermNumber(data['Teaching Period']);
+        courses[term - 1].streams.push(stream);
       }
 
-      courses.push(course);
+      for (let i = 0; i < courses.length; ++i) {
+        removeDuplicateStreams(courses[i]);
+        allCourses[i].push(courses[i]);
+      }
     });
 
-    this.log(`parsed ${courses.length} courses`);
-    return courses;
+    return allCourses;
   }
 
-  private async parseTable (table: Cheerio) {
+  private parseTable (table: Cheerio): StreamTableData {
     const labels = table.find('td.label').toArray().map(element => $(element).text().trim());
     const data = table.find('td.data').toArray().map(element => $(element).text().trim());
-    const mapping: { [key: string]: string } = {};
+    const mapping: Partial<StreamTableData> = {};
     for (let i = 0; i < labels.length; i++) {
-      mapping[labels[i]] = data[i];
+      mapping[labels[i] as keyof StreamTableData] = data[i] || '';
     }
-    return mapping;
+    return mapping as StreamTableData;
   }
 
   log (...args: any[]) {
@@ -171,11 +210,88 @@ export class TimetableScraper {
 }
 
 
-export function splitLocation (locationString: string): [string, string] {
+export function getTermNumber (termString: string): number {
+  return parseInt(termString.charAt(1));
+}
+
+export function getCourseName ($: CheerioStatic, code: string) {
+  const codeAndName = $('td.classSearchMinorHeading').text().trim();
+  const name = codeAndName.replace(new RegExp(`^${code}`), '').trim();
+  return name;
+}
+
+export function shouldSkipStream (data: StreamTableData) {
+  // Skip streams which are closed for enrolment but not full
+  if (!['open', 'full'].includes(data['Status'].toLowerCase())) {
+    return true;
+  }
+
+  // Skip course enrolment entries
+  if (data['Activity'].toLowerCase() === 'course enrolment') {
+    return true;
+  }
+
+  // Skip streams with zero capacity
+  if (/\/\s*0/.test(data['Enrols/Capacity'])) {
+    return true;
+  }
+
+  return false;
+}
+
+export function shouldSkipTime (time: ClassTime) {
+  if (weeksAreOutsideTerm(time.weeks)) {
+    return true;
+  }
+
+  return false;
+}
+
+export function abbreviateDay (day: string) {
+  if (day.length < 2) {
+    return day;
+  }
+  day = day.toUpperCase().slice(0, 2);
+  const mapping: { [day: string]: DayLetter } = {
+    'MO': 'M',
+    'TU': 'T',
+    'WE': 'W',
+    'TH': 'H',
+    'FR': 'F',
+    'SA': 'S',
+    'SU': 's',
+  };
+  return mapping[day];
+}
+
+export function shortenTime (time: string) {
+  time = time.replace(/:30/g, '.5');
+  const [start, end] = time.split(/\s*-\s*/).map(t => parseFloat(t));
+  if (end - start === 1) {
+    return start.toString();
+  } else {
+    return `${start}-${end}`;
+  }
+}
+
+export function splitLocation (locationString: string): [string | undefined, string | undefined] {
   const bracketPos = locationString.indexOf('(');
-  const name = locationString.slice(0, bracketPos).trim();
-  const gridRef = locationString.slice(bracketPos - 1).trim();
-  return [name, gridRef];
+
+  let name: string;
+  let gridRef: string;
+  if (bracketPos !== -1) {
+    name = locationString.slice(0, bracketPos).trim();
+    gridRef = locationString.slice(bracketPos - 1).trim().replace(/^\(|\)$/g, '');
+  } else {
+    name = locationString;
+    gridRef = '';
+  }
+
+  if (name.toLowerCase() === 'see school') {
+    name = '';
+  }
+
+  return [name || undefined, gridRef || undefined];
 }
 
 export function getShortActivity (activity: string) {
@@ -186,29 +302,18 @@ export function getShortActivity (activity: string) {
   return short;
 }
 
-export function shouldSkipStream (status: string) {
-  const allowedStatuses = ['open', 'full'];
-  return allowedStatuses.includes(status);
-}
-
 export function getEnrols (enrolmentString: string) {
   return enrolmentString.split(/\s*\/\s*/).map(x => parseInt(x)) as [number, number];
 }
 
 export function getIsWeb (section: string) {
-  return section.toUpperCase().startsWith('WEB');
+  return section.toUpperCase().startsWith('WEB') || undefined;
 }
 
 export function getIsFull (status: string) {
-  return status.toLowerCase() === 'full';
+  return status.toLowerCase() === 'full' || undefined;
 }
 
-
-const test = async () => {
-  const timetable = new TimetableScraper();
-  timetable.maxFaculties = 1;
-  await timetable.setup();
-  const result = await timetable.scrape();
-  console.log(result);
+export function weeksAreOutsideTerm (weeks?: string) {
+  return weeks && /^((11|N[0-9]|< ?1)[, ]*)*$/.test(weeks);
 }
-test();

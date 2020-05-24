@@ -22,7 +22,12 @@ export class Scraper {
   async scrapePages<T> (urls: string[], handler: (page: CheerioStatic, url: string) => Promise<T>) {
     const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
-    const processor = async (url: string) => handler(await this.getPageContent(url), url);
+    const processor = async (url: string) => {
+      return handler(await this.getPageContent(url), url).catch(error => {
+        console.error(`Error while scraping "${url}":`, error);
+        return null;
+      });
+    };
     const parsingPromises = await queue.run(processor);
     return await Promise.all(parsingPromises);
   }

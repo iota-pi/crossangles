@@ -1,5 +1,6 @@
-import { Parser, removeDuplicateStreams } from './ClassUtilScraper';
+import { Parser } from './ClassUtilScraper';
 import { CourseData, StreamData } from '../../../app/src/state';
+import { removeDuplicateStreams } from './commonUtils';
 
 
 describe('Parser', () => {

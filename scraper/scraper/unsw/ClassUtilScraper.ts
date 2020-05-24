@@ -5,6 +5,15 @@ import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';
 import { hashData } from '../../data/util';
 import { CourseNameMap } from './handbook';
+import { removeDuplicateStreams } from './commonUtils';
+
+
+export interface ClassUtilScraperConfig {
+  scraper?: Scraper,
+  parser?: Parser,
+  state?: StateManager,
+}
+
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -31,25 +40,10 @@ export class ClassUtilScraper {
 
   protected dataUpdateTime: string | undefined;
 
-  constructor (scraper: Scraper, parser: Parser, state: StateManager) {
-    this.scraper = scraper;
-    this.parser = parser;
-    this.state = state;
-  }
-
-  static async create ({
-    scraper,
-    parser,
-    state,
-  }: {
-    scraper?: Scraper,
-    parser?: Parser,
-    state?: StateManager,
-  } = {}) {
-    scraper = scraper || new Scraper();
-    parser = parser || new Parser();
-    state = state || await getStateManager();
-    return new ClassUtilScraper(scraper, parser, state);
+  constructor ({ scraper, parser, state }: ClassUtilScraperConfig) {
+    this.scraper = scraper || new Scraper();
+    this.parser = parser || new Parser();
+    this.state = state || getStateManager();
   }
 
   async setup () {
@@ -366,40 +360,4 @@ export class Parser {
 
     return weeks;
   }
-}
-
-export function removeDuplicateStreams (course: CourseData) {
-  const mapping = new Map<string, StreamData[]>();
-  for (let stream of course.streams) {
-    const times = stream.times !== null ? stream.times.map(t => t.time) : null;
-    const key = stream.component + `[${times}]`;
-    const currentGroup = mapping.get(key) || [];
-    const newGroup = currentGroup.concat(stream);
-    mapping.set(key, newGroup);
-  }
-
-  // For each set of streams with identical component and times, remove all but the emptiest stream
-  for (const streamGroup of Array.from(mapping.values())) {
-    const emptiest = emptiestStream(streamGroup);
-    for (let stream of streamGroup) {
-      if (stream !== emptiest) {
-        const index = course.streams.indexOf(stream);
-        course.streams.splice(index, 1);
-      }
-    }
-  }
-}
-
-function emptiestStream (streams: StreamData[]) {
-  let bestStream = null;
-  let bestRatio = Infinity;
-  for (let stream of streams) {
-    const ratio = stream.enrols[0] / stream.enrols[1];
-    if (ratio < bestRatio) {
-      bestRatio = ratio;
-      bestStream = stream;
-    }
-  }
-
-  return bestStream!;
 }

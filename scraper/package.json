@@ -11,20 +11,20 @@
   },
   "author": "David Adams",
   "dependencies": {
-    "@types/moment-timezone": "^0.5.12",
-    "@types/node": "^13.7.1",
+    "@types/moment-timezone": "^0.5.13",
+    "@types/node": "^13.13.8",
     "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
-    "moment-timezone": "^0.5.28"
+    "moment-timezone": "^0.5.31"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.16",
-    "@types/jest": "^25.1.2",
-    "aws-sdk": "^2.620.0",
-    "jest": "^25.1.0",
-    "ts-jest": "^25.2.1",
-    "typescript": "^3.7.5",
-    "webpack": "^4.41.6",
+    "@types/cheerio": "^0.22.18",
+    "@types/jest": "^25.2.3",
+    "aws-sdk": "^2.680.0",
+    "jest": "^25.5.4",
+    "ts-jest": "^25.5.1",
+    "typescript": "^3.9.3",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   }
 }

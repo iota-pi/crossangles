@@ -9,7 +9,7 @@ export class AsyncQueue<T, R> {
     this.queue.unshift(...reversedItems);
   }
 
-  async run (func: (item: T) => Promise<R>): Promise<R[]> {
+  async run (func: (item: T) => Promise<R | null>): Promise<R[]> {
     const senders: Promise<void>[] = [];
 
     for (let i = 0; i < this.maxRequests; ++i) {
@@ -20,12 +20,15 @@ export class AsyncQueue<T, R> {
     return this.results;
   }
 
-  async send (func: (item: T) => Promise<R>) {
+  async send (func: (item: T) => Promise<R | null>) {
     while (this.queue.length) {
       const item = this.queue.pop();
 
       if (item !== undefined) {
-        this.results.push(await func(item));
+        const result = await func(item);
+        if (result !== null) {
+          this.results.push(result);
+        }
       }
     }
   }

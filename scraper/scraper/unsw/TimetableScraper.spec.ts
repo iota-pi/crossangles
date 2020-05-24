@@ -1,15 +1,186 @@
-import { splitLocation, getShortActivity } from './TimetableScraper';
+import {
+  splitLocation,
+  getShortActivity,
+  abbreviateDay,
+  shortenTime,
+  StreamTableData,
+  shouldSkipStream,
+  getTermNumber,
+  getIsWeb,
+  getIsFull,
+  weeksAreOutsideTerm,
+} from './TimetableScraper';
+
+const baseStreamTableData: StreamTableData = {
+  'Activity': 'Lecture',
+  'Census Date': '15/03/2020',
+  'Class Nbr': '8765',
+  'Class Notes': '',
+  'Enrols/Capacity': '326/352',
+  'Instruction Mode': 'In Person',
+  'Meeting Dates': 'Standard dates',
+  'Meeting Information': '',
+  'Offering Period': '17/02/2020 - 17/05/2020',
+  'Teaching Period': 'T1 - Teaching Period One',
+  'Consent': 'Consent not required',
+  'Section': 'CR01',
+  'Status': 'Open',
+};
 
 describe('parsing utilities', () => {
-  it('splitLocation', () => {
-    const location = 'Science Theatre (K-F13-G09)';
-    expect(splitLocation(location)).toEqual(['Science Theatre', '(K-F13-G09)'])
+  it('shouldSkipStream() = false', () => {
+    const data: StreamTableData[] = [
+      {
+        ...baseStreamTableData,
+      },
+      {
+        ...baseStreamTableData,
+        'Status': 'Full',
+      },
+      {
+        ...baseStreamTableData,
+        'Enrols/Capacity': '0/1',
+      },
+    ];
+    const results = data.filter(x => !shouldSkipStream(x));
+    expect(results.length).toBe(data.length);
+  })
+
+  it('shouldSkipStream() = true', () => {
+    const data: StreamTableData[] = [
+      {
+        ...baseStreamTableData,
+        'Status': 'Cancelled',
+      },
+      {
+        ...baseStreamTableData,
+        'Status': 'Stop',
+      },
+      {
+        ...baseStreamTableData,
+        'Activity': 'Course Enrolment'
+      },
+      {
+        ...baseStreamTableData,
+        'Enrols/Capacity': '0/0',
+      },
+      {
+        ...baseStreamTableData,
+        'Enrols/Capacity': '1/0',
+      },
+    ];
+    const results = data.filter(x => !shouldSkipStream(x));
+    expect(results.length).toBe(0);
+  })
+
+  it.each`
+    time         | expected
+    ${'11'}      | ${true}
+    ${'1,11'}    | ${false}
+    ${'1-11'}    | ${false}
+    ${'1'}       | ${false}
+    ${'5'}       | ${false}
+    ${'< 1'}     | ${true}
+    ${'N1'}      | ${true}
+    ${'N2'}      | ${true}
+    ${'N2,11'}   | ${true}
+    ${'1,N2,11'} | ${false}
+  `('weeksAreOutsideTerm("$time") = $expected', ({ time, expected }) => {
+    expect(weeksAreOutsideTerm(time)).toEqual(expected);
+  })
+
+  it.each`
+    term                            | expected
+    ${'T1 - Teaching Period One'}   | ${1}
+    ${'T2 - Teaching Period Two'}   | ${2}
+    ${'T3 - Teaching Period Three'} | ${3}
+  `('getTermNumber("$term") = $expected', ({ term, expected }) => {
+    expect(getTermNumber(term)).toEqual(expected);
+  })
+
+  it.each`
+    location                         | result
+    ${'Science Theatre (K-F13-G09)'} | ${['Science Theatre', 'K-F13-G09']}
+    ${'See School'}                  | ${[undefined, undefined]}
+    ${'Online (ONLINE)'}             | ${['Online', 'ONLINE']}
+  `('splitLocation("$location") === $result', ({ location, result }) => {
+    expect(splitLocation(location)).toEqual(result);
   })
 
   it.each`
     long                     | short
     ${'Tutorial-Laboratory'} | ${'TLB'}
-  `('getShortActivity($long) = $short', ({ long, short }) => {
+    ${'Lecture'}             | ${'LEC'}
+    ${'Tutorial'}            | ${'TUT'}
+    ${'Laboratory'}          | ${'LAB'}
+    ${'Other'}               | ${'OTH'}
+  `('getShortActivity("$long") = "$short"', ({ long, short }) => {
     expect(getShortActivity(long)).toEqual(short);
+  })
+
+  it.each`
+    day            | abbrev
+    ${'Monday'}    | ${'M'}
+    ${'Mon'}       | ${'M'}
+    ${'M'}         | ${'M'}
+    ${'Tuesday'}   | ${'T'}
+    ${'Tue'}       | ${'T'}
+    ${'T'}         | ${'T'}
+    ${'Wednesday'} | ${'W'}
+    ${'Wed'}       | ${'W'}
+    ${'W'}         | ${'W'}
+    ${'Thursday'}  | ${'H'}
+    ${'Thurs'}     | ${'H'}
+    ${'Thur'}      | ${'H'}
+    ${'Thu'}       | ${'H'}
+    ${'H'}         | ${'H'}
+    ${'Friday'}    | ${'F'}
+    ${'Fri'}       | ${'F'}
+    ${'F'}         | ${'F'}
+    ${'Saturday'}  | ${'S'}
+    ${'Sat'}       | ${'S'}
+    ${'S'}         | ${'S'}
+    ${'Sunday'}    | ${'s'}
+    ${'Sun'}       | ${'s'}
+    ${'s'}         | ${'s'}
+  `('abbreviateDay("$day") = "$abbrev"', ({ day, abbrev }) => {
+    expect(abbreviateDay(day)).toEqual(abbrev);
+  })
+
+  it.each`
+    time               | short
+    ${'10:00 - 11:00'} | ${'10'}
+    ${'09:00 - 10:00'} | ${'9'}
+    ${'12:00 - 14:00'} | ${'12-14'}
+    ${'08:00 - 11:00'} | ${'8-11'}
+    ${'12:30 - 14:00'} | ${'12.5-14'}
+    ${'12:30 - 13:30'} | ${'12.5'}
+    ${'12:00 - 13:30'} | ${'12-13.5'}
+  `('shortenTime("$time") = "$short"', ({ time, short }) => {
+    expect(shortenTime(time)).toEqual(short);
+  })
+
+  it.each`
+    section   | expected
+    ${'WEB1'} | ${true}
+    ${'LEC1'} | ${undefined}
+    ${'TUT'} | ${undefined}
+    ${'CR01'} | ${undefined}
+  `('getIsWeb("$section") = $expected', ({ section, expected }) => {
+    expect(getIsWeb(section)).toEqual(expected);
+  })
+
+  it.each`
+    status         | expected
+    ${'Full'}      | ${true}
+    ${'full'}      | ${true}
+    ${'FULL'}      | ${true}
+    ${'Open'}      | ${undefined}
+    ${'open'}      | ${undefined}
+    ${'OPEN'}      | ${undefined}
+    ${'Stop'}      | ${undefined}
+    ${'Cancelled'} | ${undefined}
+  `('getIsFull("$status") = $expected', ({ status, expected }) => {
+    expect(getIsFull(status)).toEqual(expected);
   })
 })
