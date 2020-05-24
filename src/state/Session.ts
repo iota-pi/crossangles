@@ -3,7 +3,7 @@ import { StreamData, StreamId, getStreamId, LinkedStream } from './Stream';
 
 export type SessionId = string;
 
-export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F';
+export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F' | 'S' | 's';
 
 export interface SessionCommon {
   index: number,
