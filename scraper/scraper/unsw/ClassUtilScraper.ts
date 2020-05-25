@@ -35,7 +35,7 @@ export class ClassUtilScraper {
   protected state: StateManager;
   readonly campus = 'unsw';
   facultyPages: string[] = [];
-  maxFaculties = process.env.NODE_ENV === 'test' ? 3 : Infinity;
+  maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   logging = process.env.NODE_ENV !== 'test';
 
   protected dataUpdateTime: string | null | undefined = null;

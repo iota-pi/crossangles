@@ -25,11 +25,12 @@ export async function scrapeUNSW (scraper: Scraper, state: StateManager): Promis
   if (timetableData.length) { sources.push(TIMETABLE_UNSW); }
 
   const results: CampusData[] = [];
-  for (const term of terms) {
-    classutilData[term] = mergeData(classutilData[term], timetableData[term]);
+  for (let i = 0; i < terms.length; ++i) {
+    const mergedData = mergeData(classutilData[i], timetableData[i]);
+    const term = i + 1;
     results.push({
       campus: UNSW,
-      courses: classutilData[term],
+      courses: mergedData,
       meta: generateMetaData(term, sources),
       current: false,
     });

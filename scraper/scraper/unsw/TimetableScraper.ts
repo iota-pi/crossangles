@@ -38,7 +38,7 @@ export class TimetableScraper {
   protected state: StateManager;
   readonly campus = 'unsw';
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
-  maxCourses = process.env.NODE_ENV === 'test' ? 5 : Infinity;
+  maxCourses = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   facultyPages: string[] = [];
   logging = process.env.NODE_ENV !== 'test';
   baseURL: string;
