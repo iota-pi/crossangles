@@ -26,7 +26,10 @@ jobs:
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Init
-      run: terraform init -input=false
+      run: |
+        terraform init -input=false
+        terraform workspace select staging
+        terraform refresh
 
     - name: Create placeholder files
       run: |
