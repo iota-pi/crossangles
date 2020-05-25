@@ -21,6 +21,12 @@ resource "aws_lambda_function" "contact" {
   source_code_hash = filebase64sha256(aws_s3_bucket_object.contact_code.source)
 
   role = aws_iam_role.contact_role.arn
+
+  environment {
+    variables = {
+      MAILGUN_API_KEY = var.mailgun_api_key
+    }
+  }
 }
 
 resource "aws_iam_role" "contact_role" {

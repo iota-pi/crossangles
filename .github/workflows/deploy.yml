@@ -46,6 +46,8 @@ jobs:
 
     - name: Terraform Validate
       run: terraform apply -auto-approve -input=false
+      env:
+        TF_VAR_mailgun_api_key: ${{ secrets.MAILGUN_API_KEY }}
 
     - name: Build App
       run: ./build-app.sh

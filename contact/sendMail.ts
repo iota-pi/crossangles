@@ -1,6 +1,8 @@
 import mailgun from 'mailgun-js';
-import { apiKey, domain, from, to } from './mailgun.json';
+import { domain, from, to } from './mailgun.json';
 import { RequestBody } from './parseBody.js';
+
+const apiKey = process.env.MAILGUN_API_KEY || '';
 const mg = mailgun({ apiKey, domain });
 
 export const sendMail = ({ email, name, message }: RequestBody): Promise<mailgun.messages.SendResponse> => {

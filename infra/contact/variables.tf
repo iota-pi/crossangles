@@ -11,3 +11,8 @@ variable code_key {
   type    = string
   default = "contact/contact.zip"
 }
+
+variable mailgun_api_key {
+  type    = string
+  default = ""
+}
