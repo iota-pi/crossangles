@@ -1,6 +1,7 @@
 import ClassUtilScraper, { CLASSUTIL } from './ClassUtilScraper';
 import { CampusData, Scraper } from '../Scraper';
-import { CourseData, CourseMap, getCourseId, getStreamId } from '../../../app/src/state';
+import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
+import { getStreamId } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
