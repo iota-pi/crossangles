@@ -13,35 +13,12 @@ const forceUpdate = !!process.env.FORCE || process.env.NODE_ENV === 'test';
 
 export async function scrapeUNSW (scraper: Scraper, state: StateManager): Promise<CampusData[]> {
   const classutil = new ClassUtilScraper({ scraper, state });
-  const classutilPromise = classutil.setup() || forceUpdate;
-
   const timetable = new TimetableScraper({ scraper, state });
-  const timetablePromise = timetable.setup() || forceUpdate;
 
-  const useClassUtil = await classutilPromise;
-  const useTimetable = await timetablePromise;
-
-  let classutilData: CourseData[][] = [];
-  if (useClassUtil) {
-    for (const term of terms) {
-      try {
-        classutilData.push(await classutil.scrape(term));
-      } catch (error) {
-        console.error(`Error while scraping from ${CLASSUTIL} for term ${term}`);
-        console.error(error);
-      }
-    }
-  }
-
-  let timetableData: CourseData[][] = [];
-  if (useTimetable) {
-    try {
-      timetableData = await timetable.scrape();
-    } catch (error) {
-      console.error(`Error while scraping from ${TIMETABLE_UNSW}`);
-      console.error(error);
-    }
-  }
+  const classutilPromise = scrapeClassUtil(classutil);
+  const timetablePromise = scrapeTimetable(timetable);
+  const classutilData = await classutilPromise;
+  const timetableData = await timetablePromise;
 
   const sources: string[] = [];
   if (classutilData.length) { sources.push(CLASSUTIL); }
@@ -115,6 +92,35 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
   }
 
   return classutilData;
+}
+
+export async function scrapeClassUtil (classutil: ClassUtilScraper) {
+  let classutilData: CourseData[][] = [];
+  const useClassUtil = await classutil.setup() || forceUpdate;
+  if (useClassUtil) {
+    for (const term of terms) {
+      try {
+        classutilData.push(await classutil.scrape(term));
+      } catch (error) {
+        console.error(`Error while scraping from ${CLASSUTIL} for term ${term}`);
+        console.error(error);
+      }
+    }
+  }
+  return classutilData;
+}
+
+export async function scrapeTimetable (timetable: TimetableScraper) {
+  const useTimetable = await timetable.setup() || forceUpdate;
+  if (useTimetable) {
+    try {
+      return await timetable.scrape();
+    } catch (error) {
+      console.error(`Error while scraping from ${TIMETABLE_UNSW}`);
+      console.error(error);
+    }
+  }
+  return [];
 }
 
 export function getCurrentTerm (data: CampusData[]) {
