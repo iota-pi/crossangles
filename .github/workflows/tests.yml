@@ -25,15 +25,15 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
-    - name: Terraform Init
-      run: |
-        terraform init -input=false && terraform refresh -input=false
-        terraform workspace select staging
-
     - name: Create placeholder files
       run: |
         mkdir -p contact/build image/build scraper/build
         touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
+
+    - name: Terraform Init
+      run: |
+        terraform init -input=false && terraform refresh -input=false
+        terraform workspace select staging
 
     - name: Validate Terraform IAC
       run: terraform plan -input=false
