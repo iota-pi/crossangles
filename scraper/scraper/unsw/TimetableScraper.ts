@@ -128,7 +128,7 @@ export class TimetableScraper {
     const uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
     uniqueLinks.length = Math.min(uniqueLinks.length, this.maxCourses);
 
-    this.log(`found ${uniqueLinks.length} courses`);
+    this.log(`found ${uniqueLinks.length} course pages`);
     return uniqueLinks;
   }
 
@@ -182,7 +182,9 @@ export class TimetableScraper {
         }
 
         const term = getTermNumber(data['Teaching Period']);
-        courses[term - 1].streams.push(stream);
+        if (courses[term - 1] !== undefined) {
+          courses[term - 1].streams.push(stream);
+        }
       }
 
       for (let i = 0; i < courses.length; ++i) {
