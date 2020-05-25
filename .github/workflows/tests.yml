@@ -52,5 +52,5 @@ jobs:
         mkdir -p contact/build image/build scraper/build
         touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
 
-    - name: Terraform Validate
+    - name: Terraform Plan
       run: terraform plan -input=false
