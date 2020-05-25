@@ -1,5 +1,5 @@
 import { Scraper } from '../Scraper';
-import { ClassTime, CourseData, StreamData, DayLetter } from '../../../app/src/state';
+import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import $ from 'cheerio';
@@ -175,6 +175,7 @@ export class TimetableScraper {
           }
         }
 
+        // Skip streams without any associated times (unless it's a web stream)
         if (stream.times!.length === 0 && !stream.web) {
           continue;
         }
@@ -244,15 +245,28 @@ export function shouldSkipTime (time: ClassTime) {
     return true;
   }
 
+  if (isIntensive(time.time)) {
+    return true;
+  }
+
+  if (isOnWeekend(time.time)) {
+    return true;
+  }
+
   return false;
 }
 
-export function abbreviateDay (day: string) {
+export function abbreviateDay (day: string): string {
+  // Handle multiple days
+  if (day.includes(' ')) {
+    return day.split(/ +/g).map(abbreviateDay).join('');
+  }
+
   if (day.length < 2) {
     return day;
   }
   day = day.toUpperCase().slice(0, 2);
-  const mapping: { [day: string]: DayLetter } = {
+  const mapping: { [day: string]: string } = {
     'MO': 'M',
     'TU': 'T',
     'WE': 'W',
@@ -316,4 +330,12 @@ export function getIsFull (status: string) {
 
 export function weeksAreOutsideTerm (weeks?: string) {
   return weeks && /^((11|N[0-9]|< ?1)[, ]*)*$/.test(weeks);
+}
+
+export function isIntensive (time: string) {
+  return time.replace(/[^a-z].*/i, '').length > 1;
+}
+
+export function isOnWeekend (time: string) {
+  return time.replace(/[^a-z].*/i, '').toLowerCase().includes('s');
 }

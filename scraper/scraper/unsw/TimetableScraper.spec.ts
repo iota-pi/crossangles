@@ -9,6 +9,8 @@ import {
   getIsWeb,
   getIsFull,
   weeksAreOutsideTerm,
+  isIntensive,
+  isOnWeekend,
 } from './TimetableScraper';
 
 const baseStreamTableData: StreamTableData = {
@@ -119,30 +121,31 @@ describe('parsing utilities', () => {
   })
 
   it.each`
-    day            | abbrev
-    ${'Monday'}    | ${'M'}
-    ${'Mon'}       | ${'M'}
-    ${'M'}         | ${'M'}
-    ${'Tuesday'}   | ${'T'}
-    ${'Tue'}       | ${'T'}
-    ${'T'}         | ${'T'}
-    ${'Wednesday'} | ${'W'}
-    ${'Wed'}       | ${'W'}
-    ${'W'}         | ${'W'}
-    ${'Thursday'}  | ${'H'}
-    ${'Thurs'}     | ${'H'}
-    ${'Thur'}      | ${'H'}
-    ${'Thu'}       | ${'H'}
-    ${'H'}         | ${'H'}
-    ${'Friday'}    | ${'F'}
-    ${'Fri'}       | ${'F'}
-    ${'F'}         | ${'F'}
-    ${'Saturday'}  | ${'S'}
-    ${'Sat'}       | ${'S'}
-    ${'S'}         | ${'S'}
-    ${'Sunday'}    | ${'s'}
-    ${'Sun'}       | ${'s'}
-    ${'s'}         | ${'s'}
+    day              | abbrev
+    ${'Monday'}      | ${'M'}
+    ${'Mon'}         | ${'M'}
+    ${'M'}           | ${'M'}
+    ${'Tuesday'}     | ${'T'}
+    ${'Tue'}         | ${'T'}
+    ${'T'}           | ${'T'}
+    ${'Wednesday'}   | ${'W'}
+    ${'Wed'}         | ${'W'}
+    ${'W'}           | ${'W'}
+    ${'Thursday'}    | ${'H'}
+    ${'Thurs'}       | ${'H'}
+    ${'Thur'}        | ${'H'}
+    ${'Thu'}         | ${'H'}
+    ${'H'}           | ${'H'}
+    ${'Friday'}      | ${'F'}
+    ${'Fri'}         | ${'F'}
+    ${'F'}           | ${'F'}
+    ${'Saturday'}    | ${'S'}
+    ${'Sat'}         | ${'S'}
+    ${'S'}           | ${'S'}
+    ${'Sunday'}      | ${'s'}
+    ${'Sun'}         | ${'s'}
+    ${'s'}           | ${'s'}
+    ${'Mon Tue Wed'} | ${'MTW'}
   `('abbreviateDay("$day") = "$abbrev"', ({ day, abbrev }) => {
     expect(abbreviateDay(day)).toEqual(abbrev);
   })
@@ -182,5 +185,31 @@ describe('parsing utilities', () => {
     ${'Cancelled'} | ${undefined}
   `('getIsFull("$status") = $expected', ({ status, expected }) => {
     expect(getIsFull(status)).toEqual(expected);
+  })
+
+  it.each`
+    status        | expected
+    ${'M10'}      | ${false}
+    ${'T9-12'}    | ${false}
+    ${'W9'}       | ${false}
+    ${'H15-18'}   | ${false}
+    ${'S14-16'}   | ${false}
+    ${'MTW10-16'} | ${true}
+  `('isIntensive("$status") = $expected', ({ status, expected }) => {
+    expect(isIntensive(status)).toEqual(expected);
+  })
+
+  it.each`
+    status        | expected
+    ${'M10'}      | ${false}
+    ${'T9-12'}    | ${false}
+    ${'W9'}       | ${false}
+    ${'H15-18'}   | ${false}
+    ${'S14-16'}   | ${true}
+    ${'s10'}      | ${true}
+    ${'MTW10-16'} | ${false}
+    ${'MTS10-16'} | ${true}
+  `('isOnWeekend("$status") = $expected', ({ status, expected }) => {
+    expect(isOnWeekend(status)).toEqual(expected);
   })
 })
