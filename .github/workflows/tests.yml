@@ -27,9 +27,8 @@ jobs:
 
     - name: Terraform Init
       run: |
-        terraform init -input=false
+        terraform init -input=false && terraform refresh -input=false
         terraform workspace select staging
-        terraform refresh
 
     - name: Create placeholder files
       run: |
