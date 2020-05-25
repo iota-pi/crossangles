@@ -8,26 +8,7 @@ on:
 
 jobs:
   test:
-    name: Unit and E2E Tests
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - name: Setup NodeJS
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-
-    - name: Install dependencies
-      run: ./ci.sh ci-install
-
-    - name: Run tests
-      run: ./ci-test.sh
-
-  terraform:
-    name: Verify IAC
+    name: Validate IAC and Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -52,5 +33,16 @@ jobs:
         mkdir -p contact/build image/build scraper/build
         touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
 
-    - name: Terraform Plan
+    - name: Validate Terraform IAC
       run: terraform plan -input=false
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: Install dependencies
+      run: ./ci.sh ci-install
+
+    - name: Run tests
+      run: ./ci-test.sh
