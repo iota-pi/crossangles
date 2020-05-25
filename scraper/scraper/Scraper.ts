@@ -1,8 +1,11 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
+import axiosRetry from 'axios-retry';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
 import { CourseData, Meta } from '../../app/src/state';
+
+axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay });
 
 export interface CampusData {
   campus: string,
