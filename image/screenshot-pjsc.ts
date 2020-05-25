@@ -1,11 +1,11 @@
 import axios from 'axios';
-import secrets from './secrets';
 
+const pjsc_key = process.env.PJSC_KEY || '';
 export const screenshot = async (
   uri: string,
   viewport?: { width: number, height: number },
 ): Promise<string> => {
-  const endpoint = `https://phantomjscloud.com/api/browser/v2/${secrets.pjsc_key}/`;
+  const endpoint = `https://phantomjscloud.com/api/browser/v2/${pjsc_key}/`;
 
   const data = {
     url: uri,
