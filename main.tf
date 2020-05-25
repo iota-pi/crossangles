@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "crosscode-terraform-state"
+    key    = "crossangles/prod/terraform.tfstate"
+    region = "ap-southeast-2"
+  }
+}
+
 variable "endpoints" {
   type = map(string)
   default = {}

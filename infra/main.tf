@@ -1,11 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket = "crosscode-terraform-state"
-    key    = "crossangles/prod/terraform.tfstate"
-    region = "ap-southeast-2"
-  }
-}
-
 provider "aws" {
   region  = "ap-southeast-2"
   version = "~> 2.52"
