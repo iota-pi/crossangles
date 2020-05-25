@@ -37,13 +37,14 @@ export class TimetableScraper {
   scraper: Scraper;
   protected state: StateManager;
   readonly campus = 'unsw';
-  maxFaculties = Infinity;
+  maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
+  maxCourses = process.env.NODE_ENV === 'test' ? 5 : Infinity;
   facultyPages: string[] = [];
   logging = process.env.NODE_ENV !== 'test';
   baseURL: string;
   year: number;
 
-  protected dataUpdateTime: string | undefined;
+  protected dataUpdateTime: string | null | undefined = null;
 
   constructor ({ scraper, state, year }: TimetableScraperConfig = {}) {
     this.scraper = scraper || new Scraper();
@@ -55,7 +56,7 @@ export class TimetableScraper {
   async setup () {
     this.facultyPages = await this.findFacultyPages();
 
-    if (await this.checkIfDataUpdated()) {
+    if (!await this.checkIfDataUpdated()) {
       this.log('data has not been updated yet; nothing to do');
       return false;
     }
@@ -93,7 +94,6 @@ export class TimetableScraper {
 
     // Remove timezone because it confuses parsers and is inconsistent
     const withoutTZ = timeText.replace(/\bA?E[SD]T\b/, '');
-    console.log(withoutTZ);
     this.dataUpdateTime = withoutTZ;
   }
 
@@ -126,6 +126,7 @@ export class TimetableScraper {
     });
 
     const uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
+    uniqueLinks.length = Math.min(uniqueLinks.length, this.maxCourses);
 
     this.log(`found ${uniqueLinks.length} courses`);
     return uniqueLinks;
@@ -212,7 +213,7 @@ export class TimetableScraper {
 
 
 export function getTermNumber (termString: string): number {
-  return parseInt(termString.charAt(1));
+  return parseInt(termString.replace(/[^\d]+/, '').replace(/[^\d].*/, ''));
 }
 
 export function getCourseName ($: CheerioStatic, code: string) {
@@ -234,6 +235,11 @@ export function shouldSkipStream (data: StreamTableData) {
 
   // Skip streams with zero capacity
   if (/\/\s*0/.test(data['Enrols/Capacity'])) {
+    return true;
+  }
+
+  // Skip intensive courses
+  if (data['Instruction Mode'].toLowerCase() === 'intensive mode') {
     return true;
   }
 

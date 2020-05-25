@@ -6,7 +6,7 @@ import getStateManager from './state/getStateManager';
 export const scrapeCampus = async (campus: string, outputPrefix: string = '', cacheFile?: string) => {
   const scraper = new Scraper();
   const cache = scraper.cache;
-  const state = await getStateManager();
+  const state = getStateManager();
   if (cacheFile) await cache.load(cacheFile).catch(() => {});
 
   let data: CampusData[] | null = null;

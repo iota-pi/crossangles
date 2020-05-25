@@ -9,20 +9,21 @@ import { generateMetaData } from '../meta';
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
+const forceUpdate = !!process.env.FORCE || process.env.NODE_ENV === 'test';
 
 export async function scrapeUNSW (scraper: Scraper, state: StateManager): Promise<CampusData[]> {
   const classutil = new ClassUtilScraper({ scraper, state });
-  const classutilPromise = classutil.setup();
+  const classutilPromise = classutil.setup() || forceUpdate;
 
   const timetable = new TimetableScraper({ scraper, state });
-  const timetablePromise = timetable.setup();
+  const timetablePromise = timetable.setup() || forceUpdate;
 
   const useClassUtil = await classutilPromise;
   const useTimetable = await timetablePromise;
 
   let classutilData: CourseData[][] = [];
-  for (const term of terms) {
-    if (useClassUtil) {
+  if (useClassUtil) {
+    for (const term of terms) {
       try {
         classutilData.push(await classutil.scrape(term));
       } catch (error) {
@@ -48,7 +49,7 @@ export async function scrapeUNSW (scraper: Scraper, state: StateManager): Promis
 
   const results: CampusData[] = [];
   for (const term of terms) {
-    mergeData(classutilData[term], timetableData[term]);
+    classutilData[term] = mergeData(classutilData[term], timetableData[term]);
     results.push({
       campus: UNSW,
       courses: classutilData[term],
@@ -73,7 +74,7 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     if (data) {
       return data;
     }
-    throw new Error('Received no course data');
+    return [];
   }
 
   const timetableCourseMap: CourseMap = {};
@@ -84,6 +85,9 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
   for (const course of classutilData) {
     const courseId = getCourseId(course);
     const timetableCourse = timetableCourseMap[courseId];
+    if (timetableCourse === undefined) {
+      continue;
+    }
 
     // ClassUtil abbreviates long names
     course.name = timetableCourse.name;
@@ -109,6 +113,8 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
       }
     }
   }
+
+  return classutilData;
 }
 
 export function getCurrentTerm (data: CampusData[]) {

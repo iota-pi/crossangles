@@ -34,11 +34,11 @@ export class ClassUtilScraper {
   parser: Parser;
   protected state: StateManager;
   readonly campus = 'unsw';
-  maxFaculties = Infinity;
   facultyPages: string[] = [];
+  maxFaculties = process.env.NODE_ENV === 'test' ? 3 : Infinity;
   logging = process.env.NODE_ENV !== 'test';
 
-  protected dataUpdateTime: string | undefined;
+  protected dataUpdateTime: string | null | undefined = null;
 
   constructor ({ scraper, parser, state }: ClassUtilScraperConfig) {
     this.scraper = scraper || new Scraper();
@@ -49,7 +49,7 @@ export class ClassUtilScraper {
   async setup () {
     this.facultyPages = await this.findFacultyPages();
 
-    if (await this.checkIfDataUpdated()) {
+    if (!await this.checkIfDataUpdated()) {
       this.log('data has not been updated yet; nothing to do');
       return false;
     }
@@ -73,6 +73,7 @@ export class ClassUtilScraper {
     }
 
     // Update data if additional data has changed
+    // TODO: lift to UNSW scraper
     const oldAdditionalHash = await this.state.get(this.campus, ADDITIONAL_HASH_KEY);
     if (ADDITIONAL_DATA_HASH !== oldAdditionalHash) {
       return true;

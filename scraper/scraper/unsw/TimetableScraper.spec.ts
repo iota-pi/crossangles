@@ -92,10 +92,11 @@ describe('parsing utilities', () => {
   })
 
   it.each`
-    term                            | expected
-    ${'T1 - Teaching Period One'}   | ${1}
-    ${'T2 - Teaching Period Two'}   | ${2}
-    ${'T3 - Teaching Period Three'} | ${3}
+    term                                      | expected
+    ${'T1 - Teaching Period One'}             | ${1}
+    ${'T2 - Teaching Period Two'}             | ${2}
+    ${'T3 - Teaching Period Three'}           | ${3}
+    ${'MG1 - Management Teaching Period MG1'} | ${1}
   `('getTermNumber("$term") = $expected', ({ term, expected }) => {
     expect(getTermNumber(term)).toEqual(expected);
   })
@@ -145,7 +146,7 @@ describe('parsing utilities', () => {
     ${'Sunday'}      | ${'s'}
     ${'Sun'}         | ${'s'}
     ${'s'}           | ${'s'}
-    ${'Mon Tue Wed'} | ${'MTW'}
+    ${'Mon, Tue, Wed'} | ${'MTW'}
   `('abbreviateDay("$day") = "$abbrev"', ({ day, abbrev }) => {
     expect(abbreviateDay(day)).toEqual(abbrev);
   })
