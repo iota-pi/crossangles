@@ -2,6 +2,8 @@ import { scrapeUNSW } from './index';
 import { Scraper } from '../Scraper';
 import StateManager from '../../state/StateManager';
 
+jest.setTimeout(10000);
+
 describe('scrapeUNSW', () => {
   it('gives consistent output', async () => {
     const cacheFile = 'unsw-snapshot.json.br';
