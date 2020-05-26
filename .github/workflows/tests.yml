@@ -15,13 +15,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-2
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
@@ -29,6 +22,13 @@ jobs:
       run: |
         mkdir -p contact/build image/build scraper/build
         touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-2
 
     - name: Terraform Init
       run: |
