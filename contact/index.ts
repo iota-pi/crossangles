@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { LambdaResponder } from '../lambda-shared/LambdaResponder';
-import sendMail from './sendMail';
+import sendMail, { initMailgun } from './sendMail';
 import { parseBody } from './parseBody';
 
 export const MAX_BODY_LENGTH = 10000;
@@ -54,6 +54,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     });
   }
 
+  initMailgun();
   await sendMail(body);
 
   return responder.getResponse({
