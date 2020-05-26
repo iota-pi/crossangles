@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "crosscode-terraform-state"
-    key    = "crossangles/prod/terraform.tfstate"
+    key    = "crossangles/terraform.tfstate"
     region = "ap-southeast-2"
   }
 }
