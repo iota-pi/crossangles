@@ -1,3 +1,4 @@
+import zlib from 'zlib';
 import { Scraper } from '../Scraper';
 import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
@@ -21,6 +22,7 @@ const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
 
+const CACHE_KEY = 'classutil_last_data';
 const UPDATE_TIME_KEY = 'classutil_update_time';
 const ADDITIONAL_HASH_KEY = 'additional_data_hash';
 
@@ -57,13 +59,38 @@ export class ClassUtilScraper {
     return true;
   }
 
-  async scrape (term: number) {
+  async scrape (term: number): Promise<CourseData[]> {
     this.log(`scraping term ${term} from ${CLASSUTIL}`);
     const termLinkEnd = `${term}.html`;
     const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
-    await this.persistState();
+    const results = await this.scrapeFacultyPages(facultyPages);
+    await this.persistState(results, term);
+    return results;
+  }
 
-    return await this.scrapeFacultyPages(facultyPages);
+  getCacheKey (term: number) {
+    return `${CACHE_KEY}_term_${term}`;
+  }
+
+  async getCache (term: number): Promise<CourseData[]> {
+    if (this.state) {
+      const cacheKey = this.getCacheKey(term);
+      const blob = await this.state.get(this.campus, cacheKey);
+      const json = zlib.brotliDecompressSync(blob).toString('utf-8');
+      return JSON.parse(json) || [];
+    }
+    return [];
+  }
+
+  async persistState (result: CourseData[], term: number) {
+    if (this.state) {
+      const cacheKey = this.getCacheKey(term);
+      await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+      await this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
+      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
+      const json = zlib.brotliCompressSync(Buffer.from(JSON.stringify(result)));
+      await this.state.set(this.campus, cacheKey, json);
+    }
   }
 
   async checkIfDataUpdated () {
@@ -81,12 +108,6 @@ export class ClassUtilScraper {
     }
 
     return false;
-  }
-
-  async persistState () {
-    await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-    await this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
-    this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
   }
 
   private getUpdateTime ($: CheerioStatic) {

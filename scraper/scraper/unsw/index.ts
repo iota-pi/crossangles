@@ -5,8 +5,6 @@ import { getStreamId } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
-import { getWriter } from '../../writer';
-import { S3_BUCKET } from '../../util';
 
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
@@ -101,43 +99,35 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
 
 export async function scrapeClassUtil (classutil: ClassUtilScraper) {
   let classutilData: CourseData[][] = [];
-  const cache = getWriter(`${S3_BUCKET}${UNSW}/classutil.json`);
   const useClassUtil = await classutil.setup() || forceUpdate;
-  if (useClassUtil) {
-    for (const term of terms) {
+  for (const term of terms) {
+    if (useClassUtil) {
       try {
         classutilData.push(await classutil.scrape(term));
       } catch (error) {
         console.error(`Error while scraping from ${CLASSUTIL} for term ${term}`);
         console.error(error);
       }
-    }
-
-    // Write to cache
-    await cache.write(classutilData);
-  } else {
-    // Read last info from cache
-    try {
-      classutilData = await cache.read() || [];
-    } catch (error) {
-      classutilData = [];
+    } else {
+      // Read last info from cache
+      const cached = await classutil.getCache(term);
+      classutilData.push(cached);
     }
   }
   return classutilData;
 }
 
 export async function scrapeTimetable (timetable: TimetableScraper) {
-  const cache = getWriter(`${S3_BUCKET}${UNSW}/timetable.json`);
   const useTimetable = await timetable.setup() || forceUpdate;
   if (useTimetable) {
     try {
-      const data = await timetable.scrape();
-      await cache.write(data);
-      return data;
+      return await timetable.scrape();
     } catch (error) {
       console.error(`Error while scraping from ${TIMETABLE_UNSW}`);
       console.error(error);
     }
+  } else {
+    return timetable.getCache();
   }
   return [];
 }

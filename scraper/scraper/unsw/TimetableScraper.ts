@@ -1,13 +1,15 @@
+import $ from 'cheerio';
+import zlib from 'zlib';
 import { Scraper } from '../Scraper';
 import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
-import $ from 'cheerio';
 import { removeDuplicateStreams } from './commonUtils';
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
 const UPDATE_TIME_KEY = 'timetable_update_time';
+const CACHE_KEY = 'timetable_last_data';
 
 export const TIMETABLE_UNSW = 'http://timetable.unsw.edu.au';
 
@@ -64,12 +66,30 @@ export class TimetableScraper {
     return true;
   }
 
-  async scrape () {
+  async scrape (): Promise<CourseData[][]> {
     this.log(`scraping from ${TIMETABLE_UNSW}`);
     const coursePages = await this.scrapeFacultyPages();
     const result = await this.scrapeCoursePages(coursePages);
-    await this.persistState();
+    await this.persistState(result);
     return result;
+  }
+
+  async getCache (): Promise<CourseData[][]> {
+    if (this.state) {
+      const blob = await this.state.get(this.campus, CACHE_KEY);
+      const json = zlib.brotliDecompressSync(blob).toString('utf-8');
+      return JSON.parse(json);
+    }
+    return [];
+  }
+
+  async persistState (result: CourseData[][]) {
+    if (this.state) {
+      await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
+      const json = zlib.brotliCompressSync(Buffer.from(JSON.stringify(result)));
+      await this.state.set(this.campus, CACHE_KEY, json);
+    }
   }
 
   async checkIfDataUpdated () {
@@ -80,11 +100,6 @@ export class TimetableScraper {
     }
 
     return false;
-  }
-
-  async persistState () {
-    await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-    this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
   }
 
   private getUpdateTime ($: CheerioStatic) {
