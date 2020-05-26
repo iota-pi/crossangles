@@ -27,7 +27,12 @@ export const migrations = {
   },
   1: (state: any) => {
     const meta = { ...state.meta };
-    meta.sources = [meta.source];
+    if (meta.sources === undefined) {
+      meta.sources = [];
+      if (meta.source) {
+        meta.sources.push(meta.source);
+      }
+    }
     delete meta.source;
     return {
       ...state,
