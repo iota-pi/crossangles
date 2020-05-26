@@ -1,5 +1,5 @@
 # Terraform hack to work around https://github.com/hashicorp/terraform/issues/22607
-echo 'no' | terraform apply -refresh=false
+# echo 'no' | terraform apply -refresh=false
 
 # Get ENV variables from terraform output
 data_uri="$(terraform output scraper_endpoint)"
