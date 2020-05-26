@@ -18,7 +18,7 @@ resource "aws_lambda_function" "scraper" {
   handler     = "lambda.handler"
   runtime     = "nodejs12.x"
   memory_size = 1024
-  timeout     = 60
+  timeout     = 300
 
   s3_bucket        = aws_s3_bucket_object.scraper_code.bucket
   s3_key           = aws_s3_bucket_object.scraper_code.key
