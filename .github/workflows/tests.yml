@@ -51,5 +51,12 @@ jobs:
     - name: Run unit tests
       run: ./ci.sh test
 
+    - name: Build and serve app
+      run: ./ci.sh build app
+
     - name: Run e2e tests
-      run: ./ci-test.sh
+      run: |
+        ./ci.sh run --prod &
+        ./ci.sh cypress
+      env:
+        CYPRESS_BASE_URL: http://localhost:5000

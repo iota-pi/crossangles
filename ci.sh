@@ -12,7 +12,14 @@ fi
 run_for_each () {
   for module in app scraper contact image lambda-shared
   do
-    (cd $module; $1 ${@:2})
+    (
+      cd $module
+      if [[ $1 =~ ^ci|i|install$ && $module == image ]]; then
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 $1 ${@:2}
+      else
+        $1 ${@:2}
+      fi
+    )
   done
 }
 
