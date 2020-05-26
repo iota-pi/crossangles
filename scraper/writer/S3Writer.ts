@@ -1,4 +1,3 @@
-import { CampusData } from '../scraper/Scraper';
 import { Writer } from './Writer';
 import S3 from 'aws-sdk/clients/s3';
 import crypto from 'crypto';
@@ -12,7 +11,7 @@ export class S3Writer implements Writer {
     private readonly path: string,
   ) {}
 
-  async write (data: CampusData, createBackup = false) {
+  async write (data: any, createBackup = false) {
     const json = JSON.stringify(data);
 
     await this.upload(json);
@@ -20,6 +19,16 @@ export class S3Writer implements Writer {
     if (createBackup) {
       await this.createBackup(json);
     }
+  }
+
+  async read () {
+    const result = await this.getObject();
+    const content = result.Body?.toString('utf-8');
+    if (content) {
+      return JSON.parse(content);
+    }
+
+    return undefined;
   }
 
   toString () {
@@ -41,6 +50,13 @@ export class S3Writer implements Writer {
       ContentMD5: this.getHash(content),
       ACL: 'public-read',
       ...additionalParams,
+    }).promise();
+  }
+
+  private getObject () {
+    return this.s3.getObject({
+      Bucket: this.bucket,
+      Key: this.path,
     }).promise();
   }
 

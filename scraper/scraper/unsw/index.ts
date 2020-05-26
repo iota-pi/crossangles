@@ -6,6 +6,7 @@ import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
 import { getWriter } from '../../writer';
+import { S3_BUCKET } from '../../util';
 
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
@@ -100,7 +101,7 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
 
 export async function scrapeClassUtil (classutil: ClassUtilScraper) {
   let classutilData: CourseData[][] = [];
-  const cache = getWriter()
+  const cache = getWriter(`${S3_BUCKET}${UNSW}/classutil.json`);
   const useClassUtil = await classutil.setup() || forceUpdate;
   if (useClassUtil) {
     for (const term of terms) {
@@ -113,20 +114,26 @@ export async function scrapeClassUtil (classutil: ClassUtilScraper) {
     }
 
     // Write to cache
-    try {
-
-    }
+    await cache.write(classutilData);
   } else {
-
+    // Read last info from cache
+    try {
+      classutilData = await cache.read() || [];
+    } catch (error) {
+      classutilData = [];
+    }
   }
   return classutilData;
 }
 
 export async function scrapeTimetable (timetable: TimetableScraper) {
+  const cache = getWriter(`${S3_BUCKET}${UNSW}/timetable.json`);
   const useTimetable = await timetable.setup() || forceUpdate;
   if (useTimetable) {
     try {
-      return await timetable.scrape();
+      const data = await timetable.scrape();
+      await cache.write(data);
+      return data;
     } catch (error) {
       console.error(`Error while scraping from ${TIMETABLE_UNSW}`);
       console.error(error);
