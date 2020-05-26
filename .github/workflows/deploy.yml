@@ -29,6 +29,8 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_wrapper: false
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -44,7 +46,7 @@ jobs:
       if: github.ref != 'refs/heads/release'
       run: terraform workspace select staging
 
-    - name: Terraform Validate
+    - name: Terraform Apply
       run: terraform apply -auto-approve -input=false
       env:
         TF_VAR_mailgun_api_key: ${{ secrets.MAILGUN_API_KEY }}
