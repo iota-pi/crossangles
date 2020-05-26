@@ -11,7 +11,7 @@ describe('scrapeUNSW', () => {
     const cache = scraper.cache;
     await cache.load(cacheFile).catch(() => {});
     const state: StateManager = { get: jest.fn(), set: jest.fn() } as any;
-    const result = await scrapeUNSW(scraper, state);
+    const result = await scrapeUNSW({ state });
     expect(result[0].courses).toMatchSnapshot();
     await cache.write(cacheFile);
   })

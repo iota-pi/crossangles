@@ -2,21 +2,28 @@ import { getWriter } from './writer';
 import { CampusData, Scraper } from './scraper/Scraper';
 import { UNSW, scrapeUNSW } from './scraper/unsw';
 import getStateManager from './state/getStateManager';
+import HTMLCache from './scraper/HTMLCache';
 
 export const scrapeCampus = async (campus: string, outputPrefix: string = '', cacheFile?: string) => {
-  const scraper = new Scraper();
-  const cache = scraper.cache;
+  let scraper: Scraper | undefined = undefined;
+  let cache: HTMLCache | undefined = undefined;
+  if (cacheFile) {
+    scraper = new Scraper();
+    cache = scraper.cache;
+    await cache.load(cacheFile).catch(() => {})
+  }
   const state = getStateManager();
-  if (cacheFile) await cache.load(cacheFile).catch(() => {});
 
   let data: CampusData[] | null = null;
   switch (campus) {
     case UNSW:
-      data = await scrapeUNSW(scraper, state);
+      data = await scrapeUNSW({ scraper, state });
   }
 
   if (data) {
-    if (cacheFile) await cache.write(cacheFile);
+    if (cache && cacheFile) {
+      await cache.write(cacheFile);
+    }
 
     for (const term of data) {
       await writeTermData(outputPrefix, term);

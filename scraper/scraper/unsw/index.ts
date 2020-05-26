@@ -5,13 +5,16 @@ import { getStreamId } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
+import { getWriter } from '../../writer';
 
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
 const forceUpdate = !!process.env.FORCE || process.env.NODE_ENV === 'test';
 
-export async function scrapeUNSW (scraper: Scraper, state: StateManager): Promise<CampusData[]> {
+export async function scrapeUNSW (
+  { scraper, state }: { scraper?: Scraper, state?: StateManager }
+): Promise<CampusData[]> {
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });
 
@@ -97,6 +100,7 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
 
 export async function scrapeClassUtil (classutil: ClassUtilScraper) {
   let classutilData: CourseData[][] = [];
+  const cache = getWriter()
   const useClassUtil = await classutil.setup() || forceUpdate;
   if (useClassUtil) {
     for (const term of terms) {
@@ -107,6 +111,13 @@ export async function scrapeClassUtil (classutil: ClassUtilScraper) {
         console.error(error);
       }
     }
+
+    // Write to cache
+    try {
+
+    }
+  } else {
+
   }
   return classutilData;
 }
