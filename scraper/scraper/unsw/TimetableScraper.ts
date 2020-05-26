@@ -137,6 +137,7 @@ export class TimetableScraper {
     const courseCodeRegex = /([A-Z]{4}[0-9]{4})/i;
     await this.scraper.scrapePages(urls, async ($, url) => {
       const code = (courseCodeRegex.exec(url) || [])[1];
+      console.log(`Scraping ${code}`);
       const name = getCourseName($, code);
       const courses: CourseData[] = [
         { code, name, streams: [] },
