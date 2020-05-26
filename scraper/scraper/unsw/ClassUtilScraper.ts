@@ -61,6 +61,7 @@ export class ClassUtilScraper {
     this.log(`scraping term ${term} from ${CLASSUTIL}`);
     const termLinkEnd = `${term}.html`;
     const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
+    await this.persistState();
 
     return await this.scrapeFacultyPages(facultyPages);
   }
@@ -83,11 +84,9 @@ export class ClassUtilScraper {
   }
 
   async persistState () {
-    if (this.state) {
-      this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-      this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
-      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-    }
+    await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+    await this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
+    this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
   }
 
   private getUpdateTime ($: CheerioStatic) {

@@ -68,6 +68,7 @@ export class TimetableScraper {
     this.log(`scraping from ${TIMETABLE_UNSW}`);
     const coursePages = await this.scrapeFacultyPages();
     const result = await this.scrapeCoursePages(coursePages);
+    await this.persistState();
     return result;
   }
 
@@ -82,10 +83,8 @@ export class TimetableScraper {
   }
 
   async persistState () {
-    if (this.state) {
-      this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-    }
+    await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+    this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
   }
 
   private getUpdateTime ($: CheerioStatic) {
