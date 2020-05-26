@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -x
+
 # Get ENV variables from terraform output
 app_bucket=$(terraform output app_bucket)
 stage_name=$(terraform output environment)
