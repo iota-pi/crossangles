@@ -6,6 +6,7 @@ import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
 
+
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
@@ -13,12 +14,20 @@ const forceUpdate = !!process.env.FORCE || process.env.NODE_ENV === 'test';
 
 export async function scrapeUNSW (
   { scraper, state }: { scraper?: Scraper, state?: StateManager }
-): Promise<CampusData[]> {
+): Promise<CampusData[] | null> {
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });
 
-  const classutilPromise = scrapeClassUtil(classutil);
-  const timetablePromise = scrapeTimetable(timetable);
+  const rescrapeClassUtil = await classutil.setup() || forceUpdate
+  const rescrapeTimetable = await timetable.setup() || forceUpdate
+
+  // Don't need to update data if only using info from cache
+  if (!rescrapeClassUtil && !rescrapeTimetable) {
+    return null;
+  }
+
+  const classutilPromise = scrapeClassUtil(classutil, !rescrapeClassUtil);
+  const timetablePromise = scrapeTimetable(timetable, !rescrapeTimetable);
   const classutilData = await classutilPromise;
   const timetableData = await timetablePromise;
 
@@ -97,37 +106,33 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
   return classutilData;
 }
 
-export async function scrapeClassUtil (classutil: ClassUtilScraper) {
+export async function scrapeClassUtil (classutil: ClassUtilScraper, useCache: boolean): Promise<CourseData[][]> {
   let classutilData: CourseData[][] = [];
-  const useClassUtil = await classutil.setup() || forceUpdate;
   for (const term of terms) {
-    if (useClassUtil) {
+    if (useCache) {
+      classutilData.push(await classutil.getCache(term));
+    } else {
       try {
         classutilData.push(await classutil.scrape(term));
       } catch (error) {
         console.error(`Error while scraping from ${CLASSUTIL} for term ${term}`);
         console.error(error);
       }
-    } else {
-      // Read last info from cache
-      const cached = await classutil.getCache(term);
-      classutilData.push(cached);
     }
   }
   return classutilData;
 }
 
-export async function scrapeTimetable (timetable: TimetableScraper) {
-  const useTimetable = await timetable.setup() || forceUpdate;
-  if (useTimetable) {
+export async function scrapeTimetable (timetable: TimetableScraper, useCache: boolean): Promise<CourseData[][]> {
+  if (useCache) {
+    return await timetable.getCache();
+  } else {
     try {
       return await timetable.scrape();
     } catch (error) {
       console.error(`Error while scraping from ${TIMETABLE_UNSW}`);
       console.error(error);
     }
-  } else {
-    return timetable.getCache();
   }
   return [];
 }
