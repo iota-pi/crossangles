@@ -10,10 +10,9 @@ import { generateMetaData } from '../meta';
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
-const forceUpdate = !!process.env.FORCE || process.env.NODE_ENV === 'test';
 
 export async function scrapeUNSW (
-  { scraper, state }: { scraper?: Scraper, state?: StateManager }
+  { scraper, state, forceUpdate = false }: { scraper?: Scraper, state?: StateManager, forceUpdate?: boolean }
 ): Promise<CampusData[] | null> {
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });
