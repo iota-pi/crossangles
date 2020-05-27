@@ -51,7 +51,7 @@ const writeTermData = async (
   }
   const output = getWriter(destination);
   await output.write(termData);
-  console.log(`${UNSW.toUpperCase()}: no data written`);
+  console.log(`${UNSW.toUpperCase()}: data written for term ${term}`);
 }
 
 export default scrapeCampus;
