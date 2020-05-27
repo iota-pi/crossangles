@@ -51,10 +51,11 @@ jobs:
     - name: Run unit tests
       run: ./ci.sh test
 
-    - name: Build and serve app
+    - name: Build app
       run: ./ci.sh build app
 
     - name: Run e2e tests
+      if: github.ref == 'refs/heads/master'
       run: |
         ./ci.sh run --prod &
         ./ci.sh cypress run
