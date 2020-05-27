@@ -123,7 +123,7 @@ const TimetableSession: React.FC<Props> = props => {
       if (options.showWeeks) {
         const weeks = session.weeks;
         if (weeks) {
-          const weeksText = 'Weeks: ' + weeks.replace('-', '–');
+          const weeksText = 'Weeks: ' + weeks.replace(/-/g, '–');
           details.push({ key: 'weeks', text: weeksText });
         }
       }
