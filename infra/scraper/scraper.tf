@@ -95,6 +95,16 @@ resource "aws_iam_policy" "scraper_policy" {
 EOF
 }
 
+resource "aws_iam_role_policy_attachment" "scraper_policy_attach" {
+  role       = aws_iam_role.scraper_role.name
+  policy_arn = aws_iam_policy.scraper_policy.arn
+}
+
+resource "aws_cloudwatch_log_group" "lambda_logs" {
+  name              = "/aws/lambda/${aws_lambda_function.scraper.function_name}"
+  retention_in_days = 14
+}
+
 resource "aws_dynamodb_table" "scraper_state_table" {
   name = "ScraperState_${var.environment}"
   billing_mode = "PAY_PER_REQUEST"
@@ -110,11 +120,6 @@ resource "aws_dynamodb_table" "scraper_state_table" {
     name = "key"
     type = "S"
   }
-}
-
-resource "aws_iam_role_policy_attachment" "scraper_policy_attach" {
-  role       = aws_iam_role.scraper_role.name
-  policy_arn = aws_iam_policy.scraper_policy.arn
 }
 
 resource "aws_s3_bucket" "scraper_output" {
