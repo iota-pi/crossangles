@@ -1,4 +1,3 @@
-import zlib from 'zlib';
 import { Scraper } from '../Scraper';
 import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
@@ -75,21 +74,19 @@ export class ClassUtilScraper {
   async getCache (term: number): Promise<CourseData[]> {
     if (this.state) {
       const cacheKey = this.getCacheKey(term);
-      const blob = await this.state.get(this.campus, cacheKey);
-      const json = zlib.brotliDecompressSync(blob).toString('utf-8');
-      return JSON.parse(json) || [];
+      return await this.state.getBlob(this.campus, cacheKey) || [];
     }
     return [];
   }
 
   async persistState (result: CourseData[], term: number) {
     if (this.state) {
-      const cacheKey = this.getCacheKey(term);
       await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
       await this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
       this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-      const json = zlib.brotliCompressSync(Buffer.from(JSON.stringify(result)));
-      await this.state.set(this.campus, cacheKey, json);
+
+      const cacheKey = this.getCacheKey(term);
+      await this.state.setBlob(this.campus, cacheKey, result);
     }
   }
 

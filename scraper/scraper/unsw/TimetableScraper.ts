@@ -1,5 +1,4 @@
 import $ from 'cheerio';
-import zlib from 'zlib';
 import { Scraper } from '../Scraper';
 import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
 import StateManager from '../../state/StateManager';
@@ -76,9 +75,7 @@ export class TimetableScraper {
 
   async getCache (): Promise<CourseData[][]> {
     if (this.state) {
-      const blob = await this.state.get(this.campus, CACHE_KEY);
-      const json = zlib.brotliDecompressSync(blob).toString('utf-8');
-      return JSON.parse(json);
+      return await this.state.getBlob(this.campus, CACHE_KEY) || [];
     }
     return [];
   }
@@ -87,8 +84,7 @@ export class TimetableScraper {
     if (this.state) {
       await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
       this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-      const json = zlib.brotliCompressSync(Buffer.from(JSON.stringify(result)));
-      await this.state.set(this.campus, CACHE_KEY, json);
+      await this.state.setBlob(this.campus, CACHE_KEY, result);
     }
   }
 

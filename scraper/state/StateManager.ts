@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import zlib from 'zlib';
 
 export class StateManager {
   private readonly tableName = process.env.STATE_TABLE || '';
@@ -29,6 +30,21 @@ export class StateManager {
         value,
       },
     }).promise();
+  }
+
+  async getBlob (campus: string, key: string) {
+    const blob = await this.get(campus, key);
+    if (blob) {
+      const json = zlib.brotliDecompressSync(blob).toString('utf-8');
+      return JSON.parse(json) || [];
+    }
+    return blob;
+  }
+
+  async setBlob (campus: string, key: string, value: any) {
+    const json = JSON.stringify(value);
+    const compressedData = zlib.brotliCompressSync(Buffer.from(json));
+    await this.set(campus, key, compressedData);
   }
 
   async delete (campus: string, key: string) {
