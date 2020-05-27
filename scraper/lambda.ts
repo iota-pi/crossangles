@@ -1,7 +1,8 @@
 import scrapeCampus from './scrapeCampus';
-import { S3_BUCKET } from './util';
 
 const campuses = ['unsw'];
+const bucket_name = process.env.S3_OUTPUT_BUCKET || 'crossangles-course-data';
+export const S3_BUCKET = `s3://${bucket_name}/`;
 
 export const handler = async () => {
   const promises: Promise<void>[] = [];
