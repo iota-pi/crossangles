@@ -18,8 +18,8 @@ export async function scrapeUNSW (
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });
 
-  const rescrapeClassUtil = await classutil.setup() || forceUpdate
-  const rescrapeTimetable = await timetable.setup() || forceUpdate
+  const rescrapeClassUtil = await classutil.setup() || forceUpdate;
+  const rescrapeTimetable = await timetable.setup() || forceUpdate;
 
   // Don't need to update data if only using info from cache
   if (!rescrapeClassUtil && !rescrapeTimetable) {
