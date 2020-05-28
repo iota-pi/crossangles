@@ -1,4 +1,11 @@
 # Root domain DNS and SSL Cert
+resource "cloudflare_record" "root_domain" {
+  zone_id = var.cloudflare_zone_id
+  type    = "CNAME"
+  name    = "@"
+  value   = aws_cloudfront_distribution.s3_distribution.domain_name
+}
+
 resource "cloudflare_record" "root_cert_validation" {
   zone_id = var.cloudflare_zone_id
   name    = aws_acm_certificate.root_cert.domain_validation_options.0.resource_record_name
@@ -18,11 +25,4 @@ resource "aws_acm_certificate_validation" "root_cert" {
   validation_record_fqdns = [cloudflare_record.root_cert_validation.hostname]
 
   provider = aws.us_east_1
-}
-
-resource "cloudflare_record" "root_domain" {
-  zone_id = var.cloudflare_zone_id
-  type    = "CNAME"
-  name    = "@"
-  value   = aws_cloudfront_distribution.s3_distribution.domain_name
 }
