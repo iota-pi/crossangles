@@ -11,11 +11,6 @@ provider "aws" {
   version = "~> 2.52"
 }
 
-provider "aws" {
-  region = "us-east-1"
-  alias = "us_east_1"
-}
-
 provider "cloudflare" {
   version = "~> 2.4"
 }
