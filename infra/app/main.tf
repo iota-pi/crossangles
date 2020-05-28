@@ -1,8 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-  alias = "us_east_1"
-}
-
 locals {
   origin_id = "app_s3_origin"
 }
