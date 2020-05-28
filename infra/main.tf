@@ -1,6 +1,7 @@
 locals {
   environment = terraform.workspace == "default" ? "production" : terraform.workspace
   domain = local.environment == "production" ? var.root_domain : "${local.environment}.${var.root_domain}"
+  subdomain = local.environment == "production" ? "@" : "${local.environment}"
 }
 
 module "app" {
@@ -8,6 +9,7 @@ module "app" {
 
   environment = local.environment
   domain = local.domain
+  subdomain = local.subdomain
   cloudflare_zone_id = var.cloudflare_zone_id
 }
 

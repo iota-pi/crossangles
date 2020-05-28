@@ -2,7 +2,7 @@
 resource "cloudflare_record" "root_domain" {
   zone_id = var.cloudflare_zone_id
   type    = "CNAME"
-  name    = "@"
+  name    = var.subdomain
   value   = aws_cloudfront_distribution.s3_distribution.domain_name
 }
 
