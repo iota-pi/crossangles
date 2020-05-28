@@ -16,9 +16,13 @@ resource "cloudflare_record" "root_cert_validation" {
 resource "aws_acm_certificate" "root_cert" {
   domain_name       = var.domain
   validation_method = "DNS"
+
+  provider = aws.us_east_1
 }
 
 resource "aws_acm_certificate_validation" "root_cert" {
   certificate_arn         = aws_acm_certificate.root_cert.arn
   validation_record_fqdns = [cloudflare_record.root_cert_validation.hostname]
+
+  provider = aws.us_east_1
 }
