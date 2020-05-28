@@ -1,5 +1,3 @@
-# TODO: dns
-
 locals {
   origin_id = "app_s3_origin"
 }
@@ -32,6 +30,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
+  aliases = [var.domain]
+
   enabled         = true
   is_ipv6_enabled = true
 
@@ -52,8 +52,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
 
     min_ttl                = 0
-    default_ttl            = 1800
-    max_ttl                = 3600
+    default_ttl            = 600
+    max_ttl                = 1800
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }

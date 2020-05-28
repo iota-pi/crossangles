@@ -36,9 +36,15 @@ jobs:
       run: |
         terraform init -input=false && terraform refresh -input=false
         terraform workspace select staging
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
     - name: Validate Terraform IAC
       run: terraform plan -input=false
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
     - name: Setup NodeJS
       uses: actions/setup-node@v1

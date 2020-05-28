@@ -1,11 +1,14 @@
 locals {
   environment = terraform.workspace == "default" ? "production" : terraform.workspace
+  domain = local.environment == "production" ? var.root_domain : "${local.environment}.${var.root_domain}"
 }
 
 module "app" {
   source = "./app"
 
   environment = local.environment
+  domain = local.domain
+  cloudflare_zone_id = var.cloudflare_zone_id
 }
 
 module "scraper" {
