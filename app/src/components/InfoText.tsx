@@ -78,7 +78,7 @@ const InfoText = ({
   const sources = (
     <React.Fragment>
       {meta.sources.map((source, i) => (
-        <React.Fragment>
+        <React.Fragment key={source}>
           <a
             href={source}
             target="_blank"
