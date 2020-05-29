@@ -104,7 +104,7 @@ const TimetableSession: React.FC<Props> = props => {
       if (options.showLocations) {
         const location = session.location;
         if (location) {
-          details.push({ key: 'location-enrols', text: location});
+          details.push({ key: 'location', text: location });
         }
       }
 
@@ -112,20 +112,26 @@ const TimetableSession: React.FC<Props> = props => {
         const enrols = stream.enrols;
         if (enrols[1] > 0) {
           const enrolsText = enrols.join('/');
-          if (details.length > 0) {
-            details[0].text += ` (${enrolsText})`;
-          } else {
-            details.push({ key: 'location-enrols', text: enrolsText });
-          }
+          details.push({ key: 'enrols', text: enrolsText });
         }
       }
 
       if (options.showWeeks) {
         const weeks = session.weeks;
         if (weeks) {
-          const weeksText = 'Weeks: ' + weeks.replace(/-/g, '–');
+          const weeksText = 'Weeks: ' + weeks.replace(/-/g, '–').replace(/,\s*/g, ', ');
           details.push({ key: 'weeks', text: weeksText });
         }
+      }
+
+      // Compress details onto two lines if duration is less than an hour
+      if (session.end - session.start <= 1 && details.length >= 3) {
+        const enrolsIndex = details.findIndex(d => d.key === 'enrols');
+        const enrols = details.splice(enrolsIndex, 1)[0].text;
+        const shortestItem = details.slice().sort(
+          (a, b) => +(a.text.length > b.text.length) - +(a.text.length < b.text.length)
+        )[0];
+        shortestItem.text += `; ${enrols}`;
       }
 
       return details;
