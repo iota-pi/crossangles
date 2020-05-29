@@ -131,7 +131,7 @@ const TimetableSession: React.FC<Props> = props => {
         const shortestItem = details.slice().sort(
           (a, b) => +(a.text.length > b.text.length) - +(a.text.length < b.text.length)
         )[0];
-        shortestItem.text += `; ${enrols}`;
+        shortestItem.text += ` (${enrols})`;
       }
 
       return details;
