@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
+      minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * 5 + TIMETABLE_BORDER_WIDTH,
     },
     row: {
       display: 'flex',
