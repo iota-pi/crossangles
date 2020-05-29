@@ -29,7 +29,7 @@ resource "aws_lambda_function" "scraper" {
   environment {
     variables = {
       S3_OUTPUT_BUCKET = aws_s3_bucket.scraper_output.bucket
-      STATE_TABLE = aws_dynamodb_table.scraper_state_table.name
+      STATE_TABLE      = aws_dynamodb_table.scraper_state_table.name
     }
   }
 }
@@ -106,10 +106,10 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
 }
 
 resource "aws_dynamodb_table" "scraper_state_table" {
-  name = "ScraperState_${var.environment}"
+  name         = "ScraperState_${var.environment}"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key = "campus"
-  range_key = "key"
+  hash_key     = "campus"
+  range_key    = "key"
 
   attribute {
     name = "campus"
@@ -195,8 +195,8 @@ resource "aws_cloudwatch_event_rule" "scraper_trigger" {
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
-  rule      = aws_cloudwatch_event_rule.scraper_trigger.name
-  arn       = aws_lambda_function.scraper.arn
+  rule = aws_cloudwatch_event_rule.scraper_trigger.name
+  arn  = aws_lambda_function.scraper.arn
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_scraper" {

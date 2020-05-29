@@ -1,6 +1,6 @@
 provider "aws" {
   region = "us-east-1"
-  alias = "us_east_1"
+  alias  = "us_east_1"
 }
 
 locals {
@@ -71,7 +71,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.root_cert.arn
-    ssl_support_method = "sni-only"
+    ssl_support_method  = "sni-only"
   }
 
   depends_on = [aws_acm_certificate_validation.root_cert]
