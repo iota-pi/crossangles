@@ -10,6 +10,7 @@ export const TIMETABLE_DAYS = 5;
 export const TIMETABLE_FIRST_CELL_WIDTH = 62;
 export const TIMETABLE_CELL_HEIGHT = 50;
 export const TIMETABLE_BORDER_WIDTH = 1;
+export const TIMETABLE_CELL_MIN_WIDTH = 150;
 export const SNAP_DIST = 40;
 
 export const DISPLACE_VARIATION_X = 15;
