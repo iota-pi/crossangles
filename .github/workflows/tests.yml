@@ -1,10 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, release ]
 
 jobs:
   test:
@@ -57,8 +55,6 @@ jobs:
 
     - name: Run e2e tests
       if: github.ref == 'refs/heads/master'
-      run: |
-        ./ci.sh run --prod &
-        ./ci.sh cypress run
+      run: ./ci.sh cypress run
       env:
-        CYPRESS_BASE_URL: http://localhost:5000
+        CYPRESS_BASE_URL: staging.crossangles.com
