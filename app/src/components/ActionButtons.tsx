@@ -107,6 +107,7 @@ export const ActionButtons = withStyles(styles)(({
           href={ministryMeta.signupURL}
           disabled={disabled}
           target="_blank"
+          rel="noopener noreferrer"
           onClick={() => handleLinkClick(ministryMeta.signupURL)}
         >
           <div className={classes.centredText}>
