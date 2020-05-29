@@ -20,7 +20,7 @@ export interface Props extends WithStyles<typeof styles> {}
 
 
 export const FooterImage = withStyles(styles)(({ classes }: Props) => {
-  const campus = getCampus(window.location.hostname);
+  const campus = getCampus();
   const images: { [campus: string]: string } = {
     unsw: 'img/cbs.png',
   };
