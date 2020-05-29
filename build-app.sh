@@ -19,4 +19,7 @@ echo REACT_APP_SAVE_IMAGE_ENDPOINT=$REACT_APP_SAVE_IMAGE_ENDPOINT
 echo REACT_APP_DATA_ROOT_URI=$REACT_APP_DATA_ROOT_URI
 
 cd app
-npm run build
+for campus in $@
+do
+  REACT_APP_CAMPUS=$campus npm run build
+done

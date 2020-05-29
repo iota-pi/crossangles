@@ -54,8 +54,7 @@ jobs:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
-    - name: Build App
-      run: ./build-app.sh
-
-    - name: Deploy App
-      run: ./deploy-app.sh
+    - name: Build and Deploy for UNSW
+      run: |
+        ./build-app.sh unsw
+        ./deploy-app.sh

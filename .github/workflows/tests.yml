@@ -53,7 +53,7 @@ jobs:
       run: ./ci.sh test
 
     - name: Build app
-      run: ./ci.sh build app
+      run: ./ci.sh build app unsw
 
     - name: Run e2e tests
       if: github.ref == 'refs/heads/master'
