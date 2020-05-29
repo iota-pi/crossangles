@@ -1,5 +1,5 @@
 import chromium from 'chrome-aws-lambda';
-import { Browser } from 'puppeteer';
+import { Browser } from 'puppeteer-core';
 
 export const screenshot = async (
   uri: string,

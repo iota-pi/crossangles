@@ -14,12 +14,7 @@ run_for_each () {
   do
     (
       cd $module
-      if [[ $1 =~ '^ci|i|install$' && $module == image ]]; then
-        echo 'skip chromium download &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 $1 ${@:2}
-      else
-        $1 ${@:2}
-      fi
+      $1 ${@:2}
     )
   done
 }
