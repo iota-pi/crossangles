@@ -63,7 +63,7 @@ export interface CourseDisplayProps extends BaseCourseDisplayProps {
 
 
 const getHandbookLink = (course: CourseData, meta: Meta) => {
-  const campus = getCampus(window.location.hostname);
+  const campus = getCampus();
   if (campus === 'unsw') {
     return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`;
   }

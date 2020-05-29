@@ -182,7 +182,7 @@ class App extends Component<Props, State> {
     });
 
     const { timetable, colours, options, twentyFourHours } = this.props;
-    const campus = getCampus(window.location.hostname);
+    const campus = getCampus();
     const viewport = getScreenshotViewport(this.props.timetable);
 
     const promise = saveAsImage({
