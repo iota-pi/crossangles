@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH } from './timetableUtil';
+import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_MIN_WIDTH } from './timetableUtil';
 import { HourSpan } from './getHours';
 import IconButton from '@material-ui/core/IconButton';
 import Schedule from '@material-ui/icons/Schedule';
@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => {
     },
     cell: {
       flex: '1 1 100%',
-      minWidth: 120,
+      minWidth: TIMETABLE_CELL_MIN_WIDTH,
 
       display: 'flex',
       alignItems: 'center',
