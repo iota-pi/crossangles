@@ -73,6 +73,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     acm_certificate_arn = aws_acm_certificate.root_cert.arn
     ssl_support_method = "sni-only"
   }
+
+  depends_on = [aws_acm_certificate_validation.root_cert]
 }
 
 output "cloudfront_url" {
