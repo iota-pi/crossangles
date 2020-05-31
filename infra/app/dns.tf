@@ -1,8 +1,14 @@
+locals {
+  campus_prefix = var.campus == "unsw" ? "" : "${var.campus}."
+  env_prefix    = var.environment == "production" ? "" : "${var.environment}."
+  subdomain     = trim(concat(local.env_prefix, local.campus_prefix), ".")
+}
+
 # Root domain DNS and SSL Cert
 resource "cloudflare_record" "primary_cname" {
   zone_id = var.cloudflare_zone_id
   type    = "CNAME"
-  name    = var.subdomain
+  name    = local.subdomain != "" ? local.subdomain : "@"
   value   = aws_cloudfront_distribution.s3_distribution.domain_name
 }
 

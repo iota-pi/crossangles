@@ -18,6 +18,7 @@ provider "cloudflare" {
 
 module "crossangles" {
   source = "./infra"
+  campuses = ["unsw"]
 }
 
 output "app_uri" {

@@ -10,6 +10,6 @@ variable domain {
   type = string
 }
 
-variable subdomain {
+variable campus {
   type = string
 }
