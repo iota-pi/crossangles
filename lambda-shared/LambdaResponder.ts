@@ -57,8 +57,7 @@ export class LambdaResponder {
   private checkOrigin = (origin: string): boolean => {
     const allowedOrigins = [
       /^http:\/\/localhost:3000$/,
-      /^https:\/\/([a-z0-9]+\.)?crossangles\.(app|com)$/,
-      /^https:\/\/([a-f0-9]{24}--)?crossangles2.netlify.com$/,
+      /^https:\/\/([^.]+\.)*crossangles\.(app|com)$/,
     ];
     const result = allowedOrigins.some(re => re.test(origin));
     if (!result && this.shouldLog) {

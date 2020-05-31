@@ -10,9 +10,10 @@ describe('LambdaResponder', () => {
     ${'https://usyd.crossangles.app'}
     ${'https://uts.crossangles.app'}
     ${'https://crossangles.com'}
+    ${'https://staging.crossangles.com'}
+    ${'https://usyd.crossangles.com'}
+    ${'https://staging.usyd.crossangles.com'}
     ${'https://abc.crossangles.com'}
-    ${'https://crossangles2.netlify.com'}
-    ${'https://5e5ce8532a1d57000de26e20--crossangles2.netlify.com'}
   `('allows CORS from $origin', ({ origin }) => {
     const event = { ...fakeEvent, headers: { origin } };
     const r = new LambdaResponder(event);
@@ -32,10 +33,6 @@ describe('LambdaResponder', () => {
     ${'https://crossangles.net'}
     ${'https://crossangles.com.au'}
     ${'https://crossangles.app.dodgywebsite.com'}
-    ${'https://dodgy-crossangles2.netlify.com'}
-    ${'https://attackcrossangles2.netlify.com'}
-    ${'https://crossangles2.netlify.com.akjlsgralhrgakeljald.com'}
-    ${'https://5e5ce8532a1d57000de26e20-crossangles2.netlify.com'}
   `('allows CORS from $origin', ({ origin }) => {
     const event = { ...fakeEvent, headers: { origin } };
     const r = new LambdaResponder(event);
