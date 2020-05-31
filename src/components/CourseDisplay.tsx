@@ -24,17 +24,31 @@ const useStyles = makeStyles(theme => ({
   },
   lightText: {
     fontWeight: 300,
+    whiteSpace: 'pre',
   },
   termText: {
     fontWeight: 400,
   },
+  courseTitle: {
+    display: 'flex',
+    flexGrow: 1,
+    ...theme.typography.body1,
+    overflow: 'hidden',
+    paddingRight: theme.spacing(1),
+  },
   plainLink: {
     textDecoration: 'none',
     color: 'inherit',
-    display: 'inline-flex',
     alignItems: 'center',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  noShrink: {
+    flexShrink: 0,
   },
   externalLinkIcon: {
+    marginBottom: -2,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     color: theme.palette.text.disabled,
@@ -68,7 +82,7 @@ const getHandbookLink = (course: CourseData, meta: Meta) => {
     return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`;
   }
 
-  return null;
+  return undefined;
 }
 
 
@@ -95,6 +109,12 @@ export const CourseDisplay = ({
     </>
   );
   const webStream = getWebStream(course);
+  const linkProps = {
+    href: handbookLink,
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    onClick: () => handleLinkClick(handbookLink),
+  };
 
   const handleLinkClick = (destination?: string) => {
     ReactGA.event({
@@ -108,20 +128,19 @@ export const CourseDisplay = ({
     <React.Fragment>
       <ListItem>
         {!course.isCustom ? (
-          <ListItemText>
+          <div className={classes.courseTitle}>
             {handbookLink ? (
-              <a
-                href={handbookLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={classes.plainLink}
-                onClick={() => handleLinkClick(handbookLink)}
-              >
-                {courseTitle}
-                <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
-              </a>
+              <React.Fragment>
+                <a {...linkProps} className={classes.plainLink}>
+                  {courseTitle}
+                </a>
+
+                <a {...linkProps} className={`${classes.plainLink} ${classes.noShrink}`}>
+                  <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
+                </a>
+              </React.Fragment>
             ) : courseTitle}
-          </ListItemText>
+          </div>
         ) : (
           <ListItemText>
             <span>{course.name}</span>
