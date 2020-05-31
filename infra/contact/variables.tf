@@ -14,5 +14,4 @@ variable code_key {
 
 variable mailgun_api_key {
   type    = string
-  default = ""
 }

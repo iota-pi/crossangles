@@ -19,6 +19,8 @@ provider "cloudflare" {
 module "crossangles" {
   source = "./infra"
   campuses = ["unsw"]
+  mailgun_api_key = var.mailgun_api_key
+  pjsc_key = var.pjsc_key
 }
 
 output "app_uri" {
@@ -38,4 +40,14 @@ output "contact_endpoint" {
 }
 output "environment" {
   value = module.crossangles.environment
+}
+
+variable mailgun_api_key {
+  type    = string
+  default = ""
+}
+
+variable pjsc_key {
+  type    = string
+  default = ""
 }

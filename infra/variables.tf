@@ -11,3 +11,11 @@ variable cloudflare_zone_id {
 variable campuses {
   type = list(string)
 }
+
+variable mailgun_api_key {
+  type = string
+}
+
+variable pjsc_key {
+  type = string
+}

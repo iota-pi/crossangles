@@ -22,12 +22,14 @@ module "image" {
   source = "./image"
 
   environment = local.environment
+  pjsc_key = var.pjsc_key
 }
 
 module "contact" {
   source = "./contact"
 
   environment = local.environment
+  mailgun_api_key = var.mailgun_api_key
 }
 
 # Outputs

@@ -14,5 +14,4 @@ variable code_key {
 
 variable pjsc_key {
   type    = string
-  default = ""
 }
