@@ -139,6 +139,12 @@ const TimetableSession: React.FC<Props> = props => {
     [options, session, stream],
   );
 
+  const [lastColour, setLastColour] = React.useState<string>();
+  React.useEffect(() => {
+    setLastColour(props.colour);
+  }, [props.colour]);
+  const colour = props.colour || lastColour;
+
   const styles: CSSProperties = React.useMemo(
     () => {
       const { width, height } = dimensions;
@@ -185,7 +191,7 @@ const TimetableSession: React.FC<Props> = props => {
         <div
           className={classes.background}
           style={{
-            backgroundColor: props.colour,
+            backgroundColor: colour,
           }}
           data-cy="timetable-session-background"
         />

@@ -122,7 +122,6 @@ export const TimetableGrid: React.FC<Props> = ({
     },
     [hours, twentyFourHours],
   );
-  console.log(hoursArray)
 
 
   return (
