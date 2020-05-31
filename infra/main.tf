@@ -10,6 +10,10 @@ module "unsw_app" {
   environment        = local.environment
   domain             = local.domain
   cloudflare_zone_id = var.cloudflare_zone_id
+
+  providers {
+    aws = aws
+  }
 }
 
 module "scraper" {
