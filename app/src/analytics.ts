@@ -7,7 +7,7 @@ export const initialiseGA = () => {
 }
 
 export const pageView = () => {
-  ReactGA.pageview(window.location.origin + window.location.pathname);
+  ReactGA.pageview(window.location.pathname.replace(/^\/*/, ''));
 }
 
 export const CATEGORY = 'CrossAngles React';
