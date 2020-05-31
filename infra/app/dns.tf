@@ -1,7 +1,7 @@
 locals {
-  campus_prefix = var.campus == "unsw" ? "" : "${var.campus}."
-  env_prefix    = var.environment == "production" ? "" : "${var.environment}."
-  subdomain     = trim(concat(local.env_prefix, local.campus_prefix), ".")
+  env_prefix    = var.environment == "production" ? "" : var.environment
+  campus_prefix = var.campus == "unsw" ? "" : var.campus
+  subdomain     = trim("${local.env_prefix}.${local.campus_prefix}", ".")
 }
 
 # Root domain DNS and SSL Cert
