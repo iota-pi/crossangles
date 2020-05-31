@@ -52,7 +52,7 @@ resource "cloudflare_page_rule" "redirect_to_root" {
 
   actions {
     forwarding_url {
-      url = var.domain
+      url = "https://${var.domain}"
       status_code = 301
     }
   }
