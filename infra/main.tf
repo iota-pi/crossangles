@@ -3,17 +3,13 @@ locals {
   domain      = local.environment == "production" ? var.root_domain : "${local.environment}.${var.root_domain}"
 }
 
-module "unsw_app" {
+module "app" {
   source = "./app"
 
   campus             = var.campuses[0]
   environment        = local.environment
   domain             = local.domain
   cloudflare_zone_id = var.cloudflare_zone_id
-
-  providers {
-    aws = aws
-  }
 }
 
 module "scraper" {
