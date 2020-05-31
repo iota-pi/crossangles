@@ -23,7 +23,7 @@ import {
 import { SessionManagerData } from '../components/Timetable/SessionManagerTypes';
 
 type NoHistoryState = Omit<RootState, 'history'>;
-const basicReducer = combineReducers<NoHistoryState>({
+const basicReducer = combineReducers<RootState>({
   courses,
   custom,
   additional,
@@ -39,12 +39,8 @@ const basicReducer = combineReducers<NoHistoryState>({
   hiddenEvents,
   darkMode,
   twentyFourHours,
+  history: state => state || initialState.history,
 });
-
-const removeHistory = (state: RootState): NoHistoryState | undefined => {
-  delete state.history;
-  return state;
-}
 
 export const getTimetableState = (state: NoHistoryState): TimetableHistoryState => {
   const {
@@ -71,7 +67,7 @@ export const getTimetableState = (state: NoHistoryState): TimetableHistoryState 
   };
 }
 
-function getNextState(history: HistoryData, nextTimetable: SessionManagerData, nextState: NoHistoryState): RootState {
+function getNextState(history: HistoryData, nextTimetable: SessionManagerData, nextState: RootState): RootState {
   const { timetable, ...otherHistory } = history.present;
   timetable.version = nextTimetable.version + 1;
   return {
@@ -82,8 +78,9 @@ function getNextState(history: HistoryData, nextTimetable: SessionManagerData, n
   };
 }
 
-const historyReducer = (nextState: NoHistoryState, history: HistoryData, action: AllActions) => {
+const historyReducer = (nextState: RootState, action: AllActions): RootState => {
   const nextTimetable = getCurrentTimetable(nextState);
+  let history = nextState.history;
 
   if (action.type === UNDO) {
     history = undo(history);
@@ -112,20 +109,10 @@ const historyReducer = (nextState: NoHistoryState, history: HistoryData, action:
 
 const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
   state = state || { ...initialState };
-  const history = state.history;
-  const noHistory = removeHistory(state);
-  let nextState = basicReducer(noHistory, action);
-  nextState = historyReducer(nextState, history, action);
+  let nextState = basicReducer(state, action);
+  nextState = historyReducer(nextState, action);
 
-  if (nextState === state) {
-    state.history = history;
-    return state;
-  }
-
-  return {
-    ...nextState,
-    history,
-  }
+  return nextState;
 }
 
 export default rootReducer;
