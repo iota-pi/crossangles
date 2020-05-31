@@ -34,6 +34,11 @@ const useStyles = makeStyles(theme => ({
   popupIndicator: {
     transition: theme.transitions.create(['transform', 'backgroundColor']),
   },
+  autocompleteOption: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
 }));
 
 
@@ -107,7 +112,7 @@ const AutocompleteControl = ({
         const nameParts = parse(name, nameMatches);
 
         return (
-          <div data-cy="autocomplete-option">
+          <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
             {codeParts.map((part, index) => (
               <span key={index} style={{ fontWeight: part.highlight ? 500 : 400 }}>
                 {part.text}
