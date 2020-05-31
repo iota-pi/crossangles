@@ -1,7 +1,7 @@
 import axios from 'axios';
 import download from 'downloadjs';
 import { ColourMap, Options } from './state';
-import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
+import { SessionManagerData, getEmptySessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './components/Timetable/timetableUtil';
 import getHours from './components/Timetable/getHours';
 
@@ -10,6 +10,7 @@ export interface SaveAsImageData {
   colours: ColourMap,
   options: Options,
   twentyFourHours: boolean,
+  darkMode: boolean,
 }
 
 export interface Viewport {
@@ -93,9 +94,12 @@ export const parseJSONQueryString = (queryString: string) => {
 
 export const parseQueryString = (queryString: string): SaveAsImageData => {
   const data = parseJSONQueryString(queryString);
-  const { timetable, colours, options, twentyFourHours } = data;
-  if (!timetable || !colours || !options) {
-    throw new Error(`Missing some attributes in ${data}`);
-  }
-  return { timetable, colours, options, twentyFourHours };
+  const {
+    timetable = getEmptySessionManagerData(),
+    colours = {},
+    options = {},
+    twentyFourHours = false,
+    darkMode = false,
+  } = data as Partial<SaveAsImageData>;
+  return { timetable, colours, options, twentyFourHours, darkMode };
 }
