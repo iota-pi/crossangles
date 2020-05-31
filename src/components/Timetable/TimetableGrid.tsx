@@ -122,6 +122,7 @@ export const TimetableGrid: React.FC<Props> = ({
     },
     [hours, twentyFourHours],
   );
+  console.log(hoursArray)
 
 
   return (
@@ -145,7 +146,7 @@ export const TimetableGrid: React.FC<Props> = ({
       </div>
 
       {hoursArray.map(([hour, am]) => (
-        <div className={classes.row} key={hour}>
+        <div className={classes.row} key={hour + am.toString()}>
           <div className={`${classes.cell} ${classes.time}`}>
             <span>
               {hour}
