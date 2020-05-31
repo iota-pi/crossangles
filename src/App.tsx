@@ -181,7 +181,7 @@ class App extends Component<Props, State> {
       action: 'Save as Image',
     });
 
-    const { timetable, colours, options, twentyFourHours } = this.props;
+    const { timetable, colours, options, twentyFourHours, darkMode } = this.props;
     const campus = getCampus();
     const viewport = getScreenshotViewport(this.props.timetable);
 
@@ -192,6 +192,7 @@ class App extends Component<Props, State> {
       viewport,
       campus,
       twentyFourHours,
+      darkMode,
     });
 
     promise.then(success => {
