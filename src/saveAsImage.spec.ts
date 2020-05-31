@@ -1,7 +1,8 @@
 import { parseQueryString, parseJSONQueryString, SaveAsImageData, getScreenshotHeight } from './saveAsImage';
 import { getSessionManager } from './test_util';
-import { ColourMap, Options } from './state';
+import { ColourMap, Options, initialState } from './state';
 import { buildQueryString } from '../../image';
+import { getEmptySessionManagerData } from './components/Timetable/SessionManager';
 
 const testTimetable = Object.freeze(getSessionManager().data);
 const testColours: ColourMap = Object.freeze({
@@ -20,37 +21,22 @@ describe('buildQueryString and parseQueryString', () => {
       colours: testColours,
       options: testOptions,
       twentyFourHours: false,
+      darkMode: false,
     });
     const queryString = buildQueryString(data);
     const result = parseQueryString(queryString);
     expect(result).toEqual(data);
   })
 
-  it('fails if missing timetable', () => {
-    const data = Object.freeze({
-      colours: testColours,
-      options: testOptions,
-    } as SaveAsImageData);
-    const queryString = buildQueryString(data);
-    expect(() => parseQueryString(queryString)).toThrow();
-  })
-
-  it('fails if missing colours', () => {
-    const data = Object.freeze({
-      timetable: testTimetable,
-      options: testOptions,
-    } as SaveAsImageData);
-    const queryString = buildQueryString(data);
-    expect(() => parseQueryString(queryString)).toThrow();
-  })
-
-  it('fails if missing options', () => {
-    const data = Object.freeze({
-      timetable: testTimetable,
-      colours: testColours,
-    } as SaveAsImageData);
-    const queryString = buildQueryString(data);
-    expect(() => parseQueryString(queryString)).toThrow();
+  it('uses default for values missing options', () => {
+    const queryString = buildQueryString({});
+    expect(parseQueryString(queryString)).toEqual({
+      timetable: getEmptySessionManagerData(),
+      colours: {},
+      options: {},
+      twentyFourHours: false,
+      darkMode: false,
+    });
   })
 
   it('strips out excess values', () => {
@@ -59,6 +45,7 @@ describe('buildQueryString and parseQueryString', () => {
       colours: testColours,
       options: testOptions,
       twentyFourHours: false,
+      darkMode: true,
     });
     const queryString = buildQueryString({ ...data, abc: 123 } as SaveAsImageData);
     const result = parseQueryString(queryString);
