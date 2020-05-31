@@ -47,7 +47,7 @@ resource "cloudflare_page_rule" "redirect_to_root" {
   count = var.environment == "production" ? 1 : 0
 
   zone_id = var.cloudflare_zone_id
-  target = "www.${var.domain}/*"
+  target = "www.${var.domain}*"
   priority = 1
 
   actions {
