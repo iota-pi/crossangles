@@ -68,7 +68,7 @@ export const TimetableControls = ({
               color="primary"
               disabled={history.past.length === 0}
               data-cy="undo-button"
-              >
+            >
               <Undo />
             </IconButton>
           </span>
