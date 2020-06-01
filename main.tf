@@ -18,6 +18,8 @@ provider "cloudflare" {
 
 module "crossangles" {
   source = "./infra"
+
+  git_version = var.git_version
   campuses = ["unsw"]
   mailgun_api_key = var.mailgun_api_key
   pjsc_key = var.pjsc_key
@@ -53,5 +55,5 @@ variable pjsc_key {
 }
 
 variable git_version {
-  type    = string
+  type = string
 }
