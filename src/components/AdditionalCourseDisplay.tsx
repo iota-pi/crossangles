@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import ReactGA from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Expand from '@material-ui/icons/ExpandMore';
 import Close from '@material-ui/icons/Close';
 import OpenInNew from '@material-ui/icons/OpenInNew';
@@ -40,11 +39,28 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 0,
     paddingBottom: 0,
   },
+  courseTitle: {
+    display: 'flex',
+    flexGrow: 1,
+    ...theme.typography.body1,
+    overflow: 'hidden',
+    paddingRight: theme.spacing(1),
+  },
   plainLink: {
     textDecoration: 'none',
     color: 'inherit',
-    display: 'inline-flex',
     alignItems: 'center',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  clipText: {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  noShrink: {
+    flexShrink: 0,
   },
   externalLinkIcon: {
     marginLeft: theme.spacing(1),
@@ -74,6 +90,13 @@ export const AdditionalCourseDisplay = ({
   const minimiseEvents = hiddenEvents.includes(courseId);
   const showEvents = eventList.length > 1 || course.autoSelect;
   const colour = colours[courseId];
+  const website = course.metadata ? course.metadata.website : undefined;
+  const linkProps = {
+    href: website,
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    onClick: () => handleLinkClick(website),
+  };
 
   const handleLinkClick = (destination?: string) => {
     ReactGA.event({
@@ -86,22 +109,27 @@ export const AdditionalCourseDisplay = ({
   return (
     <React.Fragment>
       <ListItem>
-        <ListItemText>
+        <div className={classes.courseTitle}>
           {course.metadata ? (
-            <a
-              href={course.metadata.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={classes.plainLink}
-              onClick={() => handleLinkClick(course.metadata!.website)}
-            >
-              <span>{course.name}</span>
-              <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
-            </a>
+            <React.Fragment>
+              <a
+                {...linkProps}
+                className={classes.plainLink}
+              >
+                <span>{course.name}</span>
+              </a>
+
+              <a
+                {...linkProps}
+                className={`${classes.plainLink} ${classes.noShrink}`}
+              >
+                <OpenInNew className={classes.externalLinkIcon} fontSize="inherit" />
+              </a>
+            </React.Fragment>
           ) : (
-            <span>{course.name}</span>
+            <span className={classes.clipText}>{course.name}</span>
           )}
-        </ListItemText>
+        </div>
 
         <div className={classes.marginRight}>
           <ColourControl
