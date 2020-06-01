@@ -3,7 +3,6 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import ReactGA from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
@@ -40,6 +39,11 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     color: 'inherit',
     alignItems: 'center',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+  clipText: {
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
@@ -142,10 +146,12 @@ export const CourseDisplay = ({
             ) : courseTitle}
           </div>
         ) : (
-          <ListItemText>
-            <span>{course.name}</span>
-            <span className={classes.lightText}> (Personal)</span>
-          </ListItemText>
+          <div className={classes.courseTitle}>
+            <span className={classes.clipText}>
+              <span>{course.name}</span>
+              <span className={classes.lightText}> (Personal)</span>
+            </span>
+          </div>
         )}
 
         {course.isCustom && (
