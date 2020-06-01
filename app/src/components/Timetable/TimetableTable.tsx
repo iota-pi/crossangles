@@ -149,7 +149,7 @@ class TimetableTable extends Component<Props, State> {
     return true;
   }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate () {
     // Update dimensions
     const dimensions = this.getTimetableDimensions();
     const { width, height } = this.state.dimensions;
@@ -157,11 +157,7 @@ class TimetableTable extends Component<Props, State> {
       this.setState({ dimensions });
     }
 
-    const prevCourseIds = this.getCourses(prevProps.timetable).sort();
-    const courseIds = this.getCourses(this.props.timetable).sort();
-    if (courseIds.length !== prevCourseIds.length || !prevCourseIds.some((id, i) => id === courseIds[i])) {
-      this.updateHours();
-    }
+    this.updateHours();
   }
 
   componentDidMount () {

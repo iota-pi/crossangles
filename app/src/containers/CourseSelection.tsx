@@ -173,7 +173,6 @@ class CourseSelection extends Component<Props, State> {
       ...courseData,
     };
     await this.props.dispatch(addCourse(course));
-
     await this.updateTimetable(sessionManager);
   }
 
