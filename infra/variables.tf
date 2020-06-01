@@ -19,3 +19,7 @@ variable mailgun_api_key {
 variable pjsc_key {
   type = string
 }
+
+variable git_version {
+  type = string
+}

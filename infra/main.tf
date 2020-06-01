@@ -6,6 +6,7 @@ locals {
 module "app" {
   source = "./app"
 
+  git_version        = var.git_version
   campus             = var.campuses[0]
   environment        = local.environment
   domain             = local.domain

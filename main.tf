@@ -51,3 +51,7 @@ variable pjsc_key {
   type    = string
   default = ""
 }
+
+variable git_version {
+  type    = string
+}

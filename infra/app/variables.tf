@@ -13,3 +13,7 @@ variable domain {
 variable campus {
   type = string
 }
+
+variable git_version {
+  type = string
+}

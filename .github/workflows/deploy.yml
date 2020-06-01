@@ -46,15 +46,16 @@ jobs:
       if: github.ref != 'refs/heads/release'
       run: terraform workspace select staging
 
+    - name: Build and Deploy for UNSW
+      run: |
+        ./build-app.sh unsw
+        ./deploy-app.sh
+
     - name: Terraform Apply
-      run: terraform apply -auto-approve -input=false
+      run: |
+        terraform apply -auto-approve -input=false -var="git_version=$(git rev-parse HEAD)"
       env:
         TF_VAR_mailgun_api_key: ${{ secrets.MAILGUN_API_KEY }}
         TF_VAR_pjsc_key: ${{ secrets.PJSC_KEY }}
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-    - name: Build and Deploy for UNSW
-      run: |
-        ./build-app.sh unsw
-        ./deploy-app.sh
