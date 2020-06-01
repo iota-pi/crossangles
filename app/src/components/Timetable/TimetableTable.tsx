@@ -1,4 +1,4 @@
-import React, { Component, createRef, RefObject } from 'react';
+import React, { PureComponent, createRef, RefObject } from 'react';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
@@ -64,7 +64,7 @@ export interface State {
   dragging: LinkedSession | null,
 }
 
-class TimetableTable extends Component<Props, State> {
+class TimetableTable extends PureComponent<Props, State> {
   state: State = {
     dimensions: { width: 0, height: 0 },
     dragging: null,
@@ -142,11 +142,6 @@ class TimetableTable extends Component<Props, State> {
         />
       </div>
     )
-  }
-
-  shouldComponentUpdate () {
-    // TODO: can I do anything more efficient?
-    return true;
   }
 
   componentDidUpdate () {
