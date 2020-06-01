@@ -259,7 +259,10 @@ class TimetableTable extends Component<Props, State> {
       sessions = streams.flatMap(s => s.sessions);
     }
 
-    this.hours = getHours(sessions);
+    const newHours = getHours(sessions);
+    if (newHours.start !== this.hours.start || newHours.end !== this.hours.end) {
+      this.hours = newHours;
+    }
   }
 
   private getTimetableDimensions (): Dimensions {
