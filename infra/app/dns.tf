@@ -41,6 +41,7 @@ resource "cloudflare_record" "www_cname" {
   type    = "CNAME"
   name    = "www"
   value   = aws_cloudfront_distribution.s3_distribution.domain_name
+  proxied = true
 }
 
 resource "cloudflare_page_rule" "redirect_to_root" {
