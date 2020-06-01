@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
 import {
@@ -84,7 +84,7 @@ export interface State {
   showCreateCustom: boolean,
 }
 
-class CourseSelection extends Component<Props, State> {
+class CourseSelection extends PureComponent<Props, State> {
   state: State = {
     editingCourse: null,
     showCreateCustom: false,

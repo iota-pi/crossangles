@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, Suspense, ErrorInfo } from 'react';
+import React, { Component, PureComponent, ReactNode, Suspense, ErrorInfo } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
 import loadable, { lazy } from '@loadable/component';
@@ -88,7 +88,7 @@ export interface State {
 
 store.dispatch(fetchData());
 
-class App extends Component<Props, State> {
+class App extends PureComponent<Props, State> {
   state: State = {
     showContact: false,
     isSavingImage: false,
