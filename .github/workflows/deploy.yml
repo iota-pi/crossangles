@@ -31,11 +31,11 @@ jobs:
         aws-region: ap-southeast-2
 
     - name: Terraform Init
-      run: terraform init -input=false
+      run: cd infra && terraform init -input=false
 
     - name: Select Terraform Workspace
       if: github.ref != 'refs/heads/release'
-      run: terraform workspace select staging
+      run: cd infra && terraform workspace select staging
 
     - name: Build and Deploy Lambdas
       run: |
@@ -48,6 +48,7 @@ jobs:
 
     - name: Terraform Apply
       run: |
+        cd infra
         terraform apply -auto-approve -input=false -var="git_version=$(git rev-parse HEAD)"
       env:
         TF_VAR_mailgun_api_key: ${{ secrets.MAILGUN_API_KEY }}

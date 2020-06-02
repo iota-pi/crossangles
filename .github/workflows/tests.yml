@@ -32,6 +32,7 @@ jobs:
 
     - name: Validate Terraform IAC
       run: |
+        cd infra
         terraform init -input=false
         terraform workspace select staging
         terraform plan -input=false -refresh=false -var="git_version=$(git rev-parse HEAD)"
