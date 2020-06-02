@@ -12,8 +12,8 @@ variable code_key {
   default = "contact/contact.zip"
 }
 
-variable mailgun_api_key {
-  type    = string
+variable mailgun_key {
+  type = string
 }
 
 variable git_version {

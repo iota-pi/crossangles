@@ -1,10 +1,3 @@
-resource "aws_s3_bucket_object" "contact_code" {
-  bucket = var.code_bucket
-  key    = "${var.environment}/${var.git_version}/${var.code_key}"
-  source = "contact/build/contact.zip"
-  etag   = filemd5("contact/build/contact.zip")
-}
-
 resource "aws_lambda_function" "contact" {
   function_name = "crossangles-contact-${var.environment}"
 
@@ -16,15 +9,14 @@ resource "aws_lambda_function" "contact" {
   memory_size = 256
   timeout     = 10
 
-  s3_bucket        = aws_s3_bucket_object.contact_code.bucket
-  s3_key           = aws_s3_bucket_object.contact_code.key
-  source_code_hash = filebase64sha256(aws_s3_bucket_object.contact_code.source)
+  s3_bucket = var.code_bucket
+  s3_key    = var.code_key
 
   role = aws_iam_role.contact_role.arn
 
   environment {
     variables = {
-      MAILGUN_API_KEY = var.mailgun_api_key
+      MAILGUN_API_KEY = var.mailgun_key
     }
   }
 }

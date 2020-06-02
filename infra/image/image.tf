@@ -1,10 +1,3 @@
-resource "aws_s3_bucket_object" "image_code" {
-  bucket = var.code_bucket
-  key    = "${var.environment}/${var.git_version}/${var.code_key}"
-  source = "image/build/image.zip"
-  etag   = filemd5("image/build/image.zip")
-}
-
 resource "aws_lambda_function" "image" {
   function_name = "crossangles-image-${var.environment}"
 
@@ -16,9 +9,8 @@ resource "aws_lambda_function" "image" {
   memory_size = 1024
   timeout     = 30
 
-  s3_bucket        = aws_s3_bucket_object.image_code.bucket
-  s3_key           = aws_s3_bucket_object.image_code.key
-  source_code_hash = filebase64sha256(aws_s3_bucket_object.image_code.source)
+  s3_bucket = var.code_bucket
+  s3_key    = "${var.environment}/${var.git_version}/${var.code_key}"
 
   layers = [
     # this layer includes the chromium binary

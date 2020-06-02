@@ -13,7 +13,7 @@ variable code_key {
 }
 
 variable pjsc_key {
-  type    = string
+  type = string
 }
 
 variable git_version {

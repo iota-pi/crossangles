@@ -2,13 +2,6 @@ locals {
   scraper_s3_origin_id = "scraper_s3_origin"
 }
 
-resource "aws_s3_bucket_object" "scraper_code" {
-  bucket = var.code_bucket
-  key    = "${var.environment}/${var.git_version}/${var.code_key}"
-  source = "scraper/build/scraper.zip"
-  etag   = filemd5("scraper/build/scraper.zip")
-}
-
 resource "aws_lambda_function" "scraper" {
   function_name = "crossangles-scraper-${var.environment}"
 
@@ -20,9 +13,8 @@ resource "aws_lambda_function" "scraper" {
   memory_size = 1536
   timeout     = 300
 
-  s3_bucket        = aws_s3_bucket_object.scraper_code.bucket
-  s3_key           = aws_s3_bucket_object.scraper_code.key
-  source_code_hash = filebase64sha256(aws_s3_bucket_object.scraper_code.source)
+  s3_bucket = var.code_bucket
+  s3_key    = "${var.environment}/${var.git_version}/${var.code_key}"
 
   role = aws_iam_role.scraper_role.arn
 

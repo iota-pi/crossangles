@@ -17,6 +17,7 @@ module "scraper" {
   source = "./scraper"
 
   environment = local.environment
+  code_bucket = var.code_bucket
   git_version = var.git_version
 }
 
@@ -24,6 +25,7 @@ module "image" {
   source = "./image"
 
   environment = local.environment
+  code_bucket = var.code_bucket
   git_version = var.git_version
   pjsc_key    = var.pjsc_key
 }
@@ -31,27 +33,8 @@ module "image" {
 module "contact" {
   source = "./contact"
 
-  environment     = local.environment
-  git_version     = var.git_version
-  mailgun_api_key = var.mailgun_api_key
-}
-
-# Outputs
-output "app_uri" {
-  value = module.app.cloudfront_url
-}
-output "app_bucket" {
-  value = module.app.app_bucket
-}
-output "scraper_endpoint" {
-  value = module.scraper.cloudfront_url
-}
-output "image_endpoint" {
-  value = module.image.invoke_url
-}
-output "contact_endpoint" {
-  value = module.contact.invoke_url
-}
-output "environment" {
-  value = local.environment
+  environment = local.environment
+  code_bucket = var.code_bucket
+  git_version = var.git_version
+  mailgun_key = var.mailgun_key
 }

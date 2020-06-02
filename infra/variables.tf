@@ -9,17 +9,25 @@ variable cloudflare_zone_id {
 }
 
 variable campuses {
-  type = list(string)
-}
-
-variable mailgun_api_key {
-  type = string
-}
-
-variable pjsc_key {
-  type = string
+  type    = list(string)
+  default = ["unsw"]
 }
 
 variable git_version {
   type = string
+}
+
+variable code_bucket {
+  type    = string
+  default = "crossangles-lambda-code"
+}
+
+variable mailgun_key {
+  type    = string
+  default = ""
+}
+
+variable pjsc_key {
+  type    = string
+  default = ""
 }
