@@ -18,15 +18,6 @@ jobs:
       with:
         node-version: '12.x'
 
-    - name: Install dependencies
-      run: ./ci.sh install
-
-    - name: Build lambdas
-      run: |
-        ./ci.sh build scraper
-        ./ci.sh build contact
-        ./ci.sh build image
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -45,6 +36,10 @@ jobs:
     - name: Select Terraform Workspace
       if: github.ref != 'refs/heads/release'
       run: terraform workspace select staging
+
+    - name: Build and Deploy Lambdas
+      run: |
+        ./deploy-lambdas.sh
 
     - name: Build and Deploy for UNSW
       run: |
