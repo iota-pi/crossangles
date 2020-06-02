@@ -41,10 +41,10 @@ jobs:
       run: |
         ./deploy-lambdas.sh
 
-    - name: Build and Deploy for UNSW
-      run: |
-        ./build-app.sh unsw
-        ./deploy-app.sh
+    # - name: Build and Deploy for UNSW
+    #   run: |
+    #     ./build-app.sh unsw
+    #     ./deploy-app.sh
 
     - name: Terraform Apply
       run: |
