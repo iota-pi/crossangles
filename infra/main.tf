@@ -6,9 +6,9 @@ locals {
 module "app" {
   source = "./app"
 
+  environment        = local.environment
   git_version        = var.git_version
   campus             = var.campuses[0]
-  environment        = local.environment
   domain             = local.domain
   cloudflare_zone_id = var.cloudflare_zone_id
 }
@@ -17,19 +17,22 @@ module "scraper" {
   source = "./scraper"
 
   environment = local.environment
+  git_version = var.git_version
 }
 
 module "image" {
   source = "./image"
 
   environment = local.environment
-  pjsc_key = var.pjsc_key
+  git_version = var.git_version
+  pjsc_key    = var.pjsc_key
 }
 
 module "contact" {
   source = "./contact"
 
-  environment = local.environment
+  environment     = local.environment
+  git_version     = var.git_version
   mailgun_api_key = var.mailgun_api_key
 }
 

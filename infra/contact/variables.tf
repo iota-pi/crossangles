@@ -15,3 +15,7 @@ variable code_key {
 variable mailgun_api_key {
   type    = string
 }
+
+variable git_version {
+  type = string
+}

@@ -11,3 +11,7 @@ variable code_key {
   type    = string
   default = "scraper/scraper.zip"
 }
+
+variable git_version {
+  type = string
+}

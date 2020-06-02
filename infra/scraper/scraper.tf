@@ -4,7 +4,7 @@ locals {
 
 resource "aws_s3_bucket_object" "scraper_code" {
   bucket = var.code_bucket
-  key    = "${var.environment}/${var.code_key}"
+  key    = "${var.environment}/${var.git_version}/${var.code_key}"
   source = "scraper/build/scraper.zip"
   etag   = filemd5("scraper/build/scraper.zip")
 }

@@ -1,6 +1,6 @@
 resource "aws_s3_bucket_object" "contact_code" {
   bucket = var.code_bucket
-  key    = "${var.environment}/${var.code_key}"
+  key    = "${var.environment}/${var.git_version}/${var.code_key}"
   source = "contact/build/contact.zip"
   etag   = filemd5("contact/build/contact.zip")
 }
