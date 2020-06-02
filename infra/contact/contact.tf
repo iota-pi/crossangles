@@ -13,7 +13,7 @@ resource "aws_lambda_function" "contact" {
   # exported in that file.
   handler     = "lambda.handler"
   runtime     = "nodejs12.x"
-  memory_size = 128
+  memory_size = 256
   timeout     = 10
 
   s3_bucket        = aws_s3_bucket_object.contact_code.bucket
