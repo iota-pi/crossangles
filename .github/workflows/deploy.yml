@@ -35,7 +35,10 @@ jobs:
 
     - name: Select Terraform Workspace
       if: github.ref != 'refs/heads/release'
-      run: cd infra && terraform workspace select staging
+      run: |
+        cd infra
+        terraform workspace select staging
+        terraform init -input=false
 
     - name: Terraform Refresh
       run: cd infra && terraform refresh -input=false -var="git_version=$(git rev-parse HEAD)"
