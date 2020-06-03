@@ -1,4 +1,5 @@
-import { CourseData, StreamData } from '../../../app/src/state';
+import { CourseData } from '../../../app/src/state/Course';
+import { StreamData } from '../../../app/src/state/Stream';
 
 export function removeDuplicateStreams (course: CourseData) {
   const mapping = new Map<string, StreamData[]>();

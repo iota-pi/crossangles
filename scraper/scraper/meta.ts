@@ -1,4 +1,4 @@
-import { Meta } from '../../app/src/state';
+import { Meta } from '../../app/src/state/Meta';
 import getAEST from '../getAEST';
 
 export function generateMetaData (term: number, sources: string[]): Meta {

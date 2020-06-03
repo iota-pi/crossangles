@@ -1,5 +1,6 @@
 import { Scraper } from '../Scraper';
-import { ClassTime, CourseData, StreamData } from '../../../app/src/state';
+import { CourseData } from '../../../app/src/state/Course';
+import { ClassTime, StreamData } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';

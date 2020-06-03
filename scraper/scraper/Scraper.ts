@@ -3,7 +3,8 @@ import cheerio from 'cheerio';
 import axiosRetry from 'axios-retry';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
-import { CourseData, Meta } from '../../app/src/state';
+import { CourseData } from '../../app/src/state/Course';
+import { Meta } from '../../app/src/state/Meta';
 
 axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay });
 

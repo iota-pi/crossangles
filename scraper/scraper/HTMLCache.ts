@@ -1,4 +1,4 @@
-import { writeFileSync, readFileSync } from "fs";
+import { writeFileSync, readFileSync } from 'fs';
 import zlib from 'zlib';
 
 export class HTMLCache {

@@ -1,5 +1,6 @@
 import { Parser } from './ClassUtilScraper';
-import { CourseData, StreamData } from '../../../app/src/state';
+import { CourseData } from '../../../app/src/state/Course';
+import { StreamData } from '../../../app/src/state/Stream';
 import { removeDuplicateStreams } from './commonUtils';
 
 
