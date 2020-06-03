@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 version=$(git rev-parse HEAD)
-
-# Get ENV variables from terraform output
 app_bucket=$(terraform output app_bucket)
 stage_name=$(terraform output environment)
 
