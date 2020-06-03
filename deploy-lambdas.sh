@@ -24,7 +24,7 @@ do
     echo "Installing dependencies"
     npm install >/dev/null
     echo "Building $lambda lambda"
-    npm run build >/dev/null
+    npm run build
     echo "Copying to s3://$code_bucket/$environment/$lambda/$version/$lambda.zip"
     aws s3 cp "build/$lambda.zip" "s3://$code_bucket/$environment/$lambda/$version/"
     echo $version >version.txt
