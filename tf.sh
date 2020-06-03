@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 extra_args=""
 if [[ $1 =~ init|refresh|apply ]]; then
