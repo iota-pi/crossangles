@@ -31,14 +31,14 @@ jobs:
         aws-region: ap-southeast-2
 
     - name: Terraform Init
-      run: |
-        cd infra
-        terraform init -input=false
-        terraform refresh -input=false -var="git_version=$(git rev-parse HEAD)"
+      run: cd infra && terraform init -input=false
 
     - name: Select Terraform Workspace
       if: github.ref != 'refs/heads/release'
       run: cd infra && terraform workspace select staging
+
+    - name: Terraform Refresh
+      run: cd infra && terraform refresh -input=false -var="git_version=$(git rev-parse HEAD)"
 
     - name: Build and Deploy Lambdas
       run: ./deploy-lambdas.sh
