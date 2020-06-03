@@ -4,7 +4,7 @@ set -euo pipefail
 if [[ ${1:-} ]]; then
   lambdas=$@
 else
-  lambdas=(scraper contact image)
+  lambdas="scraper contact image"
 fi
 
 cd infra
