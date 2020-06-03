@@ -13,7 +13,7 @@ environment=$(terraform output environment)
 code_bucket="crossangles-lambda-code"
 cd ..
 
-if [[ $lambdas =~ '\b(contact|image)\b' ]]; then
+if [[ $lambdas =~ contact|image ]]; then
   (
     cd lambda-shared
     echo "Installing dependencies for lambda-shared"
