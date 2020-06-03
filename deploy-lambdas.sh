@@ -7,9 +7,11 @@ else
   lambdas=(scraper contact image)
 fi
 
+cd infra
 version=$(git rev-parse HEAD)
 environment=$(terraform output environment)
 code_bucket="crossangles-lambda-code"
+cd ..
 
 for lambda in $lambdas
 do
@@ -18,7 +20,7 @@ do
   echo $message
   echo $hyphens
   (
-    cd $lambdas
+    cd $lambda
     echo "Installing dependencies"
     npm install >/dev/null
     echo "Building $lambda lambda"

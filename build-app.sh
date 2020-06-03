@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
 # Get ENV variables from terraform output
+
+cd infra
 data_uri="$(terraform output scraper_endpoint)"
 contact_endpoint="$(terraform output contact_endpoint | sed 's@\.com/.*@.com@')"
 image_endpoint="$(terraform output image_endpoint | sed 's@\.com/.*@.com@')"
 environment="$(terraform output environment)"
+cd ..
 
 environment_hyphens=$(echo $environment | sed 's/./-/g')
 echo "Building app for $environment"
