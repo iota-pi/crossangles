@@ -5,13 +5,6 @@ locals {
   domain        = "${local.subdomain}.${var.root_domain}"
 }
 
-data "null_data_source" "domains" {
-  inputs = {
-    subdomain = local.subdomain
-    domain = local.domain
-  }
-}
-
 # Root domain DNS and SSL Cert
 resource "cloudflare_record" "primary_cname" {
   zone_id = var.cloudflare_zone_id

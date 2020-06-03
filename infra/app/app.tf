@@ -36,7 +36,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
-  aliases = [data.null_data_source.domains.outputs.domain]
+  aliases = [local.domain]
 
   enabled         = true
   is_ipv6_enabled = true
@@ -91,7 +91,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 output "app_domain" {
-  value = "${data.null_data_source.domains.outputs.domain}"
+  value = "${local.domain}"
 }
 
 output "app_bucket" {

@@ -1,3 +1,7 @@
+output "environment" {
+  value = local.environment
+}
+
 output "app_uri" {
   value = "https://${module.app.app_domain}"
 }

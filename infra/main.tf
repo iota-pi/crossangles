@@ -37,7 +37,3 @@ module "contact" {
   git_version = var.git_version
   mailgun_key = var.mailgun_key
 }
-
-output "environment" {
-  value = local.environment
-}
