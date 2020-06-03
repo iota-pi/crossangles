@@ -36,7 +36,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
-  aliases = [var.domain]
+  aliases = [data.null_data_source.domains.outputs.domain]
 
   enabled         = true
   is_ipv6_enabled = true
@@ -90,8 +90,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   depends_on = [aws_acm_certificate_validation.root_cert]
 }
 
-output "cloudfront_url" {
-  value = "https://${aws_cloudfront_distribution.s3_distribution.domain_name}"
+output "app_domain" {
+  value = "${data.null_data_source.domains.outputs.domain}"
 }
 
 output "app_bucket" {

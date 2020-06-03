@@ -1,5 +1,5 @@
 output "app_uri" {
-  value = module.app.cloudfront_url
+  value = "https://${module.app.app_domain}"
 }
 
 output "app_bucket" {
@@ -16,8 +16,4 @@ output "image_endpoint" {
 
 output "contact_endpoint" {
   value = module.contact.invoke_url
-}
-
-output "environment" {
-  value = local.environment
 }

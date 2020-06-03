@@ -2,6 +2,14 @@ locals {
   env_prefix    = var.environment == "production" ? "" : var.environment
   campus_prefix = var.campus == "unsw" ? "" : var.campus
   subdomain     = trim("${local.env_prefix}.${local.campus_prefix}", ".")
+  domain        = "${local.subdomain}.${var.root_domain}"
+}
+
+data "null_data_source" "domains" {
+  inputs = {
+    subdomain = local.subdomain
+    domain = local.domain
+  }
 }
 
 # Root domain DNS and SSL Cert
@@ -13,7 +21,7 @@ resource "cloudflare_record" "primary_cname" {
 }
 
 resource "aws_acm_certificate" "root_cert" {
-  domain_name       = var.domain
+  domain_name       = local.domain
   validation_method = "DNS"
 
   provider = aws.us_east_1
@@ -35,7 +43,7 @@ resource "cloudflare_record" "root_cert_validation" {
 
 # Redirect www domain to root domain for production
 resource "cloudflare_record" "www_cname" {
-  count = var.environment == "production" ? 1 : 0
+  count = local.subdomain == "" ? 1 : 0
 
   zone_id = var.cloudflare_zone_id
   type    = "CNAME"
@@ -48,12 +56,12 @@ resource "cloudflare_page_rule" "redirect_to_root" {
   count = var.environment == "production" ? 1 : 0
 
   zone_id = var.cloudflare_zone_id
-  target = "www.${var.domain}*"
+  target = "www.${local.domain}*"
   priority = 1
 
   actions {
     forwarding_url {
-      url = "https://${var.domain}"
+      url = "https://${local.domain}"
       status_code = 301
     }
   }

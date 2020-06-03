@@ -1,6 +1,5 @@
 locals {
   environment = terraform.workspace == "default" ? "production" : terraform.workspace
-  domain      = local.environment == "production" ? var.root_domain : "${local.environment}.${var.root_domain}"
 }
 
 module "app" {
@@ -9,7 +8,7 @@ module "app" {
   environment        = local.environment
   git_version        = var.git_version
   campus             = var.campuses[0]
-  domain             = local.domain
+  root_domain        = var.root_domain
   cloudflare_zone_id = var.cloudflare_zone_id
 }
 
@@ -37,4 +36,8 @@ module "contact" {
   code_bucket = var.code_bucket
   git_version = var.git_version
   mailgun_key = var.mailgun_key
+}
+
+output "environment" {
+  value = local.environment
 }

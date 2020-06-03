@@ -6,7 +6,7 @@ variable cloudflare_zone_id {
   type = string
 }
 
-variable domain {
+variable root_domain {
   type = string
 }
 
