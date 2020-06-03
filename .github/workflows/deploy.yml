@@ -42,6 +42,9 @@ jobs:
 
     - name: Terraform Refresh
       run: cd infra && terraform refresh -input=false -var="git_version=$(git rev-parse HEAD)"
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
     - name: Build and Deploy Lambdas
       run: ./deploy-lambdas.sh
