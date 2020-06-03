@@ -9,7 +9,6 @@
   },
   "author": "David Adams",
   "dependencies": {
-    "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.688.0",
     "axios": "^0.19.2",
     "chrome-aws-lambda": "^2.1.1",
