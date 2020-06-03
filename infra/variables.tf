@@ -13,7 +13,19 @@ variable campuses {
   default = ["unsw"]
 }
 
-variable git_version {
+variable app_version {
+  type = string
+}
+
+variable scraper_version {
+  type = string
+}
+
+variable contact_version {
+  type = string
+}
+
+variable image_version {
   type = string
 }
 
