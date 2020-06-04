@@ -7,11 +7,6 @@ variable code_bucket {
   default = "crossangles-lambda-code"
 }
 
-variable code_key {
-  type    = string
-  default = "scraper/scraper.zip"
-}
-
 variable git_version {
   type = string
 }

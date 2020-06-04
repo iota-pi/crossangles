@@ -14,7 +14,7 @@ resource "aws_lambda_function" "scraper" {
   timeout     = 300
 
   s3_bucket = var.code_bucket
-  s3_key    = "${var.environment}/${var.git_version}/${var.code_key}"
+  s3_key    = "${var.environment}/scraper/${var.git_version}/scraper.zip"
 
   role = aws_iam_role.scraper_role.arn
 

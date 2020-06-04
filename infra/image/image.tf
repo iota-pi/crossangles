@@ -10,7 +10,7 @@ resource "aws_lambda_function" "image" {
   timeout     = 30
 
   s3_bucket = var.code_bucket
-  s3_key    = "${var.environment}/${var.git_version}/${var.code_key}"
+  s3_key    = "${var.environment}/image/${var.git_version}/image.zip"
 
   layers = [
     # this layer includes the chromium binary

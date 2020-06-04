@@ -10,7 +10,7 @@ resource "aws_lambda_function" "contact" {
   timeout     = 10
 
   s3_bucket = var.code_bucket
-  s3_key    = var.code_key
+  s3_key    = "${var.environment}/contact/${var.git_version}/contact.zip"
 
   role = aws_iam_role.contact_role.arn
 

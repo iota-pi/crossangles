@@ -7,11 +7,6 @@ variable code_bucket {
   default = "crossangles-lambda-code"
 }
 
-variable code_key {
-  type    = string
-  default = "contact/contact.zip"
-}
-
 variable mailgun_key {
   type = string
 }
