@@ -7,12 +7,6 @@ else
   lambdas="scraper contact image"
 fi
 
-cd infra
-version=$(git rev-parse HEAD)
-environment=$(terraform output environment)
-code_bucket="crossangles-lambda-code"
-cd ..
-
 if [[ $lambdas =~ contact|image ]]; then
   (
     cd lambda-shared
@@ -21,8 +15,21 @@ if [[ $lambdas =~ contact|image ]]; then
   )
 fi
 
+# version=$(git rev-parse HEAD)
+environment="$(./tf.sh output environment)"
+code_bucket="crossangles-lambda-code"
+
 for lambda in $lambdas
 do
+  version="$(git log -1 --pretty=tformat:%H $lambda)"
+  last_version="$(./tf.sh output ${lambda}_version)"
+  if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
+    echo "No changes to $lambda, skipping build and deploy."
+    echo "Set the FORCE_UPDATE env variable to force an update."
+    echo
+    continue
+  fi
+
   message="Deploying $lambda lambda to $environment"
   hyphens=$(echo $message | sed 's/./-/g')
   echo $message
@@ -33,9 +40,10 @@ do
     2>&1 npm install >/dev/null
     echo "Building $lambda lambda"
     npm run build
-    echo "Copying to s3://$code_bucket/$environment/$lambda/$version/$lambda.zip"
-    aws s3 cp "build/$lambda.zip" "s3://$code_bucket/$environment/$lambda/$version/"
-    echo $version >version.txt
+
+    dest="s3://$code_bucket/$environment/$lambda/$version"
+    echo "Copying to $dest/$lambda.zip"
+    aws s3 cp "build/$lambda.zip" "$dest/"
   )
   echo
 done
