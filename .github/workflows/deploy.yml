@@ -50,7 +50,7 @@ jobs:
       run: ./deploy-lambdas.sh
 
     - name: Build and Deploy App for UNSW
-      run: ./deploy-app.sh unsw
+      run: FORCE_UPDATE=1 ./deploy-app.sh unsw
 
     - name: Terraform Apply
       run: ./tf.sh apply -auto-approve
