@@ -68,7 +68,7 @@ const AutocompleteControl = ({
   React.useEffect(() => setOpenOnFocus(true), []);
 
   const handleChange = (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
-    if (newCourses) {
+    if (newCourses && newCourses.length > chosen.length) {
       const newCourse = newCourses[newCourses.length - 1];
       chooseCourse(newCourse);
     }
