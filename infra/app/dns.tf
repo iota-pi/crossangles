@@ -2,7 +2,7 @@ locals {
   env_prefix    = var.environment == "production" ? "" : var.environment
   campus_prefix = var.campus == "unsw" ? "" : var.campus
   subdomain     = trim("${local.env_prefix}.${local.campus_prefix}", ".")
-  domain        = "${local.subdomain}.${var.root_domain}"
+  domain        = trim("${local.subdomain}.${var.root_domain}", ".")
 }
 
 # Root domain DNS and SSL Cert
