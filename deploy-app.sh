@@ -4,8 +4,8 @@ set -euo pipefail
 outputs="$(./tf.sh output -json)"
 
 # Check versions to see if we need to re-build and re-deploy
+version="$(./version.sh app)"
 last_version="$(echo "$outputs" | jq -r .app_version.value)"
-version="$(git log -1 --pretty=tformat:%H app)"
 if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
   echo 'No changes to app, skipping build and deploy.'
   echo 'Set the FORCE_UPDATE env variable to force an update.'

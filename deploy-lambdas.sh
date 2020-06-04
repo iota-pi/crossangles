@@ -23,7 +23,7 @@ code_bucket="crossangles-lambda-code"
 
 for lambda in $lambdas
 do
-  version="$(git log -1 --pretty=tformat:%H $lambda)"
+  version="$(./version.sh $lambda)"
   last_version="$(echo "$outputs" | jq -r .${lambda}_version.value)"
   if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
     echo "No changes to $lambda, skipping build and deploy."
