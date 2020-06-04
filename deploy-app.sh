@@ -8,6 +8,11 @@ contact_endpoint=$(echo "$outputs" | jq -r ".contact_endpoint.value" | sed 's@\.
 data_uri=$(echo "$outputs" | jq -r ".scraper_endpoint.value")
 app_bucket=$(echo "$outputs" | jq -r ".app_bucket.value")
 
+if [[ -z $app_bucket || $app_bucket == null ]]; then
+  echo "App bucket has not been deployed yet. Skipping building app."
+  exit 0
+fi
+
 # Check versions to see if we need to re-build and re-deploy
 version=$(./version.sh app)
 s3_version_prefix="s3://$app_bucket/$version/"
