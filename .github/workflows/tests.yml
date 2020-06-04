@@ -51,11 +51,8 @@ jobs:
     - name: Run unit tests
       run: ./ci.sh test
 
-    - name: Build app
-      run: ./ci.sh build app unsw
-
     - name: Run e2e tests
       if: github.ref == 'refs/heads/release'
       run: ./ci.sh cypress run
       env:
-        CYPRESS_BASE_URL: staging.crossangles.com
+        CYPRESS_BASE_URL: https://staging.crossangles.com
