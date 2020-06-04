@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+outputs="$(./tf.sh output -json)"
+
 # Check versions to see if we need to re-build and re-deploy
-last_version="$(./tf.sh output app_version)"
+last_version="$(echo "$outputs" | jq -r .app_version.value)"
 version="$(git log -1 --pretty=tformat:%H app)"
 if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
   echo 'No changes to app, skipping build and deploy.'
@@ -10,11 +12,11 @@ if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
   exit 0
 fi
 
-environment="$(./tf.sh output environment)"
-image_endpoint="$(./tf.sh output image_endpoint | sed 's@\.com/.*@.com@')"
-contact_endpoint="$(./tf.sh output contact_endpoint | sed 's@\.com/.*@.com@')"
-data_uri="$(./tf.sh output scraper_endpoint)"
-app_bucket=$(./tf.sh output app_bucket)
+environment="$(echo "$outputs" | jq -r .environment.value)"
+image_endpoint="$(echo "$outputs" | jq -r .image_endpoint.value | sed 's@\.com/.*@.com@')"
+contact_endpoint="$(echo "$outputs" | jq -r .contact_endpoint.value | sed 's@\.com/.*@.com@')"
+data_uri="$(echo "$outputs" | jq -r .scraper_endpoint.value)"
+app_bucket="$(echo "$outputs" | jq -r .app_bucket.value)"
 
 environment_hyphens=$(echo $environment | sed 's/./-/g')
 echo "Deploying app to $environment"

@@ -11,18 +11,20 @@ if [[ $lambdas =~ contact|image ]]; then
   (
     cd lambda-shared
     echo "Installing dependencies for lambda-shared"
-    2>&1 npm install --production >/dev/null
+    npm install --production >/dev/null 2>&1
   )
 fi
 
+outputs="$(./tf.sh output -json)"
+
 # version=$(git rev-parse HEAD)
-environment="$(./tf.sh output environment)"
+environment="$(echo "$outputs" | jq -r .environment.value)"
 code_bucket="crossangles-lambda-code"
 
 for lambda in $lambdas
 do
   version="$(git log -1 --pretty=tformat:%H $lambda)"
-  last_version="$(./tf.sh output ${lambda}_version)"
+  last_version="$(echo "$outputs" | jq -r .${lambda}_version.value)"
   if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
     echo "No changes to $lambda, skipping build and deploy."
     echo "Set the FORCE_UPDATE env variable to force an update."
