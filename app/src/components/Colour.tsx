@@ -54,7 +54,7 @@ function ColourComponent ({ colour, size, isSelected, isCircle, onClick }: Props
     >
       {isSelected ? <Check/> : null}
     </div>
-  )
+  );
 }
 
 export default ColourComponent;
