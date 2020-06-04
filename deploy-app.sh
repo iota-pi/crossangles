@@ -31,6 +31,6 @@ do
   REACT_APP_CAMPUS=$campus npm run build
 
   echo "Copying to s3://$app_bucket/$version/$campus/"
-  aws s3 cp app/build/ s3://$app_bucket/$version/$campus/ --recursive --acl public-read
+  aws s3 cp build/ s3://$app_bucket/$version/$campus/ --recursive --acl public-read
 done
 
