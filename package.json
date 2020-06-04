@@ -8,7 +8,17 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.55",
     "@types/autosuggest-highlight": "^3.1.0",
+    "@types/downloadjs": "^1.4.2",
+    "@types/loadable__component": "^5.10.0",
     "@types/match-sorter": "^4.0.0",
+    "@types/node": "^12.12.43",
+    "@types/react": "^16.9.35",
+    "@types/react-color": "^3.0.2",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
+    "@types/react-router-dom": "^5.1.5",
+    "@types/react-select": "^2.0.19",
+    "@types/react-transition-group": "^4.4.0",
     "@types/react-window": "^1.8.2",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.19.2",
@@ -32,6 +42,7 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
+    "typescript": "^3.9.3",
     "workerize-loader": "~1.1.0"
   },
   "scripts": {
@@ -58,19 +69,8 @@
   },
   "devDependencies": {
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",
-    "@types/downloadjs": "^1.4.2",
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^24.9.1",
-    "@types/loadable__component": "^5.10.0",
-    "@types/node": "^12.12.43",
-    "@types/react": "16.8.19",
-    "@types/react-color": "^3.0.2",
-    "@types/react-dom": "16.8.4",
-    "@types/react-redux": "^7.1.9",
-    "@types/react-router-dom": "^5.1.5",
-    "@types/react-select": "^2.0.19",
-    "@types/react-transition-group": "^4.4.0",
-    "cypress": "^3.8.3",
-    "typescript": "3.5.1"
+    "cypress": "^3.8.3"
   }
 }
