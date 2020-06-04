@@ -47,10 +47,10 @@ jobs:
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
     - name: Build and Deploy Lambdas
-      run: FORCE_UPDATE=1 ./deploy-lambdas.sh
+      run: ./deploy-lambdas.sh
 
     - name: Build and Deploy App for UNSW
-      run: FORCE_UPDATE=1 ./deploy-app.sh unsw
+      run: ./deploy-app.sh unsw
 
     - name: Terraform Apply
       run: ./tf.sh apply -auto-approve
