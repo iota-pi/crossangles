@@ -7,8 +7,9 @@ outputs="$(./tf.sh output -json)"
 version="$(./version.sh app)"
 last_version="$(echo "$outputs" | jq -r .app_version.value)"
 if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
-  echo 'No changes to app, skipping build and deploy.'
-  echo 'Set the FORCE_UPDATE env variable to force an update.'
+  echo "No changes to app, skipping build and deploy."
+  echo "Set the FORCE_UPDATE env variable to force an update."
+  echo "Version is: $version"
   exit 0
 fi
 

@@ -17,7 +17,6 @@ fi
 
 outputs="$(./tf.sh output -json)"
 
-# version=$(git rev-parse HEAD)
 environment="$(echo "$outputs" | jq -r .environment.value)"
 code_bucket="crossangles-lambda-code"
 
@@ -28,6 +27,7 @@ do
   if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
     echo "No changes to $lambda, skipping build and deploy."
     echo "Set the FORCE_UPDATE env variable to force an update."
+    echo "Version is: $version"
     echo
     continue
   fi
