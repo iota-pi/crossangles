@@ -11,7 +11,7 @@ app_bucket=$(echo "$outputs" | jq -r ".app_bucket.value")
 # Check versions to see if we need to re-build and re-deploy
 version=$(./version.sh app)
 s3_version_prefix="s3://$app_bucket/$version/"
-existing_files=$(aws s3 ls $s3_version_prefix)
+existing_files=$(aws s3 ls $s3_version_prefix || true)
 if [[ -n $existing_files && -z ${FORCE_UPDATE:-} ]]; then
   echo "No changes to app, skipping build and deploy."
   echo "Set the FORCE_UPDATE env variable to force an update."

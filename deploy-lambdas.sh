@@ -22,7 +22,7 @@ for lambda in $lambdas
 do
   version="$(./version.sh $lambda)"
   dest="s3://$code_bucket/$environment/$lambda/$version"
-  existing_files=$(aws s3 ls "$dest/")
+  existing_files=$(aws s3 ls "$dest/" || true)
   if [[ -n $existing_files && -z ${FORCE_UPDATE:-} ]]; then
     echo "No changes to $lambda, skipping build and deploy."
     echo "Set the FORCE_UPDATE env variable to force an update."
