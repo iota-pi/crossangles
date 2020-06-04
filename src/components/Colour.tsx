@@ -28,7 +28,7 @@ export interface Props {
   size: number,
   isSelected?: boolean,
   isCircle?: boolean,
-  onClick: (event: MouseEvent<HTMLDivElement>) => void,
+  onClick?: (event: MouseEvent<HTMLDivElement>) => void,
 }
 
 function ColourComponent ({ colour, size, isSelected, isCircle, onClick }: Props) {
