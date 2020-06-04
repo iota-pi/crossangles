@@ -105,7 +105,9 @@ const InfoText = ({
           The data was last updated
           at <span style={{ fontWeight: 400 }}>
             {meta.updateTime} ({meta.updateDate})
-          </span> from {sources}.
+          </span> from {sources} for <span style={{ fontWeight: 400}}>
+            Term {meta.term}, {meta.year}
+          </span>.
           CrossAngles comes without any guarantee of data accuracy or of optimality.
           If you have any questions or suggestions,
           please <span
