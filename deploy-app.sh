@@ -2,22 +2,22 @@
 set -euo pipefail
 
 outputs="$(./tf.sh output -json)"
+environment=$(echo "$outputs" | jq -r ".environment.value")
+image_endpoint=$(echo "$outputs" | jq -r ".image_endpoint.value" | sed 's@\.com/.*@.com@')
+contact_endpoint=$(echo "$outputs" | jq -r ".contact_endpoint.value" | sed 's@\.com/.*@.com@')
+data_uri=$(echo "$outputs" | jq -r ".scraper_endpoint.value")
+app_bucket=$(echo "$outputs" | jq -r ".app_bucket.value")
 
 # Check versions to see if we need to re-build and re-deploy
-version="$(./version.sh app)"
-last_version="$(echo "$outputs" | jq -r .app_version.value)"
-if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
+version=$(./version.sh app)
+s3_version_prefix="s3://$app_bucket/$version/"
+existing_files=$(aws s3 ls $s3_version_prefix)
+if [[ -n $existing_files && -z ${FORCE_UPDATE:-} ]]; then
   echo "No changes to app, skipping build and deploy."
   echo "Set the FORCE_UPDATE env variable to force an update."
-  echo "Version is: $version"
+  echo "Already built version is: $version"
   exit 0
 fi
-
-environment="$(echo "$outputs" | jq -r .environment.value)"
-image_endpoint="$(echo "$outputs" | jq -r .image_endpoint.value | sed 's@\.com/.*@.com@')"
-contact_endpoint="$(echo "$outputs" | jq -r .contact_endpoint.value | sed 's@\.com/.*@.com@')"
-data_uri="$(echo "$outputs" | jq -r .scraper_endpoint.value)"
-app_bucket="$(echo "$outputs" | jq -r .app_bucket.value)"
 
 environment_hyphens=$(echo $environment | sed 's/./-/g')
 echo "Deploying app to $environment"

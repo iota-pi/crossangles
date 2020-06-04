@@ -15,19 +15,18 @@ if [[ $lambdas =~ contact|image ]]; then
   )
 fi
 
-outputs="$(./tf.sh output -json)"
-
-environment="$(echo "$outputs" | jq -r .environment.value)"
+environment="$(./tf.sh output environment)"
 code_bucket="crossangles-lambda-code"
 
 for lambda in $lambdas
 do
   version="$(./version.sh $lambda)"
-  last_version="$(echo "$outputs" | jq -r .${lambda}_version.value)"
-  if [[ $version == $last_version && -z ${FORCE_UPDATE:-} ]]; then
+  dest="s3://$code_bucket/$environment/$lambda/$version"
+  existing_files=$(aws s3 ls "$dest/")
+  if [[ -n $existing_files && -z ${FORCE_UPDATE:-} ]]; then
     echo "No changes to $lambda, skipping build and deploy."
     echo "Set the FORCE_UPDATE env variable to force an update."
-    echo "Version is: $version"
+    echo "Already built version is: $version"
     echo
     continue
   fi
@@ -43,7 +42,6 @@ do
     echo "Building $lambda lambda"
     npm run build
 
-    dest="s3://$code_bucket/$environment/$lambda/$version"
     echo "Copying to $dest/$lambda.zip"
     aws s3 cp "build/$lambda.zip" "$dest/"
   )
