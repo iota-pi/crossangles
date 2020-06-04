@@ -28,7 +28,7 @@ export REACT_APP_SAVE_IMAGE_ENDPOINT=$image_endpoint
 export REACT_APP_DATA_ROOT_URI=$data_uri
 
 cd app
-npm install
+npm install --production
 for campus in $@
 do
   REACT_APP_CAMPUS=$campus npm run build

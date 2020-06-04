@@ -38,7 +38,7 @@ do
   (
     cd $lambda
     echo "Installing dependencies"
-    2>&1 npm install >/dev/null
+    npm install >/dev/null 2>&1
     echo "Building $lambda lambda"
     npm run build
 
