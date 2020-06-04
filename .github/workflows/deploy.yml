@@ -49,10 +49,8 @@ jobs:
     - name: Build and Deploy Lambdas
       run: ./deploy-lambdas.sh
 
-    # - name: Build and Deploy for UNSW
-    #   run: |
-    #     ./build-app.sh unsw
-    #     ./deploy-app.sh
+    - name: Build and Deploy App for UNSW
+      run: ./deploy-app.sh unsw
 
     - name: Terraform Apply
       run: ./tf.sh apply -auto-approve
