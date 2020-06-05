@@ -16,7 +16,7 @@ import {
 } from '../state';
 import { GeneticSearchOptionalConfig } from './GeneticSearch';
 import SessionManager from '../components/Timetable/SessionManager';
-import { setNotice, setTimetable, setSuggestionScore, clearNotice, toggleOption } from '../actions';
+import { setNotice, setTimetable, setSuggestionScore, clearNotice, toggleOption, setUnplacedCount } from '../actions';
 
 import Button from '@material-ui/core/Button';
 
@@ -110,6 +110,7 @@ const notifyUnplaced = async (
 ) => {
   const { dispatch, selection } = args;
   const count = unplaced.length;
+  dispatch(setUnplacedCount(count));
   if (count > 0) {
     const es = count !== 1 ? 'es' : '';
     const messages = [

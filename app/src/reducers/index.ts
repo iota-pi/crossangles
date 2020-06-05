@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { meta } from './meta';
 import { courses, chosen, custom, additional } from './courses';
 import { events, options, hiddenEvents } from './commitments';
-import { timetables, suggestionScore } from './timetables';
+import { timetables, suggestionScore, unplacedCount } from './timetables';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
@@ -33,6 +33,7 @@ const basicReducer = combineReducers<RootState>({
   options,
   timetables,
   suggestionScore,
+  unplacedCount,
   colours,
   webStreams,
   notice,
