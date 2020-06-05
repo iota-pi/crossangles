@@ -34,7 +34,7 @@ export interface TimetableState {
 }
 
 export interface TimetableHistoryState extends TimetableState {
-  timetable: SessionManagerData
+  timetable: SessionManagerData,
 }
 
 export interface RootState extends TimetableState {
@@ -42,6 +42,7 @@ export interface RootState extends TimetableState {
   history: HistoryData,
   notice: Notice | null,
   suggestionScore: number | null,
+  unplacedCount: number,
   hiddenEvents: CourseId[],
   timetables: Timetables,
   darkMode: boolean,
@@ -89,6 +90,7 @@ export const initialState: RootState = {
   history,
   notice: null,
   suggestionScore: null,
+  unplacedCount: 0,
   hiddenEvents: [],
   darkMode: false,
   twentyFourHours: false,

@@ -7,7 +7,9 @@ import Undo from '@material-ui/icons/Undo';
 import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 import Event from '@material-ui/icons/Event';
-import { HistoryData } from '../state';
+import Warning from '@material-ui/icons/Warning';
+import { HistoryData, RootState } from '../state';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   primary: {
@@ -24,6 +26,18 @@ const useStyles = makeStyles(theme => ({
   },
   spacer: {
     flexGrow: 1,
+  },
+  unplacedCountContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: theme.palette.warning.main,
+    marginRight: theme.spacing(1),
+  },
+  unplacedCount: {
+    ...theme.typography.body1,
+    fontWeight: 500,
+    paddingRight: theme.spacing(0.25),
   },
 }));
 
@@ -57,6 +71,7 @@ export const TimetableControls = ({
       updateClass = classes.red;
     }
   }
+  const unplacedCount = useSelector((state: RootState) => state.unplacedCount);
 
   return (
     <Toolbar>
@@ -104,6 +119,15 @@ export const TimetableControls = ({
       )}
 
       <div className={classes.spacer}></div>
+
+      {unplacedCount > 0 && (
+        <Tooltip title={`${unplacedCount} full classes`}>
+          <div className={classes.unplacedCountContainer}>
+            <span className={classes.unplacedCount}>{unplacedCount}</span>
+            <Warning />
+          </div>
+        </Tooltip>
+      )}
 
       {onCreateCustom && (
         <Tooltip title="Create Personal Event">

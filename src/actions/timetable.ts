@@ -19,6 +19,14 @@ export interface SuggestionAction extends Action {
 }
 
 
+export const UPDATE_UNPLACED_COUNT = 'UPDATE_UNPLACED_COUNT';
+
+export interface UnplacedCountAction extends Action {
+  type: typeof UPDATE_UNPLACED_COUNT,
+  count: number,
+}
+
+
 export function setTimetable (newTimetable: SessionManagerData, meta: YearAndTerm): SessionManagerAction {
   return {
     type: UPDATE_SESSION_MANAGER,
@@ -31,5 +39,12 @@ export function setSuggestionScore (score: number | null): SuggestionAction {
   return {
     type: UPDATE_SUGGESTED_TIMETABLE,
     score,
+  };
+}
+
+export function setUnplacedCount (count: number): UnplacedCountAction {
+  return {
+    type: UPDATE_UNPLACED_COUNT,
+    count,
   };
 }

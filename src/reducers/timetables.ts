@@ -1,4 +1,4 @@
-import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions } from '../actions';
+import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT } from '../actions';
 import { initialState, Timetables } from '../state';
 
 export function timetables (
@@ -17,11 +17,22 @@ export function timetables (
 };
 
 export function suggestionScore (
-  state: number | null = initialState.suggestionScore,
+  state: number | null | undefined = initialState.suggestionScore,
   action: AllActions,
 ): number | null {
   if (action.type === UPDATE_SUGGESTED_TIMETABLE) {
     return action.score;
+  }
+
+  return state;
+}
+
+export function unplacedCount (
+  state: number | undefined = initialState.unplacedCount,
+  action: AllActions,
+): number {
+  if (action.type === UPDATE_UNPLACED_COUNT) {
+    return action.count;
   }
 
   return state;
