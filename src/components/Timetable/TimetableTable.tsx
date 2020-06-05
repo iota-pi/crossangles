@@ -239,7 +239,7 @@ class TimetableTable extends PureComponent<Props, State> {
   private getCourses (timetable: SessionManager) {
     const sessions = timetable.orderSessions;
     const courses = sessions.map(s => s.course);
-    return courses;
+    return courses.filter((c, i) => courses.indexOf(c) === i);
   }
 
   private updateHours () {
