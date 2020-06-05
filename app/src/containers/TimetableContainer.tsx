@@ -67,17 +67,18 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   render () {
+    const timetableIsEmpty = this.props.timetableData.order.length === 0;
     return (
       <div className={this.props.className}>
         <TimetableControls
           history={this.props.timetableHistory}
-          timetableIsEmpty={this.props.timetableData.order.length === 0}
+          improvementScore={this.suggestionImprovementScore}
+          isUpdating={this.state.isUpdating}
+          timetableIsEmpty={timetableIsEmpty}
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
           onCreateCustom={this.handleClickCreateCustom}
-          improvementScore={this.suggestionImprovementScore}
-          isUpdating={this.state.isUpdating}
         />
 
         <CreateCustom
