@@ -41,5 +41,10 @@ export const getWebStream = (course: CourseData): StreamData | null => {
   return null;
 }
 
+export const getComponents = (course: CourseData) => {
+  const components = course.streams.map(s => s.component);
+  return components.filter((c, i) => components.indexOf(c) === i);
+}
+
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 export const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);
