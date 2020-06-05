@@ -1,4 +1,4 @@
-import { getCourseId, hasWebStream, CourseData, getWebStream } from './Course';
+import { getCourseId, hasWebStream, CourseData, getWebStream, getComponents } from './Course';
 import { StreamData } from './Stream';
 
 const code = 'TPBC1234';
@@ -64,5 +64,27 @@ describe('course state util functions', () => {
     const result = hasWebStream(course);
     expect(result).toBe(false);
     expect(getWebStream(course)).toBe(null);
+  })
+
+  it('doesn\'t give duplicate components', () => {
+    const streams: StreamData[] = [
+      { component: 'LEC', enrols: [ 0,   0], times: [] },
+      { component: 'LEC', enrols: [10,  10], times: [], full: true },
+      { component: 'LEC', enrols: [ 1, 100], times: [], full: false, web: true },
+    ];
+    const course: CourseData = { code, name, streams };
+    const result = getComponents(course);
+    expect(result).toEqual(['LEC']);
+  })
+
+  it('gives correct components', () => {
+    const streams: StreamData[] = [
+      { component: 'OTH', enrols: [ 0,   0], times: [] },
+      { component: 'TUT', enrols: [10,  10], times: [], full: true },
+      { component: 'LEC', enrols: [ 1, 100], times: [], full: false, web: true },
+    ];
+    const course: CourseData = { code, name, streams };
+    const result = getComponents(course);
+    expect(result).toEqual(['OTH', 'TUT', 'LEC']);
   })
 })
