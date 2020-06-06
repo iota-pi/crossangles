@@ -60,8 +60,13 @@ const noStateChange = (current: TimetableHistoryState, next: TimetableHistorySta
   if (current.webStreams !== next.webStreams) {
     return false;
   }
-  if (JSON.stringify(current.timetable.map) !== JSON.stringify(next.timetable.map)) {
-    return false;
+  if (current.timetable !== next.timetable) {
+    if (current.timetable.map.length !== next.timetable.map.length) {
+      return false;
+    }
+    if (JSON.stringify(current.timetable.map) !== JSON.stringify(next.timetable.map)) {
+      return false;
+    }
   }
 
   return true;

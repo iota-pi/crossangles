@@ -3,6 +3,7 @@ import { initialState, TimetableHistoryState } from '.';
 import { CourseMap } from './Course';
 import { undo, redo, push, HistoryData } from './StateHistory';
 import SessionManager from '../components/Timetable/SessionManager';
+import { getSessions } from './Stream';
 
 const courses: CourseMap = {
   a: { code: 'a', name: '', streams: [{ component: 'e', enrols: [0, 0], times: [] }], isAdditional: true },
@@ -171,13 +172,35 @@ describe('test history utilities', () => {
     doPushTest(nextState);
   })
 
-  test('push history changes when colours change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
-    doPushTest(nextState);
+  test('push history doesn\'t change when map doesn\'t change', () => {
+    const nextState: TimetableHistoryState = { ...firstState, timetable: { ...firstState.timetable, map: [] } };
+    const result = push(history, nextState);
+    expect(result).toBe(history);
+    expect(result).toEqual(history);
   })
 
-  test('push history changes when colours change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
+  test('push history changes when map change', () => {
+    const course = courses.a;
+    const nextState: TimetableHistoryState = {
+      ...firstState,
+      timetable: {
+        ...firstState.timetable,
+        map: [
+          [
+            course.code,
+            {
+              session: getSessions(course, course.streams[0])[0],
+              offset: { x: 0, y: 0 },
+              clashDepth: 0,
+              isDragging: false,
+              isSnapped: false,
+              isRaised: false,
+              touched: false,
+            },
+          ],
+        ],
+      },
+    };
     doPushTest(nextState);
   })
 
