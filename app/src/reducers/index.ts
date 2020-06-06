@@ -68,7 +68,7 @@ export const getTimetableState = (state: NoHistoryState): TimetableHistoryState 
   };
 }
 
-function getNextState(history: HistoryData, nextTimetable: SessionManagerData, nextState: RootState): RootState {
+function getStateFromHistory(history: HistoryData, nextTimetable: SessionManagerData, nextState: RootState): RootState {
   const { timetable, ...otherHistory } = history.present;
   timetable.version = nextTimetable.version + 1;
   return {
@@ -85,10 +85,10 @@ const historyReducer = (nextState: RootState, action: AllActions): RootState => 
 
   if (action.type === UNDO) {
     history = undo(history);
-    return getNextState(history, nextTimetable, nextState);
+    return getStateFromHistory(history, nextTimetable, nextState);
   } else if (action.type === REDO) {
     history = redo(history);
-    return getNextState(history, nextTimetable, nextState);
+    return getStateFromHistory(history, nextTimetable, nextState);
   } else if (action.type === UPDATE_SESSION_MANAGER) {
     history = push(history, getTimetableState(nextState));
     return {
