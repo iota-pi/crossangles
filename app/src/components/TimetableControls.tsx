@@ -121,7 +121,7 @@ export const TimetableControls = ({
       <div className={classes.spacer}></div>
 
       {unplacedCount > 0 && (
-        <Tooltip title={`${unplacedCount} full classes`}>
+        <Tooltip title={`${unplacedCount} full classes are not visible`}>
           <div className={classes.unplacedCountContainer}>
             <span className={classes.unplacedCount}>{unplacedCount}</span>
             <Warning />
