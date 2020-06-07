@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0,
   },
   externalLinkIcon: {
+    marginBottom: -2,
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     color: theme.palette.text.disabled,
