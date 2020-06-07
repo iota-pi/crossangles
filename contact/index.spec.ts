@@ -25,6 +25,24 @@ describe('HTTP methods', () => {
   })
 
   it.each`
+    key
+    ${'origin'}
+    ${'Origin'}
+    ${'ORIGIN'}
+  `('handles multiple header cases "$origin"', async ({ key }) => {
+    const origin = 'https://crossangles.app';
+    const event: APIGatewayProxyEvent = {
+      ...fakeEvent,
+      httpMethod: 'OPTIONS',
+      body: null,
+      headers: { [key]: origin },
+    };
+    const result = await handler(event);
+    expect(result.statusCode).toBe(200);
+    expect(result.headers!['Access-Control-Allow-Origin']).toBe(origin);
+  })
+
+  it.each`
     httpMethod ${'GET'} ${'PUT'} ${'DELETE'} ${'HEAD'} ${'PATCH'} ${'CONNECT'} ${'TRACE'}
   `('gives error for $httpMethod requests', async ({ httpMethod }) => {
     const event: APIGatewayProxyEvent = {

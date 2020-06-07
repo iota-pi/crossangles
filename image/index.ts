@@ -1,9 +1,11 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { LambdaResponder } from '../lambda-shared/LambdaResponder';
+import { standardiseHeaders } from '../lambda-shared/util';
 import { screenshot } from './screenshot';
 import { saveForDebug } from './dumpDebugData';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  standardiseHeaders(event);
   const responder = new LambdaResponder(event);
   const method = event.httpMethod.toUpperCase();
 

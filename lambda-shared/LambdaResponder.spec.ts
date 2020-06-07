@@ -37,7 +37,6 @@ describe('LambdaResponder', () => {
     const event = { ...fakeEvent, headers: { origin } };
     const r = new LambdaResponder(event);
     const result = r.getResponse({});
-    // expect(result.statusCode).toBeGreaterThanOrEqual(400);
     expect(Object.keys(result.headers!)).not.toContain('Access-Control-Allow-Origin');
   })
 
