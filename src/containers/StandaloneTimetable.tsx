@@ -35,9 +35,10 @@ export const StandaloneTimetable = () => {
     <div>
       <CssBaseline />
       <TimetableTable
+        timetable={timetable}
         options={queryData.options}
         colours={queryData.colours}
-        timetable={timetable}
+        darkMode={queryData.darkMode}
         minimalHours
         isStandalone
       />
