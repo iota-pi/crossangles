@@ -236,25 +236,25 @@ context.skip('Timetable controls', () => {
     cy.dataCy('custom-event-submit')
       .click()
 
-    // Add Growth Groups
-    cy.dataCy('event-CBS~Growth Groups')
+    // Add The Bible Talks
+    cy.dataCy('event-CBS~The Bible Talks')
       .click()
 
     // Should not be able to redo
     cy.dataCy('redo-button')
       .should('be.disabled')
 
-    // Undo adding Growth Groups
+    // Undo adding The Bible Talks
     cy.dataCy('timetable-session')
-      .should('contain.text', 'Growth Groups')
-    cy.dataCy('event-CBS~Growth Groups')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
     cy.dataCy('undo-button')
       .click()
     cy.dataCy('timetable-session')
-      .should('not.contain.text', 'Growth Groups')
-    cy.dataCy('event-CBS~Growth Groups')
+      .should('not.contain.text', 'The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('not.be.checked')
 
@@ -264,8 +264,8 @@ context.skip('Timetable controls', () => {
     cy.dataCy('redo-button')
       .click()
     cy.dataCy('timetable-session')
-      .should('contain.text', 'Growth Groups')
-    cy.dataCy('event-CBS~Growth Groups')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
 
@@ -308,8 +308,8 @@ context.skip('Timetable controls', () => {
     cy.dataCy('undo-button')
       .click()
     cy.dataCy('timetable-session')
-      .should('not.contain.text', 'Growth Groups')
-    cy.dataCy('event-CBS~Growth Groups')
+      .should('not.contain.text', 'The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('not.be.checked')
 
@@ -334,8 +334,8 @@ context.skip('Timetable controls', () => {
     cy.get('[data-session^="custom_"][data-session$="T8-10"]')
       .should('exist')
     cy.dataCy('timetable-session')
-      .should('contain.text', 'Growth Groups')
-    cy.dataCy('event-CBS~Growth Groups')
+      .should('contain.text', 'The Bible Talks')
+    cy.dataCy('event-CBS~The Bible Talks')
       .find('input[type=checkbox]')
       .should('be.checked')
     cy.get(`[data-session^="${TEST_CODE}"]`)
@@ -344,11 +344,11 @@ context.skip('Timetable controls', () => {
 
   it('can undo after dragging', () => {
     // Add TBT
-    cy.dataCy('event-CBS~Growth Groups')
+    cy.dataCy('event-CBS~The Bible Talks')
       .click()
 
     // Move the Bible talk
-    cy.get('[data-session="CBS-Growth Groups-T12-13"]').as('session')
+    cy.get('[data-session="CBS-The Bible Talks-T12-13"]').as('session')
       .should('exist')
     cy.get('@session')
       .dragTo('W12')
@@ -359,9 +359,9 @@ context.skip('Timetable controls', () => {
 
     // Undo and check position
     cy.dataCy('undo-button').click()
-    cy.get('[data-session="CBS-Growth Groups-H12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-H12-13"]')
       .should('not.exist')
-    cy.get('[data-session="CBS-Growth Groups-W12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-W12-13"]')
       .should('exist')
 
     // Should be able to redo
@@ -376,18 +376,18 @@ context.skip('Timetable controls', () => {
 
     // Undo and check position
     cy.dataCy('undo-button').click()
-    cy.get('[data-session="CBS-Growth Groups-T13-14"]')
+    cy.get('[data-session="CBS-The Bible Talks-T13-14"]')
       .should('not.exist')
-    cy.get('[data-session="CBS-Growth Groups-W12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-W12-13"]')
       .should('exist')
     cy.dataCy('undo-button').click()
-    cy.get('[data-session="CBS-Growth Groups-W12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-W12-13"]')
       .should('not.exist')
-    cy.get('[data-session="CBS-Growth Groups-T12-13"]')
+    cy.get('[data-session="CBS-The Bible Talks-T12-13"]')
       .should('exist')
 
     cy.dataCy('undo-button').click()
-    cy.get('[data-session^="CBS-Growth Groups-"]')
+    cy.get('[data-session^="CBS-The Bible Talks-"]')
       .should('not.exist')
   })
 })
