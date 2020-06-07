@@ -1,3 +1,7 @@
 #!/usr/bin/env bash
 set -e
-git log -1 --pretty="tformat:%at-%H" $@
+paths=$@
+if [[ $paths =~ contact|image ]]; then
+  paths+=" lambda-shared"
+fi
+git log -1 --pretty="tformat:%at-%H" $paths
