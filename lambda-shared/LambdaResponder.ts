@@ -17,6 +17,7 @@ export class LambdaResponder {
   shouldLog = process.env.NODE_ENV !== 'test';
 
   constructor (event: APIGatewayProxyEvent) {
+    console.log(event.headers);
     this.origin = event.headers.origin;
     this.originIsAllowed = this.checkOrigin(this.origin);
   }
