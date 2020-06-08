@@ -32,6 +32,9 @@ const useStyles = makeStyles(theme => ({
       boxShadow: theme.shadows[8],
     },
   },
+  disableTransitions: {
+    transition: 'none !important',
+  },
   background: {
     transition: theme.transitions.create(['background-color']),
     position: 'absolute',
@@ -75,6 +78,7 @@ export interface Props {
   isSnapped: boolean,
   clashDepth: number,
   options: Options,
+  disableTransitions?: boolean,
   onDrag: (session: LinkedSession) => false | void,
   onMove: (session: LinkedSession, delta: Position) => void,
   onDrop: (session: LinkedSession) => void,
@@ -90,6 +94,7 @@ const TimetableSession: React.FC<Props> = props => {
     props.isDragging ? classes.dragging : '',
     props.isSnapped ? classes.snapped : '',
     props.clashDepth > 0 ? classes.hovering : '',
+    props.disableTransitions ? classes.disableTransitions : '',
   ].join(' ');
   const { dimensions, options, position, session } = props;
   const { course, stream, day, start, end } = session;
