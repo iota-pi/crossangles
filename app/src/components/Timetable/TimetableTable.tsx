@@ -55,6 +55,7 @@ export interface Props extends WithStyles<typeof styles> {
   minimalHours?: boolean,
   isStandalone?: boolean,
   isUpdating?: boolean,
+  disableTransitions?: boolean,
   twentyFourHours?: boolean,
   onToggleTwentyFourHours?: () => void,
 }
@@ -113,6 +114,7 @@ class TimetableTable extends PureComponent<Props, State> {
               isSnapped={placement.isSnapped}
               clashDepth={placement.clashDepth}
               options={this.props.options}
+              disableTransitions={this.props.disableTransitions}
               onDrag={this.handleDrag}
               onMove={this.handleMove}
               onDrop={this.handleDrop}
