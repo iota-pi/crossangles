@@ -2,7 +2,6 @@ import React, { RefObject } from 'react';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_MIN_WIDTH } from './timetableUtil';
-import { HourSpan } from './getHours';
 import IconButton from '@material-ui/core/IconButton';
 import Schedule from '@material-ui/icons/Schedule';
 
@@ -93,7 +92,8 @@ const daysToLetters: {[key: string]: string} = {
 export interface Props {
   disabled: boolean,
   timetableRef: RefObject<HTMLDivElement>,
-  hours: HourSpan,
+  start: number,
+  end: number,
   twentyFourHours?: boolean,
   onToggleTwentyFourHours?: () => void,
 }
@@ -101,16 +101,17 @@ export interface Props {
 export const TimetableGrid: React.FC<Props> = ({
   disabled,
   timetableRef,
-  hours,
+  start,
+  end,
   twentyFourHours = false,
   onToggleTwentyFourHours,
 }) => {
   const classes = useStyles();
   const hoursArray = React.useMemo(
     () => {
-      const duration = hours.end - hours.start;
+      const duration = end - start;
       return new Array(duration).fill(0).map((_, i) => {
-        let hour = hours.start + i;
+        let hour = start + i;
         if (twentyFourHours) {
           return [hour.toString().padStart(2, '0'), ':00'];
         } else {
@@ -120,9 +121,8 @@ export const TimetableGrid: React.FC<Props> = ({
         }
       });
     },
-    [hours, twentyFourHours],
+    [start, end, twentyFourHours],
   );
-
 
   return (
     <div className={classes.grid} ref={timetableRef}>
