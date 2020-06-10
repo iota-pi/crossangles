@@ -17,6 +17,15 @@ export const getCourse = (): CourseData => ({
       ],
     },
     {
+      component: 'OTH',
+      enrols: [10, 50],
+      times: [
+        { time: 'T9', location: 'Morder', canClash: true },
+        { time: 'F9', location: 'Helm\'s Deep', weeks: '1,3,7-9' },
+        { time: 'W12', location: 'Tol Brandir', weeks: '1,3,7-9' },
+      ],
+    },
+    {
       component: 'TUT',
       enrols: [5, 10],
       times: [
@@ -51,8 +60,8 @@ export const getSessionPlacement = (streamIndex = 0, sessionIndex = 0): SessionP
 export const getSessionManager = () => {
   const manager = new SessionManager();
   const p1 = getSessionPlacement(0);
-  const p2 = getSessionPlacement(1);
-  const p3 = getSessionPlacement(2);
+  const p2 = getSessionPlacement(2);
+  const p3 = getSessionPlacement(3);
   manager.set(p1.session.id, p1);
   manager.set(p2.session.id, p2);
   manager.set(p3.session.id, p3);

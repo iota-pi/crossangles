@@ -6,6 +6,7 @@ export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>
 export interface SessionManagerData {
   map: SessionManagerEntriesData,
   order: SessionId[],
+  renderOrder: SessionId[],
   version: number,
   score: number,
 }
@@ -13,6 +14,7 @@ export interface SessionManagerData {
 export const getEmptySessionManagerData = (): SessionManagerData => ({
   map: [],
   order: [],
+  renderOrder: [],
   score: 0,
   version: 0,
 });

@@ -1,6 +1,6 @@
 import SessionManager from './SessionManager';
 import SessionPlacement from './SessionPlacement';
-import { getSessionPlacement, getDimensions } from '../../test_util';
+import { getSessionPlacement, getDimensions, getLinkedStream } from '../../test_util';
 import { LinkedStream, LinkedSession } from '../../state';
 
 describe('SessionManager basic functionality', () => {
@@ -78,10 +78,10 @@ describe('SessionManager basic functionality', () => {
     s.set('o', getSessionPlacement(0));
     s.set('r', getSessionPlacement(1));
     s.set('d', getSessionPlacement(2));
-    expect(s.getOrder('o')).toBe(0);
-    expect(s.getOrder('r')).toBe(1);
-    expect(s.getOrder('d')).toBe(2);
-    expect(s.getOrder('-')).toBe(-1);
+    expect(s.getRenderOrder('o')).toBe(0);
+    expect(s.getRenderOrder('r')).toBe(1);
+    expect(s.getRenderOrder('d')).toBe(2);
+    expect(s.getRenderOrder('-')).toBe(-1);
   })
 
   test('getSession doesn\'t affect the version', () => {
@@ -116,7 +116,7 @@ describe('SessionManager basic functionality', () => {
     s.set('b', placements[1]);
     s.set('c', placements[2]);
     const v = s.version;
-    expect(s.orderSessions).toEqual(placements.map(p => p.session));
+    expect(s.renderOrderSessions).toEqual(placements.map(p => p.session));
     expect(s.version).toBe(v);
   })
 
@@ -131,13 +131,14 @@ describe('SessionManager basic functionality', () => {
     s.remove('r');
     expect(s.version).toBe(v + 1);
     expect(cb).toHaveBeenCalledTimes(0);
-    expect(s.getOrder('o')).toBe(0);
-    expect(s.getOrder('d')).toBe(1);
-    expect(s.getOrder('r')).toBe(-1);
+    expect(s.getRenderOrder('o')).toBe(0);
+    expect(s.getRenderOrder('d')).toBe(1);
+    expect(s.getRenderOrder('r')).toBe(-1);
     expect(s.order).toEqual(['o', 'd']);
+    expect(s.renderOrder).toEqual(['o', 'd']);
   })
 
-  test('remove doesn\'t if session doesn\'t exist', () => {
+  test('remove does nothing if session doesn\'t exist', () => {
     const s = new SessionManager();
     const v = s.version;
     s.remove('a');
@@ -157,8 +158,8 @@ describe('SessionManager basic functionality', () => {
 
   test('can drag a session', () => {
     const s = new SessionManager();
-    let p1 = getSessionPlacement(1);
-    let p2 = getSessionPlacement(2);
+    let p1 = getSessionPlacement(2);
+    let p2 = getSessionPlacement(3);
     p1.drag = jest.fn();
     p2.drag = jest.fn();
     s.set(p1.session.id, p1);
@@ -210,8 +211,8 @@ describe('SessionManager basic functionality', () => {
   test('can drop a session', () => {
     const s = new SessionManager();
     const updateScore = jest.spyOn(s as any, 'updateScore').mockImplementation();
-    const p1 = getSessionPlacement(1);
-    const p2 = getSessionPlacement(2);
+    const p1 = getSessionPlacement(2);
+    const p2 = getSessionPlacement(3);
     p1.drop = jest.fn();
     p2.drop = jest.fn();
     s.set(p1.session.id, p1);
@@ -309,6 +310,57 @@ describe('SessionManager basic functionality', () => {
     expect(p.displace).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
   })
+
+  it('can replace a stream', () => {
+    const s = new SessionManager();
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(2, 0);
+    const p3 = getSessionPlacement(0, 2);
+    const p4 = getSessionPlacement(3, 0);
+    const p5 = getSessionPlacement(0, 1);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
+    s.set(p5.session.id, p5);
+    s.replaceStream(p1.session.id, getLinkedStream(1).sessions);
+    expect(s.renderOrder).toEqual([
+      getSessionPlacement(1, 0), p2, getSessionPlacement(1, 2), p4, getSessionPlacement(1, 1),
+    ].map(p => p.session.id));
+    expect(s.order).toEqual([
+      p2, p4, getSessionPlacement(1, 0), getSessionPlacement(1, 1), getSessionPlacement(1, 2),
+    ].map(p => p.session.id));
+  })
+
+  it('can replace a larger stream', () => {
+    const s = new SessionManager();
+    const p1 = getSessionPlacement(2, 0);
+    const p2 = getSessionPlacement(3, 0);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.replaceStream(p1.session.id, getLinkedStream(1).sessions);
+    expect(s.renderOrder).toEqual([
+      getSessionPlacement(1, 0), p2, getSessionPlacement(1, 1), getSessionPlacement(1, 2),
+    ].map(p => p.session.id));
+    expect(s.order).toEqual([
+      p2, getSessionPlacement(1, 0), getSessionPlacement(1, 1), getSessionPlacement(1, 2),
+    ].map(p => p.session.id));
+  })
+
+  it('can replace a smaller stream', () => {
+    const s = new SessionManager();
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(0, 1);
+    const p3 = getSessionPlacement(0, 2);
+    const p4 = getSessionPlacement(3, 0);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
+    s.replaceStream(p1.session.id, getLinkedStream(2).sessions);
+    expect(s.renderOrder).toEqual([getSessionPlacement(2), p4].map(p => p.session.id));
+    expect(s.order).toEqual([p4, getSessionPlacement(2)].map(p => p.session.id));
+  })
 })
 
 
@@ -329,7 +381,9 @@ describe('bumping sessions and streams', () => {
 
     s.bumpStream(p3.session.id);
 
+    const initialOrder = [p1, p2, p3, p4, p5];
     const expectedOrder = [p2, p4, p1, p5, p3];
+    expect(s.renderOrder).toEqual(initialOrder.map(p => p.session.id));
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
     expect(s.version).toBe(v + 1);
   })
@@ -347,7 +401,9 @@ describe('bumping sessions and streams', () => {
     const o = s.order;
     s.bumpSession(p1.session.id);
 
+    const initialOrder = [p1, p2, p3];
     const expectedOrder = [p2, p3, p1];
+    expect(s.renderOrder).toEqual(initialOrder.map(p => p.session.id));
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
     expect(s.order).not.toBe(o);
     expect(s.version).toBe(v + 1);
@@ -364,7 +420,9 @@ describe('bumping sessions and streams', () => {
 
     s.bumpSession(p2.session.id);
 
+    const initialOrder = [p1, p2, p3];
     const expectedOrder = [p1, p3, p2];
+    expect(s.renderOrder).toEqual(initialOrder.map(p => p.session.id));
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
   })
 
@@ -381,6 +439,7 @@ describe('bumping sessions and streams', () => {
 
     const expectedOrder = [p1, p2, p3];
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
+    expect(s.order).toEqual(s.renderOrder);
   })
 
   test('bumping non-existent session throws', () => {
@@ -413,6 +472,7 @@ describe('constructor, data, and from', () => {
     s1.set(p3.session.id, p3);
 
     expect(s2['_order']).toEqual([p1.session.id, p2.session.id]);
+    expect(s2['_renderOrder']).toEqual([p1.session.id, p2.session.id]);
     expect(Array.from(s2['map'].entries())).toEqual(
       [[p1.session.id, p1], [p2.session.id, p2]]
     );
@@ -423,20 +483,20 @@ describe('constructor, data, and from', () => {
 
 describe('snapSessionTo', () => {
   const oldSessions = [
-    { id: 'a-0' },
-    { id: 'b-0' },
+    { id: 'a-0', index: 0 },
+    { id: 'a-1', index: 1 },
   ] as LinkedSession[];
   oldSessions[0].stream = { sessions: oldSessions, id: 'a' } as LinkedStream;
   const newSessions = [
-    { id: 'c-0', stream: { id: 'c' } },
-    { id: 'd-0' },
+    { id: 'c-0', index: 0, stream: { id: 'c' } },
+    { id: 'd-0', index: 0 },
   ] as LinkedSession[];
   let s: SessionManager;
 
   beforeEach(() => {
     s = new SessionManager();
     s.set('a-0', new SessionPlacement(oldSessions[0]));
-    s.set('b-0', new SessionPlacement(oldSessions[1]));
+    s.set('a-1', new SessionPlacement(oldSessions[1]));
   })
 
   test('increments version', () => {
@@ -456,7 +516,7 @@ describe('snapSessionTo', () => {
     );
 
     expect(s.has('a-0')).toBe(false);
-    expect(s.has('b-0')).toBe(false);
+    expect(s.has('a-1')).toBe(false);
     expect(s.has('c-0')).toBe(true);
     expect(s.has('d-0')).toBe(true);
   })
@@ -478,7 +538,7 @@ describe('snapSessionTo', () => {
     );
 
     expect(s.get('a-0').touched).toBe(false);
-    expect(s.get('b-0').touched).toBe(false);
+    expect(s.get('a-1').touched).toBe(false);
   })
 
   test('new sessions are snapped', () => {
@@ -486,8 +546,8 @@ describe('snapSessionTo', () => {
     const d = new SessionPlacement(oldSessions[1]);
     c['_offset'] = { x: 10, y: 10 };
     d['_offset'] = { x: 20, y: 0 };
-    s.set('c-0', c);
-    s.set('d-0', d);
+    s.set(c.session.id, c);
+    s.set(d.session.id, d);
 
     s['snapSessionTo'](
       'a-0',
@@ -496,6 +556,23 @@ describe('snapSessionTo', () => {
 
     expect(s.get('c-0')['_offset']).toEqual({ x: 0, y: 0 });
     expect(s.get('d-0')['_offset']).toEqual({ x: 0, y: 0 });
+  })
+
+  test('sessions are snapped even if stream is the same', () => {
+    const p1 = new SessionPlacement(oldSessions[0]);
+    const p2 = new SessionPlacement(oldSessions[1]);
+    p1['_offset'] = { x: 10, y: 10 };
+    p2['_offset'] = { x: 20, y: 0 };
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+
+    s['snapSessionTo'](
+      p1.session.id,
+      oldSessions,
+    );
+
+    expect(s.get(p1.session.id)['_offset']).toEqual({ x: 0, y: 0 });
+    expect(s.get(p2.session.id)['_offset']).toEqual({ x: 0, y: 0 });
   })
 })
 
