@@ -70,6 +70,17 @@ export function getCourseColour (course: CourseData, colourMap: ColourMap, darkM
 }
 
 function TimetableTable (props: Props) {
+  const sessions = props.timetable.renderOrderSessions;
+  const hours = React.useMemo(() => {
+    if (props.minimalHours) {
+      // Only consider times for currently placed sessions
+      return getHours(sessions);
+    }
+    const courses = sessions.map(s => s.course).filter((c, i, arr) => arr.indexOf(c) === i);
+    const streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
+    return getHours(streams.flatMap(s => s.sessions));
+  }, [props.minimalHours, sessions]);
+
   const timetableRef = React.useRef<HTMLDivElement>(null);
   const updateDimensions = () => {
     const el = timetableRef.current;
@@ -86,7 +97,7 @@ function TimetableTable (props: Props) {
   React.useEffect(() => {
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
-  }, [timetableRef]);
+  }, [timetableRef, hours]);
 
   const [version, setVersion] = React.useState(false);
   const forceUpdate = () => {
@@ -96,19 +107,7 @@ function TimetableTable (props: Props) {
 
   useEffect(forceUpdate, [props.timetable.version]);
 
-
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
-
-  const sessions = props.timetable.orderSessions;
-  const hours = React.useMemo(() => {
-    if (props.minimalHours) {
-      // Only consider times for currently placed sessions
-      return getHours(sessions);
-    }
-    const courses = sessions.map(s => s.course).filter((c, i, arr) => arr.indexOf(c) === i);
-    const streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
-    return getHours(streams.flatMap(s => s.sessions));
-  }, [props.minimalHours, sessions]);
 
   const dropzones = React.useMemo<DropzonePlacement[]>(() => {
     if (!dragging) { return []; }
@@ -200,7 +199,7 @@ function TimetableTable (props: Props) {
 
   const classes = useStyles();
   const rootClasses = [classes.root];
-  const disabled = props.timetable.order.length === 0 && !props.isStandalone;
+  const disabled = props.timetable.renderOrder.length === 0 && !props.isStandalone;
   if (disabled) {
     rootClasses.push(classes.faded);
   }
@@ -211,7 +210,7 @@ function TimetableTable (props: Props) {
       data-cy="timetable"
       id="timetable-display"
     >
-      {dimensions.width ? props.timetable.order.map(sid => {
+      {dimensions.width ? props.timetable.renderOrder.map(sid => {
         const placement = props.timetable.getMaybe(sid);
         if (!placement) return null;
         const session = placement.session;

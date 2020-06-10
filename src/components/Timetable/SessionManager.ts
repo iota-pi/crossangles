@@ -12,6 +12,7 @@ export * from './SessionManagerTypes';
 
 export class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
+  private _renderOrder: SessionId[];
   private _order: SessionId[];
   private _version: number;
   private _score: number;
@@ -22,6 +23,7 @@ export class SessionManager {
     if (base) {
       this.map = new Map(base.map);
       this._order = base._order.slice();
+      this._renderOrder = base._renderOrder.slice();
       this._version = base._version;
       this._score = base._score;
       this._changing = 0;
@@ -31,6 +33,7 @@ export class SessionManager {
       this._version = 0;
       this._score = 0;
       this._changing = 0;
+      this._renderOrder = [];
     }
   }
 
@@ -41,7 +44,8 @@ export class SessionManager {
     });
     return {
       map: mapData,
-      order: this.order.slice(),
+      order: this._order.slice(),
+      renderOrder: this._renderOrder.slice(),
       version: this.version,
       score: this._score,
     };
@@ -61,6 +65,7 @@ export class SessionManager {
     const sm = new SessionManager();
     sm.map = new Map(mapData);
     sm._order = data.order.filter(sid => sm.map.has(sid));
+    sm._renderOrder = data.renderOrder.filter(sid => sm.map.has(sid));
     sm._version = data.version;
     sm._score = data.score;
     return sm;
@@ -78,13 +83,17 @@ export class SessionManager {
     return this._order;
   }
 
-  get orderSessions (): LinkedSession[] {
-    return this._order.map(sid => this.getSession(sid));
+  get renderOrder () {
+    return this._renderOrder;
+  }
+
+  get renderOrderSessions (): LinkedSession[] {
+    return this._renderOrder.map(sid => this.getSession(sid));
   }
 
   getTouchedSessions (allCourses: CourseData[], events: AdditionalEvent[]) {
     const allCourseIds = allCourses.map(c => getCourseId(c));
-    const touchedSessions = this.orderSessions.filter(s => this.get(s.id).touched);
+    const touchedSessions = this.renderOrderSessions.filter(s => this.get(s.id).touched);
     const eventIds = events.map(e => e.id);
 
     // Filter by included courses and events
@@ -104,8 +113,8 @@ export class SessionManager {
     return fixedSessions;
   }
 
-  getOrder (sessionId: SessionId) {
-    return this._order.indexOf(sessionId);
+  getRenderOrder (sessionId: SessionId) {
+    return this._renderOrder.indexOf(sessionId);
   }
 
   get (sessionId: SessionId): SessionPlacement {
@@ -124,36 +133,85 @@ export class SessionManager {
     return this.map.has(sessionId);
   }
 
-  set (sessionId: SessionId, session: SessionPlacement): void {
-    this.map.set(sessionId, session);
+  set (sessionId: SessionId, placement: SessionPlacement): void {
+    this.map.set(sessionId, placement);
 
     if (!this._order.includes(sessionId)) {
       this._order = [...this._order, sessionId];
+    }
+    if (!this._renderOrder.includes(sessionId)) {
+      this._renderOrder = [...this._renderOrder, sessionId];
     }
 
     this.next();
   }
 
-  remove (sessionId: SessionId, hardDelete = true): void {
+  remove (sessionId: SessionId): void {
     const index = this._order.indexOf(sessionId);
     if (index !== -1) {
       this._order = [
         ...this._order.slice(0, index),
         ...this._order.slice(index + 1),
       ];
+
+      const renderIndex = this._renderOrder.indexOf(sessionId);
+      this._renderOrder = [
+        ...this._renderOrder.slice(0, renderIndex),
+        ...this._renderOrder.slice(renderIndex + 1),
+      ];
     }
 
-    if (hardDelete) {
-      this.map.delete(sessionId);
-    }
+    this.map.delete(sessionId);
 
     this.next();
   }
 
-  removeStream (sessionId: SessionId, hardDelete = true): void {
+  removeStream (sessionId: SessionId): void {
     const sessions = this.getSession(sessionId).stream.sessions;
     for (let session of sessions) {
-      this.remove(session.id, hardDelete);
+      this.remove(session.id);
+    }
+  }
+
+  replace (oldSessionId: SessionId, placement: SessionPlacement) {
+    const index = this._order.indexOf(oldSessionId);
+    this._order = [
+      ...this._order.slice(0, index),
+      ...this._order.slice(index + 1),
+      placement.session.id,
+    ];
+    const renderIndex = this._renderOrder.indexOf(oldSessionId);
+    this._renderOrder = [
+      ...this._renderOrder.slice(0, renderIndex),
+      placement.session.id,
+      ...this._renderOrder.slice(renderIndex + 1),
+    ];
+    this.map.delete(oldSessionId);
+    this.map.set(placement.session.id, placement);
+  }
+
+  replaceStream (sessionId: SessionId, nextSessions: LinkedSession[], touchPlacements = true) {
+    const oldStream = this.get(sessionId).session.stream;
+    for (const oldSession of oldStream.sessions) {
+      if (oldSession.index < nextSessions.length) {
+        // Replace old session with new one
+        const session = nextSessions[oldSession.index];
+        const placement = new SessionPlacement(session);
+        this.replace(oldSession.id, placement);
+        if (touchPlacements) {
+          placement.touch();
+        }
+      } else {
+        // No corresponding new session, remove old one
+        this.remove(oldSession.id);
+      }
+    }
+
+    // No corresponding old session, just add new ones
+    const remainingSessions = nextSessions.slice(oldStream.sessions.length);
+    for (const newSession of remainingSessions) {
+      const placement = new SessionPlacement(newSession);
+      this.set(newSession.id, placement);
     }
   }
 
@@ -184,14 +242,14 @@ export class SessionManager {
     sessionId: SessionId,
     dropzone: DropzonePlacement | null,
     timetableDimensions: Dimensions,
-    firsttHour: number,
+    firstHour: number,
     shouldCallback=true,
   ): void {
     this.startChange();
 
     // Drop this placement
     const session = this.get(sessionId);
-    session.drop(timetableDimensions, firsttHour);
+    session.drop(timetableDimensions, firstHour);
 
     // Lower all linked placements
     const stream = session.session.stream;
@@ -293,40 +351,14 @@ export class SessionManager {
 
     // Get the session which initiated this move (i.e. the dragged/dropped session)
     const initiator = this.get(sessionId).session;
-    const initiatorIndex = initiator.index;
 
     // Mark new stream as touched iff stream has changed
-    let shouldTouch = false;
     const nextStreamId = nextSessions[0].stream.id;
     const prevStreamId = initiator.stream.id;
     if (nextStreamId !== prevStreamId) {
-      shouldTouch = true;
-    }
-
-    // Remove old session placements
-    this.removeStream(sessionId);
-
-    // Add new session placements
-    let replacementSession: LinkedSession | undefined;
-    for (let session of nextSessions) {
-      const newPlacement = new SessionPlacement(session);
-      this.set(session.id, newPlacement);
-
-      if (session.index === initiatorIndex) {
-        replacementSession = session;
-      }
-
-      if (shouldTouch) {
-        newPlacement.touch();
-      }
-    }
-
-    // Bump session which corresponds to the initiating session
-    // NB: aside from neatness, this also is required for React to apply transistions correctly,
-    //     even though it doesn't affect the key of the ReactDOM elements
-    // TODO: investigate why this is required for transitions ()
-    if (replacementSession) {
-      this.bumpSession(replacementSession.id);
+      this.replaceStream(sessionId, nextSessions);
+    } else {
+      this.snapStream(sessionId);
     }
 
     this.stopChange();
@@ -335,15 +367,15 @@ export class SessionManager {
   updateClashDepths () {
     this.startChange();
 
-    for (let i = 0; i < this.order.length; ++i) {
+    for (let i = 0; i < this._order.length; ++i) {
       let takenDepths = new Set<number>();
-      const sessionId1 = this.order[i];
+      const sessionId1 = this._order[i];
       const placement1 = this.get(sessionId1);
 
       // Only measure for sessions which are snapped
       if (placement1.isSnapped) {
         for (let j = 0; j < i; ++j) {
-          const sessionId2 = this.order[j];
+          const sessionId2 = this._order[j];
           const placement2 = this.get(sessionId2);
 
           // Skip checking other sessions which aren't snapped
@@ -378,6 +410,7 @@ export class SessionManager {
   clear () {
     this.map.clear();
     this._order = [];
+    this._renderOrder = [];
     this.next();
   }
 
