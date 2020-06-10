@@ -113,8 +113,8 @@ export class SessionManager {
     return fixedSessions;
   }
 
-  getRenderOrder (sessionId: SessionId) {
-    return this._renderOrder.indexOf(sessionId);
+  getOrder (sessionId: SessionId) {
+    return this._order.indexOf(sessionId);
   }
 
   get (sessionId: SessionId): SessionPlacement {
