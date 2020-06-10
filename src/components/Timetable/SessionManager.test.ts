@@ -78,10 +78,10 @@ describe('SessionManager basic functionality', () => {
     s.set('o', getSessionPlacement(0));
     s.set('r', getSessionPlacement(1));
     s.set('d', getSessionPlacement(2));
-    expect(s.getRenderOrder('o')).toBe(0);
-    expect(s.getRenderOrder('r')).toBe(1);
-    expect(s.getRenderOrder('d')).toBe(2);
-    expect(s.getRenderOrder('-')).toBe(-1);
+    expect(s.getOrder('o')).toBe(0);
+    expect(s.getOrder('r')).toBe(1);
+    expect(s.getOrder('d')).toBe(2);
+    expect(s.getOrder('-')).toBe(-1);
   })
 
   test('getSession doesn\'t affect the version', () => {
@@ -131,9 +131,9 @@ describe('SessionManager basic functionality', () => {
     s.remove('r');
     expect(s.version).toBe(v + 1);
     expect(cb).toHaveBeenCalledTimes(0);
-    expect(s.getRenderOrder('o')).toBe(0);
-    expect(s.getRenderOrder('d')).toBe(1);
-    expect(s.getRenderOrder('r')).toBe(-1);
+    expect(s.getOrder('o')).toBe(0);
+    expect(s.getOrder('d')).toBe(1);
+    expect(s.getOrder('r')).toBe(-1);
     expect(s.order).toEqual(['o', 'd']);
     expect(s.renderOrder).toEqual(['o', 'd']);
   })
