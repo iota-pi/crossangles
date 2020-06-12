@@ -32,7 +32,7 @@ Object {
         ],
       },
       Object {
-        "component": "OTH",
+        "component": "LEC",
         "enrols": Array [
           10,
           50,
@@ -120,7 +120,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -211,7 +211,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -302,7 +302,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -385,7 +385,7 @@ Object {
 
 exports[`linkStream gives consistent output 2`] = `
 Object {
-  "component": "OTH",
+  "component": "LEC",
   "course": Object {
     "code": "RING9731",
     "name": "Introduction to Ring Theory",
@@ -415,7 +415,7 @@ Object {
         ],
       },
       Object {
-        "component": "OTH",
+        "component": "LEC",
         "enrols": Array [
           10,
           50,
@@ -470,7 +470,7 @@ Object {
     10,
     50,
   ],
-  "id": "RING9731~OTH~T9,F9,W12",
+  "id": "RING9731~LEC~T9,F9,W12",
   "sessions": Array [
     Object {
       "canClash": true,
@@ -503,7 +503,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -556,7 +556,7 @@ Object {
       },
       "day": "T",
       "end": 10,
-      "id": "RING9731~OTH~T9,F9,W12~0",
+      "id": "RING9731~LEC~T9,F9,W12~0",
       "index": 0,
       "location": "Morder",
       "start": 9,
@@ -594,7 +594,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -647,7 +647,7 @@ Object {
       },
       "day": "F",
       "end": 10,
-      "id": "RING9731~OTH~T9,F9,W12~1",
+      "id": "RING9731~LEC~T9,F9,W12~1",
       "index": 1,
       "location": "Helm's Deep",
       "start": 9,
@@ -685,7 +685,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -738,7 +738,7 @@ Object {
       },
       "day": "W",
       "end": 13,
-      "id": "RING9731~OTH~T9,F9,W12~2",
+      "id": "RING9731~LEC~T9,F9,W12~2",
       "index": 2,
       "location": "Tol Brandir",
       "start": 12,
@@ -798,7 +798,7 @@ Object {
         ],
       },
       Object {
-        "component": "OTH",
+        "component": "LEC",
         "enrols": Array [
           10,
           50,
@@ -886,7 +886,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,
@@ -988,7 +988,7 @@ Object {
         ],
       },
       Object {
-        "component": "OTH",
+        "component": "LEC",
         "enrols": Array [
           10,
           50,
@@ -1076,7 +1076,7 @@ Object {
             ],
           },
           Object {
-            "component": "OTH",
+            "component": "LEC",
             "enrols": Array [
               10,
               50,

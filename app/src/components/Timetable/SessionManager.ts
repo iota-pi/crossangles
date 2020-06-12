@@ -423,11 +423,11 @@ export class SessionManager {
     const newSessionIds = newSessions.map(s => s.id);
     const toRemoveIds = this._order.filter(s => !newSessionIds.includes(s));
     const toAdd = newSessions.filter(s => !this._order.includes(s.id));
-    const newComponents = toAdd.map(s => getComponentId(s.course, s.stream));
+    const newComponents = toAdd.map(s => `${getComponentId(s.course, s.stream)}~${s.index}`);
 
     for (const sessionId of toRemoveIds) {
       const oldSession = this.get(sessionId).session;
-      const component = getComponentId(oldSession.course, oldSession.stream);
+      const component = `${getComponentId(oldSession.course, oldSession.stream)}~${oldSession.index}`;
       const index = newComponents.indexOf(component);
       if (index > -1) {
         const newPlacement = new SessionPlacement(toAdd[index]);

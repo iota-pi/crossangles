@@ -578,7 +578,7 @@ describe('snapSessionTo', () => {
 
 
 describe('update', () => {
-  it('preserves fixed sessions', () => {
+  it('preserves unchanged session displacement', () => {
     const s = new SessionManager();
     const p1 = getSessionPlacement(0, 0);
     const p2 = getSessionPlacement(2, 0);
@@ -594,6 +594,24 @@ describe('update', () => {
       10,
     );
     expect(s.get(p2.session.id)['_offset']).toEqual({ x: 10, y: 10 });
+  })
+
+  it('allows swapping multiple-session streams', () => {
+    const s = new SessionManager();
+    const p1 = getSessionPlacement(2, 0);
+    const p2 = getSessionPlacement(0, 0);
+    const p3 = getSessionPlacement(0, 1);
+    const p4 = getSessionPlacement(0, 2);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
+    s.update(
+      [getLinkedSession(1, 0), getLinkedSession(1, 1), getLinkedSession(1, 2), p1.session],
+      10,
+    );
+    expect(s.renderOrder).toEqual(
+      [p1.session.id, getLinkedSession(1, 0).id, getLinkedSession(1, 1).id, getLinkedSession(1, 2).id]);
   })
 
   it('preserves render order for components', () => {
