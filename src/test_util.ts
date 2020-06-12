@@ -17,7 +17,7 @@ export const getCourse = (): CourseData => ({
       ],
     },
     {
-      component: 'OTH',
+      component: 'LEC',
       enrols: [10, 50],
       times: [
         { time: 'T9', location: 'Morder', canClash: true },
