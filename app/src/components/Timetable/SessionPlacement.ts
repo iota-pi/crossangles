@@ -177,7 +177,7 @@ export class SessionPlacement extends TimetablePlacement {
       const raised = SessionPosition.getRaisedOffset(this.isRaised);
       let x = base.x + clash.x + raised.x + this._offset.x;
       let y = base.y + clash.y + raised.y + this._offset.y;
-      let z = SessionPosition.getZ(this.isSnapped, this.clashDepth);
+      let z = SessionPosition.getZ(this.isSnapped, this.isDragging, this.clashDepth);
 
       const maxX = timetableDimensions.width  - base.width;
       const maxY = timetableDimensions.height - base.height;
