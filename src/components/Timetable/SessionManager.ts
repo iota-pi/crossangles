@@ -1,7 +1,7 @@
 import { notUndefined } from '../../typeHelpers';
 import { SessionPlacement } from './SessionPlacement';
 import { Position, Dimensions } from './timetableTypes';
-import { CourseMap, CourseData, getCourseId, AdditionalEvent, getEventId, SessionId, LinkedSession } from '../../state';
+import { CourseMap, CourseData, getCourseId, AdditionalEvent, getEventId, SessionId, LinkedSession, getComponentId } from '../../state';
 import { sessionClashLength } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
 import { getSessionManagerScore } from '../../timetable/scoreSessionManager';
@@ -416,26 +416,30 @@ export class SessionManager {
 
   update (
     newSessions: LinkedSession[],
-    fixedSessions: LinkedSession[],
     score: number,
   ) {
     this.startChange();
 
-    // Get placements of fixed sessions
-    const fixedSessionIds = fixedSessions.map(s => s.id);
-    const fixedPlacements = fixedSessionIds.map(id => this.get(id));
+    const newSessionIds = newSessions.map(s => s.id);
+    const toRemoveIds = this._order.filter(s => !newSessionIds.includes(s));
+    const toAdd = newSessions.filter(s => !this._order.includes(s.id));
+    const newComponents = toAdd.map(s => getComponentId(s.course, s.stream));
 
-    // Clear all placements (NB: must be done after fetching fixed session placements)
-    this.clear();
-
-    for (let session of newSessions) {
-      const index = fixedSessionIds.indexOf(session.id);
-      let placement: SessionPlacement;
+    for (const sessionId of toRemoveIds) {
+      const oldSession = this.get(sessionId).session;
+      const component = getComponentId(oldSession.course, oldSession.stream);
+      const index = newComponents.indexOf(component);
       if (index > -1) {
-        placement = fixedPlacements[index];
+        const newPlacement = new SessionPlacement(toAdd[index]);
+        this.replace(sessionId, newPlacement);
       } else {
-        placement = new SessionPlacement(session);
+        this.remove(sessionId);
       }
+    }
+
+    const remainingToAdd = toAdd.filter(s => !this._order.includes(s.id));
+    for (const session of remainingToAdd) {
+      const placement = new SessionPlacement(session);
       this.set(session.id, placement);
     }
 

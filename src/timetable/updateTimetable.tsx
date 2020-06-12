@@ -82,7 +82,7 @@ export const updateTimetable = async (
     await dispatch(setNotice('There was a problem generating a timetable'));
   } else {
     try {
-      sessionManager.update(newTimetable.timetable, fixedSessions, newTimetable.score);
+      sessionManager.update(newTimetable.timetable, newTimetable.score);
     } catch (error) {
       ReactGA.exception({ description: 'Unexpected error when updating SessionManager. ' + error });
       console.error(error);
