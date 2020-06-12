@@ -1,6 +1,6 @@
 import SessionManager from './SessionManager';
 import SessionPlacement from './SessionPlacement';
-import { getSessionPlacement, getDimensions, getLinkedStream } from '../../test_util';
+import { getSessionPlacement, getDimensions, getLinkedStream, getLinkedSession } from '../../test_util';
 import { LinkedStream, LinkedSession } from '../../state';
 
 describe('SessionManager basic functionality', () => {
@@ -578,5 +578,53 @@ describe('snapSessionTo', () => {
 
 
 describe('update', () => {
+  it('preserves fixed sessions', () => {
+    const s = new SessionManager();
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(2, 0);
+    const p3 = getSessionPlacement(0, 1);
+    const p4 = getSessionPlacement(0, 2);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
+    p2.move({ x: 10, y: 10 });
+    s.update(
+      [getLinkedSession(1, 0), p2.session, getLinkedSession(1, 1), getLinkedSession(1, 2)],
+      10,
+    );
+    expect(s.get(p2.session.id)['_offset']).toEqual({ x: 10, y: 10 });
+  })
 
+  it('preserves render order for components', () => {
+    const s = new SessionManager();
+    const p1 = getSessionPlacement(0, 0);
+    const p2 = getSessionPlacement(2, 0);
+    const p3 = getSessionPlacement(0, 1);
+    const p4 = getSessionPlacement(0, 2);
+    s.set(p1.session.id, p1);
+    s.set(p2.session.id, p2);
+    s.set(p3.session.id, p3);
+    s.set(p4.session.id, p4);
+    s.update(
+      [getLinkedSession(0, 0), getLinkedSession(0, 1), getLinkedSession(0, 2), getLinkedSession(3, 0)],
+      10,
+    );
+    expect(s.renderOrder).toEqual([
+      getLinkedSession(0, 0).id,
+      getLinkedSession(3, 0).id,
+      getLinkedSession(0, 1).id,
+      getLinkedSession(0, 2).id,
+    ]);
+  })
+
+  it('updates the score', () => {
+    const s = new SessionManager();
+    s.update([], 10);
+    expect(s.score).toBe(10);
+    s.update([], 50);
+    expect(s.score).toBe(50);
+    s.update([], -9999);
+    expect(s.score).toBe(-9999);
+  })
 })
