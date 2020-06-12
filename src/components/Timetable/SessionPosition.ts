@@ -14,8 +14,9 @@ export const getRaisedOffset = (isRaised: boolean) => {
   };
 }
 
-export const getZ = (isSnapped: boolean, clashDepth: number) => {
+export const getZ = (isSnapped: boolean, isDragging: boolean, clashDepth: number) => {
   const unsnapZ = (!isSnapped) ? tt.SESSION_DRAG_Z : 0;
+  const dragZ = (isDragging) ? tt.SESSION_DRAG_Z : 0;
   const clashZ = tt.SESSION_LIFT_Z * clashDepth;
-  return tt.SESSION_BASE_Z + unsnapZ + clashZ;
+  return tt.SESSION_BASE_Z + unsnapZ + dragZ + clashZ;
 }
