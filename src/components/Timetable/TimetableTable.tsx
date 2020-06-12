@@ -70,7 +70,11 @@ export function getCourseColour (course: CourseData, colourMap: ColourMap, darkM
 }
 
 function TimetableTable (props: Props) {
-  const sessions = props.timetable.renderOrderSessions;
+  const timetable = props.timetable;
+  const sessions = React.useMemo(
+    () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
+    [timetable],
+  );
   const hours = React.useMemo(() => {
     if (props.minimalHours) {
       // Only consider times for currently placed sessions
@@ -82,6 +86,7 @@ function TimetableTable (props: Props) {
   }, [props.minimalHours, sessions]);
 
   const timetableRef = React.useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 });
   const updateDimensions = () => {
     const el = timetableRef.current;
     if (el) {
@@ -89,15 +94,12 @@ function TimetableTable (props: Props) {
         width: el.scrollWidth,
         height: el.scrollHeight,
       });
-    } else {
-      setDimensions({ width: 0, height: 0 });
     }
   };
-  const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 })
   React.useEffect(() => {
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
-  }, [timetableRef, hours]);
+  }, [timetableRef]);
 
   const [version, setVersion] = React.useState(false);
   const forceUpdate = () => {
@@ -106,6 +108,7 @@ function TimetableTable (props: Props) {
   };
 
   useEffect(forceUpdate, [props.timetable.version]);
+  useEffect(updateDimensions, [hours]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
@@ -147,17 +150,11 @@ function TimetableTable (props: Props) {
     props.timetable.bumpStream(session.id);
     props.timetable.bumpSession(session.id);
 
-    // Start drag in next tick so transitions aren't interrupted by the order changing
-    // forceUpdate(() => {
-      // Update session placement with dragging state
-      props.timetable.drag(session.id);
+    props.timetable.drag(session.id);
+    props.timetable.updateClashDepths();
 
-      props.timetable.updateClashDepths();
-
-      // Mark this session as being dragged
-      setDragging(session);
-    // });
-    // forceUpdate();
+    // Mark this session as being dragged
+    setDragging(session);
   }
 
   const handleMove = (session: LinkedSession, delta: Position) => {
