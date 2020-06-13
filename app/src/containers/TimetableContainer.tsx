@@ -25,7 +25,7 @@ import {
 } from '../state';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
-import { setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours } from '../actions';
+import { setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours, toggleOption } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
 
@@ -78,6 +78,7 @@ class TimetableContainer extends PureComponent<Props> {
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
+          onIncludeFull={this.handleIncludeFull}
           onCreateCustom={this.handleClickCreateCustom}
         />
 
@@ -161,6 +162,12 @@ class TimetableContainer extends PureComponent<Props> {
     } finally {
       this.setState({ isUpdating: false });
     }
+  }
+
+  private handleIncludeFull = async () => {
+    const sessionManager = this.getSessionManager();
+    await this.props.dispatch(toggleOption('includeFull'));
+    await this.updateTimetable(sessionManager);
   }
 
   private handleClickCreateCustom = () => {
