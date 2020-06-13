@@ -83,6 +83,7 @@ export const updateTimetable = async (
   } else {
     try {
       sessionManager.update(newTimetable.timetable, newTimetable.score);
+      sessionManager.snapAll();
     } catch (error) {
       ReactGA.exception({ description: 'Unexpected error when updating SessionManager. ' + error });
       console.error(error);

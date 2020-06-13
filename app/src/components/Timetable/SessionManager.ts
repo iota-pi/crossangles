@@ -289,6 +289,14 @@ export class SessionManager {
     this.next();
   }
 
+  snapAll (): void {
+    this.startChange();
+    for (let placement of this.map.values()) {
+      placement.snap();
+    }
+    this.stopChange();
+  }
+
   snapStream (sessionId: SessionId): void {
     this.startChange();
     const stream = this.get(sessionId).session.stream;
