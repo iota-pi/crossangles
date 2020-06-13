@@ -32,6 +32,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     color: theme.palette.warning.main,
+    cursor: 'pointer',
     marginRight: theme.spacing(1),
   },
   unplacedCount: {
@@ -49,6 +50,7 @@ export interface Props {
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
+  onIncludeFull?: () => void,
   onCreateCustom?: () => void,
 }
 
@@ -60,6 +62,7 @@ export const TimetableControls = ({
   onUndo,
   onRedo,
   onUpdate,
+  onIncludeFull,
   onCreateCustom,
 }: Props) => {
   const classes = useStyles()
@@ -122,7 +125,7 @@ export const TimetableControls = ({
 
       {unplacedCount > 0 && (
         <Tooltip title={`${unplacedCount} full classes are not visible`}>
-          <div className={classes.unplacedCountContainer}>
+          <div className={classes.unplacedCountContainer} onClick={onIncludeFull}>
             <span className={classes.unplacedCount}>{unplacedCount}</span>
             <Warning />
           </div>
