@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
 export interface Props {
   position: Placement,
   session: LinkedSession | SessionData,
-  colour: string,
+  colour?: string,
 }
 
 export const TimetableDropzone: React.FC<Props> = ({ colour, session, position }) => {
@@ -42,6 +42,7 @@ export const TimetableDropzone: React.FC<Props> = ({ colour, session, position }
     },
     [position],
   );
+  const backgroundColor = colour ? colour + 'A0' : 'none';
 
   return (
     <div
@@ -52,7 +53,7 @@ export const TimetableDropzone: React.FC<Props> = ({ colour, session, position }
       <div
         className={classes.background}
         style={{
-          backgroundColor: colour + 'A0',
+          backgroundColor,
         }}
       />
     </div>

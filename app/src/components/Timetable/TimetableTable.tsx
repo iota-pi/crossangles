@@ -4,6 +4,7 @@ import ReactGA from 'react-ga';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fade from '@material-ui/core/Fade';
+import { TransitionGroup } from 'react-transition-group';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
@@ -13,7 +14,6 @@ import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
 import {
   ColourMap,
-  FALLBACK_COLOUR,
   getColour,
   Options,
   getCourseId,
@@ -63,10 +63,14 @@ export interface State {
   dragging: LinkedSession | null,
 }
 
-export function getCourseColour (course: CourseData, colourMap: ColourMap, darkMode = false): string {
+export function getCourseColour (course: CourseData, colourMap: ColourMap, darkMode = false): string | undefined {
   const courseId = getCourseId(course);
-  const colourName = colourMap[courseId] || FALLBACK_COLOUR;
-  return getColour(colourName, darkMode);
+  const colourName = colourMap[courseId];
+  if (colourName) {
+    return getColour(colourName, darkMode);
+  } else {
+    return undefined;
+  }
 }
 
 function TimetableTable (props: Props) {
@@ -207,31 +211,36 @@ function TimetableTable (props: Props) {
       data-cy="timetable"
       id="timetable-display"
     >
-      {dimensions.width ? props.timetable.renderOrder.map(sid => {
-        const placement = props.timetable.getMaybe(sid);
-        if (!placement) return null;
-        const session = placement.session;
-        const courseId = getCourseId(session.course);
-        const key = `${courseId}-${session.stream.component}-${session.index}`;
+      <TransitionGroup>
+        {dimensions.width ? props.timetable.renderOrder.map(sid => {
+          const placement = props.timetable.getMaybe(sid);
+          if (!placement) return null;
+          const session = placement.session;
+          const courseId = getCourseId(session.course);
+          const key = `${courseId}-${session.stream.component}-${session.index}`;
 
-        return (
-          <TimetableSession
-            key={key}
-            session={session}
-            colour={getCourseColour(session.course, props.colours, props.darkMode)}
-            position={placement.getPosition(dimensions, hours.start)}
-            dimensions={placement.basePlacement(dimensions, hours.start)}
-            isDragging={placement.isDragging}
-            isSnapped={placement.isSnapped}
-            clashDepth={placement.clashDepth}
-            options={props.options}
-            disableTransitions={props.disableTransitions}
-            onDrag={handleDrag}
-            onMove={handleMove}
-            onDrop={handleDrop}
-          />
-        );
-      }) : null}
+          return (
+            <Fade key={key}>
+              <div>
+                <TimetableSession
+                  session={session}
+                  colour={getCourseColour(session.course, props.colours, props.darkMode)}
+                  position={placement.getPosition(dimensions, hours.start)}
+                  dimensions={placement.basePlacement(dimensions, hours.start)}
+                  isDragging={placement.isDragging}
+                  isSnapped={placement.isSnapped}
+                  clashDepth={placement.clashDepth}
+                  options={props.options}
+                  disableTransitions={props.disableTransitions}
+                  onDrag={handleDrag}
+                  onMove={handleMove}
+                  onDrop={handleDrop}
+                />
+              </div>
+            </Fade>
+          );
+        }) : null}
+      </TransitionGroup>
 
       {dropzones.map(dropzone => (
         <TimetableDropzone

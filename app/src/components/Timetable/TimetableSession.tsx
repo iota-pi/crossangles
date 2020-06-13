@@ -71,7 +71,7 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   session: LinkedSession,
-  colour: string,
+  colour: string | undefined,
   dimensions: Dimensions,
   position: Required<Position>,
   isDragging: boolean,
