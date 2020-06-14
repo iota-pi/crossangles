@@ -1,6 +1,10 @@
 import chromium from 'chrome-aws-lambda';
 import { Browser } from 'puppeteer-core';
 
+function sleep (ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export const screenshot = async (
   uri: string,
   viewport?: { width: number, height: number },
@@ -19,6 +23,9 @@ export const screenshot = async (
       page.waitForSelector('[data-cy="timetable-session"]', { timeout: 5000 }),
       page.waitForSelector('[data-session]', { timeout: 5000 }),
     ]);
+
+    // Waiting for a bit here adds an extra layer of protection for slow rendering/animations
+    await sleep(350);
 
     const result = await page.screenshot({ encoding: 'base64' });
     return result;
