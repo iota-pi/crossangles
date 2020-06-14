@@ -230,7 +230,7 @@ export function getTermNumber (termString: string): number {
 }
 
 export function getCourseName ($: CheerioStatic, code: string) {
-  const codeAndName = $('td.classSearchMinorHeading').text().trim();
+  const codeAndName = $('td.classSearchMinorHeading').first().text().trim();
   const name = codeAndName.replace(new RegExp(`^${code}`), '').trim();
   return name;
 }
