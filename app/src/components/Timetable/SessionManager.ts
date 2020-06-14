@@ -147,6 +147,7 @@ export class SessionManager {
   }
 
   remove (sessionId: SessionId): void {
+    this.startChange();
     const index = this._order.indexOf(sessionId);
     if (index !== -1) {
       this._order = [
@@ -162,18 +163,20 @@ export class SessionManager {
     }
 
     this.map.delete(sessionId);
-
-    this.next();
+    this.stopChange();
   }
 
   removeStream (sessionId: SessionId): void {
+    this.startChange();
     const sessions = this.getSession(sessionId).stream.sessions;
     for (let session of sessions) {
       this.remove(session.id);
     }
+    this.stopChange();
   }
 
   replace (oldSessionId: SessionId, placement: SessionPlacement) {
+    this.startChange();
     const index = this._order.indexOf(oldSessionId);
     this._order = [
       ...this._order.slice(0, index),
@@ -188,9 +191,11 @@ export class SessionManager {
     ];
     this.map.delete(oldSessionId);
     this.map.set(placement.session.id, placement);
+    this.stopChange();
   }
 
   replaceStream (sessionId: SessionId, nextSessions: LinkedSession[], touchPlacements = true) {
+    this.startChange();
     const oldStream = this.get(sessionId).session.stream;
     for (const oldSession of oldStream.sessions) {
       if (oldSession.index < nextSessions.length) {
@@ -213,6 +218,7 @@ export class SessionManager {
       const placement = new SessionPlacement(newSession);
       this.set(newSession.id, placement);
     }
+    this.stopChange();
   }
 
   drag (sessionId: SessionId, shouldCallback=false): void {
