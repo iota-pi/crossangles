@@ -218,14 +218,20 @@ function TimetableTable (props: Props) {
           const session = placement.session;
           const courseId = getCourseId(session.course);
           const key = `${courseId}-${session.stream.component}-${session.index}`;
+          const position = placement.getPosition(dimensions, hours.start);
 
           return (
-            <Fade key={key}>
-              <div>
+            <Fade
+              key={key}
+              appear={!props.disableTransitions}
+              enter={!props.disableTransitions}
+              exit={!props.disableTransitions}
+            >
+              <div style={{ zIndex: position.z }}>
                 <TimetableSession
                   session={session}
                   colour={getCourseColour(session.course, props.colours, props.darkMode)}
-                  position={placement.getPosition(dimensions, hours.start)}
+                  position={position}
                   dimensions={placement.basePlacement(dimensions, hours.start)}
                   isDragging={placement.isDragging}
                   isSnapped={placement.isSnapped}
