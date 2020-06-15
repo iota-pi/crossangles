@@ -3,6 +3,7 @@ import { CampusData, Scraper } from './scraper/Scraper';
 import { UNSW, scrapeUNSW } from './scraper/unsw';
 import getStateManager from './state/getStateManager';
 import HTMLCache from './scraper/HTMLCache';
+import { checkVersionChange, updateVersion } from './state/util';
 
 export const scrapeCampus = async (campus: string, outputPrefix: string = '', cacheFile?: string) => {
   let scraper: Scraper | undefined = undefined;
@@ -14,10 +15,16 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
   }
   const state = getStateManager();
 
+  let forceUpdate = false;
+  if (await checkVersionChange(state)) {
+    updateVersion(state);
+    forceUpdate = true;
+  }
+
   let data: CampusData[] | null = null;
   switch (campus) {
     case UNSW:
-      data = await scrapeUNSW({ scraper, state });
+      data = await scrapeUNSW({ scraper, state, forceUpdate });
   }
 
   if (data) {
