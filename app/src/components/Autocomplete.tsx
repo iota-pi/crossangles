@@ -63,24 +63,21 @@ const AutocompleteControl = ({
   chooseCourse,
 }: Props) => {
   const classes = useStyles();
-  const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
-  const allOptions = React.useMemo(() => {
-    const allChosenIds = allChosen.map(c => getCourseId(c));
-    let availableOptions = courses.filter(course => !course.isCustom);
-    availableOptions = availableOptions.filter(course => !allChosenIds.includes(getCourseId(course)));
-    availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code));
-    return availableOptions;
-  }, [courses, allChosen]);
-
-  const handleChange = (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
-    if (newCourses) {
-      const newCourse = newCourses[newCourses.length - 1];
-      chooseCourse(newCourse);
-    }
-  };
 
   const [inputValue, setInputValue] = React.useState('');
   const [focused, setFocused] = React.useState(true);
+
+  const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
+  const allOptions = React.useMemo(
+    () => {
+      const allChosenIds = allChosen.map(c => getCourseId(c));
+      let availableOptions = courses.filter(course => !course.isCustom);
+      availableOptions = availableOptions.filter(course => !allChosenIds.includes(getCourseId(course)));
+      availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code));
+      return availableOptions;
+    },
+    [courses, allChosen],
+  );
 
   const [filteredOptions, setFilteredOptions] = React.useState<typeof allOptions>(allOptions);
   React.useEffect(
@@ -125,9 +122,15 @@ const AutocompleteControl = ({
   // This hack prevents the ref of this dummy value array from changing
   const value = React.useState([])[0];
 
+  const handleChange = (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
+    if (newCourses) {
+      const newCourse = newCourses[newCourses.length - 1];
+      chooseCourse(newCourse);
+    }
+  };
+
   return (
     <Autocomplete
-      debug
       id="course-selection-autocomplete"
       options={filteredOptions}
       filterOptions={o => o}
