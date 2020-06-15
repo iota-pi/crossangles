@@ -5,10 +5,9 @@ import match from 'autosuggest-highlight/match';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { FilterOptionsState } from '@material-ui/lab/useAutocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import ListboxComponent from './ListboxComponent';
-import { CourseData } from '../state';
+import { CourseData, getCourseId } from '../state';
 
 export interface Props {
   maxItems?: number,
@@ -19,17 +18,32 @@ export interface Props {
   chooseCourse: (course: CourseData) => void,
 }
 
+const SEARCH_DEBOUNCE = 100;
+const QUICK_SEARCH_DEBOUNCE = 10;
+
+const matchSorterOptions = {
+  keys: ['code', 'name'],
+};
+
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
+    transition: theme.transitions.create('border-color'),
   },
-  iconContainer: {
-    marginTop: theme.spacing(1.5),
-    padding: theme.spacing(1),
+  searchIcon: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   selectContainer: {
     flexGrow: 1,
+  },
+  inputLabel: {
+    transition: theme.transitions.create('all'),
+    marginLeft: 38,
+  },
+  shrunk: {
+    marginLeft: 2,
   },
   popupIndicator: {
     transition: theme.transitions.create(['transform', 'backgroundColor']),
@@ -50,57 +64,107 @@ const AutocompleteControl = ({
 }: Props) => {
   const classes = useStyles();
   const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
-  const options = React.useMemo(() => {
+  const allOptions = React.useMemo(() => {
+    const allChosenIds = allChosen.map(c => getCourseId(c));
     let availableOptions = courses.filter(course => !course.isCustom);
+    availableOptions = availableOptions.filter(course => !allChosenIds.includes(getCourseId(course)));
     availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code));
     return availableOptions;
-  }, [courses]);
-
-  const filterOptions = (options: CourseData[], { inputValue }: FilterOptionsState<CourseData>) => {
-    return matchSorter(options, inputValue, { keys: ['code', 'name'] });
-  };
-
-  const [focused, setFocused] = React.useState(true);
-  const handleFocus = () => setFocused(true);
-  const handleBlur = () => setFocused(false);
-
-  const [openOnFocus, setOpenOnFocus] = React.useState(false);
-  React.useEffect(() => setOpenOnFocus(true), []);
+  }, [courses, allChosen]);
 
   const handleChange = (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
-    if (newCourses && newCourses.length > chosen.length) {
+    if (newCourses) {
       const newCourse = newCourses[newCourses.length - 1];
       chooseCourse(newCourse);
     }
   };
 
+  const [inputValue, setInputValue] = React.useState('');
+  const [focused, setFocused] = React.useState(true);
+
+  const [filteredOptions, setFilteredOptions] = React.useState<typeof allOptions>(allOptions);
+  React.useEffect(
+    () => {
+      const quickSearch = setTimeout(
+        () => {
+          if (inputValue.length === 0) {
+            setFilteredOptions(allOptions);
+          } else {
+            const lowerInputValue = inputValue.toLowerCase();
+            const results = allOptions.filter(o => o.code.toLowerCase().startsWith(lowerInputValue));
+            results.concat(allOptions.filter(o => o.code.toLowerCase().includes(lowerInputValue)));
+            results.concat(allOptions.filter(o => o.name.toLowerCase().includes(lowerInputValue)));
+            if (results.length) {
+              setFilteredOptions(results);
+            }
+          }
+        },
+        QUICK_SEARCH_DEBOUNCE,
+      );
+
+      const fullSearch = setTimeout(
+        () => {
+          if (inputValue.length === 0) {
+            setFilteredOptions(allOptions);
+          } else {
+            const results = matchSorter(allOptions, inputValue, matchSorterOptions);
+            setFilteredOptions(results);
+          }
+        },
+        SEARCH_DEBOUNCE,
+      );
+
+      return () => {
+        clearTimeout(quickSearch);
+        clearTimeout(fullSearch);
+      }
+    },
+    [inputValue, allOptions],
+  );
+
+  // This hack prevents the ref of this dummy value array from changing
+  const value = React.useState([])[0];
+
   return (
     <Autocomplete
+      debug
       id="course-selection-autocomplete"
-      options={options}
-      filterOptions={filterOptions}
+      options={filteredOptions}
+      filterOptions={o => o}
       ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
       onChange={handleChange}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      openOnFocus={openOnFocus}
+      onInputChange={(_, value) => setInputValue(value)}
+      onFocus={() => setFocused(true)}
+      onBlur={() => setFocused(false)}
       autoHighlight
       multiple
-      filterSelectedOptions
       disableClearable
       clearOnBlur={false}
-      value={allChosen}
+      value={value}
+      inputValue={inputValue}
       getOptionLabel={option => option.code}
       noOptionsText="No matching courses found"
       renderInput={params => (
         <div className={classes.root}>
-          <div className={classes.iconContainer}>
-            <SearchIcon color={focused ? "primary" : undefined} />
-          </div>
           <TextField
             {...params}
-            label="Tap to select your courses…"
+            label="Select your courses"
+            variant="outlined"
             autoFocus
+            InputProps={{
+              ...params.InputProps,
+              startAdornment: (
+                <SearchIcon
+                  color={focused ? 'primary' : undefined}
+                  className={classes.searchIcon}
+                />
+              ),
+            }}
+            InputLabelProps={{
+              ...params.InputLabelProps,
+              shrink: focused || inputValue.length > 0,
+              className: `${classes.inputLabel} ${focused || inputValue.length > 0 ? classes.shrunk : ''}`,
+            }}
           />
         </div>
       )}
