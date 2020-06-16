@@ -48,6 +48,7 @@ export interface RootState extends TimetableState {
   darkMode: boolean,
   twentyFourHours: boolean,
   compactView: boolean,
+  reducedMotion: boolean,
 }
 
 
@@ -96,4 +97,5 @@ export const initialState: RootState = {
   darkMode: false,
   twentyFourHours: false,
   compactView: false,
+  reducedMotion: false,
 };
