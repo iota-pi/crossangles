@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { SNAP_DIST } from './timetableUtil';
+import { SNAP_DIST, DROPZONE_Z } from './timetableUtil';
 import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
@@ -123,28 +123,32 @@ function TimetableTable (props: Props) {
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
-  const dropzones = React.useMemo<DropzonePlacement[]>(() => {
-    if (!dragging) { return []; }
+  const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
+  React.useEffect(
+    () => {
+      if (dragging) {
+        const { course, stream: { component }, index } = dragging;
+        let streams = course.streams.map(s => linkStream(course, s));
+        streams = streams.filter(s => {
+          // Skip streams that are for a different component
+          if (s.component !== component) { return false; }
 
-    const { course, stream: { component }, index } = dragging;
-    let streams = course.streams.map(s => linkStream(course, s));
-    streams = streams.filter(s => {
-      // Skip streams that are for a different component
-      if (s.component !== component) { return false; }
+          // Skip streams which don't have enough sessions
+          if (index >= s.sessions.length) { return false; }
 
-      // Skip streams which don't have enough sessions
-      if (index >= s.sessions.length) { return false; }
+          if (s.full && !props.options.includeFull) { return false; }
 
-      if (s.full && !props.options.includeFull) { return false; }
-
-      return true;
-    });
-    const dropzones = streams.flatMap(s => {
-      const session = s.sessions[index];
-      return new DropzonePlacement(session);
-    });
-    return dropzones;
-  }, [dragging, props.options.includeFull]);
+          return true;
+        });
+        const dropzones = streams.flatMap(s => {
+          const session = s.sessions[index];
+          return new DropzonePlacement(session);
+        });
+        setDropzones(dropzones);
+      }
+    },
+    [dragging, props.options.includeFull],
+  );
 
 
   const handleDrag = React.useCallback(
@@ -222,6 +226,12 @@ function TimetableTable (props: Props) {
     rootClasses.push(classes.faded);
   }
 
+  const draggingColour = dragging ? getCourseColour(dragging.course, props.colours, props.darkMode) : undefined;
+  const dropzoneStyles = React.useMemo<React.CSSProperties>(() => ({
+    position: 'absolute',
+    zIndex: DROPZONE_Z,
+  }), []);
+
   return (
     <div
       className={rootClasses.join(' ')}
@@ -265,14 +275,23 @@ function TimetableTable (props: Props) {
         }) : null}
       </TransitionGroup>
 
-      {dropzones.map(dropzone => (
-        <TimetableDropzone
-          key={dropzone.session.stream.id}
-          position={dropzone.basePlacement(dimensions, hours.start, compact)}
-          colour={getCourseColour(dropzone.session.course, props.colours, props.darkMode)}
-          session={dropzone.session}
-        />
-      ))}
+      <Fade
+        in={!!dragging}
+        appear={!props.disableTransitions}
+        enter={!props.disableTransitions}
+        exit={!props.disableTransitions}
+      >
+        <div style={dropzoneStyles}>
+          {dropzones.map(dropzone => (
+            <TimetableDropzone
+              key={dropzone.session.stream.id}
+              position={dropzone.basePlacement(dimensions, hours.start, compact)}
+              colour={draggingColour}
+              session={dropzone.session}
+            />
+          ))}
+        </div>
+      </Fade>
 
       <Fade in={props.isUpdating} mountOnEnter unmountOnExit>
         <LinearProgress className={classes.progress} color="primary" />
