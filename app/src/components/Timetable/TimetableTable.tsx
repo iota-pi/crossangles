@@ -91,27 +91,32 @@ function TimetableTable (props: Props) {
 
   const timetableRef = React.useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 });
-  const updateDimensions = () => {
-    const el = timetableRef.current;
-    if (el) {
-      setDimensions({
-        width: el.scrollWidth,
-        height: el.scrollHeight,
-      });
-    }
-  };
+  const updateDimensions = React.useCallback(
+    () => {
+      const el = timetableRef.current;
+      if (el) {
+        setDimensions({
+          width: el.scrollWidth,
+          height: el.scrollHeight,
+        });
+      }
+    },
+    [timetableRef],
+  );
+  const [version, setVersion] = React.useState(false);
   React.useEffect(() => {
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
-  }, [timetableRef]);
+  }, [timetableRef, updateDimensions]);
+  const forceUpdate = React.useCallback(
+    () => {
+      if (dimensions.width === 0) updateDimensions();
+      setVersion(!version);
+    },
+    [dimensions.width, version, updateDimensions],
+  );
 
-  const [version, setVersion] = React.useState(false);
-  const forceUpdate = () => {
-    if (dimensions.width === 0) updateDimensions();
-    setVersion(!version);
-  };
-
-  useEffect(forceUpdate, [props.timetable.version]);
+  useEffect(forceUpdate, [timetable.version]);
   useEffect(updateDimensions, [hours]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
@@ -140,67 +145,77 @@ function TimetableTable (props: Props) {
   }, [dragging, props.options.includeFull]);
 
 
-  const handleDrag = (session: LinkedSession): void => {
-    // Don't drag if something else is being dragged already
-    if (dragging) return;
+  const handleDrag = React.useCallback(
+    (session: LinkedSession): void => {
+      // Don't drag if something else is being dragged already
+      if (dragging) return;
 
-    ReactGA.event({
-      category: CATEGORY,
-      action: 'Drag Session',
-      label: session.stream.id,
-    });
+      ReactGA.event({
+        category: CATEGORY,
+        action: 'Drag Session',
+        label: session.stream.id,
+      });
 
-    // Bump dragged stream, keeping the dragged session on top
-    props.timetable.bumpStream(session.id);
-    props.timetable.bumpSession(session.id);
+      // Bump dragged stream, keeping the dragged session on top
+      timetable.bumpStream(session.id);
+      timetable.bumpSession(session.id);
 
-    props.timetable.drag(session.id);
-    props.timetable.updateClashDepths();
+      timetable.drag(session.id);
+      timetable.updateClashDepths();
 
-    // Mark this session as being dragged
-    setDragging(session);
-  }
+      // Mark this session as being dragged
+      setDragging(session);
+    },
+    [timetable, dragging, setDragging],
+  );
 
-  const handleMove = (session: LinkedSession, delta: Position) => {
-    props.timetable.move(session.id, delta);
-    forceUpdate();
-  }
+  const handleMove = React.useCallback(
+    (session: LinkedSession, delta: Position) => {
+      timetable.move(session.id, delta);
+      forceUpdate();
+    },
+    [timetable, forceUpdate],
+  );
 
-  const handleDrop = (session: LinkedSession): void => {
-    if (!dragging) return;
+  const getNearestDropzone = React.useCallback(
+    (position: Position): DropzonePlacement | null => {
+      let nearest: DropzonePlacement | null = null;
+      let bestDistance = SNAP_DIST * SNAP_DIST;
+      for (let dropzone of dropzones) {
+        const dropzonePosition = dropzone.basePlacement(dimensions, hours.start);
+        const deltaX = dropzonePosition.x - position.x;
+        const deltaY = dropzonePosition.y - position.y;
 
-    // Snap session to nearest dropzone
-    const sessionPlacement = props.timetable.get(session.id);
-    const startHour = hours.start;
-    const position = sessionPlacement.getPosition(dimensions, startHour);
-    const dropzone = getNearestDropzone(position);
-    props.timetable.drop(session.id, dropzone, dimensions, hours.start);
-
-    setDragging(null);
-  }
-
-  const getNearestDropzone = (position: Position): DropzonePlacement | null => {
-    let nearest: DropzonePlacement | null = null;
-    let bestDistance = SNAP_DIST * SNAP_DIST;
-    const startHour = hours.start;
-    for (let dropzone of dropzones) {
-      const dropzonePosition = dropzone.basePlacement(dimensions, startHour);
-      const deltaX = dropzonePosition.x - position.x;
-      const deltaY = dropzonePosition.y - position.y;
-
-      let distSq = (deltaX * deltaX) + (deltaY * deltaY);
-      if (distSq < bestDistance) {
-        nearest = dropzone;
-        bestDistance = distSq;
+        let distSq = (deltaX * deltaX) + (deltaY * deltaY);
+        if (distSq < bestDistance) {
+          nearest = dropzone;
+          bestDistance = distSq;
+        }
       }
-    }
-    return nearest;
-  }
+      return nearest;
+    },
+    [dropzones, dimensions, hours.start],
+  );
+
+  const handleDrop = React.useCallback(
+    (session: LinkedSession): void => {
+      if (!dragging) return;
+
+      // Snap session to nearest dropzone
+      const sessionPlacement = timetable.get(session.id);
+      const position = sessionPlacement.getPosition(dimensions, hours.start);
+      const dropzone = getNearestDropzone(position);
+      timetable.drop(session.id, dropzone, dimensions, hours.start);
+
+      setDragging(null);
+    },
+    [timetable, getNearestDropzone, dragging, dimensions, hours.start],
+  );
 
 
   const classes = useStyles();
   const rootClasses = [classes.root];
-  const disabled = props.timetable.renderOrder.length === 0 && !props.isStandalone;
+  const disabled = timetable.renderOrder.length === 0 && !props.isStandalone;
   if (disabled) {
     rootClasses.push(classes.faded);
   }
@@ -212,8 +227,8 @@ function TimetableTable (props: Props) {
       id="timetable-display"
     >
       <TransitionGroup>
-        {dimensions.width ? props.timetable.renderOrder.map(sid => {
-          const placement = props.timetable.getMaybe(sid);
+        {dimensions.width ? timetable.renderOrder.map(sid => {
+          const placement = timetable.getMaybe(sid);
           if (!placement) return null;
           const session = placement.session;
           const courseId = getCourseId(session.course);
@@ -239,7 +254,7 @@ function TimetableTable (props: Props) {
                   options={props.options}
                   disableTransitions={props.disableTransitions}
                   onDrag={handleDrag}
-                  onMove={handleMove}
+                  onMove={dragging && dragging.id === session.id ? handleMove : undefined}
                   onDrop={handleDrop}
                 />
               </div>

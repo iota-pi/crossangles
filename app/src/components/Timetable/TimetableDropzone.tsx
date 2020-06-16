@@ -27,7 +27,7 @@ export interface Props {
   colour?: string,
 }
 
-export const TimetableDropzone: React.FC<Props> = ({ colour, session, position }) => {
+export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, session, position }) => {
   const classes = useStyles();
   const styles = React.useMemo(
     () => {
@@ -58,6 +58,6 @@ export const TimetableDropzone: React.FC<Props> = ({ colour, session, position }
       />
     </div>
   );
-}
+});
 
 export default TimetableDropzone;
