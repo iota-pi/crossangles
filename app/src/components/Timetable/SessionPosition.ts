@@ -1,4 +1,4 @@
-import * as tt from "./timetableUtil";
+import * as tt from './timetableUtil';
 
 export const getClashOffset = (clashDepth: number) => {
   return {

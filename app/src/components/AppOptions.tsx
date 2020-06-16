@@ -90,7 +90,7 @@ export const AppOptions = () => {
       >
         <DialogTitle disableTypography className={classes.dialogTitle}>
           <Typography variant="h6" className={classes.flexGrow}>
-            CrossAngles Options
+            Settings
           </Typography>
 
           <IconButton
