@@ -4,7 +4,7 @@ import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import ListboxComponent from './ListboxComponent';
 import { CourseData, getCourseId } from '../state';
@@ -55,6 +55,47 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function noFilter<T> (x: T) { return x; }
+
+interface InputProps extends AutocompleteRenderInputParams {
+  inputValue: string,
+}
+
+const AutocompleteInput: React.FC<InputProps> = (props) => {
+  const classes = useStyles();
+  const [focused, setFocused] = React.useState(true);
+  const onFocus = React.useCallback(() => setFocused(true), []);
+  const onBlur = React.useCallback(() => setFocused(false), []);
+  const { inputValue, ...textFieldProps } = props;
+
+  return (
+    <div className={classes.root}>
+      <TextField
+        {...textFieldProps}
+        label="Select your courses"
+        variant="outlined"
+        autoFocus
+        onFocus={onFocus}
+        onBlur={onBlur}
+        InputProps={{
+          ...props.InputProps,
+          startAdornment: (
+            <SearchIcon
+              color={focused ? 'primary' : undefined}
+              className={classes.searchIcon}
+            />
+          ),
+        }}
+        InputLabelProps={{
+          ...props.InputLabelProps,
+          shrink: focused || inputValue.length > 0,
+          className: `${classes.inputLabel} ${focused || inputValue.length > 0 ? classes.shrunk : ''}`,
+        }}
+      />
+    </div>
+  )
+};
+
 
 const AutocompleteControl = ({
   courses,
@@ -65,7 +106,6 @@ const AutocompleteControl = ({
   const classes = useStyles();
 
   const [inputValue, setInputValue] = React.useState('');
-  const [focused, setFocused] = React.useState(true);
 
   const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
   const allOptions = React.useMemo(
@@ -122,82 +162,84 @@ const AutocompleteControl = ({
   // This hack prevents the ref of this dummy value array from changing
   const value = React.useState([])[0];
 
-  const handleChange = (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
-    if (newCourses) {
-      const newCourse = newCourses[newCourses.length - 1];
-      chooseCourse(newCourse);
-    }
-  };
+  const handleChange = React.useCallback(
+    (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
+      if (newCourses) {
+        const newCourse = newCourses[newCourses.length - 1];
+        chooseCourse(newCourse);
+      }
+    },
+    [chooseCourse],
+  );
+  const handleInputChange = React.useCallback(
+    (_: any, value: string) => setInputValue(value),
+    [setInputValue],
+  );
+
+  const renderInput = React.useCallback(
+    (props: AutocompleteRenderInputParams) => <AutocompleteInput {...props} inputValue={inputValue}/>,
+    [inputValue],
+  )
+
+  const renderOption = React.useCallback(
+    (option, { inputValue }) => {
+      const name = ` — ${option.name}`
+      const codeMatches = match(option.code, inputValue);
+      const codeParts = parse(option.code, codeMatches);
+      const nameMatches = match(name, inputValue);
+      const nameParts = parse(name, nameMatches);
+
+      return (
+        <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
+          {codeParts.map((part, index) => (
+            <span key={index} style={{ fontWeight: part.highlight ? 500 : 400 }}>
+              {part.text}
+            </span>
+          ))}
+          {nameParts.map((part, index) => (
+            <span key={index} style={{ fontWeight: part.highlight ? 500 : 300 }}>
+              {part.text}
+            </span>
+          ))}
+          {option.term ? ` (${option.term})` : ''}
+        </div>
+      );
+    },
+    [classes],
+  );
+
+  const renderTags = React.useCallback(() => null, []);
+
+  const childClasses = React.useMemo(
+    () => ({ popupIndicator: classes.popupIndicator }),
+    [classes],
+  );
+
+  const getOptionLabel = React.useCallback((option: CourseData) => option.code, []);
+
 
   return (
     <Autocomplete
       id="course-selection-autocomplete"
       options={filteredOptions}
-      filterOptions={o => o}
+      filterOptions={noFilter}
       ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
       onChange={handleChange}
-      onInputChange={(_, value) => setInputValue(value)}
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
+      onInputChange={handleInputChange}
       autoHighlight
       multiple
       disableClearable
       clearOnBlur={false}
       value={value}
       inputValue={inputValue}
-      getOptionLabel={option => option.code}
+      getOptionLabel={getOptionLabel}
       noOptionsText="No matching courses found"
-      renderInput={params => (
-        <div className={classes.root}>
-          <TextField
-            {...params}
-            label="Select your courses"
-            variant="outlined"
-            autoFocus
-            InputProps={{
-              ...params.InputProps,
-              startAdornment: (
-                <SearchIcon
-                  color={focused ? 'primary' : undefined}
-                  className={classes.searchIcon}
-                />
-              ),
-            }}
-            InputLabelProps={{
-              ...params.InputLabelProps,
-              shrink: focused || inputValue.length > 0,
-              className: `${classes.inputLabel} ${focused || inputValue.length > 0 ? classes.shrunk : ''}`,
-            }}
-          />
-        </div>
-      )}
-      renderOption={(option, { inputValue }) => {
-        const name = ` — ${option.name}`
-        const codeMatches = match(option.code, inputValue);
-        const codeParts = parse(option.code, codeMatches);
-        const nameMatches = match(name, inputValue);
-        const nameParts = parse(name, nameMatches);
-
-        return (
-          <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
-            {codeParts.map((part, index) => (
-              <span key={index} style={{ fontWeight: part.highlight ? 500 : 400 }}>
-                {part.text}
-              </span>
-            ))}
-            {nameParts.map((part, index) => (
-              <span key={index} style={{ fontWeight: part.highlight ? 500 : 300 }}>
-                {part.text}
-              </span>
-            ))}
-            {option.term ? ` (${option.term})` : ''}
-          </div>
-        );
-      }}
-      renderTags={() => null}
-      classes={{ popupIndicator: classes.popupIndicator }}
+      renderInput={renderInput}
+      renderOption={renderOption}
+      renderTags={renderTags}
+      classes={childClasses}
     />
-  )
-}
+  );
+};
 
 export default AutocompleteControl;
