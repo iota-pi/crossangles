@@ -1,4 +1,4 @@
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './timetableUtil';
+import { CLASH_OFFSET_X, CLASH_OFFSET_Y, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH, getCellHeight } from './timetableUtil';
 import SessionPlacement from './SessionPlacement';
 import { LinkedSession } from '../../state';
 import { Dimensions } from './timetableTypes';
@@ -20,18 +20,22 @@ const dimensions: Dimensions = {
 
 
 describe('SessionPlacement', () => {
-  test('can initialise instance with expected base position', () => {
+  it.each`
+    compact
+    ${true}
+    ${false}
+  `('can initialise instance with expected base position', ({compact}) => {
     const p = new SessionPlacement(session);
     expect(p.session).toBe(session);
 
-    const basePlacement = p.basePlacement(dimensions, startHour);
+    const basePlacement = p.basePlacement(dimensions, startHour, compact);
     const cellWidth = (1000 - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
     const expectedX = 1 + TIMETABLE_FIRST_CELL_WIDTH + cellWidth * 2;
-    const expectedY = 1 + TIMETABLE_CELL_HEIGHT * 2;
+    const expectedY = 1 + getCellHeight(compact) * 2;
     expect(basePlacement.x).toBe(expectedX);
     expect(basePlacement.y).toBe(expectedY);
     expect(basePlacement.width).toBe(cellWidth - 1);
-    expect(basePlacement.height).toBe(TIMETABLE_CELL_HEIGHT - 1);
+    expect(basePlacement.height).toBe(getCellHeight(compact) - 1);
   });
 
   test('getters return expected initial values', () => {
@@ -66,7 +70,7 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     p.drag();
 
-    p.drop({ width: 500, height: 500 }, session.start);
+    p.drop({ width: 500, height: 500 }, session.start, false);
 
     expect(p['_isDragging']).toBe(false);
     expect(p['_isSnapped']).toBe(false);
@@ -151,9 +155,9 @@ describe('SessionPlacement', () => {
 
   test('result object doesn\'t change if position is the same', () => {
     const p = new SessionPlacement(session);
-    const pos1 = p.getPosition(dimensions, startHour);
-    expect(p.getPosition(dimensions, startHour)).toBe(pos1);
-    expect(p.getPosition(dimensions, startHour)).toBe(pos1);
+    const pos1 = p.getPosition(dimensions, startHour, false);
+    expect(p.getPosition(dimensions, startHour, false)).toBe(pos1);
+    expect(p.getPosition(dimensions, startHour, false)).toBe(pos1);
   });
 
   test('position can\'t be negative after drag', () => {
@@ -161,8 +165,8 @@ describe('SessionPlacement', () => {
     p.drag();
     p.move({ x: -1000, y: -1000 });
     const dimensions = { width: 500, height: 500 }
-    p.drop(dimensions, session.start);
-    const { x, y } = p.getPosition(dimensions, session.start);
+    p.drop(dimensions, session.start, false);
+    const { x, y } = p.getPosition(dimensions, session.start, false);
     expect({ x, y }).toEqual({ x: TIMETABLE_BORDER_WIDTH, y: TIMETABLE_BORDER_WIDTH});
   });
 
@@ -173,12 +177,12 @@ describe('SessionPlacement', () => {
 
     p.drag();
     p.move({ x: 1000, y: 1000 });
-    p.drop(dimensions, session.start);
+    p.drop(dimensions, session.start, false);
 
-    const { x, y } = p.getPosition(dimensions, session.start);
+    const { x, y } = p.getPosition(dimensions, session.start, false);
     expect({ x, y }).toEqual({
       x: dimensions.width - cellWidth + TIMETABLE_BORDER_WIDTH,
-      y: dimensions.height - TIMETABLE_CELL_HEIGHT + TIMETABLE_BORDER_WIDTH,
+      y: dimensions.height - getCellHeight(false) + TIMETABLE_BORDER_WIDTH,
     });
   });
 });

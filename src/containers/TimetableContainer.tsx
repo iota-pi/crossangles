@@ -49,6 +49,7 @@ export interface StateProps {
   meta: Meta,
   darkMode: boolean,
   twentyFourHours: boolean,
+  compactView: boolean,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -95,6 +96,7 @@ class TimetableContainer extends PureComponent<Props> {
           timetable={this.state.timetable}
           isUpdating={this.state.isUpdating}
           twentyFourHours={this.props.twentyFourHours}
+          compactView={this.props.compactView}
           onToggleTwentyFourHours={this.handleToggleTwentyFourHours}
         />
       </div>
@@ -253,6 +255,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     meta: state.meta,
     darkMode: state.darkMode,
     twentyFourHours: state.twentyFourHours,
+    compactView: state.compactView,
   };
 }
 

@@ -39,6 +39,7 @@ export const StandaloneTimetable = () => {
         options={queryData.options}
         colours={queryData.colours}
         darkMode={queryData.darkMode}
+        compactView={queryData.compactView}
         disableTransitions={true}
         minimalHours
         isStandalone

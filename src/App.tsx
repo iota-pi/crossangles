@@ -71,6 +71,7 @@ export interface StateProps {
   options: Options,
   darkMode: boolean,
   twentyFourHours: boolean,
+  compactView: boolean,
 }
 
 export interface DispatchProps {
@@ -181,9 +182,9 @@ class App extends PureComponent<Props, State> {
       action: 'Save as Image',
     });
 
-    const { timetable, colours, options, twentyFourHours, darkMode } = this.props;
+    const { timetable, colours, options, twentyFourHours, darkMode, compactView } = this.props;
     const campus = getCampus();
-    const viewport = getScreenshotViewport(this.props.timetable);
+    const viewport = getScreenshotViewport(timetable, compactView);
 
     const promise = saveAsImage({
       timetable,
@@ -193,6 +194,7 @@ class App extends PureComponent<Props, State> {
       campus,
       twentyFourHours,
       darkMode,
+      compactView,
     });
 
     promise.then(success => {
@@ -244,6 +246,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     options: state.options,
     darkMode: state.darkMode,
     twentyFourHours: state.twentyFourHours,
+    compactView: state.compactView,
   };
 }
 

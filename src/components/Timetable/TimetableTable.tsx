@@ -55,6 +55,7 @@ export interface Props {
   isUpdating?: boolean,
   disableTransitions?: boolean,
   twentyFourHours?: boolean,
+  compactView?: boolean,
   onToggleTwentyFourHours?: () => void,
 }
 
@@ -75,6 +76,7 @@ export function getCourseColour (course: CourseData, colourMap: ColourMap, darkM
 
 function TimetableTable (props: Props) {
   const timetable = props.timetable;
+  const compact = props.compactView || false;
   const sessions = React.useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
     [timetable],
@@ -182,7 +184,7 @@ function TimetableTable (props: Props) {
       let nearest: DropzonePlacement | null = null;
       let bestDistance = SNAP_DIST * SNAP_DIST;
       for (let dropzone of dropzones) {
-        const dropzonePosition = dropzone.basePlacement(dimensions, hours.start);
+        const dropzonePosition = dropzone.basePlacement(dimensions, hours.start, compact);
         const deltaX = dropzonePosition.x - position.x;
         const deltaY = dropzonePosition.y - position.y;
 
@@ -194,7 +196,7 @@ function TimetableTable (props: Props) {
       }
       return nearest;
     },
-    [dropzones, dimensions, hours.start],
+    [dropzones, dimensions, hours.start, compact],
   );
 
   const handleDrop = React.useCallback(
@@ -203,13 +205,13 @@ function TimetableTable (props: Props) {
 
       // Snap session to nearest dropzone
       const sessionPlacement = timetable.get(session.id);
-      const position = sessionPlacement.getPosition(dimensions, hours.start);
+      const position = sessionPlacement.getPosition(dimensions, hours.start, compact);
       const dropzone = getNearestDropzone(position);
-      timetable.drop(session.id, dropzone, dimensions, hours.start);
+      timetable.drop(session.id, dropzone, dimensions, hours.start, compact);
 
       setDragging(null);
     },
-    [timetable, getNearestDropzone, dragging, dimensions, hours.start],
+    [timetable, getNearestDropzone, dragging, dimensions, hours.start, compact],
   );
 
 
@@ -233,7 +235,7 @@ function TimetableTable (props: Props) {
           const session = placement.session;
           const courseId = getCourseId(session.course);
           const key = `${courseId}-${session.stream.component}-${session.index}`;
-          const position = placement.getPosition(dimensions, hours.start);
+          const position = placement.getPosition(dimensions, hours.start, compact);
 
           return (
             <Fade
@@ -247,7 +249,7 @@ function TimetableTable (props: Props) {
                   session={session}
                   colour={getCourseColour(session.course, props.colours, props.darkMode)}
                   position={position}
-                  dimensions={placement.basePlacement(dimensions, hours.start)}
+                  dimensions={placement.basePlacement(dimensions, hours.start, compact)}
                   isDragging={placement.isDragging}
                   isSnapped={placement.isSnapped}
                   clashDepth={placement.clashDepth}
@@ -266,7 +268,7 @@ function TimetableTable (props: Props) {
       {dropzones.map(dropzone => (
         <TimetableDropzone
           key={dropzone.session.stream.id}
-          position={dropzone.basePlacement(dimensions, hours.start)}
+          position={dropzone.basePlacement(dimensions, hours.start, compact)}
           colour={getCourseColour(dropzone.session.course, props.colours, props.darkMode)}
           session={dropzone.session}
         />
@@ -281,7 +283,8 @@ function TimetableTable (props: Props) {
         start={hours.start}
         end={hours.end}
         disabled={disabled}
-        twentyFourHours={props.twentyFourHours}
+        twentyFourHours={props.twentyFourHours || false}
+        compact={compact}
         onToggleTwentyFourHours={props.onToggleTwentyFourHours}
       />
     </div>

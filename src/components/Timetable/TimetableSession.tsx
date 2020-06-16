@@ -6,7 +6,8 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { Position, Dimensions } from './timetableTypes';
-import { Options, LinkedSession } from '../../state';
+import { Options, LinkedSession, RootState } from '../../state';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -51,9 +52,9 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     textAlign: 'center',
     fontWeight: 300,
+    lineHeight: 1.25,
 
     '& > $label': {
-      lineHeight: 1.25,
       fontSize: '105%',
 
       '& > $em': {
@@ -64,9 +65,14 @@ const useStyles = makeStyles(theme => ({
   label: {},
   em: {},
   details: {
-    lineHeight: 1.15,
-    fontSize: '82%',
+    fontSize: '88%',
+
+    '&$compact': {
+      fontSize: '82%',
+      lineHeight: 1.15,
+    },
   },
+  compact: {},
 }));
 
 export interface Props {
@@ -101,6 +107,8 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
   const sessionComponent = isSpecialCourse ? '' : stream.component;
+
+  const compact = useSelector((state: RootState) => state.compactView);
 
   const details: Detail[] = React.useMemo(
     () => {
@@ -199,6 +207,10 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
     [colour],
   );
 
+  const detailsClassList = [classes.details];
+  if (compact) { detailsClassList.push(classes.compact); }
+  const detailsClasses = detailsClassList.join(' ');
+
   return (
     <DraggableCore
       onStart={handleStart}
@@ -230,7 +242,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
               <TransitionGroup appear={false}>
                 {details.map(detail => (
                   <Collapse key={detail.key}>
-                    <div className={classes.details}>
+                    <div className={detailsClasses}>
                       {detail.text}
                     </div>
                   </Collapse>

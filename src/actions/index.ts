@@ -6,6 +6,7 @@ import { NoticeAction } from './notice';
 import { CourseAction, EventAction, ToggleShowEventsAction, ToggleOptionAction } from './selection';
 import { SessionManagerAction, SuggestionAction, UnplacedCountAction } from './timetable';
 import { SetTwentyFourHoursAction } from './twentyFourHours';
+import { SetCompactViewAction } from './compactView';
 
 export * from './colours';
 export * from './darkMode';
@@ -15,5 +16,6 @@ export * from './notice';
 export * from './selection';
 export * from './timetable';
 export * from './twentyFourHours';
+export * from './compactView';
 
-export type AllActions = ColourAction | CourseListAction | MetaAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | UnplacedCountAction | SetDarkModeAction | SetTwentyFourHoursAction;
+export type AllActions = ColourAction | CourseListAction | MetaAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | UnplacedCountAction | SetDarkModeAction | SetTwentyFourHoursAction | SetCompactViewAction;

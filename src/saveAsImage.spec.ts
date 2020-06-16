@@ -22,6 +22,7 @@ describe('buildQueryString and parseQueryString', () => {
       options: testOptions,
       twentyFourHours: false,
       darkMode: false,
+      compactView: false,
     });
     const queryString = buildQueryString(data);
     const result = parseQueryString(queryString);
@@ -36,6 +37,7 @@ describe('buildQueryString and parseQueryString', () => {
       options: {},
       twentyFourHours: false,
       darkMode: false,
+      compactView: false,
     });
   })
 
@@ -46,6 +48,7 @@ describe('buildQueryString and parseQueryString', () => {
       options: testOptions,
       twentyFourHours: false,
       darkMode: true,
+      compactView: false,
     });
     const queryString = buildQueryString({ ...data, abc: 123 } as SaveAsImageData);
     const result = parseQueryString(queryString);
@@ -83,6 +86,7 @@ describe('parseGenericQueryString', () => {
 describe('getScreenshotHeight', () => {
   it('gives expected result', () => {
     const timetable = getSessionManager().data;
-    expect(getScreenshotHeight(timetable)).toBe(602);
+    expect(getScreenshotHeight(timetable, true)).toBe(602);
+    expect(getScreenshotHeight(timetable, false)).toBe(722);
   })
 })

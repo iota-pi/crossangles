@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_MIN_WIDTH } from './timetableUtil';
+import { getCellHeight, TIMETABLE_BORDER_WIDTH, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_MIN_WIDTH } from './timetableUtil';
 import IconButton from '@material-ui/core/IconButton';
 import Schedule from '@material-ui/icons/Schedule';
 
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => {
     },
     row: {
       display: 'flex',
-      height: TIMETABLE_CELL_HEIGHT,
+      height: getCellHeight(false),
 
       borderStyle: 'solid',
       borderColor: STANDARD_BORDER,
@@ -43,7 +43,11 @@ const useStyles = makeStyles(theme => {
       '&:last-child': {
         borderBottomColor: DARKER_BORDER,
       },
+      '&$compact': {
+        height: getCellHeight(true),
+      },
     },
+    compact: {},
     header: {
       fontWeight: 500,
       fontSize: '120%',
@@ -94,7 +98,8 @@ export interface Props {
   timetableRef: RefObject<HTMLDivElement>,
   start: number,
   end: number,
-  twentyFourHours?: boolean,
+  compact: boolean,
+  twentyFourHours: boolean,
   onToggleTwentyFourHours?: () => void,
 }
 
@@ -103,7 +108,8 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
   timetableRef,
   start,
   end,
-  twentyFourHours = false,
+  compact,
+  twentyFourHours,
   onToggleTwentyFourHours,
 }) => {
   const classes = useStyles();
@@ -123,6 +129,10 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
     },
     [start, end, twentyFourHours],
   );
+
+  const rowClassList = [classes.row];
+  if (compact) { rowClassList.push(classes.compact); }
+  const rowClasses = rowClassList.join(' ');
 
   return (
     <div className={classes.grid} ref={timetableRef}>
@@ -145,7 +155,7 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
       </div>
 
       {hoursArray.map(([hour, am]) => (
-        <div className={classes.row} key={hour + am.toString()}>
+        <div className={rowClasses} key={hour + am.toString()}>
           <div className={`${classes.cell} ${classes.time}`}>
             <span>
               {hour}
