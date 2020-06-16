@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => {
       borderRightWidth: 0,
       borderBottomWidth: 0,
       minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * 5 + TIMETABLE_BORDER_WIDTH,
+      zIndex: -1,
     },
     row: {
       display: 'flex',
@@ -136,7 +137,7 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
 
   return (
     <div className={classes.grid} ref={timetableRef}>
-      <div className={`${classes.row} ${classes.header}`}>
+      <div className={`${rowClasses} ${classes.header}`}>
         <div className={`${classes.cell} ${classes.time} ${classes.timeCentred}`}>
           {onToggleTwentyFourHours && (
             <IconButton
