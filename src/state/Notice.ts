@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export const DEFAULT_NOTICE_TIMEOUT = 6000;
 

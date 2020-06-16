@@ -1,7 +1,7 @@
 import React, { PureComponent, MouseEvent } from 'react';
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import withStyles, { WithStyles } from "@material-ui/core/styles/withStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
