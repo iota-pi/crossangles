@@ -5,6 +5,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { AboutCrossAngles } from './AboutCrossAngles';
+import { AppOptions } from './AppOptions';
 import InvertColors from '@material-ui/icons/InvertColors';
 import InvertColorsOff from '@material-ui/icons/InvertColorsOff';
 import { makeStyles } from '@material-ui/core';
@@ -50,6 +51,7 @@ export function CrossAnglesAppBar({
         </IconButton>
 
         <AboutCrossAngles onShowContact={onShowContact} />
+        <AppOptions />
       </Toolbar>
     </AppBar>
   );

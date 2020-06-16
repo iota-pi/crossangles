@@ -9,6 +9,7 @@ import { notice } from './notice';
 import { darkMode } from './darkMode';
 import { twentyFourHours } from './twentyFourHours';
 import { compactView } from './compactView';
+import { reducedMotion } from './reducedMotion';
 import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions';
 import {
   RootState,
@@ -42,6 +43,7 @@ const basicReducer = combineReducers<RootState>({
   darkMode,
   twentyFourHours,
   compactView,
+  reducedMotion,
   history: state => state || initialState.history,
 });
 

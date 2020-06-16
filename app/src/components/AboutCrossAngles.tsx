@@ -27,18 +27,24 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'underline',
     cursor: 'pointer',
   },
-}))
+}));
 
 
-export function AboutCrossAngles ({ onShowContact }: { onShowContact: () => void }) {
+export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
+  const classes = useStyles();
   const [showDialog, setShowDialog] = React.useState(false);
-  const classes = useStyles()
 
-  const handleOpen = () => {
-    setShowDialog(true);
-    modalview('about-crossangles');
-  }
-  const handleClose = () => setShowDialog(false);
+  const handleOpen = React.useCallback(
+    () => {
+      setShowDialog(true);
+      modalview('about-crossangles');
+    },
+    [],
+  );
+  const handleClose = React.useCallback(
+    () => setShowDialog(false),
+    [],
+  );
 
   return (
     <div>
