@@ -89,7 +89,10 @@ const AutocompleteInput: React.FC<InputProps> = (props) => {
         InputLabelProps={{
           ...props.InputLabelProps,
           shrink: focused || inputValue.length > 0,
-          className: `${classes.inputLabel} ${focused || inputValue.length > 0 ? classes.shrunk : ''}`,
+          classes: {
+            root: classes.inputLabel,
+            shrink: classes.shrunk,
+          },
         }}
       />
     </div>
