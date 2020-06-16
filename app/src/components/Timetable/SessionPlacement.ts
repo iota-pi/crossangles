@@ -96,13 +96,13 @@ export class SessionPlacement extends TimetablePlacement {
     this._offset.y += delta.y;
   }
 
-  drop (timetableDimensions: Dimensions, firstHour: number): void {
+  drop (timetableDimensions: Dimensions, firstHour: number, compact: boolean): void {
     this._isDragging = false;
 
     // Update offset based on current (rendered) position and base position
     // NB: this is done to ensure the offset stays bounded within the timetable element
-    const base = this.basePlacement(timetableDimensions, firstHour);
-    const current = this.getPosition(timetableDimensions, firstHour);
+    const base = this.basePlacement(timetableDimensions, firstHour, compact);
+    const current = this.getPosition(timetableDimensions, firstHour, compact);
     this._offset.x = current.x - base.x;
     this._offset.y = current.y - base.y;
   }
@@ -157,8 +157,8 @@ export class SessionPlacement extends TimetablePlacement {
     let cachedDeps: (Dimensions | number | boolean)[] = [];
     let cachedResult: Required<Position>;
 
-    return (timetableDimensions: Dimensions, startHour: number): Required<Position> => {
-      const base = this.basePlacement(timetableDimensions, startHour);
+    return (timetableDimensions: Dimensions, startHour: number, compact: boolean): Required<Position> => {
+      const base = this.basePlacement(timetableDimensions, startHour, compact);
       const dependencies = [
         timetableDimensions,
         startHour,

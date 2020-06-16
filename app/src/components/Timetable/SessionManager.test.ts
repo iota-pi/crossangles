@@ -218,7 +218,7 @@ describe('SessionManager basic functionality', () => {
     s.set(p1.session.id, p1);
     s.set(p2.session.id, p2);
     const v = s.version;
-    s.drop(p1.session.id, null, getDimensions(), 10);
+    s.drop(p1.session.id, null, getDimensions(), 10, false);
     expect(p1.drop).toHaveBeenCalledTimes(1);
     expect(p2.drop).not.toHaveBeenCalled();
     expect(updateScore).toHaveBeenCalledTimes(1);
@@ -239,7 +239,7 @@ describe('SessionManager basic functionality', () => {
     s.set(p2.session.id, p2);
     s.set(p3.session.id, p3);
     const v = s.version;
-    s.drop(p1.session.id, null, getDimensions(), 10);
+    s.drop(p1.session.id, null, getDimensions(), 10, false);
     expect(p1.lower).not.toHaveBeenCalled();
     expect(p2.lower).toHaveBeenCalledTimes(1);
     expect(p3.lower).toHaveBeenCalledTimes(1);

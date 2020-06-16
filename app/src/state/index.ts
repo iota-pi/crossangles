@@ -47,6 +47,7 @@ export interface RootState extends TimetableState {
   timetables: Timetables,
   darkMode: boolean,
   twentyFourHours: boolean,
+  compactView: boolean,
 }
 
 
@@ -94,4 +95,5 @@ export const initialState: RootState = {
   hiddenEvents: [],
   darkMode: false,
   twentyFourHours: false,
+  compactView: false,
 };

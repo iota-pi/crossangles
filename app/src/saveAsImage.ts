@@ -2,7 +2,7 @@ import axios from 'axios';
 import download from 'downloadjs';
 import { ColourMap, Options } from './state';
 import { SessionManagerData, getEmptySessionManagerData } from './components/Timetable/SessionManagerTypes';
-import { TIMETABLE_BORDER_WIDTH, TIMETABLE_CELL_HEIGHT } from './components/Timetable/timetableUtil';
+import { getCellHeight, TIMETABLE_BORDER_WIDTH } from './components/Timetable/timetableUtil';
 import getHours from './components/Timetable/getHours';
 
 export interface SaveAsImageData {
@@ -11,6 +11,7 @@ export interface SaveAsImageData {
   options: Options,
   twentyFourHours: boolean,
   darkMode: boolean,
+  compactView: boolean,
 }
 
 export interface Viewport {
@@ -24,10 +25,10 @@ export interface SaveAsImageRequest extends SaveAsImageData {
 }
 
 
-export const getScreenshotViewport = (timetable: SessionManagerData): Viewport => {
+export const getScreenshotViewport = (timetable: SessionManagerData, compact: boolean): Viewport => {
   return {
     width: getScreenshotWidth(),
-    height: getScreenshotHeight(timetable),
+    height: getScreenshotHeight(timetable, compact),
   };
 }
 
@@ -39,14 +40,14 @@ export const getScreenshotWidth = (): number => {
   return width;
 }
 
-export const getScreenshotHeight = (timetable: SessionManagerData): number => {
+export const getScreenshotHeight = (timetable: SessionManagerData, compact: boolean): number => {
   // Get height based off number of timetable rows
   const borderSpace = TIMETABLE_BORDER_WIDTH * 2;
   const sessions = timetable.map.map(([_, s]) => s.session);
   const hours = getHours(sessions);
   const duration = hours.end - hours.start;
   const rows = 1 + duration;
-  const height = rows * TIMETABLE_CELL_HEIGHT + borderSpace;
+  const height = rows * getCellHeight(compact) + borderSpace;
   return height;
 }
 
@@ -100,6 +101,7 @@ export const parseQueryString = (queryString: string): SaveAsImageData => {
     options = {},
     twentyFourHours = false,
     darkMode = false,
+    compactView = false,
   } = data as Partial<SaveAsImageData>;
-  return { timetable, colours, options, twentyFourHours, darkMode };
+  return { timetable, colours, options, twentyFourHours, darkMode, compactView };
 }
