@@ -46,7 +46,7 @@ export interface Props {
   onToggleOption: (option: OptionName) => void,
 }
 
-const GeneralOptions = ({
+const GeneralOptions = React.memo(({
   options,
   darkMode,
   onToggleOption,
@@ -76,6 +76,6 @@ const GeneralOptions = ({
       ))}
     </div>
   );
-}
+});
 
 export default GeneralOptions;

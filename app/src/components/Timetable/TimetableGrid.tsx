@@ -98,7 +98,7 @@ export interface Props {
   onToggleTwentyFourHours?: () => void,
 }
 
-export const TimetableGrid: React.FC<Props> = ({
+export const TimetableGrid: React.FC<Props> = React.memo(({
   disabled,
   timetableRef,
   start,
@@ -168,6 +168,6 @@ export const TimetableGrid: React.FC<Props> = ({
       ))}
     </div>
   );
-};
+});
 
 export default TimetableGrid;
