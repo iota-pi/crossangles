@@ -227,10 +227,13 @@ function TimetableTable (props: Props) {
   }
 
   const draggingColour = dragging ? getCourseColour(dragging.course, props.colours, props.darkMode) : undefined;
-  const dropzoneStyles = React.useMemo<React.CSSProperties>(() => ({
-    position: 'absolute',
-    zIndex: DROPZONE_Z,
-  }), []);
+  const dropzoneStyles = React.useMemo<React.CSSProperties>(
+    () => ({
+      position: 'absolute',
+      zIndex: dragging ? DROPZONE_Z : undefined,
+    }),
+    [dragging],
+  );
 
   return (
     <div
