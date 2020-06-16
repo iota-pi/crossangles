@@ -96,7 +96,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
     props.clashDepth > 0 ? classes.hovering : '',
     props.disableTransitions ? classes.disableTransitions : '',
   ].join(' ');
-  const { dimensions, options, position, session } = props;
+  const { dimensions, isDragging, options, onDrag, onMove, onDrop, position, session } = props;
   const { course, stream, day, start, end } = session;
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
@@ -165,23 +165,39 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
     [dimensions, position],
   );
 
-  const handleStart = (e: DraggableEvent) => {
-    if (props.onDrag) {
-      props.onDrag(props.session);
-    }
-  }
-  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
-    if (props.isDragging && props.onMove) {
-      let x = data.deltaX;
-      let y = data.deltaY;
-      props.onMove(props.session, { x, y });
-    }
-  }
-  const handleStop = () => {
-    if (props.onDrop) {
-      props.onDrop(props.session);
-    }
-  }
+  const handleStart = React.useCallback(
+    (e: DraggableEvent) => {
+      if (onDrag) {
+        onDrag(session);
+      }
+    },
+    [onDrag, session],
+  );
+  const handleDrag = React.useCallback(
+    (e: DraggableEvent, data: DraggableData) => {
+      if (isDragging && onMove) {
+        let x = data.deltaX;
+        let y = data.deltaY;
+        onMove(session, { x, y });
+      }
+    },
+    [isDragging, onMove, session],
+  );
+  const handleStop = React.useCallback(
+    () => {
+      if (onDrop) {
+        onDrop(session);
+      }
+    },
+    [onDrop, session],
+  );
+
+  const backgroundStyle = React.useMemo(
+    () => ({
+      backgroundColor: colour,
+    }),
+    [colour],
+  );
 
   return (
     <DraggableCore
@@ -199,9 +215,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
       >
         <div
           className={classes.background}
-          style={{
-            backgroundColor: colour,
-          }}
+          style={backgroundStyle}
           data-cy="timetable-session-background"
         />
 
