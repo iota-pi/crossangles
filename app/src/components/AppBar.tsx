@@ -34,7 +34,7 @@ export function CrossAnglesAppBar({
 
   return (
     <AppBar
-      position="absolute"
+      position="fixed"
       color={darkMode ? "secondary" : "primary"}
     >
       <Toolbar>
