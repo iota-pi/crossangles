@@ -31,6 +31,10 @@ export function CrossAnglesAppBar({
   onToggleDarkMode,
 }: Props) {
   const classes = useStyles();
+  const handleClickDarkMode = React.useCallback(
+    () => onToggleDarkMode(),
+    [onToggleDarkMode],
+  );
 
   return (
     <AppBar
@@ -42,7 +46,7 @@ export function CrossAnglesAppBar({
           CrossAngles
         </Typography>
 
-        <IconButton onClick={() => onToggleDarkMode()} color="inherit">
+        <IconButton onClick={handleClickDarkMode} color="inherit">
           {darkMode ? (
             <InvertColorsOff />
           ) : (
