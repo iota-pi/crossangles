@@ -1,4 +1,4 @@
-import { ThunkDispatch } from "redux-thunk";
+import { ThunkDispatch } from 'redux-thunk';
 
 export function notNull<T = any>(val: T | null): T {
   if (val === null) {
