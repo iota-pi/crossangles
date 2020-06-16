@@ -79,15 +79,15 @@ export interface Props {
   clashDepth: number,
   options: Options,
   disableTransitions?: boolean,
-  onDrag: (session: LinkedSession) => false | void,
-  onMove: (session: LinkedSession, delta: Position) => void,
-  onDrop: (session: LinkedSession) => void,
+  onDrag?: (session: LinkedSession) => false | void,
+  onMove?: (session: LinkedSession, delta: Position) => void,
+  onDrop?: (session: LinkedSession) => void,
 }
 
 type Detail = { key: string, text: string };
 
 
-const TimetableSession: React.FC<Props> = props => {
+const TimetableSession: React.FC<Props> = React.memo(props => {
   const classes = useStyles();
   const rootClasses = [
     classes.main,
@@ -166,17 +166,21 @@ const TimetableSession: React.FC<Props> = props => {
   );
 
   const handleStart = (e: DraggableEvent) => {
-    props.onDrag(props.session);
+    if (props.onDrag) {
+      props.onDrag(props.session);
+    }
   }
   const handleDrag = (e: DraggableEvent, data: DraggableData) => {
-    if (props.isDragging) {
+    if (props.isDragging && props.onMove) {
       let x = data.deltaX;
       let y = data.deltaY;
       props.onMove(props.session, { x, y });
     }
   }
   const handleStop = () => {
-    return props.onDrop(props.session);
+    if (props.onDrop) {
+      props.onDrop(props.session);
+    }
   }
 
   return (
@@ -224,6 +228,6 @@ const TimetableSession: React.FC<Props> = props => {
       </div>
     </DraggableCore>
   );
-}
+});
 
 export default TimetableSession;
