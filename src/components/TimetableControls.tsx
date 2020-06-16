@@ -75,6 +75,29 @@ export const TimetableControls = ({
     }
   }
   const unplacedCount = useSelector((state: RootState) => state.unplacedCount);
+  const canUndo = history.past.length > 0;
+  const canRedo = history.future.length > 0;
+
+  const handleKeyDown = React.useCallback(
+    (event: KeyboardEvent) => {
+      if (event.ctrlKey) {
+        if (event.key === 'z') {
+          if (onUndo && canUndo) onUndo();
+        }
+
+        if (event.key === 'Z' || event.key === 'y') {
+          if (onRedo && canRedo) onRedo();
+        }
+      }
+    },
+    [onUndo, onRedo, canUndo, canRedo],
+  );
+
+  React.useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <Toolbar>
@@ -84,7 +107,7 @@ export const TimetableControls = ({
             <IconButton
               onClick={onUndo}
               color="primary"
-              disabled={history.past.length === 0}
+              disabled={!canUndo}
               data-cy="undo-button"
             >
               <Undo />
@@ -98,7 +121,7 @@ export const TimetableControls = ({
             <IconButton
               onClick={onRedo}
               color="primary"
-              disabled={history.future.length === 0}
+              disabled={!canRedo}
               data-cy="redo-button"
             >
               <Redo />
