@@ -104,11 +104,11 @@ export const AdditionalCourseDisplay = React.memo(({
   );
   const handleActionClick = React.useCallback(
     () => course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course),
-    [course],
+    [course, onToggleShowEvents, onRemoveCourse],
   );
   const handleColourClick = React.useCallback(
     (e: MouseEvent<HTMLElement>) => onShowPopover(e, course),
-    [course],
+    [course, onShowPopover],
   );
 
   return (
