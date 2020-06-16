@@ -10,7 +10,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import WebStream from './WebStream';
 import CourseActionButton from './CourseActionButton';
 import ColourControl from './Colour';
-import { ColourMap, CourseData, CourseId, getCourseId, getWebStream, Meta } from '../state';
+import { Colour, CourseData, CourseId, getCourseId, getWebStream, Meta } from '../state';
 import getCampus from '../getCampus';
 import { CATEGORY } from '../analytics';
 
@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 
 export interface BaseCourseDisplayProps {
   course: CourseData,
-  colours: ColourMap,
+  colour: Colour,
   onRemoveCourse: (course: CourseData) => void,
   onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
 }
@@ -92,7 +92,7 @@ const getHandbookLink = (course: CourseData, meta: Meta) => {
 
 export const CourseDisplay = ({
   course,
-  colours,
+  colour,
   meta,
   webStreams,
   includeFull,
@@ -166,7 +166,7 @@ export const CourseDisplay = ({
 
         <div className={classes.marginRight}>
           <ColourControl
-            colour={colours[getCourseId(course)]!}
+            colour={colour}
             size={32}
             isCircle
             onClick={e => onShowPopover(e, course)}

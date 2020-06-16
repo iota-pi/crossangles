@@ -14,7 +14,7 @@ import {
   CourseId,
   getEvents,
   AdditionalEvent,
-  ColourMap,
+  Colour,
 } from '../state';
 import { Collapse } from '@material-ui/core';
 import { CATEGORY } from '../analytics';
@@ -24,7 +24,7 @@ import { BaseCourseDisplayProps } from './CourseDisplay';
 export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
   course: CourseData,
   events: AdditionalEvent[],
-  colours: ColourMap,
+  colour: Colour,
   hiddenEvents: CourseId[],
   onToggleEvent: (event: AdditionalEvent) => void,
   onRemoveCourse: (course: CourseData) => void,
@@ -74,10 +74,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const AdditionalCourseDisplay = ({
+export const AdditionalCourseDisplay = React.memo(({
   course,
   events,
-  colours,
+  colour,
   hiddenEvents,
   onShowPopover,
   onToggleEvent,
@@ -90,22 +90,26 @@ export const AdditionalCourseDisplay = ({
   const courseId = getCourseId(course);
   const minimiseEvents = hiddenEvents.includes(courseId);
   const showEvents = eventList.length > 1 || course.autoSelect;
-  const colour = colours[courseId];
   const website = course.metadata ? course.metadata.website : undefined;
-  const linkProps = {
-    href: website,
-    target: '_blank',
-    rel: 'noopener noreferrer',
-    onClick: () => handleLinkClick(website),
-  };
 
-  const handleLinkClick = (destination?: string) => {
-    ReactGA.event({
-      category: CATEGORY,
-      action: 'Additional Link',
-      label: destination,
-    });
-  }
+  const handleLinkClick = React.useCallback(
+    () => {
+      ReactGA.event({
+        category: CATEGORY,
+        action: 'Additional Link',
+        label: website,
+      });
+    },
+    [website],
+  );
+  const handleActionClick = React.useCallback(
+    () => course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course),
+    [course],
+  );
+  const handleColourClick = React.useCallback(
+    (e: MouseEvent<HTMLElement>) => onShowPopover(e, course),
+    [course],
+  );
 
   return (
     <React.Fragment>
@@ -114,14 +118,20 @@ export const AdditionalCourseDisplay = ({
           {course.metadata ? (
             <React.Fragment>
               <a
-                {...linkProps}
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleLinkClick}
                 className={classes.plainLink}
               >
                 <span>{course.name}</span>
               </a>
 
               <a
-                {...linkProps}
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleLinkClick}
                 className={`${classes.plainLink} ${classes.noShrink}`}
               >
                 <OpenInNew className={classes.externalLinkIcon} fontSize="inherit" />
@@ -137,12 +147,12 @@ export const AdditionalCourseDisplay = ({
             colour={colour}
             size={32}
             isCircle
-            onClick={e => onShowPopover(e, course)}
+            onClick={handleColourClick}
           />
         </div>
 
         <CourseActionButton
-          onClick={() => course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course)}
+          onClick={handleActionClick}
           flipped={minimiseEvents}
         >
           {course.autoSelect ? (
@@ -166,6 +176,6 @@ export const AdditionalCourseDisplay = ({
       )}
     </React.Fragment>
   )
-};
+});
 
 export default AdditionalCourseDisplay;

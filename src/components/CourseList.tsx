@@ -72,7 +72,7 @@ class CourseList extends PureComponent<Props, State> {
             {!course.isAdditional ? (
               <CourseDisplay
                 course={course}
-                colours={this.props.colours}
+                colour={this.props.colours[getCourseId(course)]}
                 webStreams={this.props.webStreams}
                 meta={this.props.meta}
                 includeFull={this.props.options.includeFull || false}
@@ -85,7 +85,7 @@ class CourseList extends PureComponent<Props, State> {
               <AdditionalCourseDisplay
                 course={course}
                 events={this.props.events}
-                colours={this.props.colours}
+                colour={this.props.colours[getCourseId(course)]}
                 hiddenEvents={this.props.hiddenEvents}
                 onToggleEvent={this.props.onToggleEvent}
                 onToggleShowEvents={this.props.onToggleShowEvents}
