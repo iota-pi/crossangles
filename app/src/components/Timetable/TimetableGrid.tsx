@@ -137,7 +137,7 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
 
   return (
     <div className={classes.grid} ref={timetableRef}>
-      <div className={`${rowClasses} ${classes.header}`}>
+      <div className={`${classes.row} ${classes.compact} ${classes.header}`}>
         <div className={`${classes.cell} ${classes.time} ${classes.timeCentred}`}>
           {onToggleTwentyFourHours && (
             <IconButton
