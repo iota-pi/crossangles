@@ -41,7 +41,7 @@ export abstract class TimetablePlacement {
       const sessionWidth = this.calculateWidth(timetableDimensions.width);
 
       const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
-      const baseY = getCellHeight(compact) + TIMETABLE_BORDER_WIDTH;
+      const baseY = getCellHeight(true) + TIMETABLE_BORDER_WIDTH;
       const dayOffsetX = sessionWidth * this.dayIndex;
       const hourOffsetY = getCellHeight(compact) * hourIndex;
 
