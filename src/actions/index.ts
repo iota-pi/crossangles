@@ -1,6 +1,6 @@
 import { ColourAction } from './colours';
 import { SetDarkModeAction } from './darkMode';
-import { CourseListAction, MetaAction } from './fetchData';
+import { CourseListAction } from './fetchData';
 import { HistoryAction } from './history';
 import { NoticeAction } from './notice';
 import { CourseAction, EventAction, ToggleShowEventsAction, ToggleOptionAction } from './selection';
@@ -20,4 +20,4 @@ export * from './twentyFourHours';
 export * from './compactView';
 export * from './reducedMotion';
 
-export type AllActions = ColourAction | CourseListAction | MetaAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | UnplacedCountAction | SetDarkModeAction | SetTwentyFourHoursAction | SetCompactViewAction | SetReducedMotionAction;
+export type AllActions = ColourAction | CourseListAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | UnplacedCountAction | SetDarkModeAction | SetTwentyFourHoursAction | SetCompactViewAction | SetReducedMotionAction;

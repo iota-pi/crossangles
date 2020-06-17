@@ -1,8 +1,8 @@
-import { AllActions, SET_META_DATA } from '../actions';
+import { AllActions, SET_COURSE_DATA } from '../actions';
 import { initialState, Meta } from '../state';
 
 export function meta(state: Meta | undefined, action: AllActions): Meta {
-  if (action.type === SET_META_DATA) {
+  if (action.type === SET_COURSE_DATA && action.meta) {
     return action.meta;
   }
 

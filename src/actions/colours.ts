@@ -3,7 +3,6 @@ import { Action } from 'redux';
 import { Colour, CourseId } from '../state';
 import { CATEGORY } from '../analytics';
 
-// Chosen courses
 export const SET_COLOUR = 'SET_COLOUR';
 
 export interface ColourAction extends Action {

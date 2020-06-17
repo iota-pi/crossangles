@@ -4,33 +4,23 @@ import { requestData } from '../requestData';
 import { CourseData, Meta } from '../state';
 
 export const SET_COURSE_DATA = 'SET_COURSE_DATA';
-export const SET_COURSE_MANAGER = 'SET_COURSE_MANAGER';
-export const SET_META_DATA = 'SET_META_DATA';
 
 export interface CourseListAction extends Action {
   type: typeof SET_COURSE_DATA;
   courses: CourseData[];
-}
-export interface MetaAction extends Action {
-  type: typeof SET_META_DATA;
-  meta: Meta;
+  meta?: Meta;
 }
 
-export function fetchData (): ThunkAction<Promise<void>, {}, undefined, AnyAction> {
+export function fetchData (): ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction> {
   return async dispatch => {
-    return requestData().then(async data => {
+    return requestData().then(data => {
       const setCourseAction: CourseListAction = {
         type: SET_COURSE_DATA,
         courses: data.courses,
+        meta: data.meta,
       };
 
-      await Promise.all([
-        dispatch(setCourseAction),
-        dispatch({
-          type: SET_META_DATA,
-          meta: data.meta,
-        }),
-      ]);
+      return dispatch(setCourseAction);
     });
   };
 }

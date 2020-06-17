@@ -1,5 +1,5 @@
 import { meta } from './meta';
-import { ClearNoticeAction, CLEAR_NOTICE, SET_META_DATA, MetaAction } from '../actions';
+import { ClearNoticeAction, CLEAR_NOTICE, SET_COURSE_DATA, CourseListAction } from '../actions';
 import { initialState, Meta } from '../state';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
@@ -20,20 +20,15 @@ describe('meta reducer', () => {
   it('can be set', () => {
     const testMeta = { ...initialState.meta };
     const newMeta: Meta = {
-      ministryName: 'abc',
-      ministryWebsite: 'abc',
-      promoText: 'abc',
-      signup: '',
-      source: '',
+      year: 1984,
       term: 1,
+      sources: [],
       updateDate: '',
       updateTime: '',
-      year: 1984,
-      signupURL: '',
-      signupValidFor: [],
     };
-    const action: MetaAction = {
-      type: SET_META_DATA,
+    const action: CourseListAction = {
+      type: SET_COURSE_DATA,
+      courses: [],
       meta: newMeta,
     };
     const state = meta(testMeta, action);
