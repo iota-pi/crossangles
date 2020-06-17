@@ -68,7 +68,6 @@ export const meta: Meta = {
   year: 1960,
   updateDate: '',
   updateTime: '',
-  signup: '',
   sources: [],
 };
 
