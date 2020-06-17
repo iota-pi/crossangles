@@ -1,4 +1,5 @@
 import React, { PureComponent, MouseEvent } from 'react';
+import { TransitionGroup } from 'react-transition-group';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
@@ -20,6 +21,7 @@ import {
   AdditionalEvent,
 } from '../state';
 import { notNull } from '../typeHelpers';
+import { Collapse } from '@material-ui/core';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -66,35 +68,39 @@ class CourseList extends PureComponent<Props, State> {
 
     return (
       <List className={classes.root} disablePadding id="course-display">
-        {allCourses.map((course, i) => (
-          <React.Fragment key={getCourseId(course)}>
-            <Divider light />
-            {!course.isAdditional ? (
-              <CourseDisplay
-                course={course}
-                colour={this.props.colours[getCourseId(course)]}
-                webStreams={this.props.webStreams}
-                meta={this.props.meta}
-                includeFull={this.props.options.includeFull || false}
-                onToggleWeb={this.props.onToggleWeb}
-                onRemoveCourse={this.props.onRemoveCourse}
-                onEditCustomCourse={this.props.onEditCustomCourse}
-                onShowPopover={this.showPopover}
-              />
-            ) : (
-              <AdditionalCourseDisplay
-                course={course}
-                events={this.props.events}
-                colour={this.props.colours[getCourseId(course)]}
-                hiddenEvents={this.props.hiddenEvents}
-                onToggleEvent={this.props.onToggleEvent}
-                onToggleShowEvents={this.props.onToggleShowEvents}
-                onRemoveCourse={this.props.onRemoveCourse}
-                onShowPopover={this.showPopover}
-              />
-            )}
-          </React.Fragment>
-        ))}
+        <TransitionGroup>
+          {allCourses.map((course, i) => (
+            <Collapse key={getCourseId(course)}>
+              <div>
+                <Divider light />
+                {!course.isAdditional ? (
+                  <CourseDisplay
+                    course={course}
+                    colour={this.props.colours[getCourseId(course)]}
+                    webStreams={this.props.webStreams}
+                    meta={this.props.meta}
+                    includeFull={this.props.options.includeFull || false}
+                    onToggleWeb={this.props.onToggleWeb}
+                    onRemoveCourse={this.props.onRemoveCourse}
+                    onEditCustomCourse={this.props.onEditCustomCourse}
+                    onShowPopover={this.showPopover}
+                  />
+                ) : (
+                  <AdditionalCourseDisplay
+                    course={course}
+                    events={this.props.events}
+                    colour={this.props.colours[getCourseId(course)]}
+                    hiddenEvents={this.props.hiddenEvents}
+                    onToggleEvent={this.props.onToggleEvent}
+                    onToggleShowEvents={this.props.onToggleShowEvents}
+                    onRemoveCourse={this.props.onRemoveCourse}
+                    onShowPopover={this.showPopover}
+                  />
+                )}
+              </div>
+            </Collapse>
+          ))}
+        </TransitionGroup>
         <Divider light />
 
         <Popover
