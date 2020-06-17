@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { lazy, PureComponent, Suspense } from 'react';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
 import {
@@ -18,6 +18,7 @@ import {
   Options,
   OptionName,
   RootState,
+  hasWebStream,
 } from '../state';
 import {
   addCourse,
@@ -29,6 +30,8 @@ import {
   setColour,
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
+import { updateTimetable } from '../timetable/updateTimetable';
 
 // Styles
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -36,12 +39,13 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
-import Autocomplete from '../components/Autocomplete';
-import CourseList from '../components/CourseList';
-import GeneralOptions from '../components/GeneralOptions';
-import CreateCustom from '../components/CreateCustom';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { updateTimetable } from '../timetable/updateTimetable';
+import Skeleton from '@material-ui/lab/Skeleton';
+
+import loadable from '@loadable/component';
+const Autocomplete = lazy(() => import('../components/Autocomplete'));
+const CourseList = lazy(() => import('../components/CourseList'));
+const GeneralOptions = lazy(() => import('../components/GeneralOptions'));
+const CreateCustom = loadable(() => import('../components/CreateCustom'));
 
 
 const styles = (theme: Theme) => createStyles({
@@ -84,6 +88,10 @@ export interface State {
   showCreateCustom: boolean,
 }
 
+const courseHeight = 52;
+const webStreamHeight = 34;
+const eventsHeight = 32;
+
 class CourseSelection extends PureComponent<Props, State> {
   state: State = {
     editingCourse: null,
@@ -97,42 +105,48 @@ class CourseSelection extends PureComponent<Props, State> {
       <React.Fragment>
         <div className={classes.flex}>
           <div className={classes.flexGrow}>
-            <Autocomplete
-              courses={this.props.courseList}
-              chosen={this.props.chosen}
-              additional={this.props.additional}
-              chooseCourse={this.chooseCourse}
-              maxItems={20}
-            />
+            <Suspense fallback={<Skeleton variant="rect" height={56} />}>
+              <Autocomplete
+                courses={this.props.courseList}
+                chosen={this.props.chosen}
+                additional={this.props.additional}
+                chooseCourse={this.chooseCourse}
+                maxItems={20}
+              />
+            </Suspense>
           </div>
         </div>
 
         <div className={classes.slightSpaceAbove}>
-          <CourseList
-            chosen={this.props.chosen}
-            custom={this.props.custom}
-            additional={this.props.additional}
-            events={this.props.events}
-            colours={this.props.colours}
-            webStreams={this.props.webStreams}
-            hiddenEvents={this.props.hiddenEvents}
-            meta={this.props.meta}
-            options={this.props.options}
-            onEditCustomCourse={this.editCustomCourse}
-            onRemoveCourse={this.removeCourse}
-            onToggleShowEvents={this.toggleShowEvents}
-            onToggleEvent={this.toggleEvent}
-            onToggleWeb={this.toggleWebStream}
-            onColourChange={this.changeColour}
-          />
+          <Suspense fallback={<Skeleton variant="rect" height={this.courseListSkeletonHeight} />}>
+            <CourseList
+              chosen={this.props.chosen}
+              custom={this.props.custom}
+              additional={this.props.additional}
+              events={this.props.events}
+              colours={this.props.colours}
+              webStreams={this.props.webStreams}
+              hiddenEvents={this.props.hiddenEvents}
+              meta={this.props.meta}
+              options={this.props.options}
+              onEditCustomCourse={this.editCustomCourse}
+              onRemoveCourse={this.removeCourse}
+              onToggleShowEvents={this.toggleShowEvents}
+              onToggleEvent={this.toggleEvent}
+              onToggleWeb={this.toggleWebStream}
+              onColourChange={this.changeColour}
+            />
+          </Suspense>
         </div>
 
         <div className={classes.spaceAbove}>
-          <GeneralOptions
-            options={this.props.options}
-            darkMode={this.props.darkMode}
-            onToggleOption={this.toggleOption}
-          />
+          <Suspense fallback={<div style={{height: 34}} />}>
+            <GeneralOptions
+              options={this.props.options}
+              darkMode={this.props.darkMode}
+              onToggleOption={this.toggleOption}
+            />
+          </Suspense>
         </div>
 
         <CreateCustom
@@ -238,6 +252,15 @@ class CourseSelection extends PureComponent<Props, State> {
         timeout: 100,
       },
     });
+  }
+
+  private get courseListSkeletonHeight () {
+    const courseCount = this.props.chosen.length + this.props.additional.length + this.props.custom.length;
+    const webStreamCount = this.props.chosen.filter(c => hasWebStream(c)).length;
+    const eventsCount = this.props.additional.length - this.props.hiddenEvents.length;
+    return (
+      courseHeight * courseCount + webStreamHeight * webStreamCount + eventsHeight * eventsCount
+    );
   }
 }
 
