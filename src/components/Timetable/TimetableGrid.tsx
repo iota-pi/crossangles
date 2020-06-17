@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => {
     row: {
       display: 'flex',
       height: getCellHeight(false),
+      transition: theme.transitions.create('height'),
 
       borderStyle: 'solid',
       borderColor: STANDARD_BORDER,
@@ -47,8 +48,12 @@ const useStyles = makeStyles(theme => {
       '&$compact': {
         height: getCellHeight(true),
       },
+      '&$disableTransitions': {
+        transition: 'none',
+      },
     },
     compact: {},
+    disableTransitions: {},
     header: {
       fontWeight: 500,
       fontSize: '120%',
@@ -101,6 +106,7 @@ export interface Props {
   end: number,
   compact: boolean,
   twentyFourHours: boolean,
+  disableTransitions: boolean,
   onToggleTwentyFourHours?: () => void,
 }
 
@@ -111,6 +117,7 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
   end,
   compact,
   twentyFourHours,
+  disableTransitions,
   onToggleTwentyFourHours,
 }) => {
   const classes = useStyles();
@@ -133,6 +140,7 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
 
   const rowClassList = [classes.row];
   if (compact) { rowClassList.push(classes.compact); }
+  if (disableTransitions) { rowClassList.push(classes.disableTransitions); }
   const rowClasses = rowClassList.join(' ');
 
   return (

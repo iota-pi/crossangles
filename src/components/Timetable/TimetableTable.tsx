@@ -305,8 +305,9 @@ function TimetableTable (props: Props) {
         start={hours.start}
         end={hours.end}
         disabled={disabled}
-        twentyFourHours={props.twentyFourHours || false}
         compact={compact}
+        twentyFourHours={props.twentyFourHours || false}
+        disableTransitions={props.disableTransitions || false}
         onToggleTwentyFourHours={props.onToggleTwentyFourHours}
       />
     </div>
