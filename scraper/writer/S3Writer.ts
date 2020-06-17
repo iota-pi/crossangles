@@ -49,6 +49,7 @@ export class S3Writer implements Writer {
       Body: content,
       ContentMD5: this.getHash(content),
       ACL: 'public-read',
+      CacheControl: `max-age=${7200}`,
       ...additionalParams,
     }).promise();
   }

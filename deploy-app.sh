@@ -32,6 +32,11 @@ export REACT_APP_CONTACT_ENDPOINT=$contact_endpoint
 export REACT_APP_SAVE_IMAGE_ENDPOINT=$image_endpoint
 export REACT_APP_DATA_ROOT_URI=$data_uri
 
+max_age=0
+if [[ $environment == production ]]; then
+  max_age=7200
+fi
+
 cd app
 npm install --production
 for campus in $@
@@ -39,6 +44,6 @@ do
   REACT_APP_CAMPUS=$campus npm run build
 
   echo "Copying to s3://$app_bucket/$version/$campus/"
-  aws s3 cp build/ s3://$app_bucket/$version/$campus/ --recursive --acl public-read
+  aws s3 cp build/ s3://$app_bucket/$version/$campus/ --recursive --acl public-read --cache-control "max-age=$max_age"
 done
 
