@@ -1,7 +1,7 @@
-import React, { Component, PureComponent, ReactNode, Suspense, ErrorInfo } from 'react';
+import React, { Component, lazy, PureComponent, ReactNode, Suspense, ErrorInfo } from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
-import loadable, { lazy } from '@loadable/component';
+import loadable from '@loadable/component';
 import {
   RootState,
   Meta,
