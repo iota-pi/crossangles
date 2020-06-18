@@ -116,7 +116,7 @@ resource "aws_dynamodb_table" "scraper_state_table" {
 }
 
 resource "aws_s3_bucket" "scraper_output" {
-  bucket = "crossangles-course-data${terraform.workspace == "default" ? "" : "-${terraform.workspace}"}"
+  bucket = "crossangles-course-data${var.environment == "production" ? "" : "-${var.environment}"}"
   acl    = "private"
 
   tags = {

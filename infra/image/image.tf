@@ -45,7 +45,7 @@ EOF
 }
 
 resource "aws_s3_bucket" "timetables" {
-  bucket = "crossangles-timetables${terraform.workspace == "default" ? "" : "-${terraform.workspace}"}"
+  bucket = "crossangles-timetables${var.environment == "production" ? "" : "-${var.environment}"}"
   acl    = "private"
 
   tags = {
