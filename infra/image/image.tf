@@ -148,3 +148,23 @@ resource "aws_cloudwatch_log_group" "debugging" {
 output "invoke_url" {
   value = aws_api_gateway_deployment.image_deployment.invoke_url
 }
+
+resource "aws_cloudwatch_event_rule" "image_trigger" {
+  description = "Keep lambda warm"
+
+  # Run every 15 minutes
+  schedule_expression = "cron(2,17,32,47 * * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "image_target" {
+  rule = aws_cloudwatch_event_rule.image_trigger.name
+  arn  = aws_lambda_function.image.arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_image" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.image.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.image_trigger.arn
+}
