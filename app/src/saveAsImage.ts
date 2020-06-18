@@ -46,8 +46,7 @@ export const getScreenshotHeight = (timetable: SessionManagerData, compact: bool
   const sessions = timetable.map.map(([_, s]) => s.session);
   const hours = getHours(sessions);
   const duration = hours.end - hours.start;
-  const rows = 1 + duration;
-  const height = rows * getCellHeight(compact) + borderSpace;
+  const height = getCellHeight(true) + duration * getCellHeight(compact) + borderSpace;
   return height;
 }
 
