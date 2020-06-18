@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from '@material-ui/core/styles/';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TimetableTable from '../components/Timetable';
 import { CourseMap, getCourseId } from '../state';
 import SessionManager from '../components/Timetable/SessionManager';
 import requestData from '../requestData';
 import { parseQueryString } from '../saveAsImage';
+import theme from '../theme';
 
 
 export interface Props {
@@ -32,7 +34,7 @@ export const StandaloneTimetable = () => {
   }, [])
 
   return (
-    <div>
+    <ThemeProvider theme={theme(queryData.darkMode)}>
       <CssBaseline />
       <TimetableTable
         timetable={timetable}
@@ -44,7 +46,7 @@ export const StandaloneTimetable = () => {
         minimalHours
         isStandalone
       />
-    </div>
+    </ThemeProvider>
   );
 }
 
