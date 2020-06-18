@@ -3,6 +3,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import ReactGA from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
+import Collapse from '@material-ui/core/Collapse';
 import Expand from '@material-ui/icons/ExpandMore';
 import Close from '@material-ui/icons/Close';
 import OpenInNew from '@material-ui/icons/OpenInNew';
@@ -16,7 +17,6 @@ import {
   AdditionalEvent,
   Colour,
 } from '../state';
-import { Collapse } from '@material-ui/core';
 import { CATEGORY } from '../analytics';
 import CourseActionButton from './CourseActionButton';
 import { BaseCourseDisplayProps } from './CourseDisplay';
