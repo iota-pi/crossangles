@@ -130,7 +130,7 @@ const AutocompleteControl = ({
           if (inputValue.length === 0) {
             setFilteredOptions(allOptions);
           } else {
-            const lowerInputValue = inputValue.toLowerCase();
+            const lowerInputValue = inputValue.toLowerCase().trim();
             const results = allOptions.filter(o => o.code.toLowerCase().startsWith(lowerInputValue));
             results.concat(allOptions.filter(o => o.code.toLowerCase().includes(lowerInputValue)));
             results.concat(allOptions.filter(o => o.name.toLowerCase().includes(lowerInputValue)));
@@ -147,7 +147,8 @@ const AutocompleteControl = ({
           if (inputValue.length === 0) {
             setFilteredOptions(allOptions);
           } else {
-            const results = matchSorter(allOptions, inputValue, matchSorterOptions);
+            const query = inputValue.trim();
+            const results = matchSorter(allOptions, query, matchSorterOptions);
             setFilteredOptions(results);
           }
         },
