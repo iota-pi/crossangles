@@ -237,9 +237,9 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
             <span>{sessionComponent}</span>
           </div>
 
-          <Fade in={props.isSnapped} appear={false}>
+          <Fade in={props.isSnapped}>
             <div>
-              <TransitionGroup appear={false}>
+              <TransitionGroup>
                 {details.map(detail => (
                   <Collapse key={detail.key}>
                     <div className={detailsClasses}>

@@ -16,8 +16,10 @@ import {
   getCourseId,
   Meta,
   AdditionalEvent,
+  RootState,
 } from '../state';
 import { Collapse } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,6 +53,7 @@ export interface PopoverState {
 const CourseList: React.FC<Props> = React.memo(props => {
   const classes = useStyles();
   const [showPopover, setShowPopover] = React.useState<PopoverState>();
+  const reducedMotion = useSelector((state: RootState) => state.reducedMotion);
   const { chosen, custom, additional, onColourChange } = props;
   const allCourses = React.useMemo(
     () => [...chosen, ...custom, ...additional],
@@ -88,6 +91,8 @@ const CourseList: React.FC<Props> = React.memo(props => {
         {allCourses.map(course => (
           <Collapse
             key={getCourseId(course)}
+            enter={!reducedMotion}
+            exit={!reducedMotion}
           >
             <div>
               <Divider light />

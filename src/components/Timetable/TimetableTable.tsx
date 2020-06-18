@@ -253,7 +253,6 @@ function TimetableTable (props: Props) {
           return (
             <Fade
               key={key}
-              appear={!props.disableTransitions}
               enter={!props.disableTransitions}
               exit={!props.disableTransitions}
             >
