@@ -1,8 +1,6 @@
-import React, { PureComponent, MouseEvent } from 'react';
+import React, { MouseEvent } from 'react';
 import { TransitionGroup } from 'react-transition-group';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
@@ -17,19 +15,17 @@ import {
   CourseId,
   getCourseId,
   Meta,
-  Options,
   AdditionalEvent,
 } from '../state';
-import { notNull } from '../typeHelpers';
 import { Collapse } from '@material-ui/core';
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
   },
-});
+}));
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   chosen: CourseData[],
   custom: CourseData[],
   additional: CourseData[],
@@ -38,7 +34,6 @@ export interface Props extends WithStyles<typeof styles> {
   webStreams: CourseId[],
   hiddenEvents: CourseId[],
   meta: Meta,
-  options: Options,
   onEditCustomCourse: (course: CourseData) => void,
   onRemoveCourse: (course: CourseData) => void,
   onToggleShowEvents: (course: CourseData) => void,
@@ -47,104 +42,107 @@ export interface Props extends WithStyles<typeof styles> {
   onColourChange: (course: CourseData, colour: Colour) => void,
 }
 
-export interface State {
-  showPopover: PopoverState | null,
-}
-
 export interface PopoverState {
   target: HTMLElement,
   course: CourseData,
 }
 
 
-class CourseList extends PureComponent<Props, State> {
-  state: State = {
-    showPopover: null,
-  }
+const CourseList: React.FC<Props> = React.memo(props => {
+  const classes = useStyles();
+  const [showPopover, setShowPopover] = React.useState<PopoverState>();
+  const { chosen, custom, additional, onColourChange } = props;
+  const allCourses = React.useMemo(
+    () => [...chosen, ...custom, ...additional],
+    [chosen, custom, additional],
+  );
 
-  render() {
-    const classes = this.props.classes;
-    const allCourses = this.props.chosen.concat(this.props.custom, this.props.additional);
-
-    return (
-      <List className={classes.root} disablePadding id="course-display">
-        <TransitionGroup>
-          {allCourses.map((course, i) => (
-            <Collapse key={getCourseId(course)}>
-              <div>
-                <Divider light />
-                {!course.isAdditional ? (
-                  <CourseDisplay
-                    course={course}
-                    colour={this.props.colours[getCourseId(course)]}
-                    webStreams={this.props.webStreams}
-                    meta={this.props.meta}
-                    includeFull={this.props.options.includeFull || false}
-                    onToggleWeb={this.props.onToggleWeb}
-                    onRemoveCourse={this.props.onRemoveCourse}
-                    onEditCustomCourse={this.props.onEditCustomCourse}
-                    onShowPopover={this.showPopover}
-                  />
-                ) : (
-                  <AdditionalCourseDisplay
-                    course={course}
-                    events={this.props.events}
-                    colour={this.props.colours[getCourseId(course)]}
-                    hiddenEvents={this.props.hiddenEvents}
-                    onToggleEvent={this.props.onToggleEvent}
-                    onToggleShowEvents={this.props.onToggleShowEvents}
-                    onRemoveCourse={this.props.onRemoveCourse}
-                    onShowPopover={this.showPopover}
-                  />
-                )}
-              </div>
-            </Collapse>
-          ))}
-        </TransitionGroup>
-        <Divider light />
-
-        <Popover
-          open={this.state.showPopover !== null}
-          anchorEl={this.state.showPopover ? this.state.showPopover.target : null}
-          onClose={this.hidePopover}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-        >
-          <ColourPicker
-            colours={COURSE_COLOURS}
-            value={this.state.showPopover ? this.props.colours[getCourseId(this.state.showPopover.course)] : null}
-            size={40}
-            columns={4}
-            onChange={this.handleChange}
-          />
-        </Popover>
-      </List>
-    )
-  }
-
-  private showPopover = (event: MouseEvent<HTMLElement>, course: CourseData) => {
-    this.setState({
-      showPopover: {
+  const handleShowPopover = React.useCallback(
+    (event: MouseEvent<HTMLElement>, course: CourseData) => {
+      setShowPopover({
         target: event.currentTarget,
         course,
-      },
-    });
-  }
+      });
+    },
+    [],
+  );
 
-  private hidePopover = () => {
-    this.setState({ showPopover: null });
-  }
+  const handleHidePopover = React.useCallback(
+    () => {
+      setShowPopover(undefined);
+    },
+    [],
+  );
 
-  private handleChange = (colour: Colour) => {
-    this.props.onColourChange(notNull(this.state.showPopover).course, colour);
-    this.hidePopover();
-  }
-}
+  const handleChange = React.useCallback(
+    (colour: Colour) => {
+      onColourChange(showPopover!.course, colour);
+      handleHidePopover();
+    },
+    [showPopover, handleHidePopover, onColourChange],
+  );
 
-export default withStyles(styles)(CourseList);
+  return (
+    <List className={classes.root} disablePadding id="course-display">
+      <TransitionGroup>
+        {allCourses.map(course => (
+          <Collapse
+            key={getCourseId(course)}
+          >
+            <div>
+              <Divider light />
+              {!course.isAdditional ? (
+                <CourseDisplay
+                  course={course}
+                  colour={props.colours[getCourseId(course)]}
+                  webStreams={props.webStreams}
+                  meta={props.meta}
+                  onToggleWeb={props.onToggleWeb}
+                  onRemoveCourse={props.onRemoveCourse}
+                  onEditCustomCourse={props.onEditCustomCourse}
+                  onShowPopover={handleShowPopover}
+                />
+              ) : (
+                <AdditionalCourseDisplay
+                  course={course}
+                  events={props.events}
+                  colour={props.colours[getCourseId(course)]}
+                  hiddenEvents={props.hiddenEvents}
+                  onToggleEvent={props.onToggleEvent}
+                  onToggleShowEvents={props.onToggleShowEvents}
+                  onRemoveCourse={props.onRemoveCourse}
+                  onShowPopover={handleShowPopover}
+                />
+              )}
+            </div>
+          </Collapse>
+        ))}
+      </TransitionGroup>
+      <Divider light />
+
+      <Popover
+        open={showPopover !== undefined}
+        anchorEl={showPopover ? showPopover.target : undefined}
+        onClose={handleHidePopover}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <ColourPicker
+          colours={COURSE_COLOURS}
+          value={showPopover ? props.colours[getCourseId(showPopover.course)] : undefined}
+          size={40}
+          columns={4}
+          onChange={handleChange}
+        />
+      </Popover>
+    </List>
+  );
+})
+
+export default CourseList;

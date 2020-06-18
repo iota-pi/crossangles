@@ -18,13 +18,13 @@ const useStyles = makeStyles(theme => ({
 export interface Props {
   checked: boolean,
   stream: StreamData,
-  includeFull: boolean,
   onChange: () => void,
 }
 
-function WebStream ({ checked, stream, includeFull, onChange }: Props) {
+function WebStream ({ checked, stream, onChange }: Props) {
   const classes = useStyles();
   const darkMode = useSelector((state: RootState) => state.darkMode);
+  const includeFull = useSelector((state: RootState) => state.options.includeFull);
 
   const disabled = stream.full && !includeFull;
   let label = 'Choose online-only lecture stream';
