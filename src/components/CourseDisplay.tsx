@@ -74,7 +74,6 @@ export interface BaseCourseDisplayProps {
 export interface CourseDisplayProps extends BaseCourseDisplayProps {
   webStreams: CourseId[],
   meta: Meta,
-  includeFull: boolean,
   onEditCustomCourse: (course: CourseData) => void,
   onToggleWeb: (course: CourseData) => void,
 }
@@ -95,7 +94,6 @@ export const CourseDisplay = ({
   colour,
   meta,
   webStreams,
-  includeFull,
   onEditCustomCourse,
   onRemoveCourse,
   onToggleWeb,
@@ -185,7 +183,6 @@ export const CourseDisplay = ({
           <WebStream
             checked={webStreams.includes(getCourseId(course))}
             stream={webStream}
-            includeFull={includeFull}
             onChange={() => onToggleWeb(course)}
           />
         </ListItem>

@@ -128,7 +128,6 @@ class CourseSelection extends PureComponent<Props, State> {
               webStreams={this.props.webStreams}
               hiddenEvents={this.props.hiddenEvents}
               meta={this.props.meta}
-              options={this.props.options}
               onEditCustomCourse={this.editCustomCourse}
               onRemoveCourse={this.removeCourse}
               onToggleShowEvents={this.toggleShowEvents}
