@@ -4,4 +4,4 @@ paths=$@
 if [[ $paths =~ contact|image ]]; then
   paths+=" lambda-shared"
 fi
-git log -1 --pretty="tformat:%at-%H" $paths
+git log -1 --pretty="tformat:%at-%H" $paths ":(exclude)*.spec.[tj]s" ":(exclude)*.test.[tj]s"
