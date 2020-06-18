@@ -43,7 +43,7 @@ jobs:
         ./tf.sh init
 
     - name: Terraform Refresh
-      run: ./tf.sh refresh
+      run: ./tf.sh refresh -lock=false
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
