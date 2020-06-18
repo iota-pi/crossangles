@@ -14,6 +14,5 @@ export function generateMetaData (term: number, sources: string[]): Meta {
     sources,
     updateDate,
     updateTime,
-    signup: process.env.SIGN_UP || '',
   };
 }
