@@ -4,7 +4,11 @@ import { standardiseHeaders } from '../lambda-shared/util';
 import { screenshot } from './screenshot';
 import { saveForDebug } from './dumpDebugData';
 
-export const handler = async (_event: APIGatewayProxyEvent | ScheduledEvent): Promise<APIGatewayProxyResult | void> => {
+export function handler (_event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult>;
+export function handler (_event: ScheduledEvent): Promise<void>;
+export async function handler (
+  _event: APIGatewayProxyEvent | ScheduledEvent,
+): Promise<APIGatewayProxyResult | void> {
   if ((_event as ScheduledEvent).source === 'aws.events') {
     // CloudWatch Event
     console.log('lambda warmed');
