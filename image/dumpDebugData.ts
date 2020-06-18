@@ -3,8 +3,6 @@ import S3 from 'aws-sdk/clients/s3';
 
 const s3 = new S3();
 
-const TIMETABLE_BUCKET = 'crossangles-timetables';
-
 export const saveForDebug = (data: any) => {
   const content = JSON.stringify({
     data,
@@ -18,7 +16,7 @@ const upload = (content: string, campus: string, additionalParams?: Partial<S3.P
   const hash = getHash(content);
   const filename = `${hash.replace(/\//g, '_')}.json`;
   return s3.upload({
-    Bucket: TIMETABLE_BUCKET,
+    Bucket: process.env.TIMETABLE_BUCKET!,
     Key: `${campus}/${filename}`,
     ContentType: 'application/json',
     Body: content,

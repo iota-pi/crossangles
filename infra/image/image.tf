@@ -18,6 +18,12 @@ resource "aws_lambda_function" "image" {
   ]
 
   role = aws_iam_role.image_role.arn
+
+  environment {
+    variables = {
+      TIMETABLE_BUCKET = aws_s3_bucket.timetables.bucket
+    }
+  }
 }
 
 resource "aws_iam_role" "image_role" {
