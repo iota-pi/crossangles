@@ -87,6 +87,6 @@ describe('getScreenshotHeight', () => {
   it('gives expected result', () => {
     const timetable = getSessionManager().data;
     expect(getScreenshotHeight(timetable, true)).toBe(602);
-    expect(getScreenshotHeight(timetable, false)).toBe(722);
+    expect(getScreenshotHeight(timetable, false)).toBe(712);
   })
 })
