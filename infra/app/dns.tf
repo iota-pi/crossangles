@@ -17,6 +17,10 @@ resource "aws_acm_certificate" "root_cert" {
   domain_name       = local.domain
   validation_method = "DNS"
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   provider = aws.us_east_1
 }
 
