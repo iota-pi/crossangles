@@ -57,7 +57,7 @@ jobs:
     - name: Terraform Apply
       run: ./tf.sh apply -auto-approve
       env:
-        TF_VAR_mailgun_api_key: ${{ secrets.MAILGUN_API_KEY }}
+        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_API_KEY }}
         TF_VAR_pjsc_key: ${{ secrets.PJSC_KEY }}
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
