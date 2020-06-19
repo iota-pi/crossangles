@@ -11,36 +11,48 @@ export const getCourse = (): CourseData => ({
       component: 'LEC',
       enrols: [50, 100],
       times: [
-        { time: 'M9', location: 'Morder', canClash: true },
-        { time: 'H12', location: 'Helm\'s Deep', weeks: '1,3,7-9' },
-        { time: 'T12', location: 'Tol Brandir', weeks: '1,3,7-9' },
+        {time: 'M9', location: 'Morder', canClash: true},
+        {time: 'H12', location: 'Helm\'s Deep', weeks: '1,3,7-9'},
+        {time: 'T12', location: 'Tol Brandir', weeks: '1,3,7-9'},
       ],
     },
     {
       component: 'LEC',
       enrols: [10, 50],
       times: [
-        { time: 'T9', location: 'Morder', canClash: true },
-        { time: 'F9', location: 'Helm\'s Deep', weeks: '1,3,7-9' },
-        { time: 'W12', location: 'Tol Brandir', weeks: '1,3,7-9' },
+        {time: 'T9', location: 'Morder', canClash: true},
+        {time: 'F9', location: 'Helm\'s Deep', weeks: '1,3,7-9'},
+        {time: 'W12', location: 'Tol Brandir', weeks: '1,3,7-9'},
       ],
     },
     {
       component: 'TUT',
       enrols: [5, 10],
       times: [
-        { time: 'H9', location: 'Hobbiton' },
+        {time: 'H9', location: 'Hobbiton'},
       ],
     },
     {
       component: 'TUT',
       enrols: [9, 9],
       times: [
-        { time: 'F19', location: 'Fangorn' },
+        {time: 'F19', location: 'Fangorn'},
       ],
     },
   ],
 });
+
+export const getAdditionalCourse = (): CourseData => ({
+  code: 'CBS',
+  name: 'Campus Bible Study',
+  streams: [
+    {component: 'The Bible Talks', enrols: [0, 0], times: []},
+    {component: 'The Bible Talks', enrols: [0, 0], times: []},
+    {component: 'Bible Study', enrols: [0, 0], times: []},
+  ],
+  isAdditional: true,
+  autoSelect: true,
+})
 
 export const getLinkedStream = (streamIndex = 0) => {
   const course = getCourse();

@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 import { RootState } from '.';
-import { courseSort, customSort } from './Course';
+import { courseSort, customSort, CourseId, CourseMap } from './Course';
 import { getEmptySessionManagerData } from '../components/Timetable/SessionManagerTypes';
 import { getCurrentTerm } from './Meta';
-import { getAutoSelectedEvents } from './Events';
+import { getAutoSelectedEvents, AdditionalEvent } from './Events';
 
 
 const getCourses = (state: RootState) => state.courses;
@@ -51,11 +51,13 @@ export const getAdditionalCourses = createSelector(
   }
 );
 
+export const _getShowSignup = (courses: CourseMap, additional: CourseId[], events: AdditionalEvent[]) => {
+  let allEvents = getAutoSelectedEvents(courses, additional);
+  const eventNames = events.map(e => e.id);
+  return allEvents.some(e => eventNames.includes(e.id))
+};
+
 export const getShowSignup = createSelector(
   [getCourses, getAdditional, getEvents],
-  (courses, additional) => {
-    let events = getAutoSelectedEvents(courses, additional);
-    const eventNames = events.map(e => e.id);
-    return events.some(e => eventNames.includes(e.id))
-  }
+  _getShowSignup,
 );
