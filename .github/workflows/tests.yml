@@ -55,4 +55,4 @@ jobs:
       if: github.ref == 'refs/heads/release'
       run: ./ci.sh cypress run
       env:
-        CYPRESS_BASE_URL: https://staging.crossangles.com
+        CYPRESS_BASE_URL: https://staging.crossangles.app
