@@ -1,5 +1,6 @@
 locals {
-  environment = terraform.workspace == "default" ? "production" : terraform.workspace
+  environment        = terraform.workspace == "default" ? "production" : terraform.workspace
+  cloudflare_zone_id = var.root_domain == "crossangles.app" ? "4a43b80f8478b4e805d704edadb864c8" : "525c11e0fba1dd406c3cd38fcba98d44"
 }
 
 module "app" {
@@ -9,7 +10,7 @@ module "app" {
   git_version        = var.app_version
   campus             = var.campuses[0]
   root_domain        = var.root_domain
-  cloudflare_zone_id = var.cloudflare_zone_id
+  cloudflare_zone_id = local.cloudflare_zone_id
 }
 
 module "scraper" {
