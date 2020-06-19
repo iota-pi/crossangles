@@ -48,13 +48,13 @@ resource "cloudflare_record" "www_cname" {
 resource "cloudflare_page_rule" "redirect_to_root" {
   count = var.environment == "production" ? 1 : 0
 
-  zone_id = var.cloudflare_zone_id
-  target = "www.${local.domain}*"
+  zone_id  = var.cloudflare_zone_id
+  target   = "www.${local.domain}*"
   priority = 1
 
   actions {
     forwarding_url {
-      url = "https://${local.domain}"
+      url         = "https://${local.domain}"
       status_code = 301
     }
   }
