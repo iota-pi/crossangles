@@ -52,7 +52,7 @@ jobs:
       run: ./ci.sh test
 
     - name: Run e2e tests
-      if: github.base_ref == 'refs/heads/release'
+      if: github.base_ref == 'release'
       run: ./ci.sh cypress run
       env:
         CYPRESS_BASE_URL: https://staging.crossangles.app
