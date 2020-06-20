@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-import { SESSION_BASE_Z, SESSION_DRAG_Z, TIMETABLE_CELL_HEIGHT } from '../../src/components/Timetable/timetableUtil';
+import { SESSION_BASE_Z, SESSION_DRAG_Z, getCellHeight } from '../../src/components/Timetable/timetableUtil';
 
 const TEST_CODE = 'TEST1010'
 
@@ -16,43 +16,6 @@ context('Timetable interaction', () => {
     cy.dataCy('autocomplete-option')
       .first()
       .click()
-  })
-
-  it('can do basic dragging and snapping', () => {
-    const session = `[data-session=${TEST_CODE}-TUT-F9-10]`
-
-    cy.get(session)
-      .expectData('snapped', 1)
-      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
-    cy.get(session)
-      .trigger('mousedown', { force: true })
-    cy.get(`[data-session=${TEST_CODE}-TUT-F9-10]`)
-      .expectData('snapped', 0)
-      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
-    cy.dataCy('timetable-dropzone-F9')
-      .should('exist')
-    cy.get(session)
-      .trigger('mouseup', { force: true })
-    cy.get(`[data-session=${TEST_CODE}-TUT-F9-10]`)
-      .expectData('snapped', 1)
-      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
-    cy.dataCy('timetable-dropzone-F9')
-      .should('not.exist')
-
-    cy.get(session)
-      .dragAndDrop({ x: -100, y: 100 })
-      .expectData('snapped', 0)
-      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
-
-    cy.get(session)
-      .dragAndDrop({ x: 50, y: -50 })
-      .expectData('snapped', 0)
-      .should('have.css', 'z-index', '' + (SESSION_BASE_Z + SESSION_DRAG_Z))
-
-    cy.get(session)
-      .dragAndDrop({ x: 30, y: -30 })
-      .expectData('snapped', 1)
-      .should('have.css', 'z-index', '' + SESSION_BASE_Z)
   })
 
   it('prevents dragging outside of the timetable', () => {
@@ -174,7 +137,7 @@ context('Timetable interaction', () => {
       .dragTo('M9')
       .should('have.css', 'box-shadow').and('not.be', 'none')
     cy.get('@session1')
-      .should('have.css', 'height', `${TIMETABLE_CELL_HEIGHT * 3 - 1}px`)
+      .should('have.css', 'height', `${getCellHeight(false) * 3 - 1}px`)
     cy.get('@session2')
       .should('have.css', 'box-shadow', 'none')
 
@@ -191,7 +154,7 @@ context('Timetable interaction', () => {
       .dragTo('F10')
       .should('have.css', 'box-shadow', 'none')
     cy.get('@session1')
-      .should('have.css', 'height', `${TIMETABLE_CELL_HEIGHT - 1}px`)
+      .should('have.css', 'height', `${getCellHeight(false) - 1}px`)
     cy.get('@session2')
       .should('have.css', 'box-shadow', 'none')
   })
