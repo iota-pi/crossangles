@@ -19,11 +19,6 @@ jobs:
         terraform_wrapper: false
         terraform_version: 0.12.26
 
-    - name: Create placeholder files
-      run: |
-        mkdir -p contact/build image/build scraper/build
-        touch contact/build/contact.zip image/build/image.zip scraper/build/scraper.zip
-
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
