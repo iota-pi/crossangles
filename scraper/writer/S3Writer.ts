@@ -2,6 +2,7 @@ import { Writer } from './Writer';
 import S3 from 'aws-sdk/clients/s3';
 import crypto from 'crypto';
 
+const ENVIRONMENT = process.env.ENVIRONMENT || '';
 
 export class S3Writer implements Writer {
   private readonly s3 = new S3();
@@ -42,6 +43,7 @@ export class S3Writer implements Writer {
   }
 
   private upload (content: string, additionalParams?: Partial<S3.PutObjectRequest>) {
+    const maxAge = ENVIRONMENT === 'staging' ? 600 : 7200;
     return this.s3.upload({
       Bucket: this.bucket,
       Key: this.path,
@@ -49,7 +51,7 @@ export class S3Writer implements Writer {
       Body: content,
       ContentMD5: this.getHash(content),
       ACL: 'public-read',
-      CacheControl: `max-age=${7200}`,
+      CacheControl: `max-age=${maxAge}`,
       ...additionalParams,
     }).promise();
   }
