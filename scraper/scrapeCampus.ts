@@ -11,7 +11,7 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
   if (cacheFile) {
     scraper = new Scraper();
     cache = scraper.cache;
-    await cache.load(cacheFile).catch(() => {})
+    await cache.load(cacheFile).catch(() => {});
   }
   const state = getStateManager();
 
