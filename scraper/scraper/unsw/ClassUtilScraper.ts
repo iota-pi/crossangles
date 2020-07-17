@@ -261,6 +261,8 @@ export class Parser {
       } else {
         delivery = DeliveryType.mixed;
       }
+    } else if (web) {
+      delivery = DeliveryType.online;
     }
 
     return {
