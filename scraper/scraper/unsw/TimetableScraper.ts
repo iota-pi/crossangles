@@ -101,11 +101,11 @@ export class TimetableScraper {
 
   private getUpdateTime ($: CheerioStatic) {
     let timeText = $('td.note:contains("Data is correct as at")').text();
-    timeText = timeText.replace('Data is correct as at ', '');
+    timeText = timeText.replace('Data is correct as at', '').trim();
 
     // Remove timezone because it confuses parsers and is inconsistent
     const withoutTZ = timeText.replace(/\bA?E[SD]T\b/, '');
-    this.dataUpdateTime = withoutTZ;
+    this.dataUpdateTime = withoutTZ.replace(/\s\s{1,20}/g, ' ');
   }
 
   private async findFacultyPages () {

@@ -112,7 +112,7 @@ export class ClassUtilScraper {
     const timeText = $('p>strong').text();
     // Remove timezone because it confuses parsers and is inconsistent
     const withoutTZ = timeText.replace(/\bA?E[SD]T\b/, '');
-    this.dataUpdateTime = withoutTZ;
+    this.dataUpdateTime = withoutTZ.replace(/\s\s{1,20}/g, ' ');
   }
 
   private async findFacultyPages () {
