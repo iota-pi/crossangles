@@ -12,20 +12,20 @@
   "author": "David Adams",
   "dependencies": {
     "@types/moment-timezone": "^0.5.13",
-    "@types/node": "^13.13.9",
+    "@types/node": "^13.13.14",
     "axios": "^0.19.2",
     "axios-retry": "^3.1.8",
     "cheerio": "^1.0.0-rc.3",
     "moment-timezone": "^0.5.31"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.18",
+    "@types/cheerio": "^0.22.21",
     "@types/jest": "^25.2.3",
-    "aws-sdk": "^2.688.0",
+    "aws-sdk": "^2.714.2",
     "jest": "^25.5.4",
     "ts-jest": "^25.5.1",
-    "typescript": "^3.9.3",
+    "typescript": "^3.9.7",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   }
 }

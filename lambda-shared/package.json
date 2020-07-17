@@ -4,13 +4,13 @@
     "build": "true"
   },
   "dependencies": {
-    "@types/aws-lambda": "^8.10.52"
+    "@types/aws-lambda": "^8.10.59"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
-    "@types/node": "^13.13.9",
+    "@types/node": "^13.13.14",
     "jest": "^25.5.4",
     "ts-jest": "^25.5.1",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.7"
   }
 }

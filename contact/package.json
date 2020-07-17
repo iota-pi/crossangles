@@ -12,13 +12,13 @@
     "mailgun-js": "^0.22.0"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.52",
+    "@types/aws-lambda": "^8.10.59",
     "@types/jest": "^25.2.3",
-    "@types/mailgun-js": "^0.22.7",
+    "@types/mailgun-js": "^0.22.9",
     "jest": "^25.5.4",
     "ts-jest": "^25.5.1",
-    "typescript": "^3.9.3",
+    "typescript": "^3.9.7",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   }
 }
