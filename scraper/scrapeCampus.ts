@@ -19,6 +19,7 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
   if (await checkVersionChange(state)) {
     updateVersion(state);
     forceUpdate = true;
+    console.log('Scraper code updated, forcing data update.');
   }
 
   let data: CampusData[] | null = null;
