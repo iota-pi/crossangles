@@ -1,6 +1,6 @@
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
-import { ClassTime, StreamData } from '../../../app/src/state/Stream';
+import { ClassTime, StreamData, DeliveryType } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';
@@ -251,12 +251,25 @@ export class Parser {
       component = 'LEC';
     }
 
+    let delivery: DeliveryType | undefined;
+    if (times) {
+      const onlineTimes = times.filter(t => t.location && t.location.toLowerCase().replace(/[()]/g, '') === 'online');
+      if (onlineTimes.length === times.length) {
+        delivery = DeliveryType.online;
+      } else if (onlineTimes.length === 0) {
+        delivery = DeliveryType.person;
+      } else {
+        delivery = DeliveryType.mixed;
+      }
+    }
+
     return {
       component,
       enrols,
       full,
       times,
       web,
+      delivery,
     };
   }
 

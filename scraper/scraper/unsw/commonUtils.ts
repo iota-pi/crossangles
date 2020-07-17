@@ -1,5 +1,5 @@
 import { CourseData } from '../../../app/src/state/Course';
-import { StreamData } from '../../../app/src/state/Stream';
+import { DeliveryType, StreamData } from '../../../app/src/state/Stream';
 
 export function removeDuplicateStreams (course: CourseData) {
   const mapping = new Map<string, StreamData[]>();
@@ -14,6 +14,7 @@ export function removeDuplicateStreams (course: CourseData) {
   // For each set of streams with identical component and times, remove all but the emptiest stream
   for (const streamGroup of Array.from(mapping.values())) {
     const emptiest = emptiestStream(streamGroup);
+    emptiest.delivery = mergeDeliveryType(streamGroup);
     for (let stream of streamGroup) {
       if (stream !== emptiest) {
         const index = course.streams.indexOf(stream);
@@ -35,4 +36,20 @@ function emptiestStream (streams: StreamData[]) {
   }
 
   return bestStream!;
+}
+
+export function mergeDeliveryType (streams: StreamData[]): DeliveryType | undefined {
+  // Merges delivery types of multiple streams
+  let delivery: DeliveryType | undefined;
+  for (const stream of streams) {
+    if (stream.delivery !== undefined) {
+      if (delivery === undefined) {
+        delivery = stream.delivery;
+      } else if (stream.delivery !== delivery) {
+        delivery = DeliveryType.either;
+        break;
+      }
+    }
+  }
+  return delivery;
 }

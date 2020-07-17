@@ -3,12 +3,20 @@ import { CourseData, getCourseId } from './Course';
 
 export type StreamId = string;
 
+export enum DeliveryType {
+  person,
+  online,
+  either,
+  mixed,
+}
+
 export interface StreamData {
   component: string,
   enrols: [number, number],
   times: ClassTime[] | null,
   full?: boolean,
   web?: boolean,
+  delivery?: DeliveryType,
 }
 
 export interface LinkedStream extends StreamData {
