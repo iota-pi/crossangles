@@ -2,7 +2,9 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
-import { LinkedSession, SessionData } from '../../state';
+import { LinkedSession, DeliveryType } from '../../state';
+import OnlineIcon from '@material-ui/icons/Laptop';
+import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,15 +21,30 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     zIndex: 0,
   },
+  onlineIcon: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: 0.85,
+  },
+  iconSlash: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(0.5),
+  },
 }));
 
 export interface Props {
-  position: Placement,
-  session: LinkedSession | SessionData,
   colour?: string,
+  position: Placement,
+  session: LinkedSession,
 }
 
-export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, session, position }) => {
+export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, position, session }) => {
   const classes = useStyles();
   const styles = React.useMemo(
     () => {
@@ -43,6 +60,7 @@ export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, session,
     [position],
   );
   const backgroundColor = colour ? colour + 'A0' : 'none';
+  const delivery = session.stream.delivery;
 
   return (
     <div
@@ -56,6 +74,15 @@ export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, session,
           backgroundColor,
         }}
       />
+        {delivery !== undefined && (
+          <div className={classes.onlineIcon}>
+            {delivery !== DeliveryType.person && <OnlineIcon />}
+            {delivery === DeliveryType.either || delivery === DeliveryType.mixed ? (
+              <span className={classes.iconSlash}>/</span>
+            ) : null}
+            {delivery !== DeliveryType.online && <PersonIcon />}
+          </div>
+        )}
     </div>
   );
 });
