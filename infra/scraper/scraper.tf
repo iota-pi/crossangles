@@ -10,7 +10,7 @@ resource "aws_lambda_function" "scraper" {
   # exported in that file.
   handler     = "lambda.handler"
   runtime     = "nodejs12.x"
-  memory_size = 1536
+  memory_size = 2048
   timeout     = 300
 
   s3_bucket = var.code_bucket

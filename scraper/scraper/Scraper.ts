@@ -16,7 +16,7 @@ export interface CampusData {
 }
 
 export class Scraper {
-  maxRequests: number = 5;
+  maxRequests: number = 10;
   cache: HTMLCache;
 
   constructor (cache?: HTMLCache) {
