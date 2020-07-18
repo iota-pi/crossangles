@@ -29,6 +29,7 @@ export async function scrapeUNSW (
   const timetablePromise = scrapeTimetable(timetable, !rescrapeTimetable);
   const classutilData = await classutilPromise;
   const timetableData = await timetablePromise;
+  console.log('Finished scraping for UNSW');
 
   const sources: string[] = [];
   if (classutilData.length) { sources.push(CLASSUTIL); }
@@ -36,8 +37,9 @@ export async function scrapeUNSW (
 
   const results: CampusData[] = [];
   for (let i = 0; i < terms.length; ++i) {
-    const mergedData = mergeData(classutilData[i], timetableData[i]);
     const term = i + 1;
+    console.log(`Merging data for term ${term}`);
+    const mergedData = mergeData(classutilData[i], timetableData[i]);
     results.push({
       campus: UNSW,
       courses: mergedData,
@@ -47,6 +49,7 @@ export async function scrapeUNSW (
   }
 
   // Nominate latest stream with sufficient data as being "current"
+  console.log('Picking current term');
   const currentTerm = getCurrentTerm(results);
   if (currentTerm !== null) {
     results[currentTerm].current = true;

@@ -30,13 +30,16 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
 
   if (data) {
     if (cache && cacheFile) {
+      console.log('Writing data to cache file');
       await cache.write(cacheFile);
     }
 
     for (const term of data) {
+      console.log(`Writing term ${term} data`);
       await writeTermData(outputPrefix, term);
 
       if (term.current) {
+        console.log(`Writing current data (term ${term})`);
         await writeTermData(outputPrefix, term, true);
       }
     }

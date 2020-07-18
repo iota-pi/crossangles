@@ -8,6 +8,7 @@ export const handler = async () => {
   const promises: Promise<void>[] = [];
   for (let campus of campuses) {
     const promise = scrapeCampus(campus, S3_BUCKET).catch(e => {
+      console.error(`Error while scraping ${campus.toUpperCase()} campus`);
       console.error(e + '');
       process.exitCode = 1;
     });

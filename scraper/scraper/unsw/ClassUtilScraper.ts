@@ -52,7 +52,7 @@ export class ClassUtilScraper {
     this.facultyPages = await this.findFacultyPages();
 
     if (!await this.checkIfDataUpdated()) {
-      this.log('data has not been updated yet; nothing to do');
+      this.log('data has not been updated yet');
       return false;
     }
 

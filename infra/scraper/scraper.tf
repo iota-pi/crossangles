@@ -11,7 +11,7 @@ resource "aws_lambda_function" "scraper" {
   handler     = "lambda.handler"
   runtime     = "nodejs12.x"
   memory_size = 1536
-  timeout     = 500
+  timeout     = 300
 
   s3_bucket = var.code_bucket
   s3_key    = "${var.environment}/scraper/${var.git_version}/scraper.zip"
