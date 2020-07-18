@@ -64,7 +64,9 @@ export class ClassUtilScraper {
     const termLinkEnd = `${term}.html`;
     const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
     const results = await this.scrapeFacultyPages(facultyPages);
+    console.log('Persisting results to DynamoDB');
     await this.persistState(results, term);
+    console.log('Finished persisting results to DynamoDB');
     return results;
   }
 

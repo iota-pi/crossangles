@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { useSelector } from 'react-redux';
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
 import { TransitionGroup } from 'react-transition-group';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -7,7 +8,6 @@ import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { Position, Dimensions } from './timetableTypes';
 import { Options, LinkedSession, RootState } from '../../state';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -90,7 +90,7 @@ export interface Props {
   onDrop?: (session: LinkedSession) => void,
 }
 
-type Detail = { key: string, text: string };
+type Detail = { key: string, text: ReactNode };
 
 
 const TimetableSession: React.FC<Props> = React.memo(props => {
@@ -103,7 +103,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
     props.disableTransitions ? classes.disableTransitions : '',
   ].join(' ');
   const { dimensions, isDragging, options, onDrag, onMove, onDrop, position, session } = props;
-  const { course, stream, day, start, end } = session;
+  const { course, day, start, end, stream } = session;
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
   const sessionComponent = isSpecialCourse ? '' : stream.component;
@@ -141,10 +141,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
       if (session.end - session.start <= 1 && details.length >= 3) {
         const enrolsIndex = details.findIndex(d => d.key === 'enrols');
         const enrols = details.splice(enrolsIndex, 1)[0].text;
-        const shortestItem = details.slice().sort(
-          (a, b) => +(a.text.length > b.text.length) - +(a.text.length < b.text.length)
-        )[0];
-        shortestItem.text += ` (${enrols})`;
+        details[1].text += ` (${enrols})`;
       }
 
       return details;
