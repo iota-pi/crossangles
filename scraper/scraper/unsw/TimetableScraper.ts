@@ -70,7 +70,9 @@ export class TimetableScraper {
     this.log(`scraping from ${TIMETABLE_UNSW}`);
     const coursePages = await this.scrapeFacultyPages();
     const result = await this.scrapeCoursePages(coursePages);
+    this.log('Persisting state to DynamoDB');
     await this.persistState(result);
+    this.log('Finished persisting state to DynamoDB');
     return result;
   }
 
