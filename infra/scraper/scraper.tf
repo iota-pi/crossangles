@@ -1,5 +1,8 @@
 locals {
   scraper_s3_origin_id = "scraper_s3_origin"
+
+  # Run the scraper every 15 minutes in prod, in staging run it at 6:05am or 7:05am (depending on DST)
+  cron_time = var.environment == "production" ? "5,20,35,50 *" : "5 19"
 }
 
 resource "aws_lambda_function" "scraper" {
@@ -185,7 +188,7 @@ resource "aws_cloudwatch_event_rule" "scraper_trigger" {
   description = "Run scraper on schedule"
 
   # Run every 15 minutes
-  schedule_expression = "cron(5,20,35,50 * * * ? *)"
+  schedule_expression = "cron(${local.cron_minutes} * * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
