@@ -188,7 +188,7 @@ resource "aws_cloudwatch_event_rule" "scraper_trigger" {
   description = "Run scraper on schedule"
 
   # Run every 15 minutes
-  schedule_expression = "cron(${local.cron_minutes} * * * ? *)"
+  schedule_expression = "cron(${local.cron_time} * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
