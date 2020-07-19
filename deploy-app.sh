@@ -44,7 +44,7 @@ do
   echo "Building app from $campus"
   REACT_APP_CAMPUS=$campus npm run build
 
-  s3_campus_key_base="s3://$app_bucket/$campus/"
+  campus_key_base="s3://$app_bucket/$campus/"
   s3_app_params="--recursive --acl public-read --cache-control max-age=$max_age"
 
   echo "Copying to $campus_key_base"
