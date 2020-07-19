@@ -98,7 +98,6 @@ resource "aws_iam_policy" "scraper_policy" {
   ]
 }
 EOF
-  tags = local.standard_tags
 }
 
 resource "aws_iam_role_policy_attachment" "scraper_policy_attach" {
