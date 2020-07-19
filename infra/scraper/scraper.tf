@@ -3,6 +3,11 @@ locals {
 
   # Run the scraper every 15 minutes in prod, in staging run it at 6:05am or 7:05am (depending on DST)
   cron_time = var.environment == "production" ? "5,20,35,50 *" : "5 19"
+
+  standard_tags = {
+    Environment = var.environment
+    Component = "scraper"
+  }
 }
 
 resource "aws_lambda_function" "scraper" {
@@ -29,6 +34,8 @@ resource "aws_lambda_function" "scraper" {
       ENVIRONMENT      = var.environment
     }
   }
+
+  tags = local.standard_tags
 }
 
 resource "aws_iam_role" "scraper_role" {
@@ -47,6 +54,7 @@ resource "aws_iam_role" "scraper_role" {
   ]
 }
 EOF
+  tags = local.standard_tags
 }
 
 resource "aws_iam_policy" "scraper_policy" {
@@ -90,6 +98,7 @@ resource "aws_iam_policy" "scraper_policy" {
   ]
 }
 EOF
+  tags = local.standard_tags
 }
 
 resource "aws_iam_role_policy_attachment" "scraper_policy_attach" {
@@ -117,16 +126,15 @@ resource "aws_dynamodb_table" "scraper_state_table" {
     name = "key"
     type = "S"
   }
+
+  tags = local.standard_tags
 }
 
 resource "aws_s3_bucket" "scraper_output" {
   bucket = "crossangles-course-data${var.environment == "production" ? "" : "-${var.environment}"}"
   acl    = "private"
 
-  tags = {
-    Name        = "CrossAngles Data"
-    Environment = var.environment
-  }
+  tags = local.standard_tags
 
   cors_rule {
     allowed_headers = ["*"]
@@ -181,6 +189,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+
+  tags = local.standard_tags
 }
 
 
@@ -189,6 +199,8 @@ resource "aws_cloudwatch_event_rule" "scraper_trigger" {
 
   # Run every 15 minutes
   schedule_expression = "cron(${local.cron_time} * * ? *)"
+
+  tags = local.standard_tags
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
