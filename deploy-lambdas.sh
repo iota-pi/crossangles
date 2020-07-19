@@ -7,13 +7,7 @@ else
   lambdas="scraper contact image"
 fi
 
-if [[ $lambdas =~ contact|image ]]; then
-  (
-    cd lambda-shared
-    echo "Installing dependencies for lambda-shared"
-    npm install --production >/dev/null 2>&1
-  )
-fi
+installed_shared_deps=0
 
 environment="$(./tf.sh output environment)"
 code_bucket="crossangles-lambda-code"
@@ -29,6 +23,15 @@ do
     echo "Already built version is: $version"
     echo
     continue
+  fi
+
+  if [[ $lambda =~ ^contact|image$ && $installed_shared_deps = 0 ]]; then
+    (
+      cd lambda-shared
+      echo "Installing dependencies for lambda-shared"
+      npm install --production >/dev/null 2>&1
+    )
+    installed_shared_deps=1
   fi
 
   message="Deploying $lambda lambda to $environment"
