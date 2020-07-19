@@ -57,7 +57,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const viewport = { width, height };
     delete data.viewport;
 
-    const baseURI = event.headers.origin + '/timetable';
+    const baseURI = event.headers.origin + '/timetable/index.html';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
 
