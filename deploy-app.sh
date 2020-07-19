@@ -54,4 +54,3 @@ do
   echo "Finished deployment for $campus"
   echo "Version is $version"
 done
-

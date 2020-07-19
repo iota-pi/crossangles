@@ -1,3 +1,10 @@
+locals {
+  standard_tags = {
+    Environment = var.environment
+    Component = "image"
+  }
+}
+
 resource "aws_lambda_function" "image" {
   function_name = "crossangles-image-${var.environment}"
 
@@ -24,6 +31,8 @@ resource "aws_lambda_function" "image" {
       TIMETABLE_BUCKET = aws_s3_bucket.timetables.bucket
     }
   }
+
+  tags = local.standard_tags
 }
 
 resource "aws_iam_role" "image_role" {
@@ -48,10 +57,7 @@ resource "aws_s3_bucket" "timetables" {
   bucket = "crossangles-timetables${var.environment == "production" ? "" : "-${var.environment}"}"
   acl    = "private"
 
-  tags = {
-    Name        = "CrossAngles Data"
-    Environment = "Staging"
-  }
+  tags = local.standard_tags
 }
 
 resource "aws_iam_policy" "image_policy" {
@@ -143,6 +149,8 @@ resource "aws_api_gateway_deployment" "image_deployment" {
 
   rest_api_id = aws_api_gateway_rest_api.image_gateway.id
   stage_name  = var.environment
+
+  tags = local.standard_tags
 }
 
 resource "aws_cloudwatch_log_group" "debugging" {

@@ -1,3 +1,10 @@
+locals {
+  standard_tags = {
+    Environment = var.environment
+    Component = "contact"
+  }
+}
+
 resource "aws_lambda_function" "contact" {
   function_name = "crossangles-contact-${var.environment}"
 
@@ -19,6 +26,8 @@ resource "aws_lambda_function" "contact" {
       MAILGUN_API_KEY = var.mailgun_key
     }
   }
+
+  tags = local.standard_tags
 }
 
 resource "aws_iam_role" "contact_role" {
@@ -122,6 +131,8 @@ resource "aws_api_gateway_deployment" "contact_deployment" {
 
   rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
   stage_name  = var.environment
+
+  tags = local.standard_tags
 }
 
 
