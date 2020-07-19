@@ -15,8 +15,8 @@ fi
 
 # Check versions to see if we need to re-build and re-deploy
 version=$(./version.sh app)
-s3_version_prefix="s3://$app_bucket/$version/"
-existing_files=$(aws s3 ls $s3_version_prefix || true)
+s3_version_file="s3://$app_bucket/versions/$version"
+existing_files=$(aws s3 ls $s3_version_file || true)
 if [[ -n $existing_files && -z ${FORCE_UPDATE:-} ]]; then
   echo "No changes to app, skipping build and deploy."
   echo "Set the FORCE_UPDATE env variable to force an update."
@@ -43,7 +43,15 @@ for campus in $@
 do
   REACT_APP_CAMPUS=$campus npm run build
 
-  echo "Copying to s3://$app_bucket/$version/$campus/"
-  aws s3 cp build/ s3://$app_bucket/$version/$campus/ --recursive --acl public-read --cache-control "max-age=$max_age"
+  echo "Copying to s3://$app_bucket/$campus/"
+  aws s3 cp build/ "s3://$app_bucket/$campus/" --recursive --acl public-read --cache-control "max-age=$max_age"
+
+  echo "Creating version marker at s3://$app_bucket/versions/$version"
+  touch version
+  aws s3 cp version "s3://$app_bucket/versions/$version"
+  rm version
+
+  echo "Finished deployment for $campus"
+  echo "Version is $version"
 done
 
