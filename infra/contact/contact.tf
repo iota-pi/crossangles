@@ -131,8 +131,6 @@ resource "aws_api_gateway_deployment" "contact_deployment" {
 
   rest_api_id = aws_api_gateway_rest_api.contact_gateway.id
   stage_name  = var.environment
-
-  tags = local.standard_tags
 }
 
 
