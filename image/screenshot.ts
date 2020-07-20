@@ -17,8 +17,13 @@ export const screenshot = async (
       executablePath: await chromium.executablePath,
       headless: chromium.headless,
     });
+    console.log('Creating new page');
     const page = await browser.newPage();
+
+    console.log('Navigating to page');
     await page.goto(uri);
+
+    console.log('Looking for a session in the timetable');
     await Promise.race([
       page.waitForSelector('[data-cy="timetable-session"]', { timeout: 5000 }),
       page.waitForSelector('[data-session]', { timeout: 5000 }),
@@ -27,6 +32,7 @@ export const screenshot = async (
     // Waiting for a bit here adds an extra layer of protection for slow rendering/animations
     await sleep(350);
 
+    console.log('Found session, taking screenshot');
     const result = await page.screenshot({ encoding: 'base64' });
     return result;
   } finally {

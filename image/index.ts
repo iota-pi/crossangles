@@ -56,21 +56,25 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const { width, height } = data.viewport;
     const viewport = { width, height };
     delete data.viewport;
+    console.log(`Using viewport: ${viewport}`);
 
     const baseURI = event.headers.origin + '/timetable/index.html';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
+    console.log(`Timetable URI is: ${uri}`);
 
     const debugPromise = saveForDebug(data);
     const imagePromise = screenshot(uri, viewport);
 
     try {
       await debugPromise;
+      console.log('debug data saved');
     } catch (error) {
       console.error('failed to save debug info', error);
     }
 
     const image = await imagePromise;
+    console.log('Finished saving as image');
     return responder.getResponse({
       data: image,
     });
