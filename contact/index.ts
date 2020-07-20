@@ -56,8 +56,11 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     });
   }
 
+  console.log('Validated request data, initialising mailgun');
   initMailgun();
+  console.log('Sending mail');
   await sendMail(body);
+  console.log('Finished sending mail');
 
   return responder.getResponse({
     message: 'Thanks, your message has been received',
