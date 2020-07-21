@@ -23,6 +23,7 @@ import {
 } from '../../state';
 import getHours from './getHours';
 import { CATEGORY } from '../../analytics';
+import { getDropzones } from './dropzones';
 
 
 const useStyles = makeStyles(theme => ({
@@ -74,6 +75,7 @@ export function getCourseColour (course: CourseData, colourMap: ColourMap, darkM
   }
 }
 
+
 function TimetableTable (props: Props) {
   const timetable = props.timetable;
   const compact = props.compactView || false;
@@ -123,31 +125,17 @@ function TimetableTable (props: Props) {
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
+  const includeFull = props.options.includeFull || false;
   const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
   React.useEffect(
     () => {
       if (dragging) {
-        const { course, stream: { component }, index } = dragging;
-        let streams = course.streams.map(s => linkStream(course, s));
-        streams = streams.filter(s => {
-          // Skip streams that are for a different component
-          if (s.component !== component) { return false; }
-
-          // Skip streams which don't have enough sessions
-          if (index >= s.sessions.length) { return false; }
-
-          if (s.full && !props.options.includeFull) { return false; }
-
-          return true;
-        });
-        const dropzones = streams.flatMap(s => {
-          const session = s.sessions[index];
-          return new DropzonePlacement(session);
-        });
-        setDropzones(dropzones);
+        setDropzones(
+          getDropzones(dragging, includeFull)
+        );
       }
     },
-    [dragging, props.options.includeFull],
+    [dragging, includeFull],
   );
 
 

@@ -7,7 +7,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { Position, Dimensions } from './timetableTypes';
-import { Options, LinkedSession, RootState } from '../../state';
+import { Options, LinkedSession, RootState, getDuration } from '../../state';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -138,7 +138,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
       }
 
       // Compress details onto two lines if duration is less than an hour
-      if (session.end - session.start <= 1 && details.length >= 3) {
+      if (getDuration(session) <= 1 && details.length >= 3) {
         const enrolsIndex = details.findIndex(d => d.key === 'enrols');
         const enrols = details.splice(enrolsIndex, 1)[0].text;
         details[1].text += ` (${enrols})`;
