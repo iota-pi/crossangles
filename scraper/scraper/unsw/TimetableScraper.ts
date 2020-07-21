@@ -37,7 +37,7 @@ export interface StreamTableData {
 
 export class TimetableScraper {
   scraper: Scraper;
-  protected state: StateManager;
+  state: StateManager | undefined;
   readonly campus = 'unsw';
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   maxCourses = process.env.NODE_ENV === 'test' ? 1 : Infinity;
@@ -92,6 +92,11 @@ export class TimetableScraper {
   }
 
   async checkIfDataUpdated () {
+    // Can't check update time, presume has been updated since last scrape
+    if (!this.state) {
+      return true;
+    }
+
     // Update data if source has changed
     const lastUpdateTime = await this.state.get(this.campus, UPDATE_TIME_KEY);
     if (lastUpdateTime !== this.dataUpdateTime) {
@@ -210,8 +215,9 @@ export class TimetableScraper {
   }
 
   private parseTable (table: Cheerio): StreamTableData {
-    const labels = table.find('td.label').toArray().map(element => $(element).text().trim());
-    const data = table.find('td.data').toArray().map(element => $(element).text().trim());
+    const allLabels = table.find('td.label').toArray().map(element => $(element).text().trim());
+    const labels = allLabels.filter(l => l.toLowerCase() !== 'meeting information');
+    const data = table.children('tr').children('td.data').toArray().map(element => $(element).text().trim());
     const mapping: Partial<StreamTableData> = {};
     for (let i = 0; i < labels.length; i++) {
       mapping[labels[i] as keyof StreamTableData] = data[i] || '';
