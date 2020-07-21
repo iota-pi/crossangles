@@ -32,6 +32,10 @@ export const getSessionId = (course: CourseData, stream: StreamData, session: Se
   return `${streamId}~${session.index}`;
 }
 
+export const getDuration = (session: SessionData | LinkedSession): number => {
+  return session.end - session.start;
+}
+
 export const linkSession = (course: CourseData, stream: LinkedStream, session: SessionData): LinkedSession => {
   return {
     ...session,

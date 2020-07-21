@@ -1,4 +1,4 @@
-import { LinkedSession } from '../../state';
+import { LinkedSession, getDuration } from '../../state';
 import { Dimensions, Placement } from './timetableTypes';
 import {
   getCellHeight,
@@ -16,6 +16,14 @@ export abstract class TimetablePlacement {
 
   get session (): LinkedSession {
     return this._session;
+  }
+
+  get id (): string {
+    return `${this._session.day}~${this._session.start}`;
+  }
+
+  get duration (): number {
+    return getDuration(this._session);
   }
 
   basePlacement = (() => {
@@ -71,6 +79,6 @@ export abstract class TimetablePlacement {
   }
 
   private calculateHeight (compact: boolean): number {
-    return (this._session.end - this._session.start) * getCellHeight(compact);
+    return this.duration * getCellHeight(compact);
   }
 }

@@ -1,5 +1,5 @@
-import { getSessionId } from './Session';
-import { getCourse } from '../test_util';
+import { getSessionId, getDuration } from './Session';
+import { getCourse, getLinkedSession } from '../test_util';
 import { getSessions, getStreamId } from './Stream';
 
 
@@ -12,4 +12,14 @@ describe('getSessionId', () => {
     const session = getSessions(course, stream)[i];
     expect(getSessionId(course, stream, session)).toBe(getStreamId(course, stream) + `~${i}`);
   })
+})
+
+it.each`
+  end   | start | expected
+  ${11} | ${10} | ${1}
+  ${21} | ${15} | ${6}
+  ${12} | ${9}  | ${3}
+`('getDuration({start: $start, end: $end}) = $expected', ({end, start, expected}) => {
+  const session = getLinkedSession(0, 0, {start, end});
+  expect(getDuration(session)).toBe(expected);
 })
