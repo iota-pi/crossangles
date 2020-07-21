@@ -53,8 +53,6 @@ jobs:
 
     - name: Build and Deploy App for UNSW
       run: ./deploy-app.sh unsw
-      env:
-        FORCE_UPDATE: 1
 
     - name: Terraform Apply
       run: ./tf.sh apply -auto-approve
