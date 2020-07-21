@@ -1,9 +1,9 @@
-import { CourseData, linkStream } from './state';
+import { CourseData, linkStream, LinkedStream, LinkedSession } from './state';
 import SessionPlacement from './components/Timetable/SessionPlacement';
 import SessionManager from './components/Timetable/SessionManager';
 import { Dimensions } from './components/Timetable/timetableTypes';
 
-export const getCourse = (): CourseData => ({
+export const getCourse = (override?: Partial<CourseData>): CourseData => ({
   code: 'RING9731',
   name: 'Introduction to Ring Theory',
   streams: [
@@ -40,9 +40,10 @@ export const getCourse = (): CourseData => ({
       ],
     },
   ],
+  ...override,
 });
 
-export const getAdditionalCourse = (): CourseData => ({
+export const getAdditionalCourse = (override?: Partial<CourseData>): CourseData => ({
   code: 'CBS',
   name: 'Campus Bible Study',
   streams: [
@@ -52,16 +53,26 @@ export const getAdditionalCourse = (): CourseData => ({
   ],
   isAdditional: true,
   autoSelect: true,
-})
+  ...override,
+});
 
-export const getLinkedStream = (streamIndex = 0) => {
+export const getLinkedStream = (
+  streamIndex = 0,
+  override?: Partial<LinkedStream>,
+): LinkedStream => {
   const course = getCourse();
-  return linkStream(course, course.streams[streamIndex]);
+  const stream = linkStream(course, course.streams[streamIndex]);
+  return {...stream, ...override};
 }
 
-export const getLinkedSession = (streamIndex = 0, sessionIndex = 0) => {
+export const getLinkedSession = (
+  streamIndex = 0,
+  sessionIndex = 0,
+  override?: Partial<LinkedSession>,
+): LinkedSession => {
   const stream = getLinkedStream(streamIndex);
-  return stream.sessions[sessionIndex];
+  const session = stream.sessions[sessionIndex];
+  return {...session, ...override};
 }
 
 export const getSessionPlacement = (streamIndex = 0, sessionIndex = 0): SessionPlacement => {
