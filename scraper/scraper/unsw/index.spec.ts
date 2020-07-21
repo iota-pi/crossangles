@@ -13,7 +13,19 @@ describe('scrapeUNSW', () => {
     await cachePromise;
     const result = await scrapeUNSW({ scraper, state, forceUpdate: true });
     expect(result).not.toBeNull();
-    expect(result![0].courses).toMatchSnapshot();
+    const courses = result![0].courses;
+    for (let i = 0; i < courses.length; ++i) {
+      if (courses[i].isAdditional) {
+        courses[i] = {
+          ...courses[i],
+          metadata: undefined,
+          streams: [],
+          description: undefined,
+          defaultColour: undefined,
+        };
+      }
+    }
+    expect(courses.filter(c => c.isAdditional)).toMatchSnapshot();
     await cache.write(cacheFile);
   })
 })
