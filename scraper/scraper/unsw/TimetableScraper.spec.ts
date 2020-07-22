@@ -11,6 +11,7 @@ import {
   weeksAreOutsideTerm,
   isIntensive,
   isOnWeekend,
+  getComponent,
 } from './TimetableScraper';
 
 const baseStreamTableData: StreamTableData = {
@@ -25,7 +26,7 @@ const baseStreamTableData: StreamTableData = {
   'Offering Period': '17/02/2020 - 17/05/2020',
   'Teaching Period': 'T1 - Teaching Period One',
   'Consent': 'Consent not required',
-  'Section': 'CR01',
+  'Section': 'A',
   'Status': 'Open',
 };
 
@@ -57,10 +58,6 @@ describe('parsing utilities', () => {
       {
         ...baseStreamTableData,
         'Status': 'Stop',
-      },
-      {
-        ...baseStreamTableData,
-        'Activity': 'Course Enrolment'
       },
       {
         ...baseStreamTableData,
@@ -108,6 +105,17 @@ describe('parsing utilities', () => {
     ${'Online (ONLINE)'}             | ${['Online', 'ONLINE']}
   `('splitLocation("$location") === $result', ({ location, result }) => {
     expect(splitLocation(location)).toEqual(result);
+  })
+
+  it.each`
+    Activity                 | Section   | expected
+    ${'Course Enrolment'}    | ${'CR01'} | ${'CR01'}
+    ${'Tutorial-Laboratory'} | ${'T11A'} | ${'TLB'}
+    ${'Lecture'}             | ${'A'}    | ${'LEC'}
+  `('getComponent', ({Activity, Section, expected}) => {
+    const data: StreamTableData = {...baseStreamTableData, Activity, Section};
+    const result = getComponent(data);
+    expect(result).toBe(expected);
   })
 
   it.each`

@@ -170,11 +170,12 @@ export class TimetableScraper {
           continue;
         }
         const stream: StreamData = {
-          component: getShortActivity(data['Activity']),
+          component: getComponent(data),
           enrols: getEnrols(data['Enrols/Capacity']),
           full: getIsFull(data['Status']),
           web: getIsWeb(data['Section']),
           times: [],
+          notes: data['Class Notes'] || undefined,
         };
 
         const timesRows = $(streamTable).find('table tr:has(td.data)').toArray();
@@ -246,11 +247,6 @@ export function getCourseName ($: CheerioStatic, code: string) {
 export function shouldSkipStream (data: StreamTableData) {
   // Skip streams which are closed for enrolment but not full
   if (!['open', 'full'].includes(data['Status'].toLowerCase())) {
-    return true;
-  }
-
-  // Skip course enrolment entries
-  if (data['Activity'].toLowerCase() === 'course enrolment') {
     return true;
   }
 
@@ -335,6 +331,14 @@ export function splitLocation (locationString: string): [string | undefined, str
   return [name || undefined, gridRef || undefined];
 }
 
+export function getComponent (data: StreamTableData) {
+  if (isCourseEnrolment(data)) {
+    return data['Section'];
+  } else {
+    return getShortActivity(data['Activity']);
+  }
+}
+
 export function getShortActivity (activity: string) {
   const mapping: { [long: string]: string } = {
     'tutorial-laboratory': 'TLB',
@@ -365,4 +369,8 @@ export function isIntensive (time: string) {
 
 export function isOnWeekend (time: string) {
   return time.replace(/[^a-z].*/i, '').toLowerCase().includes('s');
+}
+
+export function isCourseEnrolment (data: StreamTableData) {
+  return data['Activity'].toLowerCase() === 'course enrolment';
 }
