@@ -17,6 +17,7 @@ export interface StreamData {
   full?: boolean,
   web?: boolean,
   delivery?: DeliveryType,
+  notes?: string,
 }
 
 export interface LinkedStream extends StreamData {
