@@ -1,13 +1,21 @@
-import { getCourseId, hasWebStream, CourseData, getWebStream, getComponents } from './Course';
+import { getCourseId, hasWebStream, CourseData, getWebStream, getComponents, Career } from './Course';
 import { StreamData } from './Stream';
 
 const code = 'TPBC1234';
 const name = 'Theory of Practical Blockchain';
 describe('course state util functions', () => {
-  it('gets correct course id', () => {
-    const course: CourseData = { code, name, streams: [], term: 'T1A' };
+  it.each`
+    term         | section      | career         | expected
+    ${undefined} | ${undefined} | ${undefined}   | ${'TPBC1234'}
+    ${'T1A'}     | ${undefined} | ${undefined}   | ${'TPBC1234~T1A'}
+    ${undefined} | ${'CR01'}    | ${undefined}   | ${'TPBC1234~CR01'}
+    ${undefined} | ${undefined} | ${Career.PGRD} | ${'TPBC1234~PGRD'}
+    ${undefined} | ${undefined} | ${Career.UGRD} | ${'TPBC1234'}
+    ${'T1A'}     | ${'CR01'}    | ${Career.PGRD} | ${'TPBC1234~T1A~CR01~PGRD'}
+  `('gets correct course id', ({ term, section, career, expected }) => {
+    const course: CourseData = { code, name, streams: [], term, section, career };
     const result = getCourseId(course);
-    expect(result).toBe('TPBC1234T1A');
+    expect(result).toBe(expected);
   })
 
   it('detects a web stream at the start', () => {

@@ -4,11 +4,18 @@ import { Colour } from './Colours';
 
 export type CourseId = string;
 
+export enum Career {
+  UGRD = 1,
+  PGRD = 2,
+}
+
 export interface CourseData {
   code: string,
   name: string,
   streams: StreamData[],
-  term?: string | null,
+  term?: string,
+  section?: string,
+  career?: Career,
   isCustom?: boolean,
   isAdditional?: boolean,
   autoSelect?: boolean,
@@ -23,7 +30,13 @@ export interface CourseMap {
 
 
 export const getCourseId = (course: CourseData): CourseId => {
-  return course.code + (course.term || '');
+  const extraSegments = [
+    course.code,
+    course.term,
+    course.section,
+    course.career === Career.PGRD ? 'PGRD' : undefined,
+  ];
+  return extraSegments.filter(x => !!x).join('~');
 }
 
 export const hasWebStream = (course: CourseData): boolean => {
