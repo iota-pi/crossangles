@@ -1,11 +1,10 @@
 import { Scraper } from '../Scraper';
-import { CourseData } from '../../../app/src/state/Course';
+import { CourseData, Career } from '../../../app/src/state/Course';
 import { ClassTime, StreamData, DeliveryType } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';
 import { hashData } from '../../data/util';
-import { CourseNameMap } from './handbook';
 import { removeDuplicateStreams } from './commonUtils';
 
 
@@ -34,7 +33,7 @@ export const CLASSUTIL = 'http://classutil.unsw.edu.au';
 export class ClassUtilScraper {
   scraper: Scraper;
   parser: Parser;
-  protected state: StateManager;
+  state: StateManager | undefined;
   readonly campus = 'unsw';
   facultyPages: string[] = [];
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
@@ -42,7 +41,7 @@ export class ClassUtilScraper {
 
   protected dataUpdateTime: string | null | undefined = null;
 
-  constructor ({ scraper, parser, state }: ClassUtilScraperConfig) {
+  constructor ({ scraper, parser, state }: ClassUtilScraperConfig = {}) {
     this.scraper = scraper || new Scraper();
     this.parser = parser || new Parser();
     this.state = state || getStateManager();
@@ -94,6 +93,10 @@ export class ClassUtilScraper {
   }
 
   async checkIfDataUpdated () {
+    if (!this.state) {
+      return true;
+    }
+
     // Update data if source has changed
     const lastUpdateTime = await this.state.get(this.campus, UPDATE_TIME_KEY);
     if (lastUpdateTime !== this.dataUpdateTime) {
@@ -165,8 +168,6 @@ export default ClassUtilScraper;
 
 
 export class Parser {
-  courseNames: CourseNameMap = {};
-
   async parseFacultyPage ($: CheerioStatic): Promise<CourseData[]> {
     // Get all rows of the table
     const rows = Array.from($($('table').get(2)).find('tr'));
@@ -174,29 +175,44 @@ export class Parser {
     // Remove first row (which is the header)
     const bodyRows = rows.slice(1);
     const courses: CourseData[] = [];
+    let courseCode: string = '';
+    let courseName: string = '';
+    let newCourse = false;
 
     for (const row of bodyRows) {
+      const currentCourse = courses[courses.length - 1];
       const cells = $(row).find('td');
 
       if (cells.length === TABLE_END_COUNT) {
         break;
       } else if (cells.length === COURSE_HEADING_COUNT) {
-        const course = this.parseCourse(
-          $(cells.get(0)).text().trim(),
-          $(cells.get(1)).text().trim(),
-        );
-        courses.push(course);
+        courseCode = $(cells.get(0)).text().trim();
+        courseName = $(cells.get(1)).text().trim();
+        newCourse = true;
       } else if (cells.length === REGULAR_CELL_COUNT) {
-        const course = courses[courses.length - 1];
-        const stream = this.parseStream(
-          $(cells.get(0)).text(),
-          $(cells.get(1)).text(),
-          $(cells.get(4)).text(),
-          $(cells.get(5)).text(),
-          $(cells.get(7)).text(),
-        );
+        // Check for course enrolment streams
+        const component = $(cells.get(0)).text().trim();
+        const section = $(cells.get(1)).text().trim();
+        const status = $(cells.get(4)).text().trim();
+        const enrols = $(cells.get(5)).text().trim();
+        const times = $(cells.get(7)).text().trim();
+
+        // Handle new course
+        if (component === 'CRS') {
+          courses.push(this.parseCourse(courseCode, courseName, section, times));
+          newCourse = false;
+          continue;
+        }
+
+        // Handle streams listed before any course enrolment
+        if (newCourse === true) {
+          courses.push(this.parseCourse(courseCode, courseName));
+          newCourse = false;
+        }
+
+        const stream = this.parseStream(component, section, status, enrols, times);
         if (stream !== null) {
-          course.streams.push(stream);
+          currentCourse.streams.push(stream);
         }
       }
     }
@@ -204,15 +220,18 @@ export class Parser {
     return courses;
   }
 
-  parseCourse (code: string, rawName: string): CourseData {
+  parseCourse (code: string, rawName: string, section?: string, time?: string): CourseData {
     const term = this.extractTerm(rawName);
     const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
-    const name = this.courseNames[code] || rawName.replace(termRegex, '');
+    const name = rawName.replace(termRegex, '');
+    const career = time ? (time.toLowerCase().includes('ugrd') ? Career.UGRD : Career.PGRD) : undefined;
     return {
       code,
       name,
       streams: [],
       term,
+      section: section || undefined,
+      career,
     };
   }
 
@@ -223,11 +242,7 @@ export class Parser {
     enrolString: string,
     timeString: string,
   ): StreamData | null {
-    if (component === 'CRS') {
-      return null;
-    }
-
-    status = status.trim().replace(/\*$/, '').toLowerCase();
+    status = status.replace(/\*$/, '').toLowerCase();
     if (status !== 'open' && status !== 'full') {
       return null;
     }
@@ -240,17 +255,15 @@ export class Parser {
 
     let web = undefined;
     let times: ClassTime[] | null = null;
-    if (section.indexOf('WEB') === -1) {
+    if (section.includes('WEB')) {
+      // Standardise all web streams as 'LEC' component
+      component = 'LEC';
+      web = true;
+    } else {
       times = this.parseTimeStr(timeString);
-
       if (times === null || times.length === 0) {
         return null;
       }
-    } else {
-      web = true;
-
-      // Standardise all web streams as 'LEC' component
-      component = 'LEC';
     }
 
     let delivery: DeliveryType | undefined;

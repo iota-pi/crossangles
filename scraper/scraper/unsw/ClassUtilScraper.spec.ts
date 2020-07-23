@@ -1,22 +1,17 @@
 import { Parser } from './ClassUtilScraper';
-import { CourseData } from '../../../app/src/state/Course';
+import { CourseData, Career } from '../../../app/src/state/Course';
 import { StreamData } from '../../../app/src/state/Stream';
 import { removeDuplicateStreams } from './commonUtils';
 
 
 describe('Parser', () => {
   it.each`
-    rawCode       | rawName                  | code          | name                     | term
-    ${'COMP1511'} | ${'Computing 1A (T3A)'}  | ${'COMP1511'} | ${'Computing 1A'}        | ${'T3A'}
-    ${'BLAH9870'} | ${'Thesis (Full-time)'}  | ${'BLAH9870'} | ${'Thesis (Full-time)'}  | ${undefined}
-    ${'BLAH9876'} | ${'Hist. Foobar'}        | ${'BLAH9876'} | ${'A History of Foobar'} | ${undefined}
-    ${'BLAH9876'} | ${'Hist. Foobar  (UE2)'} | ${'BLAH9876'} | ${'A History of Foobar'} | ${'UE2'}
+    rawCode       | rawName                         | code          | name                     | term
+    ${'COMP1511'} | ${'Computing 1A (T3A)'}         | ${'COMP1511'} | ${'Computing 1A'}        | ${'T3A'}
+    ${'BLAH9870'} | ${'Thesis (Full-time)'}         | ${'BLAH9870'} | ${'Thesis (Full-time)'}  | ${undefined}
+    ${'BLAH9876'} | ${'A History of Foobar  (UE2)'} | ${'BLAH9876'} | ${'A History of Foobar'} | ${'UE2'}
   `('parseCourse("$code", "$name")"', ({ rawCode, rawName, code, name, term }) => {
     const p = new Parser();
-    p.courseNames = {
-      BLAH9876: 'A History of Foobar',
-    };
-
     const result = p.parseCourse(rawCode, rawName);
     expect(result).toEqual({
       code,
@@ -24,6 +19,21 @@ describe('Parser', () => {
       term,
       streams: [],
     });
+  })
+
+  it.each`
+    section      | times                         | career
+    ${'CR01'}    | ${'(Course Enrolment, UGRD)'} | ${Career.UGRD}
+    ${'CR02'}    | ${'(Course Enrolment, PGRD)'} | ${Career.PGRD}
+    ${''}        | ${''}                         | ${undefined}
+    ${undefined} | ${undefined}                  | ${undefined}
+  `('parseCourse("$code", "$name")"', ({ section, times, career }) => {
+    const p = new Parser();
+    const rawCode = 'COMP1379';
+    const rawName = 'Introduction to Ring Theory';
+    const result = p.parseCourse(rawCode, rawName, section, times);
+    expect(result.career).toEqual(career || undefined);
+    expect(result.section).toEqual(section || undefined);
   })
 
   it.each`
