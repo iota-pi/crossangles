@@ -7,4 +7,7 @@
 # Misc/IDE
 .vscode
 
+# Jest coverage
+coverage/
+
 /secrets.sh
