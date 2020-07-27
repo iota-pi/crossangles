@@ -157,10 +157,11 @@ export class TimetableScraper {
     await this.scraper.scrapePages(urls, async ($, url) => {
       const code = (courseCodeRegex.exec(url) || [])[1];
       const name = getCourseName($, code);
-      const courses: CourseData[] = [
-        { code, name, streams: [] },
-        { code, name, streams: [] },
-        { code, name, streams: [] },
+      const getBaseCourse = (): CourseData => ({ code, name, streams: [] });
+      const courses: CourseData[][] = [
+        [],
+        [],
+        [],
       ];
 
       const streamTables = $('td.label:contains("Class Nbr")').parent().parent().toArray();
@@ -201,14 +202,22 @@ export class TimetableScraper {
         }
 
         const term = getTermNumber(data['Teaching Period']);
-        if (courses[term - 1] !== undefined) {
-          courses[term - 1].streams.push(stream);
+        const coursesForTerm = courses[term - 1];
+        let course: CourseData;
+        if (coursesForTerm.length === 0 || isCourseEnrolment(data)) {
+          course = getBaseCourse();
+          course.description = stream.notes;
+        } else {
+          course = coursesForTerm[coursesForTerm.length - 1];
+          course.streams.push(stream);
         }
       }
 
-      for (let i = 0; i < courses.length; ++i) {
-        removeDuplicateStreams(courses[i]);
-        allCourses[i].push(courses[i]);
+      for (let term = 0; term < courses.length; ++term) {
+        for (const course of courses[term]) {
+          removeDuplicateStreams(course);
+          allCourses[term].push(course);
+        }
       }
     });
 
