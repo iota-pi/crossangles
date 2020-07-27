@@ -201,7 +201,12 @@ export class TimetableScraper {
           continue;
         }
 
+        // Get term number or skip courses which don't have a definable number
         const term = getTermNumber(data['Teaching Period']);
+        if (term === undefined) {
+          continue;
+        }
+
         const coursesForTerm = courses[term - 1];
         let course: CourseData;
         if (coursesForTerm.length === 0 || isCourseEnrolment(data)) {
@@ -243,8 +248,12 @@ export class TimetableScraper {
 }
 
 
-export function getTermNumber (termString: string): number {
-  return parseInt(termString.replace(/[^\d]+/, '').replace(/[^\d].*/, ''));
+export function getTermNumber (termString: string): number | undefined {
+  const term = parseInt(termString.replace(/[^\d]+/, '').replace(/[^\d].*/, ''));
+  if (Number.isNaN(term)) {
+    return undefined;
+  }
+  return term;
 }
 
 export function getCourseName ($: CheerioStatic, code: string) {
