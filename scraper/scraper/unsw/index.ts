@@ -83,6 +83,11 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     // ClassUtil abbreviates long names
     course.name = timetableCourse.name;
 
+    // ClassUtil doesn't include descriptions for courses
+    if (timetableCourse.description) {
+      course.description = timetableCourse.description;
+    }
+
     if (timetableCourse !== undefined) {
       for (const stream of course.streams) {
         const timetableStream = timetableCourse.streams.find(
