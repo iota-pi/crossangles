@@ -1,7 +1,21 @@
-import { Parser } from './ClassUtilScraper';
+import ClassUtilScraper, { Parser } from './ClassUtilScraper';
 import { CourseData, Career } from '../../../app/src/state/Course';
 import { StreamData } from '../../../app/src/state/Stream';
 import { removeDuplicateStreams } from './commonUtils';
+
+
+describe('ClassUtilScraper', () => {
+  it('checkTerm', () => {
+    const c = new ClassUtilScraper();
+    c.checkTerm(1);
+    c.checkTerm(2);
+    c.checkTerm(3);
+    expect(() => c.checkTerm(-1)).toThrow();
+    expect(() => c.checkTerm(0)).toThrow();
+    expect(() => c.checkTerm(4)).toThrow();
+    expect(() => c.checkTerm(5)).toThrow();
+  })
+})
 
 
 describe('Parser', () => {

@@ -59,6 +59,8 @@ export class ClassUtilScraper {
   }
 
   async scrape (term: number): Promise<CourseData[]> {
+    this.checkTerm(term);
+
     this.log(`scraping term ${term} from ${CLASSUTIL}`);
     const termLinkEnd = `${term}.html`;
     const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
@@ -157,6 +159,12 @@ export class ClassUtilScraper {
     return allCourses;
   }
 
+  checkTerm (term: number) {
+    if (term < 1 || term > 3) {
+      throw new Error(`ClassUtilScraper does not support scraping term ${term}`);
+    }
+  }
+
   log (...args: any[]) {
     if (this.logging) {
       console.log(`${this.campus.toUpperCase()}:`, ...args);
@@ -180,7 +188,7 @@ export class Parser {
     let newCourse = false;
 
     for (const row of bodyRows) {
-      const currentCourse = courses[courses.length - 1];
+      let currentCourse = courses[courses.length - 1];
       const cells = $(row).find('td');
 
       if (cells.length === TABLE_END_COUNT) {
@@ -207,6 +215,7 @@ export class Parser {
         // Handle streams listed before any course enrolment
         if (newCourse === true) {
           courses.push(this.parseCourse(courseCode, courseName));
+          currentCourse = courses[courses.length - 1];
           newCourse = false;
         }
 
