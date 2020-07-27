@@ -27,7 +27,13 @@ export class Scraper {
     const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
     const processor = async (url: string) => {
-      return handler(await this.getPageContent(url), url).catch(error => {
+      const content = await this.getPageContent(url).catch(error => {
+        console.error(`Error while fetching "${url}":`, error);
+        return null;
+      });
+      if (content === null) return null;
+
+      return handler(content, url).catch(error => {
         console.error(`Error while scraping "${url}":`, error);
         return null;
       });
