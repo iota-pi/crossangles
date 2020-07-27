@@ -5,8 +5,7 @@ const test = async () => {
   const timetable = new ClassUtilScraper();
   timetable.state = undefined;
   await timetable.setup();
-  const result = await timetable.scrape(2);
-  console.log(result[0].streams);
+  const result = await timetable.scrape(3);
   writeFileSync('test_classutil.json', JSON.stringify(result));
 }
 test();
