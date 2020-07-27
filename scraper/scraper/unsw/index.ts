@@ -1,6 +1,6 @@
 import ClassUtilScraper, { CLASSUTIL } from './ClassUtilScraper';
 import { CampusData, Scraper } from '../Scraper';
-import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
+import { CourseData, CourseMap, getCourseId, CourseId } from '../../../app/src/state/Course';
 import { getStreamId } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
@@ -68,9 +68,12 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     return [];
   }
 
+  const coursesWithCode = new Map<CourseId, number>();
   const timetableCourseMap: CourseMap = {};
   for (const course of timetableData) {
     timetableCourseMap[getCourseId(course)] = course;
+    const count = coursesWithCode.get(course.code) || 0;
+    coursesWithCode.set(course.code, count + 1);
   }
 
   for (const course of classutilData) {
@@ -86,6 +89,12 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     // ClassUtil doesn't include descriptions for courses
     if (timetableCourse.description) {
       course.description = timetableCourse.description;
+    }
+
+    // Exclude section for courses with only one course enrolment stream
+    const countOfCode = coursesWithCode.get(courseId) || 0;
+    if (countOfCode > 1) {
+      course.section = undefined;
     }
 
     if (timetableCourse !== undefined) {
