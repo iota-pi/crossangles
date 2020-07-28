@@ -173,7 +173,7 @@ resource "aws_cloudwatch_event_target" "image_target" {
   count = var.environment == "production" ? 1 : 0
 
   rule = aws_cloudwatch_event_rule.image_trigger.name
-  arn  = aws_lambda_function.image.arn
+  arn  = aws_lambda_function.image[count.index].arn
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_image" {
@@ -181,7 +181,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_image" {
 
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.image.function_name
+  function_name = aws_lambda_function.image[count.index].function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.image_trigger.arn
 }
