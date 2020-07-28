@@ -7,7 +7,7 @@ const main = async () => {
     const campus = arg.toLowerCase();
     const outputDir = '../app/public/';
     const cacheFile = `./${campus}-snapshot-full.json.br`;
-    const promise = scrapeCampus(campus, outputDir, cacheFile).catch(e => {
+    const promise = scrapeCampus(campus, outputDir, cacheFile, false).catch(e => {
       console.error(e + '');
       process.exitCode = 1;
     });

@@ -11,7 +11,7 @@ import { removeDuplicateStreams } from './commonUtils';
 export interface ClassUtilScraperConfig {
   scraper?: Scraper,
   parser?: Parser,
-  state?: StateManager,
+  state?: StateManager | null,
 }
 
 
@@ -44,7 +44,7 @@ export class ClassUtilScraper {
   constructor ({ scraper, parser, state }: ClassUtilScraperConfig = {}) {
     this.scraper = scraper || new Scraper();
     this.parser = parser || new Parser();
-    this.state = state || getStateManager();
+    this.state = state === undefined ? getStateManager() : state || undefined;
   }
 
   async setup () {

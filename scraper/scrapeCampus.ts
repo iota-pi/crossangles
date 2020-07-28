@@ -5,7 +5,12 @@ import getStateManager from './state/getStateManager';
 import HTMLCache from './scraper/HTMLCache';
 import { checkVersionChange, updateVersion } from './state/util';
 
-export const scrapeCampus = async (campus: string, outputPrefix: string = '', cacheFile?: string) => {
+export const scrapeCampus = async (
+  campus: string,
+  outputPrefix: string = '',
+  cacheFile?: string,
+  useState = true,
+) => {
   let scraper: Scraper | undefined = undefined;
   let cache: HTMLCache | undefined = undefined;
   if (cacheFile) {
@@ -13,10 +18,10 @@ export const scrapeCampus = async (campus: string, outputPrefix: string = '', ca
     cache = scraper.cache;
     await cache.load(cacheFile).catch(() => {});
   }
-  const state = getStateManager();
+  const state = useState ? getStateManager() : null;
 
-  let forceUpdate = false;
-  if (await checkVersionChange(state)) {
+  let forceUpdate = !useState;
+  if (state && await checkVersionChange(state)) {
     updateVersion(state);
     forceUpdate = true;
     console.log('Scraper code updated, forcing data update.');

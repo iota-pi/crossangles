@@ -1,7 +1,7 @@
 import ClassUtilScraper, { CLASSUTIL } from './ClassUtilScraper';
 import { CampusData, Scraper } from '../Scraper';
-import { CourseData, CourseMap, getCourseId, CourseId } from '../../../app/src/state/Course';
-import { getStreamId } from '../../../app/src/state/Stream';
+import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
+import { getStreamId, StreamData } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
@@ -12,7 +12,7 @@ const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
 
 export async function scrapeUNSW (
-  { scraper, state, forceUpdate = false }: { scraper?: Scraper, state?: StateManager, forceUpdate?: boolean }
+  { scraper, state, forceUpdate = false }: { scraper?: Scraper, state?: StateManager | null, forceUpdate?: boolean }
 ): Promise<CampusData[] | null> {
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });
@@ -61,6 +61,11 @@ export async function scrapeUNSW (
 export function mergeData (classutilData?: CourseData[], timetableData?: CourseData[]) {
   // Just use data from one if the other has no data
   if (!classutilData || !timetableData) {
+    if (!classutilData) {
+      console.log('No data from classutil, using timetable data only');
+    } else {
+      console.log('No data from timetable, using classutil data only');
+    }
     const data = classutilData || timetableData;
     if (data) {
       return data;
@@ -68,17 +73,15 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     return [];
   }
 
-  const coursesWithCode = new Map<CourseId, number>();
   const timetableCourseMap: CourseMap = {};
   for (const course of timetableData) {
-    timetableCourseMap[getCourseId(course)] = course;
-    const count = coursesWithCode.get(course.code) || 0;
-    coursesWithCode.set(course.code, count + 1);
+    const courseId = getCourseId(course, true);
+    timetableCourseMap[courseId] = course;
   }
 
   for (const course of classutilData) {
-    const courseId = getCourseId(course);
-    const timetableCourse = timetableCourseMap[courseId];
+    const simpleCourseId = getCourseId(course, true);
+    const timetableCourse = timetableCourseMap[simpleCourseId];
     if (timetableCourse === undefined) {
       continue;
     }
@@ -91,19 +94,25 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
       course.description = timetableCourse.description;
     }
 
-    // Exclude section for courses with only one course enrolment stream
-    const countOfCode = coursesWithCode.get(courseId) || 0;
-    if (countOfCode > 1) {
+    const enrolmentStreams = filterEnrolmentStreams(timetableCourse.streams);
+    if (enrolmentStreams.length > 1) {
+      // Find corresponding course enrolment stream and update the course's description
+      const enrolment = timetableCourse.streams.find(s => s.component === course.section);
+      if (enrolment) {
+        course.description = enrolment.notes;
+      }
+    } else {
+      // No need to include section if there only is one section for the course
       course.section = undefined;
     }
 
     if (timetableCourse !== undefined) {
       for (const stream of course.streams) {
         const timetableStream = timetableCourse.streams.find(
-          s => getStreamId(timetableCourse, s) === getStreamId(course, stream)
+          s => getStreamId(timetableCourse, s, true) === getStreamId(course, stream, true)
         );
 
-        if (stream.times !== null && timetableStream && timetableStream.times) {
+        if (stream.times && timetableStream && timetableStream.times) {
           for (const time of stream.times) {
             const timetableTime = timetableStream.times.find(
               t => t.time === time.time
@@ -120,6 +129,11 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
   }
 
   return classutilData;
+}
+
+export function filterEnrolmentStreams (streams: StreamData[]) {
+  const regex = /^CR(?:[0-9]{2}|S)$/;
+  return streams.filter(s => regex.test(s.component));
 }
 
 export async function scrapeClassUtil (classutil: ClassUtilScraper, useCache: boolean): Promise<CourseData[][]> {
