@@ -158,10 +158,10 @@ export class TimetableScraper {
       const code = (courseCodeRegex.exec(url) || [])[1];
       const name = getCourseName($, code);
       const getBaseCourse = (): CourseData => ({ code, name, streams: [] });
-      const courses: CourseData[][] = [
-        [],
-        [],
-        [],
+      const courses: CourseData[] = [
+        getBaseCourse(),
+        getBaseCourse(),
+        getBaseCourse(),
       ];
 
       const streamTables = $('td.label:contains("Class Nbr")').parent().parent().toArray();
@@ -208,22 +208,14 @@ export class TimetableScraper {
           continue;
         }
 
-        const coursesForTerm = courses[term - 1];
-        let course: CourseData;
-        if (coursesForTerm.length === 0 || isCourseEnrolment(data)) {
-          course = getBaseCourse();
-          course.description = stream.notes;
-        } else {
-          course = coursesForTerm[coursesForTerm.length - 1];
-          course.streams.push(stream);
-        }
+        const course: CourseData = courses[term - 1];
+        course.streams.push(stream);
       }
 
       for (let term = 0; term < courses.length; ++term) {
-        for (const course of courses[term]) {
-          removeDuplicateStreams(course);
-          allCourses[term].push(course);
-        }
+        const course = courses[term];
+        removeDuplicateStreams(course);
+        allCourses[term].push(course);
       }
     });
 
