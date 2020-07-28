@@ -1,10 +1,12 @@
 import scrapeCampus from './scrapeCampus';
+import code_version from './version';
 
 const campuses = ['unsw'];
 const bucket_name = process.env.S3_OUTPUT_BUCKET || 'crossangles-course-data';
 export const S3_BUCKET = `s3://${bucket_name}/`;
 
 export const handler = async () => {
+  console.log(`Scraper invoked with code version: ${code_version}`);
   const promises: Promise<void>[] = [];
   for (let campus of campuses) {
     const promise = scrapeCampus(campus, S3_BUCKET).catch(e => {
