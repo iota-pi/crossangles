@@ -162,6 +162,7 @@ output "invoke_url" {
 }
 
 resource "aws_cloudwatch_event_rule" "image_trigger" {
+  count = var.environment == "production" ? 1 : 0
   description = "Keep lambda warm"
 
   # Run every 15 minutes
@@ -169,11 +170,15 @@ resource "aws_cloudwatch_event_rule" "image_trigger" {
 }
 
 resource "aws_cloudwatch_event_target" "image_target" {
+  count = var.environment == "production" ? 1 : 0
+
   rule = aws_cloudwatch_event_rule.image_trigger.name
   arn  = aws_lambda_function.image.arn
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_image" {
+  count = var.environment == "production" ? 1 : 0
+
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.image.function_name
