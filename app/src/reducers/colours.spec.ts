@@ -18,7 +18,7 @@ import {
   getCourseId,
   initialState,
 } from '../state';
-import { getCourse } from '../test_util';
+import { getCourse, getMeta } from '../test_util';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 const CBS_COLOUR: Colour = 'indigo';
@@ -175,6 +175,7 @@ describe('colours reducer', () => {
 
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
+      meta: getMeta(),
       courses,
     };
 

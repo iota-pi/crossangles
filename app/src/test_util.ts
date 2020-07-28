@@ -1,4 +1,4 @@
-import { CourseData, linkStream, LinkedStream, LinkedSession } from './state';
+import { CourseData, linkStream, LinkedStream, LinkedSession, Meta } from './state';
 import SessionPlacement from './components/Timetable/SessionPlacement';
 import SessionManager from './components/Timetable/SessionManager';
 import { Dimensions } from './components/Timetable/timetableTypes';
@@ -98,3 +98,11 @@ export const getDimensions = () => {
   };
   return dimensions;
 }
+
+export const getMeta = (): Meta => ({
+  sources: [],
+  updateDate: 'today',
+  updateTime: 'now',
+  term: 3,
+  year: 2020,
+});

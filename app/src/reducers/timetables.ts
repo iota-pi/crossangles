@@ -1,5 +1,5 @@
-import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT } from '../actions';
-import { initialState, Timetables } from '../state';
+import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT, SET_COURSE_DATA } from '../actions';
+import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId } from '../state';
 
 export function timetables (
   state: Timetables = initialState.timetables,
@@ -11,6 +11,23 @@ export function timetables (
       state = { ...state, [term]: action.sessionManager };
     }
     return state;
+  }
+
+  if (action.type === SET_COURSE_DATA) {
+    const courses = new Set(action.courses.map(c => getCourseId(c)));
+    const term = getCurrentTerm(action.meta);
+    const timetable = state[term];
+    const sessionsToRemove = new Set<SessionId>();
+    for (const [sessionId, placement] of timetable.map) {
+      if (!courses.has(placement.session.course)) {
+        sessionsToRemove.add(sessionId);
+      }
+    }
+    const newTimetable = {...timetable};
+    newTimetable.map = newTimetable.map.filter(([id, _]) => !sessionsToRemove.has(id));
+    newTimetable.order = newTimetable.order.filter(id => !sessionsToRemove.has(id));
+    newTimetable.renderOrder = newTimetable.renderOrder.filter(id => !sessionsToRemove.has(id));
+    return {...state, [term]: newTimetable};
   }
 
   return state;

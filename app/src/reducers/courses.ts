@@ -6,7 +6,15 @@ export function courses (
   action: AllActions,
 ): CourseMap {
   if (action.type === SET_COURSE_DATA) {
-    const allCourses: CourseMap = {};
+    const continuingCourses: CourseMap = {};
+    for (const code of Object.keys(state)) {
+      const course = state[code];
+      if (course.isCustom) {
+        continuingCourses[code] = course;
+      }
+    }
+
+    const allCourses: CourseMap = continuingCourses;
 
     // Return with new course data
     for (const course of action.courses) {
@@ -14,7 +22,7 @@ export function courses (
       allCourses[id] = course;
     }
 
-    return { ...state, ...allCourses };
+    return allCourses;
   }
 
   if (action.type === ADD_COURSE && action.course.isCustom) {
