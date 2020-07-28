@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import ListboxComponent from './ListboxComponent';
-import { CourseData, getCourseId } from '../state';
+import { CourseData, getCourseId, getClarificationText } from '../state';
 
 export interface Props {
   maxItems?: number,
@@ -192,6 +192,7 @@ const AutocompleteControl = ({
       const codeParts = parse(option.code, codeMatches);
       const nameMatches = match(name, inputValue);
       const nameParts = parse(name, nameMatches);
+      const clarification = getClarificationText(option);
 
       return (
         <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
@@ -205,7 +206,7 @@ const AutocompleteControl = ({
               {part.text}
             </span>
           ))}
-          {option.term ? ` (${option.term})` : ''}
+          {clarification ? ` (${clarification})` : ''}
         </div>
       );
     },
