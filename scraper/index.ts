@@ -6,7 +6,7 @@ const main = async () => {
   for (let arg of args) {
     const campus = arg.toLowerCase();
     const outputDir = '../app/public/';
-    const cacheFile = `./${campus}-snapshot.json.br`;
+    const cacheFile = `./${campus}-snapshot-full.json.br`;
     const promise = scrapeCampus(campus, outputDir, cacheFile).catch(e => {
       console.error(e + '');
       process.exitCode = 1;
