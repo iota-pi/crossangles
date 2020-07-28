@@ -45,6 +45,7 @@ export class TimetableScraper {
   logging = process.env.NODE_ENV !== 'test';
   baseURL: string;
   year: number;
+  facultyLinkFilter?: (links: string[]) => string[];
 
   protected dataUpdateTime: string | null | undefined = null;
 
@@ -143,7 +144,10 @@ export class TimetableScraper {
       links.push(...matchingLinks);
     });
 
-    const uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
+    let uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
+    if (this.facultyLinkFilter) {
+      uniqueLinks = this.facultyLinkFilter(uniqueLinks);
+    }
     uniqueLinks.length = Math.min(uniqueLinks.length, this.maxCourses);
 
     this.log(`found ${uniqueLinks.length} course pages`);
