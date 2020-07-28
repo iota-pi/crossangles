@@ -1,6 +1,7 @@
-import { scrapeUNSW } from './index';
+import { scrapeUNSW, filterEnrolmentStreams } from './index';
 import { Scraper } from '../Scraper';
 import StateManager from '../../state/StateManager';
+import { StreamData, ClassTime } from '../../../app/src/state/Stream';
 
 describe('scrapeUNSW', () => {
   const cacheFile = 'unsw-snapshot.json.br';
@@ -28,4 +29,20 @@ describe('scrapeUNSW', () => {
     expect(courses.filter(c => c.isAdditional)).toMatchSnapshot();
     await cache.write(cacheFile);
   })
+})
+
+it('filterEnrolmentStreams', () => {
+  const enrols: [number, number] = [0, 0];
+  const times: ClassTime[] = [];
+  const streams: StreamData[] = [
+    {component: 'LEC', enrols, times},
+    {component: 'CRS', enrols, times},
+    {component: 'CR01', enrols, times},
+    {component: 'CR02', enrols, times},
+    {component: 'CR99', enrols, times},
+    {component: 'CR100', enrols, times},
+    {component: 'OTH', enrols, times},
+  ];
+  const result = filterEnrolmentStreams(streams);
+  expect(result.map(s => s.component)).toEqual(['CRS', 'CR01', 'CR02', 'CR99']);
 })
