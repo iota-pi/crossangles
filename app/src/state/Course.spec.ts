@@ -120,9 +120,15 @@ describe('course state util functions', () => {
 
   it.each`
     career         | section      | term         | description                      | expected
-    ${Career.UGRD} | ${'CR01'}    | ${undefined} | ${'AVAIlable only to MECH/SENG'} | ${'CR01; MECH, SENG'}
-    ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'AVAIlable only to MECH/SENG'} | ${'CR02; T2A; MECH, SENG; Postgrad'}
+    ${Career.UGRD} | ${undefined} | ${undefined} | ${undefined}                     | ${''}
+    ${Career.PGRD} | ${undefined} | ${undefined} | ${undefined}                     | ${'Postgrad'}
+    ${undefined}   | ${'CR02'}    | ${undefined} | ${undefined}                     | ${'CR02'}
+    ${undefined}   | ${undefined} | ${'T2A'}     | ${undefined}                     | ${'T2A'}
     ${undefined}   | ${undefined} | ${undefined} | ${'MECH/AERO/MTRN programs'}     | ${'MECH, AERO, MTRN'}
+    ${Career.UGRD} | ${'CR01'}    | ${undefined} | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG'}
+    ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'Something unrelated'}         | ${'CR02; T2A; Postgrad'}
+    ${Career.UGRD} | ${'CR02'}    | ${'T2A'}     | ${undefined}                     | ${'CR02; T2A'}
+    ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG; T2A; Postgrad'}
   `('gets correct clarification text', ({ career, section, term, description, expected }) => {
     const course: CourseData = {
       ...getCourse(),

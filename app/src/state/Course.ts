@@ -71,7 +71,7 @@ export const getClarificationText = (course: CourseData): string => {
 
   const discipline = disciplines.join(', ') || undefined;
   const career = course.career === Career.PGRD ? 'Postgrad' : undefined;
-  const parts = [course.section, course.term, discipline, career];
+  const parts = [discipline || course.section, course.term, career];
   return parts.filter(x => x).join('; ');
 }
 
