@@ -29,12 +29,12 @@ export interface CourseMap {
 }
 
 
-export const getCourseId = (course: CourseData): CourseId => {
+export const getCourseId = (course: CourseData, simple = false): CourseId => {
   const extraSegments = [
     course.code,
     course.term,
-    course.section,
-    course.career === Career.PGRD ? 'PGRD' : undefined,
+    !simple && course.section,
+    !simple && course.career === Career.PGRD ? 'PGRD' : undefined,
   ];
   return extraSegments.filter(x => !!x).join('~');
 }

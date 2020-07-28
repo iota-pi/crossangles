@@ -34,15 +34,15 @@ export interface ClassTime {
 }
 
 
-export const getStreamId = (course: CourseData, stream: StreamData) => {
+export const getStreamId = (course: CourseData, stream: StreamData, simple = false) => {
   const timeString = stream.times ? stream.times.map(t => t.time).join(',') : 'WEB';
-  const id = `${getComponentId(course, stream)}~${timeString}`;
+  const id = `${getComponentId(course, stream, simple)}~${timeString}`;
   return id;
 }
 
-export const getComponentId = (course: CourseData, stream: StreamData) => {
+export const getComponentId = (course: CourseData, stream: StreamData, simple = false) => {
   const componentString = course.isCustom ? '' : stream.component;
-  return `${getCourseId(course)}~${componentString}`;
+  return `${getCourseId(course, simple)}~${componentString}`;
 }
 
 export const getSessions = (course: CourseData, stream: StreamData): SessionData[] => {
