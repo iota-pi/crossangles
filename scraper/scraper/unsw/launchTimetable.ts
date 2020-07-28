@@ -6,7 +6,6 @@ const test = async () => {
   timetable.state = undefined;
   await timetable.setup();
   const result = await timetable.scrape();
-  console.log(result[2][0].streams);
-  writeFileSync('timetable.json', JSON.stringify(result[0][0]));
+  writeFileSync('test_timetable.json', JSON.stringify(result[2]));
 }
 test();
