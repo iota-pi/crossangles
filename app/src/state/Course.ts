@@ -54,9 +54,25 @@ export const getWebStream = (course: CourseData): StreamData | null => {
   return null;
 }
 
-export const getComponents = (course: CourseData) => {
+export const getComponents = (course: CourseData): string[] => {
   const components = course.streams.map(s => s.component);
   return components.filter((c, i) => components.indexOf(c) === i);
+}
+
+export const getClarificationText = (course: CourseData): string => {
+  const disciplineRegex = /\b[A-Z]{4}\b/g;
+  const disciplines: string[] = [];
+  let match;
+  if (course.description) {
+    while ((match = disciplineRegex.exec(course.description)) !== null) {
+      disciplines.push(match[0]);
+    }
+  }
+
+  const discipline = disciplines.join(', ') || undefined;
+  const career = course.career === Career.PGRD ? 'Postgrad' : undefined;
+  const parts = [course.section, course.term, discipline, career];
+  return parts.filter(x => x).join('; ');
 }
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);

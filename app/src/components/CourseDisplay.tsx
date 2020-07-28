@@ -10,7 +10,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import WebStream from './WebStream';
 import CourseActionButton from './CourseActionButton';
 import ColourControl from './Colour';
-import { Colour, CourseData, CourseId, getCourseId, getWebStream, Meta } from '../state';
+import { Colour, CourseData, CourseId, getCourseId, getClarificationText, getWebStream, Meta } from '../state';
 import getCampus from '../getCampus';
 import { CATEGORY } from '../analytics';
 
@@ -101,13 +101,14 @@ export const CourseDisplay = ({
 }: CourseDisplayProps) => {
   const classes = useStyles();
   const handbookLink = getHandbookLink(course, meta);
+  const clarification = getClarificationText(course);
   const courseTitle = (
     <>
       <span>{course.code}</span>
       <span className={classes.lightText}> — {course.name}</span>
-      {course.term ? (
-        <span className={classes.termText}> ({course.term})</span>
-      ) : null}
+      {clarification && (
+        <span className={classes.termText}> ({clarification})</span>
+      )}
     </>
   );
   const webStream = getWebStream(course);

@@ -1,5 +1,6 @@
-import { getCourseId, hasWebStream, CourseData, getWebStream, getComponents, Career } from './Course';
+import { getCourseId, hasWebStream, CourseData, getWebStream, getComponents, Career, getClarificationText } from './Course';
 import { StreamData } from './Stream';
+import { getCourse } from '../test_util';
 
 const code = 'TPBC1234';
 const name = 'Theory of Practical Blockchain';
@@ -94,5 +95,22 @@ describe('course state util functions', () => {
     const course: CourseData = { code, name, streams };
     const result = getComponents(course);
     expect(result).toEqual(['OTH', 'TUT', 'LEC']);
+  })
+
+  it.each`
+    career         | section      | term         | description                      | expected
+    ${Career.UGRD} | ${'CR01'}    | ${undefined} | ${'AVAIlable only to MECH/SENG'} | ${'CR01; MECH, SENG'}
+    ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'AVAIlable only to MECH/SENG'} | ${'CR02; T2A; MECH, SENG; Postgrad'}
+    ${undefined}   | ${undefined} | ${undefined} | ${'MECH/AERO/MTRN programs'}     | ${'MECH, AERO, MTRN'}
+  `('gets correct clarification text', ({ career, section, term, description, expected }) => {
+    const course: CourseData = {
+      ...getCourse(),
+      career,
+      section,
+      term,
+      description,
+    };
+    const result = getClarificationText(course);
+    expect(result).toEqual(expected);
   })
 })
