@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     whiteSpace: 'pre',
   },
   termText: {
-    fontWeight: 400,
+    fontWeight: 300,
   },
   courseTitle: {
     display: 'flex',
