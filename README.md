@@ -4,43 +4,39 @@ Welcome to CrossAngles!
 
 ## Getting started
 
-To get started with developing locally, clone the repository, then in the
-repository root directory, run the following commands to build and run the
-scraper:
+To get started with developing locally, clone the repository, and install the
+dependencies using:
 
 ```bash
-./ci.sh build scraper
-./ci.sh scrape unsw
+./ci.sh install
 ```
 
-This will run the UNSW scraper and get you up-to-date course data which you can
-use when running locally.
+## Running the app development server
 
-If you're making frequent changes to the scraper, you can run the build in
-watch-mode, which means you don't have to manually build it after each change.
-
-```bash
-./ci.sh build scraper -w
-```
-
-To run the web app, run:
+To build and serve the web app locally, you can use:
 
 ```bash
 ./ci.sh run
+# OR
+cd app && npm start
 ```
 
 ## Running tests
 
-To run the unit tests for the web app, run:
+To run the unit tests:
 
 ```bash
+# Unit tests for web app
 ./ci.sh test app
+
+# Unit tests for scraper
+./ci.sh test scraper
 ```
 
-To run the unit tests for the scraper, run:
+Or, to run all the unit tests as they are in the CI pipeline, run:
 
 ```bash
-./ci.sh test scraper
+./ci.sh test
 ```
 
 There is also an end-to-end (E2E) test suite for the web-app using Cypress.
@@ -48,10 +44,10 @@ These can be run either with or without a graphical window. It is often useful
 when debugging tests to watch them while they run.
 
 ```bash
-# Run tests in Chrome
+# Run the tests in Chrome
 ./ci.sh cypress open
 
-# Run tests headless in electron
+# Run the tests headless in electron
 ./ci.sh cypress run
 ```
 
@@ -98,20 +94,8 @@ the **why** of your change.
 
 ### Continuous Integration
 This repository has continuous integration set up, and will run all the tests
-on the code before your PR can be merged. This process helps with making
-progress quickly, and having confidence that our changes won't cause any issues
-in other parts of the app.
+on the code before your PR can be merged.
 
 ### Code Review
 Another quality gate is the code review process. At least one person must review
-a pull-request before it can be merged. This is intended to keep the quality of
-the code-base high which, once again, helps us to move fast and not break
-things.
-
-It's also a great opportunity for both the developer and the reviewer to think
-critically about code and become better developers.
-
-### Merging
-One the PR has been approved and the status checks (CI tests) have passed, the
-branch can be merged into master. Now you can make a new branch and start work
-on a new feature!
+a pull-request before it can be merged.
