@@ -196,8 +196,9 @@ export class TimetableScraper {
           }
         }
 
-        // Skip streams without any associated times (unless it's a web stream)
-        if (stream.times!.length === 0 && !stream.web) {
+        // Skip regular streams without any associated class times
+        const isRegularStream = !stream.web && !isCourseEnrolment(data);
+        if (stream.times!.length === 0 && isRegularStream) {
           continue;
         }
 
