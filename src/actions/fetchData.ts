@@ -8,7 +8,7 @@ export const SET_COURSE_DATA = 'SET_COURSE_DATA';
 export interface CourseListAction extends Action {
   type: typeof SET_COURSE_DATA;
   courses: CourseData[];
-  meta?: Meta;
+  meta: Meta;
 }
 
 export function fetchData (): ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction> {

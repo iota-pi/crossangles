@@ -1,7 +1,9 @@
 import { additional, custom, chosen, courses } from './courses';
 import { CourseListAction, CourseAction, REMOVE_COURSE, SET_COURSE_DATA, ADD_COURSE } from '../actions';
-import { CourseData, CourseMap, CourseId, getCourseId, initialState } from '../state';
-import { getCourse } from '../test_util';
+import { CourseData, CourseMap, CourseId, getCourseId, initialState, Career } from '../state';
+import { getCourse, getMeta } from '../test_util';
+
+const meta = getMeta();
 
 
 describe('courses', () => {
@@ -23,6 +25,7 @@ describe('courses', () => {
     ];
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
+      meta,
       courses: courseList,
     };
     const state = {};
@@ -40,15 +43,31 @@ describe('courses', () => {
     ];
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
+      meta,
       courses: courseList,
     };
     const state: CourseMap = {
+      // Unchanged course
       [getCourseId(courseList[0])]: { code: 'RING1379', name: 'Old Ring Theory Name', streams: [] },
-      'observer': { code: 'observer', name: 'Observation', streams: [] },
+
+      // Custom course
+      'custom': { code: 'custom', name: 'Observation', streams: [], isCustom: true },
+
+      // Removed course
+      'oldcourse': { code: 'oldcourse', name: 'Observation', streams: [] },
+
+      // Changed course
+      'RING9731': {
+        code: 'RING9731',
+        name: 'Introduction to Ring Theory',
+        streams: [],
+        section: 'CR01',
+        career: Career.PGRD,
+      },
     };
     const result = courses(state, action);
     expect(result).toEqual({
-      ...state,
+      'custom': state['custom'],
       [getCourseId(courseList[0])]: courseList[0],
       [getCourseId(courseList[1])]: courseList[1],
     });
@@ -230,6 +249,7 @@ describe('chosen', () => {
     const courseIds = courseList.map(c => getCourseId(c));
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
+      meta,
       courses: courseList,
     };
     const state = ['extra1', courseIds[0], 'extra3', courseIds[1], 'extra3'];
@@ -245,6 +265,7 @@ describe('chosen', () => {
     const courseIds = courseList.map(c => getCourseId(c));
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
+      meta,
       courses: courseList,
     };
     const state = [ ...courseIds ];
@@ -386,6 +407,7 @@ describe('additional', () => {
   it('automatically adds additional courses marked as autoSelect', () => {
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
+      meta,
       courses: [
         { code: 'COMP1511', name: 'Computing 1A', streams: [], autoSelect: true },
         { code: 'EU', name: 'Evangelical Union', streams: [], isAdditional: true, autoSelect: true },
