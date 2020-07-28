@@ -1,4 +1,12 @@
-import { getCourseId, hasWebStream, CourseData, getWebStream, getComponents, Career, getClarificationText } from './Course';
+import {
+  Career,
+  CourseData,
+  getClarificationText,
+  getComponents,
+  getCourseId,
+  getWebStream,
+  hasWebStream,
+} from './Course';
 import { StreamData } from './Stream';
 import { getCourse } from '../test_util';
 
@@ -16,6 +24,19 @@ describe('course state util functions', () => {
   `('gets correct course id', ({ term, section, career, expected }) => {
     const course: CourseData = { code, name, streams: [], term, section, career };
     const result = getCourseId(course);
+    expect(result).toBe(expected);
+  })
+
+  it.each`
+    term         | section      | career         | expected
+    ${undefined} | ${undefined} | ${undefined}   | ${'TPBC1234'}
+    ${'T1A'}     | ${undefined} | ${undefined}   | ${'TPBC1234~T1A'}
+    ${undefined} | ${'CR01'}    | ${undefined}   | ${'TPBC1234'}
+    ${undefined} | ${undefined} | ${Career.UGRD} | ${'TPBC1234'}
+    ${'T1A'}     | ${'CR01'}    | ${Career.PGRD} | ${'TPBC1234~T1A'}
+  `('gets correct simple course id', ({ term, section, career, expected }) => {
+    const course: CourseData = { code, name, streams: [], term, section, career };
+    const result = getCourseId(course, true);
     expect(result).toBe(expected);
   })
 
