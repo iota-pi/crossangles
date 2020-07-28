@@ -1,8 +1,9 @@
 locals {
   scraper_s3_origin_id = "scraper_s3_origin"
 
-  # Run the scraper every 15 minutes in prod, in staging run it at 6:05am or 7:05am (depending on DST)
-  cron_time = var.environment == "production" ? "5,20,35,50 *" : "5 19"
+  # In production: run the scraper at 5 minutes past every hour
+  # In staging: run it at 6:05am or 7:05am (depending on DST)
+  cron_time = var.environment == "production" ? "5 *" : "5 19"
 
   standard_tags = {
     Environment = var.environment
