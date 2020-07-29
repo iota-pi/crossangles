@@ -6,7 +6,7 @@ import HTMLCache from './scraper/HTMLCache';
 import { checkVersionChange, updateVersion } from './state/util';
 import { getLogger } from './logging';
 
-const logger = getLogger('scraperCampus');
+const logger = getLogger('scrapeCampus');
 
 export const scrapeCampus = async (
   campus: string,
