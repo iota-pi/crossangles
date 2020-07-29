@@ -22,6 +22,7 @@ export interface CourseData {
   defaultColour?: Colour,
   description?: string,
   metadata?: MinistryMeta,
+  id?: { simple?: CourseId, full?: CourseId },
 }
 
 export interface CourseMap {
@@ -30,13 +31,28 @@ export interface CourseMap {
 
 
 export const getCourseId = (course: CourseData, simple = false): CourseId => {
+  // Return cached course id if it exists
+  if (!course.id) course.id = {};
+  if (simple && course.id.simple) {
+    return course.id.simple;
+  }
+  if (!simple && course.id.full) {
+    return course.id.full;
+  }
+
   const extraSegments = [
     course.code,
     course.term,
     !simple && course.section,
     !simple && course.career === Career.PGRD ? 'PGRD' : undefined,
   ];
-  return extraSegments.filter(x => !!x).join('~');
+  const id = extraSegments.filter(x => !!x).join('~');
+  if (simple) {
+    course.id.simple = id;
+  } else {
+    course.id.full = id;
+  }
+  return id;
 }
 
 export const hasWebStream = (course: CourseData): boolean => {

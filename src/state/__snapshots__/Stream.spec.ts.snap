@@ -5,6 +5,9 @@ Object {
   "component": "LEC",
   "course": Object {
     "code": "RING9731",
+    "id": Object {
+      "full": "RING9731",
+    },
     "name": "Introduction to Ring Theory",
     "streams": Array [
       Object {
@@ -93,6 +96,9 @@ Object {
       "canClash": true,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -184,6 +190,9 @@ Object {
       "canClash": undefined,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -275,6 +284,9 @@ Object {
       "canClash": undefined,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -388,6 +400,9 @@ Object {
   "component": "LEC",
   "course": Object {
     "code": "RING9731",
+    "id": Object {
+      "full": "RING9731",
+    },
     "name": "Introduction to Ring Theory",
     "streams": Array [
       Object {
@@ -476,6 +491,9 @@ Object {
       "canClash": true,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -567,6 +585,9 @@ Object {
       "canClash": undefined,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -658,6 +679,9 @@ Object {
       "canClash": undefined,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -771,6 +795,9 @@ Object {
   "component": "TUT",
   "course": Object {
     "code": "RING9731",
+    "id": Object {
+      "full": "RING9731",
+    },
     "name": "Introduction to Ring Theory",
     "streams": Array [
       Object {
@@ -859,6 +886,9 @@ Object {
       "canClash": undefined,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
@@ -961,6 +991,9 @@ Object {
   "component": "TUT",
   "course": Object {
     "code": "RING9731",
+    "id": Object {
+      "full": "RING9731",
+    },
     "name": "Introduction to Ring Theory",
     "streams": Array [
       Object {
@@ -1049,6 +1082,9 @@ Object {
       "canClash": undefined,
       "course": Object {
         "code": "RING9731",
+        "id": Object {
+          "full": "RING9731",
+        },
         "name": "Introduction to Ring Theory",
         "streams": Array [
           Object {
