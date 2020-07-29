@@ -40,7 +40,6 @@ export class ClassUtilScraper {
   readonly campus = 'unsw';
   facultyPages: string[] = [];
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
-  logging = process.env.NODE_ENV !== 'test';
 
   protected dataUpdateTime: string | null | undefined = null;
 

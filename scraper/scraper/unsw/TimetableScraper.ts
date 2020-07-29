@@ -45,7 +45,6 @@ export class TimetableScraper {
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   maxCourses = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   facultyPages: string[] = [];
-  logging = process.env.NODE_ENV !== 'test';
   baseURL: string;
   year: number;
   facultyLinkFilter?: (links: string[]) => string[];
