@@ -108,13 +108,6 @@ export class ClassUtilScraper {
       return true;
     }
 
-    // Update data if additional data has changed
-    // TODO: lift to UNSW scraper
-    const oldAdditionalHash = await this.state.get(this.campus, ADDITIONAL_HASH_KEY);
-    if (ADDITIONAL_DATA_HASH !== oldAdditionalHash) {
-      return true;
-    }
-
     return false;
   }
 
