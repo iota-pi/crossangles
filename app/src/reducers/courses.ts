@@ -62,8 +62,8 @@ export function chosen (
 
   if (action.type === SET_COURSE_DATA) {
     // Only keep chosen courses which have current data
-    // NB: this would be necessary if a course stops being offered for a particular term
-    //     after the timetable data has already been released (fairly unlikely)
+    // This would be necessary if a course stops being offered (or part of its
+    // id changes) for a particular term
     const newIds = new Set(action.courses.map(c => getCourseId(c)));
     const newState = state.filter(id => newIds.has(id));
     if (newState.length === state.length) {
