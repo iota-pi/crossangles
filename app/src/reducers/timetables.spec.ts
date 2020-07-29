@@ -89,6 +89,19 @@ describe('timetables reducer', () => {
     expect(Object.keys(result)).toHaveLength(1);
     expect(result[term]).toEqual(expected);
   })
+
+  it('works when setting course data for the first time (no timetable yet)', () => {
+    const state: Timetables = {...initialState.timetables};
+    const action: CourseListAction = {
+      type: SET_COURSE_DATA,
+      meta: getMeta(),
+      courses: [
+        { code: "RING9731", name: "", streams: [] },
+      ],
+    };
+    expect(() => timetables(state, action)).not.toThrow();
+    expect(timetables(state, action)).toEqual(state);
+  })
 })
 
 describe('suggestionScore reducer', () => {
