@@ -20,7 +20,7 @@ describe('course state util functions', () => {
     ${undefined} | ${'CR01'}    | ${undefined}   | ${'TPBC1234~CR01'}
     ${undefined} | ${undefined} | ${Career.PGRD} | ${'TPBC1234~PGRD'}
     ${undefined} | ${undefined} | ${Career.UGRD} | ${'TPBC1234'}
-    ${'T1A'}     | ${'CR01'}    | ${Career.PGRD} | ${'TPBC1234~T1A~CR01~PGRD'}
+    ${'T1A'}     | ${'CR01'}    | ${Career.RSCH} | ${'TPBC1234~T1A~CR01~RSCH'}
   `('gets correct course id', ({ term, section, career, expected }) => {
     const course: CourseData = { code, name, streams: [], term, section, career };
     const result = getCourseId(course);
@@ -128,7 +128,7 @@ describe('course state util functions', () => {
     ${Career.UGRD} | ${'CR01'}    | ${undefined} | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG'}
     ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'Something unrelated'}         | ${'CR02; T2A; Postgrad'}
     ${Career.UGRD} | ${'CR02'}    | ${'T2A'}     | ${undefined}                     | ${'CR02; T2A'}
-    ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG; T2A; Postgrad'}
+    ${Career.RSCH} | ${'CR02'}    | ${'T2A'}     | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG; T2A; Research'}
   `('gets correct clarification text', ({ career, section, term, description, expected }) => {
     const course: CourseData = {
       ...getCourse(),
