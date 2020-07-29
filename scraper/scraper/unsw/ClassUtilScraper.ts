@@ -196,6 +196,10 @@ export class Parser {
 
         // Handle new course
         if (component === 'CRS') {
+          if (!this.checkStatus(status)) {
+            continue;
+          }
+
           courses.push(this.parseCourse(courseCode, courseName, section, times));
           newCourse = false;
           continue;
@@ -255,10 +259,10 @@ export class Parser {
     enrolString: string,
     timeString: string,
   ): StreamData | null {
-    status = status.replace(/\*$/, '').toLowerCase();
-    if (status !== 'open' && status !== 'full') {
+    if (!this.checkStatus(status)) {
       return null;
     }
+    status = status.replace(/\*$/, '').toLowerCase();
     const full = status === 'full' ? true : undefined;
 
     const enrols = enrolString.split(' ')[0].split('/').map(x => parseInt(x)) as [number, number];
@@ -421,5 +425,10 @@ export class Parser {
     }
 
     return weeks;
+  }
+
+  checkStatus (status: string): boolean {
+    status = status.replace(/\*$/, '').toLowerCase();
+    return status === 'open' || status === 'full';
   }
 }
