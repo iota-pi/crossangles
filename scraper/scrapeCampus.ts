@@ -4,6 +4,9 @@ import { UNSW, scrapeUNSW } from './scraper/unsw';
 import getStateManager from './state/getStateManager';
 import HTMLCache from './scraper/HTMLCache';
 import { checkVersionChange, updateVersion } from './state/util';
+import { getLogger } from './logging';
+
+const logger = getLogger('scraperCampus');
 
 export const scrapeCampus = async (
   campus: string,
@@ -24,7 +27,7 @@ export const scrapeCampus = async (
   if (state && await checkVersionChange(state)) {
     updateVersion(state);
     forceUpdate = true;
-    console.log('Scraper code updated, forcing data update.');
+    logger.info('Scraper code updated, forcing data update.');
   }
 
   let data: CampusData[] | null = null;
@@ -35,21 +38,21 @@ export const scrapeCampus = async (
 
   if (data) {
     if (cache && cacheFile) {
-      console.log('Writing data to cache file');
+      logger.info('Writing data to cache file');
       await cache.write(cacheFile);
     }
 
     for (const term of data) {
-      console.log(`Writing term ${term} data`);
+      logger.info(`Writing term ${term} data`);
       await writeTermData(outputPrefix, term);
 
       if (term.current) {
-        console.log(`Writing current data (term ${term})`);
+        logger.info(`Writing current data (term ${term})`);
         await writeTermData(outputPrefix, term, true);
       }
     }
   } else {
-    console.log(`${UNSW}: no data written`);
+    logger.info(`${UNSW}: no data written`);
   }
 }
 
@@ -67,7 +70,7 @@ const writeTermData = async (
   }
   const output = getWriter(destination);
   await output.write(termData);
-  console.log(`${UNSW.toUpperCase()}: data written for term ${term}`);
+  logger.info(`data written for term ${term}`);
 }
 
 export default scrapeCampus;

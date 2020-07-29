@@ -5,7 +5,9 @@ import { getStreamId, StreamData } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
+import { getLogger } from '../../logging';
 
+const logger = getLogger('scrapeUNSW', { campus: 'unsw' });
 
 export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
@@ -29,7 +31,7 @@ export async function scrapeUNSW (
   const timetablePromise = scrapeTimetable(timetable, !rescrapeTimetable);
   const classutilData = await classutilPromise;
   const timetableData = await timetablePromise;
-  console.log('Finished scraping for UNSW');
+  logger.info('Finished scraping for UNSW');
 
   const sources: string[] = [];
   if (classutilData.length) { sources.push(CLASSUTIL); }
@@ -38,7 +40,7 @@ export async function scrapeUNSW (
   const results: CampusData[] = [];
   for (let i = 0; i < terms.length; ++i) {
     const term = i + 1;
-    console.log(`Merging data for term ${term}`);
+    logger.info(`Merging data for term ${term}`);
     const mergedData = mergeData(classutilData[i], timetableData[i]);
     results.push({
       campus: UNSW,
@@ -49,11 +51,12 @@ export async function scrapeUNSW (
   }
 
   // Nominate latest stream with sufficient data as being "current"
-  console.log('Picking current term');
+  logger.info('Picking current term');
   const currentTerm = getCurrentTerm(results);
   if (currentTerm !== null) {
     results[currentTerm].current = true;
   }
+  logger.info(`Current term is ${currentTerm}`);
 
   return results;
 }
@@ -61,16 +64,16 @@ export async function scrapeUNSW (
 export function mergeData (classutilData?: CourseData[], timetableData?: CourseData[]) {
   // Just use data from one if the other has no data
   if (!classutilData || !timetableData) {
-    if (!classutilData) {
-      console.log('No data from classutil, using timetable data only');
+    if (timetableData) {
+      logger.warn('No data from classutil, using timetable data only');
+      return timetableData;
+    } else if (classutilData) {
+      logger.warn('No data from timetable, using classutil data only');
+      return classutilData;
     } else {
-      console.log('No data from timetable, using classutil data only');
+      logger.warn('No data from classutil or timetable!');
+      return [];
     }
-    const data = classutilData || timetableData;
-    if (data) {
-      return data;
-    }
-    return [];
   }
 
   const timetableCourseMap: CourseMap = {};
@@ -145,8 +148,7 @@ export async function scrapeClassUtil (classutil: ClassUtilScraper, useCache: bo
       try {
         classutilData.push(await classutil.scrape(term));
       } catch (error) {
-        console.error(`Error while scraping from ${CLASSUTIL} for term ${term}`);
-        console.error(error);
+        logger.error(`Error while scraping from ${CLASSUTIL} for term ${term}`, error);
       }
     }
   }
@@ -160,8 +162,7 @@ export async function scrapeTimetable (timetable: TimetableScraper, useCache: bo
     try {
       return await timetable.scrape();
     } catch (error) {
-      console.error(`Error while scraping from ${TIMETABLE_UNSW}`);
-      console.error(error);
+      logger.error(`Error while scraping from ${TIMETABLE_UNSW}`, error);
     }
   }
   return [];

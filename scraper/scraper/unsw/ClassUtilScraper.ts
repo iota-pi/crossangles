@@ -6,6 +6,9 @@ import getStateManager from '../../state/getStateManager';
 import additional from '../../data/additional';
 import { hashData } from '../../data/util';
 import { removeDuplicateStreams } from './commonUtils';
+import { getLogger } from '../../logging';
+
+const logger = getLogger('ClassUtilScraper', { campus: 'unsw' });
 
 
 export interface ClassUtilScraperConfig {
@@ -51,7 +54,7 @@ export class ClassUtilScraper {
     this.facultyPages = await this.findFacultyPages();
 
     if (!await this.checkIfDataUpdated()) {
-      this.log('data has not been updated yet');
+      logger.info('data has not been updated yet');
       return false;
     }
 
@@ -61,13 +64,13 @@ export class ClassUtilScraper {
   async scrape (term: number): Promise<CourseData[]> {
     this.checkTerm(term);
 
-    this.log(`scraping term ${term} from ${CLASSUTIL}`);
+    logger.info(`scraping term ${term} from ${CLASSUTIL}`);
     const termLinkEnd = `${term}.html`;
     const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
     const results = await this.scrapeFacultyPages(facultyPages);
-    console.log('Persisting results to DynamoDB');
+    logger.info('Persisting results to DynamoDB');
     await this.persistState(results, term);
-    console.log('Finished persisting results to DynamoDB');
+    logger.info('Finished persisting results to DynamoDB');
     return results;
   }
 
@@ -87,7 +90,7 @@ export class ClassUtilScraper {
     if (this.state) {
       await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
       await this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
-      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
+      logger.info(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
 
       const cacheKey = this.getCacheKey(term);
       await this.state.setBlob(this.campus, cacheKey, result);
@@ -135,7 +138,7 @@ export class ClassUtilScraper {
 
     links.length = Math.min(links.length, this.maxFaculties);
 
-    this.log(`found ${links.length} faculty pages`);
+    logger.info(`found ${links.length} faculty pages`);
     return links;
   }
 
@@ -155,19 +158,13 @@ export class ClassUtilScraper {
     // Sort courses for consistency
     allCourses.sort(courseSort);
 
-    this.log(`parsed ${allCourses.length} courses`);
+    logger.info(`parsed ${allCourses.length} courses`);
     return allCourses;
   }
 
   checkTerm (term: number) {
     if (term < 1 || term > 3) {
       throw new Error(`ClassUtilScraper does not support scraping term ${term}`);
-    }
-  }
-
-  log (...args: any[]) {
-    if (this.logging) {
-      console.log(`${this.campus.toUpperCase()}:`, ...args);
     }
   }
 }

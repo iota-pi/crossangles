@@ -4,6 +4,9 @@ import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
 import { CourseData } from '../../app/src/state/Course';
 import { Meta } from '../../app/src/state/Meta';
+import { getLogger } from '../logging';
+
+const logger = getLogger('Scraper');
 
 
 export interface CampusData {
@@ -26,13 +29,13 @@ export class Scraper {
     queue.enqueue(urls);
     const processor = async (url: string) => {
       const content = await this.getPageContent(url).catch(error => {
-        console.error(`Error while fetching "${url}":`, error);
+        logger.error(`Error while fetching "${url}":`, error);
         return null;
       });
       if (content === null) return null;
 
       return handler(content, url).catch(error => {
-        console.error(`Error while scraping "${url}":`, error);
+        logger.error(`Error while scraping "${url}":`, error);
         return null;
       });
     };

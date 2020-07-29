@@ -5,6 +5,9 @@ import { ClassTime, StreamData } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from './commonUtils';
+import { getLogger } from '../../logging';
+
+const logger = getLogger('TimetableScraper', { campus: 'unsw' });
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -60,7 +63,7 @@ export class TimetableScraper {
     this.facultyPages = await this.findFacultyPages();
 
     if (!await this.checkIfDataUpdated()) {
-      this.log('data has not been updated yet');
+      logger.info('data has not been updated yet');
       return false;
     }
 
@@ -68,12 +71,12 @@ export class TimetableScraper {
   }
 
   async scrape (): Promise<CourseData[][]> {
-    this.log(`scraping from ${TIMETABLE_UNSW}`);
+    logger.info(`scraping from ${TIMETABLE_UNSW}`);
     const coursePages = await this.scrapeFacultyPages();
     const result = await this.scrapeCoursePages(coursePages);
-    this.log('Persisting state to DynamoDB');
+    logger.info('Persisting state to DynamoDB');
     await this.persistState(result);
-    this.log('Finished persisting state to DynamoDB');
+    logger.info('Finished persisting state to DynamoDB');
     return result;
   }
 
@@ -87,7 +90,7 @@ export class TimetableScraper {
   async persistState (result: CourseData[][]) {
     if (this.state) {
       await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-      this.log(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
+      logger.info(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
       await this.state.setBlob(this.campus, CACHE_KEY, result);
     }
   }
@@ -130,7 +133,7 @@ export class TimetableScraper {
     const uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
     uniqueLinks.length = Math.min(uniqueLinks.length, this.maxFaculties);
 
-    this.log(`found ${uniqueLinks.length} faculty pages`);
+    logger.info(`found ${uniqueLinks.length} faculty pages`);
     return uniqueLinks;
   }
 
@@ -150,7 +153,7 @@ export class TimetableScraper {
     }
     uniqueLinks.length = Math.min(uniqueLinks.length, this.maxCourses);
 
-    this.log(`found ${uniqueLinks.length} course pages`);
+    logger.info(`found ${uniqueLinks.length} course pages`);
     return uniqueLinks;
   }
 
@@ -235,12 +238,6 @@ export class TimetableScraper {
       mapping[labels[i] as keyof StreamTableData] = data[i] || '';
     }
     return mapping as StreamTableData;
-  }
-
-  log (...args: any[]) {
-    if (this.logging) {
-      console.log(`${this.campus.toUpperCase()}:`, ...args);
-    }
   }
 }
 

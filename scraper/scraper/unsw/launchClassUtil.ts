@@ -1,5 +1,8 @@
 import { writeFileSync } from 'fs';
 import ClassUtilScraper from './ClassUtilScraper';
+import { getLogger } from '../../logging';
+
+const logger = getLogger('LambdaEntry');
 
 const test = async () => {
   const timetable = new ClassUtilScraper();

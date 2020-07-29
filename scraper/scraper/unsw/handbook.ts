@@ -1,7 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import handbookPayload from './handbookRequest';
+import { getLogger } from '../../logging';
 
 export type CourseNameMap = { [code: string]: string };
+
+const logger = getLogger('fetchHandbookNames');
 
 export const fetchHandbookNames = async (): Promise<CourseNameMap> => {
   const endpoint = 'https://www.handbook.unsw.edu.au/api/es/search';
@@ -9,7 +12,7 @@ export const fetchHandbookNames = async (): Promise<CourseNameMap> => {
   try {
     handbook = await axios.post(endpoint, handbookPayload);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return {};
   }
 
