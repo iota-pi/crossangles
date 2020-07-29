@@ -7,6 +7,7 @@ export type CourseId = string;
 export enum Career {
   UGRD = 1,
   PGRD = 2,
+  RSCH = 3,
 }
 
 export interface CourseData {
@@ -34,9 +35,33 @@ export const getCourseId = (course: CourseData, simple = false): CourseId => {
     course.code,
     course.term,
     !simple && course.section,
-    !simple && course.career === Career.PGRD ? 'PGRD' : undefined,
+    !simple && careerToString(course.career) || undefined,
   ];
   return extraSegments.filter(x => !!x).join('~');
+}
+
+export const careerToString = (career?: Career): string | undefined => {
+  if (career === Career.PGRD) {
+    return 'PGRD';
+  } else if (career === Career.RSCH) {
+    return 'RSCH';
+  } else if (career === Career.UGRD) {
+    return '';
+  } else {
+    return undefined;
+  }
+}
+
+export const careerToName = (career?: Career): string | undefined => {
+  if (career === Career.PGRD) {
+    return 'Postgrad';
+  } else if (career === Career.RSCH) {
+    return 'Research';
+  } else if (career === Career.UGRD) {
+    return 'Undergrad';
+  } else {
+    return undefined;
+  }
 }
 
 export const hasWebStream = (course: CourseData): boolean => {
@@ -70,7 +95,7 @@ export const getClarificationText = (course: CourseData): string => {
   }
 
   const discipline = disciplines.join(', ') || undefined;
-  const career = course.career === Career.PGRD ? 'Postgrad' : undefined;
+  const career = course.career !== Career.UGRD ? careerToName(course.career) : undefined;
   const parts = [discipline || course.section, course.term, career];
   return parts.filter(x => x).join('; ');
 }

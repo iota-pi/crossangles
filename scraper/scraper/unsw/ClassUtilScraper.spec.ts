@@ -89,6 +89,19 @@ describe('Parser', () => {
     const p = new Parser();
     expect(p.parseTimeStr(raw)).toEqual(parsed);
   })
+
+  it.each`
+    time                          | expected
+    ${undefined}                  | ${undefined}
+    ${''}                         | ${undefined}
+    ${'(Course Enrolment, UGRD)'} | ${Career.UGRD}
+    ${'(Course Enrolment, PGRD)'} | ${Career.PGRD}
+    ${'(Course Enrolment, RSCH)'} | ${Career.RSCH}
+    ${'PGRD'}                     | ${Career.PGRD}
+  `('getCareer($time) = $expected', ({time, expected}) => {
+    const p = new Parser();
+    expect(p.getCareer(time)).toEqual(expected);
+  })
 })
 
 describe('utility functions', () => {

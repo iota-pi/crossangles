@@ -218,11 +218,26 @@ export class Parser {
     return courses;
   }
 
+  getCareer (time?: string): Career | undefined {
+    if (!time) return undefined;
+
+    time = time.toLowerCase();
+    if (time.includes('ugrd')) {
+      return Career.UGRD;
+    } else if (time.includes('pgrd')) {
+      return Career.PGRD;
+    } else if (time.includes('rsch')) {
+      return Career.RSCH;
+    }
+
+    return undefined;
+  }
+
   parseCourse (code: string, rawName: string, section?: string, time?: string): CourseData {
     const term = this.extractTerm(rawName);
     const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
     const name = rawName.replace(termRegex, '');
-    const career = time ? (time.toLowerCase().includes('ugrd') ? Career.UGRD : Career.PGRD) : undefined;
+    const career = this.getCareer(time);
     return {
       code,
       name,
