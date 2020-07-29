@@ -35,7 +35,7 @@ export const getCourseId = (course: CourseData, simple = false): CourseId => {
     course.code,
     course.term,
     !simple && course.section,
-    !simple && careerToString(course.career) || undefined,
+    !simple && careerToString(course.career),
   ];
   return extraSegments.filter(x => !!x).join('~');
 }
