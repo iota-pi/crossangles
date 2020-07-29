@@ -40,21 +40,6 @@ describe('course state util functions', () => {
     expect(result).toBe(expected);
   })
 
-  it('uses cached id when it exists', () => {
-    const id = { simple: 'foobar', full: 'foobar~full' };
-    const course: CourseData = { code, name, streams: [], id };
-    expect(getCourseId(course)).toBe('foobar~full');
-    expect(getCourseId(course, true)).toBe('foobar');
-  })
-
-  it('caches id result', () => {
-    const course: CourseData = { code, name, streams: [] };
-    const fullId = getCourseId(course);
-    const simpleId = getCourseId(course, true);
-    expect((course.id || {}).full).toEqual(fullId);
-    expect((course.id || {}).simple).toEqual(simpleId);
-  })
-
   it('detects a web stream at the start', () => {
     const streams: StreamData[] = [
       { component: 'LEC', enrols: [ 0,   0], times: [], web: true },
