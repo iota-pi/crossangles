@@ -15,6 +15,8 @@ export class FileWriter implements Writer {
     }
 
     writeFileSync(this.destination, json, 'utf-8');
+
+    return json.length;
   }
 
   async read () {

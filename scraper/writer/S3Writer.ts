@@ -20,6 +20,8 @@ export class S3Writer implements Writer {
     if (createBackup) {
       await this.createBackup(json);
     }
+
+    return json.length;
   }
 
   async read () {

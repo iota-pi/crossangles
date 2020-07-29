@@ -69,8 +69,8 @@ const writeTermData = async (
     destination = `${outputPrefix}${UNSW}/data-${year}T${term}.json`;
   }
   const output = getWriter(destination);
-  await output.write(termData);
-  logger.info(`data written for term ${term}`);
+  const size = await output.write(termData);
+  logger.info(`data written for term ${term}`, { dataFileSize: size });
 }
 
 export default scrapeCampus;
