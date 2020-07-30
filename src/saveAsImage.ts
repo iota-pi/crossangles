@@ -42,7 +42,7 @@ export const getScreenshotWidth = (): number => {
 
 export const getScreenshotHeight = (timetable: SessionManagerData, compact: boolean): number => {
   // Get height based off number of timetable rows
-  const borderSpace = TIMETABLE_BORDER_WIDTH * 2;
+  const borderSpace = TIMETABLE_BORDER_WIDTH;
   const sessions = timetable.map.map(([_, s]) => s.session);
   const hours = getHours(sessions);
   const duration = hours.end - hours.start;
