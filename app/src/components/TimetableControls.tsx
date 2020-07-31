@@ -8,8 +8,8 @@ import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 import Event from '@material-ui/icons/Event';
 import Warning from '@material-ui/icons/Warning';
-import { HistoryData, RootState } from '../state';
 import { useSelector } from 'react-redux';
+import { HistoryData, RootState } from '../state';
 
 const useStyles = makeStyles(theme => ({
   primary: {
@@ -65,7 +65,7 @@ export const TimetableControls = ({
   onIncludeFull,
   onCreateCustom,
 }: Props) => {
-  const classes = useStyles()
+  const classes = useStyles();
   let updateClass = classes.primary;
   if (improvementScore > 100) {
     if (improvementScore < 800) {
@@ -94,7 +94,7 @@ export const TimetableControls = ({
   );
 
   React.useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
@@ -144,7 +144,7 @@ export const TimetableControls = ({
         </Tooltip>
       )}
 
-      <div className={classes.spacer}></div>
+      <div className={classes.spacer} />
 
       {unplacedCount > 0 && (
         <Tooltip title={`${unplacedCount} full classes are not visible`}>
@@ -167,7 +167,7 @@ export const TimetableControls = ({
         </Tooltip>
       )}
     </Toolbar>
-  )
-}
+  );
+};
 
 export default TimetableControls;

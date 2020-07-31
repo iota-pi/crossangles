@@ -28,10 +28,10 @@ export const StandaloneTimetable = () => {
       }
 
       setTimetable(SessionManager.from(queryData.timetable, newCourses));
-    }
+    };
 
     loadData();
-  }, [])
+  }, []);
 
   return (
     <ThemeProvider theme={theme(queryData.darkMode)}>
@@ -42,12 +42,12 @@ export const StandaloneTimetable = () => {
         colours={queryData.colours}
         darkMode={queryData.darkMode}
         compactView={queryData.compactView}
-        disableTransitions={true}
+        disableTransitions
         minimalHours
         isStandalone
       />
     </ThemeProvider>
   );
-}
+};
 
 export default StandaloneTimetable;

@@ -1,7 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { RootState } from '../../state';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../state';
 import { getCellHeight } from './timetableUtil';
 
 const useStyles = makeStyles(theme => ({

@@ -21,7 +21,7 @@ export interface Props {
   onChange: () => void,
 }
 
-function WebStream ({ checked, stream, onChange }: Props) {
+function WebStream({ checked, stream, onChange }: Props) {
   const classes = useStyles();
   const darkMode = useSelector((state: RootState) => state.darkMode);
   const includeFull = useSelector((state: RootState) => state.options.includeFull);
@@ -36,15 +36,15 @@ function WebStream ({ checked, stream, onChange }: Props) {
     <FormControlLabel
       label={label}
       className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
-      control={
+      control={(
         <Checkbox
           checked={checked && !disabled}
           onChange={onChange}
           color={darkMode ? 'primary' : 'secondary'}
           disabled={disabled}
-          value={true}
+          value
         />
-      }
+      )}
       data-cy="web-stream-toggle"
     />
   );

@@ -7,37 +7,37 @@ describe('SessionManager basic functionality', () => {
   test('get throws if not found', () => {
     const s = new SessionManager();
     expect(() => s.get('a')).toThrowError(TypeError);
-  })
+  });
 
   test('getMaybe returns undefined if not found', () => {
     const s = new SessionManager();
     expect(s.getMaybe('a')).toBe(undefined);
-  })
+  });
 
   test('get returns found placement', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
     s.set(p.session.id, p);
     expect(s.get(p.session.id)).toBe(p);
-  })
+  });
 
   test('getMaybe returns found placement', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
     s.set(p.session.id, p);
     expect(s.getMaybe(p.session.id)).toBe(p);
-  })
+  });
 
   test('has returns true when found', () => {
     const s = new SessionManager();
     s.set('a', getSessionPlacement());
     expect(s.has('a')).toBe(true);
-  })
+  });
 
   test('has returns false when not found', () => {
     const s = new SessionManager();
     expect(s.has('a')).toBe(false);
-  })
+  });
 
   test('set advances version and calls callback', () => {
     const s = new SessionManager();
@@ -47,7 +47,7 @@ describe('SessionManager basic functionality', () => {
     s.set('a', getSessionPlacement());
     expect(s.version).toBe(v + 1);
     expect(cb).toHaveBeenCalledTimes(0);
-  })
+  });
 
   test('set adds items in expected order', () => {
     const s = new SessionManager();
@@ -55,7 +55,7 @@ describe('SessionManager basic functionality', () => {
     s.set('r', getSessionPlacement(1));
     s.set('d', getSessionPlacement(2));
     expect(s.order).toEqual(['o', 'r', 'd']);
-  })
+  });
 
   test('order is not mutated by set', () => {
     const s = new SessionManager();
@@ -63,7 +63,7 @@ describe('SessionManager basic functionality', () => {
     const initialOrder = s.order;
     s.set('b', getSessionPlacement(1));
     expect(s.order).not.toBe(initialOrder);
-  })
+  });
 
   test('order is not mutated by remove', () => {
     const s = new SessionManager();
@@ -71,7 +71,7 @@ describe('SessionManager basic functionality', () => {
     const initialOrder = s.order;
     s.remove('a');
     expect(s.order).not.toBe(initialOrder);
-  })
+  });
 
   test('getOrder returns expected values', () => {
     const s = new SessionManager();
@@ -82,7 +82,7 @@ describe('SessionManager basic functionality', () => {
     expect(s.getOrder('r')).toBe(1);
     expect(s.getOrder('d')).toBe(2);
     expect(s.getOrder('-')).toBe(-1);
-  })
+  });
 
   test('getSession doesn\'t affect the version', () => {
     const s = new SessionManager();
@@ -91,19 +91,19 @@ describe('SessionManager basic functionality', () => {
     const v = s.version;
     s.getSession(p.session.id);
     expect(s.version).toBe(v);
-  })
+  });
 
   test('getSession returns session', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
     s.set(p.session.id, p);
     expect(s.getSession(p.session.id)).toBe(p.session);
-  })
+  });
 
   test('getSession throws if session id doesn\'t exist', () => {
     const s = new SessionManager();
     expect(() => s.getSession('a')).toThrow();
-  })
+  });
 
   test('orderSessions gives expected result', () => {
     const s = new SessionManager();
@@ -118,7 +118,7 @@ describe('SessionManager basic functionality', () => {
     const v = s.version;
     expect(s.renderOrderSessions).toEqual(placements.map(p => p.session));
     expect(s.version).toBe(v);
-  })
+  });
 
   test('remove removes from order', () => {
     const s = new SessionManager();
@@ -136,14 +136,14 @@ describe('SessionManager basic functionality', () => {
     expect(s.getOrder('r')).toBe(-1);
     expect(s.order).toEqual(['o', 'd']);
     expect(s.renderOrder).toEqual(['o', 'd']);
-  })
+  });
 
   test('remove does nothing if session doesn\'t exist', () => {
     const s = new SessionManager();
     const v = s.version;
     s.remove('a');
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('update clash depth', () => {
     const s = new SessionManager();
@@ -154,12 +154,12 @@ describe('SessionManager basic functionality', () => {
     s.setClashDepth('a', 2);
     expect(p.clashDepth).toBe(2);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can drag a session', () => {
     const s = new SessionManager();
-    let p1 = getSessionPlacement(2);
-    let p2 = getSessionPlacement(3);
+    const p1 = getSessionPlacement(2);
+    const p2 = getSessionPlacement(3);
     p1.drag = jest.fn();
     p2.drag = jest.fn();
     s.set(p1.session.id, p1);
@@ -169,7 +169,7 @@ describe('SessionManager basic functionality', () => {
     expect(p1.drag).toHaveBeenCalledTimes(1);
     expect(p2.drag).not.toHaveBeenCalled();
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('dragging raises linked sessions', () => {
     const s = new SessionManager();
@@ -193,7 +193,7 @@ describe('SessionManager basic functionality', () => {
     expect(p3.raise).toHaveBeenCalledTimes(1);
     expect(p4.raise).toHaveBeenCalledTimes(0);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can move session with given delta', () => {
     const s = new SessionManager();
@@ -206,7 +206,7 @@ describe('SessionManager basic functionality', () => {
     expect(p.move).toHaveBeenCalledTimes(1);
     expect(p.move).toHaveBeenCalledWith(delta);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can drop a session', () => {
     const s = new SessionManager();
@@ -223,7 +223,7 @@ describe('SessionManager basic functionality', () => {
     expect(p2.drop).not.toHaveBeenCalled();
     expect(updateScore).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('dropping lowers linked sessions', () => {
     const s = new SessionManager();
@@ -245,7 +245,7 @@ describe('SessionManager basic functionality', () => {
     expect(p3.lower).toHaveBeenCalledTimes(1);
     expect(updateScore).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can raise a session', () => {
     const s = new SessionManager();
@@ -256,7 +256,7 @@ describe('SessionManager basic functionality', () => {
     s['raise'](p.session.id);
     expect(p.raise).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can lower a session', () => {
     const s = new SessionManager();
@@ -267,7 +267,7 @@ describe('SessionManager basic functionality', () => {
     s['lower'](p.session.id);
     expect(p.lower).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can snap all sessions in a stream', () => {
     const s = new SessionManager();
@@ -287,7 +287,7 @@ describe('SessionManager basic functionality', () => {
     expect(p2.snap).toHaveBeenCalledTimes(1);
     expect(p3.snap).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can snap one session', () => {
     const s = new SessionManager();
@@ -298,7 +298,7 @@ describe('SessionManager basic functionality', () => {
     s.snap(p.session.id);
     expect(p.snap).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can displace one session', () => {
     const s = new SessionManager();
@@ -309,7 +309,7 @@ describe('SessionManager basic functionality', () => {
     s.displace(p.session.id);
     expect(p.displace).toHaveBeenCalledTimes(1);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   it('can replace a stream', () => {
     const s = new SessionManager();
@@ -330,7 +330,7 @@ describe('SessionManager basic functionality', () => {
     expect(s.order).toEqual([
       p2, p4, getSessionPlacement(1, 0), getSessionPlacement(1, 1), getSessionPlacement(1, 2),
     ].map(p => p.session.id));
-  })
+  });
 
   it('can replace a larger stream', () => {
     const s = new SessionManager();
@@ -345,7 +345,7 @@ describe('SessionManager basic functionality', () => {
     expect(s.order).toEqual([
       p2, getSessionPlacement(1, 0), getSessionPlacement(1, 1), getSessionPlacement(1, 2),
     ].map(p => p.session.id));
-  })
+  });
 
   it('can replace a smaller stream', () => {
     const s = new SessionManager();
@@ -360,8 +360,8 @@ describe('SessionManager basic functionality', () => {
     s.replaceStream(p1.session.id, getLinkedStream(2).sessions);
     expect(s.renderOrder).toEqual([getSessionPlacement(2), p4].map(p => p.session.id));
     expect(s.order).toEqual([p4, getSessionPlacement(2)].map(p => p.session.id));
-  })
-})
+  });
+});
 
 
 describe('bumping sessions and streams', () => {
@@ -386,7 +386,7 @@ describe('bumping sessions and streams', () => {
     expect(s.renderOrder).toEqual(initialOrder.map(p => p.session.id));
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can bump a session from the start and change version', () => {
     const s = new SessionManager();
@@ -407,7 +407,7 @@ describe('bumping sessions and streams', () => {
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
     expect(s.order).not.toBe(o);
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('can bump a session from the middle without mutating order', () => {
     const s = new SessionManager();
@@ -424,7 +424,7 @@ describe('bumping sessions and streams', () => {
     const expectedOrder = [p1, p3, p2];
     expect(s.renderOrder).toEqual(initialOrder.map(p => p.session.id));
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
-  })
+  });
 
   test('can bump a session from the end', () => {
     const s = new SessionManager();
@@ -440,22 +440,22 @@ describe('bumping sessions and streams', () => {
     const expectedOrder = [p1, p2, p3];
     expect(s.order).toEqual(expectedOrder.map(p => p.session.id));
     expect(s.order).toEqual(s.renderOrder);
-  })
+  });
 
   test('bumping non-existent session throws', () => {
     const s = new SessionManager();
     const v = s.version;
     expect(() => s.bumpSession('a')).toThrow();
     expect(s.version).toBe(v);
-  })
+  });
 
   test('bumping stream for non-existent session throws', () => {
     const s = new SessionManager();
     const v = s.version;
     expect(() => s.bumpStream('a')).toThrow();
     expect(s.version).toBe(v);
-  })
-})
+  });
+});
 
 
 describe('constructor, data, and from', () => {
@@ -474,11 +474,11 @@ describe('constructor, data, and from', () => {
     expect(s2['_order']).toEqual([p1.session.id, p2.session.id]);
     expect(s2['_renderOrder']).toEqual([p1.session.id, p2.session.id]);
     expect(Array.from(s2['map'].entries())).toEqual(
-      [[p1.session.id, p1], [p2.session.id, p2]]
+      [[p1.session.id, p1], [p2.session.id, p2]],
     );
     expect(s2.version).toBe(v);
-  })
-})
+  });
+});
 
 
 describe('snapSessionTo', () => {
@@ -497,7 +497,7 @@ describe('snapSessionTo', () => {
     s = new SessionManager();
     s.set('a-0', new SessionPlacement(oldSessions[0]));
     s.set('a-1', new SessionPlacement(oldSessions[1]));
-  })
+  });
 
   test('increments version', () => {
     const v = s.version;
@@ -507,7 +507,7 @@ describe('snapSessionTo', () => {
     );
 
     expect(s.version).toBe(v + 1);
-  })
+  });
 
   test('replaces old sessions with new', () => {
     s['snapSessionTo'](
@@ -519,7 +519,7 @@ describe('snapSessionTo', () => {
     expect(s.has('a-1')).toBe(false);
     expect(s.has('c-0')).toBe(true);
     expect(s.has('d-0')).toBe(true);
-  })
+  });
 
   test('touches new sessions', () => {
     s['snapSessionTo'](
@@ -529,7 +529,7 @@ describe('snapSessionTo', () => {
 
     expect(s.get('c-0').touched).toBe(true);
     expect(s.get('d-0').touched).toBe(true);
-  })
+  });
 
   test('doesn\'t touch sessions if unchanged', () => {
     s['snapSessionTo'](
@@ -539,7 +539,7 @@ describe('snapSessionTo', () => {
 
     expect(s.get('a-0').touched).toBe(false);
     expect(s.get('a-1').touched).toBe(false);
-  })
+  });
 
   test('new sessions are snapped', () => {
     const c = new SessionPlacement(oldSessions[0]);
@@ -556,7 +556,7 @@ describe('snapSessionTo', () => {
 
     expect(s.get('c-0')['_offset']).toEqual({ x: 0, y: 0 });
     expect(s.get('d-0')['_offset']).toEqual({ x: 0, y: 0 });
-  })
+  });
 
   test('sessions are snapped even if stream is the same', () => {
     const p1 = new SessionPlacement(oldSessions[0]);
@@ -573,8 +573,8 @@ describe('snapSessionTo', () => {
 
     expect(s.get(p1.session.id)['_offset']).toEqual({ x: 0, y: 0 });
     expect(s.get(p2.session.id)['_offset']).toEqual({ x: 0, y: 0 });
-  })
-})
+  });
+});
 
 
 describe('update', () => {
@@ -594,7 +594,7 @@ describe('update', () => {
       10,
     );
     expect(s.get(p2.session.id)['_offset']).toEqual({ x: 10, y: 10 });
-  })
+  });
 
   it('allows swapping multiple-session streams', () => {
     const s = new SessionManager();
@@ -611,8 +611,9 @@ describe('update', () => {
       10,
     );
     expect(s.renderOrder).toEqual(
-      [p1.session.id, getLinkedSession(1, 0).id, getLinkedSession(1, 1).id, getLinkedSession(1, 2).id]);
-  })
+      [p1.session.id, getLinkedSession(1, 0).id, getLinkedSession(1, 1).id, getLinkedSession(1, 2).id],
+    );
+  });
 
   it('preserves render order for components', () => {
     const s = new SessionManager();
@@ -634,7 +635,7 @@ describe('update', () => {
       getLinkedSession(0, 1).id,
       getLinkedSession(0, 2).id,
     ]);
-  })
+  });
 
   it('updates the score', () => {
     const s = new SessionManager();
@@ -644,5 +645,5 @@ describe('update', () => {
     expect(s.score).toBe(50);
     s.update([], -9999);
     expect(s.score).toBe(-9999);
-  })
-})
+  });
+});

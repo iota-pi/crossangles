@@ -1,7 +1,7 @@
 import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, AllActions } from '../actions';
 import { CourseMap, CourseId, getCourseId, initialState } from '../state';
 
-export function courses (
+export function courses(
   state: CourseMap = initialState.courses,
   action: AllActions,
 ): CourseMap {
@@ -39,9 +39,9 @@ export function courses (
   }
 
   return state;
-};
+}
 
-export function chosen (
+export function chosen(
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
@@ -73,9 +73,9 @@ export function chosen (
   }
 
   return state;
-};
+}
 
-export function custom (
+export function custom(
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
@@ -98,7 +98,7 @@ export function custom (
   return state;
 }
 
-export function additional (
+export function additional(
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {

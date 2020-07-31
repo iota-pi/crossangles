@@ -1,10 +1,10 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import OnlineIcon from '@material-ui/icons/Laptop';
+import PersonIcon from '@material-ui/icons/Person';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
 import { LinkedSession, DeliveryType } from '../../state';
-import OnlineIcon from '@material-ui/icons/Laptop';
-import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,7 +59,7 @@ export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, position
     },
     [position],
   );
-  const backgroundColor = colour ? colour + 'A0' : 'none';
+  const backgroundColor = colour ? `${colour}A0` : 'none';
   const delivery = session.stream.delivery;
 
   return (
@@ -70,9 +70,7 @@ export const TimetableDropzone: React.FC<Props> = React.memo(({ colour, position
     >
       <div
         className={classes.background}
-        style={{
-          backgroundColor,
-        }}
+        style={{ backgroundColor }}
       />
         {delivery !== undefined && (
           <div className={classes.onlineIcon}>

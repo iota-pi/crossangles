@@ -25,7 +25,9 @@ import {
 } from '../state';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
-import { setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours, toggleOption } from '../actions';
+import {
+  setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours, toggleOption,
+} from '../actions';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
 
@@ -66,9 +68,9 @@ class TimetableContainer extends PureComponent<Props> {
     timetable: new SessionManager(),
     showCreateCustom: false,
     isUpdating: false,
-  }
+  };
 
-  render () {
+  render() {
     const timetableIsEmpty = this.props.timetableData.order.length === 0;
     return (
       <div className={this.props.className}>
@@ -105,7 +107,7 @@ class TimetableContainer extends PureComponent<Props> {
     );
   }
 
-  static getDerivedStateFromProps (props: Props, state: State) {
+  static getDerivedStateFromProps(props: Props, state: State) {
     // Update session manager if timetable data has been updated
     let timetable = state.timetable;
     if (props.timetableData.version > timetable.version) {
@@ -127,7 +129,7 @@ class TimetableContainer extends PureComponent<Props> {
     return state;
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     if (!this.state.timetable.callback) {
       const timetable = new SessionManager(this.state.timetable);
       timetable.callback = data => this.handleTimetableCallback(data);
@@ -137,11 +139,11 @@ class TimetableContainer extends PureComponent<Props> {
 
   private handleUndo = () => {
     this.props.dispatch(undoTimetable());
-  }
+  };
 
   private handleRedo = () => {
     this.props.dispatch(redoTimetable());
-  }
+  };
 
   private handleUpdate = async () => {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
@@ -156,7 +158,9 @@ class TimetableContainer extends PureComponent<Props> {
       await updateTimetable({
         dispatch: this.props.dispatch,
         sessionManager: new SessionManager(this.state.timetable),
-        selection: { chosen, additional, custom, events, options, webStreams, meta },
+        selection: {
+          chosen, additional, custom, events, options, webStreams, meta,
+        },
         cleanUpdate: true,
         searchConfig: {
           timeout: 1500,
@@ -166,67 +170,63 @@ class TimetableContainer extends PureComponent<Props> {
     } finally {
       this.setState({ isUpdating: false });
     }
-  }
+  };
 
   private handleIncludeFull = async () => {
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleOption('includeFull'));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
   private handleClickCreateCustom = () => {
-    this.setState({
-      showCreateCustom: true,
-    });
-  }
+    this.setState({ showCreateCustom: true });
+  };
 
   private handleCloseCreateCustom = () => {
-    this.setState({
-      showCreateCustom: false,
-    });
-  }
+    this.setState({ showCreateCustom: false });
+  };
 
   private handleToggleTwentyFourHours = () => {
     this.props.dispatch(setTwentyFourHours());
-  }
+  };
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
     const sessionManager = this.getSessionManager();
 
-    let course: CourseData = {
-      code: 'custom_' + Math.random(),
+    const course: CourseData = {
+      code: `custom_${Math.random()}`,
       isCustom: true,
       ...courseData,
     };
     await this.props.dispatch(addCourse(course));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
-  private getSessionManager = () => {
-    return SessionManager.from(this.props.timetableData, this.props.courses);
-  }
+  private getSessionManager = () => SessionManager.from(this.props.timetableData, this.props.courses);
 
   private updateTimetable = async (sessionManager: SessionManager) => {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
-      selection: { chosen, additional, custom, events, options, webStreams, meta },
-      searchConfig: {
-        timeout: 100,
+      selection: {
+        chosen, additional, custom, events, options, webStreams, meta,
       },
+      searchConfig: { timeout: 100 },
     });
-  }
+  };
 
   private recommendTimetable = async () => {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
     recommendTimetable(
       this.props.dispatch,
-      { chosen, additional, custom, events, options, webStreams, meta },
+      {
+        chosen, additional, custom, events, options, webStreams, meta,
+      },
     );
-  }
+  };
 
-  private get suggestionImprovementScore () {
+  private get suggestionImprovementScore() {
     const { suggestionScore } = this.props;
     if (suggestionScore !== null) {
       return suggestionScore - this.state.timetable.score;
@@ -235,32 +235,30 @@ class TimetableContainer extends PureComponent<Props> {
     return 0;
   }
 
-  private async handleTimetableCallback (timetable: SessionManagerData) {
+  private async handleTimetableCallback(timetable: SessionManagerData) {
     await this.props.dispatch(setTimetable(timetable, this.props.meta));
     this.recommendTimetable();
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
-  return {
-    courses: state.courses,
-    chosen: getChosenCourses(state),
-    custom: getCustomCourses(state),
-    additional: getAdditionalCourses(state),
-    events: state.events,
-    options: state.options,
-    colours: state.colours,
-    webStreams: state.webStreams,
-    timetableData: getCurrentTimetable(state),
-    timetableHistory: state.history,
-    suggestionScore: state.suggestionScore,
-    meta: state.meta,
-    darkMode: state.darkMode,
-    twentyFourHours: state.twentyFourHours,
-    compactView: state.compactView,
-    reducedMotion: state.reducedMotion,
-  };
-}
+const mapStateToProps = (state: RootState): StateProps => ({
+  courses: state.courses,
+  chosen: getChosenCourses(state),
+  custom: getCustomCourses(state),
+  additional: getAdditionalCourses(state),
+  events: state.events,
+  options: state.options,
+  colours: state.colours,
+  webStreams: state.webStreams,
+  timetableData: getCurrentTimetable(state),
+  timetableHistory: state.history,
+  suggestionScore: state.suggestionScore,
+  meta: state.meta,
+  darkMode: state.darkMode,
+  twentyFourHours: state.twentyFourHours,
+  compactView: state.compactView,
+  reducedMotion: state.reducedMotion,
+});
 
 const connected = connect(mapStateToProps);
 export default connected(TimetableContainer);

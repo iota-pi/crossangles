@@ -1,4 +1,11 @@
-import { CLASH_OFFSET_X, CLASH_OFFSET_Y, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_DAYS, TIMETABLE_BORDER_WIDTH, getCellHeight } from './timetableUtil';
+import {
+  CLASH_OFFSET_X,
+  CLASH_OFFSET_Y,
+  TIMETABLE_FIRST_CELL_WIDTH,
+  TIMETABLE_DAYS,
+  TIMETABLE_BORDER_WIDTH,
+  getCellHeight,
+} from './timetableUtil';
 import SessionPlacement from './SessionPlacement';
 import { LinkedSession } from '../../state';
 import { Dimensions } from './timetableTypes';
@@ -24,7 +31,7 @@ describe('SessionPlacement', () => {
     compact
     ${true}
     ${false}
-  `('can initialise instance with expected base position', ({compact}) => {
+  `('can initialise instance with expected base position', ({ compact }) => {
     const p = new SessionPlacement(session);
     expect(p.session).toBe(session);
 
@@ -164,15 +171,15 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     p.drag();
     p.move({ x: -1000, y: -1000 });
-    const dimensions = { width: 500, height: 500 }
+    const dimensions = { width: 500, height: 500 };
     p.drop(dimensions, session.start, false);
     const { x, y } = p.getPosition(dimensions, session.start, false);
-    expect({ x, y }).toEqual({ x: TIMETABLE_BORDER_WIDTH, y: TIMETABLE_BORDER_WIDTH});
+    expect({ x, y }).toEqual({ x: TIMETABLE_BORDER_WIDTH, y: TIMETABLE_BORDER_WIDTH });
   });
 
   test('offset can\'t be too large after drag', () => {
     const p = new SessionPlacement(session);
-    const dimensions = { width: 500, height: 500 }
+    const dimensions = { width: 500, height: 500 };
     const cellWidth = (dimensions.width - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
 
     p.drag();

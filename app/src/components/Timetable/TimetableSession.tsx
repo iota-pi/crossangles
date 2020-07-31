@@ -102,7 +102,9 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
     props.clashDepth > 0 ? classes.hovering : '',
     props.disableTransitions ? classes.disableTransitions : '',
   ].join(' ');
-  const { dimensions, isDragging, options, onDrag, onMove, onDrop, position, session } = props;
+  const {
+    dimensions, isDragging, options, onDrag, onMove, onDrop, position, session,
+  } = props;
   const { course, day, start, end, stream } = session;
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
@@ -132,7 +134,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
       if (options.showWeeks) {
         const weeks = session.weeks;
         if (weeks) {
-          const weeksText = 'Weeks: ' + weeks.replace(/-/g, '–').replace(/,\s*/g, ', ');
+          const weeksText = `Weeks: ${weeks.replace(/-/g, '–').replace(/,\s*/g, ', ')}`;
           details.push({ key: 'weeks', text: weeksText });
         }
       }
@@ -181,8 +183,8 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
   const handleDrag = React.useCallback(
     (e: DraggableEvent, data: DraggableData) => {
       if (isDragging && onMove) {
-        let x = data.deltaX;
-        let y = data.deltaY;
+        const x = data.deltaX;
+        const y = data.deltaY;
         onMove(session, { x, y });
       }
     },
@@ -198,9 +200,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
   );
 
   const backgroundStyle = React.useMemo(
-    () => ({
-      backgroundColor: colour,
-    }),
+    () => ({ backgroundColor: colour }),
     [colour],
   );
 
@@ -230,7 +230,8 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
 
         <div className={classes.sessionText}>
           <div className={classes.label}>
-            <span className={classes.em}>{sessionTitle} </span>
+            <span className={classes.em}>{sessionTitle}</span>
+            {' '}
             <span>{sessionComponent}</span>
           </div>
 

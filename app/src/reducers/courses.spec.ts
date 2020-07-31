@@ -1,6 +1,8 @@
 import { additional, custom, chosen, courses } from './courses';
 import { CourseListAction, CourseAction, REMOVE_COURSE, SET_COURSE_DATA, ADD_COURSE } from '../actions';
-import { CourseData, CourseMap, CourseId, getCourseId, initialState, Career } from '../state';
+import {
+  CourseData, CourseMap, CourseId, getCourseId, initialState, Career,
+} from '../state';
 import { getCourse, getMeta } from '../test_util';
 
 const meta = getMeta();
@@ -9,14 +11,14 @@ const meta = getMeta();
 describe('courses', () => {
   it('initialises correctly', () => {
     expect(courses(undefined, { type: '@@INIT' } as any)).toEqual(initialState.courses);
-  })
+  });
 
   it('returns same object for no-ops', () => {
     const state = { ...initialState.courses };
     const result = courses(state, { type: 'NO_OP_ACTION' } as any);
     expect(result).toBe(state);
     expect(result).toEqual(initialState.courses);
-  })
+  });
 
   it('sets course data when blank', () => {
     const courseList: CourseData[] = [
@@ -34,7 +36,7 @@ describe('courses', () => {
       [getCourseId(courseList[0])]: courseList[0],
       [getCourseId(courseList[1])]: courseList[1],
     });
-  })
+  });
 
   it('merges new course data with existing data', () => {
     const courseList: CourseData[] = [
@@ -51,13 +53,13 @@ describe('courses', () => {
       [getCourseId(courseList[0])]: { code: 'RING1379', name: 'Old Ring Theory Name', streams: [] },
 
       // Custom course
-      'custom': { code: 'custom', name: 'Observation', streams: [], isCustom: true },
+      custom: { code: 'custom', name: 'Observation', streams: [], isCustom: true },
 
       // Removed course
-      'oldcourse': { code: 'oldcourse', name: 'Observation', streams: [] },
+      oldcourse: { code: 'oldcourse', name: 'Observation', streams: [] },
 
       // Changed course
-      'RING9731': {
+      RING9731: {
         code: 'RING9731',
         name: 'Introduction to Ring Theory',
         streams: [],
@@ -67,12 +69,12 @@ describe('courses', () => {
     };
     const result = courses(state, action);
     expect(result).toEqual({
-      'custom': state['custom'],
+      custom: state.custom,
       [getCourseId(courseList[0])]: courseList[0],
       [getCourseId(courseList[1])]: courseList[1],
     });
     expect(result[getCourseId(courseList[0])].name).toBe(courseList[0].name);
-  })
+  });
 
   it('isn\'t affected by choosing non-custom courses', () => {
     const course = getCourse();
@@ -85,7 +87,7 @@ describe('courses', () => {
     const result = courses(state, action);
     expect(result).toBe(state);
     expect(result).toEqual(originalState);
-  })
+  });
 
   it('handles new custom course', () => {
     const course: CourseData = {
@@ -102,7 +104,7 @@ describe('courses', () => {
       ...state,
       [getCourseId(course)]: course,
     });
-  })
+  });
 
   it('handles updating a custom course', () => {
     const course: CourseData = {
@@ -123,7 +125,7 @@ describe('courses', () => {
       ...state,
       [getCourseId(updatedCourse)]: updatedCourse,
     });
-  })
+  });
 
   it('handles removing only custom course', () => {
     const course: CourseData = {
@@ -137,7 +139,7 @@ describe('courses', () => {
     const state = { [getCourseId(course)]: course };
     const result = courses(state, action);
     expect(result).toEqual({});
-  })
+  });
 
   it('removing a custom course doesn\'t affect other courses', () => {
     const course: CourseData = {
@@ -158,10 +160,8 @@ describe('courses', () => {
       [getCourseId(observerCourse)]: observerCourse,
     };
     const result = courses(state, action);
-    expect(result).toEqual({
-      [getCourseId(observerCourse)]: observerCourse,
-    });
-  })
+    expect(result).toEqual({ [getCourseId(observerCourse)]: observerCourse });
+  });
 
   it('isn\'t affected by unselecting a non-custom course', () => {
     const course = getCourse();
@@ -173,21 +173,21 @@ describe('courses', () => {
     const result = courses(state, action);
     expect(result).toBe(state);
     expect(result).toEqual({ [getCourseId(course)]: course });
-  })
-})
+  });
+});
 
 
 describe('chosen', () => {
   it('initialises correctly', () => {
     expect(chosen(undefined, { type: '@@INIT' } as any)).toEqual(initialState.chosen);
-  })
+  });
 
   it('returns same object for no-ops', () => {
-    const state = [ ...initialState.chosen ];
+    const state = [...initialState.chosen];
     const result = chosen(state, { type: 'NO_OP_ACTION' } as any);
     expect(result).toBe(state);
     expect(result).toEqual(initialState.chosen);
-  })
+  });
 
   it('allows adding a first chosen course', () => {
     const course = getCourse();
@@ -197,7 +197,7 @@ describe('chosen', () => {
     };
     const result = chosen([], action);
     expect(result).toEqual([getCourseId(course)]);
-  })
+  });
 
   it('allows adding a second chosen course', () => {
     const course = getCourse();
@@ -207,7 +207,7 @@ describe('chosen', () => {
     };
     const result = chosen(['observer'], action);
     expect(result).toEqual(['observer', getCourseId(course)]);
-  })
+  });
 
   it('isn\'t affected by adding a custom course', () => {
     const course: CourseData = { ...getCourse(), isCustom: true };
@@ -219,7 +219,7 @@ describe('chosen', () => {
     const result = chosen(state, action);
     expect(result).toBe(state);
     expect(result).toEqual([]);
-  })
+  });
 
   it('allows removing the only chosen course', () => {
     const course = getCourse();
@@ -229,7 +229,7 @@ describe('chosen', () => {
     };
     const result = chosen([getCourseId(course)], action);
     expect(result).toEqual([]);
-  })
+  });
 
   it('allows removing one of many chosen courses', () => {
     const course = getCourse();
@@ -239,7 +239,7 @@ describe('chosen', () => {
     };
     const result = chosen(['observerA', getCourseId(course), 'observerB'], action);
     expect(result).toEqual(['observerA', 'observerB']);
-  })
+  });
 
   it('removes courses which no longer exist', () => {
     const courseList: CourseData[] = [
@@ -255,7 +255,7 @@ describe('chosen', () => {
     const state = ['extra1', courseIds[0], 'extra3', courseIds[1], 'extra3'];
     const result = chosen(state, action);
     expect(result).toEqual(courseIds);
-  })
+  });
 
   it('doesn\'t change if all courses exist', () => {
     const courseList: CourseData[] = [
@@ -268,11 +268,11 @@ describe('chosen', () => {
       meta,
       courses: courseList,
     };
-    const state = [ ...courseIds ];
+    const state = [...courseIds];
     const result = chosen(state, action);
     expect(result).toBe(state);
     expect(result).toEqual(courseIds);
-  })
+  });
 
   it('isn\'t affected by removing a custom course', () => {
     const course: CourseData = { ...getCourse(), isCustom: true };
@@ -284,21 +284,21 @@ describe('chosen', () => {
     const result = chosen(state, action);
     expect(result).toBe(state);
     expect(result).toEqual([getCourseId(course)]);
-  })
-})
+  });
+});
 
 
 describe('custom', () => {
   it('initialises correctly', () => {
     expect(custom(undefined, { type: '@@INIT' } as any)).toEqual(initialState.custom);
-  })
+  });
 
   it('returns same object for no-ops', () => {
-    const state = [ ...initialState.custom ];
+    const state = [...initialState.custom];
     const result = custom(state, { type: 'NO_OP_ACTION' } as any);
     expect(result).toBe(state);
     expect(result).toEqual(initialState.custom);
-  })
+  });
 
   it('allows adding a first custom course', () => {
     const course: CourseData = {
@@ -311,7 +311,7 @@ describe('custom', () => {
     };
     const result = custom([], action);
     expect(result).toEqual([getCourseId(course)]);
-  })
+  });
 
   it('allows adding a second custom course', () => {
     const course: CourseData = {
@@ -324,7 +324,7 @@ describe('custom', () => {
     };
     const result = custom(['observer'], action);
     expect(result).toEqual(['observer', getCourseId(course)]);
-  })
+  });
 
   it('allows updating existing custom course', () => {
     const course: CourseData = {
@@ -335,10 +335,10 @@ describe('custom', () => {
       type: ADD_COURSE,
       course,
     };
-    const state = [getCourseId(course)]
+    const state = [getCourseId(course)];
     const result = custom(state, action);
     expect(result).toBe(state);
-  })
+  });
 
   it('isn\'t affected by selecting a non-custom course', () => {
     const course = getCourse();
@@ -350,7 +350,7 @@ describe('custom', () => {
     const result = custom(state, action);
     expect(result).toBe(state);
     expect(result).toEqual([]);
-  })
+  });
 
   it('allows removing the only custom course', () => {
     const course: CourseData = {
@@ -363,7 +363,7 @@ describe('custom', () => {
     };
     const result = custom([getCourseId(course)], action);
     expect(result).toEqual([]);
-  })
+  });
 
   it('allows removing one of many custom courses', () => {
     const course: CourseData = {
@@ -376,7 +376,7 @@ describe('custom', () => {
     };
     const result = custom(['observerA', getCourseId(course), 'observerB'], action);
     expect(result).toEqual(['observerA', 'observerB']);
-  })
+  });
 
   it('isn\'t affected by unselecting a non-custom course', () => {
     const course = getCourse();
@@ -388,21 +388,21 @@ describe('custom', () => {
     const result = custom(state, action);
     expect(result).toBe(state);
     expect(result).toEqual([getCourseId(course)]);
-  })
-})
+  });
+});
 
 
 describe('additional', () => {
   it('initialises correctly', () => {
     expect(additional(undefined, { type: '@@INIT' } as any)).toEqual(initialState.additional);
-  })
+  });
 
   it('returns same object for no-ops', () => {
-    const state = [ ...initialState.additional ];
+    const state = [...initialState.additional];
     const result = additional(state, { type: 'NO_OP_ACTION' } as any);
     expect(result).toBe(state);
     expect(result).toEqual(initialState.additional);
-  })
+  });
 
   it('automatically adds additional courses marked as autoSelect', () => {
     const action: CourseListAction = {
@@ -417,7 +417,7 @@ describe('additional', () => {
     };
     const result = additional([], action);
     expect(result).toEqual(['EU', 'CBS']);
-  })
+  });
 
   it('allows removing courses', () => {
     const course: CourseData = {
@@ -434,5 +434,5 @@ describe('additional', () => {
     };
     const result = additional(['observerA', id, 'observerB'], action);
     expect(result).toEqual(['observerA', 'observerB']);
-  })
-})
+  });
+});

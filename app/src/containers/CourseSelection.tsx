@@ -1,6 +1,11 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
+import createStyles from '@material-ui/core/styles/createStyles';
+import Skeleton from '@material-ui/lab/Skeleton';
+import loadable from '@loadable/component';
 import {
   AdditionalEvent,
   ColourMap,
@@ -34,14 +39,10 @@ import SessionManager, { SessionManagerData } from '../components/Timetable/Sess
 import { updateTimetable } from '../timetable/updateTimetable';
 
 // Styles
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
-import Skeleton from '@material-ui/lab/Skeleton';
 
-import loadable from '@loadable/component';
+
 const Autocomplete = lazy(() => import('../components/Autocomplete'));
 const CourseList = lazy(() => import('../components/CourseList'));
 const GeneralOptions = lazy(() => import('../components/GeneralOptions'));
@@ -96,13 +97,13 @@ class CourseSelection extends PureComponent<Props, State> {
   state: State = {
     editingCourse: null,
     showCreateCustom: false,
-  }
+  };
 
-  render () {
+  render() {
     const classes = this.props.classes;
 
     return (
-      <React.Fragment>
+      <>
         <div className={classes.flex}>
           <div className={classes.flexGrow}>
             <Suspense fallback={<Skeleton variant="rect" height={56} />}>
@@ -139,7 +140,7 @@ class CourseSelection extends PureComponent<Props, State> {
         </div>
 
         <div className={classes.spaceAbove}>
-          <Suspense fallback={<div style={{height: 34}} />}>
+          <Suspense fallback={<div style={{ height: 34 }} />}>
             <GeneralOptions
               options={this.props.options}
               darkMode={this.props.darkMode}
@@ -155,65 +156,65 @@ class CourseSelection extends PureComponent<Props, State> {
           onClose={this.handleCloseCustom}
           onExited={this.handleExitedCustom}
         />
-      </React.Fragment>
+      </>
     );
   }
 
   private editCustomCourse = (course: CourseData) => {
     this.setState({ editingCourse: course, showCreateCustom: true });
-  }
+  };
 
   private handleCloseCustom = () => {
     this.setState({ showCreateCustom: false });
-  }
+  };
 
   private handleExitedCustom = () => {
     this.setState({ editingCourse: null });
-  }
+  };
 
   private chooseCourse = async (course: CourseData) => {
     // NB: getSessionManager should come *before* any dispatches in these methods
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(addCourse(course));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
     const sessionManager = this.getSessionManager();
 
-    let course: CourseData = {
+    const course: CourseData = {
       ...this.state.editingCourse!,
       ...courseData,
     };
     await this.props.dispatch(addCourse(course));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
   private removeCourse = async (course: CourseData) => {
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(removeCourse(course));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
   private changeColour = async (course: CourseData, colour: Colour) => {
     await this.props.dispatch(setColour(getCourseId(course), colour));
-  }
+  };
 
   private toggleWebStream = async (course: CourseData) => {
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleWebStream(course));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
   private toggleShowEvents = async (course: CourseData) => {
     await this.props.dispatch(toggleShowEvents(getCourseId(course)));
-  }
+  };
 
   private toggleEvent = async (event: AdditionalEvent) => {
     const sessionManager = this.getSessionManager();
     await this.props.dispatch(toggleEvent(event));
     await this.updateTimetable(sessionManager);
-  }
+  };
 
   private toggleOption = async (option: OptionName) => {
     const generationOptions: OptionName[] = ['includeFull'];
@@ -227,33 +228,31 @@ class CourseSelection extends PureComponent<Props, State> {
     if (sessionManager) {
       await this.updateTimetable(sessionManager);
     }
-  }
+  };
 
   private getSessionManager = () => {
     try {
       return SessionManager.from(this.props.timetable, this.props.courses);
     } catch (error) {
-      ReactGA.exception({
-        description: 'Could not process timetable data. ' + error,
-      });
+      ReactGA.exception({ description: `Could not process timetable data. ${error}` });
       console.error('Could not process timetable data', this.props.timetable, this.props.courses);
       return new SessionManager();
     }
-  }
+  };
 
   private updateTimetable = async (sessionManager: SessionManager) => {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
-      selection: { chosen, additional, custom, events, options, webStreams, meta },
-      searchConfig: {
-        timeout: 100,
+      selection: {
+        chosen, additional, custom, events, options, webStreams, meta,
       },
+      searchConfig: { timeout: 100 },
     });
-  }
+  };
 
-  private get courseListSkeletonHeight () {
+  private get courseListSkeletonHeight() {
     const courseCount = this.props.chosen.length + this.props.additional.length + this.props.custom.length;
     const webStreamCount = this.props.chosen.filter(c => hasWebStream(c)).length;
     const eventsCount = this.props.additional.length - this.props.hiddenEvents.length;
@@ -263,23 +262,21 @@ class CourseSelection extends PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
-  return {
-    courses: state.courses,
-    courseList: getCourseList(state),
-    chosen: getChosenCourses(state),
-    custom: getCustomCourses(state),
-    additional: getAdditionalCourses(state),
-    events: state.events,
-    options: state.options,
-    timetable: getCurrentTimetable(state),
-    colours: state.colours,
-    webStreams: state.webStreams,
-    hiddenEvents: state.hiddenEvents,
-    meta: state.meta,
-    darkMode: state.darkMode,
-  };
-}
+const mapStateToProps = (state: RootState): StateProps => ({
+  courses: state.courses,
+  courseList: getCourseList(state),
+  chosen: getChosenCourses(state),
+  custom: getCustomCourses(state),
+  additional: getAdditionalCourses(state),
+  events: state.events,
+  options: state.options,
+  timetable: getCurrentTimetable(state),
+  colours: state.colours,
+  webStreams: state.webStreams,
+  hiddenEvents: state.hiddenEvents,
+  meta: state.meta,
+  darkMode: state.darkMode,
+});
 
 const connection = connect(mapStateToProps);
 export default withStyles(styles)(connection(CourseSelection));
