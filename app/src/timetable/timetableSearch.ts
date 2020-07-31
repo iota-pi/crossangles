@@ -1,10 +1,9 @@
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+import createSearchWorker, { Workerized } from 'workerize-loader!./search.worker';
 import { GeneticSearchOptionalConfig, Parent } from './GeneticSearch';
 import { Component } from './coursesToComponents';
 import { LinkedSession, LinkedStream } from '../state';
 import { getClashInfo, ClashInfo } from './getClashInfo';
-
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import createSearchWorker, { Workerized } from 'workerize-loader!./search.worker';
 import * as searchWorker from './search.worker';
 
 export type Worker = Workerized<typeof searchWorker>;
@@ -20,11 +19,11 @@ class TimetableSearch {
   private cache = new Map<string, TimetableSearchResult>();
   private workers: Worker[] = [];
 
-  constructor (workerCount = 5) {
+  constructor(workerCount = 5) {
     this.spawnWorkers(workerCount);
   }
 
-  async search (
+  async search(
     components: Component[],
     fixedSessions: LinkedSession[],
     ignoreCache = true,
@@ -60,21 +59,21 @@ class TimetableSearch {
     return result;
   }
 
-  private getCacheKey (components: Component[], fixedSessions: LinkedSession[]) {
+  private getCacheKey(components: Component[], fixedSessions: LinkedSession[]) {
     const componentIds = components.map(c => c.id).join('~~~');
     const fixedSessionsIds = fixedSessions.map(s => s.id).join('~~~');
     const cacheKey = `${componentIds}//${fixedSessionsIds}`;
     return cacheKey;
   }
 
-  private async spawnWorkers (count: number) {
+  private async spawnWorkers(count: number) {
     for (let i = 0; i < count; ++i) {
       const worker = createSearchWorker<typeof searchWorker>();
       this.workers.push(worker);
     }
   }
 
-  private async runSearchInWorkers ({
+  private runSearchInWorkers({
     fixedSessions,
     clashInfo,
     streams,
@@ -97,15 +96,15 @@ class TimetableSearch {
         config,
       }));
     }
-    return await Promise.all(promises);
+    return Promise.all(promises);
   }
 
-  private clashInfoFromComponents (components: Component[]) {
+  private clashInfoFromComponents(components: Component[]) {
     const allStreams = components.reduce((all, c) => all.concat(c.streams), [] as LinkedStream[]);
     return getClashInfo(allStreams);
   }
 
-  private async terminateWorkers () {
+  private async terminateWorkers() {
     for (const worker of this.workers) {
       worker.terminate();
     }

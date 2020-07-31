@@ -2,10 +2,10 @@ import { notUndefined } from '../../typeHelpers';
 import { SessionPlacement } from './SessionPlacement';
 import { Position, Dimensions } from './timetableTypes';
 import { CourseMap, CourseData, getCourseId, AdditionalEvent, getEventId, SessionId, LinkedSession, getComponentId } from '../../state';
-import { sessionClashLength } from '../../timetable/getClashInfo';
+import { sessionClashLength, getClashInfo } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
-import { getSessionManagerScore } from '../../timetable/scoreSessionManager';
 import { SessionManagerData, SessionManagerEntriesData } from './SessionManagerTypes';
+import { TimetableScorer } from '../../timetable/scoreTimetable';
 
 export * from './SessionManagerTypes';
 
@@ -482,6 +482,16 @@ export class SessionManager {
     this._changing--;
     this.next(shouldCallback);
   }
+}
+
+export function getSessionManagerScore(sessionManager: SessionManager) {
+  const allStreams = sessionManager.renderOrderSessions.map(s => s.stream);
+  const streamIds = allStreams.map(s => s.id);
+  const uniqueStreams = allStreams.filter((s, i) => streamIds.indexOf(s.id) === i);
+
+  const clashInfo = getClashInfo(uniqueStreams);
+  const score = new TimetableScorer(clashInfo, []).score(uniqueStreams);
+  return score;
 }
 
 export default SessionManager;

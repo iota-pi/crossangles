@@ -48,7 +48,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "./node_modules/.bin/eslint . --ext .ts,.tsx",
+    "lint": "./node_modules/.bin/eslint src/ --ext .ts,.tsx",
     "eject": "react-scripts eject",
     "cypress:open": "cypress open"
   },
@@ -74,7 +74,6 @@
     "@typescript-eslint/eslint-plugin": "^3.7.1",
     "@typescript-eslint/parser": "^3.7.1",
     "cypress": "^3.8.3",
-    "eslint": "^7.5.0",
     "eslint-config-airbnb-typescript": "^9.0.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^23.20.0",
