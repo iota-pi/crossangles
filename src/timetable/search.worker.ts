@@ -11,17 +11,17 @@ export interface RunSearchOptions {
 }
 
 
-export const runSearch = ({
+export function runSearch({
   clashInfo,
   fixedSessions,
   streams,
   config,
-}: RunSearchOptions) => {
+}: RunSearchOptions) {
   const scorer = new TimetableScorer(clashInfo, fixedSessions);
   const searcher = new GeneticSearch({
     ...config,
     scoreFunction: scorer.score.bind(scorer),
   });
-  const result = searcher.search(streams)
+  const result = searcher.search(streams);
   return result;
 }

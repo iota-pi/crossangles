@@ -2,6 +2,7 @@ import React from 'react';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ReactGA from 'react-ga';
+import Button from '@material-ui/core/Button';
 
 import { search, TimetableSearchResult } from './timetableSearch';
 import { coursesToComponents, Component } from './coursesToComponents';
@@ -15,10 +16,16 @@ import {
   Options,
 } from '../state';
 import { GeneticSearchOptionalConfig } from './GeneticSearch';
-import SessionManager from '../components/Timetable/SessionManager';
-import { setNotice, setTimetable, setSuggestionScore, clearNotice, toggleOption, setUnplacedCount } from '../actions';
+import { SessionManager } from '../components/Timetable/SessionManager';
+import {
+  setNotice,
+  setTimetable,
+  setSuggestionScore,
+  clearNotice,
+  toggleOption,
+  setUnplacedCount,
+} from '../actions';
 
-import Button from '@material-ui/core/Button';
 
 export interface UpdateTimetableArgs {
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
@@ -50,12 +57,12 @@ export interface TimetableSearchConfig {
 }
 
 
-export const updateTimetable = async (
+export async function updateTimetable(
   args: UpdateTimetableArgs,
-) => {
-  let { dispatch, sessionManager, selection, searchConfig, cleanUpdate } = args;
+) {
+  const { dispatch, sessionManager, selection, searchConfig, cleanUpdate } = args;
   const { chosen, custom, additional, events, webStreams, options, meta } = selection;
-  const courses = [ ...chosen, ...custom, ...additional ];
+  const courses = [...chosen, ...custom, ...additional];
   let fixedSessions: LinkedSession[] = [];
   if (!cleanUpdate) {
     fixedSessions = sessionManager.getTouchedSessions(courses, events);
@@ -73,7 +80,7 @@ export const updateTimetable = async (
       ignoreCache: cleanUpdate,
     });
   } catch (error) {
-    ReactGA.exception({ description: 'Unexpected error in doTimetableSearch. ' + error });
+    ReactGA.exception({ description: `Unexpected error in doTimetableSearch. ${error}` });
     console.error(error);
   }
 
@@ -85,7 +92,7 @@ export const updateTimetable = async (
       sessionManager.update(newTimetable.timetable, newTimetable.score);
       sessionManager.snapAll();
     } catch (error) {
-      ReactGA.exception({ description: 'Unexpected error when updating SessionManager. ' + error });
+      ReactGA.exception({ description: `Unexpected error when updating SessionManager. ${error}` });
       console.error(error);
       await dispatch(setNotice('There was a problem generating a timetable'));
       return;
@@ -105,10 +112,10 @@ export const updateTimetable = async (
   }
 }
 
-const notifyUnplaced = async (
+async function notifyUnplaced(
   args: UpdateTimetableArgs,
   unplaced: LinkedSession[],
-) => {
+) {
   const { dispatch, selection } = args;
   const count = unplaced.length;
   dispatch(setUnplacedCount(count));
@@ -144,14 +151,14 @@ const notifyUnplaced = async (
   }
 }
 
-export const recommendTimetable = async (
+export async function recommendTimetable(
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
   selection: Selection,
   maxSpawn = 1,
   searchConfig: GeneticSearchOptionalConfig = { timeout: 100 },
-) => {
+) {
   const { chosen, custom, additional, events, webStreams, options } = selection;
-  const courses = [ ...chosen, ...custom, ...additional ];
+  const courses = [...chosen, ...custom, ...additional];
   const newTimetable = await doTimetableSearch({
     fixedSessions: [],
     courses,
@@ -167,7 +174,7 @@ export const recommendTimetable = async (
   }
 }
 
-export async function doTimetableSearch ({
+export async function doTimetableSearch({
   fixedSessions,
   courses,
   events,
@@ -178,7 +185,7 @@ export async function doTimetableSearch ({
   searchConfig,
 }: TimetableSearchConfig): Promise<TimetableSearchResult | null> {
   // Remove fixed sessions from full streams
-  let includeFull = options.includeFull || false;
+  const includeFull = options.includeFull || false;
   const fixed = fixedSessions.filter(s => includeFull || !s.stream.full);
 
   // Group streams by course and component
@@ -203,7 +210,7 @@ export async function doTimetableSearch ({
     result = await search(components, fixed, ignoreCache, searchConfig, maxSpawn);
   } catch (error) {
     console.error(error);
-    ReactGA.exception({ description: 'Unexpected error in search. ' + error });
+    ReactGA.exception({ description: `Unexpected error in search. ${error}` });
     return null;
   }
 
@@ -216,7 +223,7 @@ export async function doTimetableSearch ({
   return { ...result, unplaced };
 }
 
-function getFullStreamSessions (fullComponents: Component[]) {
+function getFullStreamSessions(fullComponents: Component[]) {
   const fullSessions: LinkedSession[] = [];
 
   for (const component of fullComponents) {

@@ -4,7 +4,7 @@ export type ClashInfo = Map<LinkedStream, Map<LinkedStream, number>>;
 
 const ALLOWED_CLASH_MULTIPLIER = 0.5;
 
-export const getClashInfo = (streams: LinkedStream[]): ClashInfo => {
+export function getClashInfo(streams: LinkedStream[]): ClashInfo {
   const clashes = new Map<LinkedStream, Map<LinkedStream, number>>();
   for (let i = 0; i < streams.length; ++i) {
     const s1 = streams[i];
@@ -22,11 +22,11 @@ export const getClashInfo = (streams: LinkedStream[]): ClashInfo => {
   return clashes;
 }
 
-export const streamClashLength = (a: LinkedStream, b: LinkedStream) => {
+export function streamClashLength(a: LinkedStream, b: LinkedStream) {
   let total = 0;
 
-  for (let s1 of a.sessions) {
-    for (let s2 of b.sessions) {
+  for (const s1 of a.sessions) {
+    for (const s2 of b.sessions) {
       total += sessionClashLength(s1, s2);
     }
   }
@@ -34,14 +34,12 @@ export const streamClashLength = (a: LinkedStream, b: LinkedStream) => {
   return total;
 }
 
-export const sessionClashLength = (
+export function sessionClashLength(
   a: LinkedSession | SessionData,
   b: LinkedSession | SessionData,
-): number => {
-  if (a.day === b.day) {
-    const length = Math.max(Math.min(a.end, b.end) - Math.max(a.start, b.start), 0);
-    return length * (a.canClash || b.canClash ? ALLOWED_CLASH_MULTIPLIER : 1);
-  } else {
-    return 0;
-  }
+): number {
+  if (a.day !== b.day) return 0;
+
+  const length = Math.max(Math.min(a.end, b.end) - Math.max(a.start, b.start), 0);
+  return length * (a.canClash || b.canClash ? ALLOWED_CLASH_MULTIPLIER : 1);
 }
