@@ -15,7 +15,7 @@ export type Colour = keyof typeof COLOUR_MAP;
 export const getColour = (colourName: Colour, dark?: boolean) => {
   const colour = COLOUR_MAP[colourName] || FALLBACK_COLOUR;
   return dark ? colour.dark : colour.light;
-}
+};
 
 export const COURSE_COLOURS = Object.keys(COLOUR_MAP) as Colour[];
 

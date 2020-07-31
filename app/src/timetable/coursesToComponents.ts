@@ -21,7 +21,7 @@ export interface Component {
   id: string,
 }
 
-export function coursesToComponents (
+export function coursesToComponents(
   courseList: CourseData[],
   events: AdditionalEvent[],
   webStreams: CourseId[],
@@ -30,9 +30,9 @@ export function coursesToComponents (
 ): Component[] {
   // Group streams by component for each course
   // NB: remove components for which the web stream is chosen
-  let components: Component[] = [];
+  const components: Component[] = [];
   for (const course of courseList) {
-    let streamGroups = groupStreamsByComponent(course, events, webStreams, allowFull);
+    const streamGroups = groupStreamsByComponent(course, events, webStreams, allowFull);
     filterOutWebStreams(course, streamGroups, webStreams);
     isolateFixedStreams(streamGroups, fixedSessions);
     addComponentsTo(components, course, streamGroups, webStreams);
@@ -47,12 +47,12 @@ const groupStreamsByComponent = (
   webStreams: CourseId[],
   allowFull: boolean,
 ) => {
-  let streamGroups = new Map<string, LinkedStream[]>();
+  const streamGroups = new Map<string, LinkedStream[]>();
   const eventIds = events.map(e => e.id);
 
-  for (let stream of course.streams) {
+  for (const stream of course.streams) {
     // Skip any additional events which have been deselected
-    const eventId = getEventId(course, stream.component)
+    const eventId = getEventId(course, stream.component);
     if (course.isAdditional && !eventIds.includes(eventId)) {
       continue;
     }
@@ -78,7 +78,7 @@ const groupStreamsByComponent = (
   }
 
   return streamGroups;
-}
+};
 
 const filterOutWebStreams = (
   course: CourseData,
@@ -90,14 +90,14 @@ const filterOutWebStreams = (
   if (webStreams.includes(getCourseId(course))) {
     const streamGroupsEntries = Array.from(streamGroups.entries());
 
-    for (const [ component, streams ] of streamGroupsEntries) {
+    for (const [component, streams] of streamGroupsEntries) {
       // Remove component if web stream has been requested for this course AND this component has a web stream
       if (streams.some(s => s.web)) {
         streamGroups.delete(component);
       }
     }
   }
-}
+};
 
 const isolateFixedStreams = (
   streamGroups: Map<string, LinkedStream[]>,
@@ -114,7 +114,7 @@ const isolateFixedStreams = (
       }
     }
   }
-}
+};
 
 const addComponentsTo = (
   components: Component[],
@@ -129,7 +129,7 @@ const addComponentsTo = (
     if (!webStreams.includes(courseId) || streams.every(s => !s.web)) {
       const idParts: string[] = [courseId, component];
       const streamSessions: SessionData[] = [];
-      for (let stream of streams) {
+      for (const stream of streams) {
         const sessions = getSessions(course, stream);
         streamSessions.push(...sessions);
         idParts.push(getStreamId(course, stream));
@@ -140,6 +140,6 @@ const addComponentsTo = (
       components.push({ name: component, streams, course, streamSessions, id });
     }
   }
-}
+};
 
 export default coursesToComponents;

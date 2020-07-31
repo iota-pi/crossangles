@@ -8,15 +8,15 @@ describe('webStreams reducer', () => {
   it('initialises correctly', () => {
     const state = webStreams(undefined, otherAction);
     expect(state).toEqual(initialState.webStreams);
-  })
+  });
 
   it('doesn\'t change on no-op actions', () => {
     const initialState: CourseId[] = [];
-    const state = [ ...initialState ];
+    const state = [...initialState];
     const result = webStreams(state, otherAction);
     expect(result).toBe(state);
     expect(state).toEqual(initialState);
-  })
+  });
 
   it('can toggle on', () => {
     const state = [...initialState.webStreams];
@@ -29,7 +29,7 @@ describe('webStreams reducer', () => {
     expect(state).toBe(prevState);
     expect(state).toEqual(initialState.webStreams);
     expect(result).toEqual(['a']);
-  })
+  });
 
   it('can toggle on', () => {
     const state = ['a'];
@@ -42,5 +42,5 @@ describe('webStreams reducer', () => {
     expect(state).toBe(prevState);
     expect(state).toEqual(['a']);
     expect(result).toEqual([]);
-  })
-})
+  });
+});

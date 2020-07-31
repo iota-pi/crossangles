@@ -27,34 +27,28 @@ export interface LinkedSession extends SessionCommon {
 }
 
 
-export const getSessionId = (course: CourseData, stream: StreamData, session: SessionData) => {
+export function getSessionId(course: CourseData, stream: StreamData, session: SessionData) {
   const streamId = getStreamId(course, stream);
   return `${streamId}~${session.index}`;
 }
 
-export const getDuration = (session: SessionData | LinkedSession): number => {
-  return session.end - session.start;
-}
+export const getDuration = (session: SessionData | LinkedSession): number => session.end - session.start;
 
-export const linkSession = (course: CourseData, stream: LinkedStream, session: SessionData): LinkedSession => {
-  return {
-    ...session,
-    course,
-    stream,
-    id: getSessionId(course, stream, session),
-  };
-}
+export const linkSession = (course: CourseData, stream: LinkedStream, session: SessionData): LinkedSession => ({
+  ...session,
+  course,
+  stream,
+  id: getSessionId(course, stream, session),
+});
 
-export const unlinkSession = (session: LinkedSession): SessionData => {
-  return {
-    index: session.index,
-    start: session.start,
-    end: session.end,
-    day: session.day,
-    canClash: session.canClash,
-    location: session.location,
-    weeks: session.weeks,
-    course: getCourseId(session.course),
-    stream: getStreamId(session.course, session.stream),
-  };
-}
+export const unlinkSession = (session: LinkedSession): SessionData => ({
+  index: session.index,
+  start: session.start,
+  end: session.end,
+  day: session.day,
+  canClash: session.canClash,
+  location: session.location,
+  weeks: session.weeks,
+  course: getCourseId(session.course),
+  stream: getStreamId(session.course, session.stream),
+});

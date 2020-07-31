@@ -5,9 +5,8 @@ export const reducedMotion = (state = initialState.reducedMotion, action: AllAct
   if (action.type === SET_REDUCED_MOTION) {
     if (action.reducedMotion === true) {
       return action.reducedMotion;
-    } else {
-      return !state;
     }
+    return !state;
   }
 
   return state;

@@ -12,11 +12,11 @@ describe('getEventId', () => {
         { component: 'Secret Forging', times: [{ time: 'M8', location: 'Mount Doom' }], enrols: [0, 0] },
       ],
       isAdditional: true,
-    }
+    };
     const result = getEventId(course, 'Secret Forging');
     expect(result).toBe('RING1379~Secret Forging');
-  })
-})
+  });
+});
 
 
 describe('getEvents', () => {
@@ -36,12 +36,12 @@ describe('getEvents', () => {
       { id: 'code~a', name: 'a' },
       { id: 'code~b', name: 'b' },
     ]);
-  })
+  });
 
   it('gives no events for non-additional courses', () => {
     expect(getEvents(baseCourse)).toEqual([]);
     expect(getEvents({ ...baseCourse, isAdditional: false })).toEqual([]);
-  })
+  });
 
   it('doesn\'t give duplicate events', () => {
     const course: CourseData = {
@@ -57,8 +57,8 @@ describe('getEvents', () => {
     expect(result).toEqual([
       { id: 'code~a', name: 'a' },
     ]);
-  })
-})
+  });
+});
 
 describe('getAutoSelectedEvents', () => {
   it('gets events from auto-selected courses', () => {
@@ -95,8 +95,8 @@ describe('getAutoSelectedEvents', () => {
     const additional: CourseId[] = ['a', 'd'];
     const result = getAutoSelectedEvents(courseMap, additional);
     expect(result).toEqual([
-      { id: 'a~a', name: 'a'},
-      { id: 'a~b', name: 'b'},
+      { id: 'a~a', name: 'a' },
+      { id: 'a~b', name: 'b' },
     ]);
-  })
-})
+  });
+});

@@ -1,7 +1,7 @@
 import { AllActions, TOGGLE_WEB_STREAM } from '../actions';
 import { CourseId, getCourseId, initialState } from '../state';
 
-export function webStreams (
+export function webStreams(
   state: CourseId[] | undefined,
   action: AllActions,
 ): CourseId[] {
@@ -19,4 +19,4 @@ export function webStreams (
   }
 
   return state || initialState.webStreams;
-};
+}

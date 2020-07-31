@@ -18,43 +18,34 @@ export const getCurrentTimetable = ({ timetables, meta }: Pick<RootState, 'timet
   const timetable = timetables[term];
   if (timetable) {
     return timetable;
-  } else {
-    return getEmptySessionManagerData();
   }
+  return getEmptySessionManagerData();
 };
 
 export const getCourseList = createSelector(
   [getCourses],
-  (courses) => {
-    return Object.values(courses).sort(courseSort);
-  }
+  courses => Object.values(courses).sort(courseSort),
 );
 
 export const getChosenCourses = createSelector(
   [getCourses, getChosen],
-  (courses, chosen) => {
-    return chosen.map(c => courses[c]).sort(courseSort);
-  }
+  (courses, chosen) => chosen.map(c => courses[c]).sort(courseSort),
 );
 
 export const getCustomCourses = createSelector(
   [getCourses, getCustom],
-  (courses, custom) => {
-    return custom.map(c => courses[c]).sort(customSort);
-  }
+  (courses, custom) => custom.map(c => courses[c]).sort(customSort),
 );
 
 export const getAdditionalCourses = createSelector(
   [getCourses, getAdditional],
-  (courses, additional) => {
-    return additional.map(c => courses[c]).sort(courseSort);
-  }
+  (courses, additional) => additional.map(c => courses[c]).sort(courseSort),
 );
 
 export const _getShowSignup = (courses: CourseMap, additional: CourseId[], events: AdditionalEvent[]) => {
-  let allEvents = getAutoSelectedEvents(courses, additional);
+  const allEvents = getAutoSelectedEvents(courses, additional);
   const eventNames = events.map(e => e.id);
-  return allEvents.some(e => eventNames.includes(e.id))
+  return allEvents.some(e => eventNames.includes(e.id));
 };
 
 export const getShowSignup = createSelector(

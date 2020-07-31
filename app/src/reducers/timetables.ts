@@ -2,7 +2,7 @@ import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_
 import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId } from '../state';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
 
-export function timetables (
+export function timetables(
   state: Timetables = initialState.timetables,
   action: AllActions,
 ): Timetables {
@@ -27,17 +27,17 @@ export function timetables (
         sessionsToRemove.add(sessionId);
       }
     }
-    const newTimetable = {...timetable};
+    const newTimetable = { ...timetable };
     newTimetable.map = newTimetable.map.filter(([id, _]) => !sessionsToRemove.has(id));
     newTimetable.order = newTimetable.order.filter(id => !sessionsToRemove.has(id));
     newTimetable.renderOrder = newTimetable.renderOrder.filter(id => !sessionsToRemove.has(id));
-    return {...state, [term]: newTimetable};
+    return { ...state, [term]: newTimetable };
   }
 
   return state;
-};
+}
 
-export function suggestionScore (
+export function suggestionScore(
   state: number | null | undefined = initialState.suggestionScore,
   action: AllActions,
 ): number | null {
@@ -48,7 +48,7 @@ export function suggestionScore (
   return state;
 }
 
-export function unplacedCount (
+export function unplacedCount(
   state: number | undefined = initialState.unplacedCount,
   action: AllActions,
 ): number {
