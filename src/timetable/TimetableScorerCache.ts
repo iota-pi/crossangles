@@ -3,11 +3,11 @@ export interface ICache<T> extends Array<T | undefined | ICache<T>> {}
 export class TimetableScorerCache<T> {
   private cache: ICache<T>;
 
-  constructor () {
+  constructor() {
     this.cache = [];
   }
 
-  get (key: number[]): T | undefined {
+  get(key: number[]): T | undefined {
     let current = this.cache;
     for (let i = 0; i < key.length; ++i) {
       const next = current[key[i]];
@@ -20,15 +20,15 @@ export class TimetableScorerCache<T> {
     return undefined;
   }
 
-  set (key: number[], value: T): void {
+  set(key: number[], value: T): void {
     this._set(key, value);
   }
 
-  has (key: number[]) {
+  has(key: number[]) {
     return this.get(key) !== undefined;
   }
 
-  delete (key: number[]): void {
+  delete(key: number[]): void {
     this._set(key, undefined);
   }
 

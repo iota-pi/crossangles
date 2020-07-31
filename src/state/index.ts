@@ -71,9 +71,7 @@ export const meta: Meta = {
   sources: [],
 };
 
-export const timetables: Timetables = {
-  [getCurrentTerm(meta)]: getEmptySessionManagerData(),
-};
+export const timetables: Timetables = { [getCurrentTerm(meta)]: getEmptySessionManagerData() };
 
 export const history: HistoryData = {
   past: [],

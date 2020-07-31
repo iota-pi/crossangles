@@ -1,7 +1,7 @@
 import { SET_NOTICE, CLEAR_NOTICE, AllActions } from '../actions';
 import { initialState, Notice } from '../state';
 
-export function notice (
+export function notice(
   state = initialState.notice,
   action: AllActions,
 ): Notice | null {
@@ -14,4 +14,4 @@ export function notice (
   }
 
   return state;
-};
+}

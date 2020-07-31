@@ -84,5 +84,5 @@ describe('coursesToComponents', () => {
     cache.delete(key);
     expect(cache.has(key)).toBe(false);
     expect(cache.get(key)).toBe(undefined);
-  })
+  });
 });

@@ -10,11 +10,9 @@ describe('getCurrentTimetable', () => {
       order: [],
       score: 0,
       version: 0,
-    }
+    };
     const state = {
-      timetables: {
-        '2020~2': timetable,
-      },
+      timetables: { '2020~2': timetable },
       meta: {
         ...initialState.meta,
         year: 2020,

@@ -5,9 +5,8 @@ export const darkMode = (state = initialState.darkMode, action: AllActions): boo
   if (action.type === SET_DARK_MODE) {
     if (action.darkMode === true) {
       return action.darkMode;
-    } else {
-      return !state;
     }
+    return !state;
   }
 
   return state;

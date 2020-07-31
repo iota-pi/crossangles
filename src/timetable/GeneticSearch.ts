@@ -9,7 +9,7 @@
  */
 
 export interface GeneticSearchOptionalConfig {
-  timeout?: number,  // max execution time in milliseconds
+  timeout?: number, // max execution time in milliseconds
   maxIterations?: number,
   checkIters?: number,
   initialParents?: number,
@@ -30,7 +30,7 @@ const defaultConfig: Required<GeneticSearchOptionalConfig> = {
   initialParents: 100,
   maxParents: 20,
   biasTop: 5,
-}
+};
 
 export interface Parent<T> {
   indexes: number[],
@@ -41,22 +41,22 @@ export interface Parent<T> {
 export class GeneticSearch<T> {
   config: Required<GeneticSearchConfig<T>>;
 
-  constructor (config: GeneticSearchConfig<T>) {
-    this.config = Object.assign({}, defaultConfig, config);
+  constructor(config: GeneticSearchConfig<T>) {
+    this.config = { ...defaultConfig, ...config };
   }
 
-  search (data: T[][]): Parent<T> {
+  search(data: T[][]): Parent<T> {
     if (data.length === 0) {
       return {
         indexes: [],
         values: [],
         score: -Infinity,
-      }
+      };
     }
 
     const startTime = performance.now();
 
-    let parents = this.abiogenesis(data);
+    const parents = this.abiogenesis(data);
 
     const max = this.config.maxIterations;
     const checkIters = this.config.checkIters;
@@ -78,7 +78,7 @@ export class GeneticSearch<T> {
     return parents[0];
   }
 
-  abiogenesis (data: T[][]): Parent<T>[] {
+  abiogenesis(data: T[][]): Parent<T>[] {
     const parents: Parent<T>[] = [];
     for (let i = 0; i < this.config.initialParents; ++i) {
       const indexes = data.map(x => Math.floor(Math.random() * x.length));
@@ -90,7 +90,7 @@ export class GeneticSearch<T> {
     return parents.sort(this.parentSort);
   }
 
-  evolve (parents: Parent<T>[], data: T[][]): Parent<T>[] {
+  evolve(parents: Parent<T>[], data: T[][]): Parent<T>[] {
     // Create new parents
     const numParents = parents.length;
     for (let i = 0; i < numParents; ++i) {
@@ -106,12 +106,12 @@ export class GeneticSearch<T> {
     return parents;
   }
 
-  mutate (parent: Parent<T>, data: T[][]): Parent<T> {
+  mutate(parent: Parent<T>, data: T[][]): Parent<T> {
     const values = parent.values.slice();
     let indexes = parent.indexes;
 
     // Mutate child
-    let i = this.chooseIndexToMutate(data);
+    const i = this.chooseIndexToMutate(data);
     const newIndex = this.chooseNewIndexValue(indexes[i], data[i].length);
 
     values[i] = data[i][newIndex];
@@ -126,7 +126,7 @@ export class GeneticSearch<T> {
     return { values, indexes, score };
   }
 
-  chooseIndexToMutate (data: T[][], max_attempts=10): number {
+  chooseIndexToMutate(data: T[][], max_attempts = 10): number {
     let i = -1;
     let attempts = 0;
     while (i < 0 || data[i].length <= 1) {
@@ -136,7 +136,7 @@ export class GeneticSearch<T> {
     return i;
   }
 
-  chooseNewIndexValue (previous: number, max: number, max_attempts=10): number {
+  chooseNewIndexValue(previous: number, max: number, max_attempts = 10): number {
     let n = previous;
     let attempts = 0;
     while (n === previous) {
@@ -146,16 +146,16 @@ export class GeneticSearch<T> {
     return n;
   }
 
-  private parentSort (a: Parent<T>, b: Parent<T>) {
+  private parentSort(a: Parent<T>, b: Parent<T>) {
     return b.score - a.score;
   }
 
-  private chooseParent (parents: Parent<T>[]): Parent<T> {
+  private chooseParent(parents: Parent<T>[]): Parent<T> {
     const i = Math.floor(Math.random() * parents.length + this.config.biasTop) % parents.length;
     return parents[i];
   }
 
-  private cullParents (parents: Parent<T>[]): void {
+  private cullParents(parents: Parent<T>[]): void {
     parents.sort(this.parentSort);
     const max = this.config.maxParents;
     if (parents.length > max) {

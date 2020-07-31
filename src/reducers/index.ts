@@ -70,7 +70,7 @@ export const getTimetableState = (state: NoHistoryState): TimetableHistoryState 
     colours,
     webStreams,
   };
-}
+};
 
 function getStateFromHistory(history: HistoryData, nextTimetable: SessionManagerData, nextState: RootState): RootState {
   const { timetable, ...otherHistory } = history.present;
@@ -110,7 +110,7 @@ const historyReducer = (nextState: RootState, action: AllActions): RootState => 
   }
 
   return nextState;
-}
+};
 
 const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
   state = state || { ...initialState };
@@ -118,6 +118,6 @@ const rootReducer = (state: RootState | undefined, action: AllActions): RootStat
   nextState = historyReducer(nextState, action);
 
   return nextState;
-}
+};
 
 export default rootReducer;

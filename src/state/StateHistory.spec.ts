@@ -73,7 +73,7 @@ describe('test history utilities', () => {
     };
     const result = undo(state);
     expect(result).toEqual(expected);
-  })
+  });
 
   test('undo works correctly with empty future', () => {
     const past = Object.freeze([...timetableStates.slice(0, 4)]);
@@ -87,7 +87,7 @@ describe('test history utilities', () => {
     };
     const result = undo(state);
     expect(result).toEqual(expected);
-  })
+  });
 
   // Redo
   test('redo works correctly with one item in future', () => {
@@ -102,7 +102,7 @@ describe('test history utilities', () => {
     };
     const result = redo(state);
     expect(result).toEqual(expected);
-  })
+  });
 
   test('redo works correctly with empty past', () => {
     const past: TimetableHistoryState[] = [];
@@ -116,10 +116,10 @@ describe('test history utilities', () => {
     };
     const result = redo(state);
     expect(result).toEqual(expected);
-  })
+  });
 
   // Push
-  const firstState = Object.freeze(timetableStates[0])
+  const firstState = Object.freeze(timetableStates[0]);
   const history: HistoryData = { past: [], present: firstState, future: [] };
 
   const doPushTest = (nextState: TimetableHistoryState) => {
@@ -128,56 +128,56 @@ describe('test history utilities', () => {
     expect(result).not.toBe(history);
     expect(result).toEqual({ past: [firstState], present: nextState, future: [] });
     expect(history).toEqual(originalHistory);
-  }
+  };
 
   test('push history does nothing when state doesn\'t change', () => {
     const originalHistory = { ...history };
     const result = push(history, Object.freeze(timetableStates[0]));
     expect(result).toBe(history);
     expect(result).toEqual(originalHistory);
-  })
+  });
 
   test('push history changes when additional courses change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, additional: [ ...firstState.additional ] };
+    const nextState: TimetableHistoryState = { ...firstState, additional: [...firstState.additional] };
     doPushTest(nextState);
-  })
+  });
 
   test('push history changes when chosen courses change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, chosen: [ ...firstState.chosen ] };
+    const nextState: TimetableHistoryState = { ...firstState, chosen: [...firstState.chosen] };
     doPushTest(nextState);
-  })
+  });
 
   test('push history changes when custom courses change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, custom: [ ...firstState.custom ] };
+    const nextState: TimetableHistoryState = { ...firstState, custom: [...firstState.custom] };
     doPushTest(nextState);
-  })
+  });
 
   test('push history changes when events change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, events: [ ...firstState.events ] };
+    const nextState: TimetableHistoryState = { ...firstState, events: [...firstState.events] };
     doPushTest(nextState);
-  })
+  });
 
   test('push history changes when webStreams change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, webStreams: [ ...firstState.webStreams ] };
+    const nextState: TimetableHistoryState = { ...firstState, webStreams: [...firstState.webStreams] };
     doPushTest(nextState);
-  })
+  });
 
   test('push history changes when options change', () => {
     const nextState: TimetableHistoryState = { ...firstState, options: { ...firstState.options } };
     doPushTest(nextState);
-  })
+  });
 
   test('push history changes when colours change', () => {
     const nextState: TimetableHistoryState = { ...firstState, colours: { ...firstState.colours } };
     doPushTest(nextState);
-  })
+  });
 
   test('push history doesn\'t change when map doesn\'t change', () => {
     const nextState: TimetableHistoryState = { ...firstState, timetable: { ...firstState.timetable, map: [] } };
     const result = push(history, nextState);
     expect(result).toBe(history);
     expect(result).toEqual(history);
-  })
+  });
 
   test('push history changes when map change', () => {
     const course = courses.a;
@@ -202,7 +202,7 @@ describe('test history utilities', () => {
       },
     };
     doPushTest(nextState);
-  })
+  });
 
   test('push clears future array', () => {
     const newHistory: HistoryData = { ...history, future: timetableStates.slice(1) };
@@ -210,5 +210,5 @@ describe('test history utilities', () => {
     const result = push(newHistory, nextState);
     expect(result.future).toEqual([]);
     expect(result.future).not.toEqual(newHistory.future);
-  })
-})
+  });
+});

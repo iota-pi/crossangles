@@ -13,7 +13,7 @@ export const undo = (history: HistoryData): HistoryData => {
     present: past[past.length - 1],
     future: [present, ...future],
   };
-}
+};
 
 export const redo = (history: HistoryData): HistoryData => {
   const { past, present, future } = history;
@@ -22,7 +22,7 @@ export const redo = (history: HistoryData): HistoryData => {
     present: future[0],
     future: future.slice(1),
   };
-}
+};
 
 export const push = (history: HistoryData, next: TimetableHistoryState): HistoryData => {
   const { past, present } = history;
@@ -36,7 +36,7 @@ export const push = (history: HistoryData, next: TimetableHistoryState): History
     present: next,
     future: [],
   };
-}
+};
 
 const noStateChange = (current: TimetableHistoryState, next: TimetableHistoryState) => {
   if (current.custom !== next.custom) {
@@ -70,4 +70,4 @@ const noStateChange = (current: TimetableHistoryState, next: TimetableHistorySta
   }
 
   return true;
-}
+};

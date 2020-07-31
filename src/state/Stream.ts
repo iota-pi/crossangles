@@ -38,19 +38,19 @@ export const getStreamId = (course: CourseData, stream: StreamData, simple = fal
   const timeString = stream.times ? stream.times.map(t => t.time).join(',') : 'WEB';
   const id = `${getComponentId(course, stream, simple)}~${timeString}`;
   return id;
-}
+};
 
 export const getComponentId = (course: CourseData, stream: StreamData, simple = false) => {
   const componentString = course.isCustom ? '' : stream.component;
   return `${getCourseId(course, simple)}~${componentString}`;
-}
+};
 
 export const getSessions = (course: CourseData, stream: StreamData): SessionData[] => {
   const courseId = getCourseId(course);
   const streamId = getStreamId(course, stream);
   if (stream.times !== null) {
     return stream.times.map((t, i): SessionData => {
-      const [ startHour, endHour ] = t.time.substr(1).split('-').map(x => parseFloat(x));
+      const [startHour, endHour] = t.time.substr(1).split('-').map(x => parseFloat(x));
       return {
         start: startHour,
         end: endHour || (startHour + 1),
@@ -63,10 +63,9 @@ export const getSessions = (course: CourseData, stream: StreamData): SessionData
         course: courseId,
       };
     });
-  } else {
-    return [];
   }
-}
+  return [];
+};
 
 export const linkStream = (course: CourseData, stream: StreamData): LinkedStream => {
   const sessionData = getSessions(course, stream);
@@ -78,4 +77,4 @@ export const linkStream = (course: CourseData, stream: StreamData): LinkedStream
   };
   linkedStream.sessions = sessionData.map(session => linkSession(course, linkedStream, session));
   return linkedStream;
-}
+};

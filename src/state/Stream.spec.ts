@@ -9,8 +9,8 @@ describe('getStreamId', () => {
     const course = getCourse();
     const stream = course.streams[0];
     expect(getStreamId(course, stream)).toBe('RING9731~LEC~M9,H12,T12');
-  })
-})
+  });
+});
 
 describe('getSessions', () => {
   it.each`
@@ -22,7 +22,7 @@ describe('getSessions', () => {
       streams: [stream],
     };
     expect(getSessions(course, stream)).toEqual([]);
-  })
+  });
 
   it('gives expected result', () => {
     const stream: StreamData = {
@@ -49,8 +49,8 @@ describe('getSessions', () => {
       { ...common, index: 2, day: 'H', start: 8, end: 9 },
     ];
     expect(getSessions(course, stream)).toEqual(expected);
-  })
-})
+  });
+});
 
 
 describe('linkStream', () => {
@@ -59,5 +59,5 @@ describe('linkStream', () => {
     for (const stream of course.streams) {
       expect(linkStream(course, stream)).toMatchSnapshot();
     }
-  })
-})
+  });
+});

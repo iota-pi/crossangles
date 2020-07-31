@@ -38,7 +38,7 @@ export const getCourseId = (course: CourseData, simple = false): CourseId => {
     !simple && careerToString(course.career),
   ];
   return extraSegments.filter(x => !!x).join('~');
-}
+};
 
 export const careerToString = (career?: Career): string | undefined => {
   if (career === Career.PGRD) {
@@ -47,10 +47,9 @@ export const careerToString = (career?: Career): string | undefined => {
     return 'RSCH';
   } else if (career === Career.UGRD) {
     return '';
-  } else {
-    return undefined;
   }
-}
+  return undefined;
+};
 
 export const careerToName = (career?: Career): string | undefined => {
   if (career === Career.PGRD) {
@@ -59,14 +58,11 @@ export const careerToName = (career?: Career): string | undefined => {
     return 'Research';
   } else if (career === Career.UGRD) {
     return 'Undergrad';
-  } else {
-    return undefined;
   }
-}
+  return undefined;
+};
 
-export const hasWebStream = (course: CourseData): boolean => {
-  return getWebStream(course) !== null;
-}
+export const hasWebStream = (course: CourseData): boolean => getWebStream(course) !== null;
 
 export const getWebStream = (course: CourseData): StreamData | null => {
   const streams = course.streams;
@@ -77,12 +73,12 @@ export const getWebStream = (course: CourseData): StreamData | null => {
   }
 
   return null;
-}
+};
 
 export const getComponents = (course: CourseData): string[] => {
   const components = course.streams.map(s => s.component);
   return components.filter((c, i) => components.indexOf(c) === i);
-}
+};
 
 export const getClarificationText = (course: CourseData): string => {
   const disciplineRegex = /\b[A-Z]{4}\b/g;
@@ -98,7 +94,7 @@ export const getClarificationText = (course: CourseData): string => {
   const career = course.career !== Career.UGRD ? careerToName(course.career) : undefined;
   const parts = [discipline || course.section, course.term, career];
   return parts.filter(x => x).join('; ');
-}
+};
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 export const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);
