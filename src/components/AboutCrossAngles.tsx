@@ -83,14 +83,18 @@ export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void 
           </Typography>
 
           <Typography paragraph>
-            CrossAngles is provided by <a
+            CrossAngles is provided by
+            {' '}
+            <a
               href="https://www.campusbiblestudy.org"
               rel="noopener noreferrer"
               target="_blank"
               className={classes.link}
             >
               Campus Bible Study
-            </a> —
+            </a>
+            {' '}
+            —
             a group of people at UNSW who are interested in learning together about Jesus from the Bible.
             Whether you follow Jesus, or want to find out what He's all about,
             Campus Bible Study is a great place for you to learn more.
@@ -99,15 +103,18 @@ export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void 
 
           <Typography paragraph>
             If you have any questions or suggestions,
-            please <span
+            please
+            {' '}
+            <span
               className={classes.link}
-              onClick={(event) => { event.preventDefault(); onShowContact(); }}
+              onClick={event => { event.preventDefault(); onShowContact(); }}
             >
               contact us
-            </span>.
+            </span>
+            .
           </Typography>
         </DialogContent>
       </Dialog>
     </div>
   );
-}
+};

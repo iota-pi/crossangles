@@ -35,9 +35,6 @@ const styles = (theme: Theme) => createStyles({
     paddingBottom: 5,
     textTransform: 'none',
   },
-  saveImageButton: {
-
-  },
   buttonProgress: {
     // color: green[500],
     position: 'absolute',
@@ -88,20 +85,20 @@ export const ActionButtons = withStyles(styles)(({
       action: 'Signup Link',
       label: destination,
     });
-  }
+  };
 
   let signupButton: ReactNode = null;
   if (ministry && showSignup) {
     const ministryMeta = ministry.metadata!;
     const isValid = ministryMeta.signupValidFor.some(
-      ({year, term}) => meta.year === year && meta.term === term
+      ({ year, term }) => meta.year === year && meta.term === term,
     );
 
     if (isValid) {
       signupButton = (
         <Button
           variant="outlined"
-          className={classes.baseButton + ' ' + classes.signUpButton}
+          className={`${classes.baseButton} ${classes.signUpButton}`}
           size="large"
           endIcon={<OpenInNewIcon />}
           href={ministryMeta.signupURL}
@@ -112,7 +109,9 @@ export const ActionButtons = withStyles(styles)(({
         >
           <div className={classes.centredText}>
             <div className={classes.fontNormal}>
-              Sign Up for Term {meta.term}
+              Sign Up for Term
+              {' '}
+              {meta.term}
             </div>
             <div className={classes.fontLight}>
               {ministry.name}
@@ -132,7 +131,7 @@ export const ActionButtons = withStyles(styles)(({
       <div className={classes.buttonHolder}>
         <Button
           variant="outlined"
-          className={classes.baseButton + ' ' + classes.saveImageButton}
+          className={classes.baseButton}
           size="large"
           color="primary"
           endIcon={<CameraAltIcon />}
@@ -151,7 +150,7 @@ export const ActionButtons = withStyles(styles)(({
         {signupButton}
       </div>
     </div>
-  )
+  );
 });
 
 export default ActionButtons;

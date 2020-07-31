@@ -10,7 +10,7 @@ export interface CampusData {
 }
 
 
-export const requestData = async (): Promise<CampusData> => {
+export async function requestData(): Promise<CampusData> {
   const campus = getCampus();
   const uri = config[campus].dataPath;
   const { data } = await axios.get(uri);

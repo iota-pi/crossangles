@@ -11,16 +11,14 @@ export interface CourseListAction extends Action {
   meta: Meta;
 }
 
-export function fetchData (): ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction> {
-  return async dispatch => {
-    return requestData().then(data => {
-      const setCourseAction: CourseListAction = {
-        type: SET_COURSE_DATA,
-        courses: data.courses,
-        meta: data.meta,
-      };
+export function fetchData(): ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction> {
+  return async dispatch => requestData().then(data => {
+    const setCourseAction: CourseListAction = {
+      type: SET_COURSE_DATA,
+      courses: data.courses,
+      meta: data.meta,
+    };
 
-      return dispatch(setCourseAction);
-    });
-  };
+    return dispatch(setCourseAction);
+  });
 }

@@ -5,9 +5,7 @@ export interface SetTwentyFourHoursAction extends Action {
   type: typeof SET_TWENTY_FOUR_HOURS,
   twentyFourHours?: boolean,
 }
-export const setTwentyFourHours = (twentyFourHours?: boolean): SetTwentyFourHoursAction => {
-  return {
-    type: SET_TWENTY_FOUR_HOURS,
-    twentyFourHours,
-  };
-};
+export const setTwentyFourHours = (twentyFourHours?: boolean): SetTwentyFourHoursAction => ({
+  type: SET_TWENTY_FOUR_HOURS,
+  twentyFourHours,
+});

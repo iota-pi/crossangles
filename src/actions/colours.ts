@@ -11,7 +11,7 @@ export interface ColourAction extends Action {
   colour?: Colour;
 }
 
-export function setColour (course: CourseId, colour?: Colour): ColourAction {
+export function setColour(course: CourseId, colour?: Colour): ColourAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Change Colour',
@@ -22,5 +22,5 @@ export function setColour (course: CourseId, colour?: Colour): ColourAction {
     type: SET_COLOUR,
     course,
     colour,
-  }
+  };
 }

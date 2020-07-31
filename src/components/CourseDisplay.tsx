@@ -10,7 +10,9 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import WebStream from './WebStream';
 import CourseActionButton from './CourseActionButton';
 import ColourControl from './Colour';
-import { Colour, CourseData, CourseId, getCourseId, getClarificationText, getWebStream, Meta } from '../state';
+import {
+  Colour, CourseData, CourseId, getCourseId, getClarificationText, getWebStream, Meta,
+} from '../state';
 import getCampus from '../getCampus';
 import { CATEGORY } from '../analytics';
 
@@ -86,7 +88,7 @@ const getHandbookLink = (course: CourseData, meta: Meta) => {
   }
 
   return undefined;
-}
+};
 
 
 export const CourseDisplay = ({
@@ -105,9 +107,16 @@ export const CourseDisplay = ({
   const courseTitle = (
     <>
       <span>{course.code}</span>
-      <span className={classes.lightText}> — {course.name}</span>
+      <span className={classes.lightText}>
+        {' '}
+        —
+        {course.name}
+      </span>
       {clarification && (
-        <span className={classes.termText}> ({clarification})</span>
+        <span className={classes.termText}>
+          {' '}
+          ({clarification})
+        </span>
       )}
     </>
   );
@@ -125,23 +134,23 @@ export const CourseDisplay = ({
       action: 'Handbook Link',
       label: destination,
     });
-  }
+  };
 
   return (
-    <React.Fragment>
+    <>
       <ListItem>
         {!course.isCustom ? (
           <div className={classes.courseTitle}>
             {handbookLink ? (
-              <React.Fragment>
+              <>
                 <a {...linkProps} className={classes.plainLink}>
                   {courseTitle}
                 </a>
 
                 <a {...linkProps} className={`${classes.plainLink} ${classes.noShrink}`}>
-                  <OpenInNew className={classes.externalLinkIcon} fontSize={'inherit'} />
+                  <OpenInNew className={classes.externalLinkIcon} fontSize="inherit" />
                 </a>
-              </React.Fragment>
+              </>
             ) : courseTitle}
           </div>
         ) : (
@@ -187,9 +196,9 @@ export const CourseDisplay = ({
             onChange={() => onToggleWeb(course)}
           />
         </ListItem>
-      ) : <React.Fragment/>}
-    </React.Fragment>
-  )
+      ) : <></>}
+    </>
+  );
 };
 
 export default CourseDisplay;

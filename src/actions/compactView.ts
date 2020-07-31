@@ -5,9 +5,7 @@ export interface SetCompactViewAction extends Action {
   type: typeof SET_COMPACT_VIEW,
   compactView?: boolean,
 }
-export const setCompactView = (compactView?: boolean): SetCompactViewAction => {
-  return {
-    type: SET_COMPACT_VIEW,
-    compactView,
-  };
-};
+export const setCompactView = (compactView?: boolean): SetCompactViewAction => ({
+  type: SET_COMPACT_VIEW,
+  compactView,
+});
