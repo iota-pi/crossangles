@@ -65,18 +65,17 @@ export interface State {
   dragging: LinkedSession | null,
 }
 
-export function getCourseColour (course: CourseData, colourMap: ColourMap, darkMode = false): string | undefined {
+export function getCourseColour(course: CourseData, colourMap: ColourMap, darkMode = false): string | undefined {
   const courseId = getCourseId(course);
   const colourName = colourMap[courseId];
   if (colourName) {
     return getColour(colourName, darkMode);
-  } else {
-    return undefined;
   }
+  return undefined;
 }
 
 
-function TimetableTable (props: Props) {
+function TimetableTable(props: Props) {
   const timetable = props.timetable;
   const compact = props.compactView || false;
   const sessions = React.useMemo(
@@ -131,7 +130,7 @@ function TimetableTable (props: Props) {
     () => {
       if (dragging) {
         setDropzones(
-          getDropzones(dragging, includeFull)
+          getDropzones(dragging, includeFull),
         );
       }
     },
@@ -175,12 +174,12 @@ function TimetableTable (props: Props) {
     (position: Position): DropzonePlacement | null => {
       let nearest: DropzonePlacement | null = null;
       let bestDistance = SNAP_DIST * SNAP_DIST;
-      for (let dropzone of dropzones) {
+      for (const dropzone of dropzones) {
         const dropzonePosition = dropzone.basePlacement(dimensions, hours.start, compact);
         const deltaX = dropzonePosition.x - position.x;
         const deltaY = dropzonePosition.y - position.y;
 
-        let distSq = (deltaX * deltaX) + (deltaY * deltaY);
+        const distSq = (deltaX * deltaX) + (deltaY * deltaY);
         if (distSq < bestDistance) {
           nearest = dropzone;
           bestDistance = distSq;

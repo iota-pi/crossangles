@@ -7,7 +7,7 @@ import {
 } from '../actions';
 import { AdditionalEvent, CourseId, getEvents, initialState, Options } from '../state';
 
-export function events (state: readonly AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
+export function events(state: readonly AdditionalEvent[] = [], action: AllActions): AdditionalEvent[] {
   switch (action.type) {
     case TOGGLE_EVENT:
       const stateIds = state.map(e => e.id);
@@ -28,16 +28,16 @@ export function events (state: readonly AdditionalEvent[] = [], action: AllActio
       if (action.course.isAdditional && !action.course.autoSelect) {
         const eventList = getEvents(action.course);
         if (eventList.length === 1) {
-          return [ ...state, eventList[0] ];
+          return [...state, eventList[0]];
         }
       }
       break;
   }
 
   return state as AdditionalEvent[];
-};
+}
 
-export function options (
+export function options(
   state: Options = initialState.options,
   action: AllActions,
 ): Options {
@@ -50,9 +50,9 @@ export function options (
   }
 
   return state;
-};
+}
 
-export function hiddenEvents (
+export function hiddenEvents(
   state: readonly CourseId[] = initialState.hiddenEvents,
   action: AllActions,
 ): CourseId[] {

@@ -36,7 +36,7 @@ function useResetCache(data: any) {
 }
 
 // Adapter for react-window
-export const ListboxComponent = React.forwardRef<HTMLDivElement>(function ListboxComponent(props, ref) {
+export const ListboxComponent = React.forwardRef<HTMLDivElement>((props, ref) => {
   const { children, ...other } = props;
   const itemData = React.Children.toArray(children);
   const theme = useTheme();
@@ -71,7 +71,7 @@ export const ListboxComponent = React.forwardRef<HTMLDivElement>(function Listbo
           ref={gridRef}
           outerElementType={OuterElementType}
           innerElementType={InnerElementType}
-          itemSize={(index) => getChildSize(itemData[index])}
+          itemSize={index => getChildSize(itemData[index])}
           overscanCount={5}
           itemCount={itemCount}
         >

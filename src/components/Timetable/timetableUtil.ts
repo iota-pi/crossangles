@@ -23,7 +23,7 @@ export const RAISE_DIST_X = -5;
 export const RAISE_DIST_Y = -5;
 
 
-export function arraysEqual<T> (a: T[], b: T[]): boolean {
+export function arraysEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) {
     return false;
   }
@@ -37,6 +37,6 @@ export function arraysEqual<T> (a: T[], b: T[]): boolean {
   return true;
 }
 
-export function getCellHeight (compact: boolean) {
+export function getCellHeight(compact: boolean) {
   return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;
 }

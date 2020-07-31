@@ -1,9 +1,14 @@
 import React, { RefObject } from 'react';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import { getCellHeight, TIMETABLE_BORDER_WIDTH, TIMETABLE_FIRST_CELL_WIDTH, TIMETABLE_CELL_MIN_WIDTH } from './timetableUtil';
 import IconButton from '@material-ui/core/IconButton';
 import Schedule from '@material-ui/icons/Schedule';
+import {
+  getCellHeight,
+  TIMETABLE_BORDER_WIDTH,
+  TIMETABLE_FIRST_CELL_WIDTH,
+  TIMETABLE_CELL_MIN_WIDTH,
+} from './timetableUtil';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -12,7 +17,7 @@ const noSelect: CSSProperties = {
   MozUserSelect: 'none',
   msUserSelect: 'none',
   userSelect: 'none',
-}
+};
 
 const useStyles = makeStyles(theme => {
   const STANDARD_BORDER = theme.palette.divider;
@@ -96,7 +101,11 @@ const useStyles = makeStyles(theme => {
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const daysToLetters: {[key: string]: string} = {
-  'Monday': 'M', 'Tuesday': 'T', 'Wednesday': 'W', 'Thursday': 'H', 'Friday': 'F'
+  Monday: 'M',
+  Tuesday: 'T',
+  Wednesday: 'W',
+  Thursday: 'H',
+  Friday: 'F',
 };
 
 export interface Props {
@@ -180,8 +189,7 @@ export const TimetableGrid: React.FC<Props> = React.memo(({
               data-cy="timetable-cell"
               data-time={`${daysToLetters[day]}${hour}`}
               className={classes.cell}
-            >
-            </div>
+            />
           ))}
         </div>
       ))}

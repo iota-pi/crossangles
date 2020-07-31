@@ -1,7 +1,7 @@
 import { COURSE_COLOURS, ColourMap, Colour, getCourseId, initialState } from '../state';
 import { ADD_COURSE, SET_COLOUR, AllActions, SET_COURSE_DATA, REMOVE_COURSE } from '../actions';
 
-export function colours (state = initialState.colours, action: AllActions): ColourMap {
+export function colours(state = initialState.colours, action: AllActions): ColourMap {
   const chosenColours = Object.values(state);
 
   if (action.type === ADD_COURSE) {
@@ -41,7 +41,7 @@ export function colours (state = initialState.colours, action: AllActions): Colo
     state = Object.assign(
       {},
       ...additional.map(c => {
-        let colour = c.defaultColour || pickColour(chosenColours, colourPool);
+        const colour = c.defaultColour || pickColour(chosenColours, colourPool);
         colourPool.splice(colourPool.indexOf(colour), 1);
         return { [getCourseId(c)]: colour };
       }),
@@ -52,9 +52,9 @@ export function colours (state = initialState.colours, action: AllActions): Colo
   }
 
   return state;
-};
+}
 
-function pickColour (chosenColours: Colour[], colourPool: Colour[] = COURSE_COLOURS): Colour {
+function pickColour(chosenColours: Colour[], colourPool: Colour[] = COURSE_COLOURS): Colour {
   // Prefer to choose any colours which haven't been chosen yet
   let canChoose = colourPool.filter(c => !chosenColours.includes(c));
 

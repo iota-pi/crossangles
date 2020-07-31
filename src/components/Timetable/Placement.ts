@@ -10,19 +10,19 @@ import {
 export abstract class TimetablePlacement {
   private _session: LinkedSession;
 
-  constructor (session: LinkedSession) {
+  constructor(session: LinkedSession) {
     this._session = session;
   }
 
-  get session (): LinkedSession {
+  get session(): LinkedSession {
     return this._session;
   }
 
-  get id (): string {
+  get id(): string {
     return `${this._session.day}~${this._session.start}`;
   }
 
-  get duration (): number {
+  get duration(): number {
     return getDuration(this._session);
   }
 
@@ -59,10 +59,10 @@ export abstract class TimetablePlacement {
       cachedDeps = dependencies;
       cachedResult = { x, y, width, height };
       return cachedResult;
-    }
+    };
   })();
 
-  private baseDimensions (timetableDimensions: Dimensions, compact: boolean): Dimensions {
+  private baseDimensions(timetableDimensions: Dimensions, compact: boolean): Dimensions {
     const sessionWidth = this.calculateWidth(timetableDimensions.width);
     const sessionHeight = this.calculateHeight(compact);
     const width = sessionWidth - TIMETABLE_BORDER_WIDTH;
@@ -70,15 +70,15 @@ export abstract class TimetablePlacement {
     return { width, height };
   }
 
-  private get dayIndex (): number {
+  private get dayIndex(): number {
     return ['M', 'T', 'W', 'H', 'F'].indexOf(this._session.day);
   }
 
-  private calculateWidth (timetableWidth: number): number {
+  private calculateWidth(timetableWidth: number): number {
     return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
   }
 
-  private calculateHeight (compact: boolean): number {
+  private calculateHeight(compact: boolean): number {
     return this.duration * getCellHeight(compact);
   }
 }

@@ -30,12 +30,12 @@ export class SessionPlacement extends TimetablePlacement {
   private _touched: boolean = false;
   clashDepth: number = 0;
 
-  constructor (session: LinkedSession) {
+  constructor(session: LinkedSession) {
     super(session);
     this._offset = { x: 0, y: 0 };
   }
 
-  get data (): SessionPlacementData {
+  get data(): SessionPlacementData {
     return {
       offset: { ...this._offset },
       isSnapped: this._isSnapped,
@@ -44,10 +44,10 @@ export class SessionPlacement extends TimetablePlacement {
       touched: this._touched,
       clashDepth: this.clashDepth,
       session: unlinkSession(this.session),
-    }
+    };
   }
 
-  static from (data: SessionPlacementData, course: CourseData) {
+  static from(data: SessionPlacementData, course: CourseData) {
     // Get linked session
     const streamId = data.session.stream;
     const stream = course.streams.filter(s => getStreamId(course, s) === streamId)[0];
@@ -70,19 +70,19 @@ export class SessionPlacement extends TimetablePlacement {
     return placement;
   }
 
-  get isSnapped (): boolean {
+  get isSnapped(): boolean {
     return this._isSnapped && !this._isRaised;
   }
 
-  get isDragging (): boolean {
+  get isDragging(): boolean {
     return this._isDragging;
   }
 
-  get isRaised (): boolean {
+  get isRaised(): boolean {
     return this._isRaised;
   }
 
-  drag (): void {
+  drag(): void {
     // Add clashOffset to current offset
     this._offset.x += this.clashDepth * tt.CLASH_OFFSET_X;
     this._offset.y += this.clashDepth * tt.CLASH_OFFSET_Y;
@@ -91,12 +91,12 @@ export class SessionPlacement extends TimetablePlacement {
     this._isDragging = true;
   }
 
-  move (delta: Position): void {
+  move(delta: Position): void {
     this._offset.x += delta.x;
     this._offset.y += delta.y;
   }
 
-  drop (timetableDimensions: Dimensions, firstHour: number, compact: boolean): void {
+  drop(timetableDimensions: Dimensions, firstHour: number, compact: boolean): void {
     this._isDragging = false;
 
     // Update offset based on current (rendered) position and base position
@@ -107,23 +107,23 @@ export class SessionPlacement extends TimetablePlacement {
     this._offset.y = current.y - base.y;
   }
 
-  snap (): void {
+  snap(): void {
     this._offset = { x: 0, y: 0 };
     this._isSnapped = true;
     this._isRaised = false;
   }
 
-  raise (): void {
+  raise(): void {
     this._isRaised = true;
   }
 
-  lower (): void {
+  lower(): void {
     this._isRaised = false;
   }
 
   // Slightly displace this session
   // (e.g. if it was in a full stream and can't be anymore)
-  displace (): void {
+  displace(): void {
     let dx = Math.floor(Math.random() * tt.DISPLACE_VARIATION_X * 2) - tt.DISPLACE_VARIATION_X;
     let dy = Math.floor(Math.random() * tt.DISPLACE_VARIATION_Y * 2) - tt.DISPLACE_VARIATION_Y;
     dx = (dx < 0) ? dx - tt.DISPLACE_RADIUS_X : dx + tt.DISPLACE_RADIUS_X + 1;
@@ -132,7 +132,7 @@ export class SessionPlacement extends TimetablePlacement {
     this.displaceBy(dx, dy);
   }
 
-  private displaceBy (dx: number, dy: number): void {
+  private displaceBy(dx: number, dy: number): void {
     if (this._isSnapped) {
       this._isSnapped = false;
       this._offset.x += dx;
@@ -140,16 +140,16 @@ export class SessionPlacement extends TimetablePlacement {
     }
   }
 
-  shouldDisplace (includeFullClasses: boolean): boolean {
+  shouldDisplace(includeFullClasses: boolean): boolean {
     const isFull: boolean = !!this.session.stream.full;
     return isFull && !includeFullClasses && this.isSnapped;
   }
 
-  get touched (): boolean {
+  get touched(): boolean {
     return this._touched;
   }
 
-  touch (): void {
+  touch(): void {
     this._touched = true;
   }
 
@@ -177,9 +177,9 @@ export class SessionPlacement extends TimetablePlacement {
       const raised = SessionPosition.getRaisedOffset(this.isRaised);
       let x = base.x + clash.x + raised.x + this._offset.x;
       let y = base.y + clash.y + raised.y + this._offset.y;
-      let z = SessionPosition.getZ(this.isSnapped, this.isDragging, this.clashDepth);
+      const z = SessionPosition.getZ(this.isSnapped, this.isDragging, this.clashDepth);
 
-      const maxX = timetableDimensions.width  - base.width;
+      const maxX = timetableDimensions.width - base.width;
       const maxY = timetableDimensions.height - base.height;
 
       x = Math.min(Math.max(x, tt.TIMETABLE_BORDER_WIDTH), maxX);
@@ -188,7 +188,7 @@ export class SessionPlacement extends TimetablePlacement {
       cachedDeps = dependencies;
       cachedResult = { x, y, z };
       return cachedResult;
-    }
+    };
   })();
 }
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import { optionList, Options, OptionName } from '../state';
 
 // Styles
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import { optionList, Options, OptionName } from '../state';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -58,17 +58,15 @@ const GeneralOptions = React.memo(({
       {optionList.map(([optionName, label]) => (
         <div className={classes.optionContainer} key={optionName}>
           <FormControlLabel
-            control={
+            control={(
               <Switch
                 checked={options[optionName] || false}
                 onChange={() => onToggleOption(optionName)}
                 color={darkMode ? 'primary' : 'secondary'}
                 value={optionName}
-                classes={{
-                  track: classes.selectTrack,
-                }}
+                classes={{ track: classes.selectTrack }}
               />
-            }
+            )}
             className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
             label={label}
           />

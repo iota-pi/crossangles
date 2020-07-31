@@ -3,7 +3,7 @@ import { LinkedSession, linkStream, LinkedStream, getDuration } from '../../stat
 
 
 export class DropzoneManager {
-  getDropzones (dragging: LinkedSession, includeFull: boolean): DropzonePlacement[] {
+  getDropzones(dragging: LinkedSession, includeFull: boolean): DropzonePlacement[] {
     const { course, stream: { component }, index } = dragging;
     const allStreams = course.streams.map(s => linkStream(course, s));
     const filteredStreams = this.filterStreams(allStreams, component, index, includeFull);
@@ -14,7 +14,7 @@ export class DropzoneManager {
     return uniqueDropzones;
   }
 
-  filterStreams (
+  filterStreams(
     streams: LinkedStream[],
     component: string,
     index: number,
@@ -34,14 +34,14 @@ export class DropzoneManager {
     });
   }
 
-  streamsToDropzones (streams: LinkedStream[], index: number): DropzonePlacement[] {
+  streamsToDropzones(streams: LinkedStream[], index: number): DropzonePlacement[] {
     return streams.map(s => {
       const session = s.sessions[index];
       return new DropzonePlacement(session);
     });
   }
 
-  filterDropzones (dropzones: DropzonePlacement[], dragging: LinkedSession): DropzonePlacement[] {
+  filterDropzones(dropzones: DropzonePlacement[], dragging: LinkedSession): DropzonePlacement[] {
     const selected = new Map<string, DropzonePlacement>();
     const targetDuration = getDuration(dragging);
 

@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import ReactGA from 'react-ga';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import { CourseData, Meta } from '../state'
+import { CourseData, Meta } from '../state';
 import { CATEGORY } from '../analytics';
 
 export interface Props {
@@ -43,7 +43,7 @@ const InfoText = ({
       action,
       label: destination,
     });
-  }
+  };
 
   let ministryPromo: ReactNode = null;
   if (ministry) {
@@ -51,7 +51,7 @@ const InfoText = ({
 
     const textParts = ministryMeta.promoText.split('{link}');
     const items: ReactNode[] = [textParts.shift() || ''];
-    for (let [i, textPart] of textParts.entries()) {
+    for (const [i, textPart] of textParts.entries()) {
       const linkEl = link ? (
         <a
           key={`linkPart-${i}`}
@@ -60,7 +60,9 @@ const InfoText = ({
           rel="noopener noreferrer"
           className={classes.link}
           onClick={() => handleLinkClick('Ministry Link', ministryMeta.website)}
-        >{ministry.name}</a>
+        >
+          {ministry.name}
+        </a>
       ) : (
         <React.Fragment key={`linkPart-${i}`}>{ministry.name}</React.Fragment>
       );
@@ -76,7 +78,7 @@ const InfoText = ({
   }
 
   const sources = (
-    <React.Fragment>
+    <>
       {meta.sources.map((source, i) => (
         <React.Fragment key={source}>
           <a
@@ -92,7 +94,7 @@ const InfoText = ({
           {i < meta.sources.length - 1 && ' and '}
         </React.Fragment>
       ))}
-    </React.Fragment>
+    </>
   );
 
 
@@ -102,24 +104,33 @@ const InfoText = ({
 
       {disclaimer && (
         <Typography {...typographyProps} paragraph>
-          The data was last updated
-          at <span style={{ fontWeight: 400 }}>
+          The data was last updated at
+          {' '}
+          <span style={{ fontWeight: 400 }}>
             {meta.updateTime} ({meta.updateDate})
-          </span> from {sources} for <span style={{ fontWeight: 400}}>
+          </span>
+          {' '}
+          from {sources} for
+          {' '}
+          <span style={{ fontWeight: 400 }}>
             Term {meta.term}, {meta.year}
-          </span>.
+          </span>
+          .
           CrossAngles comes without any guarantee of data accuracy or of optimality.
           If you have any questions or suggestions,
-          please <span
+          please
+          {' '}
+          <span
             className={classes.link}
-            onClick={(event) => { event.preventDefault(); onShowContact() }}
+            onClick={event => { event.preventDefault(); onShowContact(); }}
           >
             contact us
-          </span>.
+          </span>
+          .
         </Typography>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default InfoText;

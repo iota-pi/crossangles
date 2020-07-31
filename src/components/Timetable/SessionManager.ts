@@ -1,7 +1,16 @@
 import { notUndefined } from '../../typeHelpers';
 import { SessionPlacement } from './SessionPlacement';
 import { Position, Dimensions } from './timetableTypes';
-import { CourseMap, CourseData, getCourseId, AdditionalEvent, getEventId, SessionId, LinkedSession, getComponentId } from '../../state';
+import {
+  CourseMap,
+  CourseData,
+  getCourseId,
+  AdditionalEvent,
+  getEventId,
+  SessionId,
+  LinkedSession,
+  getComponentId,
+} from '../../state';
 import { sessionClashLength, getClashInfo } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManagerData, SessionManagerEntriesData } from './SessionManagerTypes';
@@ -19,7 +28,7 @@ export class SessionManager {
   private _changing: number;
   callback: ((timetable: SessionManagerData) => void) | undefined;
 
-  constructor (base?: SessionManager) {
+  constructor(base?: SessionManager) {
     if (base) {
       this.map = new Map(base.map);
       this._order = base._order.slice();
@@ -37,7 +46,7 @@ export class SessionManager {
     }
   }
 
-  get data (): SessionManagerData {
+  get data(): SessionManagerData {
     const mapData: SessionManagerEntriesData = [];
     this.map.forEach((placement, sessionId) => {
       mapData.push([sessionId, placement.data]);
@@ -51,7 +60,7 @@ export class SessionManager {
     };
   }
 
-  static from (data: SessionManagerData, courses: CourseMap): SessionManager {
+  static from(data: SessionManagerData, courses: CourseMap): SessionManager {
     const mapData: [SessionId, SessionPlacement][] = [];
     for (const item of data.map.entries()) {
       const [sid, s] = item[1];
@@ -71,27 +80,27 @@ export class SessionManager {
     return sm;
   }
 
-  get version () {
+  get version() {
     return this._version;
   }
 
-  get score () {
+  get score() {
     return this._score;
   }
 
-  get order () {
+  get order() {
     return this._order;
   }
 
-  get renderOrder () {
+  get renderOrder() {
     return this._renderOrder;
   }
 
-  get renderOrderSessions (): LinkedSession[] {
+  get renderOrderSessions(): LinkedSession[] {
     return this._renderOrder.map(sid => this.getSession(sid));
   }
 
-  getTouchedSessions (allCourses: CourseData[], events: AdditionalEvent[]) {
+  getTouchedSessions(allCourses: CourseData[], events: AdditionalEvent[]) {
     const allCourseIds = allCourses.map(c => getCourseId(c));
     const touchedSessions = this.renderOrderSessions.filter(s => this.get(s.id).touched);
     const eventIds = events.map(e => e.id);
@@ -113,27 +122,27 @@ export class SessionManager {
     return fixedSessions;
   }
 
-  getOrder (sessionId: SessionId) {
+  getOrder(sessionId: SessionId) {
     return this._order.indexOf(sessionId);
   }
 
-  get (sessionId: SessionId): SessionPlacement {
+  get(sessionId: SessionId): SessionPlacement {
     return notUndefined(this.getMaybe(sessionId));
   }
 
-  getMaybe (sessionId: SessionId): SessionPlacement | undefined {
+  getMaybe(sessionId: SessionId): SessionPlacement | undefined {
     return this.map.get(sessionId);
   }
 
-  getSession (sessionId: SessionId): LinkedSession {
+  getSession(sessionId: SessionId): LinkedSession {
     return this.get(sessionId).session;
   }
 
-  has (sessionId: SessionId): boolean {
+  has(sessionId: SessionId): boolean {
     return this.map.has(sessionId);
   }
 
-  set (sessionId: SessionId, placement: SessionPlacement): void {
+  set(sessionId: SessionId, placement: SessionPlacement): void {
     this.map.set(sessionId, placement);
 
     if (!this._order.includes(sessionId)) {
@@ -146,7 +155,7 @@ export class SessionManager {
     this.next();
   }
 
-  remove (sessionId: SessionId): void {
+  remove(sessionId: SessionId): void {
     this.startChange();
     const index = this._order.indexOf(sessionId);
     if (index !== -1) {
@@ -166,16 +175,16 @@ export class SessionManager {
     this.stopChange();
   }
 
-  removeStream (sessionId: SessionId): void {
+  removeStream(sessionId: SessionId): void {
     this.startChange();
     const sessions = this.getSession(sessionId).stream.sessions;
-    for (let session of sessions) {
+    for (const session of sessions) {
       this.remove(session.id);
     }
     this.stopChange();
   }
 
-  replace (oldSessionId: SessionId, placement: SessionPlacement) {
+  replace(oldSessionId: SessionId, placement: SessionPlacement) {
     this.startChange();
     const index = this._order.indexOf(oldSessionId);
     this._order = [
@@ -194,7 +203,7 @@ export class SessionManager {
     this.stopChange();
   }
 
-  replaceStream (sessionId: SessionId, nextSessions: LinkedSession[], touchPlacements = true) {
+  replaceStream(sessionId: SessionId, nextSessions: LinkedSession[], touchPlacements = true) {
     this.startChange();
     const oldStream = this.get(sessionId).session.stream;
     for (const oldSession of oldStream.sessions) {
@@ -221,15 +230,15 @@ export class SessionManager {
     this.stopChange();
   }
 
-  drag (sessionId: SessionId, shouldCallback=false): void {
+  drag(sessionId: SessionId, shouldCallback = false): void {
     this.startChange();
 
     const session = this.get(sessionId);
     session.drag();
 
     const stream = session.session.stream;
-    for (let session of stream.sessions) {
-      let otherId = session.id;
+    for (const session of stream.sessions) {
+      const otherId = session.id;
       if (otherId !== sessionId) {
         this.raise(otherId);
       }
@@ -238,19 +247,19 @@ export class SessionManager {
     this.stopChange(shouldCallback);
   }
 
-  move (sessionId: SessionId, delta: Position, shouldCallback=false): void {
+  move(sessionId: SessionId, delta: Position, shouldCallback = false): void {
     const session = this.get(sessionId);
     session.move(delta);
     this.next(shouldCallback);
   }
 
-  drop (
+  drop(
     sessionId: SessionId,
     dropzone: DropzonePlacement | null,
     timetableDimensions: Dimensions,
     firstHour: number,
     compact: boolean,
-    shouldCallback=true,
+    shouldCallback = true,
   ): void {
     this.startChange();
 
@@ -260,7 +269,7 @@ export class SessionManager {
 
     // Lower all linked placements
     const stream = session.session.stream;
-    for (let linkedSession of stream.sessions) {
+    for (const linkedSession of stream.sessions) {
       const linkedId = linkedSession.id;
       if (linkedId !== sessionId) {
         this.lower(linkedId);
@@ -284,48 +293,48 @@ export class SessionManager {
     this.stopChange(shouldCallback);
   }
 
-  private raise (sessionId: SessionId): void {
+  private raise(sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.raise();
     this.next();
   }
 
-  private lower (sessionId: SessionId): void {
+  private lower(sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.lower();
     this.next();
   }
 
-  snapAll (): void {
+  snapAll(): void {
     this.startChange();
-    for (let placement of this.map.values()) {
+    for (const placement of this.map.values()) {
       placement.snap();
     }
     this.stopChange();
   }
 
-  snapStream (sessionId: SessionId): void {
+  snapStream(sessionId: SessionId): void {
     this.startChange();
     const stream = this.get(sessionId).session.stream;
-    for (let linkedSession of stream.sessions) {
+    for (const linkedSession of stream.sessions) {
       this.snap(linkedSession.id);
     }
     this.stopChange();
   }
 
-  snap (sessionId: SessionId): void {
+  snap(sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.snap();
     this.next();
   }
 
-  displace (sessionId: SessionId): void {
+  displace(sessionId: SessionId): void {
     const session = this.get(sessionId);
     session.displace();
     this.next();
   }
 
-  bumpSession (sessionId: SessionId): void {
+  bumpSession(sessionId: SessionId): void {
     const index = this._order.indexOf(sessionId);
     if (index > -1) {
       this._order = [
@@ -339,7 +348,7 @@ export class SessionManager {
     this.next();
   }
 
-  bumpStream (sessionId: SessionId): void {
+  bumpStream(sessionId: SessionId): void {
     this.startChange();
     const stream = this.get(sessionId).session.stream;
     for (const linkedSession of stream.sessions) {
@@ -348,17 +357,17 @@ export class SessionManager {
     this.stopChange();
   }
 
-  setClashDepth (sessionId: SessionId, depth: number): void {
+  setClashDepth(sessionId: SessionId, depth: number): void {
     const placement = this.get(sessionId);
     placement.clashDepth = depth;
     this.next();
   }
 
-  private updateScore () {
+  private updateScore() {
     this._score = getSessionManagerScore(this);
   }
 
-  private snapSessionTo (
+  private snapSessionTo(
     sessionId: SessionId,
     nextSessions: LinkedSession[],
   ): void {
@@ -379,11 +388,11 @@ export class SessionManager {
     this.stopChange();
   }
 
-  updateClashDepths () {
+  updateClashDepths() {
     this.startChange();
 
     for (let i = 0; i < this._order.length; ++i) {
-      let takenDepths = new Set<number>();
+      const takenDepths = new Set<number>();
       const sessionId1 = this._order[i];
       const placement1 = this.get(sessionId1);
 
@@ -412,7 +421,7 @@ export class SessionManager {
     this.stopChange();
   }
 
-  private findFreeDepth (takenDepths: Set<number>): number {
+  private findFreeDepth(takenDepths: Set<number>): number {
     for (let j = 0; j < takenDepths.size; ++j) {
       if (!takenDepths.has(j)) {
         return j;
@@ -422,14 +431,14 @@ export class SessionManager {
     return takenDepths.size;
   }
 
-  clear () {
+  clear() {
     this.map.clear();
     this._order = [];
     this._renderOrder = [];
     this.next();
   }
 
-  update (
+  update(
     newSessions: LinkedSession[],
     score: number,
   ) {
@@ -465,7 +474,7 @@ export class SessionManager {
     this.stopChange();
   }
 
-  private next (shouldCallback=false): void {
+  private next(shouldCallback = false): void {
     if (this._changing === 0) {
       this._version++;
       if (shouldCallback && this.callback) {
@@ -474,11 +483,11 @@ export class SessionManager {
     }
   }
 
-  private startChange (): void {
+  private startChange(): void {
     this._changing++;
   }
 
-  private stopChange (shouldCallback?: boolean): void {
+  private stopChange(shouldCallback?: boolean): void {
     this._changing--;
     this.next(shouldCallback);
   }

@@ -19,9 +19,7 @@ export const NoticeDisplay = ({
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       open={notice !== null}
       onClose={onSnackbarClose}
-      ContentProps={{
-        'aria-describedby': 'message-id',
-      }}
+      ContentProps={{ 'aria-describedby': 'message-id' }}
       autoHideDuration={timeout}
       message={(
         <div id="message-id">
@@ -32,7 +30,7 @@ export const NoticeDisplay = ({
       )}
       action={actions}
     />
-  )
-}
+  );
+};
 
 export default NoticeDisplay;
