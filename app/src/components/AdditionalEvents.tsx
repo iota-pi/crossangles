@@ -70,7 +70,7 @@ export const AdditionalEvents = React.memo(({
           key={event.id}
         >
           <FormControlLabel
-            control={
+            control={(
               <Checkbox
                 checked={eventIds.includes(event.id)}
                 onChange={() => onToggleEvent(event)}
@@ -78,7 +78,7 @@ export const AdditionalEvents = React.memo(({
                 value={event.id}
                 data-cy={`event-${event.id}`}
               />
-            }
+            )}
             className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
             label={event.name}
           />

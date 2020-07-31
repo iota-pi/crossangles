@@ -8,7 +8,7 @@ export interface HistoryAction extends Action {
   type: typeof UNDO | typeof REDO,
 }
 
-export function undoTimetable () {
+export function undoTimetable() {
   ReactGA.event({
     category: CATEGORY,
     action: 'History: Undo',
@@ -17,7 +17,7 @@ export function undoTimetable () {
   return { type: UNDO };
 }
 
-export function redoTimetable () {
+export function redoTimetable() {
   ReactGA.event({
     category: CATEGORY,
     action: 'History: Redo',

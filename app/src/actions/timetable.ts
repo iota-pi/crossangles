@@ -27,7 +27,7 @@ export interface UnplacedCountAction extends Action {
 }
 
 
-export function setTimetable (newTimetable: SessionManagerData, meta: YearAndTerm): SessionManagerAction {
+export function setTimetable(newTimetable: SessionManagerData, meta: YearAndTerm): SessionManagerAction {
   return {
     type: UPDATE_SESSION_MANAGER,
     sessionManager: newTimetable,
@@ -35,14 +35,14 @@ export function setTimetable (newTimetable: SessionManagerData, meta: YearAndTer
   };
 }
 
-export function setSuggestionScore (score: number | null): SuggestionAction {
+export function setSuggestionScore(score: number | null): SuggestionAction {
   return {
     type: UPDATE_SUGGESTED_TIMETABLE,
     score,
   };
 }
 
-export function setUnplacedCount (count: number): UnplacedCountAction {
+export function setUnplacedCount(count: number): UnplacedCountAction {
   return {
     type: UPDATE_UNPLACED_COUNT,
     count,

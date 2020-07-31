@@ -1,4 +1,6 @@
-import { pink, deepPurple, indigo, blue, teal, lightGreen, amber, deepOrange } from '@material-ui/core/colors';
+import {
+  pink, deepPurple, indigo, blue, teal, lightGreen, amber, deepOrange,
+} from '@material-ui/core/colors';
 import { SessionManagerData } from './components/Timetable/SessionManager';
 
 export const migrations = {
@@ -45,6 +47,6 @@ export const migrations = {
     for (const timetable of Object.values(timetables) as SessionManagerData[]) {
       timetable.renderOrder = timetable.order;
     }
-    return {...state};
-  }
-}
+    return { ...state };
+  },
+};

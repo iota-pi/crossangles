@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core';
-import theme from './theme';
-
 import loadable from '@loadable/component';
 import { RootState } from './state';
+import theme from './theme';
+
 const App = loadable(() => import('./App'));
 const StandaloneTimetable = loadable(() => import('./containers/StandaloneTimetable'));
 

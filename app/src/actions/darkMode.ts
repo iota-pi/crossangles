@@ -5,9 +5,7 @@ export interface SetDarkModeAction extends Action {
   type: typeof SET_DARK_MODE,
   darkMode?: boolean,
 }
-export const setDarkMode = (darkMode?: boolean): SetDarkModeAction => {
-  return {
-    type: SET_DARK_MODE,
-    darkMode,
-  };
-};
+export const setDarkMode = (darkMode?: boolean): SetDarkModeAction => ({
+  type: SET_DARK_MODE,
+  darkMode,
+});

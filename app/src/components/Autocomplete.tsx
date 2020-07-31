@@ -21,9 +21,7 @@ export interface Props {
 const SEARCH_DEBOUNCE = 100;
 const QUICK_SEARCH_DEBOUNCE = 10;
 
-const matchSorterOptions = {
-  keys: ['code', 'name'],
-};
+const matchSorterOptions = { keys: ['code', 'name'] };
 
 
 const useStyles = makeStyles(theme => ({
@@ -55,13 +53,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function noFilter<T> (x: T) { return x; }
+function noFilter<T>(x: T) { return x; }
 
 interface InputProps extends AutocompleteRenderInputParams {
   inputValue: string,
 }
 
-const AutocompleteInput: React.FC<InputProps> = (props) => {
+const AutocompleteInput: React.FC<InputProps> = props => {
   const classes = useStyles();
   const [focused, setFocused] = React.useState(true);
   const onFocus = React.useCallback(() => setFocused(true), []);
@@ -96,7 +94,7 @@ const AutocompleteInput: React.FC<InputProps> = (props) => {
         }}
       />
     </div>
-  )
+  );
 };
 
 
@@ -158,7 +156,7 @@ const AutocompleteControl = ({
       return () => {
         clearTimeout(quickSearch);
         clearTimeout(fullSearch);
-      }
+      };
     },
     [inputValue, allOptions],
   );
@@ -181,13 +179,13 @@ const AutocompleteControl = ({
   );
 
   const renderInput = React.useCallback(
-    (props: AutocompleteRenderInputParams) => <AutocompleteInput {...props} inputValue={inputValue}/>,
+    (props: AutocompleteRenderInputParams) => <AutocompleteInput {...props} inputValue={inputValue} />,
     [inputValue],
-  )
+  );
 
   const renderOption = React.useCallback(
     (option, { inputValue }) => {
-      const name = ` — ${option.name}`
+      const name = ` — ${option.name}`;
       const codeMatches = match(option.code, inputValue);
       const codeParts = parse(option.code, codeMatches);
       const nameMatches = match(name, inputValue);

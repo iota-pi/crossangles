@@ -13,7 +13,7 @@ export interface CourseAction extends Action {
   course: CourseData;
 }
 
-export function addCourse (course: CourseData): CourseAction {
+export function addCourse(course: CourseData): CourseAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Add Course',
@@ -26,7 +26,7 @@ export function addCourse (course: CourseData): CourseAction {
   };
 }
 
-export function removeCourse (course: CourseData): CourseAction {
+export function removeCourse(course: CourseData): CourseAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Remove Course',
@@ -40,7 +40,7 @@ export function removeCourse (course: CourseData): CourseAction {
 }
 
 // Web streams
-export function toggleWebStream (course: CourseData): CourseAction {
+export function toggleWebStream(course: CourseData): CourseAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Toggle Web Stream',
@@ -61,7 +61,7 @@ export interface EventAction extends Action {
   event: AdditionalEvent;
 }
 
-export function toggleEvent (event: AdditionalEvent): EventAction {
+export function toggleEvent(event: AdditionalEvent): EventAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Toggle Event',
@@ -81,7 +81,7 @@ export interface ToggleShowEventsAction extends Action {
   course: CourseId;
 }
 
-export function toggleShowEvents (courseId: CourseId): ToggleShowEventsAction {
+export function toggleShowEvents(courseId: CourseId): ToggleShowEventsAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Toggle Show Events',
@@ -102,7 +102,7 @@ export interface ToggleOptionAction extends Action {
   option: OptionName;
 }
 
-export function toggleOption (option: OptionName): ToggleOptionAction {
+export function toggleOption(option: OptionName): ToggleOptionAction {
   ReactGA.event({
     category: CATEGORY,
     action: 'Toggle Option',
@@ -111,6 +111,6 @@ export function toggleOption (option: OptionName): ToggleOptionAction {
 
   return {
     type: TOGGLE_OPTION,
-    option: option,
+    option,
   };
 }

@@ -43,9 +43,7 @@ export const ColourPicker: React.FC<Props> = ({ colours, columns, onChange, size
     >
       <div
         className={classes.colourContainer}
-        style={{
-          width: size * columns,
-        }}
+        style={{ width: size * columns }}
       >
         {colours.map(colour => {
           const isSelected = !!value && colour === value;
@@ -63,6 +61,6 @@ export const ColourPicker: React.FC<Props> = ({ colours, columns, onChange, size
       </div>
     </div>
   );
-}
+};
 
 export default ColourPicker;

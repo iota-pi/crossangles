@@ -16,7 +16,7 @@ export interface ClearNoticeAction extends Action {
 
 export type NoticeAction = SetNoticeAction | ClearNoticeAction;
 
-export function setNotice (
+export function setNotice(
   message: string,
   actions?: ReactNode[],
   timeout: number | null = DEFAULT_NOTICE_TIMEOUT,
@@ -29,8 +29,6 @@ export function setNotice (
   };
 }
 
-export function clearNotice (): NoticeAction {
-  return {
-    type: CLEAR_NOTICE,
-  };
+export function clearNotice(): NoticeAction {
+  return { type: CLEAR_NOTICE };
 }

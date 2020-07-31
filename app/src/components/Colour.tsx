@@ -31,7 +31,7 @@ export interface Props {
   onClick?: (event: MouseEvent<HTMLDivElement>) => void,
 }
 
-function ColourComponent ({ colour, size, isSelected, isCircle, onClick }: Props) {
+function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props) {
   const classes = useStyles();
   const darkMode = useSelector((state: RootState) => state.darkMode);
   const appliedClasses = [
@@ -52,7 +52,7 @@ function ColourComponent ({ colour, size, isSelected, isCircle, onClick }: Props
       onClick={onClick}
       data-cy="colour-selector"
     >
-      {isSelected ? <Check/> : null}
+      {isSelected ? <Check /> : null}
     </div>
   );
 }

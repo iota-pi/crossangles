@@ -50,6 +50,6 @@ export const CourseActionButton: React.FC<Props> = ({
       </IconButton>
     </ListItemIcon>
   );
-}
+};
 
 export default CourseActionButton;

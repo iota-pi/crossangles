@@ -25,14 +25,14 @@ export interface SaveAsImageRequest extends SaveAsImageData {
 }
 
 
-export const getScreenshotViewport = (timetable: SessionManagerData, compact: boolean): Viewport => {
+export function getScreenshotViewport(timetable: SessionManagerData, compact: boolean): Viewport {
   return {
     width: getScreenshotWidth(),
     height: getScreenshotHeight(timetable, compact),
   };
 }
 
-export const getScreenshotWidth = (): number => {
+export function getScreenshotWidth(): number {
   // Match width in screenshot to the width in the actual timetable
   const borderSpace = TIMETABLE_BORDER_WIDTH * 2;
   const timetable = document.getElementById('timetable-display');
@@ -40,7 +40,7 @@ export const getScreenshotWidth = (): number => {
   return width;
 }
 
-export const getScreenshotHeight = (timetable: SessionManagerData, compact: boolean): number => {
+export function getScreenshotHeight(timetable: SessionManagerData, compact: boolean): number {
   // Get height based off number of timetable rows
   const borderSpace = TIMETABLE_BORDER_WIDTH;
   const sessions = timetable.map.map(([_, s]) => s.session);
@@ -50,7 +50,7 @@ export const getScreenshotHeight = (timetable: SessionManagerData, compact: bool
   return height;
 }
 
-export const saveAsImage = async (imageData: SaveAsImageRequest) => {
+export async function saveAsImage (imageData: SaveAsImageRequest) {
   const url = `${process.env.REACT_APP_SAVE_IMAGE_ENDPOINT}/${process.env.REACT_APP_STAGE_NAME}/`;
 
   const { data } = await axios.post(url, imageData);
@@ -59,13 +59,12 @@ export const saveAsImage = async (imageData: SaveAsImageRequest) => {
     const image = `data:${mime};base64,${data.data}`;
     const filename = 'timetable.png';
     return download(image, filename, mime) === true;
-  } else {
-    console.error(data);
-    return false;
   }
+  console.error(data);
+  return false;
 }
 
-export const parseJSONQueryString = (queryString: string) => {
+export function parseJSONQueryString(queryString: string) {
   queryString = (queryString.startsWith('?')) ? queryString.substr(1) : queryString;
   const keyValuePairs = queryString.split('&');
   const results: { [key: string]: any } = {};
@@ -92,7 +91,7 @@ export const parseJSONQueryString = (queryString: string) => {
   return results;
 }
 
-export const parseQueryString = (queryString: string): SaveAsImageData => {
+export function parseQueryString(queryString: string): SaveAsImageData {
   const data = parseJSONQueryString(queryString);
   const {
     timetable = getEmptySessionManagerData(),
@@ -102,5 +101,7 @@ export const parseQueryString = (queryString: string): SaveAsImageData => {
     darkMode = false,
     compactView = false,
   } = data as Partial<SaveAsImageData>;
-  return { timetable, colours, options, twentyFourHours, darkMode, compactView };
+  return {
+    timetable, colours, options, twentyFourHours, darkMode, compactView,
+  };
 }

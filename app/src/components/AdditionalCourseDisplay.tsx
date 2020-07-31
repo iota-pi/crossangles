@@ -103,7 +103,7 @@ export const AdditionalCourseDisplay = React.memo(({
     [website],
   );
   const handleActionClick = React.useCallback(
-    () => course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course),
+    () => (course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course)),
     [course, onToggleShowEvents, onRemoveCourse],
   );
   const handleColourClick = React.useCallback(
@@ -112,11 +112,11 @@ export const AdditionalCourseDisplay = React.memo(({
   );
 
   return (
-    <React.Fragment>
+    <>
       <ListItem>
         <div className={classes.courseTitle}>
           {course.metadata ? (
-            <React.Fragment>
+            <>
               <a
                 href={website}
                 target="_blank"
@@ -136,7 +136,7 @@ export const AdditionalCourseDisplay = React.memo(({
               >
                 <OpenInNew className={classes.externalLinkIcon} fontSize="inherit" />
               </a>
-            </React.Fragment>
+            </>
           ) : (
             <span className={classes.clipText}>{course.name}</span>
           )}
@@ -174,8 +174,8 @@ export const AdditionalCourseDisplay = React.memo(({
           </ListItem>
         </Collapse>
       )}
-    </React.Fragment>
-  )
+    </>
+  );
 });
 
 export default AdditionalCourseDisplay;

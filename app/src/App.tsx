@@ -1,21 +1,9 @@
-import React, { Component, lazy, PureComponent, ReactNode, Suspense, ErrorInfo } from 'react';
+import React, {
+  Component, lazy, PureComponent, ReactNode, Suspense, ErrorInfo,
+} from 'react';
 import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
 import loadable from '@loadable/component';
-import {
-  RootState,
-  Meta,
-  Notice,
-  Options,
-  ColourMap,
-  CourseData,
-  getCurrentTimetable,
-  getShowSignup,
-  getAdditionalCourses,
-} from './state';
-import { fetchData, clearNotice, setNotice, setDarkMode } from './actions';
-import getCampus from './getCampus';
-import { initialiseGA, pageView, CATEGORY } from './analytics';
 
 // Theme
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -29,6 +17,20 @@ import { PersistGate } from 'redux-persist/integration/react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
+import { initialiseGA, pageView, CATEGORY } from './analytics';
+import getCampus from './getCampus';
+import { fetchData, clearNotice, setNotice, setDarkMode } from './actions';
+import {
+  RootState,
+  Meta,
+  Notice,
+  Options,
+  ColourMap,
+  CourseData,
+  getCurrentTimetable,
+  getShowSignup,
+  getAdditionalCourses,
+} from './state';
 import CourseSelection from './containers/CourseSelection';
 import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';
@@ -47,15 +49,9 @@ const styles = (theme: Theme) => createStyles({
     ...theme.mixins.toolbar,
     marginBottom: theme.spacing(4),
   },
-  spaceAbove: {
-    marginTop: theme.spacing(8),
-  },
-  moderateSpaceAbove: {
-    paddingTop: theme.spacing(4),
-  },
-  spaceBelow: {
-    marginBottom: theme.spacing(8),
-  },
+  spaceAbove: { marginTop: theme.spacing(8) },
+  moderateSpaceAbove: { paddingTop: theme.spacing(4) },
+  spaceBelow: { marginBottom: theme.spacing(8) },
 });
 
 export interface OwnProps extends WithStyles<typeof styles> {
@@ -93,14 +89,14 @@ class App extends PureComponent<Props, State> {
   state: State = {
     showContact: false,
     isSavingImage: false,
-  }
+  };
 
-  render () {
+  render() {
     const classes = this.props.classes;
 
     return (
       <div>
-        <CssBaseline/>
+        <CssBaseline />
 
         <AppBar
           darkMode={this.props.darkMode}
@@ -136,7 +132,7 @@ class App extends PureComponent<Props, State> {
             meta={this.props.meta}
             className={classes.spaceAbove}
             typographyProps={{
-              variant: "body2",
+              variant: 'body2',
               style: { fontWeight: 300 },
             }}
             onShowContact={this.handleContactShow}
@@ -159,12 +155,12 @@ class App extends PureComponent<Props, State> {
     );
   }
 
-  componentDidMount () {
+  componentDidMount() {
     initialiseGA();
     pageView();
   }
 
-  componentDidCatch (error: Error, info: ErrorInfo) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     const infoText = info.componentStack;
 
     ReactGA.exception({
@@ -207,16 +203,16 @@ class App extends PureComponent<Props, State> {
     }).finally(() => {
       this.setState({ isSavingImage: false });
     });
-  }
+  };
 
   private handleSnackbarClose = () => {
     this.props.clearNotice();
-  }
+  };
 
   private handleContactShow = () => {
     this.setState({ showContact: true });
     ReactGA.modalview('contact-us');
-  }
+  };
 
   private handleContactSend = async (name: string, email: string, message: string) => {
     const result = await submitContact({ name, email, message });
@@ -228,42 +224,38 @@ class App extends PureComponent<Props, State> {
     }
 
     this.setState({ showContact: false });
-  }
+  };
 
   private handleContactClose = () => {
     this.setState({ showContact: false });
-  }
-}
-
-const mapStateToProps = (state: RootState): StateProps => {
-  return {
-    showSignup: getShowSignup(state),
-    notice: state.notice,
-    additional: getAdditionalCourses(state),
-    meta: state.meta,
-    timetable: getCurrentTimetable(state),
-    colours: state.colours,
-    options: state.options,
-    darkMode: state.darkMode,
-    twentyFourHours: state.twentyFourHours,
-    compactView: state.compactView,
   };
 }
 
-const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => {
-  return {
-    setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
-    clearNotice: () => dispatch(clearNotice()),
-    setDarkMode: (darkMode?: boolean) => dispatch(setDarkMode(darkMode)),
-  }
-}
+const mapStateToProps = (state: RootState): StateProps => ({
+  showSignup: getShowSignup(state),
+  notice: state.notice,
+  additional: getAdditionalCourses(state),
+  meta: state.meta,
+  timetable: getCurrentTimetable(state),
+  colours: state.colours,
+  options: state.options,
+  darkMode: state.darkMode,
+  twentyFourHours: state.twentyFourHours,
+  compactView: state.compactView,
+});
+
+const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => ({
+  setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
+  clearNotice: () => dispatch(clearNotice()),
+  setDarkMode: (darkMode?: boolean) => dispatch(setDarkMode(darkMode)),
+});
 
 const connection = connect(mapStateToProps, mapDispatchToProps);
 const styledApp = withStyles(styles)(connection(App));
 
 export function wrapApp(AppComponent: typeof styledApp) {
   return class AppWrapper extends Component {
-    render () {
+    render() {
       return (
         <Provider store={store}>
           <PersistGate persistor={persistor} loading={null}>
@@ -272,7 +264,7 @@ export function wrapApp(AppComponent: typeof styledApp) {
         </Provider>
       );
     }
-  }
+  };
 }
 
 export default wrapApp(styledApp);

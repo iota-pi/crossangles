@@ -15,7 +15,7 @@ export const theme = (dark = false) => {
     palette = {
       primary: { main: indigo[600] },
       secondary: { main: lightBlue[600] },
-    }
+    };
   }
   return createMuiTheme({
     palette,
@@ -35,6 +35,6 @@ export const theme = (dark = false) => {
     },
     typography: {},
   });
-}
+};
 
 export default theme;

@@ -116,9 +116,7 @@ export const AppOptions = () => {
               checked={compactView}
               onChange={handleChangeCompact}
               color={darkMode ? 'primary' : 'secondary'}
-              classes={{
-                track: classes.selectTrack,
-              }}
+              classes={{ track: classes.selectTrack }}
             />
           </div>
 
@@ -134,9 +132,7 @@ export const AppOptions = () => {
               checked={reducedMotion}
               onChange={handleChangeAnimations}
               color={darkMode ? 'primary' : 'secondary'}
-              classes={{
-                track: classes.selectTrack,
-              }}
+              classes={{ track: classes.selectTrack }}
             />
           </div>
         </DialogContent>

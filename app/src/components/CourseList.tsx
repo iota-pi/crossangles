@@ -4,6 +4,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
+import { Collapse } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import CourseDisplay from './CourseDisplay';
 import AdditionalCourseDisplay from './AdditionalCourseDisplay';
 import ColourPicker from './ColourPicker';
@@ -18,8 +20,6 @@ import {
   AdditionalEvent,
   RootState,
 } from '../state';
-import { Collapse } from '@material-ui/core';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -148,6 +148,6 @@ const CourseList: React.FC<Props> = React.memo(props => {
       </Popover>
     </List>
   );
-})
+});
 
 export default CourseList;
