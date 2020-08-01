@@ -27,10 +27,8 @@ import {
   Options,
   ColourMap,
   CourseData,
-  getCurrentTimetable,
-  getShowSignup,
-  getAdditionalCourses,
 } from './state';
+import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
 import CourseSelection from './containers/CourseSelection';
 import InfoText from './components/InfoText';
 import { store, persistor } from './configureStore';

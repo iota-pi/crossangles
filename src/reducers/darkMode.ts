@@ -1,7 +1,7 @@
 import { AllActions, SET_DARK_MODE } from '../actions';
 import { initialState } from '../state';
 
-export const darkMode = (state = initialState.darkMode, action: AllActions): boolean => {
+export function darkMode(state = initialState.darkMode, action: AllActions): boolean {
   if (action.type === SET_DARK_MODE) {
     if (action.darkMode === true) {
       return action.darkMode;
@@ -10,4 +10,6 @@ export const darkMode = (state = initialState.darkMode, action: AllActions): boo
   }
 
   return state;
-};
+}
+
+export default darkMode;

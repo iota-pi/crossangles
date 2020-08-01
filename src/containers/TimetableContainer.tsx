@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
 
 // Components
-import TimetableControls from '../components/TimetableControls';
-import TimetableTable from '../components/Timetable';
+import { TimetableControls } from '../components/TimetableControls';
+import { TimetableTable } from '../components/Timetable';
 import CreateCustom from '../components/CreateCustom';
 
 // General
@@ -14,16 +14,18 @@ import {
   CourseData,
   CourseId,
   CourseMap,
-  getCurrentTimetable,
-  getChosenCourses,
-  getCustomCourses,
-  getAdditionalCourses,
   HistoryData,
   Meta,
   Options,
   RootState,
 } from '../state';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
+import {
+  getCurrentTimetable,
+  getChosenCourses,
+  getCustomCourses,
+  getAdditionalCourses,
+} from '../state/selectors';
+import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import {
   setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours, toggleOption,
@@ -63,48 +65,14 @@ export interface State {
   isUpdating: boolean,
 }
 
-class TimetableContainer extends PureComponent<Props> {
-  state: State = {
-    timetable: new SessionManager(),
-    showCreateCustom: false,
-    isUpdating: false,
-  };
-
-  render() {
-    const timetableIsEmpty = this.props.timetableData.order.length === 0;
-    return (
-      <div className={this.props.className}>
-        <TimetableControls
-          history={this.props.timetableHistory}
-          improvementScore={this.suggestionImprovementScore}
-          isUpdating={this.state.isUpdating}
-          timetableIsEmpty={timetableIsEmpty}
-          onUndo={this.handleUndo}
-          onRedo={this.handleRedo}
-          onUpdate={this.handleUpdate}
-          onIncludeFull={this.handleIncludeFull}
-          onCreateCustom={this.handleClickCreateCustom}
-        />
-
-        <CreateCustom
-          open={this.state.showCreateCustom}
-          onSave={this.addCustom}
-          onClose={this.handleCloseCreateCustom}
-        />
-
-        <TimetableTable
-          options={this.props.options}
-          colours={this.props.colours}
-          darkMode={this.props.darkMode}
-          timetable={this.state.timetable}
-          isUpdating={this.state.isUpdating}
-          twentyFourHours={this.props.twentyFourHours}
-          compactView={this.props.compactView}
-          disableTransitions={this.props.reducedMotion}
-          onToggleTwentyFourHours={this.handleToggleTwentyFourHours}
-        />
-      </div>
-    );
+class TimetableContainer extends PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      timetable: new SessionManager(),
+      showCreateCustom: false,
+      isUpdating: false,
+    };
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
@@ -130,10 +98,11 @@ class TimetableContainer extends PureComponent<Props> {
   }
 
   componentDidUpdate() {
-    if (!this.state.timetable.callback) {
-      const timetable = new SessionManager(this.state.timetable);
-      timetable.callback = data => this.handleTimetableCallback(data);
-      this.setState({ timetable });
+    const { timetable } = this.state;
+    if (!timetable.callback) {
+      const newTimetable = new SessionManager(timetable);
+      newTimetable.callback = data => this.handleTimetableCallback(data);
+      this.setState({ timetable: newTimetable });
     }
   }
 
@@ -202,7 +171,10 @@ class TimetableContainer extends PureComponent<Props> {
     await this.updateTimetable(sessionManager);
   };
 
-  private getSessionManager = () => SessionManager.from(this.props.timetableData, this.props.courses);
+  private getSessionManager = () => {
+    const { timetableData, courses } = this.props;
+    return SessionManager.from(timetableData, courses);
+  };
 
   private updateTimetable = async (sessionManager: SessionManager) => {
     const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
@@ -226,7 +198,7 @@ class TimetableContainer extends PureComponent<Props> {
     );
   };
 
-  private get suggestionImprovementScore() {
+  private getSuggestionImprovementScore() {
     const { suggestionScore } = this.props;
     if (suggestionScore !== null) {
       return suggestionScore - this.state.timetable.score;
@@ -238,6 +210,43 @@ class TimetableContainer extends PureComponent<Props> {
   private async handleTimetableCallback(timetable: SessionManagerData) {
     await this.props.dispatch(setTimetable(timetable, this.props.meta));
     this.recommendTimetable();
+  }
+
+  render() {
+    const timetableIsEmpty = this.props.timetableData.order.length === 0;
+    return (
+      <div className={this.props.className}>
+        <TimetableControls
+          history={this.props.timetableHistory}
+          improvementScore={this.getSuggestionImprovementScore()}
+          isUpdating={this.state.isUpdating}
+          timetableIsEmpty={timetableIsEmpty}
+          onUndo={this.handleUndo}
+          onRedo={this.handleRedo}
+          onUpdate={this.handleUpdate}
+          onIncludeFull={this.handleIncludeFull}
+          onCreateCustom={this.handleClickCreateCustom}
+        />
+
+        <CreateCustom
+          open={this.state.showCreateCustom}
+          onSave={this.addCustom}
+          onClose={this.handleCloseCreateCustom}
+        />
+
+        <TimetableTable
+          options={this.props.options}
+          colours={this.props.colours}
+          darkMode={this.props.darkMode}
+          timetable={this.state.timetable}
+          isUpdating={this.state.isUpdating}
+          twentyFourHours={this.props.twentyFourHours}
+          compactView={this.props.compactView}
+          disableTransitions={this.props.reducedMotion}
+          onToggleTwentyFourHours={this.handleToggleTwentyFourHours}
+        />
+      </div>
+    );
   }
 }
 

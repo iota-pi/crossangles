@@ -22,9 +22,9 @@ export function colours(state = initialState.colours, action: AllActions): Colou
   if (action.type === REMOVE_COURSE) {
     const courseId = getCourseId(action.course);
 
-    state = { ...state };
-    delete state[courseId];
-    return state;
+    const newState = { ...state };
+    delete newState[courseId];
+    return newState;
   }
 
   if (action.type === SET_COLOUR) {
@@ -38,7 +38,7 @@ export function colours(state = initialState.colours, action: AllActions): Colou
   if (action.type === SET_COURSE_DATA) {
     const additional = action.courses.filter(c => c.isAdditional && c.autoSelect);
     const colourPool = [...COURSE_COLOURS];
-    state = Object.assign(
+    const newState = Object.assign(
       {},
       ...additional.map(c => {
         const colour = c.defaultColour || pickColour(chosenColours, colourPool);
@@ -48,7 +48,7 @@ export function colours(state = initialState.colours, action: AllActions): Colou
       state,
     );
 
-    return state;
+    return newState;
   }
 
   return state;
@@ -67,3 +67,5 @@ function pickColour(chosenColours: Colour[], colourPool: Colour[] = COURSE_COLOU
   const colour = canChoose[i];
   return colour;
 }
+
+export default colours;

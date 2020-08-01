@@ -30,7 +30,7 @@ export interface CourseMap {
 }
 
 
-export const getCourseId = (course: CourseData, simple = false): CourseId => {
+export function getCourseId(course: CourseData, simple = false): CourseId {
   const extraSegments = [
     course.code,
     course.term,
@@ -38,9 +38,9 @@ export const getCourseId = (course: CourseData, simple = false): CourseId => {
     !simple && careerToString(course.career),
   ];
   return extraSegments.filter(x => !!x).join('~');
-};
+}
 
-export const careerToString = (career?: Career): string | undefined => {
+export function careerToString(career?: Career): string | undefined {
   if (career === Career.PGRD) {
     return 'PGRD';
   } else if (career === Career.RSCH) {
@@ -49,9 +49,9 @@ export const careerToString = (career?: Career): string | undefined => {
     return '';
   }
   return undefined;
-};
+}
 
-export const careerToName = (career?: Career): string | undefined => {
+export function careerToName(career?: Career): string | undefined {
   if (career === Career.PGRD) {
     return 'Postgrad';
   } else if (career === Career.RSCH) {
@@ -60,11 +60,9 @@ export const careerToName = (career?: Career): string | undefined => {
     return 'Undergrad';
   }
   return undefined;
-};
+}
 
-export const hasWebStream = (course: CourseData): boolean => getWebStream(course) !== null;
-
-export const getWebStream = (course: CourseData): StreamData | null => {
+export function getWebStream(course: CourseData): StreamData | null {
   const streams = course.streams;
   for (let i = 0; i < streams.length; ++i) {
     if (streams[i].web) {
@@ -73,19 +71,23 @@ export const getWebStream = (course: CourseData): StreamData | null => {
   }
 
   return null;
-};
+}
 
-export const getComponents = (course: CourseData): string[] => {
+export const hasWebStream = (course: CourseData): boolean => getWebStream(course) !== null;
+
+export function getComponents(course: CourseData): string[] {
   const components = course.streams.map(s => s.component);
   return components.filter((c, i) => components.indexOf(c) === i);
-};
+}
 
-export const getClarificationText = (course: CourseData): string => {
+export function getClarificationText(course: CourseData): string {
   const disciplineRegex = /\b[A-Z]{4}\b/g;
   const disciplines: string[] = [];
-  let match;
+  const maxMatches = 10;
   if (course.description) {
-    while ((match = disciplineRegex.exec(course.description)) !== null) {
+    for (let i = 0; i < maxMatches; ++i) {
+      const match = disciplineRegex.exec(course.description);
+      if (match === null) break;
       disciplines.push(match[0]);
     }
   }
@@ -94,7 +96,7 @@ export const getClarificationText = (course: CourseData): string => {
   const career = course.career !== Career.UGRD ? careerToName(course.career) : undefined;
   const parts = [discipline || course.section, course.term, career];
   return parts.filter(x => x).join('; ');
-};
+}
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 export const customSort = (a: CourseData, b: CourseData) => +(a.name > b.name) - +(a.name < b.name);

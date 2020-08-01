@@ -8,3 +8,5 @@ export function meta(state: Meta | undefined, action: AllActions): Meta {
 
   return state || initialState.meta;
 }
+
+export default meta;

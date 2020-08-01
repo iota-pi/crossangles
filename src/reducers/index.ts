@@ -12,19 +12,18 @@ import { compactView } from './compactView';
 import { reducedMotion } from './reducedMotion';
 import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions';
 import {
-  RootState,
-  HistoryData,
   getCurrentTerm,
-  getCurrentTimetable,
+  getTimetableState,
+  HistoryData,
   initialState,
-  TimetableHistoryState,
   push,
   redo,
+  RootState,
   undo,
 } from '../state';
+import { getCurrentTimetable } from '../state/selectors';
 import { SessionManagerData } from '../components/Timetable/SessionManagerTypes';
 
-type NoHistoryState = Omit<RootState, 'history'>;
 const basicReducer = combineReducers<RootState>({
   courses,
   custom,
@@ -47,32 +46,12 @@ const basicReducer = combineReducers<RootState>({
   history: state => state || initialState.history,
 });
 
-export const getTimetableState = (state: NoHistoryState): TimetableHistoryState => {
-  const {
-    courses,
-    custom,
-    additional,
-    chosen,
-    events,
-    options,
-    colours,
-    webStreams,
-  } = state;
-  const timetable = getCurrentTimetable(state);
-  return {
-    courses,
-    custom,
-    additional,
-    chosen,
-    events,
-    options,
-    timetable,
-    colours,
-    webStreams,
-  };
-};
 
-function getStateFromHistory(history: HistoryData, nextTimetable: SessionManagerData, nextState: RootState): RootState {
+function getStateFromHistory(
+  history: HistoryData,
+  nextTimetable: SessionManagerData,
+  nextState: RootState,
+): RootState {
   const { timetable, ...otherHistory } = history.present;
   timetable.version = nextTimetable.version + 1;
   return {
@@ -113,8 +92,8 @@ const historyReducer = (nextState: RootState, action: AllActions): RootState => 
 };
 
 const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
-  state = state || { ...initialState };
-  let nextState = basicReducer(state, action);
+  const baseState = state || { ...initialState };
+  let nextState = basicReducer(baseState, action);
   nextState = historyReducer(nextState, action);
 
   return nextState;

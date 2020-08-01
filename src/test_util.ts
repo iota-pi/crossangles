@@ -1,6 +1,6 @@
 import { CourseData, linkStream, LinkedStream, LinkedSession, Meta } from './state';
-import SessionPlacement from './components/Timetable/SessionPlacement';
-import SessionManager from './components/Timetable/SessionManager';
+import { SessionPlacement } from './components/Timetable/SessionPlacement';
+import { SessionManager } from './components/Timetable/SessionManager';
 import { Dimensions } from './components/Timetable/timetableTypes';
 
 export function getCourse(override?: Partial<CourseData>): CourseData {

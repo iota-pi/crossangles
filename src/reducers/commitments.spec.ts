@@ -12,6 +12,7 @@ import {
   TOGGLE_SHOW_EVENTS,
 } from '../actions';
 import { initialState } from '../state';
+/* eslint-disable @typescript-eslint/dot-notation */
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
 
@@ -171,7 +172,7 @@ describe('options reducer', () => {
     };
     const result = options(state, action);
     expect(result['includeFull']).toBe(true);
-  })
+  });
 
   it('allows toggling options on from false', () => {
     const state = Object.freeze({ includeFull: false });
@@ -181,7 +182,7 @@ describe('options reducer', () => {
     };
     const result = options(state, action);
     expect(result['includeFull']).toBe(true);
-  })
+  });
 
   it('allows toggling options off', () => {
     const state = Object.freeze({ includeFull: true });
@@ -191,8 +192,8 @@ describe('options reducer', () => {
     };
     const result = options(state, action);
     expect(result['includeFull']).toEqual(false);
-  })
-})
+  });
+});
 
 describe('hiddenEvents reducer', () => {
   it('initialises correctly', () => {

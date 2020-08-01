@@ -32,23 +32,30 @@ export function getSessionId(course: CourseData, stream: StreamData, session: Se
   return `${streamId}~${session.index}`;
 }
 
-export const getDuration = (session: SessionData | LinkedSession): number => session.end - session.start;
+export function getDuration(session: SessionData | LinkedSession): number {
+  return session.end - session.start;
+}
 
-export const linkSession = (course: CourseData, stream: LinkedStream, session: SessionData): LinkedSession => ({
-  ...session,
-  course,
-  stream,
-  id: getSessionId(course, stream, session),
-});
+export function linkSession(
+  course: CourseData, stream: LinkedStream, session: SessionData,
+): LinkedSession {
+  const id = getSessionId(course, stream, session);
+  return { ...session, course, stream, id };
+}
 
-export const unlinkSession = (session: LinkedSession): SessionData => ({
-  index: session.index,
-  start: session.start,
-  end: session.end,
-  day: session.day,
-  canClash: session.canClash,
-  location: session.location,
-  weeks: session.weeks,
-  course: getCourseId(session.course),
-  stream: getStreamId(session.course, session.stream),
-});
+export function unlinkSession(session: LinkedSession): SessionData {
+  const course = getCourseId(session.course);
+  const stream = getStreamId(session.course, session.stream);
+  const { index, day, start, end, canClash, location, weeks } = session;
+  return {
+    course,
+    stream,
+    index,
+    start,
+    end,
+    day,
+    canClash,
+    location,
+    weeks,
+  };
+}

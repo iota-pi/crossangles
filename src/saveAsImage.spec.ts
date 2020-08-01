@@ -1,6 +1,6 @@
 import { parseQueryString, parseJSONQueryString, SaveAsImageData, getScreenshotHeight } from './saveAsImage';
 import { getSessionManager } from './test_util';
-import { ColourMap, Options, initialState } from './state';
+import { ColourMap, Options } from './state';
 import { buildQueryString } from '../../image';
 import { getEmptySessionManagerData } from './components/Timetable/SessionManager';
 

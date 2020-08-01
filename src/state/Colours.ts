@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent, key-spacing */
 const COLOUR_MAP = {
   pink:       { light: '#c2185b', dark: '#d81b60' },
   deepPurple: { light: '#512da8', dark: '#5e35b1' },

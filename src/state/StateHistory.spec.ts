@@ -2,14 +2,19 @@ import { getTimetableState } from '../reducers';
 import { initialState, TimetableHistoryState } from '.';
 import { CourseMap } from './Course';
 import { undo, redo, push, HistoryData } from './StateHistory';
-import SessionManager from '../components/Timetable/SessionManager';
-import { getSessions } from './Stream';
+import { SessionManager } from '../components/Timetable/SessionManager';
+import { getSessions, ClassTime } from './Stream';
 
+/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doPushTest"] }] */
+
+const name = 'Introduction to Ring Theory';
+const enrols: [number, number] = [0, 0];
+const times: ClassTime[] = [];
 const courses: CourseMap = {
-  a: { code: 'a', name: '', streams: [{ component: 'e', enrols: [0, 0], times: [] }], isAdditional: true },
-  b: { code: 'b', name: '', streams: [{ component: 'f', enrols: [0, 0], times: [] }] },
-  c: { code: 'c', name: '', streams: [] },
-  d: { code: 'd', name: '', streams: [] },
+  a: { code: 'a', name, streams: [{ component: 'e', enrols, times }], isAdditional: true },
+  b: { code: 'b', name, streams: [{ component: 'f', enrols, times }] },
+  c: { code: 'c', name, streams: [] },
+  d: { code: 'd', name, streams: [] },
 };
 const timetableStates: TimetableHistoryState[] = [
   getTimetableState(initialState),
@@ -138,7 +143,9 @@ describe('test history utilities', () => {
   });
 
   test('push history changes when additional courses change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, additional: [...firstState.additional] };
+    const nextState: TimetableHistoryState = {
+      ...firstState, additional: [...firstState.additional],
+    };
     doPushTest(nextState);
   });
 
@@ -158,7 +165,9 @@ describe('test history utilities', () => {
   });
 
   test('push history changes when webStreams change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, webStreams: [...firstState.webStreams] };
+    const nextState: TimetableHistoryState = {
+      ...firstState, webStreams: [...firstState.webStreams],
+    };
     doPushTest(nextState);
   });
 
@@ -173,7 +182,9 @@ describe('test history utilities', () => {
   });
 
   test('push history doesn\'t change when map doesn\'t change', () => {
-    const nextState: TimetableHistoryState = { ...firstState, timetable: { ...firstState.timetable, map: [] } };
+    const nextState: TimetableHistoryState = {
+      ...firstState, timetable: { ...firstState.timetable, map: [] },
+    };
     const result = push(history, nextState);
     expect(result).toBe(history);
     expect(result).toEqual(history);

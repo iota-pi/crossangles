@@ -13,28 +13,26 @@ import { getCourse } from '../test_util';
 const code = 'TPBC1234';
 const name = 'Theory of Practical Blockchain';
 describe('course state util functions', () => {
-  it.each`
-    term         | section      | career         | expected
-    ${undefined} | ${undefined} | ${undefined}   | ${'TPBC1234'}
-    ${'T1A'}     | ${undefined} | ${undefined}   | ${'TPBC1234~T1A'}
-    ${undefined} | ${'CR01'}    | ${undefined}   | ${'TPBC1234~CR01'}
-    ${undefined} | ${undefined} | ${Career.PGRD} | ${'TPBC1234~PGRD'}
-    ${undefined} | ${undefined} | ${Career.UGRD} | ${'TPBC1234'}
-    ${'T1A'}     | ${'CR01'}    | ${Career.RSCH} | ${'TPBC1234~T1A~CR01~RSCH'}
-  `('gets correct course id', ({ term, section, career, expected }) => {
+  it.each([
+    [undefined, undefined, undefined, 'TPBC1234'],
+    ['T1A', undefined, undefined, 'TPBC1234~T1A'],
+    [undefined, 'CR01', undefined, 'TPBC1234~CR01'],
+    [undefined, undefined, Career.PGRD, 'TPBC1234~PGRD'],
+    [undefined, undefined, Career.UGRD, 'TPBC1234'],
+    ['T1A', 'CR01', Career.RSCH, 'TPBC1234~T1A~CR01~RSCH'],
+  ])('gets correct course id', (term, section, career, expected) => {
     const course: CourseData = { code, name, streams: [], term, section, career };
     const result = getCourseId(course);
     expect(result).toBe(expected);
   });
 
-  it.each`
-    term         | section      | career         | expected
-    ${undefined} | ${undefined} | ${undefined}   | ${'TPBC1234'}
-    ${'T1A'}     | ${undefined} | ${undefined}   | ${'TPBC1234~T1A'}
-    ${undefined} | ${'CR01'}    | ${undefined}   | ${'TPBC1234'}
-    ${undefined} | ${undefined} | ${Career.UGRD} | ${'TPBC1234'}
-    ${'T1A'}     | ${'CR01'}    | ${Career.PGRD} | ${'TPBC1234~T1A'}
-  `('gets correct simple course id', ({ term, section, career, expected }) => {
+  it.each([
+    [undefined, undefined, undefined, 'TPBC1234'],
+    ['T1A', undefined, undefined, 'TPBC1234~T1A'],
+    [undefined, 'CR01', undefined, 'TPBC1234'],
+    [undefined, undefined, Career.UGRD, 'TPBC1234'],
+    ['T1A', 'CR01', Career.PGRD, 'TPBC1234~T1A'],
+  ])('gets correct simple course id', (term, section, career, expected) => {
     const course: CourseData = { code, name, streams: [], term, section, career };
     const result = getCourseId(course, true);
     expect(result).toBe(expected);
@@ -118,18 +116,17 @@ describe('course state util functions', () => {
     expect(result).toEqual(['OTH', 'TUT', 'LEC']);
   });
 
-  it.each`
-    career         | section      | term         | description                      | expected
-    ${Career.UGRD} | ${undefined} | ${undefined} | ${undefined}                     | ${''}
-    ${Career.PGRD} | ${undefined} | ${undefined} | ${undefined}                     | ${'Postgrad'}
-    ${undefined}   | ${'CR02'}    | ${undefined} | ${undefined}                     | ${'CR02'}
-    ${undefined}   | ${undefined} | ${'T2A'}     | ${undefined}                     | ${'T2A'}
-    ${undefined}   | ${undefined} | ${undefined} | ${'MECH/AERO/MTRN programs'}     | ${'MECH, AERO, MTRN'}
-    ${Career.UGRD} | ${'CR01'}    | ${undefined} | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG'}
-    ${Career.PGRD} | ${'CR02'}    | ${'T2A'}     | ${'Something unrelated'}         | ${'CR02; T2A; Postgrad'}
-    ${Career.UGRD} | ${'CR02'}    | ${'T2A'}     | ${undefined}                     | ${'CR02; T2A'}
-    ${Career.RSCH} | ${'CR02'}    | ${'T2A'}     | ${'AVAIlable only to MECH/SENG'} | ${'MECH, SENG; T2A; Research'}
-  `('gets correct clarification text', ({ career, section, term, description, expected }) => {
+  it.each([
+    [Career.UGRD, undefined, undefined, undefined, ''],
+    [Career.PGRD, undefined, undefined, undefined, 'Postgrad'],
+    [undefined, 'CR02', undefined, undefined, 'CR02'],
+    [undefined, undefined, 'T2A', undefined, 'T2A'],
+    [undefined, undefined, undefined, 'MECH/AERO/MTRN programs', 'MECH, AERO, MTRN'],
+    [Career.UGRD, 'CR01', undefined, 'AVAIlable only to MECH/SENG', 'MECH, SENG'],
+    [Career.PGRD, 'CR02', 'T2A', 'Something unrelated', 'CR02; T2A; Postgrad'],
+    [Career.UGRD, 'CR02', 'T2A', undefined, 'CR02; T2A'],
+    [Career.RSCH, 'CR02', 'T2A', 'AVAIlable only to MECH/SENG', 'MECH, SENG; T2A; Research'],
+  ])('gets correct clarification text', (career, section, term, description, expected) => {
     const course: CourseData = {
       ...getCourse(),
       career,

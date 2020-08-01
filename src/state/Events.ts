@@ -6,7 +6,9 @@ export interface AdditionalEvent {
 }
 
 
-export const getEvents = (course: CourseData): AdditionalEvent[] => {
+export const getEventId = (course: CourseData, component: string) => `${getCourseId(course)}~${component}`;
+
+export function getEvents(course: CourseData): AdditionalEvent[] {
   if (!course.isAdditional) {
     return [];
   }
@@ -18,14 +20,12 @@ export const getEvents = (course: CourseData): AdditionalEvent[] => {
   const eventIds = events.map(e => e.id);
   const uniqueEvents = events.filter((e, i) => eventIds.indexOf(e.id) === i);
   return uniqueEvents;
-};
+}
 
-export const getEventId = (course: CourseData, component: string) => `${getCourseId(course)}~${component}`;
-
-export const getAutoSelectedEvents = (
+export function getAutoSelectedEvents(
   courseMap: CourseMap,
   additional: CourseId[],
-) => {
+) {
   const courseList = additional.map(id => courseMap[id]);
   const filtered = courseList.filter(c => c.autoSelect);
   const events = [];
@@ -33,4 +33,4 @@ export const getAutoSelectedEvents = (
     events.push(...getEvents(course));
   }
   return events;
-};
+}
