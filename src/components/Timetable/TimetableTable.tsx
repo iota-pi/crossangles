@@ -5,9 +5,9 @@ import ReactGA from 'react-ga';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fade from '@material-ui/core/Fade';
 import { TransitionGroup } from 'react-transition-group';
-import TimetableGrid from './TimetableGrid';
-import TimetableSession from './TimetableSession';
-import TimetableDropzone from './TimetableDropzone';
+import { TimetableGrid } from './TimetableGrid';
+import { TimetableSession } from './TimetableSession';
+import { TimetableDropzone } from './TimetableDropzone';
 import { SNAP_DIST, DROPZONE_Z } from './timetableUtil';
 import { Dimensions, Position } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
@@ -21,7 +21,7 @@ import {
   LinkedSession,
   linkStream,
 } from '../../state';
-import getHours from './getHours';
+import { getHours } from './getHours';
 import { CATEGORY } from '../../analytics';
 import { getDropzones } from './dropzones';
 
@@ -65,7 +65,11 @@ export interface State {
   dragging: LinkedSession | null,
 }
 
-export function getCourseColour(course: CourseData, colourMap: ColourMap, darkMode = false): string | undefined {
+export function getCourseColour(
+  course: CourseData,
+  colourMap: ColourMap,
+  darkMode = false,
+): string | undefined {
   const courseId = getCourseId(course);
   const colourName = colourMap[courseId];
   if (colourName) {
@@ -76,7 +80,7 @@ export function getCourseColour(course: CourseData, colourMap: ColourMap, darkMo
 
 
 function TimetableTable(props: Props) {
-  const timetable = props.timetable;
+  const { colours, darkMode, timetable } = props;
   const compact = props.compactView || false;
   const sessions = React.useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
@@ -119,8 +123,8 @@ function TimetableTable(props: Props) {
     [dimensions.width, version, updateDimensions],
   );
 
-  useEffect(forceUpdate, [timetable.version]);
-  useEffect(updateDimensions, [hours]);
+  useEffect(forceUpdate, [timetable.version, forceUpdate]);
+  useEffect(updateDimensions, [hours, updateDimensions]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
@@ -213,7 +217,7 @@ function TimetableTable(props: Props) {
     rootClasses.push(classes.faded);
   }
 
-  const draggingColour = dragging ? getCourseColour(dragging.course, props.colours, props.darkMode) : undefined;
+  const draggingColour = dragging ? getCourseColour(dragging.course, colours, darkMode) : undefined;
   const dropzoneStyles = React.useMemo<React.CSSProperties>(
     () => ({
       position: 'absolute',
@@ -246,7 +250,7 @@ function TimetableTable(props: Props) {
               <div style={{ zIndex: position.z }}>
                 <TimetableSession
                   session={session}
-                  colour={getCourseColour(session.course, props.colours, props.darkMode)}
+                  colour={getCourseColour(session.course, colours, darkMode)}
                   position={position}
                   dimensions={placement.basePlacement(dimensions, hours.start, compact)}
                   isDragging={placement.isDragging}

@@ -157,7 +157,11 @@ export class SessionPlacement extends TimetablePlacement {
     let cachedDeps: (Dimensions | number | boolean)[] = [];
     let cachedResult: Required<Position>;
 
-    return (timetableDimensions: Dimensions, startHour: number, compact: boolean): Required<Position> => {
+    return (
+      timetableDimensions: Dimensions,
+      startHour: number,
+      compact: boolean,
+    ): Required<Position> => {
       const base = this.basePlacement(timetableDimensions, startHour, compact);
       const dependencies = [
         timetableDimensions,

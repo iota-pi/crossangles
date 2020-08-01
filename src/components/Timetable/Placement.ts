@@ -82,3 +82,5 @@ export abstract class TimetablePlacement {
     return this.duration * getCellHeight(compact);
   }
 }
+
+export default TimetablePlacement;

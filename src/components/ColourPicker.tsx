@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 
     '&$selected': {
       border: '1px solid white',
-    }
+    },
   },
   selected: {},
 }));
@@ -33,7 +33,9 @@ export interface Props {
   onChange: (colour: Colour) => void,
 }
 
-export const ColourPicker: React.FC<Props> = ({ colours, columns, onChange, size, value }) => {
+export const ColourPicker: React.FC<Props> = (
+  { colours, columns, onChange, size, value }: Props,
+) => {
   const classes = useStyles();
 
   return (

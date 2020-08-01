@@ -1,7 +1,13 @@
-import SessionManager from './SessionManager';
-import SessionPlacement from './SessionPlacement';
-import { getSessionPlacement, getDimensions, getLinkedStream, getLinkedSession } from '../../test_util';
+import { SessionManager } from './SessionManager';
+import { SessionPlacement } from './SessionPlacement';
+import {
+  getSessionPlacement,
+  getDimensions,
+  getLinkedStream,
+  getLinkedSession,
+} from '../../test_util';
 import { LinkedStream, LinkedSession } from '../../state';
+/* eslint-disable @typescript-eslint/dot-notation */
 
 describe('SessionManager basic functionality', () => {
   test('get throws if not found', () => {
@@ -611,7 +617,12 @@ describe('update', () => {
       10,
     );
     expect(s.renderOrder).toEqual(
-      [p1.session.id, getLinkedSession(1, 0).id, getLinkedSession(1, 1).id, getLinkedSession(1, 2).id],
+      [
+        p1.session.id,
+        getLinkedSession(1, 0).id,
+        getLinkedSession(1, 1).id,
+        getLinkedSession(1, 2).id,
+      ],
     );
   });
 
@@ -626,7 +637,12 @@ describe('update', () => {
     s.set(p3.session.id, p3);
     s.set(p4.session.id, p4);
     s.update(
-      [getLinkedSession(0, 0), getLinkedSession(0, 1), getLinkedSession(0, 2), getLinkedSession(3, 0)],
+      [
+        getLinkedSession(0, 0),
+        getLinkedSession(0, 1),
+        getLinkedSession(0, 2),
+        getLinkedSession(3, 0),
+      ],
       10,
     );
     expect(s.renderOrder).toEqual([

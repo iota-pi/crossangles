@@ -8,12 +8,12 @@ import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import WebStream from './WebStream';
-import CourseActionButton from './CourseActionButton';
+import { CourseActionButton } from './CourseActionButton';
 import ColourControl from './Colour';
 import {
   Colour, CourseData, CourseId, getCourseId, getClarificationText, getWebStream, Meta,
 } from '../state';
-import getCampus from '../getCampus';
+import { getCampus } from '../getCampus';
 import { CATEGORY } from '../analytics';
 
 

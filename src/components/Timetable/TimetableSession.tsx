@@ -93,7 +93,7 @@ export interface Props {
 type Detail = { key: string, text: ReactNode };
 
 
-const TimetableSession: React.FC<Props> = React.memo(props => {
+const Session: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const rootClasses = [
     classes.main,
@@ -114,12 +114,12 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
 
   const details: Detail[] = React.useMemo(
     () => {
-      const details: Detail[] = [];
+      const detailList: Detail[] = [];
 
       if (options.showLocations) {
         const location = session.location;
         if (location) {
-          details.push({ key: 'location', text: location });
+          detailList.push({ key: 'location', text: location });
         }
       }
 
@@ -127,7 +127,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
         const enrols = stream.enrols;
         if (enrols[1] > 0) {
           const enrolsText = enrols.join('/');
-          details.push({ key: 'enrols', text: enrolsText });
+          detailList.push({ key: 'enrols', text: enrolsText });
         }
       }
 
@@ -135,18 +135,18 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
         const weeks = session.weeks;
         if (weeks) {
           const weeksText = `Weeks: ${weeks.replace(/-/g, '–').replace(/,\s*/g, ', ')}`;
-          details.push({ key: 'weeks', text: weeksText });
+          detailList.push({ key: 'weeks', text: weeksText });
         }
       }
 
       // Compress details onto two lines if duration is less than an hour
-      if (getDuration(session) <= 1 && details.length >= 3) {
-        const enrolsIndex = details.findIndex(d => d.key === 'enrols');
-        const enrols = details.splice(enrolsIndex, 1)[0].text;
-        details[1].text += ` (${enrols})`;
+      if (getDuration(session) <= 1 && detailList.length >= 3) {
+        const enrolsIndex = detailList.findIndex(d => d.key === 'enrols');
+        const enrols = detailList.splice(enrolsIndex, 1)[0].text;
+        detailList[1].text += ` (${enrols})`;
       }
 
-      return details;
+      return detailList;
     },
     [options, session, stream],
   );
@@ -173,7 +173,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
   );
 
   const handleStart = React.useCallback(
-    (e: DraggableEvent) => {
+    () => {
       if (onDrag) {
         onDrag(session);
       }
@@ -252,6 +252,7 @@ const TimetableSession: React.FC<Props> = React.memo(props => {
       </div>
     </DraggableCore>
   );
-});
+};
 
+export const TimetableSession = React.memo(Session);
 export default TimetableSession;

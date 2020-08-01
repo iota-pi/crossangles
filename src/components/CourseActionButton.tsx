@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { makeStyles } from '@material-ui/core';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import IconButton from '@material-ui/core/IconButton';
@@ -34,7 +34,7 @@ export const CourseActionButton: React.FC<Props> = ({
   children,
   flipped,
   onClick,
-}) => {
+}: PropsWithChildren<Props>) => {
   const classes = useStyles();
   return (
     <ListItemIcon

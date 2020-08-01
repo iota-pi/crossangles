@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     },
     '&$rounded': {
       borderRadius: '50%',
-    }
+    },
   },
   selected: {},
   rounded: {},

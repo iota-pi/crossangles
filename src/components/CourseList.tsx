@@ -6,9 +6,9 @@ import Divider from '@material-ui/core/Divider';
 import Popover from '@material-ui/core/Popover';
 import { Collapse } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import CourseDisplay from './CourseDisplay';
-import AdditionalCourseDisplay from './AdditionalCourseDisplay';
-import ColourPicker from './ColourPicker';
+import { CourseDisplay } from './CourseDisplay';
+import { AdditionalCourseDisplay } from './AdditionalCourseDisplay';
+import { ColourPicker } from './ColourPicker';
 import {
   COURSE_COLOURS,
   ColourMap,
@@ -49,8 +49,7 @@ export interface PopoverState {
   course: CourseData,
 }
 
-
-const CourseList: React.FC<Props> = React.memo(props => {
+const CourseListComponent: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const [showPopover, setShowPopover] = React.useState<PopoverState>();
   const reducedMotion = useSelector((state: RootState) => state.reducedMotion);
@@ -148,6 +147,6 @@ const CourseList: React.FC<Props> = React.memo(props => {
       </Popover>
     </List>
   );
-});
-
+};
+export const CourseList = React.memo(CourseListComponent);
 export default CourseList;
