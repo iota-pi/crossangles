@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from '@material-ui/core/styles/';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import TimetableTable from '../components/Timetable';
-import { CourseMap, getCourseId } from '../state';
-import SessionManager from '../components/Timetable/SessionManager';
-import requestData from '../requestData';
+import { TimetableTable } from '../components/Timetable';
+import { SessionManager } from '../components/Timetable/SessionManager';
 import { parseQueryString } from '../saveAsImage';
-import theme from '../theme';
+import { requestData } from '../requestData';
+import { CourseMap, getCourseId } from '../state';
+import { theme } from '../theme';
 
 
 export interface Props {

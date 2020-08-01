@@ -20,4 +20,20 @@ export * from './twentyFourHours';
 export * from './compactView';
 export * from './reducedMotion';
 
-export type AllActions = ColourAction | CourseListAction | HistoryAction | NoticeAction | CourseAction | EventAction | ToggleShowEventsAction | ToggleOptionAction | SessionManagerAction | SuggestionAction | UnplacedCountAction | SetDarkModeAction | SetTwentyFourHoursAction | SetCompactViewAction | SetReducedMotionAction;
+export type AllActions = (
+  ColourAction |
+  CourseListAction |
+  HistoryAction |
+  NoticeAction |
+  CourseAction |
+  EventAction |
+  ToggleShowEventsAction |
+  ToggleOptionAction |
+  SessionManagerAction |
+  SuggestionAction |
+  UnplacedCountAction |
+  SetDarkModeAction |
+  SetTwentyFourHoursAction |
+  SetCompactViewAction |
+  SetReducedMotionAction
+);

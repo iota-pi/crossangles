@@ -6,9 +6,10 @@ import {
   TIMETABLE_BORDER_WIDTH,
   getCellHeight,
 } from './timetableUtil';
-import SessionPlacement from './SessionPlacement';
+import { SessionPlacement } from './SessionPlacement';
 import { LinkedSession } from '../../state';
 import { Dimensions } from './timetableTypes';
+/* eslint-disable @typescript-eslint/dot-notation */
 
 const session: LinkedSession = {
   start: 10,
@@ -27,11 +28,9 @@ const dimensions: Dimensions = {
 
 
 describe('SessionPlacement', () => {
-  it.each`
-    compact
-    ${true}
-    ${false}
-  `('can initialise instance with expected base position', ({ compact }) => {
+  it.each([
+    true, false,
+  ])('can initialise instance with expected base position', compact => {
     const p = new SessionPlacement(session);
     expect(p.session).toBe(session);
 
@@ -60,7 +59,7 @@ describe('SessionPlacement', () => {
     expect(p.isDragging).toBe(true);
     expect(p.isRaised).toBe(false);
     expect(p['_offset']).toEqual(
-      { x: CLASH_OFFSET_X * 2, y: CLASH_OFFSET_Y * 2 }
+      { x: CLASH_OFFSET_X * 2, y: CLASH_OFFSET_Y * 2 },
     );
   });
 
@@ -86,7 +85,7 @@ describe('SessionPlacement', () => {
 
   test('snap', () => {
     const p = new SessionPlacement(session);
-    p['_offset'] = { x: 15, y: 0};
+    p['_offset'] = { x: 15, y: 0 };
     p['_isSnapped'] = false;
     p['_isRaised'] = true;
 
@@ -171,25 +170,25 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     p.drag();
     p.move({ x: -1000, y: -1000 });
-    const dimensions = { width: 500, height: 500 };
-    p.drop(dimensions, session.start, false);
-    const { x, y } = p.getPosition(dimensions, session.start, false);
+    const dims = { width: 500, height: 500 };
+    p.drop(dims, session.start, false);
+    const { x, y } = p.getPosition(dims, session.start, false);
     expect({ x, y }).toEqual({ x: TIMETABLE_BORDER_WIDTH, y: TIMETABLE_BORDER_WIDTH });
   });
 
   test('offset can\'t be too large after drag', () => {
     const p = new SessionPlacement(session);
-    const dimensions = { width: 500, height: 500 };
-    const cellWidth = (dimensions.width - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
+    const dims = { width: 500, height: 500 };
+    const cellWidth = (dims.width - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
 
     p.drag();
     p.move({ x: 1000, y: 1000 });
-    p.drop(dimensions, session.start, false);
+    p.drop(dims, session.start, false);
 
-    const { x, y } = p.getPosition(dimensions, session.start, false);
+    const { x, y } = p.getPosition(dims, session.start, false);
     expect({ x, y }).toEqual({
-      x: dimensions.width - cellWidth + TIMETABLE_BORDER_WIDTH,
-      y: dimensions.height - getCellHeight(false) + TIMETABLE_BORDER_WIDTH,
+      x: dims.width - cellWidth + TIMETABLE_BORDER_WIDTH,
+      y: dims.height - getCellHeight(false) + TIMETABLE_BORDER_WIDTH,
     });
   });
 });

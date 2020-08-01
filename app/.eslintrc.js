@@ -32,8 +32,8 @@ module.exports = {
     'no-else-return': ['error', { allowElseIf: true }],
     'no-multiple-empty-lines': ['error', { 'max': 2, 'maxEOF': 1 }],
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
+    'no-underscore-dangle': 'off',
     'no-use-before-define': 'off',
-    'object-curly-newline': 'off',
     'no-restricted-syntax': [
       'error',
       // Taken from eslint-airbnb-config and removed rule forbidding `for ... of` loops
@@ -50,6 +50,9 @@ module.exports = {
         message: '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
       },
     ],
+    'object-curly-newline': 'off',
     'prefer-destructuring': 'off',
+    'react/destructuring-assignment': 'off',
+    'react/jsx-indent': ['error', 2, {checkAttributes: true, indentLogicalExpressions: true}],
   },
 };

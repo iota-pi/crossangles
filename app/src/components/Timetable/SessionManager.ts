@@ -237,8 +237,8 @@ export class SessionManager {
     session.drag();
 
     const stream = session.session.stream;
-    for (const session of stream.sessions) {
-      const otherId = session.id;
+    for (const otherSession of stream.sessions) {
+      const otherId = otherSession.id;
       if (otherId !== sessionId) {
         this.raise(otherId);
       }
@@ -476,7 +476,7 @@ export class SessionManager {
 
   private next(shouldCallback = false): void {
     if (this._changing === 0) {
-      this._version++;
+      this._version += 1;
       if (shouldCallback && this.callback) {
         this.callback(this.data);
       }
@@ -484,11 +484,11 @@ export class SessionManager {
   }
 
   private startChange(): void {
-    this._changing++;
+    this._changing += 1;
   }
 
   private stopChange(shouldCallback?: boolean): void {
-    this._changing--;
+    this._changing -= 1;
     this.next(shouldCallback);
   }
 }

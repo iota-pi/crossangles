@@ -98,11 +98,13 @@ class TimetableContainer extends PureComponent<Props, State> {
   }
 
   componentDidUpdate() {
-    const { timetable } = this.state;
-    if (!timetable.callback) {
-      const newTimetable = new SessionManager(timetable);
-      newTimetable.callback = data => this.handleTimetableCallback(data);
-      this.setState({ timetable: newTimetable });
+    if (!this.state.timetable.callback) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState(({ timetable }) => {
+        const newTimetable = new SessionManager(timetable);
+        newTimetable.callback = data => this.handleTimetableCallback(data);
+        return { timetable: newTimetable };
+      });
     }
   }
 
@@ -198,14 +200,14 @@ class TimetableContainer extends PureComponent<Props, State> {
     );
   };
 
-  private getSuggestionImprovementScore() {
+  private getSuggestionImprovementScore = () => {
     const { suggestionScore } = this.props;
     if (suggestionScore !== null) {
       return suggestionScore - this.state.timetable.score;
     }
 
     return 0;
-  }
+  };
 
   private async handleTimetableCallback(timetable: SessionManagerData) {
     await this.props.dispatch(setTimetable(timetable, this.props.meta));

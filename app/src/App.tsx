@@ -1,7 +1,7 @@
 import React, {
-  Component, lazy, PureComponent, ReactNode, Suspense, ErrorInfo,
+  lazy, PureComponent, ReactNode, Suspense, ErrorInfo,
 } from 'react';
-import { connect, Provider, MapDispatchToPropsNonObject } from 'react-redux';
+import { connect, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
 import loadable from '@loadable/component';
 
@@ -13,13 +13,12 @@ import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 
 // Components
-import { PersistGate } from 'redux-persist/integration/react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
-import getCampus from './getCampus';
-import { fetchData, clearNotice, setNotice, setDarkMode } from './actions';
+import { getCampus } from './getCampus';
+import { clearNotice, setNotice, setDarkMode } from './actions';
 import {
   RootState,
   Meta,
@@ -31,7 +30,6 @@ import {
 import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
 import CourseSelection from './containers/CourseSelection';
 import InfoText from './components/InfoText';
-import { store, persistor } from './configureStore';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
@@ -81,13 +79,14 @@ export interface State {
   isSavingImage: boolean,
 }
 
-store.dispatch(fetchData());
-
 class App extends PureComponent<Props, State> {
-  state: State = {
-    showContact: false,
-    isSavingImage: false,
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      showContact: false,
+      isSavingImage: false,
+    };
+  }
 
   render() {
     const classes = this.props.classes;
@@ -250,19 +249,4 @@ const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> =
 
 const connection = connect(mapStateToProps, mapDispatchToProps);
 const styledApp = withStyles(styles)(connection(App));
-
-export function wrapApp(AppComponent: typeof styledApp) {
-  return class AppWrapper extends Component {
-    render() {
-      return (
-        <Provider store={store}>
-          <PersistGate persistor={persistor} loading={null}>
-            <AppComponent {...this.props} />
-          </PersistGate>
-        </Provider>
-      );
-    }
-  };
-}
-
-export default wrapApp(styledApp);
+export default styledApp;

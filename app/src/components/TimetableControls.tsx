@@ -148,7 +148,11 @@ export const TimetableControls = ({
 
       {unplacedCount > 0 && (
         <Tooltip title={`${unplacedCount} full classes are not visible`}>
-          <div className={classes.unplacedCountContainer} onClick={onIncludeFull}>
+          <div
+            className={classes.unplacedCountContainer}
+            onClick={onIncludeFull}
+            role="button"
+          >
             <span className={classes.unplacedCount}>{unplacedCount}</span>
             <Warning />
           </div>

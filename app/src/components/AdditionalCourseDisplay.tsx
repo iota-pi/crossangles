@@ -7,7 +7,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Expand from '@material-ui/icons/ExpandMore';
 import Close from '@material-ui/icons/Close';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-import AdditionalEvents from './AdditionalEvents';
+import { AdditionalEvents } from './AdditionalEvents';
 import ColourControl from './Colour';
 import {
   getCourseId,
@@ -18,7 +18,7 @@ import {
   Colour,
 } from '../state';
 import { CATEGORY } from '../analytics';
-import CourseActionButton from './CourseActionButton';
+import { CourseActionButton } from './CourseActionButton';
 import { BaseCourseDisplayProps } from './CourseDisplay';
 
 export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const AdditionalCourseDisplay = React.memo(({
+const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> = ({
   course,
   events,
   colour,
@@ -176,6 +176,7 @@ export const AdditionalCourseDisplay = React.memo(({
       )}
     </>
   );
-});
+};
 
+export const AdditionalCourseDisplay = React.memo(AdditionalCourseDisplayComponent);
 export default AdditionalCourseDisplay;

@@ -10,13 +10,11 @@ import { makeStyles } from '@material-ui/core';
 import { AppOptions } from './AppOptions';
 import { AboutCrossAngles } from './AboutCrossAngles';
 
-const useStyles = makeStyles(() => {
-  return createStyles({
-    grow: {
-      flexGrow: 1,
-    },
-  });
-});
+const useStyles = makeStyles(() => createStyles({
+  grow: {
+    flexGrow: 1,
+  },
+}));
 
 export interface Props {
   darkMode: boolean,

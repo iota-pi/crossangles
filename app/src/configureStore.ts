@@ -16,5 +16,8 @@ const persistConfig: PersistConfig = {
   migrate: createMigrate(migrations),
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
-export const store = createStore(persistedReducer, applyMiddleware(thunk as ThunkMiddleware<RootState, AllActions>));
+export const store = createStore(
+  persistedReducer,
+  applyMiddleware(thunk as ThunkMiddleware<RootState, AllActions>),
+);
 export const persistor = persistStore(store);

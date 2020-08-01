@@ -151,3 +151,4 @@ export const AppOptions = () => {
     </div>
   );
 };
+export default AppOptions;

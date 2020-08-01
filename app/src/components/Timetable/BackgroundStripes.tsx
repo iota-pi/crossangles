@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../state';
 import { getCellHeight } from './timetableUtil';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(_ => ({
   backgroundStripes: {
     position: 'absolute',
     left: 0,
@@ -14,14 +14,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+export interface Props {
+  opacity?: number,
+}
 
-const BackgroundStripes: React.FC<{opacity?: number}> = React.memo(({ opacity = 0.03 }) => {
+const Stripes: React.FC<Props> = ({ opacity = 0.03 }: Props) => {
   const classes = useStyles();
   const compact = useSelector((state: RootState) => state.compactView);
 
   const backgroundStripesStyle = React.useMemo(
     () => {
-      const stepSize = getCellHeight(compact) * Math.SQRT2 / 4;
+      const stepSize = (getCellHeight(compact) * Math.SQRT2) / 4;
       return {
         background: `repeating-linear-gradient(
           45deg,
@@ -41,6 +44,7 @@ const BackgroundStripes: React.FC<{opacity?: number}> = React.memo(({ opacity = 
       style={backgroundStripesStyle}
     />
   );
-});
+};
+const BackgroundStripes = React.memo(Stripes);
 
 export default BackgroundStripes;

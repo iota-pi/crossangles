@@ -69,6 +69,7 @@ export interface State {
   options: CustomTimeOption[],
 }
 
+/* eslint-disable no-multi-spaces */
 const durationOptions = [
   { text: '½ an hour', duration: 0.5 },
   { text: '1 hour',    duration: 1 },
@@ -127,6 +128,7 @@ const timeOptions = [
   { text: '07:30 PM', time: 19.5 },
   { text: '08:00 PM', time: 20 },
 ];
+/* eslint-enable no-multi-spaces */
 
 
 class CreateCustom extends PureComponent<Props, State> {

@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core';
 import loadable from '@loadable/component';
 import { RootState } from './state';
-import theme from './theme';
+import { theme } from './theme';
 
-const App = loadable(() => import('./App'));
+const App = loadable(() => import('./AppWrapper'));
 const StandaloneTimetable = loadable(() => import('./containers/StandaloneTimetable'));
 
 export const AppContainer = () => {
@@ -27,3 +27,4 @@ export const AppContainer = () => {
     </ThemeProvider>
   );
 };
+export default AppContainer;
