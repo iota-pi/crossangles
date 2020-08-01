@@ -14,17 +14,19 @@ import {
   CourseData,
   CourseId,
   getCourseId,
-  getAdditionalCourses,
-  getChosenCourses,
-  getCourseList,
-  getCustomCourses,
-  getCurrentTimetable,
   Meta,
   Options,
   OptionName,
   RootState,
   hasWebStream,
 } from '../state';
+import {
+  getAdditionalCourses,
+  getChosenCourses,
+  getCourseList,
+  getCustomCourses,
+  getCurrentTimetable,
+} from '../state/selectors';
 import {
   addCourse,
   removeCourse,

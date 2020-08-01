@@ -11,11 +11,11 @@ describe('webStreams reducer', () => {
   });
 
   it('doesn\'t change on no-op actions', () => {
-    const initialState: CourseId[] = [];
-    const state = [...initialState];
+    const initial: CourseId[] = [];
+    const state = [...initial];
     const result = webStreams(state, otherAction);
     expect(result).toBe(state);
-    expect(state).toEqual(initialState);
+    expect(state).toEqual(initial);
   });
 
   it('can toggle on', () => {
@@ -31,7 +31,7 @@ describe('webStreams reducer', () => {
     expect(result).toEqual(['a']);
   });
 
-  it('can toggle on', () => {
+  it('can toggle off', () => {
     const state = ['a'];
     const action: CourseAction = {
       type: TOGGLE_WEB_STREAM,

@@ -33,9 +33,9 @@ export function courses(
   }
 
   if (action.type === REMOVE_COURSE && action.course.isCustom) {
-    state = { ...state };
-    delete state[getCourseId(action.course)];
-    return state;
+    const newState = { ...state };
+    delete newState[getCourseId(action.course)];
+    return newState;
   }
 
   return state;

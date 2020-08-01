@@ -1,4 +1,4 @@
-import TimetableScorerCache from '../TimetableScorerCache';
+import { TimetableScorerCache } from './TimetableScorerCache';
 
 describe('coursesToComponents', () => {
   it('can store a single value', () => {

@@ -21,7 +21,7 @@ export class TimetableScorerCache<T> {
   }
 
   set(key: number[], value: T): void {
-    this._set(key, value);
+    this.setInternal(key, value);
   }
 
   has(key: number[]) {
@@ -29,10 +29,10 @@ export class TimetableScorerCache<T> {
   }
 
   delete(key: number[]): void {
-    this._set(key, undefined);
+    this.setInternal(key, undefined);
   }
 
-  private _set(key: number[], value: T | undefined): void {
+  private setInternal(key: number[], value: T | undefined): void {
     let current = this.cache;
     for (let i = 0; i < key.length - 1; ++i) {
       const next = current[key[i]];

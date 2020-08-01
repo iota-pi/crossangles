@@ -50,3 +50,5 @@ export const migrations = {
     return { ...state };
   },
 };
+
+export default migrations;

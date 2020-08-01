@@ -6,25 +6,25 @@ export interface HistoryData {
   future: TimetableHistoryState[],
 }
 
-export const undo = (history: HistoryData): HistoryData => {
+export function undo(history: HistoryData): HistoryData {
   const { past, present, future } = history;
   return {
     past: [...past.slice(0, past.length - 1)],
     present: past[past.length - 1],
     future: [present, ...future],
   };
-};
+}
 
-export const redo = (history: HistoryData): HistoryData => {
+export function redo(history: HistoryData): HistoryData {
   const { past, present, future } = history;
   return {
     past: [...past, present],
     present: future[0],
     future: future.slice(1),
   };
-};
+}
 
-export const push = (history: HistoryData, next: TimetableHistoryState): HistoryData => {
+export function push(history: HistoryData, next: TimetableHistoryState): HistoryData {
   const { past, present } = history;
 
   if (noStateChange(present, next)) {
@@ -36,9 +36,9 @@ export const push = (history: HistoryData, next: TimetableHistoryState): History
     present: next,
     future: [],
   };
-};
+}
 
-const noStateChange = (current: TimetableHistoryState, next: TimetableHistoryState) => {
+function noStateChange(current: TimetableHistoryState, next: TimetableHistoryState) {
   if (current.custom !== next.custom) {
     return false;
   }
@@ -70,4 +70,4 @@ const noStateChange = (current: TimetableHistoryState, next: TimetableHistorySta
   }
 
   return true;
-};
+}

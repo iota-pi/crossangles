@@ -41,12 +41,12 @@ export function coursesToComponents(
   return components;
 }
 
-const groupStreamsByComponent = (
+function groupStreamsByComponent(
   course: CourseData,
   events: AdditionalEvent[],
   webStreams: CourseId[],
   allowFull: boolean,
-) => {
+) {
   const streamGroups = new Map<string, LinkedStream[]>();
   const eventIds = events.map(e => e.id);
 
@@ -78,31 +78,31 @@ const groupStreamsByComponent = (
   }
 
   return streamGroups;
-};
+}
 
-const filterOutWebStreams = (
+function filterOutWebStreams(
   course: CourseData,
   streamGroups: Map<string, LinkedStream[]>,
   webStreams: CourseId[],
-) => {
+) {
   // Remove all components which have a web stream option if this course has web streams enabled
 
   if (webStreams.includes(getCourseId(course))) {
     const streamGroupsEntries = Array.from(streamGroups.entries());
 
     for (const [component, streams] of streamGroupsEntries) {
-      // Remove component if web stream has been requested for this course AND this component has a web stream
+      // Remove component if web stream has been requested AND this component has a web stream
       if (streams.some(s => s.web)) {
         streamGroups.delete(component);
       }
     }
   }
-};
+}
 
-const isolateFixedStreams = (
+function isolateFixedStreams(
   streamGroups: Map<string, LinkedStream[]>,
   fixedSessions: LinkedSession[],
-) => {
+) {
   const streamGroupsEntries = Array.from(streamGroups.entries());
   const fixedStreamIds = new Set(fixedSessions.map(s => s.stream.id));
 
@@ -114,14 +114,14 @@ const isolateFixedStreams = (
       }
     }
   }
-};
+}
 
-const addComponentsTo = (
+function addComponentsTo(
   components: Component[],
   course: CourseData,
   streamGroups: Map<string, LinkedStream[]>,
   webStreams: CourseId[],
-) => {
+) {
   const streamGroupsEntries = Array.from(streamGroups.entries());
 
   for (const [component, streams] of streamGroupsEntries) {
@@ -140,6 +140,6 @@ const addComponentsTo = (
       components.push({ name: component, streams, course, streamSessions, id });
     }
   }
-};
+}
 
 export default coursesToComponents;

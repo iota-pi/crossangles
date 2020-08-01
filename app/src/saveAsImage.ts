@@ -3,7 +3,7 @@ import download from 'downloadjs';
 import { ColourMap, Options } from './state';
 import { SessionManagerData, getEmptySessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { getCellHeight, TIMETABLE_BORDER_WIDTH } from './components/Timetable/timetableUtil';
-import getHours from './components/Timetable/getHours';
+import { getHours } from './components/Timetable/getHours';
 
 export interface SaveAsImageData {
   timetable: SessionManagerData,
@@ -43,14 +43,14 @@ export function getScreenshotWidth(): number {
 export function getScreenshotHeight(timetable: SessionManagerData, compact: boolean): number {
   // Get height based off number of timetable rows
   const borderSpace = TIMETABLE_BORDER_WIDTH;
-  const sessions = timetable.map.map(([_, s]) => s.session);
+  const sessions = timetable.map.map(s => s[1].session);
   const hours = getHours(sessions);
   const duration = hours.end - hours.start;
   const height = getCellHeight(true) + duration * getCellHeight(compact) + borderSpace;
   return height;
 }
 
-export async function saveAsImage (imageData: SaveAsImageRequest) {
+export async function saveAsImage(imageData: SaveAsImageRequest) {
   const url = `${process.env.REACT_APP_SAVE_IMAGE_ENDPOINT}/${process.env.REACT_APP_STAGE_NAME}/`;
 
   const { data } = await axios.post(url, imageData);
@@ -65,8 +65,8 @@ export async function saveAsImage (imageData: SaveAsImageRequest) {
 }
 
 export function parseJSONQueryString(queryString: string) {
-  queryString = (queryString.startsWith('?')) ? queryString.substr(1) : queryString;
-  const keyValuePairs = queryString.split('&');
+  const query = queryString.startsWith('?') ? queryString.substr(1) : queryString;
+  const keyValuePairs = query.split('&');
   const results: { [key: string]: any } = {};
   for (const pair of keyValuePairs) {
     const parts = pair.split('=', 2);

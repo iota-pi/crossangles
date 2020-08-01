@@ -23,18 +23,17 @@ module.exports = {
   rules: {
     '@typescript-eslint/lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
     '@typescript-eslint/no-use-before-define': ['error', { 'functions': false }],
+    '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_$' }],
     'arrow-parens': ['error', 'as-needed'],
     'class-methods-use-this': 'off',
+    'import/no-cycle': 'off',
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-continue': 'off',
+    'no-else-return': ['error', { allowElseIf: true }],
     'no-multiple-empty-lines': ['error', { 'max': 2, 'maxEOF': 1 }],
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
     'no-use-before-define': 'off',
-    'object-curly-newline': ['error', {
-      'ObjectExpression': { multiline: true, minProperties: 6 },
-      'ObjectPattern': { multiline: true, minProperties: 8 },
-      'ImportDeclaration': { multiline: true, minProperties: 6 },
-    }],
+    'object-curly-newline': 'off',
     'no-restricted-syntax': [
       'error',
       // Taken from eslint-airbnb-config and removed rule forbidding `for ... of` loops

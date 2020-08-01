@@ -7,6 +7,7 @@
  *
  * Please note that `mutate` and `scoreFunction` are hot code
  */
+/* eslint-disable no-param-reassign */
 
 export interface GeneticSearchOptionalConfig {
   timeout?: number, // max execution time in milliseconds
@@ -82,7 +83,7 @@ export class GeneticSearch<T> {
     const parents: Parent<T>[] = [];
     for (let i = 0; i < this.config.initialParents; ++i) {
       const indexes = data.map(x => Math.floor(Math.random() * x.length));
-      const values = indexes.map((n, i) => data[i][n]);
+      const values = indexes.map((index, j) => data[j][index]);
       const score = this.config.scoreFunction(values, indexes);
       parents.push({ indexes, values, score });
     }
@@ -130,8 +131,9 @@ export class GeneticSearch<T> {
     let i = -1;
     let attempts = 0;
     while (i < 0 || data[i].length <= 1) {
-      i = Math.floor(Math.random() * data.length);
-      if (++attempts > max_attempts) break;
+      i = this.randInt(data.length);
+      attempts += 1;
+      if (attempts > max_attempts) break;
     }
     return i;
   }
@@ -140,10 +142,15 @@ export class GeneticSearch<T> {
     let n = previous;
     let attempts = 0;
     while (n === previous) {
-      n = Math.floor(Math.random() * max);
-      if (++attempts > max_attempts) break;
+      n = this.randInt(max);
+      attempts += 1;
+      if (attempts > max_attempts) break;
     }
     return n;
+  }
+
+  private randInt(max: number): number {
+    return Math.floor(Math.random() * max);
   }
 
   private parentSort(a: Parent<T>, b: Parent<T>) {

@@ -18,15 +18,15 @@ describe('notice reducer', () => {
   });
 
   it('doesn\'t change on no-op actions', () => {
-    const initialState: Notice = { message: 'hello', actions: null };
-    const state = { ...initialState };
+    const initial: Notice = { message: 'hello', actions: null, timeout: null };
+    const state = { ...initial };
     const result = notice(state, otherAction);
     expect(result).toBe(state);
-    expect(state).toEqual(initialState);
+    expect(state).toEqual(initial);
   });
 
   it('can be set when null', () => {
-    const testNotice: Notice = { message: 'hello', actions: null };
+    const testNotice: Notice = { message: 'hello', actions: null, timeout: null };
     const action: SetNoticeAction = {
       type: SET_NOTICE,
       ...testNotice,
@@ -36,19 +36,19 @@ describe('notice reducer', () => {
   });
 
   it('can be overwritten when not null', () => {
-    const testNotice: Notice = { message: 'hello', actions: null };
-    const testNotice2: Notice = { message: 'there', actions: [] };
+    const testNotice: Notice = { message: 'hello', actions: null, timeout: null };
+    const testNotice2: Notice = { message: 'there', actions: [], timeout: null };
     const action: SetNoticeAction = {
       type: SET_NOTICE,
       ...testNotice2,
     };
     const state = notice(testNotice, action);
-    expect(testNotice).toEqual({ message: 'hello', actions: null });
+    expect(testNotice).toEqual({ message: 'hello', actions: null, timeout: null });
     expect(state).toEqual(testNotice2);
   });
 
   it('can clear notice', () => {
-    const testNotice: Notice = { message: 'hello', actions: null };
+    const testNotice: Notice = { message: 'hello', actions: null, timeout: null };
     const action: ClearNoticeAction = { type: CLEAR_NOTICE };
     const state = notice(testNotice, action);
     expect(state).toBeNull();

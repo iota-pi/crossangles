@@ -13,7 +13,9 @@ const getAdditional = (state: RootState) => state.additional;
 const getEvents = (state: RootState) => state.events;
 
 
-export const getCurrentTimetable = ({ timetables, meta }: Pick<RootState, 'timetables' | 'meta'>) => {
+export const getCurrentTimetable = (
+  { timetables, meta }: Pick<RootState, 'timetables' | 'meta'>,
+) => {
   const term = getCurrentTerm(meta);
   const timetable = timetables[term];
   if (timetable) {
@@ -42,13 +44,15 @@ export const getAdditionalCourses = createSelector(
   (courses, additional) => additional.map(c => courses[c]).sort(courseSort),
 );
 
-export const _getShowSignup = (courses: CourseMap, additional: CourseId[], events: AdditionalEvent[]) => {
+export function getShowSignupCombiner(
+  courses: CourseMap, additional: CourseId[], events: AdditionalEvent[],
+) {
   const allEvents = getAutoSelectedEvents(courses, additional);
   const eventNames = events.map(e => e.id);
   return allEvents.some(e => eventNames.includes(e.id));
-};
+}
 
 export const getShowSignup = createSelector(
   [getCourses, getAdditional, getEvents],
-  _getShowSignup,
+  getShowSignupCombiner,
 );

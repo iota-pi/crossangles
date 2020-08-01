@@ -78,7 +78,9 @@ describe('colours reducer', () => {
   });
 
   it('picks a colour even when none are free', () => {
-    const currentState = COURSE_COLOURS.reduce((all, c, i) => ({ ...all, [i.toString()]: c }), {} as ColourMap);
+    const currentState = COURSE_COLOURS.reduce(
+      (all, c, i) => ({ ...all, [i.toString()]: c }), {} as ColourMap,
+    );
     const course = 'TEST0000';
     const action: ColourAction = {
       type: SET_COLOUR,
@@ -142,7 +144,9 @@ describe('colours reducer', () => {
   });
 
   it('allows manually selecting duplicate values', () => {
-    const currentState = COURSE_COLOURS.reduce((all, c, i) => ({ ...all, [i.toString()]: c }), {} as ColourMap);
+    const currentState = COURSE_COLOURS.reduce(
+      (all, c, i) => ({ ...all, [i.toString()]: c }), {} as ColourMap,
+    );
     const course = 'TEST0000';
     const colour = COURSE_COLOURS[0];
     const action: ColourAction = {

@@ -15,7 +15,6 @@ export * from './Events';
 export * from './Meta';
 export * from './Notice';
 export * from './Options';
-export * from './selectors';
 export * from './Session';
 export * from './StateHistory';
 export * from './Stream';

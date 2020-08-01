@@ -1,6 +1,6 @@
 import axios from 'axios';
 import config from './campusConfig';
-import getCampus from './getCampus';
+import { getCampus } from './getCampus';
 import { CourseData, Meta } from './state';
 
 

@@ -15,3 +15,5 @@ export async function submitContact({ name, email, message }: {
 
   return response;
 }
+
+export default submitContact;

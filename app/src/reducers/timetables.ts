@@ -9,7 +9,7 @@ export function timetables(
   if (action.type === UPDATE_SESSION_MANAGER) {
     const term = action.term;
     if (state[term] !== action.sessionManager) {
-      state = { ...state, [term]: action.sessionManager };
+      return { ...state, [term]: action.sessionManager };
     }
     return state;
   }
