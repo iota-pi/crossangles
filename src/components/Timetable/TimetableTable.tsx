@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import ReactGA from 'react-ga';
 
@@ -78,6 +78,18 @@ export function getCourseColour(
   return undefined;
 }
 
+export function getDimensions(
+  timetableRef: React.RefObject<HTMLDivElement>,
+): Dimensions | undefined {
+  const el = timetableRef.current;
+  if (el) {
+    return {
+      width: el.scrollWidth,
+      height: el.scrollHeight,
+    };
+  }
+}
+
 
 function TimetableTable(props: Props) {
   const { colours, darkMode, timetable } = props;
@@ -100,12 +112,9 @@ function TimetableTable(props: Props) {
   const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 });
   const updateDimensions = React.useCallback(
     () => {
-      const el = timetableRef.current;
-      if (el) {
-        setDimensions({
-          width: el.scrollWidth,
-          height: el.scrollHeight,
-        });
+      const newDimensions = getDimensions(timetableRef);
+      if (newDimensions) {
+        setDimensions(newDimensions);
       }
     },
     [timetableRef],
@@ -123,8 +132,8 @@ function TimetableTable(props: Props) {
     [dimensions.width, version, updateDimensions],
   );
 
-  useEffect(forceUpdate, [timetable.version, forceUpdate]);
-  useEffect(updateDimensions, [hours, updateDimensions]);
+  useEffect(forceUpdate, [timetable.version]);
+  useEffect(updateDimensions, [hours]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
