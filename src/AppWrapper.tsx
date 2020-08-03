@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './configureStore';
@@ -8,17 +8,14 @@ import App from './App';
 store.dispatch(fetchData());
 
 export function wrapApp(AppComponent: typeof App) {
-  return class AppWrapper extends Component {
-    render() {
-      return (
-        <Provider store={store}>
-          <PersistGate persistor={persistor} loading={null}>
-            <AppComponent {...this.props} />
-          </PersistGate>
-        </Provider>
-      );
-    }
-  };
+  const AppWraper = () => (
+    <Provider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
+        <AppComponent />
+      </PersistGate>
+    </Provider>
+  );
+  return AppWraper;
 }
 
 export default wrapApp(App);

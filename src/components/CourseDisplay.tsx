@@ -121,12 +121,6 @@ export const CourseDisplay = ({
     </>
   );
   const webStream = getWebStream(course);
-  const linkProps = {
-    href: handbookLink,
-    target: '_blank',
-    rel: 'noopener noreferrer',
-    onClick: () => handleLinkClick(handbookLink),
-  };
 
   const handleLinkClick = (destination?: string) => {
     ReactGA.event({
@@ -134,6 +128,12 @@ export const CourseDisplay = ({
       action: 'Handbook Link',
       label: destination,
     });
+  };
+  const linkProps = {
+    href: handbookLink,
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    onClick: () => handleLinkClick(handbookLink),
   };
 
   return (

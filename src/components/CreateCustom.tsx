@@ -15,12 +15,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import CloseIcon from '@material-ui/icons/Close';
 import TimelapseIcon from '@material-ui/icons/Timelapse';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import AccessTime from '@material-ui/icons/AccessTime';
-import { CourseData, DayLetter, ClassTime, getSessions, StreamData } from '../state';
+import { CourseData, DayLetter, ClassTime, getSessions, StreamData, getDuration } from '../state';
+import { CustomTimeOption, TimeOption } from './TimeOption';
 
 const styles = (theme: Theme) => createStyles({
   dialog: {},
@@ -41,18 +39,13 @@ const styles = (theme: Theme) => createStyles({
   paddingBottom: {
     paddingBottom: theme.spacing(2),
   },
-  clearButton: {
-    marginRight: theme.spacing(3),
-    cursor: 'pointer',
-  },
 });
 
-export interface CustomTimeOption {
-  day: DayLetter | null,
-  start: number | null,
-}
-
-export const getBlankOption = (): CustomTimeOption => ({ day: null, start: null });
+export const getBlankOption = (): CustomTimeOption => ({
+  day: null,
+  start: null,
+  key: Math.random().toString(),
+});
 
 export interface Props extends WithStyles<typeof styles> {
   open: boolean,
@@ -92,52 +85,188 @@ const durationOptions = [
   { text: '9½ hours',  duration: 9.5 },
   { text: '10 hours',  duration: 10 },
 ];
-
-const dayOptions = [
-  { text: 'Monday',    letter: 'M' },
-  { text: 'Tuesday',   letter: 'T' },
-  { text: 'Wednesday', letter: 'W' },
-  { text: 'Thursday',  letter: 'H' },
-  { text: 'Friday',    letter: 'F' },
-];
-
-const timeOptions = [
-  { text: '08:00 AM', time: 8 },
-  { text: '08:30 AM', time: 8.5 },
-  { text: '09:00 AM', time: 9 },
-  { text: '09:30 AM', time: 9.5 },
-  { text: '10:00 AM', time: 10 },
-  { text: '10:30 AM', time: 10.5 },
-  { text: '11:00 AM', time: 11 },
-  { text: '11:30 AM', time: 11.5 },
-  { text: '12:00 PM', time: 12 },
-  { text: '12:30 PM', time: 12.5 },
-  { text: '01:00 PM', time: 13 },
-  { text: '01:30 PM', time: 13.5 },
-  { text: '02:00 PM', time: 14 },
-  { text: '02:30 PM', time: 14.5 },
-  { text: '03:00 PM', time: 15 },
-  { text: '03:30 PM', time: 15.5 },
-  { text: '04:00 PM', time: 16 },
-  { text: '04:30 PM', time: 16.5 },
-  { text: '05:00 PM', time: 17 },
-  { text: '05:30 PM', time: 17.5 },
-  { text: '06:00 PM', time: 18 },
-  { text: '06:30 PM', time: 18.5 },
-  { text: '07:00 PM', time: 19 },
-  { text: '07:30 PM', time: 19.5 },
-  { text: '08:00 PM', time: 20 },
-];
 /* eslint-enable no-multi-spaces */
 
 
 class CreateCustom extends PureComponent<Props, State> {
-  state: State = {
-    placeholderName: '',
-    name: '',
-    duration: 1,
-    options: [getBlankOption()],
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      placeholderName: '',
+      name: '',
+      duration: 1,
+      options: [getBlankOption()],
+    };
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const editing = this.props.editing;
+    if (editing && editing !== prevProps.editing) {
+      this.loadCourse(editing);
+    }
+
+    if (this.props.open && !prevProps.open) {
+      ReactGA.modalview('create-custom');
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ placeholderName: this.pickPlaceholderName() });
+    }
+  }
+
+  private loadCourse = (course: CourseData) => {
+    const name = course.name;
+    const streams = course.streams;
+    const session = getSessions(course, streams[0])[0];
+    const duration = getDuration(session);
+    const options: CustomTimeOption[] = streams.map(stream => {
+      const { day, start } = getSessions(course, stream)[0];
+      return { day, start, key: Math.random().toString() };
+    });
+    options.push(getBlankOption());
+
+    this.setState({
+      name,
+      duration,
+      options,
+    });
   };
+
+  handleClickSave = () => {
+    const name = this.state.name;
+    const duration = this.state.duration || 1;
+    const cleanOptions = this.state.options.filter(o => o.day && o.start);
+    const times = cleanOptions.map(({ day, start }): ClassTime => {
+      const end = start! + duration;
+      const durationString = duration !== 1 ? `-${end}` : '';
+      return {
+        time: `${day}${start}${durationString}`,
+      };
+    });
+    const streams = times.map((time): StreamData => ({
+      component: name,
+      enrols: [0, 0],
+      full: false,
+      times: [time],
+    }));
+    const courseData: Omit<CourseData, 'code'> = { name, streams };
+
+    this.props.onSave(courseData);
+    this.handleClose();
+  };
+
+  handleClose = () => {
+    this.props.onClose();
+  };
+
+  handleExited = () => {
+    this.setState({
+      name: '',
+      duration: 1,
+      options: [getBlankOption()],
+    });
+
+    if (this.props.onExited) {
+      this.props.onExited();
+    }
+  };
+
+  handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
+    this.setState({ name: event.target.value as string });
+  };
+
+  handleChangeDuration = (event: ChangeEvent<{ value: unknown }>) => {
+    this.setState({ duration: event.target.value as number });
+  };
+
+  handleChangeDay = (event: ChangeEvent<{value: unknown}>, optionIndex: number) => {
+    const options = this.state.options.slice();
+    const day = event.target.value as DayLetter;
+    options[optionIndex] = { ...options[optionIndex], day };
+    this.updatedOptions(options, optionIndex);
+  };
+
+  handleChangeTime = (event: ChangeEvent<{value: unknown}>, optionIndex: number) => {
+    const options = this.state.options.slice();
+    const start = event.target.value as number;
+    options[optionIndex] = { ...options[optionIndex], start };
+    this.updatedOptions(options, optionIndex);
+  };
+
+  handleClickClearDay = (optionIndex: number) => {
+    const options = this.state.options.slice();
+    options[optionIndex] = { ...options[optionIndex], day: null };
+    this.updatedOptions(options, optionIndex);
+  };
+
+  handleClickClearTime = (optionIndex: number) => {
+    const options = this.state.options.slice();
+    options[optionIndex] = { ...options[optionIndex], start: null };
+    this.updatedOptions(options, optionIndex);
+  };
+
+  private updatedOptions = (_options: CustomTimeOption[], lastModifiedIndex: number) => {
+    const options = _options.slice();
+    const option = options[lastModifiedIndex];
+    if (option.day || option.start) {
+      if (this.hasFullOptionLast(options)) {
+        options.push(getBlankOption());
+      }
+    } else if (options.length > 1) {
+      options.splice(lastModifiedIndex, 1);
+      if (this.hasFullOptionLast(options)) {
+        options.push(getBlankOption());
+      }
+    }
+
+    this.setState({ options });
+  };
+
+  private hasFullOptionLast = (options: CustomTimeOption[]) => {
+    const last = options[options.length - 1];
+    return last.day && last.start;
+  };
+
+  private durationError = () => {
+    const latestStart = Math.max(...this.state.options.map(o => o.start || 0));
+    return latestStart + this.state.duration > 24;
+  };
+
+  private startTimeError = (option: CustomTimeOption) => {
+    const sameStart = this.state.options.filter(
+      ({ day, start }) => start === option.start && day === option.day,
+    );
+    const runsTooLate = (option.start || 0) + this.state.duration > 24;
+    return runsTooLate || sameStart.length > 1;
+  };
+
+  private canSubmit = (): boolean => {
+    const nameError = !this.state.name;
+    const durationError = this.durationError();
+    const noOptionsError = this.state.options.length <= 1;
+
+    // Don't allow an option to have a day OR a time but not both
+    const emptyCellError = this.state.options.some(o => (!o.day !== !o.start));
+
+    // Don't allow multiple options to have the same day and start time
+    const startTimeError = this.state.options.some(o => this.startTimeError(o));
+
+    return !nameError && !durationError && !emptyCellError && !noOptionsError && !startTimeError;
+  };
+
+  private pickPlaceholderName() {
+    const choices = [
+      'Spikeball',
+      'Coffee break',
+      'Watch Netflix',
+      'Online lecture',
+      'Sit in the Quad',
+      'Assignment work',
+      'Finish lab report',
+      'Supervisor meeting',
+      'Line up for CSESoc BBQ',
+      'Wonder where Rex Vowels is',
+    ];
+    return choices[Math.floor(Math.random() * choices.length)];
+  }
 
   render() {
     const classes = this.props.classes;
@@ -210,12 +339,12 @@ class CreateCustom extends PureComponent<Props, State> {
           </Grid>
 
           <Typography paragraph>
-            You may enter multiple possible times below, your event will be able to be scheduled in any one of them.
+            You may enter multiple possible times below,
+            your event will be able to be scheduled in any one of them.
           </Typography>
 
           {this.state.options.map((option, index) => (
             <TimeOption
-              classes={classes}
               option={option}
               index={index}
               hasStartTimeError={this.startTimeError(option)}
@@ -223,7 +352,7 @@ class CreateCustom extends PureComponent<Props, State> {
               onClickClearDay={this.handleClickClearDay}
               onChangeTime={this.handleChangeTime}
               onClickClearTime={this.handleClickClearTime}
-              key={`option-${index}`}
+              key={`option-${option.key}`}
             />
           ))}
         </DialogContent>
@@ -243,290 +372,6 @@ class CreateCustom extends PureComponent<Props, State> {
       </Dialog>
     );
   }
-
-  componentDidUpdate(prevProps: Props) {
-    const editing = this.props.editing;
-    if (editing && editing !== prevProps.editing) {
-      this.loadCourse(editing);
-    }
-
-    if (this.props.open && !prevProps.open) {
-      ReactGA.modalview('create-custom');
-      this.setState({ placeholderName: this.pickPlaceholderName() });
-    }
-  }
-
-  private loadCourse = (course: CourseData) => {
-    const name = course.name;
-    const streams = course.streams;
-    const { end, start } = getSessions(course, streams[0])[0];
-    const duration = end - start;
-    const options: CustomTimeOption[] = streams.map(stream => {
-      const { day, start } = getSessions(course, stream)[0];
-      return { day, start };
-    });
-    options.push(getBlankOption());
-
-    this.setState({
-      name,
-      duration,
-      options,
-    });
-  };
-
-  handleClickSave = () => {
-    const name = this.state.name;
-    const duration = this.state.duration || 1;
-    const cleanOptions = this.state.options.filter(o => o.day && o.start);
-    const times = cleanOptions.map((option): ClassTime => ({
-      time: `${option.day}${option.start}` + ((duration !== 1) ? `-${option.start! + duration}` : ''),
-    }));
-    const streams = times.map((time): StreamData => ({
-      component: name,
-      enrols: [0, 0],
-      full: false,
-      times: [time],
-    }));
-    const courseData: Omit<CourseData, 'code'> = { name, streams };
-
-    this.props.onSave(courseData);
-    this.handleClose();
-  };
-
-  handleClose = () => {
-    this.props.onClose();
-  };
-
-  handleExited = () => {
-    this.setState({
-      name: '',
-      duration: 1,
-      options: [getBlankOption()],
-    });
-
-    if (this.props.onExited) {
-      this.props.onExited();
-    }
-  };
-
-  handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
-    this.setState({ name: event.target.value as string });
-  };
-
-  handleChangeDuration = (event: ChangeEvent<{ value: unknown }>) => {
-    this.setState({ duration: event.target.value as number });
-  };
-
-  handleChangeDay = (event: ChangeEvent<{value: unknown}>, optionIndex: number) => {
-    const options = this.state.options.slice();
-    const day = event.target.value as DayLetter;
-    options[optionIndex] = { ...options[optionIndex], day };
-    this.updatedOptions(options, optionIndex);
-  };
-
-  handleChangeTime = (event: ChangeEvent<{value: unknown}>, optionIndex: number) => {
-    const options = this.state.options.slice();
-    const start = event.target.value as number;
-    options[optionIndex] = { ...options[optionIndex], start };
-    this.updatedOptions(options, optionIndex);
-  };
-
-  handleClickClearDay = (optionIndex: number) => {
-    const options = this.state.options.slice();
-    options[optionIndex] = { ...options[optionIndex], day: null };
-    this.updatedOptions(options, optionIndex);
-  };
-
-  handleClickClearTime = (optionIndex: number) => {
-    const options = this.state.options.slice();
-    options[optionIndex] = { ...options[optionIndex], start: null };
-    this.updatedOptions(options, optionIndex);
-  };
-
-  private updatedOptions = (options: CustomTimeOption[], lastModifiedIndex: number) => {
-    options = options.slice();
-    const option = options[lastModifiedIndex];
-    if (option.day || option.start) {
-      if (this.hasFullOptionLast(options)) {
-        options.push(getBlankOption());
-      }
-    } else if (options.length > 1) {
-      options.splice(lastModifiedIndex, 1);
-      if (this.hasFullOptionLast(options)) {
-        options.push(getBlankOption());
-      }
-    }
-
-    this.setState({ options });
-  };
-
-  private hasFullOptionLast = (options: CustomTimeOption[]) => {
-    const last = options[options.length - 1];
-    return last.day && last.start;
-  };
-
-  private durationError = () => {
-    const latestStart = Math.max(...this.state.options.map(o => o.start || 0));
-    return latestStart + this.state.duration > 24;
-  };
-
-  private startTimeError = (option: CustomTimeOption) => {
-    const sameStart = this.state.options.filter(({ day, start }) => start === option.start && day === option.day);
-    const runsTooLate = (option.start || 0) + this.state.duration > 24;
-    return runsTooLate || sameStart.length > 1;
-  };
-
-  private canSubmit = (): boolean => {
-    const nameError = !this.state.name;
-    const durationError = this.durationError();
-    const noOptionsError = this.state.options.length <= 1;
-
-    // Don't allow an option to have a day OR a time but not both
-    const emptyCellError = this.state.options.some(o => (!o.day !== !o.start));
-
-    // Don't allow multiple options to have the same day and start time
-    const startTimeError = this.state.options.some(o => this.startTimeError(o));
-
-    return !nameError && !durationError && !emptyCellError && !noOptionsError && !startTimeError;
-  };
-
-  private pickPlaceholderName() {
-    const choices = [
-      'Spikeball',
-      'Coffee break',
-      'Watch Netflix',
-      'Online lecture',
-      'Sit in the Quad',
-      'Assignment work',
-      'Finish lab report',
-      'Supervisor meeting',
-      'Line up for CSESoc BBQ',
-      'Wonder where Rex Vowels is',
-    ];
-    return choices[Math.floor(Math.random() * choices.length)];
-  }
 }
-
-interface TimeOptionProps extends WithStyles<typeof styles> {
-  option: CustomTimeOption,
-  index: number,
-  hasStartTimeError: boolean,
-  onChangeDay: (event: ChangeEvent<{value: unknown}>, optionIndex: number) => void,
-  onClickClearDay: (optionIndex: number) => void,
-  onChangeTime: (event: ChangeEvent<{value: unknown}>, optionIndex: number) => void,
-  onClickClearTime: (optionIndex: number) => void,
-}
-
-const TimeOption = ({
-  classes,
-  option,
-  index,
-  hasStartTimeError,
-  onChangeDay,
-  onClickClearDay,
-  onChangeTime,
-  onClickClearTime,
-}: TimeOptionProps) => (
-  <Grid
-    container
-    spacing={1}
-    alignItems="flex-end"
-    className={classes.paddingBottom}
-  >
-    <Grid item xs={12} sm={2}>
-      <Typography>
-        Option {index + 1}
-      </Typography>
-    </Grid>
-    <Grid item xs={12} sm={5}>
-      <Grid container spacing={1}>
-        <Grid item>
-          <CalendarToday className={classes.marginTop} />
-        </Grid>
-        <Grid item className={classes.flexGrow}>
-          <TextField
-            label="Day"
-            select
-            fullWidth
-            value={option.day || ''}
-            onChange={event => onChangeDay(event, index)}
-            InputProps={{
-              endAdornment: option.day && (
-                <InputAdornment position="end" className={classes.clearButton}>
-                  <IconButton
-                    aria-label="clear"
-                    disableRipple
-                    disableFocusRipple
-                    size="small"
-                    onClick={() => onClickClearDay(index)}
-                    data-cy="clear-input"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            data-cy="custom-event-day"
-          >
-            {dayOptions.map(item => (
-              <MenuItem
-                value={item.letter}
-                key={item.text}
-                data-cy="custom-event-day-item"
-              >
-                {item.text}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-      </Grid>
-    </Grid>
-
-    <Grid item xs={12} sm={5}>
-      <Grid container spacing={1}>
-        <Grid item>
-          <AccessTime className={classes.marginTop} />
-        </Grid>
-        <Grid item className={classes.flexGrow}>
-          <TextField
-            label="Start time"
-            select
-            fullWidth
-            value={option.start || ''}
-            onChange={event => onChangeTime(event, index)}
-            error={hasStartTimeError}
-            InputProps={{
-              endAdornment: option.start && (
-                <InputAdornment position="end" className={classes.clearButton}>
-                  <IconButton
-                    aria-label="clear"
-                    disableRipple
-                    disableFocusRipple
-                    size="small"
-                    onClick={() => onClickClearTime(index)}
-                    data-cy="clear-input"
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            data-cy="custom-event-time"
-          >
-            {timeOptions.map(item => (
-              <MenuItem
-                value={item.time}
-                key={item.text}
-                data-cy="custom-event-time-item"
-              >
-                {item.text}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-      </Grid>
-    </Grid>
-  </Grid>
-);
 
 export default withStyles(styles)(CreateCustom);

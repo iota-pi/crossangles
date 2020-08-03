@@ -60,11 +60,73 @@ function isValidEmail(email: string) {
 
 
 class CreateCustom extends PureComponent<Props, State> {
-  state: State = {
-    name: '',
-    email: '',
-    showEmailError: false,
-    message: '',
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      name: '',
+      email: '',
+      showEmailError: false,
+      message: '',
+    };
+  }
+
+  private handleClickSave = () => {
+    this.props.onSend(
+      this.state.name,
+      this.state.email,
+      this.state.message,
+    );
+    this.handleClose();
+  };
+
+  private handleClose = () => {
+    this.props.onClose();
+  };
+
+  private handleBackdropClick = () => {
+    const partiallyCompleted = this.state.name || this.state.email || this.state.message;
+    if (!partiallyCompleted) {
+      this.handleClose();
+    }
+  };
+
+  private handleExited = () => {
+    this.setState({
+      name: '',
+      email: '',
+      showEmailError: false,
+      message: '',
+    });
+  };
+
+  private handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
+    this.setState({ name: event.target.value as string });
+  };
+
+  private handleChangeEmail = (event: ChangeEvent<{value: unknown}>) => {
+    const email = event.target.value as string;
+    this.setState(({ showEmailError }) => ({
+      email,
+      showEmailError: showEmailError && !isValidEmail(email),
+    }));
+  };
+
+  private handleBlurEmail = () => {
+    this.setState(({ email }) => (
+      { showEmailError: !isValidEmail(email) && email.length > 0 }
+    ));
+  };
+
+  private handleChangeMessage = (event: ChangeEvent<{value: unknown}>) => {
+    this.setState({ message: event.target.value as string });
+  };
+
+  private canSubmit = (): boolean => {
+    const nameError = !this.state.name;
+    const emailError = !this.state.email || !isValidEmail(this.state.email);
+    const messageError = !this.state.message;
+
+    return !nameError && !emailError && !messageError;
   };
 
   render() {
@@ -155,66 +217,6 @@ class CreateCustom extends PureComponent<Props, State> {
       </Dialog>
     );
   }
-
-  private handleClickSave = () => {
-    this.props.onSend(
-      this.state.name,
-      this.state.email,
-      this.state.message,
-    );
-    this.handleClose();
-  };
-
-  private handleClose = () => {
-    this.props.onClose();
-  };
-
-  private handleBackdropClick = () => {
-    const partiallyCompleted = this.state.name || this.state.email || this.state.message;
-    if (!partiallyCompleted) {
-      this.handleClose();
-    }
-  };
-
-  private handleExited = () => {
-    this.setState({
-      name: '',
-      email: '',
-      showEmailError: false,
-      message: '',
-    });
-  };
-
-  private handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
-    this.setState({ name: event.target.value as string });
-  };
-
-  private handleChangeEmail = (event: ChangeEvent<{value: unknown}>) => {
-    const email = event.target.value as string;
-    let showEmailError = this.state.showEmailError;
-    if (isValidEmail(email)) {
-      showEmailError = false;
-    }
-
-    this.setState({ email, showEmailError });
-  };
-
-  private handleBlurEmail = () => {
-    const email = this.state.email;
-    this.setState({ showEmailError: !isValidEmail(email) && email.length > 0 });
-  };
-
-  private handleChangeMessage = (event: ChangeEvent<{value: unknown}>) => {
-    this.setState({ message: event.target.value as string });
-  };
-
-  private canSubmit = (): boolean => {
-    const nameError = !this.state.name;
-    const emailError = !this.state.email || !isValidEmail(this.state.email);
-    const messageError = !this.state.message;
-
-    return !nameError && !emailError && !messageError;
-  };
 }
 
 export default withStyles(styles)(CreateCustom);
