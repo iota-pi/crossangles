@@ -88,70 +88,6 @@ class App extends PureComponent<Props, State> {
     };
   }
 
-  render() {
-    const classes = this.props.classes;
-
-    return (
-      <div>
-        <CssBaseline />
-
-        <AppBar
-          darkMode={this.props.darkMode}
-          onShowContact={this.handleContactShow}
-          onToggleDarkMode={this.props.setDarkMode}
-        />
-        <div className={classes.appBarSpacer} />
-
-        <Container
-          maxWidth="md"
-          className={classes.spaceBelow}
-        >
-          <CourseSelection />
-
-          <div className={classes.moderateSpaceAbove}>
-            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
-              <TimetableContainer />
-            </Suspense>
-          </div>
-
-          <ActionButtons
-            additional={this.props.additional}
-            meta={this.props.meta}
-            disabled={this.props.timetable.order.length === 0}
-            showSignup={this.props.showSignup}
-            isSavingImage={this.state.isSavingImage}
-            onSaveAsImage={this.handleSaveAsImage}
-            className={classes.spaceAbove}
-          />
-
-          <InfoText
-            additional={this.props.additional}
-            meta={this.props.meta}
-            className={classes.spaceAbove}
-            typographyProps={{
-              variant: 'body2',
-              style: { fontWeight: 300 },
-            }}
-            onShowContact={this.handleContactShow}
-            link
-            disclaimer
-          />
-        </Container>
-
-        <NoticeDisplay
-          notice={this.props.notice}
-          onSnackbarClose={this.handleSnackbarClose}
-        />
-
-        <ContactUs
-          open={this.state.showContact}
-          onSend={this.handleContactSend}
-          onClose={this.handleContactClose}
-        />
-      </div>
-    );
-  }
-
   componentDidMount() {
     initialiseGA();
     pageView();
@@ -226,6 +162,70 @@ class App extends PureComponent<Props, State> {
   private handleContactClose = () => {
     this.setState({ showContact: false });
   };
+
+  render() {
+    const classes = this.props.classes;
+
+    return (
+      <div>
+        <CssBaseline />
+
+        <AppBar
+          darkMode={this.props.darkMode}
+          onShowContact={this.handleContactShow}
+          onToggleDarkMode={this.props.setDarkMode}
+        />
+        <div className={classes.appBarSpacer} />
+
+        <Container
+          maxWidth="md"
+          className={classes.spaceBelow}
+        >
+          <CourseSelection />
+
+          <div className={classes.moderateSpaceAbove}>
+            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
+              <TimetableContainer />
+            </Suspense>
+          </div>
+
+          <ActionButtons
+            additional={this.props.additional}
+            meta={this.props.meta}
+            disabled={this.props.timetable.order.length === 0}
+            showSignup={this.props.showSignup}
+            isSavingImage={this.state.isSavingImage}
+            onSaveAsImage={this.handleSaveAsImage}
+            className={classes.spaceAbove}
+          />
+
+          <InfoText
+            additional={this.props.additional}
+            meta={this.props.meta}
+            className={classes.spaceAbove}
+            typographyProps={{
+              variant: 'body2',
+              style: { fontWeight: 300 },
+            }}
+            onShowContact={this.handleContactShow}
+            link
+            disclaimer
+          />
+        </Container>
+
+        <NoticeDisplay
+          notice={this.props.notice}
+          onSnackbarClose={this.handleSnackbarClose}
+        />
+
+        <ContactUs
+          open={this.state.showContact}
+          onSend={this.handleContactSend}
+          onClose={this.handleContactClose}
+        />
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({

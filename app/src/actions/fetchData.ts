@@ -11,7 +11,8 @@ export interface CourseListAction extends Action {
   meta: Meta;
 }
 
-export function fetchData(): ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction> {
+type FetchDataAction = ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction>;
+export function fetchData(): FetchDataAction {
   return async dispatch => requestData().then(data => {
     const setCourseAction: CourseListAction = {
       type: SET_COURSE_DATA,

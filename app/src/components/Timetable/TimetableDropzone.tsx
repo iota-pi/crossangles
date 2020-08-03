@@ -72,15 +72,15 @@ const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
         className={classes.background}
         style={{ backgroundColor }}
       />
-        {delivery !== undefined && (
-          <div className={classes.onlineIcon}>
-            {delivery !== DeliveryType.person && <OnlineIcon />}
-            {delivery === DeliveryType.either || delivery === DeliveryType.mixed ? (
-              <span className={classes.iconSlash}>/</span>
-            ) : null}
-            {delivery !== DeliveryType.online && <PersonIcon />}
-          </div>
-        )}
+      {delivery !== undefined && (
+        <div className={classes.onlineIcon}>
+          {delivery !== DeliveryType.person && <OnlineIcon />}
+          {delivery === DeliveryType.either || delivery === DeliveryType.mixed ? (
+            <span className={classes.iconSlash}>/</span>
+          ) : null}
+          {delivery !== DeliveryType.online && <PersonIcon />}
+        </div>
+      )}
     </div>
   );
 };
