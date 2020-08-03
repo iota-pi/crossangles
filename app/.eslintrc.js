@@ -54,7 +54,7 @@ module.exports = {
     'prefer-destructuring': 'off',
     'react/destructuring-assignment': 'off',
     'react/jsx-indent': ['error', 2, {checkAttributes: true, indentLogicalExpressions: true}],
-    'react/jsx-one-expression-per-line': ['error', { 'allow': 'single-child' }],
-    'react/jsx-props-no-spreading': ['error', { html: 'ignore' }],
+    'react/jsx-one-expression-per-line': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 };

@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import matchSorter from 'match-sorter';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
@@ -55,11 +55,11 @@ const useStyles = makeStyles(theme => ({
 
 function noFilter<T>(x: T) { return x; }
 
-interface InputProps extends AutocompleteRenderInputParams {
+type InputProps = AutocompleteRenderInputParams & {
   inputValue: string,
-}
+};
 
-const AutocompleteInput: React.FC<InputProps> = props => {
+const AutocompleteInput: React.FC<InputProps> = (props: InputProps) => {
   const classes = useStyles();
   const [focused, setFocused] = React.useState(true);
   const onFocus = React.useCallback(() => setFocused(true), []);
@@ -113,7 +113,9 @@ const AutocompleteControl = ({
     () => {
       const allChosenIds = allChosen.map(c => getCourseId(c));
       let availableOptions = courses.filter(course => !course.isCustom);
-      availableOptions = availableOptions.filter(course => !allChosenIds.includes(getCourseId(course)));
+      availableOptions = availableOptions.filter(
+        course => !allChosenIds.includes(getCourseId(course)),
+      );
       availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code));
       return availableOptions;
     },
@@ -129,7 +131,9 @@ const AutocompleteControl = ({
             setFilteredOptions(allOptions);
           } else {
             const lowerInputValue = inputValue.toLowerCase().trim();
-            const results = allOptions.filter(o => o.code.toLowerCase().startsWith(lowerInputValue));
+            const results = allOptions.filter(
+              o => o.code.toLowerCase().startsWith(lowerInputValue),
+            );
             if (results.length) {
               setFilteredOptions(results);
             }
@@ -160,10 +164,10 @@ const AutocompleteControl = ({
   );
 
   // This hack prevents the ref of this dummy value array from changing
-  const value = React.useState([])[0];
+  const constantValue = React.useState([])[0];
 
   const handleChange = React.useCallback(
-    (event: ChangeEvent<{}>, newCourses: CourseData[] | null) => {
+    (_: any, newCourses: CourseData[] | null) => {
       if (newCourses) {
         const newCourse = newCourses[newCourses.length - 1];
         chooseCourse(newCourse);
@@ -177,16 +181,18 @@ const AutocompleteControl = ({
   );
 
   const renderInput = React.useCallback(
-    (props: AutocompleteRenderInputParams) => <AutocompleteInput {...props} inputValue={inputValue} />,
+    (props: AutocompleteRenderInputParams) => (
+      <AutocompleteInput {...props} inputValue={inputValue} />
+    ),
     [inputValue],
   );
 
   const renderOption = React.useCallback(
-    (option, { inputValue }) => {
+    (option, { inputValue: value }) => {
       const name = ` — ${option.name}`;
-      const codeMatches = match(option.code, inputValue);
+      const codeMatches = match(option.code, value);
       const codeParts = parse(option.code, codeMatches);
-      const nameMatches = match(name, inputValue);
+      const nameMatches = match(name, value);
       const nameParts = parse(name, nameMatches);
       const clarification = getClarificationText(option);
 
@@ -224,14 +230,14 @@ const AutocompleteControl = ({
       id="course-selection-autocomplete"
       options={filteredOptions}
       filterOptions={noFilter}
-      ListboxComponent={ListboxComponent as React.ComponentType<React.HTMLAttributes<HTMLElement>>}
+      ListboxComponent={ListboxComponent as any}
       onChange={handleChange}
       onInputChange={handleInputChange}
       autoHighlight
       multiple
       disableClearable
       clearOnBlur={false}
-      value={value}
+      value={constantValue}
       inputValue={inputValue}
       getOptionLabel={getOptionLabel}
       noOptionsText="No matching courses found"
