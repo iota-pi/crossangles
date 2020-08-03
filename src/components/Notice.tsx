@@ -12,7 +12,10 @@ export const NoticeDisplay = ({
   onSnackbarClose,
 }: Props) => {
   const { message = '', actions = null, timeout = 6000 } = notice || {};
-  const paragraphs = message.split(/\n/g);
+  const paragraphs = React.useMemo(
+    () => message.split(/\n/g).map(p => ({ text: p, key: Math.random().toString() })),
+    [message],
+  );
   return (
     <Snackbar
       key={message || 'snackbar'}
@@ -23,8 +26,8 @@ export const NoticeDisplay = ({
       autoHideDuration={timeout}
       message={(
         <div id="message-id">
-          {paragraphs.map((text, i) => (
-            <p key={`message-p${i}`}>{text}</p>
+          {paragraphs.map(p => (
+            <p key={`message-p${p.key}`}>{p.text}</p>
           ))}
         </div>
       )}
