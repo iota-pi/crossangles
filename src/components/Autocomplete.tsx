@@ -6,7 +6,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
-import ListboxComponent from './ListboxComponent';
+import { ListboxComponent } from './ListboxComponent';
 import { CourseData, getCourseId, getClarificationText } from '../state';
 
 export interface Props {

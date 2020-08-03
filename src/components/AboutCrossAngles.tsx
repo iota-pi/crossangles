@@ -119,3 +119,4 @@ export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void 
     </div>
   );
 };
+export default AboutCrossAngles;

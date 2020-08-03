@@ -1,9 +1,9 @@
-import App from './App';
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './configureStore';
 import { fetchData } from './actions';
+import App from './App';
 
 store.dispatch(fetchData());
 

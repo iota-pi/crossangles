@@ -46,7 +46,7 @@ export interface Props {
   onToggleEvent: (event: AdditionalEvent) => void,
 }
 
-export const AdditionalEvents = React.memo(({
+const AdditionalEventsComponent = ({
   course,
   events,
   onToggleEvent,
@@ -86,6 +86,7 @@ export const AdditionalEvents = React.memo(({
       ))}
     </div>
   );
-});
+};
+export const AdditionalEvents = React.memo(AdditionalEventsComponent);
 
 export default AdditionalEvents;

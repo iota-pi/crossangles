@@ -27,7 +27,10 @@ export interface UnplacedCountAction extends Action {
 }
 
 
-export function setTimetable(newTimetable: SessionManagerData, meta: YearAndTerm): SessionManagerAction {
+export function setTimetable(
+  newTimetable: SessionManagerData,
+  meta: YearAndTerm,
+): SessionManagerAction {
   return {
     type: UPDATE_SESSION_MANAGER,
     sessionManager: newTimetable,
