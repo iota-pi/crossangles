@@ -130,8 +130,6 @@ const AutocompleteControl = ({
           } else {
             const lowerInputValue = inputValue.toLowerCase().trim();
             const results = allOptions.filter(o => o.code.toLowerCase().startsWith(lowerInputValue));
-            results.concat(allOptions.filter(o => o.code.toLowerCase().includes(lowerInputValue)));
-            results.concat(allOptions.filter(o => o.name.toLowerCase().includes(lowerInputValue)));
             if (results.length) {
               setFilteredOptions(results);
             }
