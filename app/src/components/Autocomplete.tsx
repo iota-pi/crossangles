@@ -193,10 +193,10 @@ const AutocompleteControl = ({
       const codeMatches = match(option.code, value);
       const nameMatches = match(name, value);
       const codeParts = parse(option.code, codeMatches).map(
-        part => ({ ...part, key: Math.random.toString() }),
+        part => ({ ...part, key: Math.random().toString() }),
       );
       const nameParts = parse(name, nameMatches).map(
-        part => ({ ...part, key: Math.random.toString() }),
+        part => ({ ...part, key: Math.random().toString() }),
       );
       const clarification = getClarificationText(option);
 
