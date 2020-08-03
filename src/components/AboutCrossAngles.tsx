@@ -106,12 +106,13 @@ export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void 
             If you have any questions or suggestions,
             please
             {' '}
-            <span
+            <a
               className={classes.link}
               onClick={event => { event.preventDefault(); onShowContact(); }}
+              href="#"
             >
               contact us
-            </span>
+            </a>
             .
           </Typography>
         </DialogContent>

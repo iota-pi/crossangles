@@ -120,12 +120,13 @@ const InfoText = ({
           If you have any questions or suggestions,
           please
           {' '}
-          <span
+          <a
             className={classes.link}
             onClick={event => { event.preventDefault(); onShowContact(); }}
+            href="#"
           >
             contact us
-          </span>
+          </a>
           .
         </Typography>
       )}
