@@ -191,20 +191,24 @@ const AutocompleteControl = ({
     (option, { inputValue: value }) => {
       const name = ` — ${option.name}`;
       const codeMatches = match(option.code, value);
-      const codeParts = parse(option.code, codeMatches);
       const nameMatches = match(name, value);
-      const nameParts = parse(name, nameMatches);
+      const codeParts = parse(option.code, codeMatches).map(
+        part => ({ ...part, key: Math.random.toString() }),
+      );
+      const nameParts = parse(name, nameMatches).map(
+        part => ({ ...part, key: Math.random.toString() }),
+      );
       const clarification = getClarificationText(option);
 
       return (
         <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
-          {codeParts.map((part, index) => (
-            <span key={index} style={{ fontWeight: part.highlight ? 500 : 400 }}>
+          {codeParts.map(part => (
+            <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 400 }}>
               {part.text}
             </span>
           ))}
-          {nameParts.map((part, index) => (
-            <span key={index} style={{ fontWeight: part.highlight ? 500 : 300 }}>
+          {nameParts.map(part => (
+            <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 300 }}>
               {part.text}
             </span>
           ))}
