@@ -27,6 +27,7 @@ module.exports = {
     'arrow-parens': ['error', 'as-needed'],
     'class-methods-use-this': 'off',
     'import/no-cycle': 'off',
+    'jsx-a11y/anchor-is-valid': ['error', { aspects: ['noHref'] }],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-continue': 'off',
     'no-else-return': ['error', { allowElseIf: true }],

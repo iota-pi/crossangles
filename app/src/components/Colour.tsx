@@ -1,6 +1,7 @@
 import React, { MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import Check from '@material-ui/icons/Check';
 import { RootState, Colour, getColour } from '../state';
 
@@ -28,7 +29,7 @@ export interface Props {
   size: number,
   isSelected?: boolean,
   isCircle?: boolean,
-  onClick?: (event: MouseEvent<HTMLDivElement>) => void,
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void,
 }
 
 function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props) {
@@ -41,7 +42,7 @@ function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props)
   ].join(' ');
 
   return (
-    <div
+    <ButtonBase
       className={appliedClasses}
       style={{
         backgroundColor: getColour(colour, darkMode),
@@ -49,11 +50,11 @@ function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props)
         height: size,
         cursor: onClick ? 'pointer' : undefined,
       }}
-      onClick={onClick}
       data-cy="colour-selector"
+      onClick={onClick}
     >
       {isSelected ? <Check /> : null}
-    </div>
+    </ButtonBase>
   );
 }
 

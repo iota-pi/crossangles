@@ -1,6 +1,7 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Toolbar from '@material-ui/core/Toolbar';
+import ButtonBase from '@material-ui/core/ButtonBase';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Undo from '@material-ui/icons/Undo';
@@ -148,14 +149,13 @@ export const TimetableControls = ({
 
       {unplacedCount > 0 && (
         <Tooltip title={`${unplacedCount} full classes are not visible`}>
-          <div
+          <ButtonBase
             className={classes.unplacedCountContainer}
             onClick={onIncludeFull}
-            role="button"
           >
             <span className={classes.unplacedCount}>{unplacedCount}</span>
             <Warning />
-          </div>
+          </ButtonBase>
         </Tooltip>
       )}
 
