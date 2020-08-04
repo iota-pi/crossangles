@@ -29,7 +29,7 @@ do
     (
       cd lambda-shared
       echo "Installing dependencies for lambda-shared"
-      npm install --production >/dev/null 2>&1
+      npm ci --production >/dev/null 2>&1
     )
     installed_shared_deps=1
   fi
@@ -41,7 +41,7 @@ do
   (
     cd $lambda
     echo "Installing dependencies"
-    npm install >/dev/null 2>&1
+    npm ci >/dev/null 2>&1
     echo "Building $lambda lambda"
     npm run build
 

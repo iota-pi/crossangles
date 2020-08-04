@@ -38,7 +38,7 @@ if [[ $environment == production ]]; then
 fi
 
 cd app
-npm install --production
+npm ci --production
 for campus in $@
 do
   echo "Building app from $campus"
