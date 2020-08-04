@@ -1,5 +1,4 @@
-import { getTimetableState } from '../reducers';
-import { initialState, TimetableHistoryState } from '.';
+import { getTimetableState, initialState, TimetableHistoryState } from '.';
 import { CourseMap } from './Course';
 import { undo, redo, push, HistoryData } from './StateHistory';
 import { SessionManager } from '../components/Timetable/SessionManager';
