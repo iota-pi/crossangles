@@ -9,9 +9,6 @@ export interface SaveAsImageData {
   timetable: SessionManagerData,
   colours: ColourMap,
   options: Options,
-  twentyFourHours: boolean,
-  darkMode: boolean,
-  compactView: boolean,
 }
 
 export interface Viewport {
@@ -97,11 +94,8 @@ export function parseQueryString(queryString: string): SaveAsImageData {
     timetable = getEmptySessionManagerData(),
     colours = {},
     options = {},
-    twentyFourHours = false,
-    darkMode = false,
-    compactView = false,
   } = data as Partial<SaveAsImageData>;
   return {
-    timetable, colours, options, twentyFourHours, darkMode, compactView,
+    timetable, colours, options,
   };
 }

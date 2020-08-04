@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { RootState, StreamData } from '../state';
+import { StreamData } from '../state';
+import { getOptions } from '../state/selectors';
 
 
 const useStyles = makeStyles(theme => ({
@@ -23,8 +24,7 @@ export interface Props {
 
 function WebStream({ checked, stream, onChange }: Props) {
   const classes = useStyles();
-  const darkMode = useSelector((state: RootState) => state.darkMode);
-  const includeFull = useSelector((state: RootState) => state.options.includeFull);
+  const { darkMode, includeFull } = useSelector(getOptions);
 
   const disabled = stream.full && !includeFull;
   let label = 'Choose online-only lecture stream';

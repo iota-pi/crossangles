@@ -4,7 +4,9 @@ import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { optionList, Options, OptionName } from '../state';
+import { timetableOptionList, Options, OptionName } from '../state';
+import { useSelector } from 'react-redux';
+import { getOptions } from '../state/selectors';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -42,20 +44,19 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   options: Options,
-  darkMode: boolean,
   onToggleOption: (option: OptionName) => void,
 }
 
-const GeneralOptionsComponent = ({
+const TimetableOptionsComponent = ({
   options,
-  darkMode,
   onToggleOption,
 }: Props) => {
   const classes = useStyles();
+  const { darkMode } = useSelector(getOptions);
 
   return (
     <div className={classes.root}>
-      {optionList.map(([optionName, label]) => (
+      {timetableOptionList.map(([optionName, label]) => (
         <div className={classes.optionContainer} key={optionName}>
           <FormControlLabel
             control={(
@@ -75,6 +76,6 @@ const GeneralOptionsComponent = ({
     </div>
   );
 };
-const GeneralOptions = React.memo(GeneralOptionsComponent);
+const TimetableOptions = React.memo(TimetableOptionsComponent);
 
-export default GeneralOptions;
+export default TimetableOptions;

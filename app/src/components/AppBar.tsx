@@ -9,6 +9,9 @@ import InvertColorsOff from '@material-ui/icons/InvertColorsOff';
 import { makeStyles } from '@material-ui/core';
 import { AppOptions } from './AppOptions';
 import { AboutCrossAngles } from './AboutCrossAngles';
+import { useSelector, useDispatch } from 'react-redux';
+import { getOptions } from '../state/selectors';
+import { toggleOption } from '../actions';
 
 const useStyles = makeStyles(() => createStyles({
   grow: {
@@ -17,21 +20,19 @@ const useStyles = makeStyles(() => createStyles({
 }));
 
 export interface Props {
-  darkMode: boolean,
   onShowContact: () => void,
-  onToggleDarkMode: (darkMode?: boolean) => void,
 }
 
 
 export function CrossAnglesAppBar({
-  darkMode,
   onShowContact,
-  onToggleDarkMode,
 }: Props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { darkMode } = useSelector(getOptions);
   const handleClickDarkMode = React.useCallback(
-    () => onToggleDarkMode(),
-    [onToggleDarkMode],
+    () => dispatch(toggleOption('darkMode')),
+    [dispatch],
   );
 
   return (

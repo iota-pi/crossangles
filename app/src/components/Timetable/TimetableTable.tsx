@@ -20,6 +20,7 @@ import {
   CourseData,
   LinkedSession,
   linkStream,
+  getOption,
 } from '../../state';
 import { getHours } from './getHours';
 import { CATEGORY } from '../../analytics';
@@ -50,13 +51,9 @@ export interface Props {
   options: Options,
   colours: ColourMap,
   timetable: SessionManager,
-  darkMode?: boolean,
   minimalHours?: boolean,
   isStandalone?: boolean,
   isUpdating?: boolean,
-  disableTransitions?: boolean,
-  twentyFourHours?: boolean,
-  compactView?: boolean,
   onToggleTwentyFourHours?: () => void,
 }
 
@@ -94,18 +91,19 @@ export function getDimensions(): Dimensions | undefined {
 
 function TimetableTable({
   colours,
-  compactView,
-  darkMode,
-  disableTransitions,
   isStandalone,
   isUpdating,
   minimalHours,
   options,
   onToggleTwentyFourHours,
   timetable,
-  twentyFourHours,
 }: Props) {
-  const compact = compactView || false;
+  const compact = getOption(options, 'compactView');
+  const darkMode = getOption(options, 'darkMode');
+  const disableTransitions = getOption(options, 'reducedMotion');
+  const twentyFourHours = getOption(options, 'twentyFourHours');
+  const includeFull = getOption(options, 'includeFull');
+
   const sessions = React.useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
     [timetable],
@@ -161,7 +159,6 @@ function TimetableTable({
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
-  const includeFull = options.includeFull || false;
   const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
   React.useEffect(
     () => {
@@ -293,7 +290,6 @@ function TimetableTable({
                   isSnapped={isSnapped}
                   clashDepth={clashDepth}
                   options={options}
-                  disableTransitions={disableTransitions}
                   onDrag={handleDrag}
                   onMove={dragging && dragging.id === id ? handleMove : undefined}
                   onDrop={handleDrop}
@@ -332,8 +328,8 @@ function TimetableTable({
         end={end}
         disabled={disabled}
         compact={compact}
-        twentyFourHours={twentyFourHours || false}
-        disableTransitions={disableTransitions || false}
+        twentyFourHours={twentyFourHours}
+        disableTransitions={disableTransitions}
         onToggleTwentyFourHours={onToggleTwentyFourHours}
       />
     </div>

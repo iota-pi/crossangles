@@ -52,7 +52,7 @@ export interface PopoverState {
 const CourseListComponent: React.FC<Props> = (props: Props) => {
   const classes = useStyles();
   const [showPopover, setShowPopover] = React.useState<PopoverState>();
-  const reducedMotion = useSelector((state: RootState) => state.reducedMotion);
+  const reducedMotion = useSelector((state: RootState) => state.options.reducedMotion);
   const { chosen, custom, additional, onColourChange } = props;
   const allCourses = React.useMemo(
     () => [...chosen, ...custom, ...additional],

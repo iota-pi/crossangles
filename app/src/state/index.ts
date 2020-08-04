@@ -44,10 +44,6 @@ export interface RootState extends TimetableState {
   unplacedCount: number,
   hiddenEvents: CourseId[],
   timetables: Timetables,
-  darkMode: boolean,
-  twentyFourHours: boolean,
-  compactView: boolean,
-  reducedMotion: boolean,
 }
 
 
@@ -90,8 +86,4 @@ export const initialState: RootState = {
   suggestionScore: null,
   unplacedCount: 0,
   hiddenEvents: [],
-  darkMode: false,
-  twentyFourHours: false,
-  compactView: false,
-  reducedMotion: false,
 };

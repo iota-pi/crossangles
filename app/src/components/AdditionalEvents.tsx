@@ -52,7 +52,7 @@ const AdditionalEventsComponent = ({
   onToggleEvent,
 }: Props) => {
   const classes = useStyles();
-  const darkMode = useSelector((state: RootState) => state.darkMode);
+  const darkMode = useSelector((state: RootState) => state.options.darkMode);
 
   const eventList = getEvents(course);
   const eventIds = events.map(e => e.id);

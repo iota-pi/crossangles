@@ -34,7 +34,7 @@ export interface Props {
 
 function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props) {
   const classes = useStyles();
-  const darkMode = useSelector((state: RootState) => state.darkMode);
+  const darkMode = useSelector((state: RootState) => state.options.darkMode);
   const appliedClasses = [
     classes.root,
     isSelected ? classes.selected : '',

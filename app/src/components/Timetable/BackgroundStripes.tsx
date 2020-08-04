@@ -20,7 +20,7 @@ export interface Props {
 
 const Stripes: React.FC<Props> = ({ opacity = 0.03 }: Props) => {
   const classes = useStyles();
-  const compact = useSelector((state: RootState) => state.compactView);
+  const compact = useSelector((state: RootState) => state.options.compactView || false);
 
   const backgroundStripesStyle = React.useMemo(
     () => {

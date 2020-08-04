@@ -49,6 +49,13 @@ export const migrations = {
     }
     return { ...state };
   },
+  3: (state: any): any => {
+    const { compactView, darkMode, reducedMotion, twentyFourHours, options, ...otherState } = state;
+    return {
+      ...otherState,
+      options: { ...options, compactView, darkMode, reducedMotion, twentyFourHours },
+    };
+  }
 };
 
 export default migrations;
