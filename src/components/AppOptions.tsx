@@ -12,8 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import Settings from '@material-ui/icons/Settings';
 import CloseIcon from '@material-ui/icons/Close';
 import { modalview } from 'react-ga';
-import { RootState } from '../state';
-import { setCompactView, setReducedMotion } from '../actions';
+import { generalOptionList, OptionName } from '../state';
+import { getOptions } from '../state/selectors';
+import { toggleOption } from '../actions';
 
 
 const useStyles = makeStyles(theme => ({
@@ -51,9 +52,8 @@ const useStyles = makeStyles(theme => ({
 export const AppOptions = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const darkMode = useSelector((state: RootState) => state.darkMode);
-  const compactView = useSelector((state: RootState) => state.compactView);
-  const reducedMotion = useSelector((state: RootState) => state.reducedMotion);
+  const options = useSelector(getOptions);
+  const { darkMode } = options;
   const [showDialog, setShowDialog] = React.useState(false);
 
   const handleOpen = React.useCallback(
@@ -64,12 +64,8 @@ export const AppOptions = () => {
     [],
   );
   const handleClose = React.useCallback(() => setShowDialog(false), []);
-  const handleChangeCompact = React.useCallback(
-    () => dispatch(setCompactView()),
-    [dispatch],
-  );
-  const handleChangeAnimations = React.useCallback(
-    () => dispatch(setReducedMotion()),
+  const handleChange = React.useCallback(
+    (option: OptionName) => dispatch(toggleOption(option)),
     [dispatch],
   );
 
@@ -104,37 +100,23 @@ export const AppOptions = () => {
         </DialogTitle>
 
         <DialogContent>
-          <div className={classes.optionContainer}>
-            <Typography
-              className={classes.optionLabel}
-              onClick={handleChangeCompact}
-            >
-              Compact Display
-            </Typography>
+          {generalOptionList.map(([name, label]) => (
+            <div className={classes.optionContainer}>
+              <Typography
+                className={classes.optionLabel}
+                onClick={() => handleChange(name)}
+              >
+                {label}
+              </Typography>
 
-            <Switch
-              checked={compactView}
-              onChange={handleChangeCompact}
-              color={darkMode ? 'primary' : 'secondary'}
-              classes={{ track: classes.selectTrack }}
-            />
-          </div>
-
-          <div className={classes.optionContainer}>
-            <Typography
-              className={classes.optionLabel}
-              onClick={handleChangeAnimations}
-            >
-              Reduced Animations
-            </Typography>
-
-            <Switch
-              checked={reducedMotion}
-              onChange={handleChangeAnimations}
-              color={darkMode ? 'primary' : 'secondary'}
-              classes={{ track: classes.selectTrack }}
-            />
-          </div>
+              <Switch
+                checked={options[name]}
+                onChange={() => handleChange(name)}
+                color={darkMode ? 'primary' : 'secondary'}
+                classes={{ track: classes.selectTrack }}
+              />
+            </div>
+          ))}
         </DialogContent>
 
         <DialogActions className={classes.dialogActions}>

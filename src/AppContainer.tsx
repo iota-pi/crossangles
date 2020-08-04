@@ -10,7 +10,7 @@ const App = loadable(() => import('./AppWrapper'));
 const StandaloneTimetable = loadable(() => import('./containers/StandaloneTimetable'));
 
 export const AppContainer = () => {
-  const darkMode = useSelector((state: RootState) => state.darkMode);
+  const darkMode = useSelector((state: RootState) => state.options.darkMode);
 
   return (
     <ThemeProvider theme={theme(darkMode)}>

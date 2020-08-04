@@ -5,7 +5,7 @@ import { TimetableTable } from '../components/Timetable';
 import { SessionManager } from '../components/Timetable/SessionManager';
 import { parseQueryString } from '../saveAsImage';
 import { requestData } from '../requestData';
-import { CourseMap, getCourseId } from '../state';
+import { CourseMap, getCourseId, Options } from '../state';
 import { theme } from '../theme';
 
 
@@ -33,16 +33,15 @@ export const StandaloneTimetable = () => {
     loadData();
   }, []);
 
+  const options: Options = { ...queryData.options, reducedMotion: true };
+
   return (
-    <ThemeProvider theme={theme(queryData.darkMode)}>
+    <ThemeProvider theme={theme(queryData.options.darkMode)}>
       <CssBaseline />
       <TimetableTable
         timetable={timetable}
-        options={queryData.options}
+        options={options}
         colours={queryData.colours}
-        darkMode={queryData.darkMode}
-        compactView={queryData.compactView}
-        disableTransitions
         minimalHours
         isStandalone
       />

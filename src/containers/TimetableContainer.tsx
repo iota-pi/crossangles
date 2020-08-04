@@ -28,7 +28,7 @@ import {
 import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import {
-  setTimetable, addCourse, undoTimetable, redoTimetable, setTwentyFourHours, toggleOption,
+  setTimetable, addCourse, undoTimetable, redoTimetable, toggleOption,
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
@@ -51,10 +51,6 @@ export interface StateProps {
   timetableHistory: HistoryData,
   suggestionScore: number | null,
   meta: Meta,
-  darkMode: boolean,
-  twentyFourHours: boolean,
-  compactView: boolean,
-  reducedMotion: boolean,
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -158,7 +154,7 @@ class TimetableContainer extends PureComponent<Props, State> {
   };
 
   private handleToggleTwentyFourHours = () => {
-    this.props.dispatch(setTwentyFourHours());
+    this.props.dispatch(toggleOption('twentyFourHours'));
   };
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
@@ -239,12 +235,8 @@ class TimetableContainer extends PureComponent<Props, State> {
         <TimetableTable
           options={this.props.options}
           colours={this.props.colours}
-          darkMode={this.props.darkMode}
           timetable={this.state.timetable}
           isUpdating={this.state.isUpdating}
-          twentyFourHours={this.props.twentyFourHours}
-          compactView={this.props.compactView}
-          disableTransitions={this.props.reducedMotion}
           onToggleTwentyFourHours={this.handleToggleTwentyFourHours}
         />
       </div>
@@ -265,10 +257,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
   timetableHistory: state.history,
   suggestionScore: state.suggestionScore,
   meta: state.meta,
-  darkMode: state.darkMode,
-  twentyFourHours: state.twentyFourHours,
-  compactView: state.compactView,
-  reducedMotion: state.reducedMotion,
 });
 
 const connected = connect(mapStateToProps);

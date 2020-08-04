@@ -18,7 +18,7 @@ import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
 import { getCampus } from './getCampus';
-import { clearNotice, setNotice, setDarkMode } from './actions';
+import { clearNotice, setNotice } from './actions';
 import {
   RootState,
   Meta,
@@ -26,6 +26,7 @@ import {
   Options,
   ColourMap,
   CourseData,
+  getOption,
 } from './state';
 import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
 import CourseSelection from './containers/CourseSelection';
@@ -61,15 +62,11 @@ export interface StateProps {
   timetable: SessionManagerData,
   colours: ColourMap,
   options: Options,
-  darkMode: boolean,
-  twentyFourHours: boolean,
-  compactView: boolean,
 }
 
 export interface DispatchProps {
   setNotice: (message: string, actions?: ReactNode[]) => void,
   clearNotice: () => void,
-  setDarkMode: (darkMode?: boolean) => void,
 }
 
 export type Props = OwnProps & StateProps & DispatchProps;
@@ -111,9 +108,9 @@ class App extends PureComponent<Props, State> {
       action: 'Save as Image',
     });
 
-    const { timetable, colours, options, twentyFourHours, darkMode, compactView } = this.props;
+    const { timetable, colours, options } = this.props;
     const campus = getCampus();
-    const viewport = getScreenshotViewport(timetable, compactView);
+    const viewport = getScreenshotViewport(timetable, getOption(options, 'compactView'));
 
     const promise = saveAsImage({
       timetable,
@@ -121,9 +118,6 @@ class App extends PureComponent<Props, State> {
       options,
       viewport,
       campus,
-      twentyFourHours,
-      darkMode,
-      compactView,
     });
 
     promise.then(success => {
@@ -171,9 +165,7 @@ class App extends PureComponent<Props, State> {
         <CssBaseline />
 
         <AppBar
-          darkMode={this.props.darkMode}
           onShowContact={this.handleContactShow}
-          onToggleDarkMode={this.props.setDarkMode}
         />
         <div className={classes.appBarSpacer} />
 
@@ -236,15 +228,11 @@ const mapStateToProps = (state: RootState): StateProps => ({
   timetable: getCurrentTimetable(state),
   colours: state.colours,
   options: state.options,
-  darkMode: state.darkMode,
-  twentyFourHours: state.twentyFourHours,
-  compactView: state.compactView,
 });
 
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => ({
   setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
   clearNotice: () => dispatch(clearNotice()),
-  setDarkMode: (darkMode?: boolean) => dispatch(setDarkMode(darkMode)),
 });
 
 const connection = connect(mapStateToProps, mapDispatchToProps);

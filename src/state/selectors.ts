@@ -11,6 +11,7 @@ const getChosen = (state: RootState) => state.chosen;
 const getCustom = (state: RootState) => state.custom;
 const getAdditional = (state: RootState) => state.additional;
 const getEvents = (state: RootState) => state.events;
+export const getOptions = (state: RootState) => state.options;
 
 
 export const getCurrentTimetable = (

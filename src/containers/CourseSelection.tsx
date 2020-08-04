@@ -42,7 +42,7 @@ import { updateTimetable } from '../timetable/updateTimetable';
 
 const Autocomplete = lazy(() => import('../components/Autocomplete'));
 const CourseList = lazy(() => import('../components/CourseList'));
-const GeneralOptions = lazy(() => import('../components/GeneralOptions'));
+const TimetableOptions = lazy(() => import('../components/TimetableOptions'));
 const CreateCustom = loadable(() => import('../components/CreateCustom'));
 
 
@@ -75,7 +75,6 @@ export interface StateProps {
   colours: ColourMap,
   webStreams: CourseId[],
   hiddenEvents: CourseId[],
-  darkMode: boolean,
   meta: Meta,
 }
 
@@ -245,9 +244,8 @@ class CourseSelection extends PureComponent<Props, State> {
 
         <div className={classes.spaceAbove}>
           <Suspense fallback={<div style={{ height: 34 }} />}>
-            <GeneralOptions
+            <TimetableOptions
               options={this.props.options}
-              darkMode={this.props.darkMode}
               onToggleOption={this.toggleOption}
             />
           </Suspense>
@@ -278,7 +276,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
   webStreams: state.webStreams,
   hiddenEvents: state.hiddenEvents,
   meta: state.meta,
-  darkMode: state.darkMode,
 });
 
 const connection = connect(mapStateToProps);

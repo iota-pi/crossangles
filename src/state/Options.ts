@@ -1,13 +1,26 @@
 export interface Options {
+  compactView?: boolean,
+  darkMode?: boolean,
+  includeFull?: boolean;
   showEnrolments?: boolean;
   showLocations?: boolean;
   showWeeks?: boolean;
-  includeFull?: boolean;
+  reducedMotion?: boolean,
+  twentyFourHours?: boolean,
 }
 export type OptionName = keyof Options;
-export const optionList: [OptionName, string][] = [
+export type OptionList = [OptionName, string][];
+export const timetableOptionList: OptionList = [
   ['showLocations', 'Show Locations'],
   ['showEnrolments', 'Show Enrolments'],
   ['showWeeks', 'Show Weeks'],
   ['includeFull', 'Include full classes'],
 ];
+export const generalOptionList: OptionList = [
+  ['compactView', 'Compact Display'],
+  ['reducedMotion', 'Reduced Animations'],
+];
+
+export function getOption(options: Options, option: OptionName): boolean {
+  return options[option] || false;
+}

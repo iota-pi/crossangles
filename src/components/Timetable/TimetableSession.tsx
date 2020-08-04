@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import { useSelector } from 'react-redux';
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
 import { TransitionGroup } from 'react-transition-group';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -7,7 +6,8 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { TimetablePosition, Dimensions } from './timetableTypes';
-import { Options, LinkedSession, RootState, getDuration } from '../../state';
+import { Options, LinkedSession, getDuration } from '../../state';
+import { useCache } from '../../hooks';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -84,7 +84,6 @@ export interface Props {
   isSnapped: boolean,
   clashDepth: number,
   options: Options,
-  disableTransitions?: boolean,
   onDrag?: (session: LinkedSession) => false | void,
   onMove?: (session: LinkedSession, delta: TimetablePosition) => void,
   onDrop?: (session: LinkedSession) => void,
@@ -93,24 +92,33 @@ export interface Props {
 type Detail = { key: string, text: ReactNode };
 
 
-const Session: React.FC<Props> = (props: Props) => {
+const Session: React.FC<Props> = ({
+  colour: propColour,
+  clashDepth,
+  dimensions,
+  isDragging,
+  isSnapped,
+  onDrag,
+  onMove,
+  onDrop,
+  options,
+  position,
+  session,
+}: Props) => {
   const classes = useStyles();
+  const { compactView, reducedMotion } = options;
   const rootClasses = [
     classes.main,
-    props.isDragging ? classes.dragging : '',
-    props.isSnapped ? classes.snapped : '',
-    props.clashDepth > 0 ? classes.hovering : '',
-    props.disableTransitions ? classes.disableTransitions : '',
+    isDragging ? classes.dragging : '',
+    isSnapped ? classes.snapped : '',
+    clashDepth > 0 ? classes.hovering : '',
+    reducedMotion ? classes.disableTransitions : '',
   ].join(' ');
-  const {
-    dimensions, isDragging, options, onDrag, onMove, onDrop, position, session,
-  } = props;
   const { course, day, start, end, stream } = session;
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
   const sessionComponent = isSpecialCourse ? '' : stream.component;
 
-  const compact = useSelector((state: RootState) => state.compactView);
 
   const details: Detail[] = React.useMemo(
     () => {
@@ -151,11 +159,7 @@ const Session: React.FC<Props> = (props: Props) => {
     [options, session, stream],
   );
 
-  const [lastColour, setLastColour] = React.useState<string>();
-  React.useEffect(() => {
-    setLastColour(props.colour);
-  }, [props.colour]);
-  const colour = props.colour || lastColour;
+  const colour = useCache(propColour);
 
   const styles: CSSProperties = React.useMemo(
     () => {
@@ -205,7 +209,7 @@ const Session: React.FC<Props> = (props: Props) => {
   );
 
   const detailsClassList = [classes.details];
-  if (compact) { detailsClassList.push(classes.compact); }
+  if (compactView) { detailsClassList.push(classes.compact); }
   const detailsClasses = detailsClassList.join(' ');
 
   return (
@@ -219,8 +223,8 @@ const Session: React.FC<Props> = (props: Props) => {
         style={styles}
         data-cy="timetable-session"
         data-session={`${course.code}-${stream.component}-${day}${start}-${end}`}
-        data-snapped={+props.isSnapped}
-        data-dragging={+props.isDragging}
+        data-snapped={+isSnapped}
+        data-dragging={+isDragging}
       >
         <div
           className={classes.background}
@@ -235,7 +239,7 @@ const Session: React.FC<Props> = (props: Props) => {
             <span>{sessionComponent}</span>
           </div>
 
-          <Fade in={props.isSnapped}>
+          <Fade in={isSnapped}>
             <div>
               <TransitionGroup>
                 {details.map(detail => (
