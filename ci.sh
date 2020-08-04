@@ -38,6 +38,13 @@ if [[ $COMMAND == build ]]; then
   fi
 fi
 
+if [[ $COMMAND == lint ]]; then
+  (
+    cd app
+    npm run lint
+  )
+fi
+
 if [[ $COMMAND == test ]]; then
   if [[ -n "${2:-}" ]]; then
     (cd $2; npm test)

@@ -43,6 +43,9 @@ jobs:
     - name: Install dependencies
       run: ./ci.sh ci-install
 
+    - name: Lint Code
+      run: ./ci.sh lint
+
     - name: Run unit tests
       run: ./ci.sh test
 
