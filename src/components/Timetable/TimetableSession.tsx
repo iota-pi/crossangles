@@ -6,7 +6,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
-import { Position, Dimensions } from './timetableTypes';
+import { TimetablePosition, Dimensions } from './timetableTypes';
 import { Options, LinkedSession, RootState, getDuration } from '../../state';
 
 const useStyles = makeStyles(theme => ({
@@ -79,14 +79,14 @@ export interface Props {
   session: LinkedSession,
   colour: string | undefined,
   dimensions: Dimensions,
-  position: Required<Position>,
+  position: Required<TimetablePosition>,
   isDragging: boolean,
   isSnapped: boolean,
   clashDepth: number,
   options: Options,
   disableTransitions?: boolean,
   onDrag?: (session: LinkedSession) => false | void,
-  onMove?: (session: LinkedSession, delta: Position) => void,
+  onMove?: (session: LinkedSession, delta: TimetablePosition) => void,
   onDrop?: (session: LinkedSession) => void,
 }
 

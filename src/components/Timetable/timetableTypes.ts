@@ -3,10 +3,10 @@ export interface Dimensions {
   height: number,
 }
 
-export interface Position {
+export interface TimetablePosition {
   x: number,
   y: number,
   z?: number,
 }
 
-export type Placement = Dimensions & Position;
+export type Placement = Dimensions & TimetablePosition;

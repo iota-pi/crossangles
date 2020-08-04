@@ -1,4 +1,4 @@
-import { Position, Dimensions } from './timetableTypes';
+import { TimetablePosition, Dimensions } from './timetableTypes';
 import { TimetablePlacement } from './Placement';
 import * as tt from './timetableUtil';
 import * as SessionPosition from './SessionPosition';
@@ -13,7 +13,7 @@ import {
 } from '../../state';
 
 export interface SessionPlacementData {
-  offset: Position,
+  offset: TimetablePosition,
   isSnapped: boolean,
   isDragging: boolean,
   isRaised: boolean,
@@ -23,7 +23,7 @@ export interface SessionPlacementData {
 }
 
 export class SessionPlacement extends TimetablePlacement {
-  private _offset: Position;
+  private _offset: TimetablePosition;
   private _isSnapped: boolean = true;
   private _isDragging: boolean = false;
   private _isRaised: boolean = false;
@@ -91,7 +91,7 @@ export class SessionPlacement extends TimetablePlacement {
     this._isDragging = true;
   }
 
-  move(delta: Position): void {
+  move(delta: TimetablePosition): void {
     this._offset.x += delta.x;
     this._offset.y += delta.y;
   }
@@ -155,13 +155,13 @@ export class SessionPlacement extends TimetablePlacement {
 
   getPosition = (() => {
     let cachedDeps: (Dimensions | number | boolean)[] = [];
-    let cachedResult: Required<Position>;
+    let cachedResult: Required<TimetablePosition>;
 
     return (
       timetableDimensions: Dimensions,
       startHour: number,
       compact: boolean,
-    ): Required<Position> => {
+    ): Required<TimetablePosition> => {
       const base = this.basePlacement(timetableDimensions, startHour, compact);
       const dependencies = [
         timetableDimensions,

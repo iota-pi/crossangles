@@ -1,6 +1,6 @@
 import { notUndefined } from '../../typeHelpers';
 import { SessionPlacement } from './SessionPlacement';
-import { Position, Dimensions } from './timetableTypes';
+import { TimetablePosition, Dimensions } from './timetableTypes';
 import {
   CourseMap,
   CourseData,
@@ -247,7 +247,7 @@ export class SessionManager {
     this.stopChange(shouldCallback);
   }
 
-  move(sessionId: SessionId, delta: Position, shouldCallback = false): void {
+  move(sessionId: SessionId, delta: TimetablePosition, shouldCallback = false): void {
     const session = this.get(sessionId);
     session.move(delta);
     this.next(shouldCallback);
