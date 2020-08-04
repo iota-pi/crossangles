@@ -78,17 +78,17 @@ export function getCourseColour(
   return undefined;
 }
 
-export function getDimensions(
-  timetableRef: React.RefObject<HTMLDivElement>,
-): Dimensions | undefined {
-  const el = timetableRef.current;
-  if (el) {
-    return {
-      width: el.scrollWidth,
-      height: el.scrollHeight,
-    };
+const timetableGridId = `TimetableGrid-${Math.random()}`;
+
+export function getDimensions(): Dimensions | undefined {
+  const timetableElement = document.getElementById(timetableGridId);
+  if (timetableElement === null) {
+    return undefined;
   }
-  return undefined;
+  return {
+    width: timetableElement.scrollWidth,
+    height: timetableElement.scrollHeight,
+  };
 }
 
 
@@ -124,32 +124,40 @@ function TimetableTable({
   );
   const { start, end } = hours;
 
-  const timetableRef = React.useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 });
   const updateDimensions = React.useCallback(
     () => {
-      const newDimensions = getDimensions(timetableRef);
+      const newDimensions = getDimensions();
       if (newDimensions) {
-        setDimensions(newDimensions);
+        setDimensions(oldDimensions => {
+          if (
+            newDimensions.width !== oldDimensions.width
+            || newDimensions.height !== oldDimensions.height
+          ) {
+            return newDimensions;
+          }
+          return oldDimensions;
+        });
       }
     },
-    [timetableRef],
+    [],
   );
-  const [version, setVersion] = React.useState(false);
+  const [, setVersion] = React.useState(false);
   React.useEffect(() => {
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
-  }, [timetableRef, updateDimensions]);
+  }, [updateDimensions]);
   const forceUpdate = React.useCallback(
     () => {
       if (dimensions.width === 0) updateDimensions();
-      setVersion(!version);
+      setVersion(v => !v);
     },
-    [dimensions.width, version, updateDimensions],
+    [dimensions.width, updateDimensions],
   );
 
-  useEffect(forceUpdate, [timetable.version]);
-  useEffect(updateDimensions, [hours]);
+  const { version } = timetable;
+  useEffect(forceUpdate, [version, forceUpdate]);
+  useEffect(updateDimensions, [hours, updateDimensions]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
@@ -319,7 +327,7 @@ function TimetableTable({
       </Fade>
 
       <TimetableGrid
-        timetableRef={timetableRef}
+        timetableGridId={timetableGridId}
         start={start}
         end={end}
         disabled={disabled}
