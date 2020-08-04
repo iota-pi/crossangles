@@ -18,9 +18,6 @@ describe('buildQueryString and parseQueryString', () => {
       timetable: testTimetable,
       colours: testColours,
       options: testOptions,
-      twentyFourHours: false,
-      darkMode: false,
-      compactView: false,
     });
     const queryString = buildQueryString(data);
     const result = parseQueryString(queryString);
@@ -33,9 +30,6 @@ describe('buildQueryString and parseQueryString', () => {
       timetable: getEmptySessionManagerData(),
       colours: {},
       options: {},
-      twentyFourHours: false,
-      darkMode: false,
-      compactView: false,
     });
   });
 
@@ -44,9 +38,6 @@ describe('buildQueryString and parseQueryString', () => {
       timetable: testTimetable,
       colours: testColours,
       options: testOptions,
-      twentyFourHours: false,
-      darkMode: true,
-      compactView: false,
     });
     const queryString = buildQueryString({ ...data, abc: 123 } as SaveAsImageData);
     const result = parseQueryString(queryString);
