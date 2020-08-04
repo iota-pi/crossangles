@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react';
+import React from 'react';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import IconButton from '@material-ui/core/IconButton';
@@ -110,7 +110,7 @@ const daysToLetters: {[key: string]: string} = {
 
 export interface Props {
   disabled: boolean,
-  timetableRef: RefObject<HTMLDivElement>,
+  timetableGridId: string,
   start: number,
   end: number,
   compact: boolean,
@@ -121,7 +121,7 @@ export interface Props {
 
 const Grid: React.FC<Props> = ({
   disabled,
-  timetableRef,
+  timetableGridId,
   start,
   end,
   compact,
@@ -157,7 +157,7 @@ const Grid: React.FC<Props> = ({
   const rowClasses = rowClassList.join(' ');
 
   return (
-    <div className={classes.grid} ref={timetableRef}>
+    <div id={timetableGridId} className={classes.grid}>
       <div className={`${classes.row} ${classes.compact} ${classes.header}`}>
         <div className={`${classes.cell} ${classes.time} ${classes.timeCentred}`}>
           {onToggleTwentyFourHours && (
