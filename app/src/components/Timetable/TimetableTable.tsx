@@ -9,7 +9,7 @@ import { TimetableGrid } from './TimetableGrid';
 import { TimetableSession } from './TimetableSession';
 import { TimetableDropzone } from './TimetableDropzone';
 import { SNAP_DIST, DROPZONE_Z } from './timetableUtil';
-import { Dimensions, Position } from './timetableTypes';
+import { Dimensions, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
 import {
@@ -193,7 +193,7 @@ function TimetableTable({
   );
 
   const handleMove = React.useCallback(
-    (session: LinkedSession, delta: Position) => {
+    (session: LinkedSession, delta: TimetablePosition) => {
       timetable.move(session.id, delta);
       forceUpdate();
     },
@@ -201,7 +201,7 @@ function TimetableTable({
   );
 
   const getNearestDropzone = React.useCallback(
-    (position: Position): DropzonePlacement | null => {
+    (position: TimetablePosition): DropzonePlacement | null => {
       const { x, y } = position;
       let nearest: DropzonePlacement | null = null;
       let bestDistance = SNAP_DIST * SNAP_DIST;
