@@ -109,7 +109,7 @@ export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void 
             <a
               className={classes.link}
               onClick={event => { event.preventDefault(); onShowContact(); }}
-              href="#"
+              href="#contact"
             >
               contact us
             </a>
