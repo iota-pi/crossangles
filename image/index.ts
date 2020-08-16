@@ -3,6 +3,9 @@ import { LambdaResponder } from '../lambda-shared/LambdaResponder';
 import { standardiseHeaders } from '../lambda-shared/util';
 import { screenshot } from './screenshot';
 import { saveForDebug } from './dumpDebugData';
+import { getLogger } from './logging';
+
+const logger = getLogger();
 
 export function handler (_event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult>;
 export function handler (_event: ScheduledEvent): Promise<void>;
@@ -11,7 +14,7 @@ export async function handler (
 ): Promise<APIGatewayProxyResult | void> {
   if ((_event as ScheduledEvent).source === 'aws.events') {
     // CloudWatch Event
-    console.log('lambda warmed');
+    logger.info('lambda warmed');
     return;
   }
 
@@ -56,30 +59,30 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const { width, height } = data.viewport;
     const viewport = { width, height };
     delete data.viewport;
-    console.log(`Using viewport: ${viewport}`);
+    logger.info(`using viewport: ${viewport}`);
 
     const baseURI = event.headers.origin + '/timetable/index.html';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
-    console.log(`Timetable URI is: ${uri}`);
+    logger.info(`timetable URI is: ${uri}`);
 
     const debugPromise = saveForDebug(data);
     const imagePromise = screenshot(uri, viewport);
 
     try {
       await debugPromise;
-      console.log('debug data saved');
+      logger.info('debug data saved');
     } catch (error) {
-      console.error('failed to save debug info', error);
+      logger.error('failed to save debug info', error);
     }
 
     const image = await imagePromise;
-    console.log('Finished saving as image');
+    logger.info('finished saving as image');
     return responder.getResponse({
       data: image,
     });
   } catch (e) {
-    console.error('caught unexpected error', e);
+    logger.error('caught unexpected error', e);
     return responder.getResponse({
       statusCode: 500,
       message: 'An error occurred while attempting to save your timetable as an image',
