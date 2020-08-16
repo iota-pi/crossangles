@@ -11,7 +11,7 @@ export const MAX_BODY_LENGTH = 10000;
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   standardiseHeaders(event);
-  const responder = new LambdaResponder(event);
+  const responder = new LambdaResponder(event, logger);
   const method = event.httpMethod.toUpperCase();
 
   switch (method) {

@@ -21,7 +21,7 @@ export async function handler (
   const event = _event as APIGatewayProxyEvent;
 
   standardiseHeaders(event);
-  const responder = new LambdaResponder(event);
+  const responder = new LambdaResponder(event, logger);
   const method = event.httpMethod.toUpperCase();
 
   switch (method) {

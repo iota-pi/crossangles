@@ -1,4 +1,5 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
+import { Logger } from 'winston';
 
 export interface ResponseOptions {
   statusCode?: number,
@@ -14,11 +15,12 @@ export interface ResponseHeaders {
 export class LambdaResponder {
   private origin: string;
   private originIsAllowed: boolean;
-  shouldLog = process.env.NODE_ENV !== 'test';
+  logger?: Logger;
 
-  constructor (event: APIGatewayProxyEvent) {
+  constructor (event: APIGatewayProxyEvent, logger?: Logger) {
     this.origin = event.headers.origin;
     this.originIsAllowed = this.checkOrigin(this.origin);
+    this.logger = logger;
   }
 
   getResponse = (options?: ResponseOptions): APIGatewayProxyResult => {
@@ -38,7 +40,7 @@ export class LambdaResponder {
       body,
     };
 
-    if (this.shouldLog) console.log(result);
+    this.logger?.info(result);
     return result;
   }
 
@@ -59,8 +61,8 @@ export class LambdaResponder {
       /^https:\/\/([^.]+\.)*crossangles\.(app|com)$/,
     ];
     const result = allowedOrigins.some(re => re.test(origin));
-    if (!result && this.shouldLog) {
-      console.log(`Blocking origin: ${origin}`);
+    if (!result) {
+      this.logger?.info(`Blocking origin: ${origin}`);
     }
     return result;
   }
