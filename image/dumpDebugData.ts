@@ -21,7 +21,7 @@ const upload = (content: string, campus: string, additionalParams?: Partial<S3.P
     ContentType: 'application/json',
     Body: content,
     ContentMD5: hash,
-    ACL: 'public-read',
+    ACL: 'private',
     ...additionalParams,
   }).promise();
 }
