@@ -60,6 +60,13 @@ resource "aws_s3_bucket" "timetables" {
   tags = local.standard_tags
 }
 
+resource "aws_s3_bucket_public_access_block" "block-public-acls" {
+  bucket = aws_s3_bucket.timetables.id
+
+  block_public_acls  = true
+  ignore_public_acls = true
+}
+
 resource "aws_iam_policy" "image_policy" {
   description = "Lambda policy to allow writing logs and to S3"
 
