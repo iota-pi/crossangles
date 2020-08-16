@@ -3,6 +3,9 @@ import { LambdaResponder } from '../lambda-shared/LambdaResponder';
 import { standardiseHeaders } from '../lambda-shared/util';
 import sendMail, { initMailgun } from './sendMail';
 import { parseBody } from './parseBody';
+import { getLogger } from './logging';
+
+const logger = getLogger();
 
 export const MAX_BODY_LENGTH = 10000;
 
@@ -56,11 +59,11 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     });
   }
 
-  console.log('Validated request data, initialising mailgun');
+  logger.info('Validated request data, initialising mailgun');
   initMailgun();
-  console.log('Sending mail');
+  logger.info('Sending mail', {...body});
   await sendMail(body);
-  console.log('Finished sending mail');
+  logger.info('Finished sending mail');
 
   return responder.getResponse({
     message: 'Thanks, your message has been received',

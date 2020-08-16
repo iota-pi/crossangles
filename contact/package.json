@@ -9,16 +9,17 @@
   },
   "author": "David Adams",
   "dependencies": {
-    "mailgun-js": "^0.22.0"
+    "mailgun-js": "^0.22.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.59",
+    "@types/aws-lambda": "^8.10.61",
     "@types/jest": "^25.2.3",
-    "@types/mailgun-js": "^0.22.9",
+    "@types/mailgun-js": "^0.22.10",
     "jest": "^25.5.4",
     "ts-jest": "^25.5.1",
     "typescript": "^3.9.7",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }
 }
