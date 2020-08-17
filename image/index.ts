@@ -59,12 +59,11 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
     const { width, height } = data.viewport;
     const viewport = { width, height };
     delete data.viewport;
-    logger.info(`using viewport: ${viewport}`);
 
     const baseURI = event.headers.origin + '/timetable/index.html';
     const queryString = buildQueryString(data);
     const uri = baseURI + queryString;
-    logger.info(`timetable URI is: ${uri}`);
+    logger.info('taking screenshot', {uri, ...viewport});
 
     const debugPromise = saveForDebug(data);
     const imagePromise = screenshot(uri, viewport);
