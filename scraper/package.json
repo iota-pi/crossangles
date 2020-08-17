@@ -6,13 +6,14 @@
   "scripts": {
     "test": "./test.sh",
     "build": "./build.sh",
-    "watch": "npx tsc -w",
-    "start": "node build/scraper"
+    "lint": "./node_modules/.bin/eslint . --ext .ts",
+    "start": "node build/scraper",
+    "watch": "npx tsc -w"
   },
   "author": "David Adams",
   "dependencies": {
-    "@types/moment-timezone": "^0.5.13",
-    "@types/node": "^13.13.14",
+    "@types/moment-timezone": "^0.5.30",
+    "@types/node": "^13.13.15",
     "axios": "^0.19.2",
     "axios-retry": "^3.1.8",
     "cheerio": "^1.0.0-rc.3",
@@ -22,11 +23,16 @@
   "devDependencies": {
     "@types/cheerio": "^0.22.21",
     "@types/jest": "^25.2.3",
-    "aws-sdk": "^2.714.2",
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "aws-sdk": "^2.734.0",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-typescript": "^9.0.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^23.20.0",
     "jest": "^25.5.4",
     "ts-jest": "^25.5.1",
     "typescript": "^3.9.7",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }
 }
