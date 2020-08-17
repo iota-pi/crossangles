@@ -1,8 +1,8 @@
-import ClassUtilScraper, { CLASSUTIL } from './ClassUtilScraper';
+import { ClassUtilScraper, CLASSUTIL } from './ClassUtilScraper';
 import { CampusData, Scraper } from '../Scraper';
 import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
 import { getStreamId, StreamData } from '../../../app/src/state/Stream';
-import StateManager from '../../state/StateManager';
+import { StateManager } from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
 import { getLogger } from '../../logging';
@@ -15,8 +15,10 @@ export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
 
+type ScrapeUNSWArgs = { scraper?: Scraper, state?: StateManager | null, forceUpdate?: boolean };
+
 export async function scrapeUNSW(
-  { scraper, state, forceUpdate = false }: { scraper?: Scraper, state?: StateManager | null, forceUpdate?: boolean }
+  { scraper, state, forceUpdate = false }: ScrapeUNSWArgs,
 ): Promise<CampusData[] | null> {
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });
@@ -71,7 +73,7 @@ export async function scrapeUNSW(
   return results;
 }
 
-export function mergeData (classutilData?: CourseData[], timetableData?: CourseData[]) {
+export function mergeData(classutilData?: CourseData[], timetableData?: CourseData[]) {
   // Just use data from one if the other has no data
   if (!classutilData || !timetableData) {
     if (timetableData) {
@@ -80,10 +82,9 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     } else if (classutilData) {
       logger.warn('No data from timetable, using classutil data only');
       return classutilData;
-    } else {
-      logger.warn('No data from classutil or timetable!');
-      return [];
     }
+    logger.warn('No data from classutil or timetable!');
+    return [];
   }
 
   const timetableCourseMap: CourseMap = {};
@@ -122,13 +123,13 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
     if (timetableCourse !== undefined) {
       for (const stream of course.streams) {
         const timetableStream = timetableCourse.streams.find(
-          s => getStreamId(timetableCourse, s, true) === getStreamId(course, stream, true)
+          s => getStreamId(timetableCourse, s, true) === getStreamId(course, stream, true),
         );
 
         if (stream.times && timetableStream && timetableStream.times) {
           for (const time of stream.times) {
             const timetableTime = timetableStream.times.find(
-              t => t.time === time.time
+              t => t.time === time.time,
             );
 
             if (timetableTime) {
@@ -149,36 +150,45 @@ export function filterEnrolmentStreams(streams: StreamData[]) {
   return streams.filter(s => regex.test(s.component));
 }
 
-export async function scrapeClassUtil(classutil: ClassUtilScraper, useCache: boolean): Promise<CourseData[][]> {
-  let classutilData: CourseData[][] = [];
+export function scrapeClassUtil(
+  classutil: ClassUtilScraper,
+  useCache: boolean,
+): Promise<CourseData[][]> {
+  const classutilData: Promise<CourseData[]>[] = [];
+
   for (const term of terms) {
     if (useCache) {
-      classutilData.push(await classutil.getCache(term));
+      classutilData.push(classutil.getCache(term));
     } else {
       try {
-        classutilData.push(await classutil.scrape(term));
+        classutilData.push(classutil.scrape(term));
       } catch (error) {
         logger.error(`Error while scraping from ${CLASSUTIL} for term ${term}`, error);
       }
     }
   }
-  return classutilData;
+  return Promise.all(classutilData);
 }
 
-export async function scrapeTimetable(timetable: TimetableScraper, useCache: boolean): Promise<CourseData[][]> {
+export async function scrapeTimetable(
+  timetable: TimetableScraper,
+  useCache: boolean,
+): Promise<CourseData[][]> {
   if (useCache) {
-    return await timetable.getCache();
-  } else {
-    try {
-      return await timetable.scrape();
-    } catch (error) {
-      logger.error(`Error while scraping from ${TIMETABLE_UNSW}`, error);
-    }
+    return timetable.getCache();
   }
-  return [];
+
+  try {
+    return await timetable.scrape();
+  } catch (error) {
+    logger.error(`Error while scraping from ${TIMETABLE_UNSW}`, error);
+    return [];
+  }
 }
 
-export function selectCurrentTerm(data: CampusData[]) {
+export function selectCurrentTerm(
+  data: CampusData[],
+) {
   let currentTerm: number | null = null;
   for (let i = 0; i < data.length; i++) {
     const courses = data[i].courses;

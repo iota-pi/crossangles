@@ -1,11 +1,11 @@
 import { CourseData } from '../../../app/src/state/Course';
 import { DeliveryType, StreamData } from '../../../app/src/state/Stream';
 
-export function removeDuplicateStreams (course: CourseData) {
+export function removeDuplicateStreams(course: CourseData) {
   const mapping = new Map<string, StreamData[]>();
-  for (let stream of course.streams) {
+  for (const stream of course.streams) {
     const times = stream.times !== null ? stream.times.map(t => t.time) : null;
-    const key = stream.component + `[${times}]`;
+    const key = `${stream.component}[${times}]`;
     const currentGroup = mapping.get(key) || [];
     const newGroup = currentGroup.concat(stream);
     mapping.set(key, newGroup);
@@ -15,7 +15,7 @@ export function removeDuplicateStreams (course: CourseData) {
   for (const streamGroup of Array.from(mapping.values())) {
     const emptiest = emptiestStream(streamGroup);
     emptiest.delivery = mergeDeliveryType(streamGroup);
-    for (let stream of streamGroup) {
+    for (const stream of streamGroup) {
       if (stream !== emptiest) {
         const index = course.streams.indexOf(stream);
         course.streams.splice(index, 1);
@@ -24,10 +24,10 @@ export function removeDuplicateStreams (course: CourseData) {
   }
 }
 
-function emptiestStream (streams: StreamData[]) {
+function emptiestStream(streams: StreamData[]) {
   let bestStream = null;
   let bestRatio = Infinity;
-  for (let stream of streams) {
+  for (const stream of streams) {
     const ratio = stream.enrols[0] / stream.enrols[1];
     if (ratio < bestRatio) {
       bestRatio = ratio;
@@ -38,7 +38,7 @@ function emptiestStream (streams: StreamData[]) {
   return bestStream!;
 }
 
-export function mergeDeliveryType (streams: StreamData[]): DeliveryType | undefined {
+export function mergeDeliveryType(streams: StreamData[]): DeliveryType | undefined {
   // Merges delivery types of multiple streams
   let delivery: DeliveryType | undefined;
   for (const stream of streams) {

@@ -1,3 +1,4 @@
+/* eslint-disable quote-props */
 import {
   splitLocation,
   getShortActivity,
@@ -47,7 +48,7 @@ describe('parsing utilities', () => {
     ];
     const results = data.filter(x => !shouldSkipStream(x));
     expect(results.length).toBe(data.length);
-  })
+  });
 
   it('shouldSkipStream() = true', () => {
     const data: StreamTableData[] = [
@@ -70,7 +71,7 @@ describe('parsing utilities', () => {
     ];
     const results = data.filter(x => !shouldSkipStream(x));
     expect(results.length).toBe(0);
-  })
+  });
 
   it.each`
     time         | expected
@@ -86,7 +87,7 @@ describe('parsing utilities', () => {
     ${'1,N2,11'} | ${false}
   `('weeksAreOutsideTerm("$time") = $expected', ({ time, expected }) => {
     expect(weeksAreOutsideTerm(time)).toEqual(expected);
-  })
+  });
 
   it.each`
     term                                      | expected
@@ -97,7 +98,7 @@ describe('parsing utilities', () => {
     ${'AFB - ASU Fall Session B'}             | ${undefined}
   `('getTermNumber("$term") = $expected', ({ term, expected }) => {
     expect(getTermNumber(term)).toEqual(expected);
-  })
+  });
 
   it.each`
     location                         | result
@@ -106,18 +107,18 @@ describe('parsing utilities', () => {
     ${'Online (ONLINE)'}             | ${['Online', 'ONLINE']}
   `('splitLocation("$location") === $result', ({ location, result }) => {
     expect(splitLocation(location)).toEqual(result);
-  })
+  });
 
   it.each`
     Activity                 | Section   | expected
     ${'Course Enrolment'}    | ${'CR01'} | ${'CR01'}
     ${'Tutorial-Laboratory'} | ${'T11A'} | ${'TLB'}
     ${'Lecture'}             | ${'A'}    | ${'LEC'}
-  `('getComponent', ({Activity, Section, expected}) => {
-    const data: StreamTableData = {...baseStreamTableData, Activity, Section};
+  `('getComponent', ({ Activity, Section, expected }) => {
+    const data: StreamTableData = { ...baseStreamTableData, Activity, Section };
     const result = getComponent(data);
     expect(result).toBe(expected);
-  })
+  });
 
   it.each`
     long                     | short
@@ -128,7 +129,7 @@ describe('parsing utilities', () => {
     ${'Other'}               | ${'OTH'}
   `('getShortActivity("$long") = "$short"', ({ long, short }) => {
     expect(getShortActivity(long)).toEqual(short);
-  })
+  });
 
   it.each`
     day              | abbrev
@@ -158,7 +159,7 @@ describe('parsing utilities', () => {
     ${'Mon, Tue, Wed'} | ${'MTW'}
   `('abbreviateDay("$day") = "$abbrev"', ({ day, abbrev }) => {
     expect(abbreviateDay(day)).toEqual(abbrev);
-  })
+  });
 
   it.each`
     time               | short
@@ -171,7 +172,7 @@ describe('parsing utilities', () => {
     ${'12:00 - 13:30'} | ${'12-13.5'}
   `('shortenTime("$time") = "$short"', ({ time, short }) => {
     expect(shortenTime(time)).toEqual(short);
-  })
+  });
 
   it.each`
     section   | expected
@@ -181,7 +182,7 @@ describe('parsing utilities', () => {
     ${'CR01'} | ${undefined}
   `('getIsWeb("$section") = $expected', ({ section, expected }) => {
     expect(getIsWeb(section)).toEqual(expected);
-  })
+  });
 
   it.each`
     status         | expected
@@ -195,7 +196,7 @@ describe('parsing utilities', () => {
     ${'Cancelled'} | ${undefined}
   `('getIsFull("$status") = $expected', ({ status, expected }) => {
     expect(getIsFull(status)).toEqual(expected);
-  })
+  });
 
   it.each`
     status        | expected
@@ -207,7 +208,7 @@ describe('parsing utilities', () => {
     ${'MTW10-16'} | ${true}
   `('isIntensive("$status") = $expected', ({ status, expected }) => {
     expect(isIntensive(status)).toEqual(expected);
-  })
+  });
 
   it.each`
     status        | expected
@@ -221,5 +222,5 @@ describe('parsing utilities', () => {
     ${'MTS10-16'} | ${true}
   `('isOnWeekend("$status") = $expected', ({ status, expected }) => {
     expect(isOnWeekend(status)).toEqual(expected);
-  })
-})
+  });
+});

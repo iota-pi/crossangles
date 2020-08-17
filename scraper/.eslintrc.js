@@ -49,5 +49,6 @@ module.exports = {
     ],
     'object-curly-newline': 'off',
     'prefer-destructuring': 'off',
+    'radix': 'off',
   },
 };

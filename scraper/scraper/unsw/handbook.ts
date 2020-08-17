@@ -17,11 +17,11 @@ export const fetchHandbookNames = async (): Promise<CourseNameMap> => {
   }
 
   const mapping: CourseNameMap = {};
-  for (const course of handbook.data['contentlets']) {
-    const code = course['code'] as string;
-    const name = course['name'] as string;
+  for (const course of handbook.data.contentlets) {
+    const code = course.code as string;
+    const name = course.name as string;
     mapping[code] = name;
   }
 
   return mapping;
-}
+};
