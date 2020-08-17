@@ -3,8 +3,6 @@ import { CourseData, Career } from '../../../app/src/state/Course';
 import { ClassTime, StreamData, DeliveryType } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
-import additional from '../../data/additional';
-import { hashData } from '../../data/util';
 import { removeDuplicateStreams } from './commonUtils';
 import { getLogger } from '../../logging';
 
@@ -26,10 +24,6 @@ const REGULAR_CELL_COUNT = 8;
 
 const CACHE_KEY = 'classutil_last_data';
 const UPDATE_TIME_KEY = 'classutil_update_time';
-const ADDITIONAL_HASH_KEY = 'additional_data_hash';
-
-const ADDITIONAL_DATA = additional.unsw;
-const ADDITIONAL_DATA_HASH = hashData(ADDITIONAL_DATA);
 
 export const CLASSUTIL = 'http://classutil.unsw.edu.au';
 
@@ -88,7 +82,6 @@ export class ClassUtilScraper {
   async persistState (result: CourseData[], term: number) {
     if (this.state) {
       await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
-      await this.state.set(this.campus, ADDITIONAL_HASH_KEY, ADDITIONAL_DATA_HASH);
       logger.info(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
 
       const cacheKey = this.getCacheKey(term);
@@ -143,9 +136,6 @@ export class ClassUtilScraper {
     for (let course of allCourses) {
       removeDuplicateStreams(course);
     }
-
-    // Add (campus-specific) additional events
-    allCourses.push(...ADDITIONAL_DATA);
 
     // Sort courses for consistency
     allCourses.sort(courseSort);

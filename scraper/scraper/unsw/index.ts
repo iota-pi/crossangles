@@ -6,6 +6,8 @@ import StateManager from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import { generateMetaData } from '../meta';
 import { getLogger } from '../../logging';
+import getAdditional from '../../data/additional';
+import { getCurrentTerm } from '../../../app/src/state/Meta';
 
 const logger = getLogger('scrapeUNSW', { campus: 'unsw' });
 
@@ -13,7 +15,7 @@ export const UNSW = 'unsw';
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
 
-export async function scrapeUNSW (
+export async function scrapeUNSW(
   { scraper, state, forceUpdate = false }: { scraper?: Scraper, state?: StateManager | null, forceUpdate?: boolean }
 ): Promise<CampusData[] | null> {
   const classutil = new ClassUtilScraper({ scraper, state });
@@ -40,19 +42,27 @@ export async function scrapeUNSW (
   const results: CampusData[] = [];
   for (let i = 0; i < terms.length; ++i) {
     const term = i + 1;
+    const meta = generateMetaData(term, sources);
+
     logger.info(`Merging data for term ${term}`);
     const mergedData = mergeData(classutilData[i], timetableData[i]);
+
+    logger.info(`Including additional data for term ${term}`);
+    const termString = getCurrentTerm(meta);
+    const additional = getAdditional(UNSW, termString);
+    const courses = [...mergedData, ...additional];
+
     results.push({
       campus: UNSW,
-      courses: mergedData,
-      meta: generateMetaData(term, sources),
+      courses,
       current: false,
+      meta,
     });
   }
 
   // Nominate latest stream with sufficient data as being "current"
   logger.info('Picking current term');
-  const currentTerm = getCurrentTerm(results);
+  const currentTerm = selectCurrentTerm(results);
   if (currentTerm !== null) {
     results[currentTerm].current = true;
   }
@@ -134,12 +144,12 @@ export function mergeData (classutilData?: CourseData[], timetableData?: CourseD
   return classutilData;
 }
 
-export function filterEnrolmentStreams (streams: StreamData[]) {
+export function filterEnrolmentStreams(streams: StreamData[]) {
   const regex = /^CR(?:[0-9]{2}|S)$/;
   return streams.filter(s => regex.test(s.component));
 }
 
-export async function scrapeClassUtil (classutil: ClassUtilScraper, useCache: boolean): Promise<CourseData[][]> {
+export async function scrapeClassUtil(classutil: ClassUtilScraper, useCache: boolean): Promise<CourseData[][]> {
   let classutilData: CourseData[][] = [];
   for (const term of terms) {
     if (useCache) {
@@ -155,7 +165,7 @@ export async function scrapeClassUtil (classutil: ClassUtilScraper, useCache: bo
   return classutilData;
 }
 
-export async function scrapeTimetable (timetable: TimetableScraper, useCache: boolean): Promise<CourseData[][]> {
+export async function scrapeTimetable(timetable: TimetableScraper, useCache: boolean): Promise<CourseData[][]> {
   if (useCache) {
     return await timetable.getCache();
   } else {
@@ -168,7 +178,7 @@ export async function scrapeTimetable (timetable: TimetableScraper, useCache: bo
   return [];
 }
 
-export function getCurrentTerm (data: CampusData[]) {
+export function selectCurrentTerm(data: CampusData[]) {
   let currentTerm: number | null = null;
   for (let i = 0; i < data.length; i++) {
     const courses = data[i].courses;

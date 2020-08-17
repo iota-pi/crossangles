@@ -26,7 +26,7 @@ describe('scrapeUNSW', () => {
         };
       }
     }
-    expect(courses.filter(c => c.isAdditional)).toMatchSnapshot();
+    expect(courses).toMatchSnapshot();
     await cache.write(cacheFile);
   })
 })
