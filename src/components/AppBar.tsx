@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import createStyles from '@material-ui/core/styles/createStyles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,7 +10,6 @@ import InvertColorsOff from '@material-ui/icons/InvertColorsOff';
 import { makeStyles } from '@material-ui/core';
 import { AppOptions } from './AppOptions';
 import { AboutCrossAngles } from './AboutCrossAngles';
-import { useSelector, useDispatch } from 'react-redux';
 import { getOptions } from '../state/selectors';
 import { toggleOption } from '../actions';
 

@@ -9,3 +9,5 @@ export function useCache<T>(value: T | undefined): T | undefined {
   }, [value]);
   return cache;
 }
+
+export default { useCache };
