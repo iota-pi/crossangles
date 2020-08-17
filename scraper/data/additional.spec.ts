@@ -12,7 +12,7 @@ it('getAdditional default and non-existent term are identical', () => {
 
 it('getAdditional fills in details from default', () => {
   const defaultData = getAdditional('unsw');
-  const termData = getAdditional('unsw', '2020T3');
+  const termData = getAdditional('unsw', '2020~3');
   expect(termData[0].autoSelect).toEqual(defaultData[0].autoSelect);
   expect(termData[0].defaultColour).toEqual(defaultData[0].defaultColour);
   expect(termData[0].description).toEqual(defaultData[0].description);
