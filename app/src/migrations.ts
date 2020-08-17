@@ -55,7 +55,7 @@ export const migrations = {
       ...otherState,
       options: { ...options, compactView, darkMode, reducedMotion, twentyFourHours },
     };
-  }
+  },
 };
 
 export default migrations;

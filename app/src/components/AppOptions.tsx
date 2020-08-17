@@ -101,7 +101,7 @@ export const AppOptions = () => {
 
         <DialogContent>
           {generalOptionList.map(([name, label]) => (
-            <div className={classes.optionContainer}>
+            <div className={classes.optionContainer} key={name}>
               <Typography
                 className={classes.optionLabel}
                 onClick={() => handleChange(name)}

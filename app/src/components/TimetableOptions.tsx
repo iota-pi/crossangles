@@ -1,11 +1,9 @@
 import React from 'react';
-
-// Styles
+import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { timetableOptionList, Options, OptionName } from '../state';
-import { useSelector } from 'react-redux';
 import { getOptions } from '../state/selectors';
 
 const useStyles = makeStyles(theme => ({
