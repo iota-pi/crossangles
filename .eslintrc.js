@@ -52,6 +52,7 @@ module.exports = {
     ],
     'object-curly-newline': 'off',
     'prefer-destructuring': 'off',
+    'radix': 'off',
     'react/destructuring-assignment': 'off',
     'react/jsx-indent': ['error', 2, {checkAttributes: true, indentLogicalExpressions: true}],
     'react/jsx-one-expression-per-line': 'off',
