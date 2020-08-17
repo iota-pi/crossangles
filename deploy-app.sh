@@ -27,6 +27,11 @@ fi
 environment_hyphens=$(echo $environment | sed 's/./-/g')
 echo "Deploying app to $environment"
 echo "-----------------$environment_hyphens"
+export REACT_APP_BASE_URL=crossangles.app
+if [[ $environment != "production" ]]; then
+else
+  export REACT_APP_BASE_URL=$environment.crossangles.app
+fi
 export REACT_APP_STAGE_NAME=$environment
 export REACT_APP_CONTACT_ENDPOINT=$contact_endpoint
 export REACT_APP_SAVE_IMAGE_ENDPOINT=$image_endpoint
