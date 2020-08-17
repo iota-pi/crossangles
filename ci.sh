@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-COMMAND_LIST="ci-install|install|build|test|run|scrape|cypress"
+COMMAND_LIST="ci-install|install|build|lint|test|run|scrape|cypress"
 COMMAND=$1
 
 if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
