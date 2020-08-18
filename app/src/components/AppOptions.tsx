@@ -110,7 +110,7 @@ export const AppOptions = () => {
               </Typography>
 
               <Switch
-                checked={options[name]}
+                checked={options[name] || false}
                 onChange={() => handleChange(name)}
                 color={darkMode ? 'primary' : 'secondary'}
                 classes={{ track: classes.selectTrack }}
