@@ -43,10 +43,10 @@ if [[ $COMMAND == lint ]]; then
     cd app
     npm run lint
   )
-  # (
-  #   cd scraper
-  #   npm run lint
-  # )
+  (
+    cd scraper
+    npm run lint
+  )
 fi
 
 if [[ $COMMAND == test ]]; then

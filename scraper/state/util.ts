@@ -1,5 +1,5 @@
 import { StateManager } from './StateManager';
-import { getStateManager } from './getStateManager';
+import getStateManager from './getStateManager';
 
 const GLOBAL_STATE = '__all__';
 const version = process.env.SCRAPER_VERSION;

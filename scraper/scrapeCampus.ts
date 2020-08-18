@@ -5,17 +5,18 @@ import getStateManager from './state/getStateManager';
 import HTMLCache from './scraper/HTMLCache';
 import { checkVersionChange, updateVersion } from './state/util';
 import { getLogger } from './logging';
+import CampusError from './scraper/CampusError';
 
 const logger = getLogger('scrapeCampus');
 
-export const scrapeCampus = async (
+async function scrapeCampus(
   campus: string,
   outputPrefix: string = '',
   cacheFile?: string,
   useState = true,
-) => {
-  let scraper: Scraper | undefined = undefined;
-  let cache: HTMLCache | undefined = undefined;
+) {
+  let scraper: Scraper | undefined;
+  let cache: HTMLCache | undefined;
   if (cacheFile) {
     scraper = new Scraper();
     cache = scraper.cache;
@@ -34,6 +35,9 @@ export const scrapeCampus = async (
   switch (campus) {
     case UNSW:
       data = await scrapeUNSW({ scraper, state, forceUpdate });
+      break;
+    default:
+      throw new CampusError(`Unhandled campus ${campus}`);
   }
 
   if (data) {
@@ -42,25 +46,27 @@ export const scrapeCampus = async (
       await cache.write(cacheFile);
     }
 
+    const writeDataPromises: Promise<void>[] = [];
     for (const term of data) {
       logger.info(`Writing term ${term} data`);
-      await writeTermData(outputPrefix, term);
+      writeDataPromises.push(writeTermData(outputPrefix, term));
 
       if (term.current) {
         logger.info(`Writing current data (term ${term})`);
-        await writeTermData(outputPrefix, term, true);
+        writeDataPromises.push(writeTermData(outputPrefix, term, true));
       }
     }
+    await Promise.all(writeDataPromises);
   } else {
     logger.info(`${UNSW}: no data written`);
   }
 }
 
-const writeTermData = async (
+async function writeTermData(
   outputPrefix: string,
   termData: CampusData,
   current?: boolean,
-) => {
+) {
   const { term, year } = termData.meta;
   let destination: string;
   if (current) {

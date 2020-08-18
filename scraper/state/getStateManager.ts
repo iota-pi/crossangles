@@ -7,6 +7,6 @@ const dynamoParams: AWS.DynamoDB.ClientConfiguration = {
 
 const client = new AWS.DynamoDB.DocumentClient(dynamoParams);
 
-export const getStateManager = () => new StateManager(client);
+const getStateManager = () => new StateManager(client);
 
 export default getStateManager;

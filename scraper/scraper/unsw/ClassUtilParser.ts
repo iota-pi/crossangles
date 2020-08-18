@@ -5,8 +5,8 @@ const TABLE_END_COUNT = 1;
 const COURSE_HEADING_COUNT = 2;
 const REGULAR_CELL_COUNT = 8;
 
-export class ClassUtilParser {
-  async parseFacultyPage ($: CheerioStatic): Promise<CourseData[]> {
+class ClassUtilParser {
+  async parseFacultyPage($: CheerioStatic): Promise<CourseData[]> {
     // Get all rows of the table
     const rows = Array.from($($('table').get(2)).find('tr'));
 
@@ -63,22 +63,22 @@ export class ClassUtilParser {
     return courses;
   }
 
-  getCareer (time?: string): Career | undefined {
+  getCareer(time?: string): Career | undefined {
     if (!time) return undefined;
 
-    time = time.toLowerCase();
-    if (time.includes('ugrd')) {
+    const lowerTime = time.toLowerCase();
+    if (lowerTime.includes('ugrd')) {
       return Career.UGRD;
-    } else if (time.includes('pgrd')) {
+    } else if (lowerTime.includes('pgrd')) {
       return Career.PGRD;
-    } else if (time.includes('rsch')) {
+    } else if (lowerTime.includes('rsch')) {
       return Career.RSCH;
     }
 
     return undefined;
   }
 
-  parseCourse (code: string, rawName: string, section?: string, time?: string): CourseData {
+  parseCourse(code: string, rawName: string, section?: string, time?: string): CourseData {
     const term = this.extractTerm(rawName);
     const termRegex = new RegExp(`\\s*\\(${term}\\)$`);
     const name = rawName.replace(termRegex, '');
@@ -93,25 +93,27 @@ export class ClassUtilParser {
     };
   }
 
-  parseStream (
-    component: string,
+  parseStream(
+    rawComponent: string,
     section: string,
-    status: string,
+    rawStatus: string,
     enrolString: string,
     timeString: string,
   ): StreamData | null {
-    if (!this.checkStatus(status)) {
+    if (!this.checkStatus(rawStatus)) {
       return null;
     }
-    status = status.replace(/\*$/, '').toLowerCase();
+    const status = rawStatus.replace(/\*$/, '').toLowerCase();
     const full = status === 'full' ? true : undefined;
 
-    const enrols = enrolString.split(' ')[0].split('/').map(x => parseInt(x)) as [number, number];
+    const [current, capacity] = enrolString.split(' ')[0].split('/');
+    const enrols: [number, number] = [parseInt(current), parseInt(capacity)];
     if (enrols[1] === 0) {
       return null;
     }
 
-    let web = undefined;
+    let component = rawComponent;
+    let web;
     let times: ClassTime[] | null = null;
     if (section.includes('WEB')) {
       // Standardise all web streams as 'LEC' component
@@ -126,7 +128,9 @@ export class ClassUtilParser {
 
     let delivery: DeliveryType | undefined;
     if (times) {
-      const onlineTimes = times.filter(t => t.location && t.location.toLowerCase().replace(/[()]/g, '') === 'online');
+      const onlineTimes = times.filter(
+        t => t.location && t.location.toLowerCase().replace(/[()]/g, '') === 'online',
+      );
       if (onlineTimes.length === times.length) {
         delivery = DeliveryType.online;
       } else if (onlineTimes.length === 0) {
@@ -148,28 +152,30 @@ export class ClassUtilParser {
     };
   }
 
-  extractTerm (name: string) {
+  extractTerm(name: string) {
     const matches = / \(([A-Z][A-Z0-9]{2})\)$/.exec(name) || [];
     return matches[1];
   }
 
-  parseTimeStr (timeString: string): ClassTime[] | null {
+  parseTimeStr(timeString: string): ClassTime[] | null {
     // Basic string sanitisation
-    timeString = timeString.replace(/\/odd|\/even|Comb\/w.*/g, '').trim();
+    const times = timeString.replace(/\/odd|\/even|Comb\/w.*/g, '').trim();
 
     // Return empty list if no data has been given
-    if (timeString === '') {
+    if (times === '') {
       return [];
     }
 
-    if (timeString.indexOf('; ') !== -1) {
-      const timeParts = timeString.split('; ');
-      const times = timeParts.reduce((a: ClassTime[], t) => a.concat(this._parseTimeStringData(t)), []);
+    if (times.indexOf('; ') !== -1) {
+      const timeParts = times.split('; ');
+      const timeList = timeParts.reduce(
+        (a: ClassTime[], t) => a.concat(this._parseTimeStringData(t)), [],
+      );
 
       // Remove any duplicate times
       const timeSet = new Set();
       const finalTimes: ClassTime[] = [];
-      for (let time of times) {
+      for (const time of timeList) {
         if (!timeSet.has(time.time)) {
           timeSet.add(time.time);
           finalTimes.push(time);
@@ -177,12 +183,11 @@ export class ClassUtilParser {
       }
 
       return finalTimes;
-    } else {
-      return this._parseTimeStringData(timeString);
     }
+    return this._parseTimeStringData(times);
   }
 
-  private _parseTimeStringData (data: string): ClassTime[] {
+  private _parseTimeStringData(data: string): ClassTime[] {
     const openBracketIndex = data.indexOf('(');
     if (openBracketIndex !== -1) {
       const tidiedTime = this.tidyUpTime(data.slice(0, openBracketIndex).trim());
@@ -213,25 +218,25 @@ export class ClassUtilParser {
         location: location || undefined,
         canClash,
       }];
-    } else {
-      const tidiedTime = this.tidyUpTime(data);
-      if (tidiedTime !== null) {
-        const [ time, canClash ] = tidiedTime;
-        return [{ time, canClash }];
-      } else {
-        return [];
-      }
     }
+
+    const tidiedTime = this.tidyUpTime(data);
+    if (tidiedTime !== null) {
+      const [time, canClash] = tidiedTime;
+      return [{ time, canClash }];
+    }
+    return [];
   }
 
-  private tidyUpTime (time: string): [string, boolean | undefined] | null {
-    if (time === '' || time === '00-00') {
+  private tidyUpTime(_time: string): [string, boolean | undefined] | null {
+    if (_time === '' || _time === '00-00') {
       return null;
     }
 
-    const days = {'Mon': 'M', 'Tue': 'T', 'Wed': 'W', 'Thu': 'H', 'Fri': 'F', 'Sat': 'S', 'Sun': 's'};
-    for (let [day, letter] of Object.entries(days)) {
-      time = time.replace(day + ' ', letter);
+    let time = _time;
+    const days = { Mon: 'M', Tue: 'T', Wed: 'W', Thu: 'H', Fri: 'F', Sat: 'S', Sun: 's' };
+    for (const [day, letter] of Object.entries(days)) {
+      time = time.replace(`${day} `, letter);
     }
 
     // Use decimal notation for half-hours
@@ -241,7 +246,7 @@ export class ClassUtilParser {
     time = time.replace(/(?<=[MTWHFSs])0(?=[0-9])/, '');
 
     // Don't include courses which run over multiple days (usually intensives) or on weekends
-    if (isNaN(+time[1]) || time.toLocaleLowerCase().indexOf('s') !== -1) {
+    if (Number.isNaN(+time[1]) || time.toLocaleLowerCase().indexOf('s') !== -1) {
       return null;
     }
 
@@ -251,8 +256,8 @@ export class ClassUtilParser {
     return [time, canClash];
   }
 
-  private getWeeks (weeks: string) {
-    weeks = weeks.split(', ')[0].replace(/^[, ]|[, ]$/g, '');
+  private getWeeks(_weeks: string) {
+    let weeks = _weeks.split(', ')[0].replace(/^[, ]|[, ]$/g, '');
 
     if (weeks === '' || weeks[0] !== 'w') {
       return '';
@@ -268,8 +273,10 @@ export class ClassUtilParser {
     return weeks;
   }
 
-  checkStatus (status: string): boolean {
-    status = status.replace(/\*$/, '').toLowerCase();
+  checkStatus(_status: string): boolean {
+    const status = _status.replace(/\*$/, '').toLowerCase();
     return status === 'open' || status === 'full';
   }
 }
+
+export default ClassUtilParser;

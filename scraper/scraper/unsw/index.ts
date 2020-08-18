@@ -4,7 +4,7 @@ import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Cours
 import { getStreamId, StreamData } from '../../../app/src/state/Stream';
 import { StateManager } from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
-import { generateMetaData } from '../meta';
+import generateMetaData from '../meta';
 import { getLogger } from '../../logging';
 import getAdditional from '../../data/additional';
 import { getCurrentTerm } from '../../../app/src/state/Meta';

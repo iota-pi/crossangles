@@ -1,7 +1,7 @@
 import { Meta } from '../../app/src/state/Meta';
 import getAEST from '../getAEST';
 
-export function generateMetaData (term: number, sources: string[]): Meta {
+function generateMetaData(term: number, sources: string[]): Meta {
   const now = getAEST();
   const currentYear = now.year();
   const currentMonth = now.month();
@@ -16,3 +16,5 @@ export function generateMetaData (term: number, sources: string[]): Meta {
     updateTime,
   };
 }
+
+export default generateMetaData;

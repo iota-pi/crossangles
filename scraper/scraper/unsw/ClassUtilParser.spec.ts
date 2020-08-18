@@ -1,4 +1,4 @@
-import { ClassUtilParser } from './ClassUtilParser';
+import ClassUtilParser from './ClassUtilParser';
 import { Career } from '../../../app/src/state/Course';
 
 describe('Parser', () => {
@@ -16,7 +16,7 @@ describe('Parser', () => {
       term,
       streams: [],
     });
-  })
+  });
 
   it.each`
     section      | times                         | career
@@ -31,7 +31,7 @@ describe('Parser', () => {
     const result = p.parseCourse(rawCode, rawName, section, times);
     expect(result.career).toEqual(career || undefined);
     expect(result.section).toEqual(section || undefined);
-  })
+  });
 
   it.each`
     name                     | term
@@ -42,24 +42,24 @@ describe('Parser', () => {
   `('extractTerm($name) = $term', ({ name, term }) => {
     const p = new ClassUtilParser();
     expect(p.extractTerm(name)).toBe(term);
-  })
+  });
 
   it.each`
     raw | parsed
     ${'Wed 09-11# (w1-5,7-10, Online)'}
-      | ${[{"canClash": true, "location": "Online", "time": "W9-11", "weeks": "1-5,7-10"}]}
+      | ${[{ canClash: true, location: 'Online', time: 'W9-11', weeks: '1-5,7-10' }]}
     ${'Tue 09-10:30 (w11, Webst 252); Fri 09-10:30 (w2-5,7,9-10, Webst 252)'}
-      | ${[{"location": "Webst 252", "time": "F9-10.5", "weeks": "2-5,7,9-10"}]}
+      | ${[{ location: 'Webst 252', time: 'F9-10.5', weeks: '2-5,7,9-10' }]}
     ${'Thu 14-16 (w1-5,7-10, AinswthG03)'}
-      | ${[{"location": "AinswthG03", "time": "H14-16", "weeks": "1-5,7-10"}]}
+      | ${[{ location: 'AinswthG03', time: 'H14-16', weeks: '1-5,7-10' }]}
     ${'Tue 10-11:30 (w11, Gold G02); Fri 10-11:30 (w1-7,9-10, Gold G01)'}
-      | ${[{"location": "Gold G01", "time": "F10-11.5", "weeks": "1-7,9-10"}]}
+      | ${[{ location: 'Gold G01', time: 'F10-11.5', weeks: '1-7,9-10' }]}
     ${'Thu 19-21 (w6, See School)'}
-      | ${[{"time": "H19-21", "weeks": "6"}]}
+      | ${[{ time: 'H19-21', weeks: '6' }]}
     ${'Wed 09-10:30 (w1-10)'}
-      | ${[{"time": "W9-10.5", "weeks": "1-10"}]}
+      | ${[{ time: 'W9-10.5', weeks: '1-10' }]}
     ${'Wed 19-21 (w1-5,7-N2, MathewsThA) Comb/w COMP6841-UGRD'}
-      | ${[{"location": "MathewsThA", "time": "W19-21", "weeks": "1-5,7-N2"}]}
+      | ${[{ location: 'MathewsThA', time: 'W19-21', weeks: '1-5,7-N2' }]}
     ${'Mon 8-20 (w< 1,N1,N2, MathewsThA)'} | ${[]}
     ${'Fri 8-20 (w< 1)'} | ${[]}
     ${'Mon-Fri 8-20 (w<1, See School)'} | ${[]}
@@ -71,7 +71,7 @@ describe('Parser', () => {
   `('getWeeks($raw) = $parsed', ({ raw, parsed }) => {
     const p = new ClassUtilParser();
     expect(p.parseTimeStr(raw)).toEqual(parsed);
-  })
+  });
 
   it.each`
     time                          | expected
@@ -81,8 +81,8 @@ describe('Parser', () => {
     ${'(Course Enrolment, PGRD)'} | ${Career.PGRD}
     ${'(Course Enrolment, RSCH)'} | ${Career.RSCH}
     ${'PGRD'}                     | ${Career.PGRD}
-  `('getCareer($time) = $expected', ({time, expected}) => {
+  `('getCareer($time) = $expected', ({ time, expected }) => {
     const p = new ClassUtilParser();
     expect(p.getCareer(time)).toEqual(expected);
-  })
-})
+  });
+});

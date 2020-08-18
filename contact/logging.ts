@@ -14,13 +14,13 @@ export const defaultTransports = [
 export const defaultConfig: winston.LoggerOptions = {
   level: 'info',
   format: winston.format.json(),
-  defaultMeta: {component: 'contact'},
+  defaultMeta: { component: 'contact' },
   transports: defaultTransports,
 };
 
-export const getLogger = (section?: string, extra?: ExtraLogFields) => {
+export function getLogger(section?: string, extra?: ExtraLogFields) {
   return winston.createLogger({
     ...defaultConfig,
-    defaultMeta: {...defaultConfig.defaultMeta, ...extra, section},
+    defaultMeta: { ...defaultConfig.defaultMeta, ...extra, section },
   });
 }

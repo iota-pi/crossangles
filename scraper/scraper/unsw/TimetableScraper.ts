@@ -3,7 +3,7 @@ import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, StreamData } from '../../../app/src/state/Stream';
 import { StateManager } from '../../state/StateManager';
-import { getStateManager } from '../../state/getStateManager';
+import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from './commonUtils';
 import { getLogger } from '../../logging';
 

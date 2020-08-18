@@ -1,7 +1,5 @@
 import moment from 'moment-timezone';
 
-export const getAEST = () => {
-  return moment().tz('Australia/Sydney');
-};
+const getAEST = () => moment().tz('Australia/Sydney');
 
 export default getAEST;

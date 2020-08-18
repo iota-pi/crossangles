@@ -5,4 +5,4 @@ it('returns expected time', () => {
   const expected = new Date().getTime();
   const result = getAEST().toDate().getTime();
   expect(result - expected).toBeLessThanOrEqual(5);
-})
+});

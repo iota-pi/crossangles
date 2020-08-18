@@ -20,11 +20,11 @@ export class Scraper {
   maxRequests: number = 10;
   cache: HTMLCache;
 
-  constructor (cache?: HTMLCache) {
+  constructor(cache?: HTMLCache) {
     this.cache = cache || new HTMLCache();
   }
 
-  async scrapePages<T> (urls: string[], handler: (page: CheerioStatic, url: string) => Promise<T>) {
+  async scrapePages<T>(urls: string[], handler: (page: CheerioStatic, url: string) => Promise<T>) {
     const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
     const processor = async (url: string) => {
@@ -40,10 +40,10 @@ export class Scraper {
       });
     };
     const parsingPromises = await queue.run(processor);
-    return await Promise.all(parsingPromises);
+    return Promise.all(parsingPromises);
   }
 
-  async getPageContent (url: string) {
+  async getPageContent(url: string) {
     let content: string;
     let loadedFromCache = false;
     if (this.cache.has(url)) {

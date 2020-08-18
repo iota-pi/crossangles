@@ -8,17 +8,16 @@ describe('AsyncQueue', () => {
     let totalCount = 0;
     let highestConcurrency = 0;
 
-    const func = (result: number) => {
-      return new Promise<number>(resolve => {
-        highestConcurrency = Math.max(highestConcurrency, ++concurrentCount);
+    const func = (result: number) => new Promise<number>(resolve => {
+      concurrentCount += 1;
+      highestConcurrency = Math.max(highestConcurrency, concurrentCount);
 
-        setTimeout(() => {
-          concurrentCount--;
-          totalCount++;
-          resolve(result);
-        }, 10);
-      });
-    };
+      setTimeout(() => {
+        concurrentCount -= 1;
+        totalCount += 1;
+        resolve(result);
+      }, 10);
+    });
 
     const queue = new AsyncQueue<number, number>(maxConcurrent);
     const items = new Array(itemCount).fill(0).map((_, i) => i);
@@ -28,4 +27,4 @@ describe('AsyncQueue', () => {
     expect(totalCount).toBe(itemCount);
     expect(result).toEqual(items);
   });
-})
+});
