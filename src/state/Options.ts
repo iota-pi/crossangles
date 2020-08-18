@@ -18,6 +18,7 @@ export const timetableOptionList: OptionList = [
 ];
 export const generalOptionList: OptionList = [
   ['compactView', 'Compact Display'],
+  ['darkMode', 'Dark Mode'],
   ['reducedMotion', 'Reduced Animations'],
 ];
 
