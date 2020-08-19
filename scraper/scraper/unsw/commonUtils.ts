@@ -25,17 +25,19 @@ export function removeDuplicateStreams(course: CourseData) {
 }
 
 function emptiestStream(streams: StreamData[]) {
-  let bestStream = null;
+  let bestStream = streams[0];
   let bestRatio = Infinity;
   for (const stream of streams) {
-    const ratio = stream.enrols[0] / stream.enrols[1];
-    if (ratio < bestRatio) {
-      bestRatio = ratio;
-      bestStream = stream;
+    if (stream.enrols) {
+      const ratio = stream.enrols[0] / stream.enrols[1];
+      if (ratio < bestRatio) {
+        bestRatio = ratio;
+        bestStream = stream;
+      }
     }
   }
 
-  return bestStream!;
+  return bestStream;
 }
 
 export function mergeDeliveryType(streams: StreamData[]): DeliveryType | undefined {

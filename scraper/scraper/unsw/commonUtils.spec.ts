@@ -1,7 +1,7 @@
 import { mergeDeliveryType } from './commonUtils';
 import { StreamData, DeliveryType } from '../../../app/src/state/Stream';
 
-const baseStream: StreamData = { component: '', enrols: [0, 0], times: [] };
+const baseStream: StreamData = { component: '', times: [] };
 
 describe('mergeDeliveryType', () => {
   it.each`

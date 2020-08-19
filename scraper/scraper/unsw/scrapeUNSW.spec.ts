@@ -34,16 +34,15 @@ describe('scrapeUNSW', () => {
 });
 
 it('filterEnrolmentStreams', () => {
-  const enrols: [number, number] = [0, 0];
   const times: ClassTime[] = [];
   const streams: StreamData[] = [
-    { component: 'LEC', enrols, times },
-    { component: 'CRS', enrols, times },
-    { component: 'CR01', enrols, times },
-    { component: 'CR02', enrols, times },
-    { component: 'CR99', enrols, times },
-    { component: 'CR100', enrols, times },
-    { component: 'OTH', enrols, times },
+    { component: 'LEC', times },
+    { component: 'CRS', times },
+    { component: 'CR01', times },
+    { component: 'CR02', times },
+    { component: 'CR99', times },
+    { component: 'CR100', times },
+    { component: 'OTH', times },
   ];
   const result = filterEnrolmentStreams(streams);
   expect(result.map(s => s.component)).toEqual(['CRS', 'CR01', 'CR02', 'CR99']);

@@ -172,7 +172,6 @@ export class UOSTimetableScraper {
         const detailsRows = detailsTable.children('tbody').children('tr').toArray();
         const stream: StreamData = {
           component,
-          enrols: [0, 0],
           times: [],
         };
         for (const detailRow of detailsRows) {

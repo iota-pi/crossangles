@@ -143,7 +143,6 @@ class CreateCustom extends PureComponent<Props, State> {
     });
     const streams = times.map((time): StreamData => ({
       component: name,
-      enrols: [0, 0],
       full: false,
       times: [time],
     }));

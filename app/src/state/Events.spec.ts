@@ -9,7 +9,7 @@ describe('getEventId', () => {
       code: 'RING1379',
       name: 'Ring Theory 1A',
       streams: [
-        { component: 'Secret Forging', times: [{ time: 'M8', location: 'Mount Doom' }], enrols: [0, 0] },
+        { component: 'Secret Forging', times: [{ time: 'M8', location: 'Mount Doom' }] },
       ],
       isAdditional: true,
     };
@@ -24,8 +24,8 @@ describe('getEvents', () => {
     code: 'code',
     name: '',
     streams: [
-      { component: 'a', enrols: [0, 0], times: [] },
-      { component: 'b', enrols: [0, 0], times: [] },
+      { component: 'a', times: [] },
+      { component: 'b', times: [] },
     ],
   };
 
@@ -49,8 +49,8 @@ describe('getEvents', () => {
       name: '',
       isAdditional: true,
       streams: [
-        { component: 'a', enrols: [0, 0], times: [] },
-        { component: 'a', enrols: [0, 0], times: [] },
+        { component: 'a', times: [] },
+        { component: 'a', times: [] },
       ],
     };
     const result = getEvents(course);
@@ -62,7 +62,6 @@ describe('getEvents', () => {
 
 describe('getAutoSelectedEvents', () => {
   it('gets events from auto-selected courses', () => {
-    const enrols: [number, number] = [0, 0];
     const times: ClassTime[] = [];
     const courseMap: CourseMap = {
       a: {
@@ -71,8 +70,8 @@ describe('getAutoSelectedEvents', () => {
         isAdditional: true,
         autoSelect: true,
         streams: [
-          { component: 'a', enrols, times },
-          { component: 'b', enrols, times },
+          { component: 'a', times },
+          { component: 'b', times },
         ],
       },
       b: {
@@ -80,7 +79,7 @@ describe('getAutoSelectedEvents', () => {
         name: '',
         autoSelect: true,
         streams: [
-          { component: 'c', enrols, times },
+          { component: 'c', times },
         ],
       },
       d: {
@@ -88,7 +87,7 @@ describe('getAutoSelectedEvents', () => {
         name: '',
         isAdditional: true,
         streams: [
-          { component: 'd', enrols, times },
+          { component: 'd', times },
         ],
       },
     };
