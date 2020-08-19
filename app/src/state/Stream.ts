@@ -12,7 +12,7 @@ export enum DeliveryType {
 
 export interface StreamData {
   component: string,
-  times: ClassTime[] | null,
+  times: ClassTime[],
   enrols?: [number, number],
   full?: boolean,
   web?: boolean,
@@ -48,23 +48,20 @@ export function getComponentId(course: CourseData, stream: StreamData, simple = 
 export function getSessions(course: CourseData, stream: StreamData): SessionData[] {
   const courseId = getCourseId(course);
   const streamId = getStreamId(course, stream);
-  if (stream.times !== null) {
-    return stream.times.map((t, i): SessionData => {
-      const [startHour, endHour] = t.time.substr(1).split('-').map(x => parseFloat(x));
-      return {
-        start: startHour,
-        end: endHour || (startHour + 1),
-        day: t.time.charAt(0) as DayLetter,
-        canClash: t.canClash,
-        location: t.location,
-        index: i,
-        weeks: t.weeks,
-        stream: streamId,
-        course: courseId,
-      };
-    });
-  }
-  return [];
+  return stream.times.map((t, i): SessionData => {
+    const [startHour, endHour] = t.time.substr(1).split('-').map(x => parseFloat(x));
+    return {
+      start: startHour,
+      end: endHour || (startHour + 1),
+      day: t.time.charAt(0) as DayLetter,
+      canClash: t.canClash,
+      location: t.location,
+      index: i,
+      weeks: t.weeks,
+      stream: streamId,
+      course: courseId,
+    };
+  });
 }
 
 export function linkStream(course: CourseData, stream: StreamData): LinkedStream {

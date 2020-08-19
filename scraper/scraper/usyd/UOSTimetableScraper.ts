@@ -177,7 +177,7 @@ export class UOSTimetableScraper {
         for (const detailRow of detailsRows) {
           const cells = $(detailRow).children('td').toArray().map(td => $(td).text().trim());
           const [day, time, weeks, location] = cells;
-          stream.times?.push({
+          stream.times.push({
             time: getTime(day, time),
             weeks: getWeeks(weeks),
             location: getLocation(location),

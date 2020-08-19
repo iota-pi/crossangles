@@ -114,14 +114,14 @@ class ClassUtilParser {
 
     let component = rawComponent;
     let web;
-    let times: ClassTime[] | null = null;
+    let times: ClassTime[] = [];
     if (section.includes('WEB')) {
       // Standardise all web streams as 'LEC' component
       component = 'LEC';
       web = true;
     } else {
       times = this.parseTimeStr(timeString);
-      if (times === null || times.length === 0) {
+      if (times.length === 0) {
         return null;
       }
     }
@@ -157,7 +157,7 @@ class ClassUtilParser {
     return matches[1];
   }
 
-  parseTimeStr(timeString: string): ClassTime[] | null {
+  parseTimeStr(timeString: string): ClassTime[] {
     // Basic string sanitisation
     const times = timeString.replace(/\/odd|\/even|Comb\/w.*/g, '').trim();
 

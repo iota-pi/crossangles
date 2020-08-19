@@ -124,7 +124,7 @@ export function mergeData(classutilData?: CourseData[], timetableData?: CourseDa
           s => getStreamId(timetableCourse, s, true) === getStreamId(course, stream, true),
         );
 
-        if (stream.times && timetableStream && timetableStream.times) {
+        if (timetableStream) {
           for (const time of stream.times) {
             const timetableTime = timetableStream.times.find(
               t => t.time === time.time,

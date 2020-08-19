@@ -16,7 +16,7 @@ describe('getSessions', () => {
   it.each([
     true, false,
   ])('returns empty list for stream with no times (web=$web)', web => {
-    const stream: StreamData = { component: 'LEC', enrols: [0, 0], times: null, web };
+    const stream: StreamData = { component: 'LEC', enrols: [0, 0], times: [], web };
     const course: CourseData = {
       ...getCourse(),
       streams: [stream],

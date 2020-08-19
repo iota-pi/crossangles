@@ -199,13 +199,13 @@ export class TimetableScraper {
           };
 
           if (!shouldSkipTime(timeObject)) {
-            stream.times!.push(timeObject);
+            stream.times.push(timeObject);
           }
         }
 
         // Skip regular streams without any associated class times
         const isRegularStream = !stream.web && !isCourseEnrolment(data);
-        if (stream.times!.length === 0 && isRegularStream) {
+        if (stream.times.length === 0 && isRegularStream) {
           continue;
         }
 
