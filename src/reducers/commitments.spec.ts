@@ -90,8 +90,8 @@ describe('events reducer', () => {
         name: '',
         isAdditional: true,
         streams: [
-          { component: 'a', enrols: [0, 0], times: [] },
-          { component: 'a', enrols: [0, 0], times: [] },
+          { component: 'a', times: [] },
+          { component: 'a', times: [] },
         ],
       },
     };
@@ -108,8 +108,8 @@ describe('events reducer', () => {
         name: '',
         isAdditional: true,
         streams: [
-          { component: 'a', enrols: [0, 0], times: [] },
-          { component: 'b', enrols: [0, 0], times: [] },
+          { component: 'a', times: [] },
+          { component: 'b', times: [] },
         ],
       },
     };
@@ -125,7 +125,7 @@ describe('events reducer', () => {
         code: '',
         name: '',
         streams: [
-          { component: 'a', enrols: [0, 0], times: [] },
+          { component: 'a', times: [] },
         ],
       },
     };
@@ -143,7 +143,7 @@ describe('events reducer', () => {
         isAdditional: true,
         autoSelect: true,
         streams: [
-          { component: 'a', enrols: [0, 0], times: [] },
+          { component: 'a', times: [] },
         ],
       },
     };

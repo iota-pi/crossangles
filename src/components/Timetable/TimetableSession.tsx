@@ -131,7 +131,7 @@ const Session: React.FC<Props> = ({
         }
       }
 
-      if (options.showEnrolments) {
+      if (options.showEnrolments && stream.enrols) {
         const enrols = stream.enrols;
         if (enrols[1] > 0) {
           const enrolsText = enrols.join('/');

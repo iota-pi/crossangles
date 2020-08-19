@@ -12,8 +12,8 @@ export enum DeliveryType {
 
 export interface StreamData {
   component: string,
-  enrols: [number, number],
   times: ClassTime[] | null,
+  enrols?: [number, number],
   full?: boolean,
   web?: boolean,
   delivery?: DeliveryType,
