@@ -7,11 +7,10 @@ import { getSessions, ClassTime } from './Stream';
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doPushTest"] }] */
 
 const name = 'Introduction to Ring Theory';
-const enrols: [number, number] = [0, 0];
 const times: ClassTime[] = [];
 const courses: CourseMap = {
-  a: { code: 'a', name, streams: [{ component: 'e', enrols, times }], isAdditional: true },
-  b: { code: 'b', name, streams: [{ component: 'f', enrols, times }] },
+  a: { code: 'a', name, streams: [{ component: 'e', times }], isAdditional: true },
+  b: { code: 'b', name, streams: [{ component: 'f', times }] },
   c: { code: 'c', name, streams: [] },
   d: { code: 'd', name, streams: [] },
 };
