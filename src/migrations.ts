@@ -2,6 +2,7 @@ import {
   pink, deepPurple, indigo, blue, teal, lightGreen, amber, deepOrange,
 } from '@material-ui/core/colors';
 import { SessionManagerData } from './components/Timetable/SessionManager';
+import { CourseMap } from './state';
 
 export const migrations = {
   0: (state: any) => {
@@ -55,6 +56,19 @@ export const migrations = {
       ...otherState,
       options: { ...options, compactView, darkMode, reducedMotion, twentyFourHours },
     };
+  },
+  4: (state: any): any => {
+    // Ensure times has a non-null value, replace with an empty array instead
+    const courses: CourseMap = state;
+    const newCourses: CourseMap = {};
+    for (const [code, course] of Object.entries(courses)) {
+      const streams = course.streams.map(stream => ({
+        ...stream,
+        times: stream.times || [],
+      }));
+      newCourses[code] = { ...course, streams };
+    }
+    return { ...state, courses: newCourses };
   },
 };
 
