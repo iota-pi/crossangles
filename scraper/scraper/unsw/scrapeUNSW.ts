@@ -1,24 +1,22 @@
 import { ClassUtilScraper, CLASSUTIL } from './ClassUtilScraper';
-import { CampusData, Scraper } from '../Scraper';
+import { CampusData } from '../Scraper';
 import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
 import { getStreamId, StreamData } from '../../../app/src/state/Stream';
-import { StateManager } from '../../state/StateManager';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import generateMetaData from '../meta';
 import { getLogger } from '../../logging';
 import getAdditional from '../../data/additional';
 import { getCurrentTerm } from '../../../app/src/state/Meta';
-
-const logger = getLogger('scrapeUNSW', { campus: 'unsw' });
+import { ScrapeCampusArgs } from '../../scrapeCampus';
 
 export const UNSW = 'unsw';
+const logger = getLogger('scrapeUNSW', { campus: UNSW });
 const DATA_THRESHOLD = 0.2;
 const terms = [1, 2, 3];
 
-type ScrapeUNSWArgs = { scraper?: Scraper, state?: StateManager | null, forceUpdate?: boolean };
 
 export async function scrapeUNSW(
-  { scraper, state, forceUpdate = false }: ScrapeUNSWArgs,
+  { scraper, state, forceUpdate = false }: ScrapeCampusArgs,
 ): Promise<CampusData[] | null> {
   const classutil = new ClassUtilScraper({ scraper, state });
   const timetable = new TimetableScraper({ scraper, state });

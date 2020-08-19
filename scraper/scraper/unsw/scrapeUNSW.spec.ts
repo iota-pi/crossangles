@@ -1,4 +1,4 @@
-import { scrapeUNSW, filterEnrolmentStreams } from './index';
+import { scrapeUNSW, filterEnrolmentStreams } from './scrapeUNSW';
 import { Scraper } from '../Scraper';
 import { StateManager } from '../../state/StateManager';
 import { StreamData, ClassTime } from '../../../app/src/state/Stream';

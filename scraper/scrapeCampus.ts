@@ -1,13 +1,21 @@
 import { getWriter } from './writer';
 import { CampusData, Scraper } from './scraper/Scraper';
-import { UNSW, scrapeUNSW } from './scraper/unsw';
+import { UNSW, scrapeUNSW } from './scraper/unsw/scrapeUNSW';
+import { USYD, scrapeUSYD } from './scraper/usyd/scrapeUSYD';
 import getStateManager from './state/getStateManager';
 import HTMLCache from './scraper/HTMLCache';
 import { checkVersionChange, updateVersion } from './state/util';
 import { getLogger } from './logging';
 import CampusError from './scraper/CampusError';
+import StateManager from './state/StateManager';
 
 const logger = getLogger('scrapeCampus');
+
+export interface ScrapeCampusArgs {
+  scraper?: Scraper,
+  state?: StateManager | null,
+  forceUpdate?: boolean,
+};
 
 async function scrapeCampus(
   campus: string,
@@ -35,6 +43,9 @@ async function scrapeCampus(
   switch (campus) {
     case UNSW:
       data = await scrapeUNSW({ scraper, state, forceUpdate });
+      break;
+    case USYD:
+      data = await scrapeUSYD({ scraper, state, forceUpdate });
       break;
     default:
       throw new CampusError(`Unhandled campus ${campus}`);

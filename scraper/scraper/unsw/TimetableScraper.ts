@@ -6,8 +6,9 @@ import { StateManager } from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from './commonUtils';
 import { getLogger } from '../../logging';
+import { UNSW } from './scrapeUNSW';
 
-const logger = getLogger('TimetableScraper', { campus: 'unsw' });
+const logger = getLogger('TimetableScraper', { campus: UNSW });
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
@@ -41,7 +42,7 @@ export interface StreamTableData {
 export class TimetableScraper {
   scraper: Scraper;
   state: StateManager | undefined;
-  readonly campus = 'unsw';
+  readonly uni = UNSW;
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   maxCourses = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   facultyPages: string[] = [];
@@ -81,16 +82,16 @@ export class TimetableScraper {
 
   async getCache(): Promise<CourseData[][]> {
     if (this.state) {
-      return await this.state.getBlob(this.campus, CACHE_KEY) || [];
+      return await this.state.getBlob(this.uni, CACHE_KEY) || [];
     }
     return [];
   }
 
   async persistState(result: CourseData[][]) {
     if (this.state) {
-      await this.state.set(this.campus, UPDATE_TIME_KEY, this.dataUpdateTime);
+      await this.state.set(this.uni, UPDATE_TIME_KEY, this.dataUpdateTime);
       logger.info(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-      await this.state.setBlob(this.campus, CACHE_KEY, result);
+      await this.state.setBlob(this.uni, CACHE_KEY, result);
     }
   }
 
@@ -101,7 +102,7 @@ export class TimetableScraper {
     }
 
     // Update data if source has changed
-    const lastUpdateTime = await this.state.get(this.campus, UPDATE_TIME_KEY);
+    const lastUpdateTime = await this.state.get(this.uni, UPDATE_TIME_KEY);
     if (lastUpdateTime !== this.dataUpdateTime) {
       return true;
     }
