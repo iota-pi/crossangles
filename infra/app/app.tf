@@ -4,27 +4,30 @@ provider "aws" {
 }
 
 locals {
-  component = "app"
-  origin_id = "app_s3_origin"
-
-  allowed_methods = ["GET", "HEAD", "OPTIONS"]
-  cached_methods  = ["GET", "HEAD"]
-
+  component   = "app"
+  bucket_name = "crossangles-app-${var.environment}"
+  origin_id   = "app_s3_origin"
   min_ttl     = var.environment == "production" ? 600 : 0
   default_ttl = var.environment == "production" ? 1800 : 0
   max_ttl     = 3600
   compress    = true
+
+  allowed_methods = ["GET", "HEAD", "OPTIONS"]
+  cached_methods  = ["GET", "HEAD"]
 
   viewer_protocol_policy = "redirect-to-https"
 
   standard_tags = {
     Environment = var.environment
     Component = local.component
+    Campus = var.campus
   }
 }
 
 resource "aws_s3_bucket" "app" {
-  bucket = "crossangles-app-${var.environment}"
+  count = var.campus == "unsw" ? 1 : 0
+
+  bucket = local.bucket_name
   acl    = "private"
 
   tags = local.standard_tags
@@ -36,11 +39,15 @@ resource "aws_s3_bucket" "app" {
   }
 }
 
+data "aws_s3_bucket" "selected" {
+  bucket = local.bucket_name
+}
+
 resource "aws_cloudfront_origin_access_identity" "app_oai" {}
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = aws_s3_bucket.app.bucket_regional_domain_name
+    domain_name = aws_s3_bucket.selected.bucket_regional_domain_name
     origin_id   = local.origin_id
     origin_path = "/${var.campus}"
 
@@ -120,5 +127,5 @@ output "app_domain" {
 }
 
 output "app_bucket" {
-  value = aws_s3_bucket.app.bucket
+  value = local.bucket_name
 }
