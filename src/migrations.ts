@@ -59,7 +59,7 @@ export const migrations = {
   },
   4: (state: any): any => {
     // Ensure times has a non-null value, replace with an empty array instead
-    const courses: CourseMap = state;
+    const courses: CourseMap = state.courses;
     const newCourses: CourseMap = {};
     for (const [code, course] of Object.entries(courses)) {
       const streams = course.streams.map(stream => ({
