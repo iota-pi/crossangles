@@ -1,4 +1,4 @@
-import { StateManager } from './StateManager';
+import StateManager from './StateManager';
 import getStateManager from './getStateManager';
 
 const GLOBAL_STATE = '__all__';

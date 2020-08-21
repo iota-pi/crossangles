@@ -24,6 +24,7 @@ module.exports = {
     'arrow-parens': ['error', 'as-needed'],
     'class-methods-use-this': 'off',
     'import/no-cycle': 'off',
+    'newline-per-chained-call': ['error', { ignoreChainWithDepth: 5}],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'no-continue': 'off',
     'no-else-return': ['error', { allowElseIf: true }],

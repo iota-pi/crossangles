@@ -1,6 +1,6 @@
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
-import { StateManager } from '../../state/StateManager';
+import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
@@ -58,9 +58,9 @@ export class ClassUtilScraper {
     const termLinkEnd = `${term}.html`;
     const facultyPages = this.facultyPages.filter(l => l.endsWith(termLinkEnd));
     const results = await this.scrapeFacultyPages(facultyPages);
-    logger.info('Persisting results to DynamoDB');
+    logger.info('persisting results to DynamoDB');
     await this.persistState(results, term);
-    logger.info('Finished persisting results to DynamoDB');
+    logger.info('finished persisting results to DynamoDB');
     this.scraper.report();
     return results;
   }

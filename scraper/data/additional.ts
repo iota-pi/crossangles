@@ -151,8 +151,13 @@ const unsw: CampusAdditional = {
   ],
 };
 
+const usyd: CampusAdditional = {
+  default: [],
+};
+
 const additional = {
   unsw,
+  usyd,
 };
 
 /**

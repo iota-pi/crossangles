@@ -1,8 +1,10 @@
 import scrapeCampus from './scrapeCampus';
 import code_version from './version';
 import { getLogger } from './logging';
+import { UNSW } from './scraper/unsw/scrapeUNSW';
+import { USYD } from './scraper/usyd/scrapeUSYD';
 
-const campuses = ['unsw'];
+const campuses = [UNSW, USYD];
 const bucketName = process.env.S3_OUTPUT_BUCKET || 'crossangles-course-data';
 export const S3_BUCKET = `s3://${bucketName}/`;
 

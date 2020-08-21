@@ -15,7 +15,7 @@ export interface ScrapeCampusArgs {
   scraper?: Scraper,
   state?: StateManager | null,
   forceUpdate?: boolean,
-};
+}
 
 async function scrapeCampus(
   campus: string,

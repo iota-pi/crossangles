@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import zlib from 'zlib';
 
-export class StateManager {
+class StateManager {
   private readonly tableName = process.env.STATE_TABLE || '';
 
   constructor(

@@ -1,5 +1,6 @@
-import { getLocation, getTime, getWeeks, mergeWeeks, shouldSkipTime, mergeTimes } from './UOSTimetableScraper';
+import { getLocation, getTime, getWeeks, mergeWeeks, shouldSkipTime, mergeTimes, splitTerms } from './UOSTimetableScraper';
 import { ClassTime } from '../../../app/src/state/Stream';
+import { CourseData } from '../../../app/src/state/Course';
 
 describe('parsing utils', () => {
   it.each([
@@ -63,5 +64,21 @@ describe('parsing utils', () => {
     [[{ time: 'b' }, { time: 'b', location: 'b' }], [{ time: 'b', location: 'b' }]],
   ])('mergeTimes', (times, expected) => {
     expect(mergeTimes(times)).toEqual(expected);
+  });
+
+  it('splitTerms', () => {
+    const courses: CourseData[] = [
+      { code: 'a', name: '', streams: [], term: 'T1C' },
+      { code: 'b', name: '', streams: [], term: 'T1C' },
+      { code: 'c', name: '', streams: [], term: 'T2C' },
+    ];
+    const [term1, term2] = splitTerms(courses);
+    expect(term1).toEqual([
+      { code: 'a', name: '', streams: [], term: 'T1C' },
+      { code: 'b', name: '', streams: [], term: 'T1C' },
+    ]);
+    expect(term2).toEqual([
+      { code: 'c', name: '', streams: [], term: 'T2C' },
+    ]);
   });
 });

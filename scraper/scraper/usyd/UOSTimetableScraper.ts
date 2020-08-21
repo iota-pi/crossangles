@@ -1,6 +1,6 @@
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
-import { StateManager } from '../../state/StateManager';
+import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import { getLogger } from '../../logging';
 import getAEST from '../../getAEST';
@@ -30,12 +30,11 @@ export interface CoursePage {
 
 export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) - +(a.code < b.code);
 
-const CACHE_KEY = 'timetable_last_data';
 const UPDATE_TIME_KEY = 'timetable_update_time';
 
 const getBaseUrl = (year: number) => `https://www.timetable.usyd.edu.au/uostimetables/${year}/`;
 
-export class UOSTimetableScraper {
+class UOSTimetableScraper {
   scraper: Scraper;
   state: StateManager | undefined;
   readonly uni = USYD;
@@ -62,29 +61,22 @@ export class UOSTimetableScraper {
     return true;
   }
 
-  async scrape(): Promise<CourseData[]> {
+  async scrape(): Promise<CourseData[][]> {
     logger.info(`scraping from ${this.baseUrl}`);
-    const results = await this.scrapeCoursePages(this.coursePages);
-    logger.info('Persisting results to DynamoDB');
-    await this.persistState(results);
-    logger.info('Finished persisting results to DynamoDB');
+    const courses = await this.scrapeCoursePages(this.coursePages);
+    logger.info('persisting results to DynamoDB');
+    await this.persistState();
+    logger.info('finished persisting results to DynamoDB');
     this.scraper.report();
+    logger.info('splitting courses by terms');
+    const results = splitTerms(courses);
     return results;
   }
 
-  async getCache(): Promise<CourseData[]> {
-    if (this.state) {
-      return await this.state.getBlob(this.uni, CACHE_KEY) || [];
-    }
-    return [];
-  }
-
-  async persistState(result: CourseData[]) {
+  async persistState() {
     if (this.state) {
       await this.state.set(this.uni, UPDATE_TIME_KEY, this.dataUpdateTime);
       logger.info(`${UPDATE_TIME_KEY} set to "${this.dataUpdateTime}"`);
-
-      await this.state.setBlob(this.uni, CACHE_KEY, result);
     }
   }
 
@@ -110,15 +102,14 @@ export class UOSTimetableScraper {
 
   private async findCoursePages() {
     const pages: CoursePage[] = [];
-    // const linkRegex = /timetables\/[A-Y][A-Z]{3}[0-9]{4}.{0,16}\.html$/i;
     await this.scraper.scrapePages([this.baseUrl], async $ => {
       const table = $('table tr').toArray().slice(1);
       for (const row of table) {
         const cells = $(row).children('td').toArray().map(c => $(c).text().trim());
         const [code, termCode, termName, name, campus] = cells;
         const link = $(row).children('td').first().children('a').attr('href');
-        if (link) {
-          let url = `${this.baseUrl}/${link}`;
+        if (link && this.shouldIncludeTerm(termCode)) {
+          const url = `${this.baseUrl}/${link}`;
           pages.push({ code, termCode, termName, name, campus, url });
         }
       }
@@ -128,12 +119,16 @@ export class UOSTimetableScraper {
 
     pages.length = Math.min(pages.length, this.maxCourses);
 
-    logger.info(`found ${pages.length} course pages`);
+    logger.info(`found ${pages.length} valid course pages`);
     return pages;
   }
 
+  private shouldIncludeTerm(termCode: string) {
+    const whitelistRegex = /^T[12]C$/;
+    return whitelistRegex.test(termCode);
+  }
+
   private async scrapeCoursePages(pages: CoursePage[]) {
-    // pages.length = 1000;
     const pageLookup: { [url: string]: CoursePage } = {};
     for (const page of pages) { pageLookup[page.url] = page; }
     const urls = Object.keys(pageLookup);
@@ -141,6 +136,7 @@ export class UOSTimetableScraper {
       urls,
       ($, url) => this.scrapeCoursePage($, pageLookup[url]),
     );
+    logger.info(`parsed ${courses.length} courses`);
 
     // Remove duplicate streams from each course
     for (const course of courses) {
@@ -150,7 +146,6 @@ export class UOSTimetableScraper {
     // Sort courses for consistency
     courses.sort(courseSort);
 
-    logger.info(`parsed ${courses.length} courses`);
     return courses;
   }
 
@@ -173,8 +168,9 @@ export class UOSTimetableScraper {
             continue;
           }
           if (cells.length !== 4) {
-            throw new Error(
-              `Unexpected number of cells (${cells.length}) for ${JSON.stringify(courseDetails)}`
+            logger.warn(
+              'Skipping course with unexpected number of cells',
+              { cells: cells.length, course: courseDetails },
             );
           }
           const [day, time, weeks, location] = cells;
@@ -268,7 +264,7 @@ function getRange(start: number, end: number): string {
 }
 
 function weeksToRanges(weeks: number[]): string[] {
-  let weekTextParts = [];
+  const weekTextParts = [];
   let currentStart = weeks[0];
   for (let i = 1; i < weeks.length; ++i) {
     const n = weeks[i];
@@ -314,10 +310,23 @@ export function mergeTimes(times: ClassTime[]): ClassTime[] {
   }
 
   const timesMap = groupTimes(times);
-  return Object.values(timesMap).map(times => {
-    const time = times[0].time;
-    const weeks = mergeWeeks(times.filter(t => t.weeks).map(t => t.weeks!));
-    const location = pickLocation(times);
+  return Object.values(timesMap).map(timeGroup => {
+    const time = timeGroup[0].time;
+    const weeks = mergeWeeks(timeGroup.filter(t => t.weeks).map(t => t.weeks!));
+    const location = pickLocation(timeGroup);
     return { time, location, weeks };
   });
+}
+
+export function splitTerms(courses: CourseData[]): CourseData[][] {
+  const results: CourseData[][] = [[], []];
+  for (const course of courses) {
+    if (!course.term) {
+      logger.warn(`no term found for course ${course.code}`);
+      continue;
+    }
+    const term = parseInt(course.term.replace(/[^\d]/g, ''));
+    results[term - 1].push(course);
+  }
+  return results;
 }

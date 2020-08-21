@@ -2,7 +2,7 @@ import cheerio from 'cheerio';
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, StreamData } from '../../../app/src/state/Stream';
-import { StateManager } from '../../state/StateManager';
+import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
@@ -74,9 +74,9 @@ export class TimetableScraper {
     logger.info(`scraping from ${TIMETABLE_UNSW}`);
     const coursePages = await this.scrapeFacultyPages();
     const result = await this.scrapeCoursePages(coursePages);
-    logger.info('Persisting state to DynamoDB');
+    logger.info('persisting state to DynamoDB');
     await this.persistState(result);
-    logger.info('Finished persisting state to DynamoDB');
+    logger.info('finished persisting state to DynamoDB');
     this.scraper.report();
     return result;
   }
