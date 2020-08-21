@@ -1,15 +1,8 @@
-import { CourseData } from '../../../app/src/state/Course';
-import { DeliveryType, StreamData } from '../../../app/src/state/Stream';
+import { CourseData } from '../../app/src/state/Course';
+import { DeliveryType, StreamData } from '../../app/src/state/Stream';
 
 export function removeDuplicateStreams(course: CourseData) {
-  const mapping = new Map<string, StreamData[]>();
-  for (const stream of course.streams) {
-    const times = stream.times.map(t => t.time);
-    const key = `${stream.component}[${times}]`;
-    const currentGroup = mapping.get(key) || [];
-    const newGroup = currentGroup.concat(stream);
-    mapping.set(key, newGroup);
-  }
+  const mapping = getStreamGroupMapping(course);
 
   // For each set of streams with identical component and times, remove all but the emptiest stream
   for (const streamGroup of Array.from(mapping.values())) {
@@ -22,6 +15,18 @@ export function removeDuplicateStreams(course: CourseData) {
       }
     }
   }
+}
+
+function getStreamGroupMapping(course: CourseData): Map<string, StreamData[]> {
+  const mapping = new Map<string, StreamData[]>();
+  for (const stream of course.streams) {
+    const times = stream.times.map(t => t.time);
+    const key = `${stream.component}[${times}]`;
+    const currentGroup = mapping.get(key) || [];
+    const newGroup = currentGroup.concat(stream);
+    mapping.set(key, newGroup);
+  }
+  return mapping;
 }
 
 function emptiestStream(streams: StreamData[]) {

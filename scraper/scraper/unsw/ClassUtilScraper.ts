@@ -2,7 +2,7 @@ import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
 import { StateManager } from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
-import { removeDuplicateStreams } from './commonUtils';
+import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
 import ClassUtilParser from './ClassUtilParser';
 import { UNSW } from './scrapeUNSW';

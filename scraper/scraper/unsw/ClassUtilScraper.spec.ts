@@ -1,7 +1,7 @@
 import { ClassUtilScraper } from './ClassUtilScraper';
 import { CourseData } from '../../../app/src/state/Course';
 import { StreamData } from '../../../app/src/state/Stream';
-import { removeDuplicateStreams } from './commonUtils';
+import { removeDuplicateStreams } from '../commonUtils';
 
 
 describe('ClassUtilScraper', () => {

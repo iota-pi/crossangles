@@ -1,4 +1,4 @@
-import { mergeDeliveryType } from './commonUtils';
+import { mergeDeliveryType } from '../commonUtils';
 import { StreamData, DeliveryType } from '../../../app/src/state/Stream';
 
 const baseStream: StreamData = { component: '', times: [] };
