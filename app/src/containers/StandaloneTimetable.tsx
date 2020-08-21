@@ -24,7 +24,15 @@ export const StandaloneTimetable = () => {
       const newCourses: CourseMap = {};
       for (const course of data.courses) {
         const id = getCourseId(course);
-        newCourses[id] = course;
+        // TODO: after the production scraper has updated and the old data's
+        // cache time has expired, this could just be: newCourses[id] = course;
+        newCourses[id] = {
+          ...course,
+          streams: course.streams.map(s => ({
+            ...s,
+            times: s.times || [],
+          })),
+        };
       }
 
       setTimetable(SessionManager.from(queryData.timetable, newCourses));

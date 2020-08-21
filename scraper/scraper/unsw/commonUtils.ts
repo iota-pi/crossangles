@@ -4,7 +4,7 @@ import { DeliveryType, StreamData } from '../../../app/src/state/Stream';
 export function removeDuplicateStreams(course: CourseData) {
   const mapping = new Map<string, StreamData[]>();
   for (const stream of course.streams) {
-    const times = stream.times !== null ? stream.times.map(t => t.time) : null;
+    const times = stream.times.map(t => t.time);
     const key = `${stream.component}[${times}]`;
     const currentGroup = mapping.get(key) || [];
     const newGroup = currentGroup.concat(stream);
