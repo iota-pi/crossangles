@@ -108,7 +108,7 @@ class UOSTimetableScraper {
         const cells = $(row).children('td').toArray().map(c => $(c).text().trim());
         const [code, termCode, termName, name, campus] = cells;
         const link = $(row).children('td').first().children('a').attr('href');
-        if (link && this.shouldIncludeTerm(termCode)) {
+        if (link && shouldIncludeTerm(termCode)) {
           const url = `${this.baseUrl}/${link}`;
           pages.push({ code, termCode, termName, name, campus, url });
         }
@@ -121,11 +121,6 @@ class UOSTimetableScraper {
 
     logger.info(`found ${pages.length} valid course pages`);
     return pages;
-  }
-
-  private shouldIncludeTerm(termCode: string) {
-    const whitelistRegex = /^T[12]C$/;
-    return whitelistRegex.test(termCode);
   }
 
   private async scrapeCoursePages(pages: CoursePage[]) {
@@ -214,6 +209,11 @@ class UOSTimetableScraper {
 }
 
 export default UOSTimetableScraper;
+
+export function shouldIncludeTerm(termCode: string) {
+  const whitelistRegex = /^S[12]C$/i;
+  return whitelistRegex.test(termCode);
+}
 
 export function shouldSkipTime(time: ClassTime) {
   if (time.location !== undefined) {

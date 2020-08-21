@@ -1,8 +1,28 @@
-import { getLocation, getTime, getWeeks, mergeWeeks, shouldSkipTime, mergeTimes, splitTerms } from './UOSTimetableScraper';
+import {
+  getLocation,
+  getTime,
+  getWeeks,
+  mergeWeeks,
+  shouldSkipTime,
+  mergeTimes,
+  splitTerms,
+  shouldIncludeTerm,
+} from './UOSTimetableScraper';
 import { ClassTime } from '../../../app/src/state/Stream';
 import { CourseData } from '../../../app/src/state/Course';
 
 describe('parsing utils', () => {
+  it.each([
+    ['', false],
+    ['S1C', true],
+    ['S2C', true],
+    ['S1CIMY', false],
+    ['S2CIJL', false],
+    ['T2C', false],
+  ])('shouldIncludeTerm(%s) = %s', (termCode, expected) => {
+    expect(shouldIncludeTerm(termCode)).toEqual(expected);
+  })
+
   it.each([
     ['Abercrombie Business School', false],
     ['Online-Live', false],
