@@ -60,30 +60,31 @@ async function scrapeCampus(
     const writeDataPromises: Promise<void>[] = [];
     for (const term of data) {
       logger.info(`Writing term ${term} data`);
-      writeDataPromises.push(writeTermData(outputPrefix, term));
+      writeDataPromises.push(writeTermData(outputPrefix, campus, term));
 
       if (term.current) {
         logger.info(`Writing current data (term ${term})`);
-        writeDataPromises.push(writeTermData(outputPrefix, term, true));
+        writeDataPromises.push(writeTermData(outputPrefix, campus, term, true));
       }
     }
     await Promise.all(writeDataPromises);
   } else {
-    logger.info(`${UNSW}: no data written`);
+    logger.info('no data written');
   }
 }
 
 async function writeTermData(
   outputPrefix: string,
+  campus: string,
   termData: CampusData,
   current?: boolean,
 ) {
   const { term, year } = termData.meta;
   let destination: string;
   if (current) {
-    destination = `${outputPrefix}${UNSW}/data.json`;
+    destination = `${outputPrefix}${campus}/data.json`;
   } else {
-    destination = `${outputPrefix}${UNSW}/data-${year}T${term}.json`;
+    destination = `${outputPrefix}${campus}/data-${year}T${term}.json`;
   }
   const output = getWriter(destination);
   const size = await output.write(termData);
