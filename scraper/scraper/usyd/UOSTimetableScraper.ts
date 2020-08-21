@@ -7,6 +7,7 @@ import getAEST from '../../getAEST';
 import { USYD } from './scrapeUSYD';
 import { StreamData, ClassTime } from '../../../app/src/state/Stream';
 import { abbreviateDay } from '../unsw/TimetableScraper';
+import { removeDuplicateStreams } from '../commonUtils';
 
 const logger = getLogger('UOSTimetableScraper', { campus: USYD });
 
@@ -132,32 +133,25 @@ export class UOSTimetableScraper {
   }
 
   private async scrapeCoursePages(pages: CoursePage[]) {
-    pages.length = 1;
+    // pages.length = 1000;
     const pageLookup: { [url: string]: CoursePage } = {};
     for (const page of pages) { pageLookup[page.url] = page; }
     const urls = Object.keys(pageLookup);
-    const handbookRegex = /^(?:https?:\/\/)?www\.sydney\.edu\.au\/units\//;
     const courses = await this.scraper.scrapePages(
       urls,
       ($, url) => this.scrapeCoursePage($, pageLookup[url]),
     );
 
+    // Remove duplicate streams from each course
+    for (const course of courses) {
+      removeDuplicateStreams(course);
+    }
+
+    // Sort courses for consistency
+    courses.sort(courseSort);
+
+    logger.info(`parsed ${courses.length} courses`);
     return courses;
-    // const results = await this.scraper.scrapePages(
-    //   urls, page => this.parser.parseFacultyPage(page),
-    // );
-    // const allCourses = results.flat();
-
-    // // Remove duplicate streams from each course
-    // for (const course of allCourses) {
-    //   removeDuplicateStreams(course);
-    // }
-
-    // // Sort courses for consistency
-    // allCourses.sort(courseSort);
-
-    // logger.info(`parsed ${allCourses.length} courses`);
-    // return allCourses;
   }
 
   private async scrapeCoursePage($: CheerioStatic, courseDetails: CoursePage) {
@@ -166,25 +160,35 @@ export class UOSTimetableScraper {
     const partTables = courseTables.slice(1).toArray();
     const componentStreams: StreamData[][] = partTables.map(table => {
       const rows = $(table).find('tr').not('tr tr');
-      const component = rows.first().text().replace(/Part\s*/i, '').split(/\s*/)[0];
+      const component = rows.first().text().replace(/Part\s*/i, '').trim().split(/\s+/)[0];
       const streams: StreamData[] = [];
       for (const row of rows.slice(2).toArray()) {
         const detailsTable = $(row).children('td').children('table');
         const detailsRows = detailsTable.children('tbody').children('tr').toArray();
-        const stream: StreamData = {
-          component,
-          times: [],
-        };
+        const allTimes: ClassTime[] = [];
         for (const detailRow of detailsRows) {
           const cells = $(detailRow).children('td').toArray().map(td => $(td).text().trim());
+          // Skip notes on streams
+          if (cells.length === 1) {
+            continue;
+          }
+          if (cells.length !== 4) {
+            throw new Error(
+              `Unexpected number of cells (${cells.length}) for ${JSON.stringify(courseDetails)}`
+            );
+          }
           const [day, time, weeks, location] = cells;
-          stream.times.push({
+          const classTime: ClassTime = {
             time: getTime(day, time),
             weeks: getWeeks(weeks),
             location: getLocation(location),
-          })
+          };
+          if (!shouldSkipTime(classTime)) {
+            allTimes.push(classTime);
+          }
         }
-        streams.push(stream);
+        const times = mergeTimes(allTimes);
+        streams.push({ component, times });
       }
       return streams;
     });
@@ -215,6 +219,18 @@ export class UOSTimetableScraper {
 
 export default UOSTimetableScraper;
 
+export function shouldSkipTime(time: ClassTime) {
+  if (time.location !== undefined) {
+    // Skip times for pre-recorded online classes
+    const location = time.location.toLowerCase();
+    if (/online\s*pre-?recorded/.test(location)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function getTime(_day: string, _time: string): string {
   const day = abbreviateDay(_day);
   const time = _time.replace(/:30/g, '.5').replace(/:[0-9]{2}/g, '');
@@ -224,24 +240,26 @@ export function getTime(_day: string, _time: string): string {
 }
 
 export function getWeeks(_weeks: string): string {
-  let weeks = _weeks.replace(/^\[([^\]]{1,20})\].*$/, '$1');
-  weeks = weeks.replace(/wks?\s{0,2}/, '').replace(/\s{0,2}to\s{0,2}/, '-');
+  let weeks = _weeks.replace(/^\[wks?\s{0,2}([^\]]{1,20})\].*$/, '$1');
+  weeks = weeks.replace(/\s{0,2}to\s{0,2}/g, '-').replace(/,\s{0,2}/g, ',');
   return weeks;
 }
 
-function getWeekList(weeks: string[]): number[] {
-  const weeksSet = new Set<number>();
-  for (const w of weeks) {
-    if (w.includes('-')) {
-      const [start, end] = w.split(/-/).map(x => parseInt(x));
-      for (let i = start; i <= end; i++) {
-        weeksSet.add(i);
-      }
-    } else {
-      weeksSet.add(parseInt(w));
+export function getLocation(location: string): string {
+  return location.replace(/^in /, '');
+}
+
+function getWeekList(weekSets: string[]): number[] {
+  const resultSet = new Set<number>();
+  const ranges = weekSets.map(w => w.split(/,\s?/g)).flat();
+  for (const range of ranges) {
+    const [start, end] = range.split(/-/).map(x => parseInt(x));
+    const stop = end || start;
+    for (let i = start; i <= stop; i++) {
+      resultSet.add(i);
     }
   }
-  const weekList = Array.from(weeksSet.values()).sort((a, b) => +(a > b) - +(a < b));
+  const weekList = Array.from(resultSet.values()).sort((a, b) => +(a > b) - +(a < b));
   return weekList;
 }
 
@@ -266,13 +284,40 @@ function weeksToRanges(weeks: number[]): string[] {
   return weekTextParts;
 }
 
-export function mergeWeeks(weeks: string[]): string {
+export function mergeWeeks(weeks: string[]): string | undefined {
   const weekList = getWeekList(weeks);
   const ranges = weeksToRanges(weekList);
-  return ranges.join(',');
+  return ranges.join(',') || undefined;
 }
 
-export function getLocation(location: string): string {
-  return location.replace(/^in /, '');
+function pickLocation(times: ClassTime[]) {
+  const locations = times.filter(t => t.location).map(t => t.location!);
+  return locations.find(l => !l.toLowerCase().includes('online')) || locations[0];
 }
 
+type TimesMap = { [time: string]: ClassTime[] };
+function groupTimes(times: ClassTime[]): TimesMap {
+  const timesMap: TimesMap = {};
+  for (const time of times) {
+    if (timesMap[time.time]) {
+      timesMap[time.time].push(time);
+    } else {
+      timesMap[time.time] = [time];
+    }
+  }
+  return timesMap;
+}
+
+export function mergeTimes(times: ClassTime[]): ClassTime[] {
+  if (times.length <= 1) {
+    return times;
+  }
+
+  const timesMap = groupTimes(times);
+  return Object.values(timesMap).map(times => {
+    const time = times[0].time;
+    const weeks = mergeWeeks(times.filter(t => t.weeks).map(t => t.weeks!));
+    const location = pickLocation(times);
+    return { time, location, weeks };
+  });
+}
