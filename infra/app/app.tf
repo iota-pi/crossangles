@@ -47,7 +47,7 @@ resource "aws_cloudfront_origin_access_identity" "app_oai" {}
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = aws_s3_bucket.selected.bucket_regional_domain_name
+    domain_name = data.aws_s3_bucket.selected.bucket_regional_domain_name
     origin_id   = local.origin_id
     origin_path = "/${var.campus}"
 
