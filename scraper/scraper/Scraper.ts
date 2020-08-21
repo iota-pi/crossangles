@@ -35,7 +35,7 @@ export class Scraper {
     const processor = async (url: string) => {
       const preFetchTime = performance.now();
       const content = await this.getPageContent(url).catch(error => {
-        logger.error(`Error while fetching "${url}":`, error);
+        logger.error('Error while fetching', { url, stack: error.stack });
         return null;
       });
       if (content === null) return null;
@@ -43,7 +43,7 @@ export class Scraper {
       this.fetchTimes.push(preParseTime - preFetchTime);
 
       const result = await handler(content, url).catch(error => {
-        logger.error(`Error while scraping "${url}":`, error);
+        logger.error('Error while scraping', { url, error });
         return null;
       });
       this.parseTimes.push(performance.now() - preParseTime);
