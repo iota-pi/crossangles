@@ -13,7 +13,6 @@ const logger = getLogger('UOSTimetableScraper', { campus: USYD });
 
 
 export interface UOSTimetableScraperConfig {
-  scraper?: Scraper,
   state?: StateManager | null,
   year?: number,
 }
@@ -44,8 +43,9 @@ class UOSTimetableScraper {
 
   protected dataUpdateTime: string | null | undefined = null;
 
-  constructor({ scraper, state, year }: UOSTimetableScraperConfig = {}) {
-    this.scraper = scraper || new Scraper();
+  constructor({ state, year }: UOSTimetableScraperConfig = {}) {
+    this.scraper = new Scraper();
+    this.scraper.logger = logger;
     this.state = state === undefined ? getStateManager() : state || undefined;
     this.baseUrl = getBaseUrl(year || (new Date()).getFullYear());
   }

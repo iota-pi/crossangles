@@ -1,9 +1,8 @@
 import { getWriter } from './writer';
-import { CampusData, Scraper } from './scraper/Scraper';
+import { CampusData } from './scraper/Scraper';
 import { UNSW, scrapeUNSW } from './scraper/unsw/scrapeUNSW';
 import { USYD, scrapeUSYD } from './scraper/usyd/scrapeUSYD';
 import getStateManager from './state/getStateManager';
-import HTMLCache from './scraper/HTMLCache';
 import { checkVersionChange, updateVersion } from './state/util';
 import { getLogger } from './logging';
 import CampusError from './scraper/CampusError';
@@ -12,7 +11,6 @@ import StateManager from './state/StateManager';
 const logger = getLogger('scrapeCampus');
 
 export interface ScrapeCampusArgs {
-  scraper?: Scraper,
   state?: StateManager | null,
   forceUpdate?: boolean,
 }
@@ -20,16 +18,8 @@ export interface ScrapeCampusArgs {
 async function scrapeCampus(
   campus: string,
   outputPrefix: string = '',
-  cacheFile?: string,
   useState = true,
 ) {
-  let scraper: Scraper | undefined;
-  let cache: HTMLCache | undefined;
-  if (cacheFile) {
-    scraper = new Scraper();
-    cache = scraper.cache;
-    await cache.load(cacheFile).catch(() => {});
-  }
   const state = useState ? getStateManager() : null;
 
   let forceUpdate = !useState;
@@ -42,21 +32,16 @@ async function scrapeCampus(
   let data: CampusData[] | null = null;
   switch (campus) {
     case UNSW:
-      data = await scrapeUNSW({ scraper, state, forceUpdate });
+      data = await scrapeUNSW({ state, forceUpdate });
       break;
     case USYD:
-      data = await scrapeUSYD({ scraper, state, forceUpdate });
+      data = await scrapeUSYD({ state, forceUpdate });
       break;
     default:
       throw new CampusError(`Unhandled campus ${campus}`);
   }
 
   if (data) {
-    if (cache && cacheFile) {
-      logger.info('Writing data to cache file');
-      await cache.write(cacheFile);
-    }
-
     const writeDataPromises: Promise<void>[] = [];
     for (const term of data) {
       logger.info(`Writing term ${term} data`);

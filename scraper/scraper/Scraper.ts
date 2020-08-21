@@ -6,8 +6,7 @@ import HTMLCache from './HTMLCache';
 import { CourseData } from '../../app/src/state/Course';
 import { Meta } from '../../app/src/state/Meta';
 import { getLogger } from '../logging';
-
-const logger = getLogger('Scraper');
+import { Logger } from 'winston';
 
 
 export interface CampusData {
@@ -22,11 +21,13 @@ export class Scraper {
   cache: HTMLCache;
   fetchTimes: number[];
   parseTimes: number[];
+  logger: Logger;
 
   constructor(cache?: HTMLCache) {
     this.cache = cache || new HTMLCache();
     this.fetchTimes = [];
     this.parseTimes = [];
+    this.logger = getLogger('Scraper');
   }
 
   async scrapePages<T>(urls: string[], handler: (page: CheerioStatic, url: string) => Promise<T>) {
@@ -35,7 +36,7 @@ export class Scraper {
     const processor = async (url: string) => {
       const preFetchTime = performance.now();
       const content = await this.getPageContent(url).catch(error => {
-        logger.error('Error while fetching', { url, stack: error.stack });
+        this.logger.error('Error while fetching', { url, stack: error.stack });
         return null;
       });
       if (content === null) return null;
@@ -43,7 +44,7 @@ export class Scraper {
       this.fetchTimes.push(preParseTime - preFetchTime);
 
       const result = await handler(content, url).catch(error => {
-        logger.error('Error while scraping', { url, error });
+        this.logger.error('Error while scraping', { url, error });
         return null;
       });
       this.parseTimes.push(performance.now() - preParseTime);
@@ -82,7 +83,7 @@ export class Scraper {
   }
 
   report() {
-    logger.info(
+    this.logger.info(
       'Scraper statistics',
       {
         averageFetchTime: this.averageFetchTime,

@@ -11,7 +11,6 @@ const logger = getLogger('ClassUtilScraper', { campus: UNSW });
 
 
 export interface ClassUtilScraperConfig {
-  scraper?: Scraper,
   parser?: ClassUtilParser,
   state?: StateManager | null,
 }
@@ -28,14 +27,15 @@ export class ClassUtilScraper {
   scraper: Scraper;
   parser: ClassUtilParser;
   state: StateManager | undefined;
-  readonly campus = 'unsw';
+  readonly campus = UNSW;
   facultyPages: string[] = [];
   maxFaculties = process.env.NODE_ENV === 'test' ? 1 : Infinity;
 
   protected dataUpdateTime: string | null | undefined = null;
 
-  constructor({ scraper, parser, state }: ClassUtilScraperConfig = {}) {
-    this.scraper = scraper || new Scraper();
+  constructor({ parser, state }: ClassUtilScraperConfig = {}) {
+    this.scraper = new Scraper();
+    this.scraper.logger = logger;
     this.parser = parser || new ClassUtilParser();
     this.state = state === undefined ? getStateManager() : state || undefined;
   }

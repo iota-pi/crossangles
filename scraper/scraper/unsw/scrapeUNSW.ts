@@ -16,10 +16,10 @@ const terms = [1, 2, 3];
 
 
 export async function scrapeUNSW(
-  { scraper, state, forceUpdate = false }: ScrapeCampusArgs,
+  { state, forceUpdate = false }: ScrapeCampusArgs,
 ): Promise<CampusData[] | null> {
-  const classutil = new ClassUtilScraper({ scraper, state });
-  const timetable = new TimetableScraper({ scraper, state });
+  const classutil = new ClassUtilScraper({ state });
+  const timetable = new TimetableScraper({ state });
 
   const rescrapeClassUtil = await classutil.setup() || forceUpdate;
   const rescrapeTimetable = await timetable.setup() || forceUpdate;

@@ -18,7 +18,6 @@ const CACHE_KEY = 'timetable_last_data';
 export const TIMETABLE_UNSW = 'http://timetable.unsw.edu.au';
 
 export interface TimetableScraperConfig {
-  scraper?: Scraper,
   state?: StateManager | null,
   year?: number,
 }
@@ -52,8 +51,9 @@ export class TimetableScraper {
 
   protected dataUpdateTime: string | null | undefined = null;
 
-  constructor({ scraper, state, year }: TimetableScraperConfig = {}) {
-    this.scraper = scraper || new Scraper();
+  constructor({ state, year }: TimetableScraperConfig = {}) {
+    this.scraper = new Scraper();
+    this.scraper.logger = logger;
     this.state = state === undefined ? getStateManager() : state || undefined;
     this.year = year || new Date().getFullYear();
     this.baseURL = `${TIMETABLE_UNSW}/${this.year}`;
