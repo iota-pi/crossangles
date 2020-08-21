@@ -54,8 +54,10 @@ jobs:
     - name: Build and Deploy App for UNSW
       run: ./deploy-app.sh unsw usyd
 
-    - name: Terraform Apply
-      run: ./tf.sh apply -auto-approve
+    - name: Terraform Plan and Apply
+      run: |
+        ./tf.sh plan -out=crossangles.tfplan
+        ./tf.sh apply crossangles.tfplan
       env:
         TF_VAR_mailgun_key: ${{ secrets.MAILGUN_API_KEY }}
         TF_VAR_pjsc_key: ${{ secrets.PJSC_KEY }}
