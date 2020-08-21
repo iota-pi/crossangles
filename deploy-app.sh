@@ -29,7 +29,7 @@ echo "Deploying app to $environment"
 echo "-----------------$environment_hyphens"
 export REACT_APP_BASE_URL=crossangles.app
 if [[ $environment != "production" ]]; then
-  export REACT_APP_BASE_URL=$environment.crossangles.app
+  export REACT_APP_BASE_URL=$environment.$REACT_APP_BASE_URL
 fi
 export REACT_APP_STAGE_NAME=$environment
 export REACT_APP_CONTACT_ENDPOINT=$contact_endpoint
@@ -45,6 +45,10 @@ cd app
 npm ci --production
 for campus in $@
 do
+  if [[ $campus != "unsw" ]]; then
+    REACT_APP_BASE_URL=$campus.$REACT_APP_BASE_URL
+  fi
+
   echo "Building app from $campus"
   REACT_APP_CAMPUS=$campus npm run build
 
