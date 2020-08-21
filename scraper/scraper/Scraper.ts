@@ -1,4 +1,5 @@
 import cheerio from 'cheerio';
+import { performance } from 'perf_hooks';
 import axios from './axios';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
@@ -19,25 +20,34 @@ export interface CampusData {
 export class Scraper {
   maxRequests: number = 10;
   cache: HTMLCache;
+  fetchTimes: number[];
+  parseTimes: number[];
 
   constructor(cache?: HTMLCache) {
     this.cache = cache || new HTMLCache();
+    this.fetchTimes = [];
+    this.parseTimes = [];
   }
 
   async scrapePages<T>(urls: string[], handler: (page: CheerioStatic, url: string) => Promise<T>) {
     const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
     const processor = async (url: string) => {
+      const preFetchTime = performance.now();
       const content = await this.getPageContent(url).catch(error => {
         logger.error(`Error while fetching "${url}":`, error);
         return null;
       });
       if (content === null) return null;
+      const preParseTime = performance.now();
+      this.fetchTimes.push(preParseTime - preFetchTime);
 
-      return handler(content, url).catch(error => {
+      const result = await handler(content, url).catch(error => {
         logger.error(`Error while scraping "${url}":`, error);
         return null;
       });
+      this.parseTimes.push(performance.now() - preParseTime);
+      return result;
     };
     const parsingPromises = await queue.run(processor);
     return Promise.all(parsingPromises);
@@ -61,5 +71,25 @@ export class Scraper {
     }
 
     return page;
+  }
+
+  private get averageFetchTime() {
+    return this.fetchTimes.reduce((sum, x) => sum + x, 0) / this.fetchTimes.length;
+  }
+
+  private get averageParseTime() {
+    return this.parseTimes.reduce((sum, x) => sum + x, 0) / this.fetchTimes.length;
+  }
+
+  report() {
+    logger.info(
+      'Scraper statistics',
+      {
+        averageFetchTime: this.averageFetchTime,
+        averageParseTime: this.averageParseTime,
+        pagesFetched: this.fetchTimes.length,
+        pagesParsed: this.fetchTimes.length,
+      },
+    );
   }
 }

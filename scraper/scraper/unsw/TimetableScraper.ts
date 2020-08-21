@@ -77,6 +77,7 @@ export class TimetableScraper {
     logger.info('Persisting state to DynamoDB');
     await this.persistState(result);
     logger.info('Finished persisting state to DynamoDB');
+    this.scraper.report();
     return result;
   }
 

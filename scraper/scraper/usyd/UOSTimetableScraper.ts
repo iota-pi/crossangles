@@ -67,6 +67,7 @@ export class UOSTimetableScraper {
     logger.info('Persisting results to DynamoDB');
     await this.persistState(results);
     logger.info('Finished persisting results to DynamoDB');
+    this.scraper.report();
     return results;
   }
 

@@ -5,8 +5,9 @@ import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from './commonUtils';
 import { getLogger } from '../../logging';
 import ClassUtilParser from './ClassUtilParser';
+import { UNSW } from './scrapeUNSW';
 
-const logger = getLogger('ClassUtilScraper', { campus: 'unsw' });
+const logger = getLogger('ClassUtilScraper', { campus: UNSW });
 
 
 export interface ClassUtilScraperConfig {
@@ -60,6 +61,7 @@ export class ClassUtilScraper {
     logger.info('Persisting results to DynamoDB');
     await this.persistState(results, term);
     logger.info('Finished persisting results to DynamoDB');
+    this.scraper.report();
     return results;
   }
 
