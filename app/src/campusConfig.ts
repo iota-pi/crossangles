@@ -16,6 +16,11 @@ export const campusConfig: AllCampusConfig = {
     name: 'UNSW',
     longname: 'University of New South Wales',
   },
+  usyd: {
+    dataPath: `${DATA_ROOT_URI}/usyd/data.json`,
+    name: 'USYD',
+    longname: 'University of Sydney',
+  },
 };
 
 export default campusConfig;
