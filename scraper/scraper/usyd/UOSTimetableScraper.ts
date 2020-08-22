@@ -330,9 +330,12 @@ export function splitTerms(courses: CourseData[]): CourseData[][] {
     const term = parseInt(course.term.replace(/[^\d]/g, ''));
 
     // Throw away the term info now, since we no longer need it
-    course.term = undefined;
+    const newCourse: CourseData = {
+      ...course,
+      term: undefined,
+    };
 
-    results[term - 1].push(course);
+    results[term - 1].push(newCourse);
   }
   return results;
 }
