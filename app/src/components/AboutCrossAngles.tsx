@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
+const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
   const classes = useStyles();
   const [showDialog, setShowDialog] = React.useState(false);
 
