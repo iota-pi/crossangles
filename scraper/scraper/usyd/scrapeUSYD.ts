@@ -16,7 +16,7 @@ export async function scrapeUSYD(
 ): Promise<CampusData[] | null> {
   const year = await UOSTimetableScraper.getLatestYear();
   const timetable = new UOSTimetableScraper({ state, year });
-  const rescrapeTimetable = timetable.setup() || forceUpdate;
+  const rescrapeTimetable = await timetable.setup() || forceUpdate;
 
   // Don't need to update data if only using info from cache
   if (!rescrapeTimetable) {
