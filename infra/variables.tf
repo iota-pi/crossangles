@@ -5,7 +5,7 @@ variable root_domain {
 
 variable campuses {
   type    = list(string)
-  default = ["unsw"]
+  default = ["unsw", "usyd"]
 }
 
 variable app_version {
