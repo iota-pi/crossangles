@@ -48,7 +48,7 @@ async function scrapeCampus(
       writeDataPromises.push(writeTermData(outputPrefix, campus, term));
 
       if (term.current) {
-        logger.info(`Writing current data`, { term: term.meta.term });
+        logger.info('Writing current data', { term: term.meta.term });
         writeDataPromises.push(writeTermData(outputPrefix, campus, term, true));
       }
     }
