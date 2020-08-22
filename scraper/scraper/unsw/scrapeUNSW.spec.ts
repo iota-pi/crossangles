@@ -1,37 +1,5 @@
-import { scrapeUNSW, filterEnrolmentStreams } from './scrapeUNSW';
-import { Scraper } from '../Scraper';
-import StateManager from '../../state/StateManager';
+import { filterEnrolmentStreams } from './scrapeUNSW';
 import { StreamData, ClassTime } from '../../../app/src/state/Stream';
-
-describe('scrapeUNSW', () => {
-  const cacheFile = 'unsw-snapshot.json.br';
-  const scraper = new Scraper();
-  const cache = scraper.cache;
-  const cachePromise = cache.load(cacheFile).catch(() => {});
-  const state: StateManager = {
-    get: jest.fn(), set: jest.fn(), getBlob: jest.fn(), setBlob: jest.fn(),
-  } as any;
-
-  it('gives consistent output', async () => {
-    await cachePromise;
-    const result = await scrapeUNSW({ scraper, state, forceUpdate: true });
-    expect(result).not.toBeNull();
-    const courses = result![0].courses;
-    for (let i = 0; i < courses.length; ++i) {
-      if (courses[i].isAdditional) {
-        courses[i] = {
-          ...courses[i],
-          metadata: undefined,
-          streams: [],
-          description: undefined,
-          defaultColour: undefined,
-        };
-      }
-    }
-    expect(courses).toMatchSnapshot();
-    await cache.write(cacheFile);
-  });
-});
 
 it('filterEnrolmentStreams', () => {
   const times: ClassTime[] = [];
