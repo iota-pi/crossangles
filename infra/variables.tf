@@ -30,11 +30,13 @@ variable "code_bucket" {
 }
 
 variable "mailgun_key" {
-  type    = string
-  default = ""
+  type      = string
+  default   = ""
+  sensitive = true
 }
 
 variable "pjsc_key" {
-  type    = string
-  default = ""
+  type      = string
+  default   = ""
+  sensitive = true
 }

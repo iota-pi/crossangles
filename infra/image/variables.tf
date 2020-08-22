@@ -8,7 +8,8 @@ variable code_bucket {
 }
 
 variable pjsc_key {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable git_version {
