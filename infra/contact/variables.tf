@@ -9,7 +9,6 @@ variable code_bucket {
 
 variable mailgun_key {
   type      = string
-  sensitive = true
 }
 
 variable git_version {
