@@ -1,3 +1,5 @@
+import { isUSYD } from '../getCampus';
+
 export interface Options {
   compactView?: boolean,
   darkMode?: boolean,
@@ -8,19 +10,36 @@ export interface Options {
   reducedMotion?: boolean,
   twentyFourHours?: boolean,
 }
+
 export type OptionName = keyof Options;
-export type OptionList = [OptionName, string][];
-export const timetableOptionList: OptionList = [
-  ['showLocations', 'Show Locations'],
-  ['showEnrolments', 'Show Enrolments'],
-  ['showWeeks', 'Show Weeks'],
-  ['includeFull', 'Include full classes'],
+export interface OptionListItem {
+  key: OptionName,
+  title: string,
+  visible: boolean,
+}
+export type OptionTuple = [OptionName, string];
+
+function filterOptionList(options: OptionListItem[]): OptionTuple[] {
+  return options.filter(o => o.visible !== false).map(o => {
+    const tuple: OptionTuple = [o.key, o.title];
+    return tuple;
+  });
+}
+
+const allTimetableOptions: OptionListItem[] = [
+  { key: 'showLocations', title: 'Show Locations', visible: true },
+  { key: 'showEnrolments', title: 'Show Enrolments', visible: !isUSYD() },
+  { key: 'showWeeks', title: 'Show Weeks', visible: true },
+  { key: 'includeFull', title: 'Include full classes', visible: !isUSYD() },
 ];
-export const generalOptionList: OptionList = [
-  ['compactView', 'Compact Display'],
-  ['darkMode', 'Dark Mode'],
-  ['reducedMotion', 'Reduced Animations'],
+export const timetableOptionList = filterOptionList(allTimetableOptions);
+
+const allGeneralOptions: OptionListItem[] = [
+  { key: 'compactView', title: 'Compact Display', visible: true },
+  { key: 'darkMode', title: 'Dark Mode', visible: true },
+  { key: 'reducedMotion', title: 'Reduced Animations', visible: true },
 ];
+export const generalOptionList = filterOptionList(allGeneralOptions);
 
 export function getOption(options: Options, option: OptionName): boolean {
   return options[option] || false;
