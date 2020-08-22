@@ -12,4 +12,4 @@ export TF_VAR_contact_version="$(./version.sh contact)"
 export TF_VAR_image_version="$(./version.sh image)"
 export TF_IN_AUTOMATION=$CI
 cd infra
-terraform $extra_args $@
+terraform $1 $extra_args ${@:2}
