@@ -325,7 +325,13 @@ export function splitTerms(courses: CourseData[]): CourseData[][] {
       logger.warn(`no term found for course ${course.code}`);
       continue;
     }
+
+    // Extract term number from course
     const term = parseInt(course.term.replace(/[^\d]/g, ''));
+
+    // Throw away the term info now, since we no longer need it
+    course.term = undefined;
+
     results[term - 1].push(course);
   }
   return results;
