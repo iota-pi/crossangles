@@ -56,8 +56,8 @@ jobs:
 
     - name: Terraform Plan and Apply
       run: |
-        ./tf.sh plan -out=crossangles.tfplan
-        ./tf.sh apply crossangles.tfplan
+        ./tf.sh plan -out=tfplan
+        ./tf.sh apply tfplan
       env:
         TF_VAR_mailgun_key: ${{ secrets.MAILGUN_API_KEY }}
         TF_VAR_pjsc_key: ${{ secrets.PJSC_KEY }}
