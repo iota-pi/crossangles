@@ -34,7 +34,6 @@ resource "aws_lambda_function" "scraper" {
     variables = {
       S3_OUTPUT_BUCKET = aws_s3_bucket.scraper_output.bucket
       STATE_TABLE      = aws_dynamodb_table.scraper_state_table.name
-      SCRAPER_VERSION  = var.git_version
       ENVIRONMENT      = var.environment
     }
   }

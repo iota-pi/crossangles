@@ -1,8 +1,8 @@
 import StateManager from './StateManager';
 import getStateManager from './getStateManager';
+import version from '../version';
 
 const GLOBAL_STATE = '__all__';
-const version = process.env.SCRAPER_VERSION;
 
 export async function checkVersionChange(stateManager?: StateManager) {
   const state = stateManager || getStateManager();
