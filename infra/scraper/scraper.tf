@@ -219,7 +219,6 @@ EOF
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_scraper" {
   for_each = toset(var.campuses)
 
-  statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.scraper.function_name
   principal     = "events.amazonaws.com"
