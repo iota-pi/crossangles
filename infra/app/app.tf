@@ -20,6 +20,7 @@ locals {
     Environment = var.environment
     Component = local.component
     Campus = var.campus
+    App = "crossangles"
   }
 }
 

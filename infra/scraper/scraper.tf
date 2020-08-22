@@ -11,6 +11,7 @@ locals {
   standard_tags = {
     Environment = var.environment
     Component = "scraper"
+    App = "crossangles"
   }
 }
 

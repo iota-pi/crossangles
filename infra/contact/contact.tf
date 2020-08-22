@@ -2,6 +2,7 @@ locals {
   standard_tags = {
     Environment = var.environment
     Component = "contact"
+    App = "crossangles"
   }
 }
 
