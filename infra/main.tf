@@ -4,13 +4,19 @@ locals {
 }
 
 module "app" {
+  for_each = toset(var.campuses)
+
   source = "./app"
 
   environment        = local.environment
   git_version        = var.app_version
-  campus             = var.campuses[0]
+  campus             = each.value
   root_domain        = var.root_domain
   cloudflare_zone_id = local.cloudflare_zone_id
+
+  providers = {
+    aws.us_east_1 = aws.us_east_1
+  }
 }
 
 module "scraper" {

@@ -2,12 +2,8 @@ output "environment" {
   value = local.environment
 }
 
-output "app_uri" {
-  value = "https://${module.app.app_domain}"
-}
-
 output "app_bucket" {
-  value = module.app.app_bucket
+  value = module.app["unsw"].app_bucket
 }
 
 output "scraper_endpoint" {

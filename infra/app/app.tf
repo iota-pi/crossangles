@@ -1,5 +1,4 @@
 provider "aws" {
-  region = "us-east-1"
   alias  = "us_east_1"
 }
 
@@ -123,7 +122,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 output "app_domain" {
-  value = "${local.domain}"
+  value = local.domain
 }
 
 output "app_bucket" {
