@@ -9,8 +9,7 @@ const main = async () => {
   for (const arg of args) {
     const campus = arg.toLowerCase();
     const outputDir = '../app/public/';
-    const cacheFile = `./${campus}-snapshot-full.json.br`;
-    const promise = scrapeCampus(campus, outputDir, cacheFile, false).catch(e => {
+    const promise = scrapeCampus(campus, outputDir, false).catch(e => {
       logger.error(e.toString());
       process.exitCode = 1;
     });
