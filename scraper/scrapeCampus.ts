@@ -44,11 +44,11 @@ async function scrapeCampus(
   if (data) {
     const writeDataPromises: Promise<void>[] = [];
     for (const term of data) {
-      logger.info(`Writing term ${term} data`);
+      logger.info(`Writing term ${term.meta.term} data`);
       writeDataPromises.push(writeTermData(outputPrefix, campus, term));
 
       if (term.current) {
-        logger.info(`Writing current data (term ${term})`);
+        logger.info(`Writing current data`, { term: term.meta.term });
         writeDataPromises.push(writeTermData(outputPrefix, campus, term, true));
       }
     }
