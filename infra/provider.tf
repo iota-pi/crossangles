@@ -1,4 +1,17 @@
 terraform {
+  required_version = ">= 0.13"
+
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "~> 2.52"
+    }
+    cloudflare = {
+      source = "terraform-providers/cloudflare"
+      version = "~> 2.4"
+    }
+  }
+
   backend "s3" {
     bucket         = "crosscode-terraform-state"
     key            = "crossangles/terraform.tfstate"
@@ -9,9 +22,7 @@ terraform {
 
 provider "aws" {
   region  = "ap-southeast-2"
-  version = "~> 2.52"
 }
 
 provider "cloudflare" {
-  version = "~> 2.4"
 }
