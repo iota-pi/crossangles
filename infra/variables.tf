@@ -1,40 +1,40 @@
-variable root_domain {
+variable "root_domain" {
   type    = string
   default = "crossangles.app"
 }
 
-variable campuses {
+variable "campuses" {
   type    = list(string)
   default = ["unsw", "usyd"]
 }
 
-variable app_version {
+variable "app_version" {
   type = string
 }
 
-variable scraper_version {
+variable "scraper_version" {
   type = string
 }
 
-variable contact_version {
+variable "contact_version" {
   type = string
 }
 
-variable image_version {
+variable "image_version" {
   type = string
 }
 
-variable code_bucket {
+variable "code_bucket" {
   type    = string
   default = "crossangles-lambda-code"
 }
 
-variable mailgun_key {
+variable "mailgun_key" {
   type    = string
   default = ""
 }
 
-variable pjsc_key {
+variable "pjsc_key" {
   type    = string
   default = ""
 }

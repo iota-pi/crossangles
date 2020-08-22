@@ -19,6 +19,7 @@ module "scraper" {
   environment = local.environment
   code_bucket = var.code_bucket
   git_version = var.scraper_version
+  campuses    = var.campuses
 }
 
 module "image" {

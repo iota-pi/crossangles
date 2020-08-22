@@ -1,12 +1,16 @@
-variable environment {
+variable "environment" {
   type = string
 }
 
-variable code_bucket {
+variable "code_bucket" {
   type    = string
   default = "crossangles-lambda-code"
 }
 
-variable git_version {
+variable "campuses" {
+  type = list(string)
+}
+
+variable "git_version" {
   type = string
 }

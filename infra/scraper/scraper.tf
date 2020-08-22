@@ -1,9 +1,12 @@
 locals {
   scraper_s3_origin_id = "scraper_s3_origin"
 
-  # In production: run the scraper at 5 minutes past every hour
-  # In staging: run it at 6:05am or 7:05am (depending on DST)
-  cron_time = var.environment == "production" ? "5 *" : "5 19"
+  # In production: run the scraper every hour
+  # In staging: run it at ~6am or ~7am (depending on DST)
+  cron_times = {
+    unsw => var.environment == "production" ? "5 *" : "5 19"
+    usyd => var.environment == "production" ? "10 *" : "10 19"
+  }
 
   standard_tags = {
     Environment = var.environment
@@ -195,25 +198,32 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 
 resource "aws_cloudwatch_event_rule" "scraper_trigger" {
+  for_each = toset(var.campuses)
+
+  schedule_expression = "cron(${local.cron_times[each.key]} * * ? *)"
+
   description = "Run scraper on schedule"
-
-  # Run every 15 minutes
-  schedule_expression = "cron(${local.cron_time} * * ? *)"
-
-  tags = local.standard_tags
+  tags        = local.standard_tags
 }
 
 resource "aws_cloudwatch_event_target" "scraper_target" {
-  rule = aws_cloudwatch_event_rule.scraper_trigger.name
-  arn  = aws_lambda_function.scraper.arn
+  for_each = toset(var.campuses)
+
+  rule  = aws_cloudwatch_event_rule.scraper_trigger[each.key].name
+  arn   = aws_lambda_function.scraper.arn
+  input = <<-EOF
+{"campuses": ["${each.value}"]}
+EOF
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_scraper" {
+  for_each = toset(var.campuses)
+
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.scraper.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.scraper_trigger.arn
+  source_arn    = aws_cloudwatch_event_rule.scraper_trigger[each.key].arn
 }
 
 output "cloudfront_url" {
