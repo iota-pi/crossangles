@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export const AppOptions = () => {
+const AppOptions = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const options = useSelector(getOptions);
