@@ -152,10 +152,12 @@ class UOSTimetableScraper {
       const rows = $(table).find('tr').not('tr tr');
       const component = rows.first().text().replace(/Part\s*/i, '').trim().split(/\s+/)[0];
       const streams: StreamData[] = [];
+      // TODO: split into separate function
       for (const row of rows.slice(2).toArray()) {
         const detailsTable = $(row).children('td').children('table');
         const detailsRows = detailsTable.children('tbody').children('tr').toArray();
         const allTimes: ClassTime[] = [];
+        // TODO: split into separate function
         for (const detailRow of detailsRows) {
           const cells = $(detailRow).children('td').toArray().map(td => $(td).text().trim());
           // Skip notes on streams
