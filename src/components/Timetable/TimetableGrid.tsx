@@ -148,7 +148,7 @@ const Grid: React.FC<Props> = ({
     () => {
       const duration = end - start;
       return new Array(duration).fill(0).map((_, i) => {
-        let hour = start + i;
+        const hour = start + i;
         return timeToString(hour, twentyFourHours);
       });
     },
