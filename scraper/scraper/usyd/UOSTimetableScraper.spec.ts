@@ -25,14 +25,17 @@ describe('parsing utils', () => {
   });
 
   it.each([
-    ['Abercrombie Business School', false],
-    ['Online-Live', false],
-    ['Online', false],
-    ['Online Pre-Recorded', true],
-    ['Online pre-recorded', true],
-  ])('shouldSkipTime("%s") = %s', (location, expected) => {
-    const time: ClassTime = { time: '', location };
-    expect(shouldSkipTime(time)).toEqual(expected);
+    ['M9-12', 'Abercrombie Business School', false],
+    ['T9-12', 'Abercrombie Business School', false],
+    ['S9', 'Abercrombie Business School', true],
+    ['s14-16', 'Abercrombie Business School', true],
+    ['W9-12', 'Online-Live', false],
+    ['M9-12', 'Online', false],
+    ['M9-12', 'Online Pre-Recorded', true],
+    ['M9-12', 'Online pre-recorded', true],
+  ])('shouldSkipTime("%s") = %s', (time, location, expected) => {
+    const classTime: ClassTime = { time, location };
+    expect(shouldSkipTime(classTime)).toEqual(expected);
   });
 
   it.each([

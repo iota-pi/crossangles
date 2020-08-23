@@ -231,6 +231,11 @@ export function shouldSkipTime(time: ClassTime) {
     }
   }
 
+  // Skip weekend streams
+  if (time.time.toLowerCase().startsWith('s')) {
+    return true;
+  }
+
   return false;
 }
 
