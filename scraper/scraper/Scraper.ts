@@ -1,12 +1,12 @@
 import cheerio from 'cheerio';
 import { performance } from 'perf_hooks';
+import { Logger } from 'winston';
 import axios from './axios';
 import AsyncQueue from './AsyncQueue';
 import HTMLCache from './HTMLCache';
 import { CourseData } from '../../app/src/state/Course';
 import { Meta } from '../../app/src/state/Meta';
 import { getLogger } from '../logging';
-import { Logger } from 'winston';
 
 
 export interface CampusData {

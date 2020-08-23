@@ -21,7 +21,7 @@ describe('parsing utils', () => {
     ['T2C', false],
   ])('shouldIncludeTerm(%s) = %s', (termCode, expected) => {
     expect(shouldIncludeTerm(termCode)).toEqual(expected);
-  })
+  });
 
   it.each([
     ['Abercrombie Business School', false],
@@ -94,11 +94,11 @@ describe('parsing utils', () => {
     ];
     const [term1, term2] = splitTerms(courses);
     expect(term1).toEqual([
-      { code: 'a', name: '', streams: [], term: 'T1C' },
-      { code: 'b', name: '', streams: [], term: 'T1C' },
+      { code: 'a', name: '', streams: [] },
+      { code: 'b', name: '', streams: [] },
     ]);
     expect(term2).toEqual([
-      { code: 'c', name: '', streams: [], term: 'T2C' },
+      { code: 'c', name: '', streams: [] },
     ]);
   });
 });
