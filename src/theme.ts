@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import indigo from '@material-ui/core/colors/indigo';
 import green from '@material-ui/core/colors/green';
