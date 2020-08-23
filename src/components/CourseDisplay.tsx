@@ -108,8 +108,7 @@ export const CourseDisplay = ({
     <>
       <span>{course.code}</span>
       <span className={classes.lightText}>
-        {' '}
-        —
+        {' — '}
         {course.name}
       </span>
       {clarification && (
