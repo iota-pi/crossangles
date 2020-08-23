@@ -176,7 +176,12 @@ class UOSTimetableScraper {
       const detailsRows = cells.children('table').children('tbody').children('tr').toArray();
       const allTimes = this.parseDetailsRows(detailsRows);
       const times = mergeTimes(allTimes);
-      streams.push({ component, times, full });
+      streams.push({
+        component,
+        times,
+        full,
+        web: isWebStream(times),
+      });
     }
     return streams;
   }
@@ -241,6 +246,10 @@ export function shouldSkipTime(time: ClassTime) {
 
 export function isStreamClosed(streamCode: string): true | undefined {
   return streamCode.toLowerCase().includes('class closed') || undefined;
+}
+
+export function isWebStream(times: any[]) {
+  return times.length === 0;
 }
 
 export function getTime(_day: string, _time: string): string {

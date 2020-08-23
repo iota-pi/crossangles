@@ -8,6 +8,7 @@ import {
   splitTerms,
   shouldIncludeTerm,
   isStreamClosed,
+  isWebStream,
 } from './UOSTimetableScraper';
 import { ClassTime } from '../../../app/src/state/Stream';
 import { CourseData } from '../../../app/src/state/Course';
@@ -43,8 +44,16 @@ describe('parsing utils', () => {
     ['N10A', undefined],
     ['N14AClass Closed', true],
     ['N14A Class Closed', true],
-  ])('shouldSkipTime("%s") = %s', (streamCode, expected) => {
+  ])('isStreamClosed("%s") = %s', (streamCode, expected) => {
     expect(isStreamClosed(streamCode)).toEqual(expected);
+  });
+
+  it.each([
+    [[], true],
+    [[{}], false],
+    [[{}, {}, {}], false],
+  ])('isWebStream(%s) = %s', (times, expected) => {
+    expect(isWebStream(times)).toEqual(expected);
   });
 
   it.each([
