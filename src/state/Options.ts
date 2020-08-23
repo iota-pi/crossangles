@@ -26,11 +26,13 @@ function filterOptionList(options: OptionListItem[]): OptionTuple[] {
   });
 }
 
+const fullClassName = isUSYD() ? 'closed' : 'full';
+
 const allTimetableOptions: OptionListItem[] = [
   { key: 'showLocations', title: 'Show Locations', visible: true },
   { key: 'showEnrolments', title: 'Show Enrolments', visible: !isUSYD() },
   { key: 'showWeeks', title: 'Show Weeks', visible: true },
-  { key: 'includeFull', title: 'Include full classes', visible: !isUSYD() },
+  { key: 'includeFull', title: `Include ${fullClassName} classes`, visible: true },
 ];
 export const timetableOptionList = filterOptionList(allTimetableOptions);
 
