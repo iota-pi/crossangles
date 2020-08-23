@@ -119,6 +119,20 @@ export interface Props {
   onToggleTwentyFourHours?: () => void,
 }
 
+export function timeToString(hour: number, twentyFourHours: boolean) {
+  let hourString = hour.toString();
+  let suffix = '';
+  if (twentyFourHours) {
+    hourString = hourString.padStart(2, '0');
+    suffix = ':00';
+  } else {
+    const hour12 = (hour % 12) || 12;
+    hourString = hour12.toString();
+    suffix = hour < 12 ? 'am' : 'pm';
+  }
+  return [hourString, suffix];
+}
+
 const Grid: React.FC<Props> = ({
   disabled,
   timetableGridId,
@@ -135,17 +149,7 @@ const Grid: React.FC<Props> = ({
       const duration = end - start;
       return new Array(duration).fill(0).map((_, i) => {
         let hour = start + i;
-        let hourString = hour.toString();
-        let suffix = '';
-        if (twentyFourHours) {
-          hourString = hourString.padStart(2, '0');
-          suffix = ':00';
-        } else {
-          hour = (hour % 12) || 12;
-          hourString = hour.toString();
-          suffix = hour < 12 ? 'am' : 'pm';
-        }
-        return [hourString, suffix];
+        return timeToString(hour, twentyFourHours);
       });
     },
     [start, end, twentyFourHours],
