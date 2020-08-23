@@ -150,7 +150,7 @@ class UOSTimetableScraper {
     const courseTables = $('table').not('table table');
     const partTables = courseTables.slice(1).toArray();
     const componentStreams: StreamData[][] = partTables.map(table => {
-      const rows = $(table).find('tr').not('tr tr');
+      const rows = $(table).children('tbody').children('tr');
       const component = rows.first().text().replace(/Part\s*/i, '').trim().split(/\s+/)[0];
       return this.parseStreamRows(rows.toArray(), component);
     });
@@ -257,8 +257,13 @@ export function getWeeks(_weeks: string): string {
   return weeks;
 }
 
-export function getLocation(location: string): string {
-  return location.replace(/^in /, '');
+export function getLocation(location: string): string | undefined {
+  const blankLocationRegex = /see (?:department|canvas) for (room|location)/i
+  if (blankLocationRegex.test(location)) {
+    return undefined;
+  }
+
+  return location.replace(/^in /, '') || undefined;
 }
 
 function getWeekList(weekSets: string[]): number[] {

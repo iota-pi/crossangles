@@ -83,6 +83,8 @@ describe('parsing utils', () => {
   it.each([
     ['in Abercrombie Business School', 'Abercrombie Business School'],
     ['in Storie Dixson', 'Storie Dixson'],
+    ['See department for room', undefined],
+    ['See Canvas for location', undefined],
   ])('getLocation("%s") = "%s"', (rawLocation, expected) => {
     expect(getLocation(rawLocation)).toEqual(expected);
   });
