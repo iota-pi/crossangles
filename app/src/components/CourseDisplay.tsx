@@ -13,7 +13,7 @@ import ColourControl from './Colour';
 import {
   Colour, CourseData, CourseId, getCourseId, getClarificationText, getWebStream, Meta,
 } from '../state';
-import { getCampus } from '../getCampus';
+import { isUNSW, isUSYD } from '../getCampus';
 import { CATEGORY } from '../analytics';
 
 
@@ -82,9 +82,10 @@ export interface CourseDisplayProps extends BaseCourseDisplayProps {
 
 
 const getHandbookLink = (course: CourseData, meta: Meta) => {
-  const campus = getCampus();
-  if (campus === 'unsw') {
+  if (isUNSW()) {
     return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`;
+  } else if (isUSYD()) {
+    return `https://www.sydney.edu.au/units/${course.code}`;
   }
 
   return undefined;
