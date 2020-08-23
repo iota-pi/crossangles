@@ -53,6 +53,8 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     fontWeight: 300,
     lineHeight: 1.25,
+    paddingLeft: 2,
+    paddingRight: 2,
 
     '& > $label': {
       fontSize: '105%',
