@@ -1,3 +1,4 @@
+import cheerio from 'cheerio';
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
 import StateManager from '../../state/StateManager';
@@ -94,13 +95,13 @@ class UOSTimetableScraper {
     return false;
   }
 
-  private getUpdateTime($: CheerioStatic) {
+  getUpdateTime($: CheerioStatic) {
     const timeText = $('p>small').text();
     // Remove timezone because it confuses parsers and is inconsistent
     this.dataUpdateTime = timeText.replace('This page generated at:', '').trim();
   }
 
-  private async findCoursePages() {
+  async findCoursePages() {
     const pages: CoursePage[] = [];
     await this.scraper.scrapePages([this.baseUrl], async $ => {
       const table = $('table tr').toArray().slice(1);
@@ -123,7 +124,7 @@ class UOSTimetableScraper {
     return pages;
   }
 
-  private async scrapeCoursePages(pages: CoursePage[]) {
+  async scrapeCoursePages(pages: CoursePage[]) {
     const pageLookup: { [url: string]: CoursePage } = {};
     for (const page of pages) { pageLookup[page.url] = page; }
     const urls = Object.keys(pageLookup);
@@ -144,46 +145,14 @@ class UOSTimetableScraper {
     return courses;
   }
 
-  private async scrapeCoursePage($: CheerioStatic, courseDetails: CoursePage) {
+  async scrapeCoursePage($: CheerioStatic, courseDetails: CoursePage): Promise<CourseData> {
     // Find all top-level tables
     const courseTables = $('table').not('table table');
     const partTables = courseTables.slice(1).toArray();
     const componentStreams: StreamData[][] = partTables.map(table => {
       const rows = $(table).find('tr').not('tr tr');
       const component = rows.first().text().replace(/Part\s*/i, '').trim().split(/\s+/)[0];
-      const streams: StreamData[] = [];
-      // TODO: split into separate function
-      for (const row of rows.slice(2).toArray()) {
-        const detailsTable = $(row).children('td').children('table');
-        const detailsRows = detailsTable.children('tbody').children('tr').toArray();
-        const allTimes: ClassTime[] = [];
-        // TODO: split into separate function
-        for (const detailRow of detailsRows) {
-          const cells = $(detailRow).children('td').toArray().map(td => $(td).text().trim());
-          // Skip notes on streams
-          if (cells.length === 1) {
-            continue;
-          }
-          if (cells.length !== 4) {
-            logger.warn(
-              'Skipping course with unexpected number of cells',
-              { cells: cells.length, course: courseDetails },
-            );
-          }
-          const [day, time, weeks, location] = cells;
-          const classTime: ClassTime = {
-            time: getTime(day, time),
-            weeks: getWeeks(weeks),
-            location: getLocation(location),
-          };
-          if (!shouldSkipTime(classTime)) {
-            allTimes.push(classTime);
-          }
-        }
-        const times = mergeTimes(allTimes);
-        streams.push({ component, times });
-      }
-      return streams;
+      return this.parseStreamRows(rows.toArray(), component);
     });
 
     const { code, name, termCode } = courseDetails;
@@ -195,6 +164,42 @@ class UOSTimetableScraper {
       term: termCode,
     };
     return course;
+  }
+
+  private parseStreamRows(streamRows: CheerioElement[], component: string): StreamData[] {
+    const streams: StreamData[] = [];
+    for (const rowElement of streamRows.slice(2)) {
+      const row = cheerio(rowElement);
+      const cells = row.children('td');
+      const streamCode = cells.first().text();
+      const full = isStreamClosed(streamCode);
+      const detailsRows = cells.children('table').children('tbody').children('tr').toArray();
+      const allTimes = this.parseDetailsRows(detailsRows);
+      const times = mergeTimes(allTimes);
+      streams.push({ component, times, full });
+    }
+    return streams;
+  }
+
+  private parseDetailsRows(detailsRows: CheerioElement[]): ClassTime[] {
+    const allTimes: ClassTime[] = [];
+    for (const detailRow of detailsRows) {
+      const cells = cheerio(detailRow).children('td').toArray().map(td => cheerio(td).text().trim());
+      // Skip notes on streams or other unexpected data
+      if (cells.length !== 4) {
+        continue;
+      }
+      const [day, time, weeks, location] = cells;
+      const classTime: ClassTime = {
+        time: getTime(day, time),
+        weeks: getWeeks(weeks),
+        location: getLocation(location),
+      };
+      if (!shouldSkipTime(classTime)) {
+        allTimes.push(classTime);
+      }
+    }
+    return allTimes;
   }
 
   static async getLatestYear(_scraper?: Scraper) {
@@ -227,6 +232,10 @@ export function shouldSkipTime(time: ClassTime) {
   }
 
   return false;
+}
+
+export function isStreamClosed(streamCode: string): true | undefined {
+  return streamCode.toLowerCase().includes('class closed') || undefined;
 }
 
 export function getTime(_day: string, _time: string): string {

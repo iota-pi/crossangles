@@ -7,6 +7,7 @@ import {
   mergeTimes,
   splitTerms,
   shouldIncludeTerm,
+  isStreamClosed,
 } from './UOSTimetableScraper';
 import { ClassTime } from '../../../app/src/state/Stream';
 import { CourseData } from '../../../app/src/state/Course';
@@ -32,6 +33,15 @@ describe('parsing utils', () => {
   ])('shouldSkipTime("%s") = %s', (location, expected) => {
     const time: ClassTime = { time: '', location };
     expect(shouldSkipTime(time)).toEqual(expected);
+  });
+
+  it.each([
+    ['M09A', undefined],
+    ['N10A', undefined],
+    ['N14AClass Closed', true],
+    ['N14A Class Closed', true],
+  ])('shouldSkipTime("%s") = %s', (streamCode, expected) => {
+    expect(isStreamClosed(streamCode)).toEqual(expected);
   });
 
   it.each([
