@@ -16,16 +16,13 @@ const useStyles = makeStyles(theme => ({
   },
   optionContainer: {
     margin: 0,
-    flexGrow: 0,
-    maxWidth: '100%',
+    flexGrow: 1,
     flexBasis: '100%',
 
     [theme.breakpoints.only('sm')]: {
-      maxWidth: '50%',
       flexBasis: '50%',
     },
     [theme.breakpoints.up('md')]: {
-      maxWidth: '25%',
       flexBasis: '25%',
     },
   },
