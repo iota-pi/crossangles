@@ -23,42 +23,34 @@ const unsw: CampusAdditional = {
       streams: [
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'M12-14' }],
         },
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'T11-13' }],
         },
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'W12-14' }],
         },
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'H9-11' }],
         },
         {
           component: 'Core Theology',
-          full: false,
           times: [{ time: 'T15' }],
         },
         {
           component: 'Core Theology',
-          full: false,
           times: [{ time: 'H12' }],
         },
         {
           component: 'Core Training',
-          full: false,
           times: [{ time: 'T14' }],
         },
         {
           component: 'Core Training',
-          full: false,
           times: [{ time: 'H13' }],
         },
       ],
@@ -70,27 +62,22 @@ const unsw: CampusAdditional = {
       streams: [
         {
           component: 'Street Talk',
-          full: false,
           times: [{ time: 'M15' }],
         },
         {
           component: 'Street Talk',
-          full: false,
           times: [{ time: 'T15' }],
         },
         {
           component: 'Street Talk',
-          full: false,
           times: [{ time: 'W15' }],
         },
         {
           component: 'Street Talk',
-          full: false,
           times: [{ time: 'H15' }],
         },
         {
           component: 'Street Talk',
-          full: false,
           times: [{ time: 'F15' }],
         },
       ],
@@ -108,42 +95,34 @@ const unsw: CampusAdditional = {
       streams: [
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'M12-14' }],
         },
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'T11-13' }],
         },
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'W12-14' }],
         },
         {
           component: 'Growth Groups',
-          full: false,
           times: [{ time: 'H9-11' }],
         },
         {
           component: 'Core Theology',
-          full: false,
           times: [{ time: 'T15' }],
         },
         {
           component: 'Core Theology',
-          full: false,
           times: [{ time: 'H12' }],
         },
         {
           component: 'Core Training',
-          full: false,
           times: [{ time: 'T14' }],
         },
         {
           component: 'Core Training',
-          full: false,
           times: [{ time: 'H13' }],
         },
       ],
