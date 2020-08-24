@@ -88,7 +88,7 @@ const InfoText = ({
             className={classes.link}
             onClick={() => handleLinkClick('ClassUtil Link', source)}
           >
-            {source.replace(/^https?:\/\//, '')}
+            {source.replace(/^https?:\/\/(?:www\.)?/, '')}
           </a>
 
           {i < meta.sources.length - 1 && ' and '}
