@@ -16,13 +16,13 @@ export const theme = (dark = false) => {
         // Mui components don't allow switching from primary, but should use the
         // lighter colour
         secondary: { main: green[700] },
-        primary: { main: lightGreen[500] },
+        primary: { main: lightGreen[400] },
         type: 'dark',
       };
     } else {
       palette = {
         primary: { main: green[800] },
-        secondary: { main: lightGreen[600] },
+        secondary: { main: lightGreen[500] },
       };
     }
   } else {
