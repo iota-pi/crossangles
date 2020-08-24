@@ -267,7 +267,7 @@ export function getWeeks(_weeks: string): string {
 }
 
 export function getLocation(location: string): string | undefined {
-  const blankLocationRegex = /see (?:department|canvas) for (room|location)/i
+  const blankLocationRegex = /see (?:department|canvas) for (room|location)/i;
   if (blankLocationRegex.test(location)) {
     return undefined;
   }
