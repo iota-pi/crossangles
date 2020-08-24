@@ -9,6 +9,12 @@ const CBS_BASE_META: MinistryMeta = {
   signupURL: '',
   signupValidFor: [],
 };
+const EU_BASE_META: MinistryMeta = {
+  promoText: "This tool is provided by {link} — a group of people at USYD who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, {link} is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
+  website: 'https://sueu.org.au/',
+  signupURL: '',
+  signupValidFor: [],
+};
 
 const unsw: CampusAdditional = {
   default: [
@@ -135,6 +141,11 @@ const usyd: CampusAdditional = {
     {
       code: 'EU',
       name: 'Evangelical Union',
+      isAdditional: true,
+      autoSelect: true,
+      defaultColour: 'lightGreen',
+      description: "Evangelical Union is a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Evangelical Union is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
+      metadata: { ...EU_BASE_META },
       streams: [
         {
           component: 'Weekly Talks',
