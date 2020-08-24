@@ -5,7 +5,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { StreamData } from '../state';
 import { getOptions } from '../state/selectors';
-import { isUNSW } from '../getCampus';
 
 
 const useStyles = makeStyles(theme => ({
