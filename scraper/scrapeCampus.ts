@@ -73,7 +73,7 @@ async function writeTermData(
   }
   const output = getWriter(destination);
   const size = await output.write(termData);
-  logger.info(`data written for term ${term}`, { dataFileSize: size });
+  logger.info('data written', { dataFileSize: size, term, current });
 }
 
 export default scrapeCampus;
