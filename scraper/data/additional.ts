@@ -131,7 +131,66 @@ const unsw: CampusAdditional = {
 };
 
 const usyd: CampusAdditional = {
-  default: [],
+  default: [
+    {
+      code: 'EU',
+      name: 'Evangelical Union',
+      streams: [
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'M20' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'T17' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'T20' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'W17' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'H8.5' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'H13' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'H15' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'H17.5' }],
+        },
+        {
+          component: 'Weekly Talks',
+          times: [{ time: 'H20' }],
+        },
+        {
+          component: 'Equip Training',
+          times: [{ time: 'W9' }],
+        },
+        {
+          component: 'Equip Training',
+          times: [{ time: 'W15' }],
+        },
+        {
+          component: 'Equip Training',
+          times: [{ time: 'H9' }],
+        },
+        {
+          component: 'Equip Training',
+          times: [{ time: 'H15' }],
+        },
+      ],
+    },
+  ],
 };
 
 const additional = {
