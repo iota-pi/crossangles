@@ -3,11 +3,11 @@ terraform {
 
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "~> 2.52"
     }
     cloudflare = {
-      source = "terraform-providers/cloudflare"
+      source  = "terraform-providers/cloudflare"
       version = "~> 2.4"
     }
   }
@@ -21,7 +21,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "ap-southeast-2"
+  region = "ap-southeast-2"
 }
 
 provider "aws" {
