@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "$(realpath "$0")")"
 
 if [[ ${1:-} ]]; then
   lambdas=$@
@@ -25,9 +26,9 @@ do
     continue
   fi
 
-  if [[ $lambda =~ ^contact|image$ && $installed_shared_deps = 0 ]]; then
+  if [[ $CI && $lambda =~ ^contact|image$ && $installed_shared_deps = 0 ]]; then
     (
-      cd lambda-shared
+      cd ../lambda-shared
       echo "Installing dependencies for lambda-shared"
       npm ci --production >/dev/null 2>&1
     )
@@ -39,9 +40,12 @@ do
   echo $message
   echo $hyphens
   (
-    cd $lambda
-    echo "Installing dependencies"
-    npm ci >/dev/null 2>&1
+    cd ../$lambda
+    if [[ $CI ]]; then
+      echo "Installing dependencies"
+      npm ci >/dev/null 2>&1
+    fi
+
     echo "Building $lambda lambda"
     npm run build
 

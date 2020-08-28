@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [ master, release ]
+    branches: [ master ]
 
 jobs:
   test:
@@ -13,21 +13,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-2
-
     - name: Validate Terraform IAC
       run: |
         ./tf.sh init
-        ./tf.sh workspace select staging
-        ./tf.sh plan -refresh=false -lock=false
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        ./tf.sh validate
 
     - name: Setup NodeJS
       uses: actions/setup-node@v1
@@ -44,7 +33,6 @@ jobs:
       run: ./ci.sh test
 
     - name: Run e2e tests
-      if: github.base_ref == 'release'
       run: ./ci.sh cypress run
       env:
         CYPRESS_BASE_URL: https://staging.crossangles.app

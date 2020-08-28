@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "$(realpath "$0")")"
 
 COMMAND_LIST="ci-install|install|build|lint|test|run|scrape|cypress"
 COMMAND=$1

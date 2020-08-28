@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+cd "$(dirname "$(realpath "$0")")"/..
 paths=$@
 if [[ $paths =~ contact|image ]]; then
   paths+=" lambda-shared"

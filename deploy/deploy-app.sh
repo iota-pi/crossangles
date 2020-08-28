@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "$(realpath "$0")")"
 
 outputs="$(./tf.sh output -json)"
 environment=$(echo "$outputs" | jq -r ".environment.value")
@@ -41,7 +42,7 @@ if [[ $environment == production ]]; then
   max_age=7200
 fi
 
-cd app
+cd ../app
 npm ci --production
 for campus in $@
 do

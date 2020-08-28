@@ -5,7 +5,7 @@ set -euo pipefail
 ./node_modules/.bin/tsc
 
 # Inject git version into compiled JS files
-version=$(../version.sh .)
+version=$(../deploy/version.sh .)
 sed -i "s/git_version_will_be_injected_in_built_file/$version/" build/scraper/version.js
 
 # Bundle code and dependencies
