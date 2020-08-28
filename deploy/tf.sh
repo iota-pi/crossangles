@@ -23,7 +23,6 @@ tf_cmd="$1"
     --rm \
     -e "CLOUDFLARE_ACCOUNT_ID" \
     -e "CLOUDFLARE_API_TOKEN" \
-    -e "TF_VAR_mailgun_key" \
     -e "AWS_ACCESS_KEY_ID" \
     -e "AWS_SECRET_ACCESS_KEY" \
     -e "TF_VAR_mailgun_key" \
@@ -35,6 +34,7 @@ tf_cmd="$1"
     -e "TF_IN_AUTOMATION" \
     -v "$(realpath ../infra):/infra" \
     -w "/infra" \
+    -u "$(id -u):$(id -g)" \
     hashicorp/terraform:0.13.1 \
     $tf_cmd $extra_args ${@:2}
 )
