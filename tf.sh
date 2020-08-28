@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+terraform_image="hashicorp/terraform:0.13.1"
+terraform="docker run --rm $terraform_image"
+
 (
   if [[ -f "./secrets.sh" ]]; then
     source ./secrets.sh
@@ -15,7 +18,7 @@ set -e
   export TF_VAR_scraper_version="$(./version.sh scraper)"
   export TF_VAR_contact_version="$(./version.sh contact)"
   export TF_VAR_image_version="$(./version.sh image)"
-  export TF_IN_AUTOMATION=$CI
+  export TF_IN_AUTOMATION="$CI"
   cd infra
-  terraform $1 $extra_args ${@:2}
+  $terraform $1 $extra_args ${@:2}
 )
