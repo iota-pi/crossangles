@@ -1,9 +1,9 @@
-# CrossAngles
+# CrossAngles (old version, archived)
 
-This is the official repository for CrossAngles, an unofficial timetabler for UNSW students.
+This is a public archive of the second edition of CrossAngles, an unofficial timetabler for UNSW students. If you are looking for the current version of the repository, you can find it here: https://github.com/iota-pi/crossangles
 
 ## Contributing
-If you wish to contribute you are very welcome to fork this repository and submit pull requests, but please refrain from distributing it or any derivatives.
+If you wish to contribute, please take a look at the [main repository](https://github.com/iota-pi/crossangles).
 
 ## Project setup
 ``` bash
