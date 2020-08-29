@@ -1,0 +1,1147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`linkStream gives consistent output 1`] = `
+Object {
+  "component": "LEC",
+  "course": Object {
+    "code": "RING9731",
+    "name": "Introduction to Ring Theory",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          50,
+          100,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "M9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "H12",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "T12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          10,
+          50,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "T9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "F9",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "W12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          5,
+          10,
+        ],
+        "times": Array [
+          Object {
+            "location": "Hobbiton",
+            "time": "H9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          9,
+          9,
+        ],
+        "times": Array [
+          Object {
+            "location": "Fangorn",
+            "time": "F19",
+          },
+        ],
+      },
+    ],
+  },
+  "enrols": Array [
+    50,
+    100,
+  ],
+  "id": "RING9731~LEC~M9,H12,T12",
+  "sessions": Array [
+    Object {
+      "canClash": true,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "M",
+      "end": 10,
+      "id": "RING9731~LEC~M9,H12,T12~0",
+      "index": 0,
+      "location": "Morder",
+      "start": 9,
+      "stream": [Circular],
+      "weeks": undefined,
+    },
+    Object {
+      "canClash": undefined,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "H",
+      "end": 13,
+      "id": "RING9731~LEC~M9,H12,T12~1",
+      "index": 1,
+      "location": "Helm's Deep",
+      "start": 12,
+      "stream": [Circular],
+      "weeks": "1,3,7-9",
+    },
+    Object {
+      "canClash": undefined,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "T",
+      "end": 13,
+      "id": "RING9731~LEC~M9,H12,T12~2",
+      "index": 2,
+      "location": "Tol Brandir",
+      "start": 12,
+      "stream": [Circular],
+      "weeks": "1,3,7-9",
+    },
+  ],
+  "times": Array [
+    Object {
+      "canClash": true,
+      "location": "Morder",
+      "time": "M9",
+    },
+    Object {
+      "location": "Helm's Deep",
+      "time": "H12",
+      "weeks": "1,3,7-9",
+    },
+    Object {
+      "location": "Tol Brandir",
+      "time": "T12",
+      "weeks": "1,3,7-9",
+    },
+  ],
+}
+`;
+
+exports[`linkStream gives consistent output 2`] = `
+Object {
+  "component": "LEC",
+  "course": Object {
+    "code": "RING9731",
+    "name": "Introduction to Ring Theory",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          50,
+          100,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "M9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "H12",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "T12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          10,
+          50,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "T9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "F9",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "W12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          5,
+          10,
+        ],
+        "times": Array [
+          Object {
+            "location": "Hobbiton",
+            "time": "H9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          9,
+          9,
+        ],
+        "times": Array [
+          Object {
+            "location": "Fangorn",
+            "time": "F19",
+          },
+        ],
+      },
+    ],
+  },
+  "enrols": Array [
+    10,
+    50,
+  ],
+  "id": "RING9731~LEC~T9,F9,W12",
+  "sessions": Array [
+    Object {
+      "canClash": true,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "T",
+      "end": 10,
+      "id": "RING9731~LEC~T9,F9,W12~0",
+      "index": 0,
+      "location": "Morder",
+      "start": 9,
+      "stream": [Circular],
+      "weeks": undefined,
+    },
+    Object {
+      "canClash": undefined,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "F",
+      "end": 10,
+      "id": "RING9731~LEC~T9,F9,W12~1",
+      "index": 1,
+      "location": "Helm's Deep",
+      "start": 9,
+      "stream": [Circular],
+      "weeks": "1,3,7-9",
+    },
+    Object {
+      "canClash": undefined,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "W",
+      "end": 13,
+      "id": "RING9731~LEC~T9,F9,W12~2",
+      "index": 2,
+      "location": "Tol Brandir",
+      "start": 12,
+      "stream": [Circular],
+      "weeks": "1,3,7-9",
+    },
+  ],
+  "times": Array [
+    Object {
+      "canClash": true,
+      "location": "Morder",
+      "time": "T9",
+    },
+    Object {
+      "location": "Helm's Deep",
+      "time": "F9",
+      "weeks": "1,3,7-9",
+    },
+    Object {
+      "location": "Tol Brandir",
+      "time": "W12",
+      "weeks": "1,3,7-9",
+    },
+  ],
+}
+`;
+
+exports[`linkStream gives consistent output 3`] = `
+Object {
+  "component": "TUT",
+  "course": Object {
+    "code": "RING9731",
+    "name": "Introduction to Ring Theory",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          50,
+          100,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "M9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "H12",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "T12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          10,
+          50,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "T9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "F9",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "W12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          5,
+          10,
+        ],
+        "times": Array [
+          Object {
+            "location": "Hobbiton",
+            "time": "H9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          9,
+          9,
+        ],
+        "times": Array [
+          Object {
+            "location": "Fangorn",
+            "time": "F19",
+          },
+        ],
+      },
+    ],
+  },
+  "enrols": Array [
+    5,
+    10,
+  ],
+  "id": "RING9731~TUT~H9",
+  "sessions": Array [
+    Object {
+      "canClash": undefined,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "H",
+      "end": 10,
+      "id": "RING9731~TUT~H9~0",
+      "index": 0,
+      "location": "Hobbiton",
+      "start": 9,
+      "stream": [Circular],
+      "weeks": undefined,
+    },
+  ],
+  "times": Array [
+    Object {
+      "location": "Hobbiton",
+      "time": "H9",
+    },
+  ],
+}
+`;
+
+exports[`linkStream gives consistent output 4`] = `
+Object {
+  "component": "TUT",
+  "course": Object {
+    "code": "RING9731",
+    "name": "Introduction to Ring Theory",
+    "streams": Array [
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          50,
+          100,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "M9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "H12",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "T12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "LEC",
+        "enrols": Array [
+          10,
+          50,
+        ],
+        "times": Array [
+          Object {
+            "canClash": true,
+            "location": "Morder",
+            "time": "T9",
+          },
+          Object {
+            "location": "Helm's Deep",
+            "time": "F9",
+            "weeks": "1,3,7-9",
+          },
+          Object {
+            "location": "Tol Brandir",
+            "time": "W12",
+            "weeks": "1,3,7-9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          5,
+          10,
+        ],
+        "times": Array [
+          Object {
+            "location": "Hobbiton",
+            "time": "H9",
+          },
+        ],
+      },
+      Object {
+        "component": "TUT",
+        "enrols": Array [
+          9,
+          9,
+        ],
+        "times": Array [
+          Object {
+            "location": "Fangorn",
+            "time": "F19",
+          },
+        ],
+      },
+    ],
+  },
+  "enrols": Array [
+    9,
+    9,
+  ],
+  "id": "RING9731~TUT~F19",
+  "sessions": Array [
+    Object {
+      "canClash": undefined,
+      "course": Object {
+        "code": "RING9731",
+        "name": "Introduction to Ring Theory",
+        "streams": Array [
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              50,
+              100,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "M9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "H12",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "T12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "LEC",
+            "enrols": Array [
+              10,
+              50,
+            ],
+            "times": Array [
+              Object {
+                "canClash": true,
+                "location": "Morder",
+                "time": "T9",
+              },
+              Object {
+                "location": "Helm's Deep",
+                "time": "F9",
+                "weeks": "1,3,7-9",
+              },
+              Object {
+                "location": "Tol Brandir",
+                "time": "W12",
+                "weeks": "1,3,7-9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              5,
+              10,
+            ],
+            "times": Array [
+              Object {
+                "location": "Hobbiton",
+                "time": "H9",
+              },
+            ],
+          },
+          Object {
+            "component": "TUT",
+            "enrols": Array [
+              9,
+              9,
+            ],
+            "times": Array [
+              Object {
+                "location": "Fangorn",
+                "time": "F19",
+              },
+            ],
+          },
+        ],
+      },
+      "day": "F",
+      "end": 20,
+      "id": "RING9731~TUT~F19~0",
+      "index": 0,
+      "location": "Fangorn",
+      "start": 19,
+      "stream": [Circular],
+      "weeks": undefined,
+    },
+  ],
+  "times": Array [
+    Object {
+      "location": "Fangorn",
+      "time": "F19",
+    },
+  ],
+}
+`;
