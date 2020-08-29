@@ -1,44 +1,66 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# CrossAngles
 
-## Available Scripts
+Welcome to CrossAngles! This is the official repository for the unofficial
+timetable planner. This repository is for the development of CrossAngles,
+if you're looking for the app to use it, you can find it at:
+https://crossangles.app
 
-In the project directory, you can run:
+## Getting started
 
-### `npm start`
+To get started with developing locally, clone the repository, and install the
+dependencies using:
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+npm install
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Running the app development server
 
-### `npm test`
+To build and serve the web app locally, you can use:
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm start
+```
 
-### `npm run build`
+## Running tests
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+# Run the unit tests
+npm test
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+# Lint the code
+npm run lint
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The unit tests use Jest, and linting is done with ESLint.
 
-### `npm run eject`
+There is also an end-to-end (E2E) test suite using Cypress. These E2E tests can
+be run either with or without a graphical window. It can sometimes be useful
+when debugging to watch the tests as they run.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+# Run the tests in Chrome
+./ci.sh cypress open
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Run the tests headless in electron
+./ci.sh cypress run
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Contributing
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+If you wish to contribute you are very welcome to fork this repository and
+submit pull requests, but please refrain from distributing it or any
+derivatives.
 
-## Learn More
+### Adding tests and making changes
+When adding new features or touching existing code it is expected to add
+suitable test coverage for the code as well. Usually, for `example.ts`, the
+tests would go in `example.spec.ts`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Automated Testing
+This repository has automated testing set up, and it will run all the tests on
+the code before your PR can be merged.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Code Review
+Another quality gate is the code review process. At least one person must review
+each pull-request before it can be merged.
