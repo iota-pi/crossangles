@@ -1,8 +1,8 @@
 locals {
   standard_tags = {
     Environment = var.environment
-    Component = "image"
-    App = "crossangles"
+    Component   = "image"
+    Application = "crossangles"
   }
 }
 

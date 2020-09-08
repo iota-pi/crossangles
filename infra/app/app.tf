@@ -18,9 +18,9 @@ locals {
 
   standard_tags = {
     Environment = var.environment
-    Component = local.component
-    Campus = var.campus
-    App = "crossangles"
+    Component   = local.component
+    Campus      = var.campus
+    Application = "crossangles"
   }
 }
 
