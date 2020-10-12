@@ -26,7 +26,7 @@ do
     continue
   fi
 
-  if [[ $CI && $lambda =~ ^contact|image$ && $installed_shared_deps = 0 ]]; then
+  if [[ -n ${CI:-} && $lambda =~ ^contact|image$ && $installed_shared_deps = 0 ]]; then
     (
       cd ../lambda-shared
       echo "Installing dependencies for lambda-shared"
@@ -41,7 +41,7 @@ do
   echo $hyphens
   (
     cd ../$lambda
-    if [[ $CI ]]; then
+    if [[ -n ${CI:-} ]]; then
       echo "Installing dependencies"
       npm ci >/dev/null 2>&1
     fi

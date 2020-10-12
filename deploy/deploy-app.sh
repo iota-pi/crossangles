@@ -43,7 +43,9 @@ if [[ $environment == production ]]; then
 fi
 
 cd ../app
-npm ci --production
+if [[ -n ${CI:-} ]]; then
+  npm ci --production
+fi
 for campus in $@
 do
   if [[ $campus != "unsw" ]]; then
