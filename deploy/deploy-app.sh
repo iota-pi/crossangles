@@ -15,6 +15,7 @@ if [[ -z $app_bucket || $app_bucket == null ]]; then
 fi
 
 # Check versions to see if we need to re-build and re-deploy
+git submodule update --remote
 version=$(./version.sh app)
 s3_version_file="s3://$app_bucket/versions/$version"
 existing_files=$(aws s3 ls $s3_version_file || true)
