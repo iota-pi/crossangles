@@ -11,7 +11,7 @@ const testOptions: Options = Object.freeze({
 });
 
 
-export const buildQueryString = (data: object) => {
+function buildQueryString(data: object) {
   const pairs = Object.entries(data).map(x => {
     const key = x[0];
     const value = encodeURIComponent(JSON.stringify(x[1]));
