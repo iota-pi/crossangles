@@ -1,7 +1,6 @@
 import { parseQueryString, parseJSONQueryString, SaveAsImageData, getScreenshotHeight } from './saveAsImage';
 import { getSessionManager } from './test_util';
 import { ColourMap, Options } from './state';
-import { buildQueryString } from '../../image';
 import { getEmptySessionManagerData } from './components/Timetable/SessionManager';
 
 const testTimetable = Object.freeze(getSessionManager().data);
@@ -10,6 +9,16 @@ const testOptions: Options = Object.freeze({
   showEnrolments: true,
   showWeeks: true,
 });
+
+
+export const buildQueryString = (data: object) => {
+  const pairs = Object.entries(data).map(x => {
+    const key = x[0];
+    const value = encodeURIComponent(JSON.stringify(x[1]));
+    return `${key}=${value}`;
+  });
+  return ((pairs.length > 0) ? '?' : '') + pairs.join('&');
+}
 
 
 describe('buildQueryString and parseQueryString', () => {
