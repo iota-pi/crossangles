@@ -3,14 +3,20 @@ set -e
 cd "$(dirname "$(realpath "$0")")"
 tf_cmd="$1"
 
+docker_args=()
+
 (
   if [[ -f "./secrets.sh" ]]; then
     source ./secrets.sh
   fi
 
   extra_args=""
-  if [[ $1 =~ init|refresh|plan|apply ]]; then
+  if [[ "$1" =~ init|refresh|plan|apply ]]; then
     extra_args+=" -input=false"
+  fi
+
+  if [[ "$1" == "apply" ]]; then
+    docker_args+=("-it")
   fi
 
   export TF_VAR_app_version="$(./version.sh app)"
@@ -20,7 +26,8 @@ tf_cmd="$1"
   export TF_IN_AUTOMATION="1"
 
   docker run \
-    --rm -it \
+    --rm \
+    "${docker_args[@]}" \
     -e "CLOUDFLARE_ACCOUNT_ID" \
     -e "CLOUDFLARE_API_TOKEN" \
     -e "AWS_ACCESS_KEY_ID" \
