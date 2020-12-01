@@ -20,7 +20,7 @@ tf_cmd="$1"
   export TF_IN_AUTOMATION="1"
 
   docker run \
-    --rm \
+    --rm -it \
     -e "CLOUDFLARE_ACCOUNT_ID" \
     -e "CLOUDFLARE_API_TOKEN" \
     -e "AWS_ACCESS_KEY_ID" \
