@@ -81,7 +81,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
       data: image,
     });
   } catch (e) {
-    logger.error('caught unexpected error', e);
+    logger.error('caught unexpected error:', e);
     return responder.getResponse({
       statusCode: 500,
       message: 'An error occurred while attempting to save your timetable as an image',
