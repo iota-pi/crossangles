@@ -36,6 +36,7 @@ import { CATEGORY } from '../analytics';
 
 export interface OwnProps {
   className?: string,
+  onSaveAsImage: () => void,
 }
 
 export interface StateProps {
@@ -223,6 +224,7 @@ class TimetableContainer extends PureComponent<Props, State> {
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
           onIncludeFull={this.handleIncludeFull}
+          onSaveAsImage={this.props.onSaveAsImage}
           onCreateCustom={this.handleClickCreateCustom}
         />
 

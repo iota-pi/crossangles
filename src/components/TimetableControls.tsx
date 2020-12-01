@@ -7,8 +7,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Undo from '@material-ui/icons/Undo';
 import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
-import Event from '@material-ui/icons/Event';
 import Warning from '@material-ui/icons/Warning';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import Event from '@material-ui/icons/Event';
 import { useSelector } from 'react-redux';
 import { HistoryData, RootState } from '../state';
 
@@ -52,6 +53,7 @@ export interface Props {
   onRedo?: () => void,
   onUpdate?: () => void,
   onIncludeFull?: () => void,
+  onSaveAsImage?: () => void,
   onCreateCustom?: () => void,
 }
 
@@ -64,6 +66,7 @@ export const TimetableControls = ({
   onRedo,
   onUpdate,
   onIncludeFull,
+  onSaveAsImage,
   onCreateCustom,
 }: Props) => {
   const classes = useStyles();
@@ -159,11 +162,25 @@ export const TimetableControls = ({
         </Tooltip>
       )}
 
+      {onSaveAsImage && (
+        <Tooltip title="Save as Image">
+          <span>
+            <IconButton
+              onClick={onSaveAsImage}
+              color="primary"
+              data-cy="save-as-image"
+            >
+              <CameraAltIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
+      )}
+
       {onCreateCustom && (
         <Tooltip title="Create Personal Event">
           <IconButton
-            color="primary"
             onClick={onCreateCustom}
+            color="primary"
             data-cy="create-custom-event"
           >
             <Event />
