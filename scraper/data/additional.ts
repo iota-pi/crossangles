@@ -1,5 +1,6 @@
 import { CourseData, getCourseId } from '../../app/src/state/Course';
 import { MinistryMeta } from '../../app/src/state/Meta';
+import { DeliveryType } from '../../app/src/state/Stream';
 
 type CampusAdditional = { default: CourseData[], [campus: string]: CourseData[] };
 
@@ -130,6 +131,75 @@ const unsw: CampusAdditional = {
         {
           component: 'Core Training',
           times: [{ time: 'H13' }],
+        },
+      ],
+    },
+  ],
+  '2021~1': [
+    {
+      code: 'CBS',
+      name: 'Campus Bible Study',
+      metadata: { ...CBS_BASE_META },
+      streams: [
+        {
+          component: 'The Bible Talks',
+          times: [{ time: 'T13' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'The Bible Talks',
+          times: [{ time: 'W13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'The Bible Talks',
+          times: [{ time: 'H12' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'M12.5-14' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'T11-12.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'W11-12.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'H10-11.5' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'F11-12.5' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Core Theology',
+          times: [{ time: 'T16' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Core Theology',
+          times: [{ time: 'H14' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Core Training',
+          times: [{ time: 'T15' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Core Training',
+          times: [{ time: 'H13' }],
+          delivery: DeliveryType.either,
         },
       ],
     },
