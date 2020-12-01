@@ -36,6 +36,7 @@ import { CATEGORY } from '../analytics';
 
 export interface OwnProps {
   className?: string,
+  isSavingImage: boolean,
   onSaveAsImage: () => void,
 }
 
@@ -219,6 +220,7 @@ class TimetableContainer extends PureComponent<Props, State> {
           history={this.props.timetableHistory}
           improvementScore={this.getSuggestionImprovementScore()}
           isUpdating={this.state.isUpdating}
+          isSavingImage={this.props.isSavingImage}
           timetableIsEmpty={timetableIsEmpty}
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}

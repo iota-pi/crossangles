@@ -178,6 +178,7 @@ class App extends PureComponent<Props, State> {
           <div className={classes.moderateSpaceAbove}>
             <Suspense fallback={<Skeleton variant="rect" height={465} />}>
               <TimetableContainer
+                isSavingImage={this.state.isSavingImage}
                 onSaveAsImage={this.handleSaveAsImage}
               />
             </Suspense>
