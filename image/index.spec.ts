@@ -22,7 +22,7 @@ describe('HTTP methods', () => {
     ${'origin'}
     ${'Origin'}
     ${'ORIGIN'}
-  `('handles multiple header cases "$origin"', async ({ key }) => {
+  `('handles multiple header cases "$key"', async ({ key }) => {
     const origin = 'https://crossangles.app';
     const event: APIGatewayProxyEvent = {
       ...fakeEvent,
@@ -49,8 +49,7 @@ describe('HTTP methods', () => {
 
 describe('GET method responses', () => {
   it('gives error & message when no body received', async () => {
-    const event = { ...fakeEvent };
-    delete event.body;
+    const event = { ...fakeEvent, body: null };
     const result = await handler(event);
     expect(result.statusCode).toBe(400);
     const resultBody = JSON.parse(result.body);
