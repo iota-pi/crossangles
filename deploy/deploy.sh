@@ -30,11 +30,14 @@ export FORCE_UPDATE
 GREEN="\033[0;32m"
 NC="\033[0m"
 stage "Running tests"
-../ci.sh lint
-../ci.sh test
-if [[ "${PRODUCTION}" == "YES" ]]; then
-  ../ci.sh cypress run
-fi
+(
+  cd ..
+  ./ci.sh lint
+  ./ci.sh test
+  if [[ "${PRODUCTION}" == "YES" ]]; then
+    ./ci.sh cypress run
+  fi
+)
 
 stage "Setting workspace"
 current_workspace="$(./tf.sh workspace show)"
