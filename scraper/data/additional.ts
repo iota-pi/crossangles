@@ -139,7 +139,11 @@ const unsw: CampusAdditional = {
     {
       code: 'CBS',
       name: 'Campus Bible Study',
-      metadata: { ...CBS_BASE_META },
+      metadata: {
+        ...CBS_BASE_META,
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/698/responses/new',
+        signupValidFor: [{ year: 2021, term: 1 }],
+      },
       streams: [
         {
           component: 'The Bible Talks',
