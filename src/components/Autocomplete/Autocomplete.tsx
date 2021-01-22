@@ -7,8 +7,7 @@ import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Au
 import SearchIcon from '@material-ui/icons/Search';
 import { ListboxComponent } from '../ListboxComponent';
 import { CourseData, getCourseId, getClarificationText } from '../../state';
-import createFilterWorker, { Workerized } from './filter.worker.shim';
-import * as filterWorker from './filter.worker';
+import { useFilterWorker } from './filter.worker.shim';
 
 export interface Props {
   maxItems?: number,
@@ -34,16 +33,6 @@ function earlyExitFilter<T>(items: T[], func: (item: T) => boolean) {
     }
   }
   return results;
-}
-
-export type Worker = Workerized<typeof filterWorker>;
-
-function useFilterWorker() {
-  const worker: Worker = React.useMemo(
-    () => createFilterWorker<typeof filterWorker>(),
-    [],
-  );
-  return worker;
 }
 
 
