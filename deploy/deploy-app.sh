@@ -65,7 +65,7 @@ do
     REACT_APP_BASE_URL=$campus.$REACT_APP_BASE_URL
   fi
 
-  echo "Building app from $campus"
+  echo "Building app for $campus"
   REACT_APP_CAMPUS=$campus npm run build
 
   campus_key_base="s3://$app_bucket/$campus"
