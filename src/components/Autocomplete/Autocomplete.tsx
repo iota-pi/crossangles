@@ -1,13 +1,15 @@
 import React from 'react';
-import matchSorter from 'match-sorter';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+import createFilterWorker, { Workerized } from 'workerize-loader!./filter.worker';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
-import { ListboxComponent } from './ListboxComponent';
-import { CourseData, getCourseId, getClarificationText } from '../state';
+import { ListboxComponent } from '../ListboxComponent';
+import { CourseData, getCourseId, getClarificationText } from '../../state';
+import * as filterWorker from './filter.worker';
 
 export interface Props {
   maxItems?: number,
@@ -21,7 +23,29 @@ export interface Props {
 const SEARCH_DEBOUNCE = 100;
 const QUICK_SEARCH_DEBOUNCE = 10;
 
-const matchSorterOptions = { keys: ['code', 'name'] };
+function earlyExitFilter<T>(items: T[], func: (item: T) => boolean) {
+  const results: T[] = [];
+  for (let i = 0; i < items.length; ++i) {
+    const o = items[i];
+    if (func(o)) {
+      results.push(o);
+    } else if (results.length > 0) {
+      // Early exit on the first non-match after at least one successful match
+      break;
+    }
+  }
+  return results;
+}
+
+export type Worker = Workerized<typeof filterWorker>;
+
+function useFilterWorker() {
+  const worker: Worker = React.useMemo(
+    () => createFilterWorker<typeof filterWorker>(),
+    [],
+  );
+  return worker;
+}
 
 
 const useStyles = makeStyles(theme => ({
@@ -98,15 +122,54 @@ const AutocompleteInput: React.FC<InputProps> = (props: InputProps) => {
 };
 
 
-const AutocompleteControl = ({
+export interface OptionProps {
+  option: CourseData,
+  value: string,
+}
+
+const AutocompleteOption: React.FC<OptionProps> = ({ option, value }: OptionProps) => {
+  const classes = useStyles();
+
+  const name = ` — ${option.name}`;
+  const codeMatches = match(option.code, value);
+  const nameMatches = match(name, value);
+  const codeParts = parse(option.code, codeMatches).map(
+    (part, i) => ({ ...part, key: `${part.text}-${i}` }),
+  );
+  const nameParts = parse(name, nameMatches).map(
+    (part, i) => ({ ...part, key: `${part.text}-${i}` }),
+  );
+  const clarification = getClarificationText(option);
+
+  return (
+    <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
+      {codeParts.map(part => (
+        <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 400 }}>
+          {part.text}
+        </span>
+      ))}
+      {nameParts.map(part => (
+        <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 300 }}>
+          {part.text}
+        </span>
+      ))}
+      {clarification ? ` (${clarification})` : ''}
+    </div>
+  );
+};
+
+
+const AutocompleteControl: React.FC<Props> = ({
   courses,
   chosen,
   additional,
   chooseCourse,
-}: Props) => {
+}) => {
   const classes = useStyles();
 
   const [inputValue, setInputValue] = React.useState('');
+
+  const worker = useFilterWorker();
 
   const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
   const allOptions = React.useMemo(
@@ -117,7 +180,8 @@ const AutocompleteControl = ({
         course => !allChosenIds.includes(getCourseId(course)),
       );
       availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code));
-      return availableOptions;
+      const cachedOptions: CourseData[] = availableOptions.map(o => ({ ...o, lowerCode: o.code }));
+      return cachedOptions;
     },
     [courses, allChosen],
   );
@@ -131,8 +195,9 @@ const AutocompleteControl = ({
             setFilteredOptions(allOptions);
           } else {
             const lowerInputValue = inputValue.toLowerCase().trim();
-            const results = allOptions.filter(
-              o => o.code.toLowerCase().startsWith(lowerInputValue),
+            const results = earlyExitFilter(
+              allOptions,
+              o => o.lowerCode?.startsWith(lowerInputValue) || false,
             );
             if (results.length) {
               setFilteredOptions(results);
@@ -143,12 +208,11 @@ const AutocompleteControl = ({
       );
 
       const fullSearch = setTimeout(
-        () => {
+        async () => {
           if (inputValue.length === 0) {
             setFilteredOptions(allOptions);
           } else {
-            const query = inputValue.trim();
-            const results = matchSorter(allOptions, query, matchSorterOptions);
+            const results = await worker.runFilter(allOptions, inputValue);
             setFilteredOptions(results);
           }
         },
@@ -160,7 +224,7 @@ const AutocompleteControl = ({
         clearTimeout(fullSearch);
       };
     },
-    [inputValue, allOptions],
+    [inputValue, allOptions, worker],
   );
 
   // This hack prevents the ref of this dummy value array from changing
@@ -188,35 +252,8 @@ const AutocompleteControl = ({
   );
 
   const renderOption = React.useCallback(
-    (option, { inputValue: value }) => {
-      const name = ` — ${option.name}`;
-      const codeMatches = match(option.code, value);
-      const nameMatches = match(name, value);
-      const codeParts = parse(option.code, codeMatches).map(
-        part => ({ ...part, key: Math.random().toString() }),
-      );
-      const nameParts = parse(name, nameMatches).map(
-        part => ({ ...part, key: Math.random().toString() }),
-      );
-      const clarification = getClarificationText(option);
-
-      return (
-        <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
-          {codeParts.map(part => (
-            <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 400 }}>
-              {part.text}
-            </span>
-          ))}
-          {nameParts.map(part => (
-            <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 300 }}>
-              {part.text}
-            </span>
-          ))}
-          {clarification ? ` (${clarification})` : ''}
-        </div>
-      );
-    },
-    [classes],
+    (option, { inputValue: value }) => <AutocompleteOption option={option} value={value} />,
+    [],
   );
 
   const renderTags = React.useCallback(() => null, []);

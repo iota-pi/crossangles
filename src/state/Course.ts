@@ -23,6 +23,7 @@ export interface CourseData {
   defaultColour?: Colour,
   description?: string,
   metadata?: MinistryMeta,
+  lowerCode?: string,
 }
 
 export interface CourseMap {

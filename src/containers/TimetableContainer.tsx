@@ -207,10 +207,10 @@ class TimetableContainer extends PureComponent<Props, State> {
     return 0;
   };
 
-  private async handleTimetableCallback(timetable: SessionManagerData) {
+  private handleTimetableCallback = async (timetable: SessionManagerData) => {
     await this.props.dispatch(setTimetable(timetable, this.props.meta));
     this.recommendTimetable();
-  }
+  };
 
   render() {
     const timetableIsEmpty = this.props.timetableData.order.length === 0;
