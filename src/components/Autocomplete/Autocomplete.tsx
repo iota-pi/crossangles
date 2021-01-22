@@ -1,14 +1,13 @@
 import React from 'react';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-import createFilterWorker, { Workerized } from 'workerize-loader!./filter.worker';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import { ListboxComponent } from '../ListboxComponent';
 import { CourseData, getCourseId, getClarificationText } from '../../state';
+import createFilterWorker, { Workerized } from './filter.worker.shim';
 import * as filterWorker from './filter.worker';
 
 export interface Props {
