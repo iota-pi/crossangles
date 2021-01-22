@@ -80,7 +80,7 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
             a simple way for students to create their timetable for UNSW.
             However, it is not an official part of the UNSW enrolment system,
             and planning your timetable here does not mean
-            that you have enrolled for the term yet.
+            that you have registered or enrolled for the term yet.
           </Typography>
 
           <Typography paragraph>
