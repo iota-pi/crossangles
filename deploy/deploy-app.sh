@@ -14,8 +14,20 @@ if [[ -z $app_bucket || $app_bucket == null ]]; then
   exit 0
 fi
 
+# Check app HEAD is at the correct version
+(
+  app_head_commit="$(cd ../app && git rev-parse HEAD)"
+  app_tracked_commit="$(git rev-parse @:app)"
+  if [[ "$app_head_commit" != "$app_tracked_commit" ]]; then
+    1>&2 echo \
+      "CrossAngles app HEAD is at $app_head_commit," \
+      "but the submodule is tracking at $app_tracked_commit"
+    1>&2 echo "Please update the submodule and commit the change before deploying"
+    exit 1
+  fi
+)
+
 # Check versions to see if we need to re-build and re-deploy
-git submodule update --remote
 version=$(./version.sh app)
 s3_version_file="s3://$app_bucket/versions/$version"
 existing_files=$(aws s3 ls $s3_version_file || true)
