@@ -5,7 +5,7 @@ import {
   TOGGLE_OPTION,
   TOGGLE_SHOW_EVENTS,
 } from '../actions';
-import { AdditionalEvent, CourseId, getEvents, initialState, Options } from '../state';
+import { AdditionalEvent, CourseId, getEvents, initialState, Options, exclusiveOptions } from '../state';
 
 export function events(
   state: readonly AdditionalEvent[] = [],
@@ -42,8 +42,11 @@ export function options(
   action: AllActions,
 ): Options {
   if (action.type === TOGGLE_OPTION) {
+    const excludedOptions = exclusiveOptions[action.option] || [];
+    const exclusionMap = excludedOptions.reduce((obj, option) => ({ ...obj, [option]: false }), {});
     return {
       ...state,
+      ...exclusionMap,
       [action.option]: !state[action.option],
     };
   }

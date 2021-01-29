@@ -30,7 +30,12 @@ export abstract class TimetablePlacement {
     let cachedDeps: (Dimensions | number | boolean)[] = [];
     let cachedResult: Placement;
 
-    return (timetableDimensions: Dimensions, firstHour: number, compact: boolean): Placement => {
+    return (
+      timetableDimensions: Dimensions,
+      firstHour: number,
+      compact: boolean,
+      showMode: boolean,
+    ): Placement => {
       const dependencies = [
         timetableDimensions,
         firstHour,
@@ -42,16 +47,16 @@ export abstract class TimetablePlacement {
         return cachedResult;
       }
 
-      const { width, height } = this.baseDimensions(timetableDimensions, compact);
+      const { width, height } = this.baseDimensions(timetableDimensions, compact, showMode);
 
       const hourIndex = this._session.start - firstHour;
 
       const sessionWidth = this.calculateWidth(timetableDimensions.width);
 
       const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
-      const baseY = getCellHeight(true) + TIMETABLE_BORDER_WIDTH;
+      const baseY = getCellHeight(true, false) + TIMETABLE_BORDER_WIDTH;
       const dayOffsetX = sessionWidth * this.dayIndex;
-      const hourOffsetY = getCellHeight(compact) * hourIndex;
+      const hourOffsetY = getCellHeight(compact, showMode) * hourIndex;
 
       const x = baseX + dayOffsetX;
       const y = baseY + hourOffsetY;
@@ -62,9 +67,9 @@ export abstract class TimetablePlacement {
     };
   })();
 
-  private baseDimensions(timetableDimensions: Dimensions, compact: boolean): Dimensions {
+  private baseDimensions(timetableDimensions: Dimensions, compact: boolean, showMode: boolean): Dimensions {
     const sessionWidth = this.calculateWidth(timetableDimensions.width);
-    const sessionHeight = this.calculateHeight(compact);
+    const sessionHeight = this.calculateHeight(compact, showMode);
     const width = sessionWidth - TIMETABLE_BORDER_WIDTH;
     const height = sessionHeight - TIMETABLE_BORDER_WIDTH;
     return { width, height };
@@ -78,8 +83,8 @@ export abstract class TimetablePlacement {
     return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
   }
 
-  private calculateHeight(compact: boolean): number {
-    return this.duration * getCellHeight(compact);
+  private calculateHeight(compact: boolean, showMode: boolean): number {
+    return this.duration * getCellHeight(compact, showMode);
   }
 }
 

@@ -21,10 +21,11 @@ export interface Props {
 const Stripes: React.FC<Props> = ({ opacity = 0.03 }: Props) => {
   const classes = useStyles();
   const compact = useSelector((state: RootState) => state.options.compactView || false);
+  const showMode = useSelector((state: RootState) => state.options.showMode || false);
 
   const backgroundStripesStyle = React.useMemo(
     () => {
-      const stepSize = (getCellHeight(compact) * Math.SQRT2) / 4;
+      const stepSize = (getCellHeight(compact, showMode) * Math.SQRT2) / 4;
       return {
         background: `repeating-linear-gradient(
           45deg,
@@ -35,7 +36,7 @@ const Stripes: React.FC<Props> = ({ opacity = 0.03 }: Props) => {
         )`,
       };
     },
-    [compact, opacity],
+    [compact, opacity, showMode],
   );
 
   return (

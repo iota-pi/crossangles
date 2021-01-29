@@ -84,7 +84,7 @@ describe('parseGenericQueryString', () => {
 describe('getScreenshotHeight', () => {
   it('gives expected result', () => {
     const timetable = getSessionManager().data;
-    expect(getScreenshotHeight(timetable, true)).toBe(601);
-    expect(getScreenshotHeight(timetable, false)).toBe(711);
+    expect(getScreenshotHeight(timetable, true, false)).toBe(601);
+    expect(getScreenshotHeight(timetable, false, false)).toBe(711);
   });
 });

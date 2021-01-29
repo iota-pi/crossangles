@@ -110,7 +110,9 @@ class App extends PureComponent<Props, State> {
 
     const { timetable, colours, options } = this.props;
     const campus = getCampus();
-    const viewport = getScreenshotViewport(timetable, getOption(options, 'compactView'));
+    const compactView = getOption(options, 'compactView');
+    const showMode = getOption(options, 'showMode');
+    const viewport = getScreenshotViewport(timetable, compactView, showMode);
 
     const promise = saveAsImage({
       timetable,

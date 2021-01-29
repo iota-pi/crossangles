@@ -3,10 +3,11 @@ import { isUSYD } from '../getCampus';
 export interface Options {
   compactView?: boolean,
   darkMode?: boolean,
-  includeFull?: boolean;
-  showEnrolments?: boolean;
-  showLocations?: boolean;
-  showWeeks?: boolean;
+  includeFull?: boolean,
+  showEnrolments?: boolean,
+  showLocations?: boolean,
+  showWeeks?: boolean,
+  showMode?: boolean,
   reducedMotion?: boolean,
   twentyFourHours?: boolean,
 }
@@ -32,6 +33,7 @@ const allTimetableOptions: OptionListItem[] = [
   { key: 'showLocations', title: 'Show Locations', visible: true },
   { key: 'showEnrolments', title: 'Show Enrolments', visible: !isUSYD() },
   { key: 'showWeeks', title: 'Show Weeks', visible: true },
+  { key: 'showMode', title: 'Show Mode', visible: true },
   { key: 'includeFull', title: `Include ${fullClassName} classes`, visible: true },
 ];
 export const timetableOptionList = filterOptionList(allTimetableOptions);
@@ -42,6 +44,11 @@ const allGeneralOptions: OptionListItem[] = [
   { key: 'reducedMotion', title: 'Reduced Animations', visible: true },
 ];
 export const generalOptionList = filterOptionList(allGeneralOptions);
+
+export const exclusiveOptions: {[key in keyof Options]: OptionName[]} = {
+  compactView: ['showMode'],
+  showMode: ['compactView'],
+};
 
 export function getOption(options: Options, option: OptionName): boolean {
   return options[option] || false;

@@ -10,6 +10,7 @@ export const TIMETABLE_DAYS = 5;
 export const TIMETABLE_FIRST_CELL_WIDTH = 62;
 const TIMETABLE_COMPACT_CELL_HEIGHT = 50;
 const TIMETABLE_CELL_HEIGHT = 60;
+const TIMETABLE_CELL_SHOW_MODE_HEIGHT = 80;
 export const TIMETABLE_BORDER_WIDTH = 1;
 export const TIMETABLE_CELL_MIN_WIDTH = 150;
 export const SNAP_DIST = 40;
@@ -37,6 +38,15 @@ export function arraysEqual<T>(a: T[], b: T[]): boolean {
   return true;
 }
 
-export function getCellHeight(compact: boolean) {
-  return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;
+export function getCellHeight(compact: boolean, showMode: boolean) {
+  if (showMode) {
+    return TIMETABLE_CELL_SHOW_MODE_HEIGHT;
+  }
+  return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;;
+}
+
+export function getTimetableHeight(duration: number, compact: boolean, showMode: boolean) {
+    const headerRowHeight = getCellHeight(true, false);
+    const mainRowsHeight = getCellHeight(compact, showMode) * duration;
+    return headerRowHeight + mainRowsHeight;
 }

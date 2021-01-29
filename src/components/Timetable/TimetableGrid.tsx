@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => {
     },
     row: {
       display: 'flex',
-      height: getCellHeight(false),
+      height: getCellHeight(false, false),
       transition: theme.transitions.create('height'),
 
       borderStyle: 'solid',
@@ -51,13 +51,17 @@ const useStyles = makeStyles(theme => {
         borderBottomColor: DARKER_BORDER,
       },
       '&$compact': {
-        height: getCellHeight(true),
+        height: getCellHeight(true, false),
+      },
+      '&$spacious': {
+        height: getCellHeight(false, true),
       },
       '&$disableTransitions': {
         transition: 'none',
       },
     },
     compact: {},
+    spacious: {},
     disableTransitions: {},
     header: {
       fontWeight: 500,
@@ -114,6 +118,7 @@ export interface Props {
   start: number,
   end: number,
   compact: boolean,
+  showMode: boolean,
   twentyFourHours: boolean,
   disableTransitions: boolean,
   onToggleTwentyFourHours?: () => void,
@@ -139,6 +144,7 @@ const Grid: React.FC<Props> = ({
   start,
   end,
   compact,
+  showMode,
   twentyFourHours,
   disableTransitions,
   onToggleTwentyFourHours,
@@ -156,8 +162,14 @@ const Grid: React.FC<Props> = ({
   );
 
   const rowClassList = [classes.row];
-  if (compact) { rowClassList.push(classes.compact); }
-  if (disableTransitions) { rowClassList.push(classes.disableTransitions); }
+  if (showMode) {
+    rowClassList.push(classes.spacious);
+  } else if (compact) {
+    rowClassList.push(classes.compact);
+  }
+  if (disableTransitions) {
+    rowClassList.push(classes.disableTransitions);
+  }
   const rowClasses = rowClassList.join(' ');
 
   return (

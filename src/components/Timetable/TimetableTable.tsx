@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import { TimetableGrid } from './TimetableGrid';
 import { TimetableSession } from './TimetableSession';
 import { TimetableDropzone } from './TimetableDropzone';
-import { SNAP_DIST, DROPZONE_Z } from './timetableUtil';
+import { SNAP_DIST, DROPZONE_Z, getTimetableHeight } from './timetableUtil';
 import { Dimensions, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
@@ -77,14 +77,14 @@ export function getCourseColour(
 
 const timetableGridId = `TimetableGrid-${Math.random()}`;
 
-export function getDimensions(): Dimensions | undefined {
+export function getDimensions(duration: number, options: Options): Dimensions | undefined {
   const timetableElement = document.getElementById(timetableGridId);
   if (timetableElement === null) {
     return undefined;
   }
   return {
     width: timetableElement.scrollWidth,
-    height: timetableElement.scrollHeight,
+    height: getTimetableHeight(duration, getOption(options, 'compactView'), getOption(options, 'showMode')),
   };
 }
 
@@ -99,6 +99,7 @@ function TimetableTable({
   timetable,
 }: Props) {
   const compact = getOption(options, 'compactView');
+  const showMode = getOption(options, 'showMode');
   const darkMode = getOption(options, 'darkMode');
   const disableTransitions = getOption(options, 'reducedMotion');
   const twentyFourHours = getOption(options, 'twentyFourHours');
@@ -121,11 +122,12 @@ function TimetableTable({
     [minimalHours, sessions],
   );
   const { start, end } = hours;
+  const duration = end - start;
 
   const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 });
   const updateDimensions = React.useCallback(
     () => {
-      const newDimensions = getDimensions();
+      const newDimensions = getDimensions(duration, options);
       if (newDimensions) {
         setDimensions(oldDimensions => {
           if (
@@ -138,7 +140,7 @@ function TimetableTable({
         });
       }
     },
-    [],
+    [options, duration],
   );
   const [, setVersion] = React.useState(false);
   React.useEffect(() => {
@@ -155,7 +157,7 @@ function TimetableTable({
 
   const { version } = timetable;
   useEffect(forceUpdate, [version, forceUpdate]);
-  useEffect(updateDimensions, [hours, updateDimensions]);
+  useEffect(updateDimensions, [updateDimensions]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
 
@@ -211,7 +213,7 @@ function TimetableTable({
       let nearest: DropzonePlacement | null = null;
       let bestDistance = SNAP_DIST * SNAP_DIST;
       for (const dropzone of dropzones) {
-        const dropzonePosition = dropzone.basePlacement(dimensions, start, compact);
+        const dropzonePosition = dropzone.basePlacement(dimensions, start, compact, showMode);
         const deltaX = dropzonePosition.x - x;
         const deltaY = dropzonePosition.y - y;
 
@@ -223,7 +225,7 @@ function TimetableTable({
       }
       return nearest;
     },
-    [compact, dropzones, dimensions, start],
+    [compact, dropzones, dimensions, showMode, start],
   );
 
   const handleDrop = React.useCallback(
@@ -232,13 +234,13 @@ function TimetableTable({
 
       // Snap session to nearest dropzone
       const sessionPlacement = timetable.get(session.id);
-      const position = sessionPlacement.getPosition(dimensions, start, compact);
+      const position = sessionPlacement.getPosition(dimensions, start, compact, showMode);
       const dropzone = getNearestDropzone(position);
-      timetable.drop(session.id, dropzone, dimensions, start, compact);
+      timetable.drop(session.id, dropzone, dimensions, start, compact, showMode);
 
       setDragging(null);
     },
-    [compact, dragging, dimensions, getNearestDropzone, start, timetable],
+    [compact, dragging, dimensions, getNearestDropzone, showMode, start, timetable],
   );
 
 
@@ -270,7 +272,7 @@ function TimetableTable({
           if (!placement) return null;
           const { clashDepth, isDragging, isSnapped, session } = placement;
           const { course, id, index, stream } = session;
-          const position = placement.getPosition(dimensions, start, compact);
+          const position = placement.getPosition(dimensions, start, compact, showMode);
           const courseId = getCourseId(course);
           const key = `${courseId}-${stream.component}-${index}`;
 
@@ -285,7 +287,7 @@ function TimetableTable({
                   session={session}
                   colour={getCourseColour(course, colours, darkMode)}
                   position={position}
-                  dimensions={placement.basePlacement(dimensions, start, compact)}
+                  dimensions={placement.basePlacement(dimensions, start, compact, showMode)}
                   isDragging={isDragging}
                   isSnapped={isSnapped}
                   clashDepth={clashDepth}
@@ -310,7 +312,7 @@ function TimetableTable({
           {dropzones.map(dropzone => (
             <TimetableDropzone
               key={dropzone.session.stream.id}
-              position={dropzone.basePlacement(dimensions, start, compact)}
+              position={dropzone.basePlacement(dimensions, start, compact, showMode)}
               colour={draggingColour}
               session={dropzone.session}
             />
@@ -328,6 +330,7 @@ function TimetableTable({
         end={end}
         disabled={disabled}
         compact={compact}
+        showMode={showMode}
         twentyFourHours={twentyFourHours}
         disableTransitions={disableTransitions}
         onToggleTwentyFourHours={onToggleTwentyFourHours}

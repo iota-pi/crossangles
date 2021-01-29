@@ -2,7 +2,7 @@ import axios from 'axios';
 import download from 'downloadjs';
 import { ColourMap, Options } from './state';
 import { SessionManagerData, getEmptySessionManagerData } from './components/Timetable/SessionManagerTypes';
-import { getCellHeight, TIMETABLE_BORDER_WIDTH } from './components/Timetable/timetableUtil';
+import { getTimetableHeight, TIMETABLE_BORDER_WIDTH } from './components/Timetable/timetableUtil';
 import { getHours } from './components/Timetable/getHours';
 
 export interface SaveAsImageData {
@@ -22,10 +22,10 @@ export interface SaveAsImageRequest extends SaveAsImageData {
 }
 
 
-export function getScreenshotViewport(timetable: SessionManagerData, compact: boolean): Viewport {
+export function getScreenshotViewport(timetable: SessionManagerData, compact: boolean, showMode: boolean): Viewport {
   return {
     width: getScreenshotWidth(),
-    height: getScreenshotHeight(timetable, compact),
+    height: getScreenshotHeight(timetable, compact, showMode),
   };
 }
 
@@ -37,14 +37,12 @@ export function getScreenshotWidth(): number {
   return width;
 }
 
-export function getScreenshotHeight(timetable: SessionManagerData, compact: boolean): number {
+export function getScreenshotHeight(timetable: SessionManagerData, compact: boolean, showMode: boolean): number {
   // Get height based off number of timetable rows
-  const borderSpace = TIMETABLE_BORDER_WIDTH;
   const sessions = timetable.map.map(s => s[1].session);
   const hours = getHours(sessions);
   const duration = hours.end - hours.start;
-  const height = getCellHeight(true) + duration * getCellHeight(compact) + borderSpace;
-  return height;
+  return getTimetableHeight(duration, compact, showMode) + TIMETABLE_BORDER_WIDTH;
 }
 
 export async function saveAsImage(imageData: SaveAsImageRequest) {

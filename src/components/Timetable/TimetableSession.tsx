@@ -108,7 +108,7 @@ const Session: React.FC<Props> = ({
   session,
 }: Props) => {
   const classes = useStyles();
-  const { compactView, reducedMotion } = options;
+  const { compactView, reducedMotion, showMode } = options;
   const rootClasses = [
     classes.main,
     isDragging ? classes.dragging : '',
@@ -211,7 +211,7 @@ const Session: React.FC<Props> = ({
   );
 
   const detailsClassList = [classes.details];
-  if (compactView) { detailsClassList.push(classes.compact); }
+  if (compactView && !showMode) { detailsClassList.push(classes.compact); }
   const detailsClasses = detailsClassList.join(' ');
 
   return (
