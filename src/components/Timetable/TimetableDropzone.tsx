@@ -1,10 +1,9 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import OnlineIcon from '@material-ui/icons/Laptop';
-import PersonIcon from '@material-ui/icons/Person';
+import DeliveryModeIcon from './DeliveryModeIcon';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
-import { LinkedSession, DeliveryType } from '../../state';
+import { getDuration, LinkedSession } from '../../state';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,10 +30,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     opacity: 0.85,
-  },
-  iconSlash: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(0.5),
   },
 }));
 
@@ -74,11 +69,7 @@ const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
       />
       {delivery !== undefined && (
         <div className={classes.deliveryIcon}>
-          {delivery !== DeliveryType.person && <OnlineIcon />}
-          {delivery === DeliveryType.either || delivery === DeliveryType.mixed ? (
-            <span className={classes.iconSlash}>/</span>
-          ) : null}
-          {delivery !== DeliveryType.online && <PersonIcon />}
+          <DeliveryModeIcon delivery={delivery} padded={getDuration(session) > 1} />
         </div>
       )}
     </div>

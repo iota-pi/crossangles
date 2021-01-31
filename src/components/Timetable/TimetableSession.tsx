@@ -8,7 +8,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { TimetablePosition, Dimensions } from './timetableTypes';
 import { Options, LinkedSession, getDuration, DeliveryType } from '../../state';
 import { useCache } from '../../hooks';
-import DeliveryTypeIcon from './DeliveryTypeIcon';
+import DeliveryModeIcon from './DeliveryModeIcon';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -254,7 +254,7 @@ const Session: React.FC<Props> = ({
                 ))}
                 {showMode && stream.delivery !== undefined && (
                   <Collapse key="deliveryMode">
-                    <DeliveryTypeIcon delivery={stream.delivery} padded={getDuration(session) > 1} />
+                    <DeliveryModeIcon delivery={stream.delivery} padded={getDuration(session) > 1} />
                   </Collapse>
                 )}
               </TransitionGroup>
