@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     zIndex: 0,
   },
-  onlineIcon: {
+  deliveryIcon: {
     position: 'absolute',
     left: 0,
     top: 0,
@@ -73,7 +73,7 @@ const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
         style={{ backgroundColor }}
       />
       {delivery !== undefined && (
-        <div className={classes.onlineIcon}>
+        <div className={classes.deliveryIcon}>
           {delivery !== DeliveryType.person && <OnlineIcon />}
           {delivery === DeliveryType.either || delivery === DeliveryType.mixed ? (
             <span className={classes.iconSlash}>/</span>

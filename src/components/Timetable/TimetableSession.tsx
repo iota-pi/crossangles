@@ -6,8 +6,9 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { TimetablePosition, Dimensions } from './timetableTypes';
-import { Options, LinkedSession, getDuration } from '../../state';
+import { Options, LinkedSession, getDuration, DeliveryType } from '../../state';
 import { useCache } from '../../hooks';
+import DeliveryTypeIcon from './DeliveryTypeIcon';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -126,7 +127,7 @@ const Session: React.FC<Props> = ({
     () => {
       const detailList: Detail[] = [];
 
-      if (options.showLocations) {
+      if (options.showLocations && stream.delivery !== DeliveryType.online) {
         const location = session.location;
         if (location) {
           detailList.push({ key: 'location', text: location });
@@ -251,6 +252,11 @@ const Session: React.FC<Props> = ({
                     </div>
                   </Collapse>
                 ))}
+                {showMode && stream.delivery !== undefined && (
+                  <Collapse key="deliveryMode">
+                    <DeliveryTypeIcon delivery={stream.delivery} padded={getDuration(session) > 1} />
+                  </Collapse>
+                )}
               </TransitionGroup>
             </div>
           </Fade>
