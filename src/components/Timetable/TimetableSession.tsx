@@ -129,7 +129,7 @@ const Session: React.FC<Props> = ({
 
       if (options.showLocations && stream.delivery !== DeliveryType.online) {
         const location = session.location;
-        if (location) {
+        if (location && location.toLowerCase() !== 'online') {
           detailList.push({ key: 'location', text: location });
         }
       }
