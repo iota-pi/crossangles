@@ -127,7 +127,7 @@ class ClassUtilParser {
     }
 
     let delivery: DeliveryType | undefined;
-    if (times) {
+    if (times.length > 0) {
       const onlineTimes = times.filter(
         t => t.location && t.location.toLowerCase().replace(/[()]/g, '') === 'online',
       );
