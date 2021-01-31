@@ -80,6 +80,7 @@ const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props
           options={dropzoneOptions}
           disableTransitions={true}
           hideTitle={true}
+          largerDetails={true}
         />
       </div>
     </div>

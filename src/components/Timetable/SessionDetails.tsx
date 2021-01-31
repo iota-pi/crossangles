@@ -37,8 +37,13 @@ const useStyles = makeStyles(theme => ({
       fontSize: '82%',
       lineHeight: 1.15,
     },
+
+    '&$largerDetails': {
+      fontSize: '100%',
+    },
   },
   compact: {},
+  largerDetails: {},
 }));
 
 export interface Props {
@@ -47,6 +52,7 @@ export interface Props {
   disableTransitions?: boolean,
   hideTitle?: boolean,
   hideDetails?: boolean,
+  largerDetails?: boolean,
 }
 
 type Detail = { key: string, text: ReactNode };
@@ -58,6 +64,7 @@ const SessionDetailsBase: React.FC<Props> = ({
   disableTransitions,
   hideTitle,
   hideDetails,
+  largerDetails,
 }: Props) => {
   const classes = useStyles();
   const { course, stream } = session;
@@ -84,7 +91,7 @@ const SessionDetailsBase: React.FC<Props> = ({
       if (showEnrolments && stream.enrols) {
         const enrols = stream.enrols;
         if (enrols[1] > 0) {
-          const enrolsText = enrols.join('/');
+          const enrolsText = enrols.join(' / ');
           detailList.push({ key: 'enrols', text: enrolsText });
         }
       }
@@ -117,7 +124,11 @@ const SessionDetailsBase: React.FC<Props> = ({
   }
 
   const detailsClassList = [classes.details];
-  if (compactView && !showMode) { detailsClassList.push(classes.compact); }
+  if (largerDetails) {
+    detailsClassList.push(classes.largerDetails);
+  } else if (compactView && !showMode) {
+    detailsClassList.push(classes.compact);
+  }
   const detailsClasses = detailsClassList.join(' ');
 
   return (
