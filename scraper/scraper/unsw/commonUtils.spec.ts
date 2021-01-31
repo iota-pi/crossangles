@@ -90,6 +90,6 @@ describe('getInPersonTimes', () => {
       },
     ];
     const result = getInPersonTimes(streams);
-    expect(result).toBe(undefined);
+    expect(result).toBe(null);
   });
 });
