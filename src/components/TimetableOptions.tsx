@@ -19,11 +19,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     flexBasis: '100%',
 
-    [theme.breakpoints.only('sm')]: {
+    [theme.breakpoints.up('sm')]: {
       flexBasis: '50%',
-    },
-    [theme.breakpoints.up('md')]: {
-      flexBasis: '25%',
     },
   },
   lessSpaceAbove: {
