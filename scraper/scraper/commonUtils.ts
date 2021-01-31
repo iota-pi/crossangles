@@ -71,6 +71,7 @@ export function mergeDeliveryType(streams: StreamData[]): DeliveryType | undefin
 export function getInPersonTimes(streams: StreamData[]): ClassTime[] | null {
   for (const stream of streams) {
     if (stream.delivery === DeliveryType.person) {
+      console.log(`Using times for ${stream.component} ${stream.delivery}`);
       return stream.times;
     }
   }
