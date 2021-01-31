@@ -1,14 +1,11 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
-import { TransitionGroup } from 'react-transition-group';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import Fade from '@material-ui/core/Fade';
-import Collapse from '@material-ui/core/Collapse';
 import { TimetablePosition, Dimensions } from './timetableTypes';
-import { Options, LinkedSession, getDuration, DeliveryType, getComponentName } from '../../state';
+import { Options, LinkedSession } from '../../state';
 import { useCache } from '../../hooks';
-import DeliveryModeIcon from './DeliveryModeIcon';
+import SessionDetails from './SessionDetails';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -49,38 +46,6 @@ const useStyles = makeStyles(theme => ({
   dragging: {},
   snapped: {},
   hovering: {},
-  sessionText: {
-    position: 'relative',
-    textAlign: 'center',
-    fontWeight: 300,
-    lineHeight: 1.25,
-    paddingLeft: 2,
-    paddingRight: 2,
-
-    '& > $label': {
-      fontSize: '105%',
-
-      '& > $em': {
-        fontWeight: 400,
-      },
-
-      '& > $largerFont': {
-        fontSize: '115%',
-      },
-    },
-  },
-  label: {},
-  em: {},
-  largerFont: {},
-  details: {
-    fontSize: '88%',
-
-    '&$compact': {
-      fontSize: '82%',
-      lineHeight: 1.15,
-    },
-  },
-  compact: {},
 }));
 
 export interface Props {
@@ -97,8 +62,6 @@ export interface Props {
   onDrop?: (session: LinkedSession) => void,
 }
 
-type Detail = { key: string, text: ReactNode };
-
 
 const Session: React.FC<Props> = ({
   colour: propColour,
@@ -114,65 +77,14 @@ const Session: React.FC<Props> = ({
   session,
 }: Props) => {
   const classes = useStyles();
-  const { compactView, reducedMotion, showMode } = options;
   const rootClasses = [
     classes.main,
     isDragging ? classes.dragging : '',
     isSnapped ? classes.snapped : '',
     clashDepth > 0 ? classes.hovering : '',
-    reducedMotion ? classes.disableTransitions : '',
+    options.reducedMotion ? classes.disableTransitions : '',
   ].join(' ');
   const { course, day, start, end, stream } = session;
-  const isSpecialCourse = course.isAdditional || course.isCustom || false;
-  const sessionTitle = isSpecialCourse ? stream.component : course.code;
-
-
-  const details: Detail[] = React.useMemo(
-    () => {
-      const detailList: Detail[] = [];
-
-      if (options.showLocations && stream.delivery !== DeliveryType.online) {
-        const location = session.location;
-        if (location && location.toLowerCase() !== 'online') {
-          detailList.push({ key: 'location', text: location });
-        }
-      }
-
-      if (options.showEnrolments && stream.enrols) {
-        const enrols = stream.enrols;
-        if (enrols[1] > 0) {
-          const enrolsText = enrols.join('/');
-          detailList.push({ key: 'enrols', text: enrolsText });
-        }
-      }
-
-      if (options.showWeeks) {
-        const weeks = session.weeks;
-        if (weeks) {
-          const weeksText = `Weeks: ${weeks.replace(/-/g, '–').replace(/,\s*/g, ', ')}`;
-          detailList.push({ key: 'weeks', text: weeksText });
-        }
-      }
-
-      // Compress details onto two lines if duration is less than an hour
-      if (getDuration(session) <= 1 && detailList.length >= 3) {
-        const enrolsIndex = detailList.findIndex(d => d.key === 'enrols');
-        const enrols = detailList.splice(enrolsIndex, 1)[0].text;
-        detailList[1].text += ` (${enrols})`;
-      }
-
-      return detailList;
-    },
-    [options, session, stream],
-  );
-
-  const useComponentCode = compactView || (details.length > 1);
-  const sessionComponent = isSpecialCourse ? '' : (useComponentCode ? stream.component : getComponentName(stream));
-  const titleClasses = [classes.em];
-  if (!useComponentCode) {
-    titleClasses.push(classes.largerFont);
-  }
-
   const colour = useCache(propColour);
 
   const styles: CSSProperties = React.useMemo(
@@ -222,10 +134,6 @@ const Session: React.FC<Props> = ({
     [colour],
   );
 
-  const detailsClassList = [classes.details];
-  if (compactView && !showMode) { detailsClassList.push(classes.compact); }
-  const detailsClasses = detailsClassList.join(' ');
-
   return (
     <DraggableCore
       onStart={handleStart}
@@ -246,32 +154,11 @@ const Session: React.FC<Props> = ({
           data-cy="timetable-session-background"
         />
 
-        <div className={classes.sessionText}>
-          <div className={classes.label}>
-            <span className={titleClasses.join(' ')}>{sessionTitle}</span>
-            {useComponentCode ? ' ' : <br />}
-            <span>{sessionComponent}</span>
-          </div>
-
-          <Fade in={isSnapped}>
-            <div>
-              <TransitionGroup>
-                {details.map(detail => (
-                  <Collapse key={detail.key}>
-                    <div className={detailsClasses}>
-                      {detail.text}
-                    </div>
-                  </Collapse>
-                ))}
-                {showMode && stream.delivery !== undefined && (
-                  <Collapse key="deliveryMode">
-                    <DeliveryModeIcon delivery={stream.delivery} padded={getDuration(session) > 1} />
-                  </Collapse>
-                )}
-              </TransitionGroup>
-            </div>
-          </Fade>
-        </div>
+        <SessionDetails
+          session={session}
+          options={options}
+          hideDetails={!isSnapped}
+        />
       </div>
     </DraggableCore>
   );
