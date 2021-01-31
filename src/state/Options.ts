@@ -33,7 +33,7 @@ const allTimetableOptions: OptionListItem[] = [
   { key: 'showLocations', title: 'Show Locations', visible: true },
   { key: 'showEnrolments', title: 'Show Enrolments', visible: !isUSYD() },
   { key: 'showWeeks', title: 'Show Weeks', visible: true },
-  { key: 'showMode', title: 'Show Mode', visible: true },
+  { key: 'showMode', title: 'Show Delivery Mode', visible: true },
   { key: 'includeFull', title: `Include ${fullClassName} classes`, visible: true },
 ];
 export const timetableOptionList = filterOptionList(allTimetableOptions);

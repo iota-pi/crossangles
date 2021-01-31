@@ -6,7 +6,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
 import { TimetablePosition, Dimensions } from './timetableTypes';
-import { Options, LinkedSession, getDuration, DeliveryType } from '../../state';
+import { Options, LinkedSession, getDuration, DeliveryType, getComponentName } from '../../state';
 import { useCache } from '../../hooks';
 import DeliveryModeIcon from './DeliveryModeIcon';
 
@@ -61,12 +61,17 @@ const useStyles = makeStyles(theme => ({
       fontSize: '105%',
 
       '& > $em': {
-        fontWeight: 500,
+        fontWeight: 400,
+      },
+
+      '& > $largerFont': {
+        fontSize: '115%',
       },
     },
   },
   label: {},
   em: {},
+  largerFont: {},
   details: {
     fontSize: '88%',
 
@@ -120,7 +125,6 @@ const Session: React.FC<Props> = ({
   const { course, day, start, end, stream } = session;
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
-  const sessionComponent = isSpecialCourse ? '' : stream.component;
 
 
   const details: Detail[] = React.useMemo(
@@ -161,6 +165,13 @@ const Session: React.FC<Props> = ({
     },
     [options, session, stream],
   );
+
+  const useComponentCode = compactView || (details.length > 1);
+  const sessionComponent = isSpecialCourse ? '' : (useComponentCode ? stream.component : getComponentName(stream));
+  const titleClasses = [classes.em];
+  if (!useComponentCode) {
+    titleClasses.push(classes.largerFont);
+  }
 
   const colour = useCache(propColour);
 
@@ -237,8 +248,8 @@ const Session: React.FC<Props> = ({
 
         <div className={classes.sessionText}>
           <div className={classes.label}>
-            <span className={classes.em}>{sessionTitle}</span>
-            {' '}
+            <span className={titleClasses.join(' ')}>{sessionTitle}</span>
+            {useComponentCode ? ' ' : <br />}
             <span>{sessionComponent}</span>
           </div>
 

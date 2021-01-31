@@ -45,6 +45,32 @@ export function getComponentId(course: CourseData, stream: StreamData, simple = 
   return `${getCourseId(course, simple)}~${componentString}`;
 }
 
+export function getComponentName(stream: Pick<StreamData, 'component'>) {
+  const code = stream.component;
+  const nameMap: { [key: string]: string } = {
+    CLN: 'Clinical',
+    FLD: 'Field Studies',
+    HON: 'Honours',
+    LAB: 'Lab',
+    LA1: 'Lab (1)',
+    LA2: 'Lab (2)',
+    LEC: 'Lecture',
+    LE1: 'Lecture (1)',
+    LE2: 'Lecture (2)',
+    OTH: 'Other',
+    PRJ: 'Project',
+    SEM: 'Seminar',
+    STD: 'Studio',
+    THE: 'Thesis',
+    TLB: 'Tutorial-Laboratory',
+    TUT: 'Tutorial',
+    TU1: 'Tutorial (1)',
+    TU2: 'Tutorial (2)',
+    WEB: 'Lecture',
+  }
+  return nameMap[code.toUpperCase()] || code;
+}
+
 export function getSessions(course: CourseData, stream: StreamData): SessionData[] {
   const courseId = getCourseId(course);
   const streamId = getStreamId(course, stream);

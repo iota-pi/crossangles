@@ -1,4 +1,4 @@
-import { getStreamId, getSessions, StreamData, linkStream } from './Stream';
+import { getStreamId, getSessions, StreamData, linkStream, getComponentName } from './Stream';
 import { getCourse } from '../test_util';
 import { CourseData, getCourseId } from './Course';
 import { SessionData } from './Session';
@@ -61,3 +61,13 @@ describe('linkStream', () => {
     }
   });
 });
+
+
+it.each([
+  ['TUT', 'Tutorial'],
+  ['LEC', 'Lecture'],
+  ['LE1', 'Lecture (1)'],
+  ['QQQ', 'QQQ'],
+])('getComponentName("%s") = "%s"', (code, name) => {
+  expect(getComponentName({ component: code })).toEqual(name);
+})
