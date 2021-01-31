@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     zIndex: 0,
   },
-  deliveryIcon: {
+  deliveryIcons: {
     position: 'absolute',
     left: 0,
     top: 0,
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.85,
+    opacity: 0.9,
   },
 }));
 
@@ -68,7 +68,7 @@ const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
         style={{ backgroundColor }}
       />
       {delivery !== undefined && (
-        <div className={classes.deliveryIcon}>
+        <div className={classes.deliveryIcons}>
           <DeliveryModeIcon delivery={delivery} padded={getDuration(session) > 1} />
         </div>
       )}
