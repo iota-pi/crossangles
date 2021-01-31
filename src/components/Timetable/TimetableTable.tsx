@@ -315,6 +315,7 @@ function TimetableTable({
               position={dropzone.basePlacement(dimensions, start, compact, showMode)}
               colour={draggingColour}
               session={dropzone.session}
+              options={options}
             />
           ))}
         </div>

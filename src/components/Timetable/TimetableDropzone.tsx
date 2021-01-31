@@ -1,9 +1,9 @@
 import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import DeliveryModeIcon from './DeliveryModeIcon';
 import { DROPZONE_Z } from './timetableUtil';
 import { Placement } from './timetableTypes';
-import { getDuration, LinkedSession } from '../../state';
+import { LinkedSession, Options } from '../../state';
+import SessionDetails from './SessionDetails';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     zIndex: 0,
   },
-  deliveryIcons: {
+  detailContainer: {
     position: 'absolute',
     left: 0,
     top: 0,
@@ -35,11 +35,12 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   colour?: string,
+  options: Options,
   position: Placement,
   session: LinkedSession,
 }
 
-const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
+const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props) => {
   const classes = useStyles();
   const styles = React.useMemo(
     () => {
@@ -55,7 +56,6 @@ const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
     [position],
   );
   const backgroundColor = colour ? `${colour}A0` : 'none';
-  const delivery = session.stream.delivery;
 
   return (
     <div
@@ -67,11 +67,14 @@ const Dropzone: React.FC<Props> = ({ colour, position, session }: Props) => {
         className={classes.background}
         style={{ backgroundColor }}
       />
-      {delivery !== undefined && (
-        <div className={classes.deliveryIcons}>
-          <DeliveryModeIcon delivery={delivery} padded={getDuration(session) > 1} />
-        </div>
-      )}
+      <div className={classes.detailContainer}>
+        <SessionDetails
+          session={session}
+          options={options}
+          hideTitle={true}
+          fullDetails={true}
+        />
+      </div>
     </div>
   );
 };

@@ -44,7 +44,9 @@ const useStyles = makeStyles(theme => ({
 export interface Props {
   session: LinkedSession,
   options: Options,
+  hideTitle?: boolean,
   hideDetails?: boolean,
+  fullDetails?: boolean,
 }
 
 type Detail = { key: string, text: ReactNode };
@@ -53,11 +55,13 @@ type Detail = { key: string, text: ReactNode };
 const SessionDetailsBase: React.FC<Props> = ({
   session,
   options,
+  hideTitle,
   hideDetails,
+  fullDetails,
 }: Props) => {
   const classes = useStyles();
-  const { compactView, showMode } = options;
   const { course, stream } = session;
+  const showMode = options.showMode || fullDetails;
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
 
@@ -65,15 +69,18 @@ const SessionDetailsBase: React.FC<Props> = ({
   const details: Detail[] = React.useMemo(
     () => {
       const detailList: Detail[] = [];
+      const showLocations = options.showLocations || fullDetails;
+      const showEnrolments = options.showEnrolments || fullDetails;
+      const showWeeks = options.showWeeks || fullDetails;
 
-      if (options.showLocations && stream.delivery !== DeliveryType.online) {
+      if (showLocations && stream.delivery !== DeliveryType.online) {
         const location = session.location;
         if (location && location.toLowerCase() !== 'online') {
           detailList.push({ key: 'location', text: location });
         }
       }
 
-      if (options.showEnrolments && stream.enrols) {
+      if (showEnrolments && stream.enrols) {
         const enrols = stream.enrols;
         if (enrols[1] > 0) {
           const enrolsText = enrols.join('/');
@@ -81,7 +88,7 @@ const SessionDetailsBase: React.FC<Props> = ({
         }
       }
 
-      if (options.showWeeks) {
+      if (showWeeks) {
         const weeks = session.weeks;
         if (weeks) {
           const weeksText = `Weeks: ${weeks.replace(/-/g, '–').replace(/,\s*/g, ', ')}`;
@@ -98,9 +105,10 @@ const SessionDetailsBase: React.FC<Props> = ({
 
       return detailList;
     },
-    [options, session, stream],
+    [fullDetails, options, session, stream],
   );
 
+  const { compactView } = options;
   const useComponentCode = compactView || (details.length > 1);
   const sessionComponent = isSpecialCourse ? '' : (useComponentCode ? stream.component : getComponentName(stream));
   const titleClasses = [classes.em];
@@ -114,11 +122,13 @@ const SessionDetailsBase: React.FC<Props> = ({
 
   return (
     <div className={classes.root}>
-      <div className={classes.label}>
-        <span className={titleClasses.join(' ')}>{sessionTitle}</span>
-        {useComponentCode ? ' ' : <br />}
-        <span>{sessionComponent}</span>
-      </div>
+      {!hideTitle && (
+        <div className={classes.label}>
+          <span className={titleClasses.join(' ')}>{sessionTitle}</span>
+          {useComponentCode ? ' ' : <br />}
+          <span>{sessionComponent}</span>
+        </div>
+      )}
 
       <Fade in={!hideDetails}>
         <div>
