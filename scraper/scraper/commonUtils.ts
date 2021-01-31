@@ -1,15 +1,22 @@
 import { CourseData } from '../../app/src/state/Course';
-import { DeliveryType, StreamData } from '../../app/src/state/Stream';
+import { ClassTime, DeliveryType, StreamData } from '../../app/src/state/Stream';
 
 export function removeDuplicateStreams(course: CourseData) {
   const mapping = getStreamGroupMapping(course);
 
   // For each set of streams with identical component and times, remove all but the emptiest stream
   for (const streamGroup of Array.from(mapping.values())) {
-    const emptiest = emptiestStream(streamGroup);
-    emptiest.delivery = mergeDeliveryType(streamGroup);
+    // Get emptiest stream and merge data from other streams into it
+    const mergedStream: StreamData = emptiestStream(streamGroup);
+    mergedStream.delivery = mergeDeliveryType(streamGroup);
+    const inPersonTimes = getInPersonTimes(streamGroup);
+    if (inPersonTimes !== null) {
+      mergedStream.times = inPersonTimes;
+    }
+
+    // Remove all other streams
     for (const stream of streamGroup) {
-      if (stream !== emptiest) {
+      if (stream !== mergedStream) {
         const index = course.streams.indexOf(stream);
         course.streams.splice(index, 1);
       }
@@ -59,4 +66,13 @@ export function mergeDeliveryType(streams: StreamData[]): DeliveryType | undefin
     }
   }
   return delivery;
+}
+
+export function getInPersonTimes(streams: StreamData[]): ClassTime[] | null {
+  for (const stream of streams) {
+    if (stream.delivery === DeliveryType.person) {
+      return stream.times;
+    }
+  }
+  return null;
 }
