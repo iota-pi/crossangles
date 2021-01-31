@@ -78,14 +78,14 @@ const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props
         <SessionDetails
           session={session}
           options={dropzoneOptions}
-          disableTransitions={true}
-          hideTitle={true}
-          largerDetails={true}
+          disableTransitions
+          hideTitle
+          largerDetails
         />
       </div>
     </div>
   );
 };
-export const TimetableDropzone: React.FC<Props> = React.memo(Dropzone);
 
+const TimetableDropzone: React.FC<Props> = React.memo(Dropzone);
 export default TimetableDropzone;

@@ -70,4 +70,4 @@ it.each([
   ['QQQ', 'QQQ'],
 ])('getComponentName("%s") = "%s"', (code, name) => {
   expect(getComponentName({ component: code })).toEqual(name);
-})
+});

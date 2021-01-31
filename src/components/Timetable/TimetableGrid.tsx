@@ -217,5 +217,5 @@ const Grid: React.FC<Props> = ({
   );
 };
 
-export const TimetableGrid = React.memo(Grid);
+const TimetableGrid = React.memo(Grid);
 export default TimetableGrid;

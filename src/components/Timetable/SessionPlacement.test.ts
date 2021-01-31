@@ -38,7 +38,9 @@ describe('SessionPlacement', () => {
     const basePlacement = p.basePlacement(dimensions, startHour, compact, showMode);
     const cellWidth = (1000 - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
     const expectedX = TIMETABLE_BORDER_WIDTH + TIMETABLE_FIRST_CELL_WIDTH + cellWidth * 2;
-    const expectedY = TIMETABLE_BORDER_WIDTH + getCellHeight(true, false) + getCellHeight(compact, showMode);
+    const expectedY = (
+      TIMETABLE_BORDER_WIDTH + getCellHeight(true, false) + getCellHeight(compact, showMode)
+    );
     expect(basePlacement.x).toBe(expectedX);
     expect(basePlacement.y).toBe(expectedY);
     expect(basePlacement.width).toBe(cellWidth - TIMETABLE_BORDER_WIDTH);

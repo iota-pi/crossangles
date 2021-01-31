@@ -6,7 +6,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { Options, LinkedSession, getDuration, DeliveryType, getComponentName, getOption } from '../../state';
 import DeliveryModeIcon from './DeliveryModeIcon';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     position: 'relative',
     textAlign: 'center',
@@ -117,7 +117,9 @@ const SessionDetailsBase: React.FC<Props> = ({
   );
 
   const useComponentCode = compactView || (details.length > 1);
-  const sessionComponent = isSpecialCourse ? '' : (useComponentCode ? stream.component : getComponentName(stream));
+  let sessionComponent = useComponentCode ? stream.component : getComponentName(stream);
+  if (isSpecialCourse) { sessionComponent = ''; }
+
   const titleClasses = [classes.em];
   if (!useComponentCode) {
     titleClasses.push(classes.largerFont);
@@ -171,5 +173,5 @@ const SessionDetailsBase: React.FC<Props> = ({
   );
 };
 
-export const SessionDetails = React.memo(SessionDetailsBase);
+const SessionDetails = React.memo(SessionDetailsBase);
 export default SessionDetails;

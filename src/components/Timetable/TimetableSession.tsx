@@ -164,5 +164,5 @@ const Session: React.FC<Props> = ({
   );
 };
 
-export const TimetableSession = React.memo(Session);
+const TimetableSession = React.memo(Session);
 export default TimetableSession;

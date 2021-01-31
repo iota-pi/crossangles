@@ -22,7 +22,11 @@ export interface SaveAsImageRequest extends SaveAsImageData {
 }
 
 
-export function getScreenshotViewport(timetable: SessionManagerData, compact: boolean, showMode: boolean): Viewport {
+export function getScreenshotViewport(
+  timetable: SessionManagerData,
+  compact: boolean,
+  showMode: boolean,
+): Viewport {
   return {
     width: getScreenshotWidth(),
     height: getScreenshotHeight(timetable, compact, showMode),
@@ -37,7 +41,11 @@ export function getScreenshotWidth(): number {
   return width;
 }
 
-export function getScreenshotHeight(timetable: SessionManagerData, compact: boolean, showMode: boolean): number {
+export function getScreenshotHeight(
+  timetable: SessionManagerData,
+  compact: boolean,
+  showMode: boolean,
+): number {
   // Get height based off number of timetable rows
   const sessions = timetable.map.map(s => s[1].session);
   const hours = getHours(sessions);

@@ -67,7 +67,11 @@ export abstract class TimetablePlacement {
     };
   })();
 
-  private baseDimensions(timetableDimensions: Dimensions, compact: boolean, showMode: boolean): Dimensions {
+  private baseDimensions(
+    timetableDimensions: Dimensions,
+    compact: boolean,
+    showMode: boolean,
+  ): Dimensions {
     const sessionWidth = this.calculateWidth(timetableDimensions.width);
     const sessionHeight = this.calculateHeight(compact, showMode);
     const width = sessionWidth - TIMETABLE_BORDER_WIDTH;

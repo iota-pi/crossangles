@@ -42,11 +42,11 @@ export function getCellHeight(compact: boolean, showMode: boolean) {
   if (showMode) {
     return TIMETABLE_CELL_SHOW_MODE_HEIGHT;
   }
-  return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;;
+  return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;
 }
 
 export function getTimetableHeight(duration: number, compact: boolean, showMode: boolean) {
-    const headerRowHeight = getCellHeight(true, false);
-    const mainRowsHeight = getCellHeight(compact, showMode) * duration;
-    return headerRowHeight + mainRowsHeight;
+  const headerRowHeight = getCellHeight(true, false);
+  const mainRowsHeight = getCellHeight(compact, showMode) * duration;
+  return headerRowHeight + mainRowsHeight;
 }

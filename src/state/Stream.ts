@@ -67,7 +67,7 @@ export function getComponentName(stream: Pick<StreamData, 'component'>) {
     TU1: 'Tutorial (1)',
     TU2: 'Tutorial (2)',
     WEB: 'Lecture',
-  }
+  };
   return nameMap[code.toUpperCase()] || code;
 }
 

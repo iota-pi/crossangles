@@ -96,7 +96,12 @@ export class SessionPlacement extends TimetablePlacement {
     this._offset.y += delta.y;
   }
 
-  drop(timetableDimensions: Dimensions, firstHour: number, compact: boolean, showMode: boolean): void {
+  drop(
+    timetableDimensions: Dimensions,
+    firstHour: number,
+    compact: boolean,
+    showMode: boolean,
+  ): void {
     this._isDragging = false;
 
     // Update offset based on current (rendered) position and base position
