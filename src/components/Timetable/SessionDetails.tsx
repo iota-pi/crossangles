@@ -3,7 +3,7 @@ import { TransitionGroup } from 'react-transition-group';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Fade from '@material-ui/core/Fade';
 import Collapse from '@material-ui/core/Collapse';
-import { Options, LinkedSession, getDuration, DeliveryType, getComponentName } from '../../state';
+import { Options, LinkedSession, getDuration, DeliveryType, getComponentName, getOption } from '../../state';
 import DeliveryModeIcon from './DeliveryModeIcon';
 
 const useStyles = makeStyles(theme => ({
@@ -44,9 +44,9 @@ const useStyles = makeStyles(theme => ({
 export interface Props {
   session: LinkedSession,
   options: Options,
+  disableTransitions?: boolean,
   hideTitle?: boolean,
   hideDetails?: boolean,
-  fullDetails?: boolean,
 }
 
 type Detail = { key: string, text: ReactNode };
@@ -55,13 +55,14 @@ type Detail = { key: string, text: ReactNode };
 const SessionDetailsBase: React.FC<Props> = ({
   session,
   options,
+  disableTransitions,
   hideTitle,
   hideDetails,
-  fullDetails,
 }: Props) => {
   const classes = useStyles();
   const { course, stream } = session;
-  const showMode = options.showMode || fullDetails;
+  const compactView = getOption(options, 'compactView');
+  const showMode = getOption(options, 'showMode');
   const isSpecialCourse = course.isAdditional || course.isCustom || false;
   const sessionTitle = isSpecialCourse ? stream.component : course.code;
 
@@ -69,9 +70,9 @@ const SessionDetailsBase: React.FC<Props> = ({
   const details: Detail[] = React.useMemo(
     () => {
       const detailList: Detail[] = [];
-      const showLocations = options.showLocations || fullDetails;
-      const showEnrolments = options.showEnrolments || fullDetails;
-      const showWeeks = options.showWeeks || fullDetails;
+      const showLocations = options.showLocations;
+      const showEnrolments = options.showEnrolments;
+      const showWeeks = options.showWeeks;
 
       if (showLocations && stream.delivery !== DeliveryType.online) {
         const location = session.location;
@@ -105,10 +106,9 @@ const SessionDetailsBase: React.FC<Props> = ({
 
       return detailList;
     },
-    [fullDetails, options, session, stream],
+    [options, session, stream],
   );
 
-  const { compactView } = options;
   const useComponentCode = compactView || (details.length > 1);
   const sessionComponent = isSpecialCourse ? '' : (useComponentCode ? stream.component : getComponentName(stream));
   const titleClasses = [classes.em];
@@ -134,14 +134,22 @@ const SessionDetailsBase: React.FC<Props> = ({
         <div>
           <TransitionGroup>
             {details.map(detail => (
-              <Collapse key={detail.key}>
+              <Collapse
+                key={detail.key}
+                enter={!disableTransitions}
+                exit={!disableTransitions}
+              >
                 <div className={detailsClasses}>
                   {detail.text}
                 </div>
               </Collapse>
             ))}
             {showMode && stream.delivery !== undefined && (
-              <Collapse key="deliveryMode">
+              <Collapse
+                key="deliveryMode"
+                enter={!disableTransitions}
+                exit={!disableTransitions}
+              >
                 <DeliveryModeIcon delivery={stream.delivery} padded={getDuration(session) > 1} />
               </Collapse>
             )}

@@ -56,6 +56,13 @@ const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props
     [position],
   );
   const backgroundColor = colour ? `${colour}A0` : 'none';
+  const dropzoneOptions: Options = {
+    ...options,
+    showEnrolments: true,
+    showMode: true,
+    showLocations: false,
+    showWeeks: false,
+  };
 
   return (
     <div
@@ -70,9 +77,9 @@ const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props
       <div className={classes.detailContainer}>
         <SessionDetails
           session={session}
-          options={options}
+          options={dropzoneOptions}
+          disableTransitions={true}
           hideTitle={true}
-          fullDetails={true}
         />
       </div>
     </div>
