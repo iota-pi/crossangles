@@ -107,7 +107,7 @@ export const TimetableControls = ({
   }, [handleKeyDown]);
 
   const classesPlural = unplacedCount === 1 ? 'class is' : 'classes are';
-  const fullClassMessage = `${unplacedCount} full ${classesPlural} not visible`
+  const fullClassMessage = `${unplacedCount} full ${classesPlural} not visible`;
 
   return (
     <Toolbar>
