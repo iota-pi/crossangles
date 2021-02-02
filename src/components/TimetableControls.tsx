@@ -106,6 +106,9 @@ export const TimetableControls = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  const classesPlural = unplacedCount === 1 ? 'class is' : 'classes are';
+  const fullClassMessage = `${unplacedCount} full ${classesPlural} not visible`
+
   return (
     <Toolbar>
       {onUndo && (
@@ -154,7 +157,7 @@ export const TimetableControls = ({
       <div className={classes.spacer} />
 
       {unplacedCount > 0 && (
-        <Tooltip title={`${unplacedCount} full classes are not visible`}>
+        <Tooltip title={fullClassMessage}>
           <ButtonBase
             className={classes.unplacedCountContainer}
             onClick={onIncludeFull}
