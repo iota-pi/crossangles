@@ -5,7 +5,7 @@ import { TimetableTable } from '../components/Timetable';
 import { SessionManager } from '../components/Timetable/SessionManager';
 import { parseQueryString } from '../saveAsImage';
 import { requestData } from '../requestData';
-import { CourseMap, getCourseId, Options } from '../state';
+import { CourseMap, getCourseId, getOption, Options } from '../state';
 import { theme } from '../theme';
 
 
@@ -44,7 +44,7 @@ export const StandaloneTimetable = () => {
   const options: Options = { ...queryData.options, reducedMotion: true };
 
   return (
-    <ThemeProvider theme={theme(queryData.options.darkMode)}>
+    <ThemeProvider theme={theme(getOption(queryData.options, 'darkMode'))}>
       <CssBaseline />
       <TimetableTable
         timetable={timetable}

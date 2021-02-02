@@ -4,6 +4,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Check from '@material-ui/icons/Check';
 import { RootState, Colour, getColour } from '../state';
+import { getOptions } from '../state/selectors';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,7 +35,7 @@ export interface Props {
 
 function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props) {
   const classes = useStyles();
-  const darkMode = useSelector((state: RootState) => state.options.darkMode);
+  const { darkMode } = useSelector(getOptions);
   const appliedClasses = [
     classes.root,
     isSelected ? classes.selected : '',

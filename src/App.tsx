@@ -18,7 +18,7 @@ import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
 import { getCampus } from './getCampus';
-import { clearNotice, setNotice } from './actions';
+import { clearNotice, setNotice, toggleOption } from './actions';
 import {
   RootState,
   Meta,
@@ -26,6 +26,7 @@ import {
   Options,
   ColourMap,
   CourseData,
+  getDefaultDarkMode,
   getOption,
 } from './state';
 import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
@@ -67,6 +68,7 @@ export interface StateProps {
 export interface DispatchProps {
   setNotice: (message: string, actions?: ReactNode[]) => void,
   clearNotice: () => void,
+  initDarkMode: () => void,
 }
 
 export type Props = OwnProps & StateProps & DispatchProps;
@@ -88,6 +90,7 @@ class App extends PureComponent<Props, State> {
   componentDidMount() {
     initialiseGA();
     pageView();
+    this.props.initDarkMode();
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
@@ -238,6 +241,11 @@ const mapStateToProps = (state: RootState): StateProps => ({
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => ({
   setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
   clearNotice: () => dispatch(clearNotice()),
+  initDarkMode: () => {
+    if (getDefaultDarkMode()) {
+      dispatch(toggleOption('darkMode'));
+    }
+  }
 });
 
 const connection = connect(mapStateToProps, mapDispatchToProps);

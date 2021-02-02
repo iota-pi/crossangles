@@ -53,3 +53,7 @@ export const exclusiveOptions: {[key in keyof Options]: OptionName[]} = {
 export function getOption(options: Options, option: OptionName): boolean {
   return options[option] || false;
 }
+
+export function getDefaultDarkMode(): boolean {
+  return window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
+}
