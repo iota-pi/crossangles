@@ -16,7 +16,7 @@ export const screenshot = async (
   try {
     browser = await chromium.puppeteer.launch({
       args: chromium.args,
-      defaultViewport: { ...chromium.defaultViewport, ...viewport },
+      defaultViewport: { ...chromium.defaultViewport, ...viewport, deviceScaleFactor: 2 },
       executablePath: await chromium.executablePath,
       headless: chromium.headless,
     });
