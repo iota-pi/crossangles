@@ -1,7 +1,7 @@
 import cheerio from 'cheerio';
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
-import { ClassTime, StreamData } from '../../../app/src/state/Stream';
+import { ClassTime, DeliveryType, StreamData } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from '../commonUtils';
@@ -180,11 +180,12 @@ export class TimetableScraper {
         }
         const stream: StreamData = {
           component: getComponent(data),
+          delivery: getDelivery(data['Instruction Mode']),
           enrols: getEnrols(data['Enrols/Capacity']),
           full: getIsFull(data.Status),
-          web: getIsWeb(data.Section),
-          times: [],
           notes: data['Class Notes'] || undefined,
+          times: [],
+          web: getIsWeb(data.Section),
         };
 
         const timesRows = $(streamTable).find('table tr:has(td.data)').toArray();
@@ -363,6 +364,16 @@ export function getShortActivity(activity: string) {
 
 export function getEnrols(enrolmentString: string) {
   return enrolmentString.split(/\s*\/\s*/).map(x => parseInt(x)) as [number, number];
+}
+
+export function getDelivery(_mode: string): DeliveryType | undefined {
+  const mode = _mode.toLowerCase();
+  if (mode.includes('person')) {
+    return DeliveryType.person;
+  } else if (mode.includes('web')) {
+    return DeliveryType.online;
+  }
+  return undefined;
 }
 
 export function getIsWeb(section: string) {

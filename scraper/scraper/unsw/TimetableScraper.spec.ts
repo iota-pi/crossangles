@@ -1,18 +1,20 @@
 /* eslint-disable quote-props */
+import { DeliveryType } from '../../../app/src/state/Stream';
 import {
-  splitLocation,
-  getShortActivity,
   abbreviateDay,
-  shortenTime,
-  StreamTableData,
-  shouldSkipStream,
-  getTermNumber,
+  getComponent,
+  getDelivery,
   getIsWeb,
   getIsFull,
-  weeksAreOutsideTerm,
+  getShortActivity,
+  getTermNumber,
   isIntensive,
   isOnWeekend,
-  getComponent,
+  shortenTime,
+  shouldSkipStream,
+  splitLocation,
+  StreamTableData,
+  weeksAreOutsideTerm,
 } from './TimetableScraper';
 
 const baseStreamTableData: StreamTableData = {
@@ -129,6 +131,14 @@ describe('parsing utilities', () => {
     ${'Other'}               | ${'OTH'}
   `('getShortActivity("$long") = "$short"', ({ long, short }) => {
     expect(getShortActivity(long)).toEqual(short);
+  });
+
+  it.each([
+    ['World Wide Web', DeliveryType.online],
+    ['In Person', DeliveryType.person],
+    ['Something Else', undefined],
+  ])('getDelivery("%s") = %d', (input, expected) => {
+    expect(getDelivery(input)).toEqual(expected);
   });
 
   it.each`

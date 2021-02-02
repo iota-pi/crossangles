@@ -7,16 +7,16 @@ export function removeDuplicateStreams(course: CourseData) {
   // For each set of streams with identical component and times, remove all but the emptiest stream
   for (const streamGroup of Array.from(mapping.values())) {
     // Get emptiest stream and merge data from other streams into it
-    const mergedStream: StreamData = emptiestStream(streamGroup);
-    mergedStream.delivery = mergeDeliveryType(streamGroup);
+    const bestStream: StreamData = emptiestStream(streamGroup);
+    bestStream.delivery = mergeDeliveryType(streamGroup);
     const inPersonTimes = getInPersonTimes(streamGroup);
     if (inPersonTimes !== null) {
-      mergedStream.times = inPersonTimes;
+      bestStream.times = inPersonTimes;
     }
 
     // Remove all other streams
     for (const stream of streamGroup) {
-      if (stream !== mergedStream) {
+      if (stream !== bestStream) {
         const index = course.streams.indexOf(stream);
         course.streams.splice(index, 1);
       }
