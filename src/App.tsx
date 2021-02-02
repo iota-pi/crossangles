@@ -245,7 +245,7 @@ const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> =
     if (getDefaultDarkMode()) {
       dispatch(toggleOption('darkMode'));
     }
-  }
+  },
 });
 
 const connection = connect(mapStateToProps, mapDispatchToProps);

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Check from '@material-ui/icons/Check';
-import { RootState, Colour, getColour } from '../state';
+import { Colour, getColour } from '../state';
 import { getOptions } from '../state/selectors';
 
 const useStyles = makeStyles(theme => ({
