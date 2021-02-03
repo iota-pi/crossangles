@@ -142,11 +142,12 @@ function TimetableTable({
     },
     [options, duration],
   );
-  const [, setVersion] = React.useState(false);
   React.useEffect(() => {
     window.addEventListener('resize', updateDimensions);
     return () => window.removeEventListener('resize', updateDimensions);
   }, [updateDimensions]);
+
+  const [, setVersion] = React.useState(false);
   const forceUpdate = React.useCallback(
     () => {
       if (dimensions.width === 0) updateDimensions();
@@ -154,13 +155,11 @@ function TimetableTable({
     },
     [dimensions.width, updateDimensions],
   );
-
   const { version } = timetable;
   useEffect(forceUpdate, [version, forceUpdate]);
   useEffect(updateDimensions, [updateDimensions]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
-
   const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
   React.useEffect(
     () => {
