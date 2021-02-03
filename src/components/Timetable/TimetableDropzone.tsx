@@ -12,7 +12,12 @@ const useStyles = makeStyles(theme => ({
     zIndex: DROPZONE_Z,
   },
   background: {
-    transition: theme.transitions.create('background-color'),
+    transition: theme.transitions.create(
+      'background-color',
+      {
+        duration: theme.transitions.duration.shortest,
+      },
+    ),
     position: 'absolute',
     left: 0,
     top: 0,
@@ -35,12 +40,13 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   colour?: string,
+  highlighted: boolean,
   options: Options,
   position: Placement,
   session: LinkedSession,
 }
 
-const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props) => {
+const Dropzone: React.FC<Props> = ({ colour, highlighted, options, position, session }: Props) => {
   const classes = useStyles();
   const styles = React.useMemo(
     () => {
@@ -55,7 +61,8 @@ const Dropzone: React.FC<Props> = ({ colour, options, position, session }: Props
     },
     [position],
   );
-  const backgroundColor = colour ? `${colour}A0` : 'none';
+  const alpha = highlighted ? 'D0' : 'A0';
+  const backgroundColor = colour ? `${colour}${alpha}` : 'none';
   const dropzoneOptions: Options = {
     ...options,
     showEnrolments: true,

@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { SNAP_DIST, DROPZONE_Z, getTimetableHeight } from './timetableUtil';
+import { DROPZONE_Z, getCellHeight, getSnapDistance, getTimetableHeight } from './timetableUtil';
 import { Dimensions, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManager } from './SessionManager';
@@ -172,6 +172,15 @@ function TimetableTable({
     },
     [dragging, includeFull],
   );
+  const [highlightedZone, setHighlightedZone] = React.useState<DropzonePlacement | null>(null);
+
+  const snapDistance = React.useMemo(
+    () => {
+      const cellHeight = getCellHeight(compact, showMode);
+      return getSnapDistance(cellHeight);
+    },
+    [compact, showMode],
+  );
 
 
   const handleDrag = React.useCallback(
@@ -199,19 +208,11 @@ function TimetableTable({
     [timetable, dragging, setDragging],
   );
 
-  const handleMove = React.useCallback(
-    (session: LinkedSession, delta: TimetablePosition) => {
-      timetable.move(session.id, delta);
-      forceUpdate();
-    },
-    [forceUpdate, timetable],
-  );
-
   const getNearestDropzone = React.useCallback(
     (position: TimetablePosition): DropzonePlacement | null => {
       const { x, y } = position;
       let nearest: DropzonePlacement | null = null;
-      let bestDistance = SNAP_DIST * SNAP_DIST;
+      let bestDistance = snapDistance * snapDistance;
       for (const dropzone of dropzones) {
         const dropzonePosition = dropzone.basePlacement(dimensions, start, compact, showMode);
         const deltaX = dropzonePosition.x - x;
@@ -225,7 +226,19 @@ function TimetableTable({
       }
       return nearest;
     },
-    [compact, dropzones, dimensions, showMode, start],
+    [compact, dropzones, dimensions, showMode, snapDistance, start],
+  );
+
+  const handleMove = React.useCallback(
+    (session: LinkedSession, delta: TimetablePosition) => {
+      timetable.move(session.id, delta);
+      const sessionPlacement = timetable.get(session.id);
+      const position = sessionPlacement.getPosition(dimensions, start, compact, showMode);
+      const dropzone = getNearestDropzone(position);
+      setHighlightedZone(dropzone);
+      forceUpdate();
+    },
+    [compact, dimensions, forceUpdate, getNearestDropzone, showMode, start, timetable],
   );
 
   const handleDrop = React.useCallback(
@@ -312,8 +325,9 @@ function TimetableTable({
           {dropzones.map(dropzone => (
             <TimetableDropzone
               key={dropzone.session.stream.id}
-              position={dropzone.basePlacement(dimensions, start, compact, showMode)}
               colour={draggingColour}
+              highlighted={highlightedZone ? highlightedZone.id === dropzone.id : false}
+              position={dropzone.basePlacement(dimensions, start, compact, showMode)}
               session={dropzone.session}
               options={options}
             />

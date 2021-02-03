@@ -13,7 +13,6 @@ const TIMETABLE_CELL_HEIGHT = 60;
 const TIMETABLE_CELL_SHOW_MODE_HEIGHT = 80;
 export const TIMETABLE_BORDER_WIDTH = 1;
 export const TIMETABLE_CELL_MIN_WIDTH = 150;
-export const SNAP_DIST = 40;
 
 export const DISPLACE_VARIATION_X = 15;
 export const DISPLACE_VARIATION_Y = 10;
@@ -43,6 +42,10 @@ export function getCellHeight(compact: boolean, showMode: boolean) {
     return TIMETABLE_CELL_SHOW_MODE_HEIGHT;
   }
   return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;
+}
+
+export function getSnapDistance(cellHeight: number) {
+  return cellHeight + Math.sqrt(cellHeight);
 }
 
 export function getTimetableHeight(duration: number, compact: boolean, showMode: boolean) {
