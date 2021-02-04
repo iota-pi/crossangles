@@ -240,7 +240,7 @@ class ClassUtilParser {
     }
 
     // Use decimal notation for half-hours
-    time = time.replace(':30', '.5');
+    time = time.replace(/:30/g, '.5');
 
     // Remove leading zeros
     time = time.replace(/(?<=[MTWHFSs])0(?=[0-9])/, '');
