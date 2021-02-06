@@ -45,7 +45,7 @@ export function getCellHeight(compact: boolean, showMode: boolean) {
 }
 
 export function getSnapDistance(cellHeight: number) {
-  return cellHeight + 2 * Math.sqrt(cellHeight);
+  return Math.LOG2E * cellHeight;
 }
 
 export function getTimetableHeight(duration: number, compact: boolean, showMode: boolean) {
