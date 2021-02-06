@@ -251,6 +251,7 @@ function TimetableTable({
       timetable.drop(session.id, dropzone, dimensions, start, compact, showMode);
 
       setDragging(null);
+      setHighlightedZone(null);
     },
     [compact, dragging, dimensions, getNearestDropzone, showMode, start, timetable],
   );
