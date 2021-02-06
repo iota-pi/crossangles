@@ -8,6 +8,7 @@ describe('getCurrentTimetable', () => {
     const timetable: SessionManagerData = {
       map: [],
       order: [],
+      renderOrder: [],
       score: 0,
       version: 0,
     };

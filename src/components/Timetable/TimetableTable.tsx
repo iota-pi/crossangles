@@ -11,7 +11,7 @@ import TimetableDropzone from './TimetableDropzone';
 import { DROPZONE_Z, getCellHeight, getSnapDistance, getTimetableHeight } from './timetableUtil';
 import { Dimensions, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
-import { SessionManager } from './SessionManager';
+import SessionManager from './SessionManager';
 import {
   ColourMap,
   getColour,

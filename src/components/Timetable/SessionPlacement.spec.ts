@@ -6,7 +6,7 @@ import {
   TIMETABLE_BORDER_WIDTH,
   getCellHeight,
 } from './timetableUtil';
-import { SessionPlacement } from './SessionPlacement';
+import SessionPlacement from './SessionPlacement';
 import { LinkedSession } from '../../state';
 import { Dimensions } from './timetableTypes';
 /* eslint-disable @typescript-eslint/dot-notation */

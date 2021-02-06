@@ -22,7 +22,7 @@ export interface SessionPlacementData {
   session: SessionData,
 }
 
-export class SessionPlacement extends TimetablePlacement {
+class SessionPlacement extends TimetablePlacement {
   private _offset: TimetablePosition;
   private _isSnapped: boolean = true;
   private _isDragging: boolean = false;

@@ -1,5 +1,5 @@
 import { notUndefined } from '../../typeHelpers';
-import { SessionPlacement } from './SessionPlacement';
+import SessionPlacement from './SessionPlacement';
 import { TimetablePosition, Dimensions } from './timetableTypes';
 import {
   CourseMap,
@@ -19,7 +19,7 @@ import { TimetableScorer } from '../../timetable/scoreTimetable';
 export * from './SessionManagerTypes';
 
 
-export class SessionManager {
+class SessionManager {
   private map: Map<SessionId, SessionPlacement>;
   private _renderOrder: SessionId[];
   private _order: SessionId[];

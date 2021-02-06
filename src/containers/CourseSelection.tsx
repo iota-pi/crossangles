@@ -37,7 +37,7 @@ import {
   setColour,
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
-import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../timetable/updateTimetable';
 
 const Autocomplete = lazy(() => import('../components/Autocomplete'));

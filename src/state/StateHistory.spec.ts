@@ -1,7 +1,7 @@
 import { getTimetableState, initialState, TimetableHistoryState } from '.';
 import { CourseMap } from './Course';
 import { undo, redo, push, HistoryData } from './StateHistory';
-import { SessionManager } from '../components/Timetable/SessionManager';
+import SessionManager from '../components/Timetable/SessionManager';
 import { getSessions, ClassTime } from './Stream';
 
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "doPushTest"] }] */

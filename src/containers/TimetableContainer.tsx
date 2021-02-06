@@ -25,7 +25,7 @@ import {
   getCustomCourses,
   getAdditionalCourses,
 } from '../state/selectors';
-import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
 import {
   setTimetable, addCourse, undoTimetable, redoTimetable, toggleOption,

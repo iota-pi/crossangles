@@ -1,5 +1,5 @@
-import { SessionManager } from './SessionManager';
-import { SessionPlacement } from './SessionPlacement';
+import SessionManager from './SessionManager';
+import SessionPlacement from './SessionPlacement';
 import {
   getSessionPlacement,
   getDimensions,

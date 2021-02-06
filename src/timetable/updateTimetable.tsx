@@ -16,7 +16,7 @@ import {
   Options,
 } from '../state';
 import { GeneticSearchOptionalConfig } from './GeneticSearch';
-import { SessionManager } from '../components/Timetable/SessionManager';
+import SessionManager from '../components/Timetable/SessionManager';
 import {
   setNotice,
   setTimetable,

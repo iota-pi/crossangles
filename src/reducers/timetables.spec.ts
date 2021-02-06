@@ -10,7 +10,7 @@ import {
   SET_COURSE_DATA,
 } from '../actions';
 import { initialState, Timetables, getCurrentTerm } from '../state';
-import { SessionManager, SessionManagerData } from '../components/Timetable/SessionManager';
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { getMeta } from '../test_util';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
