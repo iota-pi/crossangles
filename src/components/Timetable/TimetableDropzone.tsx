@@ -61,7 +61,7 @@ const Dropzone: React.FC<Props> = ({ colour, highlighted, options, position, ses
     },
     [position],
   );
-  const alpha = highlighted ? 'D0' : 'A0';
+  const alpha = highlighted ? 'D8' : 'A0';
   const backgroundColor = colour ? `${colour}${alpha}` : 'none';
   const dropzoneOptions: Options = {
     ...options,
