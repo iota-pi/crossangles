@@ -12,6 +12,7 @@ import { DROPZONE_Z, getCellHeight, getSnapDistance, getTimetableHeight } from '
 import { Dimensions, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import SessionManager from './SessionManager';
+import SessionPlacement from './SessionPlacement';
 import {
   ColourMap,
   getColour,
@@ -60,6 +61,18 @@ export interface Props {
 export interface State {
   dimensions: Dimensions,
   dragging: LinkedSession | null,
+}
+
+interface SessionRenderData {
+  course: CourseData;
+  id: string;
+  key: string;
+  position: Required<TimetablePosition>;
+  placement: SessionPlacement;
+  session: LinkedSession;
+  isDragging: boolean;
+  isSnapped: boolean;
+  clashDepth: number;
 }
 
 export function getCourseColour(
@@ -273,6 +286,55 @@ function TimetableTable({
     [dragging],
   );
 
+  const sessionRenderData: SessionRenderData[] = (() => {
+    if (!dimensions.width) {
+      return [];
+    }
+
+    const results: SessionRenderData[] = [];
+    for (const sid of timetable.renderOrder) {
+      let placement = timetable.getMaybe(sid);
+      if (!placement) continue;
+
+      let session = placement.session;
+      const isStreamBeingDragged = dragging ? dragging.stream.id === session.stream.id : false;
+      // Check if another session in this stream is being dragged and hovering over a dropzone
+      if (!placement.isDragging && isStreamBeingDragged && highlightedZone) {
+        // Move this session to its tentative location
+        const tentStream = highlightedZone.session.stream;
+        if (tentStream.sessions.length > session.index) {
+          const tentSession = tentStream.sessions[session.index];
+          const tentPlacement = new SessionPlacement(tentSession);
+          if (placement.isDragging) tentPlacement.drag();
+          if (placement.isRaised) tentPlacement.raise();
+          if (placement.isSnapped) tentPlacement.snap();
+          placement = tentPlacement;
+          session = tentSession;
+        }
+      }
+
+      const { clashDepth, isDragging, isSnapped } = placement;
+      const { course, id, index, stream } = session;
+      const position = placement.getPosition(dimensions, start, compact, showMode);
+      const courseId = getCourseId(course);
+      const key = `${courseId}-${stream.component}-${index}`;
+
+      const renderData = {
+        course,
+        id,
+        key,
+        position,
+        placement,
+        session,
+        isDragging,
+        isSnapped,
+        clashDepth,
+      };
+      results.push(renderData);
+    }
+    return results;
+  })();
+
   return (
     <div
       className={rootClasses.join(' ')}
@@ -280,16 +342,20 @@ function TimetableTable({
       id="timetable-display"
     >
       <TransitionGroup>
-        {dimensions.width ? timetable.renderOrder.map(sid => {
-          const placement = timetable.getMaybe(sid);
-          if (!placement) return null;
-          const { clashDepth, isDragging, isSnapped, session } = placement;
-          const { course, id, index, stream } = session;
-          const position = placement.getPosition(dimensions, start, compact, showMode);
-          const courseId = getCourseId(course);
-          const key = `${courseId}-${stream.component}-${index}`;
-
-          return (
+        {sessionRenderData.map(
+          (
+            {
+              course,
+              id,
+              key,
+              position,
+              placement,
+              session,
+              isDragging,
+              isSnapped,
+              clashDepth,
+            },
+          ) => (
             <Fade
               key={key}
               enter={!disableTransitions}
@@ -311,8 +377,8 @@ function TimetableTable({
                 />
               </div>
             </Fade>
-          );
-        }) : null}
+          ),
+        )}
       </TransitionGroup>
 
       <Fade
