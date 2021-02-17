@@ -24,6 +24,8 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     height: '100%',
     zIndex: 0,
+    borderWidth: 3,
+    borderStyle: 'solid',
   },
   detailContainer: {
     position: 'absolute',
@@ -34,7 +36,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: 0.9,
   },
   shadow: {
     boxShadow: theme.shadows[3],
@@ -43,7 +44,6 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   colour?: string,
-  hasShadow: boolean,
   highlighted: boolean,
   options: Options,
   position: Placement,
@@ -52,7 +52,6 @@ export interface Props {
 
 const Dropzone: React.FC<Props> = ({
   colour,
-  hasShadow,
   highlighted,
   options,
   position,
@@ -61,19 +60,21 @@ const Dropzone: React.FC<Props> = ({
   const classes = useStyles();
   const styles = React.useMemo(
     () => {
-      const { width, height, x, y } = position;
+      const { width, height, x, y, z } = position;
 
       return {
         left: x,
         top: y,
+        zIndex: z,
         width,
         height,
       };
     },
     [position],
   );
-  const alpha = highlighted ? 'D8' : 'A0';
+  const alpha = highlighted ? 'DD' : 'A0';
   const backgroundColor = colour ? `${colour}${alpha}` : 'none';
+  const borderColor = colour || 'none';
   const dropzoneOptions: Options = {
     ...options,
     showEnrolments: true,
@@ -82,19 +83,15 @@ const Dropzone: React.FC<Props> = ({
     showWeeks: false,
   };
 
-  const rootClassList = [classes.root];
-  if (hasShadow) rootClassList.push(classes.shadow);
-  const rootClasses = rootClassList.join(' ')
-
   return (
     <div
-      className={rootClasses}
+      className={classes.root}
       style={styles}
       data-cy={`timetable-dropzone-${session.day}${session.start}`}
     >
       <div
         className={classes.background}
-        style={{ backgroundColor }}
+        style={{ backgroundColor, borderColor }}
       />
       <div className={classes.detailContainer}>
         <SessionDetails

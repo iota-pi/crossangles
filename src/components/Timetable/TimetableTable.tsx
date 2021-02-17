@@ -385,7 +385,6 @@ function TimetableTable({
             <TimetableDropzone
               key={dropzone.session.stream.id}
               colour={draggingColour}
-              hasShadow={dropzone.clashDepth > 0}
               highlighted={highlightedZone ? highlightedZone.id === dropzone.id : false}
               position={dropzone.getPosition(dimensions, start, compact, showMode)}
               session={dropzone.session}
