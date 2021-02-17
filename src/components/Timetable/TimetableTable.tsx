@@ -309,6 +309,9 @@ function TimetableTable({
       const { clashDepth, isDragging, isSnapped } = placement;
       const { course, id, index, stream } = session;
       const position = placement.getPosition(dimensions, start, compact, showMode);
+      if (placement.isDragging && isStreamBeingDragged && highlightedZone) {
+        position.height = highlightedZone.getPosition(dimensions, start, compact, showMode).height;
+      }
       const courseId = getCourseId(course);
       const key = `${courseId}-${stream.component}-${index}`;
 
