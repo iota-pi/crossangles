@@ -15,6 +15,7 @@ import { sessionClashLength, getClashInfo } from '../../timetable/getClashInfo';
 import { DropzonePlacement } from './DropzonePlacement';
 import { SessionManagerData, SessionManagerEntriesData } from './SessionManagerTypes';
 import { TimetableScorer } from '../../timetable/scoreTimetable';
+import { findFreeDepth } from './timetableUtil';
 
 export * from './SessionManagerTypes';
 
@@ -415,21 +416,11 @@ class SessionManager {
       }
 
       // Update clash depth
-      const depth = this.findFreeDepth(takenDepths);
+      const depth = findFreeDepth(takenDepths);
       this.setClashDepth(sessionId1, depth);
     }
 
     this.stopChange();
-  }
-
-  private findFreeDepth(takenDepths: Set<number>): number {
-    for (let j = 0; j < takenDepths.size; ++j) {
-      if (!takenDepths.has(j)) {
-        return j;
-      }
-    }
-
-    return takenDepths.size;
   }
 
   clear() {

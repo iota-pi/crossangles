@@ -1,5 +1,14 @@
 import { DropzonePlacement } from './DropzonePlacement';
 import { LinkedSession, linkStream, LinkedStream, getDuration } from '../../state';
+import { findFreeDepth } from './timetableUtil';
+
+
+export function dropzoneCompare(a: DropzonePlacement, b: DropzonePlacement) {
+  const daySort = +(a.dayIndex > b.dayIndex) - +(a.dayIndex < b.dayIndex);
+  const startSort = +(a.session.start > b.session.start) - +(a.session.start < b.session.start);
+  const endSort = +(a.session.end < b.session.end) - +(a.session.end > b.session.end);
+  return daySort || startSort || endSort;
+}
 
 
 export class DropzoneManager {
@@ -9,7 +18,14 @@ export class DropzoneManager {
     const filteredStreams = this.filterStreams(allStreams, component, index, includeFull);
 
     const dropzones = this.streamsToDropzones(filteredStreams, index);
-    const uniqueDropzones = this.filterDropzones(dropzones, dragging);
+    dropzones.sort(dropzoneCompare);
+    const uniqueDropzones: DropzonePlacement[] = [dropzones[0]];
+    for (let i = 1; i < dropzones.length; i++) {
+      if (dropzoneCompare(dropzones[i - 1], dropzones[i]) !== 0) {
+        uniqueDropzones.push(dropzones[i]);
+      }
+    }
+    this.calculateClashDepth(uniqueDropzones);
 
     return uniqueDropzones;
   }
@@ -66,6 +82,24 @@ export class DropzoneManager {
     }
 
     return dropzones.filter(d => selected.get(d.id) === d);
+  }
+
+  calculateClashDepth(
+    dropzones: DropzonePlacement[],
+  ) {
+    for (let i = 0; i < dropzones.length; ++i) {
+      const dropzone1 = dropzones[i];
+      const clashingZones = new Set<number>();
+      for (let j = 0; j < i; ++j) {
+        const dropzone2 = dropzones[j];
+        if (dropzone2.session.day !== dropzone1.session.day) continue;
+        if (dropzone2.session.end <= dropzone1.session.start) continue;
+
+        clashingZones.add(dropzone2.clashDepth);
+      }
+
+      dropzone1.clashDepth = findFreeDepth(clashingZones);
+    }
   }
 }
 

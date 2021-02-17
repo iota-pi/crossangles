@@ -70,3 +70,13 @@ export function getTimetableHeight(duration: number, compact: boolean, showMode:
   const mainRowsHeight = getCellHeight(compact, showMode) * duration;
   return headerRowHeight + mainRowsHeight;
 }
+
+export function findFreeDepth(takenDepths: Set<number>): number {
+  for (let j = 0; j < takenDepths.size; ++j) {
+    if (!takenDepths.has(j)) {
+      return j;
+    }
+  }
+
+  return takenDepths.size;
+}

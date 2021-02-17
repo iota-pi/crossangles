@@ -18,6 +18,7 @@ export abstract class TimetablePlacement {
   private _basePlacement_cachedResult: Placement | undefined;
   private _getPosition_cachedDeps: (Dimensions | number | boolean)[] = [];
   private _getPosition_cachedResult: Required<Placement> | undefined;
+  protected clashDepthMultiplier = 1;
   clashDepth: number = 0;
 
   constructor(session: LinkedSession) {
@@ -30,7 +31,7 @@ export abstract class TimetablePlacement {
   }
 
   get id(): string {
-    return `${this._session.day}~${this._session.start}`;
+    return `${this._session.day}~${this._session.start}~${this._session.end}`;
   }
 
   get duration(): number {
@@ -111,7 +112,7 @@ export abstract class TimetablePlacement {
     }
 
     const { width, height } = base;
-    const clash = SessionPosition.getClashOffset(this.clashDepth);
+    const clash = SessionPosition.getClashOffset(this.clashDepth * this.clashDepthMultiplier);
     const raised = SessionPosition.getRaisedOffset(this.isRaised);
     let x = base.x + clash.x + raised.x + this._offset.x;
     let y = base.y + clash.y + raised.y + this._offset.y;
@@ -140,7 +141,7 @@ export abstract class TimetablePlacement {
     return { width, height };
   }
 
-  private get dayIndex(): number {
+  get dayIndex(): number {
     return ['M', 'T', 'W', 'H', 'F'].indexOf(this._session.day);
   }
 

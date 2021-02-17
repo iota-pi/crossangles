@@ -36,17 +36,28 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     opacity: 0.9,
   },
+  shadow: {
+    boxShadow: theme.shadows[3],
+  },
 }));
 
 export interface Props {
   colour?: string,
+  hasShadow: boolean,
   highlighted: boolean,
   options: Options,
   position: Placement,
   session: LinkedSession,
 }
 
-const Dropzone: React.FC<Props> = ({ colour, highlighted, options, position, session }: Props) => {
+const Dropzone: React.FC<Props> = ({
+  colour,
+  hasShadow,
+  highlighted,
+  options,
+  position,
+  session,
+}: Props) => {
   const classes = useStyles();
   const styles = React.useMemo(
     () => {
@@ -71,9 +82,13 @@ const Dropzone: React.FC<Props> = ({ colour, highlighted, options, position, ses
     showWeeks: false,
   };
 
+  const rootClassList = [classes.root];
+  if (hasShadow) rootClassList.push(classes.shadow);
+  const rootClasses = rootClassList.join(' ')
+
   return (
     <div
-      className={classes.root}
+      className={rootClasses}
       style={styles}
       data-cy={`timetable-dropzone-${session.day}${session.start}`}
     >
