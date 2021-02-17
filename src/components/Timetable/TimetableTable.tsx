@@ -224,10 +224,12 @@ function TimetableTable({
     (placement: Placement): DropzonePlacement | null => {
       let nearest: DropzonePlacement | null = null;
       let bestDistance = snapDistance * snapDistance;
+      const centreX = placement.x + placement.width / 2;
+      const centreY = placement.y + placement.height / 2;
       for (const dropzone of dropzones) {
         const dropzonePosition = dropzone.getPosition(dimensions, start, compact, showMode);
-        const deltaX = dropzonePosition.x - placement.x;
-        const deltaY = dropzonePosition.y - placement.y;
+        const deltaX = (dropzonePosition.x + dropzonePosition.width / 2) - centreX;
+        const deltaY = (dropzonePosition.y + dropzonePosition.height / 2) - centreY;
 
         const distSq = (deltaX * deltaX) + (deltaY * deltaY);
         if (distSq < bestDistance) {
