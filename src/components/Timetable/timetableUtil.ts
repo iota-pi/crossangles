@@ -51,7 +51,7 @@ export function getCellHeight(compact: boolean, showMode: boolean) {
 }
 
 export function getSnapDistance(cellHeight: number) {
-  return Math.LOG2E * cellHeight;
+  return 1.25 * cellHeight;
 }
 
 export function getOverlapArea(p1: Placement, p2: Placement) {
