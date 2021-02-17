@@ -2,7 +2,7 @@ import React from 'react';
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import { TimetablePosition, Dimensions } from './timetableTypes';
+import { TimetablePosition, Placement } from './timetableTypes';
 import { Options, LinkedSession } from '../../state';
 import { useCache } from '../../hooks';
 import SessionDetails from './SessionDetails';
@@ -51,8 +51,7 @@ const useStyles = makeStyles(theme => ({
 export interface Props {
   session: LinkedSession,
   colour: string | undefined,
-  dimensions: Dimensions,
-  position: Required<TimetablePosition>,
+  position: Required<Placement>,
   isDragging: boolean,
   isSnapped: boolean,
   clashDepth: number,
@@ -66,7 +65,6 @@ export interface Props {
 const Session: React.FC<Props> = ({
   colour: propColour,
   clashDepth,
-  dimensions,
   isDragging,
   isSnapped,
   onDrag,
@@ -89,8 +87,7 @@ const Session: React.FC<Props> = ({
 
   const styles: CSSProperties = React.useMemo(
     () => {
-      const { width, height } = dimensions;
-      const { x, y, z } = position;
+      const { x, y, z, width, height } = position;
 
       return {
         transform: `translate(${x}px, ${y}px)`,
@@ -99,7 +96,7 @@ const Session: React.FC<Props> = ({
         zIndex: z,
       };
     },
-    [dimensions, position],
+    [position],
   );
 
   const handleStart = React.useCallback(

@@ -67,8 +67,7 @@ interface SessionRenderData {
   course: CourseData;
   id: string;
   key: string;
-  position: Required<TimetablePosition>;
-  placement: SessionPlacement;
+  position: Required<Placement>;
   session: LinkedSession;
   isDragging: boolean;
   isSnapped: boolean;
@@ -325,7 +324,6 @@ function TimetableTable({
         id,
         key,
         position,
-        placement,
         session,
         isDragging,
         isSnapped,
@@ -350,7 +348,6 @@ function TimetableTable({
               id,
               key,
               position,
-              placement,
               session,
               isDragging,
               isSnapped,
@@ -367,7 +364,6 @@ function TimetableTable({
                   session={session}
                   colour={getCourseColour(course, colours, darkMode)}
                   position={position}
-                  dimensions={placement.basePlacement(dimensions, start, compact, showMode)}
                   isDragging={isDragging}
                   isSnapped={isSnapped}
                   clashDepth={clashDepth}
