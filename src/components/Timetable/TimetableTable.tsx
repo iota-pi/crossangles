@@ -225,7 +225,7 @@ function TimetableTable({
       let nearest: DropzonePlacement | null = null;
       let bestDistance = snapDistance * snapDistance;
       for (const dropzone of dropzones) {
-        const dropzonePosition = dropzone.basePlacement(dimensions, start, compact, showMode);
+        const dropzonePosition = dropzone.getPosition(dimensions, start, compact, showMode);
         const deltaX = dropzonePosition.x - placement.x;
         const deltaY = dropzonePosition.y - placement.y;
 
@@ -392,7 +392,7 @@ function TimetableTable({
               key={dropzone.session.stream.id}
               colour={draggingColour}
               highlighted={highlightedZone ? highlightedZone.id === dropzone.id : false}
-              position={dropzone.basePlacement(dimensions, start, compact, showMode)}
+              position={dropzone.getPosition(dimensions, start, compact, showMode)}
               session={dropzone.session}
               options={options}
             />
