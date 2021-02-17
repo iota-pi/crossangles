@@ -3,29 +3,6 @@ import { LinkedStream } from '../../state';
 import { getLinkedStream, getLinkedSession } from '../../test_util';
 import { DropzonePlacement } from './DropzonePlacement';
 
-describe('getDropzones', () => {
-  it('returns unique streams', () => {
-    // Setup
-    const dm = new DropzoneManager();
-    const filteredStreams: LinkedStream[] = [];
-    dm.filterStreams = jest.fn().mockReturnValue(filteredStreams);
-    const streamsToDropzones: DropzonePlacement[] = [];
-    dm.streamsToDropzones = jest.fn().mockReturnValue(streamsToDropzones);
-    const filteredDropzones: DropzonePlacement[] = [];
-    dm.filterDropzones = jest.fn().mockReturnValue(filteredDropzones);
-    const dragging = getLinkedSession();
-
-    // Exercise
-    const result = dm.getDropzones(dragging, false);
-
-    // Verify
-    expect(result).toBe(filteredDropzones);
-    expect(dm.filterStreams).toHaveBeenCalledTimes(1);
-    expect(dm.streamsToDropzones).toHaveBeenCalledTimes(1);
-    expect(dm.filterDropzones).toHaveBeenCalledTimes(1);
-  });
-});
-
 describe('filterStreams', () => {
   it('filterStreams([], ...) = []', () => {
     const dm = new DropzoneManager();
@@ -105,41 +82,5 @@ describe('filterDropzones', () => {
     expect(result).not.toContain(dropzones[1]);
     expect(result).toContain(dropzones[2]);
     expect(result).toContain(dropzones[3]);
-  });
-
-  it('prioritises longer duration', () => {
-    const dm = new DropzoneManager();
-    const dropzones: DropzonePlacement[] = [
-      new DropzonePlacement(getLinkedSession(0, 0, { day: 'H', start: 11, end: 12 })),
-      new DropzonePlacement(getLinkedSession(0, 0, { day: 'H', start: 11, end: 15 })),
-    ];
-    const result = dm.filterDropzones(dropzones, getLinkedSession(1, 0, { day: 'F', start: 12, end: 15 }));
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(dropzones[1]);
-  });
-
-  it('prioritises dropzones right duration', () => {
-    const dm = new DropzoneManager();
-    const dropzones: DropzonePlacement[] = [
-      new DropzonePlacement(getLinkedSession(0, 0, { day: 'H', start: 11, end: 12 })),
-      new DropzonePlacement(getLinkedSession(1, 0, { day: 'H', start: 11, end: 13 })),
-      new DropzonePlacement(getLinkedSession(2, 0, { day: 'H', start: 11, end: 14 })),
-      new DropzonePlacement(getLinkedSession(3, 0, { day: 'H', start: 11, end: 15 })),
-    ];
-    const result = dm.filterDropzones(dropzones, getLinkedSession(1, 1, { day: 'F', start: 12, end: 15 }));
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(dropzones[2]);
-  });
-
-  it('prioritises the dropzone of the same session', () => {
-    const dm = new DropzoneManager();
-    const dropzones: DropzonePlacement[] = [
-      new DropzonePlacement(getLinkedSession(0, 0, { day: 'M', start: 11, end: 12 })),
-      new DropzonePlacement(getLinkedSession(1, 0, { day: 'M', start: 11, end: 12 })),
-      new DropzonePlacement(getLinkedSession(2, 0, { day: 'M', start: 11, end: 12 })),
-    ];
-    const result = dm.filterDropzones(dropzones.slice(), dropzones[1].session);
-    expect(result).toHaveLength(1);
-    expect(result[0]).toEqual(dropzones[1]);
   });
 });
