@@ -1,12 +1,10 @@
-import { TimetablePosition, Dimensions, Placement } from './timetableTypes';
+import { TimetablePosition, Dimensions } from './timetableTypes';
 import { TimetablePlacement } from './Placement';
 import * as tt from './timetableUtil';
-import * as SessionPosition from './SessionPosition';
 import {
   CourseData,
   getStreamId,
   linkStream,
-  LinkedSession,
   SessionData,
   unlinkSession,
   linkSession,
@@ -23,17 +21,7 @@ export interface SessionPlacementData {
 }
 
 class SessionPlacement extends TimetablePlacement {
-  private _offset: TimetablePosition;
-  private _isSnapped: boolean = true;
-  private _isDragging: boolean = false;
-  private _isRaised: boolean = false;
   private _touched: boolean = false;
-  clashDepth: number = 0;
-
-  constructor(session: LinkedSession) {
-    super(session);
-    this._offset = { x: 0, y: 0 };
-  }
 
   get data(): SessionPlacementData {
     return {
@@ -68,18 +56,6 @@ class SessionPlacement extends TimetablePlacement {
     placement.clashDepth = data.clashDepth;
 
     return placement;
-  }
-
-  get isSnapped(): boolean {
-    return this._isSnapped && !this._isRaised;
-  }
-
-  get isDragging(): boolean {
-    return this._isDragging;
-  }
-
-  get isRaised(): boolean {
-    return this._isRaised;
   }
 
   drag(): void {
@@ -157,50 +133,6 @@ class SessionPlacement extends TimetablePlacement {
   touch(): void {
     this._touched = true;
   }
-
-  getPosition = (() => {
-    let cachedDeps: (Dimensions | number | boolean)[] = [];
-    let cachedResult: Required<Placement>;
-
-    return (
-      timetableDimensions: Dimensions,
-      startHour: number,
-      compact: boolean,
-      showMode: boolean,
-    ): Required<Placement> => {
-      const base = this.basePlacement(timetableDimensions, startHour, compact, showMode);
-      const dependencies = [
-        timetableDimensions,
-        startHour,
-        base,
-        this.clashDepth,
-        this.isRaised,
-        this.isSnapped,
-        this._offset.x,
-        this._offset.y,
-      ];
-      if (dependencies.every((dep, i) => cachedDeps[i] === dep)) {
-        return cachedResult;
-      }
-
-      const { width, height } = base;
-      const clash = SessionPosition.getClashOffset(this.clashDepth);
-      const raised = SessionPosition.getRaisedOffset(this.isRaised);
-      let x = base.x + clash.x + raised.x + this._offset.x;
-      let y = base.y + clash.y + raised.y + this._offset.y;
-      const z = SessionPosition.getZ(this.isSnapped, this.isDragging, this.clashDepth);
-
-      const maxX = timetableDimensions.width - base.width;
-      const maxY = timetableDimensions.height - base.height;
-
-      x = Math.min(Math.max(x, tt.TIMETABLE_BORDER_WIDTH), maxX);
-      y = Math.min(Math.max(y, tt.TIMETABLE_BORDER_WIDTH), maxY);
-
-      cachedDeps = dependencies;
-      cachedResult = { x, y, z, width, height };
-      return cachedResult;
-    };
-  })();
 }
 
 export default SessionPlacement;

@@ -1,5 +1,6 @@
 import { LinkedSession, getDuration } from '../../state';
-import { Dimensions, Placement } from './timetableTypes';
+import * as SessionPosition from './SessionPosition';
+import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
 import {
   getCellHeight,
   TIMETABLE_FIRST_CELL_WIDTH,
@@ -9,9 +10,19 @@ import {
 
 export abstract class TimetablePlacement {
   private _session: LinkedSession;
+  protected _offset: TimetablePosition;
+  protected _isSnapped: boolean = true;
+  protected _isDragging: boolean = false;
+  protected _isRaised: boolean = false;
+  private _basePlacement_cachedDeps: (Dimensions | number | boolean)[] = [];
+  private _basePlacement_cachedResult: Placement | undefined;
+  private _getPosition_cachedDeps: (Dimensions | number | boolean)[] = [];
+  private _getPosition_cachedResult: Required<Placement> | undefined;
+  clashDepth: number = 0;
 
   constructor(session: LinkedSession) {
     this._session = session;
+    this._offset = { x: 0, y: 0 };
   }
 
   get session(): LinkedSession {
@@ -26,46 +37,96 @@ export abstract class TimetablePlacement {
     return getDuration(this._session);
   }
 
-  basePlacement = (() => {
-    let cachedDeps: (Dimensions | number | boolean)[] = [];
-    let cachedResult: Placement;
+  get isSnapped(): boolean {
+    return this._isSnapped && !this._isRaised;
+  }
 
-    return (
-      timetableDimensions: Dimensions,
-      firstHour: number,
-      compact: boolean,
-      showMode: boolean,
-    ): Placement => {
-      const dependencies = [
-        timetableDimensions,
-        firstHour,
-        compact,
-        this.session.start,
-        this.dayIndex,
-      ];
-      if (dependencies.every((dep, i) => cachedDeps[i] === dep)) {
-        return cachedResult;
+  get isDragging(): boolean {
+    return this._isDragging;
+  }
+
+  get isRaised(): boolean {
+    return this._isRaised;
+  }
+
+  basePlacement(
+    timetableDimensions: Dimensions,
+    firstHour: number,
+    compact: boolean,
+    showMode: boolean,
+  ): Placement {
+    const dependencies = [
+      timetableDimensions,
+      firstHour,
+      compact,
+      this.session.start,
+      this.dayIndex,
+    ];
+    if (dependencies.every((dep, i) => this._basePlacement_cachedDeps[i] === dep)) {
+      if (this._basePlacement_cachedResult !== undefined) {
+        return this._basePlacement_cachedResult;
       }
+    }
 
-      const { width, height } = this.baseDimensions(timetableDimensions, compact, showMode);
+    const { width, height } = this.baseDimensions(timetableDimensions, compact, showMode);
 
-      const hourIndex = this._session.start - firstHour;
+    const hourIndex = this._session.start - firstHour;
 
-      const sessionWidth = getCellWidth(timetableDimensions.width);
+    const sessionWidth = getCellWidth(timetableDimensions.width);
 
-      const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
-      const baseY = getCellHeight(true, false) + TIMETABLE_BORDER_WIDTH;
-      const dayOffsetX = sessionWidth * this.dayIndex;
-      const hourOffsetY = getCellHeight(compact, showMode) * hourIndex;
+    const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
+    const baseY = getCellHeight(true, false) + TIMETABLE_BORDER_WIDTH;
+    const dayOffsetX = sessionWidth * this.dayIndex;
+    const hourOffsetY = getCellHeight(compact, showMode) * hourIndex;
 
-      const x = baseX + dayOffsetX;
-      const y = baseY + hourOffsetY;
+    const x = baseX + dayOffsetX;
+    const y = baseY + hourOffsetY;
 
-      cachedDeps = dependencies;
-      cachedResult = { x, y, width, height };
-      return cachedResult;
-    };
-  })();
+    this._basePlacement_cachedDeps = dependencies;
+    this._basePlacement_cachedResult = { x, y, width, height };
+    return this._basePlacement_cachedResult;
+  }
+
+  getPosition(
+    timetableDimensions: Dimensions,
+    startHour: number,
+    compact: boolean,
+    showMode: boolean,
+  ): Required<Placement> {
+    const base = this.basePlacement(timetableDimensions, startHour, compact, showMode);
+    const dependencies = [
+      timetableDimensions,
+      startHour,
+      base,
+      this.clashDepth,
+      this.isRaised,
+      this.isSnapped,
+      this._offset.x,
+      this._offset.y,
+    ];
+    if (dependencies.every((dep, i) => this._getPosition_cachedDeps[i] === dep)) {
+      if (this._getPosition_cachedResult) {
+        return this._getPosition_cachedResult;
+      }
+    }
+
+    const { width, height } = base;
+    const clash = SessionPosition.getClashOffset(this.clashDepth);
+    const raised = SessionPosition.getRaisedOffset(this.isRaised);
+    let x = base.x + clash.x + raised.x + this._offset.x;
+    let y = base.y + clash.y + raised.y + this._offset.y;
+    const z = SessionPosition.getZ(this.isSnapped, this.isDragging, this.clashDepth);
+
+    const maxX = timetableDimensions.width - base.width;
+    const maxY = timetableDimensions.height - base.height;
+
+    x = Math.min(Math.max(x, TIMETABLE_BORDER_WIDTH), maxX);
+    y = Math.min(Math.max(y, TIMETABLE_BORDER_WIDTH), maxY);
+
+    this._getPosition_cachedDeps = dependencies;
+    this._getPosition_cachedResult = { x, y, z, width, height };
+    return this._getPosition_cachedResult;
+  }
 
   private baseDimensions(
     timetableDimensions: Dimensions,

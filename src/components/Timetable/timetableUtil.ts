@@ -5,8 +5,8 @@ export const SESSION_BASE_Z = 10;
 export const SESSION_DRAG_Z = DROPZONE_Z;
 export const SESSION_LIFT_Z = 1;
 
-export const CLASH_OFFSET_X = -7;
-export const CLASH_OFFSET_Y = -5;
+export const CLASH_OFFSET_X = -9;
+export const CLASH_OFFSET_Y = -7;
 
 export const TIMETABLE_DAYS = 5;
 export const TIMETABLE_FIRST_CELL_WIDTH = 62;
