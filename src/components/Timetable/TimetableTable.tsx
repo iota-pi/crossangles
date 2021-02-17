@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { DROPZONE_Z, getCellHeight, getSnapDistance, getTimetableHeight } from './timetableUtil';
+import { DROPZONE_Z, getSnapDistance, getTimetableHeight } from './timetableUtil';
 import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import SessionManager from './SessionManager';
@@ -185,14 +185,6 @@ function TimetableTable({
   );
   const [highlightedZone, setHighlightedZone] = React.useState<DropzonePlacement | null>(null);
 
-  const snapDistance = React.useMemo(
-    () => {
-      const cellHeight = getCellHeight(compact, showMode);
-      return getSnapDistance(cellHeight);
-    },
-    [compact, showMode],
-  );
-
 
   const handleDrag = React.useCallback(
     (session: LinkedSession): void => {
@@ -222,6 +214,7 @@ function TimetableTable({
   const getNearestDropzone = React.useCallback(
     (placement: Placement): DropzonePlacement | null => {
       let nearest: DropzonePlacement | null = null;
+      const snapDistance = getSnapDistance(placement.height);
       let bestDistance = snapDistance * snapDistance;
       const centreX = placement.x + placement.width / 2;
       const centreY = placement.y + placement.height / 2;
@@ -238,7 +231,7 @@ function TimetableTable({
       }
       return nearest;
     },
-    [compact, dropzones, dimensions, showMode, snapDistance, start],
+    [compact, dropzones, dimensions, showMode, start],
   );
 
   const handleMove = React.useCallback(
