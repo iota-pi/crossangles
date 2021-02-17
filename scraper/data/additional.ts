@@ -69,23 +69,23 @@ const unsw: CampusAdditional = {
       streams: [
         {
           component: 'Street Talk',
-          times: [{ time: 'M15' }],
+          times: [{ time: 'M14' }],
         },
         {
           component: 'Street Talk',
-          times: [{ time: 'T15' }],
+          times: [{ time: 'T14' }],
         },
         {
           component: 'Street Talk',
-          times: [{ time: 'W15' }],
+          times: [{ time: 'W14' }],
         },
         {
           component: 'Street Talk',
-          times: [{ time: 'H15' }],
+          times: [{ time: 'H14' }],
         },
         {
           component: 'Street Talk',
-          times: [{ time: 'F15' }],
+          times: [{ time: 'F14' }],
         },
       ],
     },
@@ -204,6 +204,33 @@ const unsw: CampusAdditional = {
           component: 'Core Training',
           times: [{ time: 'H13' }],
           delivery: DeliveryType.either,
+        },
+      ],
+    },
+    {
+      code: 'Street Talk',
+      name: 'Street Talk',
+      isAdditional: true,
+      streams: [
+        {
+          component: 'Street Talk',
+          times: [{ time: 'M14' }],
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'T14' }],
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'W14' }],
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'H14' }],
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'F14' }],
         },
       ],
     },
