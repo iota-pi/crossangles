@@ -1,4 +1,4 @@
-import { TimetablePosition, Dimensions } from './timetableTypes';
+import { TimetablePosition, Dimensions, Placement } from './timetableTypes';
 import { TimetablePlacement } from './Placement';
 import * as tt from './timetableUtil';
 import * as SessionPosition from './SessionPosition';
@@ -160,14 +160,14 @@ class SessionPlacement extends TimetablePlacement {
 
   getPosition = (() => {
     let cachedDeps: (Dimensions | number | boolean)[] = [];
-    let cachedResult: Required<TimetablePosition>;
+    let cachedResult: Required<Placement>;
 
     return (
       timetableDimensions: Dimensions,
       startHour: number,
       compact: boolean,
       showMode: boolean,
-    ): Required<TimetablePosition> => {
+    ): Required<Placement> => {
       const base = this.basePlacement(timetableDimensions, startHour, compact, showMode);
       const dependencies = [
         timetableDimensions,
@@ -183,6 +183,7 @@ class SessionPlacement extends TimetablePlacement {
         return cachedResult;
       }
 
+      const { width, height } = base;
       const clash = SessionPosition.getClashOffset(this.clashDepth);
       const raised = SessionPosition.getRaisedOffset(this.isRaised);
       let x = base.x + clash.x + raised.x + this._offset.x;
@@ -196,7 +197,7 @@ class SessionPlacement extends TimetablePlacement {
       y = Math.min(Math.max(y, tt.TIMETABLE_BORDER_WIDTH), maxY);
 
       cachedDeps = dependencies;
-      cachedResult = { x, y, z };
+      cachedResult = { x, y, z, width, height };
       return cachedResult;
     };
   })();

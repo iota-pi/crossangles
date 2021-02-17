@@ -1,3 +1,5 @@
+import { Placement } from './timetableTypes';
+
 export const DROPZONE_Z = 100;
 export const SESSION_BASE_Z = 10;
 export const SESSION_DRAG_Z = DROPZONE_Z;
@@ -37,6 +39,10 @@ export function arraysEqual<T>(a: T[], b: T[]): boolean {
   return true;
 }
 
+export function getCellWidth(timetableWidth: number): number {
+  return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
+}
+
 export function getCellHeight(compact: boolean, showMode: boolean) {
   if (showMode) {
     return TIMETABLE_CELL_SHOW_MODE_HEIGHT;
@@ -46,6 +52,17 @@ export function getCellHeight(compact: boolean, showMode: boolean) {
 
 export function getSnapDistance(cellHeight: number) {
   return Math.LOG2E * cellHeight;
+}
+
+export function getOverlapArea(p1: Placement, p2: Placement) {
+  const left = Math.max(p1.x, p2.x);
+  const right = Math.min(p1.x + p1.width, p2.x + p2.width);
+  const overlapX = Math.max(right - left, 0);
+
+  const top = Math.max(p1.y, p2.y);
+  const bottom = Math.min(p1.y + p1.height, p2.y + p2.height);
+  const overlapY = Math.max(bottom - top, 0);
+  return overlapX * overlapY;
 }
 
 export function getTimetableHeight(duration: number, compact: boolean, showMode: boolean) {

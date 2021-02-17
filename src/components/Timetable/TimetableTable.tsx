@@ -9,7 +9,7 @@ import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
 import { DROPZONE_Z, getCellHeight, getSnapDistance, getTimetableHeight } from './timetableUtil';
-import { Dimensions, TimetablePosition } from './timetableTypes';
+import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import SessionManager from './SessionManager';
 import SessionPlacement from './SessionPlacement';
@@ -221,14 +221,13 @@ function TimetableTable({
   );
 
   const getNearestDropzone = React.useCallback(
-    (position: TimetablePosition): DropzonePlacement | null => {
-      const { x, y } = position;
+    (placement: Placement): DropzonePlacement | null => {
       let nearest: DropzonePlacement | null = null;
       let bestDistance = snapDistance * snapDistance;
       for (const dropzone of dropzones) {
         const dropzonePosition = dropzone.basePlacement(dimensions, start, compact, showMode);
-        const deltaX = dropzonePosition.x - x;
-        const deltaY = dropzonePosition.y - y;
+        const deltaX = dropzonePosition.x - placement.x;
+        const deltaY = dropzonePosition.y - placement.y;
 
         const distSq = (deltaX * deltaX) + (deltaY * deltaY);
         if (distSq < bestDistance) {

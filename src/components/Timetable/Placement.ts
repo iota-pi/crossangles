@@ -3,8 +3,8 @@ import { Dimensions, Placement } from './timetableTypes';
 import {
   getCellHeight,
   TIMETABLE_FIRST_CELL_WIDTH,
-  TIMETABLE_DAYS,
   TIMETABLE_BORDER_WIDTH,
+  getCellWidth,
 } from './timetableUtil';
 
 export abstract class TimetablePlacement {
@@ -51,7 +51,7 @@ export abstract class TimetablePlacement {
 
       const hourIndex = this._session.start - firstHour;
 
-      const sessionWidth = this.calculateWidth(timetableDimensions.width);
+      const sessionWidth = getCellWidth(timetableDimensions.width);
 
       const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
       const baseY = getCellHeight(true, false) + TIMETABLE_BORDER_WIDTH;
@@ -72,7 +72,7 @@ export abstract class TimetablePlacement {
     compact: boolean,
     showMode: boolean,
   ): Dimensions {
-    const sessionWidth = this.calculateWidth(timetableDimensions.width);
+    const sessionWidth = getCellWidth(timetableDimensions.width);
     const sessionHeight = this.calculateHeight(compact, showMode);
     const width = sessionWidth - TIMETABLE_BORDER_WIDTH;
     const height = sessionHeight - TIMETABLE_BORDER_WIDTH;
@@ -81,10 +81,6 @@ export abstract class TimetablePlacement {
 
   private get dayIndex(): number {
     return ['M', 'T', 'W', 'H', 'F'].indexOf(this._session.day);
-  }
-
-  private calculateWidth(timetableWidth: number): number {
-    return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
   }
 
   private calculateHeight(compact: boolean, showMode: boolean): number {
