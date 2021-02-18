@@ -23,6 +23,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     paddingBottom: theme.spacing(1),
   },
+  dialogActions: {
+    flexDirection: 'column',
+    padding: theme.spacing(1, 3, 2),
+  },
   flexGrow: {
     flexGrow: 1,
   },
@@ -34,11 +38,11 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
   },
+  marginBottom: {
+    marginBottom: theme.spacing(1),
+  },
   moveRight: {
     marginRight: theme.spacing(-1),
-  },
-  dialogActions: {
-    padding: theme.spacing(1, 3, 2),
   },
   selectTrack: {
     opacity: 0.6 * 0.38,
@@ -49,7 +53,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const AppOptions = () => {
+export interface Props {
+  onViewChangelog: () => void,
+}
+
+
+const AppOptions = ({ onViewChangelog }: Props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const options = useSelector(getOptions);
@@ -67,6 +76,13 @@ const AppOptions = () => {
   const handleChange = React.useCallback(
     (option: OptionName) => dispatch(toggleOption(option)),
     [dispatch],
+  );
+  const handleViewChangelog = React.useCallback(
+    () => {
+      handleClose();
+      onViewChangelog();
+    },
+    [handleClose, onViewChangelog],
   );
 
   return (
@@ -119,7 +135,16 @@ const AppOptions = () => {
           ))}
         </DialogContent>
 
-        <DialogActions className={classes.dialogActions}>
+        <DialogActions className={classes.dialogActions} disableSpacing>
+          <Button
+            onClick={handleViewChangelog}
+            className={classes.marginBottom}
+            fullWidth
+            variant="outlined"
+          >
+            View Changelog
+          </Button>
+
           <Button
             onClick={handleClose}
             fullWidth

@@ -17,4 +17,10 @@ export const noticeTransform = createTransform(
   { whitelist: ['notice'] },
 );
 
-export default [historyTransform, noticeTransform];
+export const changelogViewTransform = createTransform(
+  (inboundState: Date) => inboundState.toString(),
+  (outboundState: string) => new Date(outboundState),
+  { whitelist: ['changelogView'] },
+);
+
+export default [historyTransform, noticeTransform, changelogViewTransform];

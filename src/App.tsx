@@ -41,6 +41,7 @@ const TimetableContainer = lazy(() => import('./containers/TimetableContainer'))
 const ActionButtons = loadable(() => import('./components/ActionButtons'));
 const NoticeDisplay = loadable(() => import('./components/Notice'));
 const ContactUs = loadable(() => import('./components/ContactUs'));
+const Changelog = loadable(() => import('./components/Changelog'));
 
 const styles = (theme: Theme) => createStyles({
   appBarSpacer: {
@@ -74,6 +75,7 @@ export interface DispatchProps {
 export type Props = OwnProps & StateProps & DispatchProps;
 
 export interface State {
+  showChangelog: boolean,
   showContact: boolean,
   isSavingImage: boolean,
 }
@@ -82,6 +84,7 @@ class App extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      showChangelog: false,
       showContact: false,
       isSavingImage: false,
     };
@@ -162,6 +165,14 @@ class App extends PureComponent<Props, State> {
     this.setState({ showContact: false });
   };
 
+  private handleChangelogShow = () => {
+    this.setState({ showChangelog: true });
+  };
+
+  private handleChangelogClose = () => {
+    this.setState({ showChangelog: false });
+  }
+
   render() {
     const classes = this.props.classes;
 
@@ -171,6 +182,7 @@ class App extends PureComponent<Props, State> {
 
         <AppBar
           onShowContact={this.handleContactShow}
+          onViewChangelog={this.handleChangelogShow}
         />
         <div className={classes.appBarSpacer} />
 
@@ -222,6 +234,12 @@ class App extends PureComponent<Props, State> {
           open={this.state.showContact}
           onSend={this.handleContactSend}
           onClose={this.handleContactClose}
+        />
+
+        <Changelog
+          open={this.state.showChangelog}
+          onShowContact={this.handleContactShow}
+          onClose={this.handleChangelogClose}
         />
       </div>
     );

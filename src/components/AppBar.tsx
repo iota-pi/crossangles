@@ -31,11 +31,13 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   onShowContact: () => void,
+  onViewChangelog: () => void,
 }
 
 
 export function CrossAnglesAppBar({
   onShowContact,
+  onViewChangelog,
 }: Props) {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -79,8 +81,9 @@ export function CrossAnglesAppBar({
             <InvertColors />
           )}
         </IconButton>
+
         <AboutCrossAngles onShowContact={onShowContact} />
-        <AppOptions />
+        <AppOptions onViewChangelog={onViewChangelog} />
       </Toolbar>
     </AppBar>
   );

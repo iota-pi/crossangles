@@ -44,6 +44,7 @@ export interface RootState extends TimetableState {
   unplacedCount: number,
   hiddenEvents: CourseId[],
   timetables: Timetables,
+  changelogView: Date,
 }
 
 
@@ -86,4 +87,5 @@ export const initialState: RootState = {
   suggestionScore: null,
   unplacedCount: 0,
   hiddenEvents: [],
+  changelogView: new Date(2020, 0, 1),
 };

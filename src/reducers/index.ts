@@ -6,6 +6,7 @@ import { timetables, suggestionScore, unplacedCount } from './timetables';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
 import { notice } from './notice';
+import { changelogView } from './changelogView';
 import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions';
 import {
   getCurrentTerm,
@@ -34,6 +35,7 @@ const basicReducer = combineReducers<RootState>({
   colours,
   webStreams,
   notice,
+  changelogView,
   hiddenEvents,
   history: state => state || initialState.history,
 });

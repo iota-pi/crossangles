@@ -1,7 +1,7 @@
 import { ColourAction } from './colours';
 import { CourseListAction } from './fetchData';
 import { HistoryAction } from './history';
-import { NoticeAction } from './notice';
+import { NoticeAction, SetChangelogViewAction } from './notice';
 import { CourseAction, EventAction, ToggleShowEventsAction, ToggleOptionAction } from './selection';
 import { SessionManagerAction, SuggestionAction, UnplacedCountAction } from './timetable';
 
@@ -23,5 +23,6 @@ export type AllActions = (
   ToggleOptionAction |
   SessionManagerAction |
   SuggestionAction |
-  UnplacedCountAction
+  UnplacedCountAction |
+  SetChangelogViewAction
 );

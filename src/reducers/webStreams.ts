@@ -6,7 +6,7 @@ export function webStreams(
   action: AllActions,
 ): CourseId[] {
   if (action.type === TOGGLE_WEB_STREAM) {
-    const streams = [...state];
+    const streams = state ? [...state] : [];
     const courseId = getCourseId(action.course);
     const index = streams.indexOf(courseId);
     if (index > -1) {
