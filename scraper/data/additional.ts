@@ -215,22 +215,27 @@ const unsw: CampusAdditional = {
         {
           component: 'Street Talk',
           times: [{ time: 'M14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'T14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'W14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'H14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'F14' }],
+          delivery: DeliveryType.person,
         },
       ],
     },
