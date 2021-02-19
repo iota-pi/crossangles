@@ -56,7 +56,7 @@ stage "Building Lambdas"
 ./deploy-lambdas.sh
 
 stage "Building App"
-./deploy-app.sh unsw usyd
+./deploy-app.sh unsw
 
 stage "Terraform Apply"
 ./tf.sh apply
