@@ -1,5 +1,8 @@
 import React, {
-  lazy, PureComponent, ReactNode, Suspense, ErrorInfo,
+  ErrorInfo,
+  lazy,
+  PureComponent,
+  Suspense,
 } from 'react';
 import { connect, MapDispatchToPropsNonObject } from 'react-redux';
 import ReactGA from 'react-ga';
