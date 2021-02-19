@@ -94,6 +94,7 @@ const unsw: CampusAdditional = {
     {
       code: 'CBS',
       name: 'Campus Bible Study',
+      defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
         signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/655/responses/new',
@@ -139,6 +140,7 @@ const unsw: CampusAdditional = {
     {
       code: 'CBS',
       name: 'Campus Bible Study',
+      defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
         signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/698/responses/new',
@@ -211,6 +213,7 @@ const unsw: CampusAdditional = {
       code: 'Street Talk',
       name: 'Street Talk',
       isAdditional: true,
+      defaultColour: 'indigo',
       streams: [
         {
           component: 'Street Talk',
