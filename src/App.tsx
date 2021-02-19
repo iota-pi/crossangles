@@ -16,6 +16,7 @@ import createStyles from '@material-ui/core/styles/createStyles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
+import Button from '@material-ui/core/Button';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
 import { getCampus } from './getCampus';
 import { clearNotice, setNotice, toggleOption } from './actions';
@@ -35,6 +36,7 @@ import InfoText from './components/InfoText';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
+import changelog, { getUpdateMessage } from './changelog';
 
 const AppBar = loadable(() => import('./components/AppBar'));
 const TimetableContainer = lazy(() => import('./containers/TimetableContainer'));
@@ -64,6 +66,7 @@ export interface StateProps {
   timetable: SessionManagerData,
   colours: ColourMap,
   options: Options,
+  changelogView: Date,
 }
 
 export interface DispatchProps {
@@ -94,6 +97,7 @@ class App extends PureComponent<Props, State> {
     initialiseGA();
     pageView();
     this.props.initDarkMode();
+    this.checkChangelog();
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
@@ -105,6 +109,26 @@ class App extends PureComponent<Props, State> {
     console.error(error);
     console.error(info);
   }
+
+  private checkChangelog = () => {
+    const newChanges = changelog.filter(item => item.date > this.props.changelogView);
+    if (newChanges.length) {
+      const actions: React.ReactNode[] = [(
+        <Button
+          color="secondary"
+          variant="text"
+          key="go"
+          onClick={async () => {
+            this.props.clearNotice();
+            this.handleChangelogShow();
+          }}
+        >
+          See what&apos;s new
+        </Button>
+      )];
+      this.props.setNotice(getUpdateMessage(newChanges.length), actions);
+    }
+  };
 
   private handleSaveAsImage = async () => {
     this.setState({ isSavingImage: true });
@@ -171,7 +195,7 @@ class App extends PureComponent<Props, State> {
 
   private handleChangelogClose = () => {
     this.setState({ showChangelog: false });
-  }
+  };
 
   render() {
     const classes = this.props.classes;
@@ -254,6 +278,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   timetable: getCurrentTimetable(state),
   colours: state.colours,
   options: state.options,
+  changelogView: state.changelogView,
 });
 
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => ({

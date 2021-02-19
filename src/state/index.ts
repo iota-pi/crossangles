@@ -87,5 +87,5 @@ export const initialState: RootState = {
   suggestionScore: null,
   unplacedCount: 0,
   hiddenEvents: [],
-  changelogView: new Date(2020, 0, 1),
+  changelogView: new Date(),
 };

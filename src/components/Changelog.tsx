@@ -1,12 +1,17 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 
-import IconButton from '@material-ui/core/IconButton';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Typography,
+} from '@material-ui/core';
 import {
   Timeline,
   TimelineConnector,
@@ -17,9 +22,7 @@ import {
   TimelineSeparator,
 } from '@material-ui/lab';
 import changelog from '../changelog';
-import { Button, DialogActions } from '@material-ui/core';
 import { setChangelogView } from '../actions';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../state';
 
 
@@ -57,7 +60,7 @@ export interface Props {
 }
 
 
-const Changelog = ({ onClose, onShowContact, open }: Props) => {
+const Changelog = ({ onClose, open }: Props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const lastView = useSelector((state: RootState) => state.changelogView);
@@ -92,27 +95,24 @@ const Changelog = ({ onClose, onShowContact, open }: Props) => {
 
       <DialogContent>
         <Timeline>
-          {changelog.map((item, i) => {
-            console.log(item.date, lastView, item.date > lastView);
-            return (
-              <TimelineItem key={item.id}>
-                <TimelineOppositeContent>
-                  <Typography color="textSecondary">{item.date.toDateString()}</Typography>
-                </TimelineOppositeContent>
+          {changelog.map((item, i) => (
+            <TimelineItem key={item.id}>
+              <TimelineOppositeContent>
+                <Typography color="textSecondary">{item.date.toDateString()}</Typography>
+              </TimelineOppositeContent>
 
-                <TimelineSeparator>
-                  <TimelineDot
-                    color={item.date > lastView ? 'secondary' : undefined}
-                  />
-                  {i < changelog.length - 1 && <TimelineConnector />}
-                </TimelineSeparator>
+              <TimelineSeparator>
+                <TimelineDot
+                  color={item.date > lastView ? 'secondary' : undefined}
+                />
+                {i < changelog.length - 1 && <TimelineConnector />}
+              </TimelineSeparator>
 
-                <TimelineContent>
-                  <Typography>{item.summary}</Typography>
-                </TimelineContent>
-              </TimelineItem>
-            )}
-          )}
+              <TimelineContent>
+                <Typography>{item.summary}</Typography>
+              </TimelineContent>
+            </TimelineItem>
+          ))}
         </Timeline>
       </DialogContent>
 
