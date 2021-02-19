@@ -1,6 +1,6 @@
 import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
-import { Notice } from '../state';
+import { DEFAULT_NOTICE_TIMEOUT, Notice } from '../state';
 
 export interface Props {
   notice: Notice | null,
@@ -11,17 +11,27 @@ export const NoticeDisplay = ({
   notice,
   onSnackbarClose,
 }: Props) => {
-  const { message = '', actions = null, timeout = 6000 } = notice || {};
+  const { message = '', actions = null, timeout = DEFAULT_NOTICE_TIMEOUT } = notice || {};
   const paragraphs = React.useMemo(
     () => message.split(/\n/g).map(p => ({ text: p, key: Math.random().toString() })),
     [message],
   );
+  const handleClose = React.useCallback(
+    () => {
+      if (notice && notice.callback) {
+        notice.callback();
+      }
+      onSnackbarClose();
+    },
+    [notice, onSnackbarClose],
+  );
+
   return (
     <Snackbar
       key={message || 'snackbar'}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       open={notice !== null}
-      onClose={onSnackbarClose}
+      onClose={handleClose}
       ContentProps={{ 'aria-describedby': 'message-id' }}
       autoHideDuration={timeout}
       message={(

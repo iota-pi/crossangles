@@ -6,4 +6,5 @@ export interface Notice {
   message: string,
   actions: ReactNode,
   timeout: number | null,
+  callback?: () => void,
 }

@@ -19,7 +19,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 import Button from '@material-ui/core/Button';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
 import { getCampus } from './getCampus';
-import { clearNotice, setNotice, toggleOption } from './actions';
+import { clearNotice, setChangelogView, setNotice, toggleOption } from './actions';
 import {
   RootState,
   Meta,
@@ -70,9 +70,10 @@ export interface StateProps {
 }
 
 export interface DispatchProps {
-  setNotice: (message: string, actions?: ReactNode[]) => void,
+  setNotice: typeof setNotice,
   clearNotice: () => void,
   initDarkMode: () => void,
+  setChangelogView: () => void,
 }
 
 export type Props = OwnProps & StateProps & DispatchProps;
@@ -126,7 +127,12 @@ class App extends PureComponent<Props, State> {
           See what&apos;s new
         </Button>
       )];
-      this.props.setNotice(getUpdateMessage(newChanges.length), actions);
+      this.props.setNotice(
+        getUpdateMessage(newChanges.length),
+        actions,
+        undefined,
+        () => this.props.setChangelogView(),
+      );
     }
   };
 
@@ -282,13 +288,14 @@ const mapStateToProps = (state: RootState): StateProps => ({
 });
 
 const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> = dispatch => ({
-  setNotice: (message: string, actions?: ReactNode[]) => dispatch(setNotice(message, actions)),
+  setNotice: (...args) => dispatch(setNotice(...args)),
   clearNotice: () => dispatch(clearNotice()),
   initDarkMode: () => {
     if (getDefaultDarkMode()) {
       dispatch(toggleOption('darkMode'));
     }
   },
+  setChangelogView: () => dispatch(setChangelogView()),
 });
 
 const connection = connect(mapStateToProps, mapDispatchToProps);

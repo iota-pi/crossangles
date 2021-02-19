@@ -6,8 +6,8 @@ export function notice(
   action: AllActions,
 ): Notice | null {
   if (action.type === SET_NOTICE) {
-    const { message, actions, timeout } = action;
-    return { message, actions, timeout };
+    const { message, actions, timeout, callback } = action;
+    return { message, actions, timeout, callback };
   } else if (action.type === CLEAR_NOTICE) {
     return null;
   }

@@ -24,12 +24,14 @@ export function setNotice(
   message: string,
   actions?: ReactNode[],
   timeout: number | null = DEFAULT_NOTICE_TIMEOUT,
+  callback?: () => void,
 ): NoticeAction {
   return {
     type: SET_NOTICE,
     message,
     actions: actions || [],
     timeout,
+    callback,
   };
 }
 
