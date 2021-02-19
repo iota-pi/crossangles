@@ -1,13 +1,19 @@
 export interface LogEntry {
   date: Date,
   summary: string,
+  details?: string[],
   id: number,
 }
 
 const rawChangelog: Omit<LogEntry, 'id'>[] = [
   {
     date: new Date(2021, 1, 17),
-    summary: 'Improved drag-and-drop experience',
+    summary: 'Improved drag-and-drop',
+    details: [
+      'Timetable preview',
+      'Improve clarity for overlapping streams',
+      'General quality of life updates',
+    ],
   },
   {
     date: new Date(2021, 1, 19),

@@ -45,10 +45,21 @@ const useStyles = makeStyles(theme => ({
   moveRight: {
     marginRight: theme.spacing(-1),
   },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-    cursor: 'pointer',
+  timeline: {
+    padding: 0,
+  },
+  timelineDate: {
+    maxWidth: 135,
+  },
+  detailList: {
+    position: 'relative',
+    marginLeft: theme.spacing(2),
+
+    '&>div::before': {
+      content: '"–"',
+      position: 'absolute',
+      left: -theme.spacing(1.5),
+    },
   },
 }));
 
@@ -57,6 +68,13 @@ export interface Props {
   onClose: () => void,
   onShowContact: () => void,
   open: boolean,
+}
+
+export function formatTimelineDate(date: Date) {
+  const day = date.getDate();
+  const month = date.toLocaleDateString(undefined, { month: 'short' });
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
 }
 
 
@@ -94,11 +112,11 @@ const Changelog = ({ onClose, open }: Props) => {
       </DialogTitle>
 
       <DialogContent>
-        <Timeline>
+        <Timeline className={classes.timeline}>
           {changelog.map((item, i) => (
             <TimelineItem key={item.id}>
-              <TimelineOppositeContent>
-                <Typography color="textSecondary">{item.date.toDateString()}</Typography>
+              <TimelineOppositeContent className={classes.timelineDate}>
+                <Typography color="textSecondary">{formatTimelineDate(item.date)}</Typography>
               </TimelineOppositeContent>
 
               <TimelineSeparator>
@@ -110,6 +128,16 @@ const Changelog = ({ onClose, open }: Props) => {
 
               <TimelineContent>
                 <Typography>{item.summary}</Typography>
+                <Typography
+                  className={classes.detailList}
+                  color="textSecondary"
+                  component="div"
+                  variant="caption"
+                >
+                  {item.details?.map(detail => (
+                    <div key={detail}>{detail}</div>
+                  ))}
+                </Typography>
               </TimelineContent>
             </TimelineItem>
           ))}
