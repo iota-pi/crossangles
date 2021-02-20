@@ -82,6 +82,7 @@ export interface StateProps {
 export type Props = WithDispatch<OwnProps & StateProps>;
 
 export interface State {
+  defaultName: string | null,
   editingCourse: CourseData | null,
   showCreateCustom: boolean,
 }
@@ -94,6 +95,7 @@ class CourseSelection extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      defaultName: null,
       editingCourse: null,
       showCreateCustom: false,
     };
@@ -112,11 +114,11 @@ class CourseSelection extends PureComponent<Props, State> {
   }
 
   private handleAddCustomCourse = (title: string) => {
-    this.setState({ editingCourse: null, showCreateCustom: true });
+    this.setState({ editingCourse: null, defaultName: title, showCreateCustom: true });
   }
 
   private editCustomCourse = (course: CourseData) => {
-    this.setState({ editingCourse: course, showCreateCustom: true });
+    this.setState({ editingCourse: course, defaultName: null, showCreateCustom: true });
   };
 
   private handleCloseCustom = () => {
@@ -124,7 +126,7 @@ class CourseSelection extends PureComponent<Props, State> {
   };
 
   private handleExitedCustom = () => {
-    this.setState({ editingCourse: null });
+    this.setState({ editingCourse: null, defaultName: null });
   };
 
   private chooseCourse = async (course: CourseData) => {
@@ -263,6 +265,7 @@ class CourseSelection extends PureComponent<Props, State> {
         <CreateCustom
           open={this.state.showCreateCustom}
           editing={this.state.editingCourse}
+          defaultName={this.state.defaultName}
           onSave={this.addCustom}
           onClose={this.handleCloseCustom}
           onExited={this.handleExitedCustom}

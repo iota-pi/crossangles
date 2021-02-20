@@ -50,6 +50,7 @@ export const getBlankOption = (): CustomTimeOption => ({
 export interface Props extends WithStyles<typeof styles> {
   open: boolean,
   editing?: CourseData | null,
+  defaultName?: string | null,
   onSave: (courseData: Omit<CourseData, 'code'>) => void,
   onClose: () => void,
   onExited?: () => void,
@@ -100,9 +101,12 @@ class CreateCustom extends PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const editing = this.props.editing;
+    const { defaultName, editing } = this.props;
     if (editing && editing !== prevProps.editing) {
       this.loadCourse(editing);
+    }
+    if (defaultName && !editing) {
+      this.setState({ name: defaultName });
     }
 
     if (this.props.open && !prevProps.open) {
