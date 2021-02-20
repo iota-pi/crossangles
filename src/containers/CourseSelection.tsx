@@ -115,7 +115,7 @@ class CourseSelection extends PureComponent<Props, State> {
 
   private handleAddCustomCourse = (title: string) => {
     this.setState({ editingCourse: null, defaultName: title, showCreateCustom: true });
-  }
+  };
 
   private editCustomCourse = (course: CourseData) => {
     this.setState({ editingCourse: course, defaultName: null, showCreateCustom: true });

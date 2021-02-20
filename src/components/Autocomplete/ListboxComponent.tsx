@@ -37,7 +37,7 @@ function useResetCache(data: any) {
 }
 
 // Adapter for react-window
-export const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>(
+const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>(
   (props: HTMLDivElement, ref) => {
     const { children, ...other } = props;
     const itemData = React.Children.toArray(children);

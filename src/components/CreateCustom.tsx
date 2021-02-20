@@ -105,7 +105,8 @@ class CreateCustom extends PureComponent<Props, State> {
     if (editing && editing !== prevProps.editing) {
       this.loadCourse(editing);
     }
-    if (defaultName && !editing) {
+    if (defaultName && !editing && defaultName !== prevProps.defaultName) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ name: defaultName });
     }
 
