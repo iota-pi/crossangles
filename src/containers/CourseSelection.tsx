@@ -225,7 +225,6 @@ class CourseSelection extends PureComponent<Props, State> {
                 additional={this.props.additional}
                 chooseCourse={this.chooseCourse}
                 onAddPersonalEvent={this.handleAddCustomCourse}
-                maxItems={20}
               />
             </Suspense>
           </div>
