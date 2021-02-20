@@ -50,8 +50,8 @@ export function getCellHeight(compact: boolean, showMode: boolean) {
   return compact ? TIMETABLE_COMPACT_CELL_HEIGHT : TIMETABLE_CELL_HEIGHT;
 }
 
-export function getSnapDistance(cellHeight: number) {
-  return 1.25 * cellHeight;
+export function getSnapDistance(sessionHeight: number) {
+  return 30 + 1.15 * sessionHeight;
 }
 
 export function getOverlapArea(p1: Placement, p2: Placement) {
@@ -79,4 +79,8 @@ export function findFreeDepth(takenDepths: Set<number>): number {
   }
 
   return takenDepths.size;
+}
+
+export function getCustomCode() {
+  return `custom_${Math.random()}`;
 }
