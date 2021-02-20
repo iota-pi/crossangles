@@ -258,6 +258,7 @@ const AutocompleteControl: React.FC<Props> = ({
   const handleAddPersonalEvent = React.useCallback(
     () => {
       onAddPersonalEvent(inputValue);
+      setInputValue('');
     },
     [inputValue, onAddPersonalEvent],
   );
