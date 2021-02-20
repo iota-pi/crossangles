@@ -3,6 +3,7 @@ import { VariableSizeList, ListChildComponentProps } from 'react-window';
 import { useMediaQuery, useTheme } from '@material-ui/core';
 
 const LISTBOX_PADDING = 8;
+const MAX_ITEMS = 8;
 function renderRow(props: ListChildComponentProps) {
   const { data, index, style } = props;
   return React.cloneElement(data[index], {
@@ -46,8 +47,8 @@ export const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>
     const itemSize = smUp ? 36 : 48;
 
     const getHeight = () => {
-      if (itemCount > 8) {
-        return 8 * itemSize;
+      if (itemCount > MAX_ITEMS) {
+        return MAX_ITEMS * itemSize;
       }
       return itemSize * itemCount;
     };

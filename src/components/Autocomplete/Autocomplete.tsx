@@ -5,7 +5,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
-import { ListboxComponent } from './ListboxComponent';
+import ListboxComponent from './ListboxComponent';
+import PaperComponent, { Props as PaperComponentProps } from './PaperComponent';
 import { CourseData, getCourseId, getClarificationText } from '../../state';
 import { useFilterWorker } from './filter.worker.shim';
 
@@ -16,6 +17,7 @@ export interface Props {
   chosen: CourseData[],
   additional: CourseData[],
   chooseCourse: (course: CourseData) => void,
+  onAddPersonalEvent: (search: string) => void,
 }
 
 const SEARCH_DEBOUNCE = 100;
@@ -152,6 +154,7 @@ const AutocompleteControl: React.FC<Props> = ({
   chosen,
   additional,
   chooseCourse,
+  onAddPersonalEvent,
 }) => {
   const classes = useStyles();
 
@@ -253,6 +256,25 @@ const AutocompleteControl: React.FC<Props> = ({
 
   const getOptionLabel = React.useCallback((option: CourseData) => option.code, []);
 
+  const handleAddPersonalEvent = React.useCallback(
+    () => {
+      onAddPersonalEvent(inputValue);
+    },
+    [inputValue, onAddPersonalEvent],
+  );
+
+  const Paper = React.useCallback(
+    (props: Omit<PaperComponentProps, 'onAddPersonalEvent'>) => {
+      const { children, ...other } = props;
+      return (
+        <PaperComponent onAddPersonalEvent={handleAddPersonalEvent} {...other}>
+          {children}
+        </PaperComponent>
+      );
+    },
+    [handleAddPersonalEvent],
+  );
+
 
   return (
     <Autocomplete
@@ -260,6 +282,7 @@ const AutocompleteControl: React.FC<Props> = ({
       options={filteredOptions}
       filterOptions={noFilter}
       ListboxComponent={ListboxComponent as any}
+      PaperComponent={Paper}
       onChange={handleChange}
       onInputChange={handleInputChange}
       autoHighlight

@@ -32,6 +32,7 @@ import {
 } from '../actions';
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
+import { getCustomCode } from '../components/Timetable/timetableUtil';
 
 
 export interface OwnProps {
@@ -163,7 +164,7 @@ class TimetableContainer extends PureComponent<Props, State> {
     const sessionManager = this.getSessionManager();
 
     const course: CourseData = {
-      code: `custom_${Math.random()}`,
+      code: getCustomCode(),
       isCustom: true,
       ...courseData,
     };

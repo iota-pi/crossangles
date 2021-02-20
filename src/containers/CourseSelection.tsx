@@ -39,6 +39,7 @@ import {
 import { WithDispatch } from '../typeHelpers';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../timetable/updateTimetable';
+import { getCustomCode } from '../components/Timetable/timetableUtil';
 
 const Autocomplete = lazy(() => import('../components/Autocomplete'));
 const CourseList = lazy(() => import('../components/CourseList'));
@@ -110,6 +111,10 @@ class CourseSelection extends PureComponent<Props, State> {
     );
   }
 
+  private handleAddCustomCourse = (title: string) => {
+    this.setState({ editingCourse: null, showCreateCustom: true });
+  }
+
   private editCustomCourse = (course: CourseData) => {
     this.setState({ editingCourse: course, showCreateCustom: true });
   };
@@ -131,9 +136,13 @@ class CourseSelection extends PureComponent<Props, State> {
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
     const sessionManager = this.getSessionManager();
+    const baseData = this.state.editingCourse || {
+      code: getCustomCode(),
+      isCustom: true,
+    };
 
     const course: CourseData = {
-      ...this.state.editingCourse!,
+      ...baseData,
       ...courseData,
     };
     await this.props.dispatch(addCourse(course));
@@ -215,6 +224,7 @@ class CourseSelection extends PureComponent<Props, State> {
                 chosen={this.props.chosen}
                 additional={this.props.additional}
                 chooseCourse={this.chooseCourse}
+                onAddPersonalEvent={this.handleAddCustomCourse}
                 maxItems={20}
               />
             </Suspense>
