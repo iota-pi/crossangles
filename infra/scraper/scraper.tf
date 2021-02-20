@@ -5,7 +5,7 @@ locals {
   # In staging: run it at ~6am or ~7am (depending on DST)
   cron_times = {
     unsw = var.environment == "production" ? "5 *" : "5 19"
-    # usyd = var.environment == "production" ? "10 *" : "10 19"
+    usyd = var.environment == "production" ? "10 *" : "10 19"
   }
 
   standard_tags = {
