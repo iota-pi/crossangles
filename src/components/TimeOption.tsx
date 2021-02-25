@@ -40,6 +40,10 @@ const dayOptions = [
 ];
 
 const timeOptions = [
+  { text: '06:00 AM', time: 6 },
+  { text: '06:30 AM', time: 6.5 },
+  { text: '07:00 AM', time: 7 },
+  { text: '07:30 AM', time: 7.5 },
   { text: '08:00 AM', time: 8 },
   { text: '08:30 AM', time: 8.5 },
   { text: '09:00 AM', time: 9 },
