@@ -266,7 +266,8 @@ class CreateCustom extends PureComponent<Props, State> {
       'Assignment work',
       'Finish lab report',
       'Supervisor meeting',
-      'Line up for CSESoc BBQ',
+      'Maintain social distance',
+      // 'Line up for CSESoc BBQ',
       'Wonder where Rex Vowels is',
     ];
     return choices[Math.floor(Math.random() * choices.length)];
