@@ -1,6 +1,9 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Button, DialogActions, makeStyles, Paper, PaperProps } from '@material-ui/core';
 import Event from '@material-ui/icons/Event';
+import { getOption } from '../../state';
+import { getOptions } from '../../state/selectors';
 
 
 const useStyles = makeStyles(theme => ({
@@ -19,6 +22,8 @@ export interface Props extends PaperProps {
 // Adapter for react-window
 const PaperComponent: React.FC<Props> = (props: Props) => {
   const { children, onAddPersonalEvent, ...other } = props;
+  const options = useSelector(getOptions);
+  const darkMode = getOption(options, 'darkMode');
   const classes = useStyles();
 
   return (
@@ -27,7 +32,7 @@ const PaperComponent: React.FC<Props> = (props: Props) => {
 
       <DialogActions className={classes.actions}>
         <Button
-          color="secondary"
+          color={darkMode ? 'primary' : 'secondary'}
           fullWidth
           id="add-personal-event"
           size="large"
