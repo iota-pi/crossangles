@@ -22,43 +22,72 @@ const unsw: CampusAdditional = {
     {
       code: 'CBS',
       name: 'Campus Bible Study',
-      isAdditional: true,
-      autoSelect: true,
       defaultColour: 'indigo',
-      description: "Campus Bible Study is a group of people at UNSW who are interested in learning together about Jesus from the Bible. Whether you follow Jesus, or want to find out what he's all about, Campus Bible Study is a great place for you to learn more. If you've never come before, we recommend checking out the Bible talks.",
-      metadata: { ...CBS_BASE_META },
+      metadata: {
+        ...CBS_BASE_META,
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/698/responses/new',
+        signupValidFor: [{ year: 2021, term: 1 }],
+      },
       streams: [
         {
-          component: 'Growth Groups',
-          times: [{ time: 'M12-14' }],
+          component: 'The Bible Talks',
+          times: [{ time: 'T13' }],
+          delivery: DeliveryType.either,
         },
         {
-          component: 'Growth Groups',
-          times: [{ time: 'T11-13' }],
+          component: 'The Bible Talks',
+          times: [{ time: 'W13' }],
+          delivery: DeliveryType.person,
         },
         {
-          component: 'Growth Groups',
-          times: [{ time: 'W12-14' }],
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'H9-11' }],
-        },
-        {
-          component: 'Core Theology',
-          times: [{ time: 'T15' }],
-        },
-        {
-          component: 'Core Theology',
+          component: 'The Bible Talks',
           times: [{ time: 'H12' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'M12.5-14' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'T11-12.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'W11-12.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'H10-11.5' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'F11-12.5' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Core Theology',
+          times: [{ time: 'T16' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Core Theology',
+          times: [{ time: 'H14' }],
+          delivery: DeliveryType.either,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'T14' }],
+          times: [{ time: 'T15' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
           times: [{ time: 'H13' }],
+          delivery: DeliveryType.either,
         },
       ],
     },
@@ -66,26 +95,32 @@ const unsw: CampusAdditional = {
       code: 'Street Talk',
       name: 'Street Talk',
       isAdditional: true,
+      defaultColour: 'indigo',
       streams: [
         {
           component: 'Street Talk',
           times: [{ time: 'M14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'T14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'W14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'H14' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Street Talk',
           times: [{ time: 'F14' }],
+          delivery: DeliveryType.person,
         },
       ],
     },
@@ -206,6 +241,118 @@ const unsw: CampusAdditional = {
           component: 'Core Training',
           times: [{ time: 'H13' }],
           delivery: DeliveryType.either,
+        },
+      ],
+    },
+    {
+      code: 'Street Talk',
+      name: 'Street Talk',
+      isAdditional: true,
+      defaultColour: 'indigo',
+      streams: [
+        {
+          component: 'Street Talk',
+          times: [{ time: 'M14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'T14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'W14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'H14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Street Talk',
+          times: [{ time: 'F14' }],
+          delivery: DeliveryType.person,
+        },
+      ],
+    },
+  ],
+  '2021~2': [
+    {
+      code: 'CBS',
+      name: 'Campus Bible Study',
+      defaultColour: 'indigo',
+      metadata: {
+        ...CBS_BASE_META,
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/698/responses/new',
+        signupValidFor: [{ year: 2021, term: 1 }],
+      },
+      streams: [
+        {
+          component: 'The Bible Talks',
+          times: [{ time: 'T13' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'The Bible Talks',
+          times: [{ time: 'W13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'The Bible Talks',
+          times: [{ time: 'H12' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'M12-13.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'T11-12.5' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'W11-12.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'H10-11.5' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Growth Groups',
+          times: [{ time: 'F11-12.5' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Core Theology',
+          times: [{ time: 'T16' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Core Theology',
+          times: [{ time: 'H14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Core Training',
+          times: [{ time: 'T15' }],
+          delivery: DeliveryType.either,
+        },
+        {
+          component: 'Core Training',
+          times: [{ time: 'W15' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Core Training',
+          times: [{ time: 'H13' }],
+          delivery: DeliveryType.person,
         },
       ],
     },
