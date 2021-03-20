@@ -22,6 +22,8 @@ const unsw: CampusAdditional = {
     {
       code: 'CBS',
       name: 'Campus Bible Study',
+      isAdditional: true,
+      autoSelect: true,
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
@@ -125,56 +127,12 @@ const unsw: CampusAdditional = {
       ],
     },
   ],
-  '2020~3': [
-    {
-      code: 'CBS',
-      name: 'Campus Bible Study',
-      defaultColour: 'indigo',
-      metadata: {
-        ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/655/responses/new',
-        signupValidFor: [{ year: 2020, term: 3 }],
-      },
-      streams: [
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'M12-14' }],
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'T11-13' }],
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'W12-14' }],
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'H9-11' }],
-        },
-        {
-          component: 'Core Theology',
-          times: [{ time: 'T15' }],
-        },
-        {
-          component: 'Core Theology',
-          times: [{ time: 'H12' }],
-        },
-        {
-          component: 'Core Training',
-          times: [{ time: 'T14' }],
-        },
-        {
-          component: 'Core Training',
-          times: [{ time: 'H13' }],
-        },
-      ],
-    },
-  ],
   '2021~1': [
     {
       code: 'CBS',
       name: 'Campus Bible Study',
+      isAdditional: true,
+      autoSelect: true,
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
@@ -282,6 +240,8 @@ const unsw: CampusAdditional = {
     {
       code: 'CBS',
       name: 'Campus Bible Study',
+      isAdditional: true,
+      autoSelect: true,
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
