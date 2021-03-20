@@ -295,7 +295,7 @@ const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> =
   clearNotice: () => dispatch(clearNotice()),
   initDarkMode: () => {
     if (getDefaultDarkMode()) {
-      dispatch(toggleOption('darkMode'));
+      dispatch(toggleOption('darkMode', true));
     }
   },
   setChangelogView: () => dispatch(setChangelogView()),

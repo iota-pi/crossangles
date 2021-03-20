@@ -55,5 +55,9 @@ export function getOption(options: Options, option: OptionName): boolean {
 }
 
 export function getDefaultDarkMode(): boolean {
-  return window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)').matches : false;
+  if (window.matchMedia) {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  return false;
 }

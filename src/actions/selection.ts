@@ -100,17 +100,13 @@ export const TOGGLE_OPTION = 'TOGGLE_OPTION';
 export interface ToggleOptionAction extends Action {
   type: typeof TOGGLE_OPTION;
   option: OptionName;
+  value?: boolean;
 }
 
-export function toggleOption(option: OptionName): ToggleOptionAction {
-  ReactGA.event({
-    category: CATEGORY,
-    action: 'Toggle Option',
-    label: option,
-  });
-
+export function toggleOption(option: OptionName, value?: boolean): ToggleOptionAction {
   return {
     type: TOGGLE_OPTION,
     option,
+    value,
   };
 }

@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import {
   AllActions,
   ADD_COURSE,
@@ -5,6 +6,7 @@ import {
   TOGGLE_OPTION,
   TOGGLE_SHOW_EVENTS,
 } from '../actions';
+import { CATEGORY } from '../analytics';
 import { AdditionalEvent, CourseId, getEvents, initialState, Options, exclusiveOptions } from '../state';
 
 export function events(
@@ -42,12 +44,18 @@ export function options(
   action: AllActions,
 ): Options {
   if (action.type === TOGGLE_OPTION) {
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'Toggle Option',
+      label: action.option,
+    });
+
     const excludedOptions = exclusiveOptions[action.option] || [];
     const exclusionMap = excludedOptions.reduce((obj, option) => ({ ...obj, [option]: false }), {});
     return {
       ...state,
       ...exclusionMap,
-      [action.option]: !state[action.option],
+      [action.option]: action.value !== undefined ? action.value : !state[action.option],
     };
   }
 
