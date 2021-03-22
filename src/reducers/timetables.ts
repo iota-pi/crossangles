@@ -1,5 +1,5 @@
 import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT, SET_COURSE_DATA } from '../actions';
-import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId } from '../state';
+import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId, getStreamId } from '../state';
 import { SessionManagerData } from '../components/Timetable/SessionManager';
 
 export function timetables(
@@ -15,7 +15,7 @@ export function timetables(
   }
 
   if (action.type === SET_COURSE_DATA) {
-    const courses = new Set(action.courses.map(c => getCourseId(c)));
+    const courses = new Map(action.courses.map(c => [getCourseId(c), c]));
     const term = getCurrentTerm(action.meta);
     const timetable: SessionManagerData | undefined = state[term];
     if (!timetable) {
@@ -23,8 +23,16 @@ export function timetables(
     }
     const sessionsToRemove = new Set<SessionId>();
     for (const [sessionId, placement] of timetable.map) {
-      if (!courses.has(placement.session.course)) {
+      const course = courses.get(placement.session.course);
+      if (course === undefined) {
         sessionsToRemove.add(sessionId);
+      } else {
+        const streamExists = course.streams.find(
+          s => getStreamId(course, s) === placement.session.stream
+        );
+        if (streamExists === undefined) {
+          sessionsToRemove.add(sessionId);
+        }
       }
     }
     const newTimetable = { ...timetable };

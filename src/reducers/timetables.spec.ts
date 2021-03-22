@@ -12,8 +12,17 @@ import {
 import { initialState, Timetables, getCurrentTerm } from '../state';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { getMeta } from '../test_util';
+import { SessionPlacementData } from '../components/Timetable/SessionPlacement';
 
 const otherAction: ClearNoticeAction = { type: CLEAR_NOTICE };
+const baseSessionPlacement: Omit<SessionPlacementData, 'session'> = {
+  clashDepth: 0,
+  isDragging: false,
+  isRaised: false,
+  isSnapped: false,
+  offset: { x: 0, y: 0 },
+  touched: false,
+};
 
 describe('timetables reducer', () => {
   it('initialises correctly', () => {
@@ -49,28 +58,18 @@ describe('timetables reducer', () => {
         [
           'RING1379~LEC~0',
           {
-            clashDepth: 0,
-            isDragging: false,
-            isRaised: false,
-            isSnapped: false,
-            offset: { x: 0, y: 0 },
-            touched: false,
+            ...baseSessionPlacement,
             session: {
-              course: 'RING1379', day: 'F', start: 9, end: 10, index: 0, stream: '',
+              course: 'RING1379', day: 'F', start: 9, end: 10, index: 0, stream: 'RING1379~LEC~F9',
             },
           },
         ],
         [
           'RING9731~TUT~0',
           {
-            clashDepth: 0,
-            isDragging: false,
-            isRaised: false,
-            isSnapped: false,
-            offset: { x: 0, y: 0 },
-            touched: false,
+            ...baseSessionPlacement,
             session: {
-              course: 'RING9731', day: 'M', start: 9, end: 10, index: 0, stream: '',
+              course: 'RING9731', day: 'M', start: 9, end: 10, index: 0, stream: 'RING9731~TUT~M9',
             },
           },
         ],
@@ -87,7 +86,16 @@ describe('timetables reducer', () => {
       type: SET_COURSE_DATA,
       meta,
       courses: [
-        { code: 'RING9731', name: '', streams: [] },
+        {
+          code: 'RING9731',
+          name: '',
+          streams: [
+            {
+              component: 'TUT',
+              times: [{ time: 'M9' }],
+            },
+          ],
+        },
       ],
     };
     const result = timetables(state, action);
@@ -97,8 +105,78 @@ describe('timetables reducer', () => {
       order: timetable.order.slice(0, 1),
       renderOrder: timetable.renderOrder.slice(1),
     };
-    expect(Object.keys(result)).toHaveLength(1);
     expect(result[term]).toEqual(expected);
+    expect(Object.keys(result)).toHaveLength(1);
+  });
+
+  it('filters out streams which were removed', () => {
+    const timetable: SessionManagerData = {
+      map: [
+        [
+          'RING1379~LEC~0',
+          {
+            ...baseSessionPlacement,
+            session: {
+              course: 'RING1379', day: 'F', start: 9, end: 10, index: 0, stream: 'RING1379~LEC~F9',
+            },
+          },
+        ],
+        [
+          'RING1379~TUT~0',
+          {
+            ...baseSessionPlacement,
+            session: {
+              course: 'RING1379', day: 'M', start: 9, end: 10, index: 0, stream: 'RING1379~TUT~M9',
+            },
+          },
+        ],
+        [
+          'RING1379~SEM~0',
+          {
+            ...baseSessionPlacement,
+            session: {
+              course: 'RING1379', day: 'H', start: 9, end: 10, index: 0, stream: 'RING1379~SEM~H9',
+            },
+          },
+        ],
+      ],
+      order: ['RING1379~TUT~0', 'RING1379~LEC~0', 'RING1379~SEM~0'],
+      renderOrder: ['RING1379~LEC~0', 'RING1379~SEM~0', 'RING1379~TUT~0'],
+      version: 42,
+      score: 1379,
+    };
+    const meta = getMeta();
+    const term = getCurrentTerm(meta);
+    const state: Timetables = { [term]: timetable };
+    const action: CourseListAction = {
+      type: SET_COURSE_DATA,
+      meta,
+      courses: [
+        {
+          code: 'RING1379',
+          name: '',
+          streams: [
+            {
+              component: 'LEC',
+              times: [{ time: 'M8' }],
+            },
+            {
+              component: 'SEM',
+              times: [{ time: 'H9' }],
+            },
+          ],
+        },
+      ],
+    };
+    const result = timetables(state, action);
+    const expected = {
+      ...timetable,
+      map: timetable.map.slice(2),
+      order: ['RING1379~SEM~0'],
+      renderOrder: ['RING1379~SEM~0'],
+    };
+    expect(result[term]).toEqual(expected);
+    expect(Object.keys(result)).toHaveLength(1);
   });
 
   it('works when setting course data for the first time (no timetable yet)', () => {
