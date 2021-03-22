@@ -1,6 +1,6 @@
 import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT, SET_COURSE_DATA } from '../actions';
-import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId, getStreamId } from '../state';
-import { SessionManagerData } from '../components/Timetable/SessionManager';
+import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId, getStreamId, CourseId, CourseData } from '../state';
+import { SessionManagerData, SessionManagerEntriesData } from '../components/Timetable/SessionManager';
 
 export function timetables(
   state: Timetables = initialState.timetables,
@@ -21,20 +21,7 @@ export function timetables(
     if (!timetable) {
       return state;
     }
-    const sessionsToRemove = new Set<SessionId>();
-    for (const [sessionId, placement] of timetable.map) {
-      const course = courses.get(placement.session.course);
-      if (course === undefined) {
-        sessionsToRemove.add(sessionId);
-      } else {
-        const streamExists = course.streams.find(
-          s => getStreamId(course, s) === placement.session.stream,
-        );
-        if (streamExists === undefined) {
-          sessionsToRemove.add(sessionId);
-        }
-      }
-    }
+    const sessionsToRemove = findMissingSessions(courses, timetable.map);
     const newTimetable = { ...timetable };
     newTimetable.map = newTimetable.map.filter(([id, _]) => !sessionsToRemove.has(id));
     newTimetable.order = newTimetable.order.filter(id => !sessionsToRemove.has(id));
@@ -43,6 +30,27 @@ export function timetables(
   }
 
   return state;
+}
+
+function findMissingSessions(
+  courses: Map<CourseId, CourseData>,
+  timetableData: SessionManagerEntriesData,
+): Set<SessionId> {
+  const sessionsToRemove = new Set<SessionId>();
+  for (const [sessionId, placement] of timetableData) {
+    const course = courses.get(placement.session.course);
+    if (course === undefined) {
+      sessionsToRemove.add(sessionId);
+    } else {
+      const streamExists = course.streams.find(
+        s => getStreamId(course, s) === placement.session.stream,
+      );
+      if (streamExists === undefined) {
+        sessionsToRemove.add(sessionId);
+      }
+    }
+  }
+  return sessionsToRemove;
 }
 
 export function suggestionScore(
