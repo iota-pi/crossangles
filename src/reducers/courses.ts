@@ -61,6 +61,11 @@ export function chosen(
   }
 
   if (action.type === SET_COURSE_DATA) {
+    // Clear chosen courses when moving to new term
+    if (action.isNewTerm) {
+      return [];
+    }
+
     // Only keep chosen courses which have current data
     // This would be necessary if a course stops being offered (or part of its
     // id changes) for a particular term
