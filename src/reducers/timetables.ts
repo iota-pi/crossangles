@@ -28,7 +28,7 @@ export function timetables(
         sessionsToRemove.add(sessionId);
       } else {
         const streamExists = course.streams.find(
-          s => getStreamId(course, s) === placement.session.stream
+          s => getStreamId(course, s) === placement.session.stream,
         );
         if (streamExists === undefined) {
           sessionsToRemove.add(sessionId);
