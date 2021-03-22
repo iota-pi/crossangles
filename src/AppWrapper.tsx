@@ -5,7 +5,8 @@ import { store, persistor } from './configureStore';
 import { fetchData } from './actions';
 import App from './App';
 
-store.dispatch(fetchData());
+const previousMeta = store.getState().meta;
+store.dispatch(fetchData(previousMeta));
 
 export function wrapApp(AppComponent: typeof App) {
   const AppWraper = () => (
