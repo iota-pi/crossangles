@@ -12,8 +12,7 @@ import loadable from '@loadable/component';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 // Styles
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
+import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles';
 
 // Components
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -48,7 +47,7 @@ const NoticeDisplay = loadable(() => import('./components/Notice'));
 const ContactUs = loadable(() => import('./components/ContactUs'));
 const Changelog = loadable(() => import('./components/Changelog'));
 
-const styles = (theme: Theme) => createStyles({
+const styles = (theme: Theme): StyleRules => ({
   appBarSpacer: {
     ...theme.mixins.toolbar,
     marginBottom: theme.spacing(4),
