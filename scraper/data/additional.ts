@@ -245,8 +245,8 @@ const unsw: CampusAdditional = {
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/698/responses/new',
-        signupValidFor: [{ year: 2021, term: 1 }],
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/736/responses/new',
+        signupValidFor: [{ year: 2021, term: 2 }],
       },
       streams: [
         {
@@ -267,7 +267,7 @@ const unsw: CampusAdditional = {
         {
           component: 'Growth Groups',
           times: [{ time: 'M12-13.5' }],
-          delivery: DeliveryType.person,
+          delivery: DeliveryType.either,
         },
         {
           component: 'Growth Groups',
