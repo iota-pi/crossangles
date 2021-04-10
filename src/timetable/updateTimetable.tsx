@@ -34,6 +34,7 @@ export interface UpdateTimetableArgs {
   selection: Selection,
   searchConfig?: GeneticSearchOptionalConfig,
   cleanUpdate?: boolean,
+  scoreConfig: TimetableScoreConfig,
 }
 
 export interface Selection {
@@ -62,8 +63,8 @@ export interface TimetableSearchConfig {
 export async function updateTimetable(
   args: UpdateTimetableArgs,
 ) {
-  const { dispatch, sessionManager, selection, searchConfig, cleanUpdate } = args;
-  const { chosen, custom, additional, events, webStreams, options, meta } = selection;
+  const { cleanUpdate, dispatch, scoreConfig, searchConfig, selection, sessionManager } = args;
+  const { additional, chosen, custom, events, meta, options, webStreams } = selection;
   const courses = [...chosen, ...custom, ...additional];
   let fixedSessions: LinkedSession[] = [];
   if (!cleanUpdate) {
@@ -79,6 +80,7 @@ export async function updateTimetable(
       webStreams,
       options,
       searchConfig,
+      scoreConfig,
       ignoreCache: cleanUpdate,
     });
   } catch (error) {
@@ -106,7 +108,7 @@ export async function updateTimetable(
 
     if (fixedSessions.length > 0) {
       // Try to calculate a more optimal timetable
-      recommendTimetable(dispatch, selection);
+      recommendTimetable({ dispatch, selection });
     } else {
       // Clear outdated recommendation
       await dispatch(setSuggestionScore(null));
@@ -153,12 +155,19 @@ async function notifyUnplaced(
   }
 }
 
-export async function recommendTimetable(
+export async function recommendTimetable({
+  dispatch,
+  selection,
+  maxSpawn = 1,
+  searchConfig = { timeout: 100 },
+  scoreConfig,
+}: {
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
   selection: Selection,
-  maxSpawn = 1,
-  searchConfig: GeneticSearchOptionalConfig = { timeout: 100 },
-) {
+  maxSpawn?: number,
+  searchConfig?: GeneticSearchOptionalConfig,
+  scoreConfig?: TimetableScoreConfig,
+}) {
   const { chosen, custom, additional, events, webStreams, options } = selection;
   const courses = [...chosen, ...custom, ...additional];
   const newTimetable = await doTimetableSearch({
@@ -169,6 +178,7 @@ export async function recommendTimetable(
     options,
     maxSpawn,
     searchConfig,
+    scoreConfig,
   });
 
   if (newTimetable !== null) {
