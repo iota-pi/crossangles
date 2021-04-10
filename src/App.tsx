@@ -114,7 +114,9 @@ class App extends PureComponent<Props, State> {
   }
 
   private checkChangelog = () => {
-    const newChanges = changelog.filter(item => item.date > this.props.changelogView);
+    const newChanges = changelog.filter(
+      item => !item.boring && item.date > this.props.changelogView,
+    );
     if (newChanges.length) {
       const actions: React.ReactNode[] = [(
         <Button

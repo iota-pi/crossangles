@@ -2,6 +2,7 @@ export interface LogEntry {
   date: Date,
   summary: string,
   details?: string[],
+  boring?: boolean,
   id: number,
 }
 
@@ -18,6 +19,15 @@ const rawChangelog: Omit<LogEntry, 'id'>[] = [
   {
     date: new Date(2021, 1, 19),
     summary: 'Added changelog',
+  },
+  {
+    date: new Date(2021, 2, 20),
+    summary: 'Bugfixes',
+    details: [
+      'Dark mode toggle for browsers running in dark mode',
+      'Rare issue affecting timetable generation',
+    ],
+    boring: true,
   },
 ];
 
