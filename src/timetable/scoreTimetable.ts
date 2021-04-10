@@ -8,17 +8,33 @@ export interface TimetableScore {
   timetable: LinkedSession[],
 }
 
+export interface TimetableScoreWeights {
+  clash: number,
+  freeDays: number,
+  times: number,
+  dayLength: number,
+}
+
+export const defaultWeights: TimetableScoreWeights = {
+  clash: 1,
+  freeDays: 1,
+  times: 1,
+  dayLength: 1,
+};
+
 export class TimetableScorer {
   private fixedSessions: LinkedSession[];
   private clashInfo: ClashInfo;
   private fewestClashes: number;
   private cache: TimetableScorerCache<number>;
+  private customWeights: TimetableScoreWeights;
 
   constructor(clashInfo: ClashInfo, fixedSessions: LinkedSession[]) {
     this.fixedSessions = fixedSessions;
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
     this.cache = new TimetableScorerCache();
+    this.customWeights = { ...defaultWeights };
   }
 
   score(streams: LinkedStream[], cacheKey?: number[]): number {
@@ -39,16 +55,21 @@ export class TimetableScorer {
 
     const timetable = streams.flatMap(s => s.sessions).concat(this.fixedSessions);
     let score = 0;
-    score += scoreClashes(clashes);
-    score += scoreFreeDays(timetable);
-    score += scoreTimes(timetable);
-    score += scoreDayLength(timetable);
+    score += scoreClashes(clashes) * this.customWeights.clash;
+    score += scoreFreeDays(timetable) * this.customWeights.freeDays;
+    score += scoreTimes(timetable) * this.customWeights.times;
+    score += scoreDayLength(timetable) * this.customWeights.dayLength;
 
     if (cacheKey) {
       this.cache.set(cacheKey, score);
     }
 
     return score;
+  }
+
+  updateWeights(newWeights: TimetableScoreWeights) {
+    this.customWeights = newWeights;
+    this.cache.clear();
   }
 }
 

@@ -32,6 +32,10 @@ export class TimetableScorerCache<T> {
     this.setInternal(key, undefined);
   }
 
+  clear(): void {
+    this.cache = [];
+  }
+
   private setInternal(key: number[], value: T | undefined): void {
     let current = this.cache;
     for (let i = 0; i < key.length - 1; ++i) {
