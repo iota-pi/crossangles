@@ -43,12 +43,12 @@ class TimetableSearch {
     const clashInfo = this.clashInfoFromComponents(components);
     const streams = components.map(c => c.streams);
     const results = await this.runSearchInWorkers({
-      fixedSessions,
       clashInfo,
-      streams,
       config,
-      scoreConfig,
+      fixedSessions,
       maxSpawn,
+      streams,
+      scoreConfig,
     });
 
     // Find best result

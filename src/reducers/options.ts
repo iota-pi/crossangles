@@ -5,9 +5,11 @@ import {
   TOGGLE_EVENT,
   TOGGLE_OPTION,
   TOGGLE_SHOW_EVENTS,
+  SET_SCORE_CONFIG,
 } from '../actions';
 import { CATEGORY } from '../analytics';
 import { AdditionalEvent, CourseId, getEvents, initialState, Options, exclusiveOptions } from '../state';
+import { TimetableScoreConfig } from '../timetable/scoreTimetable';
 
 export function events(
   state: readonly AdditionalEvent[] = [],
@@ -82,4 +84,15 @@ export function hiddenEvents(
   }
 
   return state as CourseId[];
+}
+
+export function scoreConfig(
+  state: TimetableScoreConfig = initialState.scoreConfig,
+  action: AllActions,
+): TimetableScoreConfig {
+  if (action.type === SET_SCORE_CONFIG) {
+    return { ...action.config };
+  }
+
+  return state;
 }

@@ -40,6 +40,7 @@ import { WithDispatch } from '../typeHelpers';
 import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
 import { updateTimetable } from '../timetable/updateTimetable';
 import { getCustomCode } from '../components/Timetable/timetableUtil';
+import { TimetableScoreConfig } from '../timetable/scoreTimetable';
 
 const Autocomplete = lazy(() => import('../components/Autocomplete'));
 const CourseList = lazy(() => import('../components/CourseList'));
@@ -65,18 +66,19 @@ const styles = (theme: Theme) => createStyles({
 export interface OwnProps extends WithStyles<typeof styles> {}
 
 export interface StateProps {
-  courses: CourseMap,
-  courseList: CourseData[],
-  chosen: CourseData[],
-  custom: CourseData[],
   additional: CourseData[],
-  events: AdditionalEvent[],
-  options: Options,
-  timetable: SessionManagerData,
+  chosen: CourseData[],
   colours: ColourMap,
-  webStreams: CourseId[],
+  courseList: CourseData[],
+  courses: CourseMap,
+  custom: CourseData[],
+  events: AdditionalEvent[],
   hiddenEvents: CourseId[],
   meta: Meta,
+  options: Options,
+  timetable: SessionManagerData,
+  scoreConfig: TimetableScoreConfig,
+  webStreams: CourseId[],
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -202,7 +204,16 @@ class CourseSelection extends PureComponent<Props, State> {
   };
 
   private updateTimetable = async (sessionManager: SessionManager) => {
-    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
+    const {
+      additional,
+      chosen,
+      custom,
+      events,
+      meta,
+      options,
+      webStreams,
+      scoreConfig,
+    } = this.props;
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
@@ -210,6 +221,7 @@ class CourseSelection extends PureComponent<Props, State> {
         chosen, additional, custom, events, options, webStreams, meta,
       },
       searchConfig: { timeout: 100 },
+      scoreConfig,
     });
   };
 
@@ -276,18 +288,19 @@ class CourseSelection extends PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  additional: getAdditionalCourses(state),
+  chosen: getChosenCourses(state),
+  colours: state.colours,
   courses: state.courses,
   courseList: getCourseList(state),
-  chosen: getChosenCourses(state),
   custom: getCustomCourses(state),
-  additional: getAdditionalCourses(state),
   events: state.events,
-  options: state.options,
-  timetable: getCurrentTimetable(state),
-  colours: state.colours,
-  webStreams: state.webStreams,
   hiddenEvents: state.hiddenEvents,
   meta: state.meta,
+  options: state.options,
+  timetable: getCurrentTimetable(state),
+  scoreConfig: state.scoreConfig,
+  webStreams: state.webStreams,
 });
 
 const connection = connect(mapStateToProps);

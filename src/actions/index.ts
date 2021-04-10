@@ -2,7 +2,7 @@ import { ColourAction } from './colours';
 import { CourseListAction } from './fetchData';
 import { HistoryAction } from './history';
 import { NoticeAction, SetChangelogViewAction } from './notice';
-import { CourseAction, EventAction, ToggleShowEventsAction, ToggleOptionAction } from './selection';
+import { CourseAction, EventAction, ToggleShowEventsAction, ToggleOptionAction, SetScoreConfigAction } from './selection';
 import { SessionManagerAction, SuggestionAction, UnplacedCountAction } from './timetable';
 
 export * from './colours';
@@ -14,15 +14,16 @@ export * from './timetable';
 
 export type AllActions = (
   ColourAction |
+  CourseAction |
   CourseListAction |
+  EventAction |
   HistoryAction |
   NoticeAction |
-  CourseAction |
-  EventAction |
-  ToggleShowEventsAction |
-  ToggleOptionAction |
   SessionManagerAction |
+  SetChangelogViewAction |
+  SetScoreConfigAction |
   SuggestionAction |
-  UnplacedCountAction |
-  SetChangelogViewAction
+  ToggleOptionAction |
+  ToggleShowEventsAction |
+  UnplacedCountAction
 );

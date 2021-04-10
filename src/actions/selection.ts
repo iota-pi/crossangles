@@ -2,6 +2,7 @@ import ReactGA from 'react-ga';
 import { Action } from 'redux';
 import { CourseData, CourseId, getCourseId, AdditionalEvent, OptionName } from '../state';
 import { CATEGORY } from '../analytics';
+import { TimetableScoreConfig } from '../timetable/scoreTimetable';
 
 // Chosen courses
 export const ADD_COURSE = 'ADD_COURSE';
@@ -108,5 +109,20 @@ export function toggleOption(option: OptionName, value?: boolean): ToggleOptionA
     type: TOGGLE_OPTION,
     option,
     value,
+  };
+}
+
+// Score Config
+export const SET_SCORE_CONFIG = 'SET_SCORE_CONFIG';
+
+export interface SetScoreConfigAction extends Action {
+  type: typeof SET_SCORE_CONFIG;
+  config: TimetableScoreConfig;
+}
+
+export function setScoreConfig(config: TimetableScoreConfig): SetScoreConfigAction {
+  return {
+    type: SET_SCORE_CONFIG,
+    config,
   };
 }

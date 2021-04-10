@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { meta } from './meta';
 import { courses, chosen, custom, additional } from './courses';
-import { events, options, hiddenEvents } from './commitments';
+import { events, hiddenEvents, options, scoreConfig } from './options';
 import { timetables, suggestionScore, unplacedCount } from './timetables';
 import { colours } from './colours';
 import { webStreams } from './webStreams';
@@ -22,22 +22,23 @@ import { getCurrentTimetable } from '../state/selectors';
 import { SessionManagerData } from '../components/Timetable/SessionManagerTypes';
 
 const basicReducer = combineReducers<RootState>({
+  additional,
+  colours,
+  changelogView,
+  chosen,
   courses,
   custom,
-  additional,
-  meta,
-  chosen,
   events,
-  options,
-  timetables,
-  suggestionScore,
-  unplacedCount,
-  colours,
-  webStreams,
-  notice,
-  changelogView,
   hiddenEvents,
   history: state => state || initialState.history,
+  meta,
+  notice,
+  options,
+  scoreConfig,
+  suggestionScore,
+  timetables,
+  unplacedCount,
+  webStreams,
 });
 
 

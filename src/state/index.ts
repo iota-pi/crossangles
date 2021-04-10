@@ -4,10 +4,11 @@ import { AdditionalEvent } from './Events';
 import { ColourMap } from './Colours';
 import { Options } from './Options';
 import { Notice } from './Notice';
-import { Meta, getCurrentTerm } from './Meta';
-import { SessionManagerData, getEmptySessionManagerData } from '../components/Timetable/SessionManagerTypes';
+import { getCurrentTerm, Meta } from './Meta';
+import { getEmptySessionManagerData, SessionManagerData } from '../components/Timetable/SessionManagerTypes';
 import { Timetables } from './Timetable';
 import { getCurrentTimetable } from './selectors';
+import { defaultScoreConfig, TimetableScoreConfig } from '../timetable/scoreTimetable';
 
 export * from './Colours';
 export * from './Course';
@@ -37,14 +38,15 @@ export interface TimetableHistoryState extends TimetableState {
 }
 
 export interface RootState extends TimetableState {
-  meta: Meta,
+  changelogView: Date,
+  hiddenEvents: CourseId[],
   history: HistoryData,
+  meta: Meta,
   notice: Notice | null,
+  timetables: Timetables,
+  scoreConfig: TimetableScoreConfig,
   suggestionScore: number | null,
   unplacedCount: number,
-  hiddenEvents: CourseId[],
-  timetables: Timetables,
-  changelogView: Date,
 }
 
 
@@ -84,6 +86,7 @@ export const initialState: RootState = {
   meta,
   history,
   notice: null,
+  scoreConfig: defaultScoreConfig,
   suggestionScore: null,
   unplacedCount: 0,
   hiddenEvents: [],

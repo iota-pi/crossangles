@@ -15,7 +15,7 @@ export interface TimetableScoreConfig {
   dayLength: number,
 }
 
-export const defaultConfig: TimetableScoreConfig = {
+export const defaultScoreConfig: TimetableScoreConfig = {
   clash: 1,
   freeDays: 1,
   times: 1,
@@ -34,7 +34,7 @@ export class TimetableScorer {
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
     this.cache = new TimetableScorerCache();
-    this.customWeights = { ...defaultConfig };
+    this.customWeights = { ...defaultScoreConfig };
   }
 
   score(streams: LinkedStream[], cacheKey?: number[]): number {

@@ -33,6 +33,7 @@ import {
 import { WithDispatch } from '../typeHelpers';
 import { CATEGORY } from '../analytics';
 import { getCustomCode } from '../components/Timetable/timetableUtil';
+import { TimetableScoreConfig } from '../timetable/scoreTimetable';
 
 
 export interface OwnProps {
@@ -42,18 +43,19 @@ export interface OwnProps {
 }
 
 export interface StateProps {
-  courses: CourseMap,
-  chosen: CourseData[],
-  custom: CourseData[],
   additional: CourseData[],
-  events: AdditionalEvent[],
-  options: Options,
+  chosen: CourseData[],
   colours: ColourMap,
-  webStreams: CourseId[],
+  courses: CourseMap,
+  custom: CourseData[],
+  events: AdditionalEvent[],
+  meta: Meta,
+  options: Options,
+  scoreConfig: TimetableScoreConfig,
+  suggestionScore: number | null,
   timetableData: SessionManagerData,
   timetableHistory: HistoryData,
-  suggestionScore: number | null,
-  meta: Meta,
+  webStreams: CourseId[],
 }
 
 export type Props = WithDispatch<OwnProps & StateProps>;
@@ -116,7 +118,16 @@ class TimetableContainer extends PureComponent<Props, State> {
   };
 
   private handleUpdate = async () => {
-    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
+    const {
+      additional,
+      chosen,
+      custom,
+      events,
+      meta,
+      options,
+      webStreams,
+      scoreConfig,
+    } = this.props;
 
     ReactGA.event({
       category: CATEGORY,
@@ -136,6 +147,7 @@ class TimetableContainer extends PureComponent<Props, State> {
           timeout: 1500,
           maxIterations: 100000,
         },
+        scoreConfig,
       });
     } finally {
       this.setState({ isUpdating: false });
@@ -178,25 +190,45 @@ class TimetableContainer extends PureComponent<Props, State> {
   };
 
   private updateTimetable = async (sessionManager: SessionManager) => {
-    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
+    const {
+      additional,
+      chosen,
+      custom,
+      events,
+      meta,
+      options,
+      webStreams,
+      scoreConfig,
+    } = this.props;
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
       selection: {
-        chosen, additional, custom, events, options, webStreams, meta,
+        additional, chosen, custom, events, meta, options, webStreams,
       },
       searchConfig: { timeout: 100 },
+      scoreConfig,
     });
   };
 
   private recommendTimetable = async () => {
-    const { chosen, additional, custom, events, options, webStreams, meta } = this.props;
-    recommendTimetable(
-      this.props.dispatch,
-      {
-        chosen, additional, custom, events, options, webStreams, meta,
+    const {
+      additional,
+      chosen,
+      custom,
+      events,
+      meta,
+      options,
+      webStreams,
+      scoreConfig,
+    } = this.props;
+    recommendTimetable({
+      dispatch: this.props.dispatch,
+      selection: {
+        additional, chosen, custom, events, meta, options, webStreams,
       },
-    );
+      scoreConfig,
+    });
   };
 
   private getSuggestionImprovementScore = () => {
@@ -250,18 +282,19 @@ class TimetableContainer extends PureComponent<Props, State> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  courses: state.courses,
-  chosen: getChosenCourses(state),
-  custom: getCustomCourses(state),
   additional: getAdditionalCourses(state),
-  events: state.events,
-  options: state.options,
+  chosen: getChosenCourses(state),
   colours: state.colours,
-  webStreams: state.webStreams,
+  courses: state.courses,
+  custom: getCustomCourses(state),
+  events: state.events,
+  meta: state.meta,
+  options: state.options,
+  scoreConfig: state.scoreConfig,
+  suggestionScore: state.suggestionScore,
   timetableData: getCurrentTimetable(state),
   timetableHistory: state.history,
-  suggestionScore: state.suggestionScore,
-  meta: state.meta,
+  webStreams: state.webStreams,
 });
 
 const connected = connect(mapStateToProps);

@@ -56,7 +56,7 @@ export interface TimetableSearchConfig {
   maxSpawn?: number,
   ignoreCache?: boolean,
   searchConfig?: GeneticSearchOptionalConfig,
-  scoreConfig?: TimetableScoreConfig,
+  scoreConfig: TimetableScoreConfig,
 }
 
 
@@ -108,7 +108,7 @@ export async function updateTimetable(
 
     if (fixedSessions.length > 0) {
       // Try to calculate a more optimal timetable
-      recommendTimetable({ dispatch, selection });
+      recommendTimetable({ dispatch, selection, scoreConfig });
     } else {
       // Clear outdated recommendation
       await dispatch(setSuggestionScore(null));
@@ -166,7 +166,7 @@ export async function recommendTimetable({
   selection: Selection,
   maxSpawn?: number,
   searchConfig?: GeneticSearchOptionalConfig,
-  scoreConfig?: TimetableScoreConfig,
+  scoreConfig: TimetableScoreConfig,
 }) {
   const { chosen, custom, additional, events, webStreams, options } = selection;
   const courses = [...chosen, ...custom, ...additional];

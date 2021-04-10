@@ -1,4 +1,4 @@
-import { events, options, hiddenEvents } from './commitments';
+import { events, options, hiddenEvents } from './options';
 import {
   ClearNoticeAction,
   CLEAR_NOTICE,
