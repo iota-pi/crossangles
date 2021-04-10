@@ -8,14 +8,14 @@ export interface TimetableScore {
   timetable: LinkedSession[],
 }
 
-export interface TimetableScoreWeights {
+export interface TimetableScoreConfig {
   clash: number,
   freeDays: number,
   times: number,
   dayLength: number,
 }
 
-export const defaultWeights: TimetableScoreWeights = {
+export const defaultConfig: TimetableScoreConfig = {
   clash: 1,
   freeDays: 1,
   times: 1,
@@ -27,14 +27,14 @@ export class TimetableScorer {
   private clashInfo: ClashInfo;
   private fewestClashes: number;
   private cache: TimetableScorerCache<number>;
-  private customWeights: TimetableScoreWeights;
+  private customWeights: TimetableScoreConfig;
 
   constructor(clashInfo: ClashInfo, fixedSessions: LinkedSession[]) {
     this.fixedSessions = fixedSessions;
     this.clashInfo = clashInfo;
     this.fewestClashes = Infinity;
     this.cache = new TimetableScorerCache();
-    this.customWeights = { ...defaultWeights };
+    this.customWeights = { ...defaultConfig };
   }
 
   score(streams: LinkedStream[], cacheKey?: number[]): number {
@@ -67,8 +67,8 @@ export class TimetableScorer {
     return score;
   }
 
-  updateWeights(newWeights: TimetableScoreWeights) {
-    this.customWeights = newWeights;
+  updateConfig(newConfig: TimetableScoreConfig) {
+    this.customWeights = newConfig;
     this.cache.clear();
   }
 }

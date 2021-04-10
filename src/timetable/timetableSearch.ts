@@ -4,6 +4,7 @@ import { GeneticSearchOptionalConfig, Parent } from './GeneticSearch';
 import { Component } from './coursesToComponents';
 import { LinkedSession, LinkedStream } from '../state';
 import { getClashInfo, ClashInfo } from './getClashInfo';
+import { TimetableScoreConfig } from './scoreTimetable';
 import * as searchWorker from './search.worker';
 
 export type Worker = Workerized<typeof searchWorker>;
@@ -28,6 +29,7 @@ class TimetableSearch {
     fixedSessions: LinkedSession[],
     ignoreCache = true,
     config: GeneticSearchOptionalConfig = {},
+    scoreConfig?: TimetableScoreConfig,
     maxSpawn?: number,
   ): Promise<TimetableSearchResult> {
     const cacheKey = this.getCacheKey(components, fixedSessions);
@@ -45,6 +47,7 @@ class TimetableSearch {
       clashInfo,
       streams,
       config,
+      scoreConfig,
       maxSpawn,
     });
 
@@ -78,12 +81,14 @@ class TimetableSearch {
     clashInfo,
     streams,
     config,
+    scoreConfig,
     maxSpawn,
   }: {
     fixedSessions: LinkedSession[],
     clashInfo: ClashInfo,
     streams: LinkedStream[][],
     config: GeneticSearchOptionalConfig,
+    scoreConfig?: TimetableScoreConfig,
     maxSpawn?: number,
   }): Promise<Parent<LinkedStream>[]> {
     const promises: Promise<Parent<LinkedStream>>[] = [];
@@ -94,6 +99,7 @@ class TimetableSearch {
         clashInfo,
         streams,
         config,
+        scoreConfig,
       }));
     }
     return Promise.all(promises);
@@ -113,5 +119,4 @@ class TimetableSearch {
 }
 
 const searcher = new TimetableSearch();
-
 export const search = searcher.search.bind(searcher);

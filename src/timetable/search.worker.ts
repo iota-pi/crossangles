@@ -1,5 +1,5 @@
 import { LinkedSession, LinkedStream } from '../state';
-import { TimetableScorer } from './scoreTimetable';
+import { TimetableScorer, TimetableScoreConfig } from './scoreTimetable';
 import { GeneticSearch, GeneticSearchOptionalConfig } from './GeneticSearch';
 import { ClashInfo } from './getClashInfo';
 
@@ -8,6 +8,7 @@ export interface RunSearchOptions {
   fixedSessions: LinkedSession[],
   streams: LinkedStream[][],
   config: GeneticSearchOptionalConfig,
+  scoreConfig?: TimetableScoreConfig,
 }
 
 
@@ -16,8 +17,11 @@ export function runSearch({
   fixedSessions,
   streams,
   config,
+  scoreConfig,
 }: RunSearchOptions) {
   const scorer = new TimetableScorer(clashInfo, fixedSessions);
+  if (scoreConfig) scorer.updateConfig(scoreConfig);
+
   const searcher = new GeneticSearch({
     ...config,
     scoreFunction: scorer.score.bind(scorer),
