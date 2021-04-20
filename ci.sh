@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$(realpath "$0")")"
 
-COMMAND_LIST="ci-install|install|build|lint|test|run|scrape|cypress"
+COMMAND_LIST="ci-install|install|build|lint|test|run|scrape"
 COMMAND=$1
 
 if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
@@ -59,13 +59,6 @@ if [[ $COMMAND == test ]]; then
       run_for_each npm test
     )
   fi
-fi
-
-if [[ $COMMAND == cypress ]]; then
-  (
-    cd app
-    npx cypress ${2:-}
-  )
 fi
 
 if [[ $COMMAND == run ]]; then

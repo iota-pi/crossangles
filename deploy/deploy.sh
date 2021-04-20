@@ -34,10 +34,6 @@ stage "Running tests"
   cd ..
   ./ci.sh lint
   ./ci.sh test
-  # Too many issues with Cypress - need to redo E2E suite some time
-  # if [[ "${PRODUCTION}" == "YES" ]]; then
-  #   ./ci.sh cypress run
-  # fi
 )
 
 stage "Setting workspace"
