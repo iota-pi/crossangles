@@ -29,6 +29,13 @@ const rawChangelog: Omit<LogEntry, 'id'>[] = [
     ],
     boring: true,
   },
+  {
+    date: new Date(2021, 3, 20),
+    summary: 'Customisable auto-timetabling',
+    details: [
+      'Accessible through settings menu',
+    ],
+  },
 ];
 
 const changelog: LogEntry[] = rawChangelog.map((item, i) => ({ ...item, id: i })).reverse();

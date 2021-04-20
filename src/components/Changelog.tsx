@@ -95,6 +95,8 @@ const Changelog = ({ onClose, open }: Props) => {
       open={open}
       onClose={handleClose}
       className={classes.root}
+      maxWidth="sm"
+      fullWidth
     >
       <DialogTitle disableTypography className={classes.dialogTitle}>
         <Typography variant="h6" className={classes.flexGrow}>
@@ -105,7 +107,6 @@ const Changelog = ({ onClose, open }: Props) => {
           aria-label="close"
           onClick={handleClose}
           className={classes.moveRight}
-          data-cy="close-dialog"
         >
           <CloseIcon />
         </IconButton>

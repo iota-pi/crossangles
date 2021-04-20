@@ -15,6 +15,7 @@ import { modalview } from 'react-ga';
 import { generalOptionList, OptionName } from '../state';
 import { getOptions } from '../state/selectors';
 import { toggleOption } from '../actions';
+import ScoringConfig from './ScoringConfig';
 
 
 const useStyles = makeStyles(theme => ({
@@ -64,6 +65,7 @@ const AppOptions = ({ onViewChangelog }: Props) => {
   const options = useSelector(getOptions);
   const { darkMode } = options;
   const [showDialog, setShowDialog] = React.useState(false);
+  const [showScoreConfig, setShowScoreConfig] = React.useState(false);
 
   const handleOpen = React.useCallback(
     () => {
@@ -83,6 +85,20 @@ const AppOptions = ({ onViewChangelog }: Props) => {
       onViewChangelog();
     },
     [handleClose, onViewChangelog],
+  );
+  const handleClickCustomise = React.useCallback(
+    () => {
+      handleClose();
+      setShowScoreConfig(true);
+    },
+    [handleClose],
+  );
+  const handleCloseScoreConfig = React.useCallback(
+    () => {
+      setShowDialog(true);
+      setShowScoreConfig(false);
+    },
+    [],
   );
 
   return (
@@ -133,6 +149,19 @@ const AppOptions = ({ onViewChangelog }: Props) => {
               />
             </div>
           ))}
+
+          <div className={classes.optionContainer}>
+            <Typography className={classes.optionLabel}>
+              Customise auto-timetable
+            </Typography>
+
+            <IconButton
+              aria-label="customise"
+              onClick={handleClickCustomise}
+            >
+              <Settings />
+            </IconButton>
+          </div>
         </DialogContent>
 
         <DialogActions className={classes.dialogActions} disableSpacing>
@@ -155,6 +184,11 @@ const AppOptions = ({ onViewChangelog }: Props) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <ScoringConfig
+        open={showScoreConfig}
+        onClose={handleCloseScoreConfig}
+      />
     </div>
   );
 };
