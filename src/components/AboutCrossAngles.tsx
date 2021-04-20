@@ -68,7 +68,6 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
             aria-label="close"
             onClick={handleClose}
             className={classes.moveRight}
-            data-cy="close-dialog"
           >
             <CloseIcon />
           </IconButton>

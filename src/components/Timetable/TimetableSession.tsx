@@ -82,7 +82,6 @@ const Session: React.FC<Props> = ({
     clashDepth > 0 ? classes.hovering : '',
     options.reducedMotion ? classes.disableTransitions : '',
   ].join(' ');
-  const { course, day, start, end, stream } = session;
   const colour = useCache(propColour);
 
   const styles: CSSProperties = React.useMemo(
