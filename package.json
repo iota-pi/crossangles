@@ -1,6 +1,7 @@
 {
-  "name": "crossangles2",
+  "name": "crossangles",
   "version": "0.1.0",
+  "license": "UNLICENSED",
   "private": true,
   "dependencies": {
     "@loadable/component": "^5.13.1",
