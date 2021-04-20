@@ -39,9 +39,9 @@ const allTimetableOptions: OptionListItem[] = [
 export const timetableOptionList = filterOptionList(allTimetableOptions);
 
 const allGeneralOptions: OptionListItem[] = [
-  { key: 'compactView', title: 'Compact Display', visible: true },
-  { key: 'darkMode', title: 'Dark Mode', visible: true },
-  { key: 'reducedMotion', title: 'Reduced Animations', visible: true },
+  { key: 'compactView', title: 'Compact display', visible: true },
+  { key: 'darkMode', title: 'Dark mode', visible: true },
+  { key: 'reducedMotion', title: 'Reduced animations', visible: true },
 ];
 export const generalOptionList = filterOptionList(allGeneralOptions);
 

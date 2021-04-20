@@ -154,7 +154,7 @@ const AppOptions = ({ onViewChangelog }: Props) => {
 
           <div className={classes.optionContainer}>
             <Typography className={classes.optionLabel}>
-              Customise auto-timetable
+              Customise auto-timetabling
             </Typography>
 
             <IconButton
