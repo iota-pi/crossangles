@@ -77,41 +77,41 @@ const SessionDetailsBase: React.FC<Props> = ({
   const details: Detail[] = React.useMemo(
     () => {
       const detailList: Detail[] = [];
-      const showLocations = options.showLocations;
-      const showEnrolments = options.showEnrolments;
-      const showWeeks = options.showWeeks;
+      const showLocations = !!(
+        options.showLocations
+        && stream.delivery !== DeliveryType.online
+        && session.location
+        && session.location.toLowerCase() !== 'online'
+      );
+      const showEnrolments = !!(
+        options.showEnrolments
+        && stream.enrols
+        && stream.enrols[1] > 0
+      );
+      const showWeeks = !!(options.showWeeks && session.weeks);
+      const detailCount = (+showLocations + +showEnrolments + +showWeeks);
+      const compact = getDuration(session) <= 1 && detailCount >= 3;
 
-      if (showLocations && stream.delivery !== DeliveryType.online) {
-        const location = session.location;
-        if (location && location.toLowerCase() !== 'online') {
-          detailList.push({ key: 'location', text: location });
-        }
+      if (showLocations) {
+        detailList.push({ key: 'location', text: session.location });
       }
 
-      if (showEnrolments && stream.enrols) {
-        const enrols = stream.enrols;
-        if (enrols[1] > 0) {
-          const enrolsText = enrols.join(' / ');
-          detailList.push({ key: 'enrols', text: enrolsText });
-        }
+      if (showEnrolments) {
+        const delimiter = compact ? '/' : ' / ';
+        const enrolsText = stream.enrols!.join(delimiter);
+        detailList.push({ key: 'enrols', text: enrolsText });
       }
 
       if (showWeeks) {
-        const weeks = session.weeks;
-        if (weeks) {
-          const weeksText = `Weeks: ${weeks.replace(/-/g, '–').replace(/,\s*/g, ', ')}`;
-          detailList.push({ key: 'weeks', text: weeksText });
-        }
+        const weeks = session.weeks!.replace(/,\s*/g, ', ');
+        const weeksText = compact ? weeks : weeks.replace(/-/g, '–');
+        detailList.push({ key: 'weeks', text: `Weeks: ${weeksText}` });
       }
 
       // Compress details onto two lines if duration is less than an hour
-      if (getDuration(session) <= 1 && detailList.length >= 3) {
-        const weeks = detailList.find(d => d.key === 'weeks');
-        if (weeks) {
-          weeks.text = weeks?.text?.toString().replace(/–/g, '-');
-        }
+      if (compact) {
         const enrolsIndex = detailList.findIndex(d => d.key === 'enrols');
-        const enrols = detailList.splice(enrolsIndex, 1)[0].text?.toString().replace(/ \/ /g, '/');
+        const enrols = detailList.splice(enrolsIndex, 1)[0].text;
         detailList[1].text += ` (${enrols})`;
       }
 
