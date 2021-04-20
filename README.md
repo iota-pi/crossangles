@@ -34,18 +34,6 @@ npm run lint
 
 The unit tests use Jest, and linting is done with ESLint.
 
-There is also an end-to-end (E2E) test suite using Cypress. These E2E tests can
-be run either with or without a graphical window. It can sometimes be useful
-when debugging to watch the tests as they run.
-
-```bash
-# Run the tests in Chrome
-./ci.sh cypress open
-
-# Run the tests headless in electron
-./ci.sh cypress run
-```
-
 ## Contributing
 
 If you wish to contribute you are very welcome to fork this repository and
