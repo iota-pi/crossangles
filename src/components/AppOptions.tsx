@@ -83,13 +83,15 @@ const AppOptions = ({ onViewChangelog }: Props) => {
     () => {
       handleClose();
       onViewChangelog();
+      modalview('changelog');
     },
     [handleClose, onViewChangelog],
   );
-  const handleClickCustomise = React.useCallback(
+  const handleClickScoreConfig = React.useCallback(
     () => {
       handleClose();
       setShowScoreConfig(true);
+      modalview('score-config');
     },
     [handleClose],
   );
@@ -157,7 +159,7 @@ const AppOptions = ({ onViewChangelog }: Props) => {
 
             <IconButton
               aria-label="customise"
-              onClick={handleClickCustomise}
+              onClick={handleClickScoreConfig}
             >
               <Settings />
             </IconButton>
