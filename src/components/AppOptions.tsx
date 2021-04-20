@@ -127,7 +127,6 @@ const AppOptions = ({ onViewChangelog }: Props) => {
             aria-label="close"
             onClick={handleClose}
             className={classes.moveRight}
-            data-cy="close-dialog"
           >
             <CloseIcon />
           </IconButton>

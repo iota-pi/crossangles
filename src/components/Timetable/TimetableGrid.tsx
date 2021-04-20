@@ -206,7 +206,6 @@ const Grid: React.FC<Props> = ({
           {days.map(day => (
             <div
               key={day}
-              data-cy="timetable-cell"
               data-time={`${daysToLetters[day]}${hour}`}
               className={classes.cell}
             />

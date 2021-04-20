@@ -156,9 +156,9 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
           flipped={minimiseEvents}
         >
           {course.autoSelect ? (
-            <Expand data-cy="hide-events" />
+            <Expand />
           ) : (
-            <Close data-cy="remove-course" />
+            <Close />
           )}
         </CourseActionButton>
       </ListItem>

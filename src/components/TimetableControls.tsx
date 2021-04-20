@@ -118,7 +118,6 @@ export const TimetableControls = ({
               onClick={onUndo}
               color="primary"
               disabled={!canUndo}
-              data-cy="undo-button"
             >
               <Undo />
             </IconButton>
@@ -132,7 +131,6 @@ export const TimetableControls = ({
               onClick={onRedo}
               color="primary"
               disabled={!canRedo}
-              data-cy="redo-button"
             >
               <Redo />
             </IconButton>
@@ -146,7 +144,6 @@ export const TimetableControls = ({
               onClick={!isUpdating ? onUpdate : undefined}
               disabled={timetableIsEmpty}
               className={updateClass}
-              data-cy="update-button"
             >
               <Refresh />
             </IconButton>
@@ -175,7 +172,6 @@ export const TimetableControls = ({
               onClick={onSaveAsImage}
               color="primary"
               disabled={isSavingImage}
-              data-cy="save-as-image"
             >
               {isSavingImage ? (
                 <CircularProgress size={24} />
@@ -192,7 +188,6 @@ export const TimetableControls = ({
           <IconButton
             onClick={onCreateCustom}
             color="primary"
-            data-cy="create-custom-event"
           >
             <Event />
           </IconButton>

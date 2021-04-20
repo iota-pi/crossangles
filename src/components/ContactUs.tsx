@@ -152,7 +152,6 @@ class CreateCustom extends PureComponent<Props, State> {
             aria-label="close"
             onClick={this.handleClose}
             className={classes.moveRight}
-            data-cy="close-dialog"
           >
             <CloseIcon />
           </IconButton>
@@ -169,7 +168,6 @@ class CreateCustom extends PureComponent<Props, State> {
             autoFocus
             className={classes.paddingBottom}
             fullWidth
-            data-cy="contact-us-name"
           />
 
           <TextField
@@ -187,7 +185,6 @@ class CreateCustom extends PureComponent<Props, State> {
             error={this.state.showEmailError}
             className={classes.paddingBottom}
             fullWidth
-            data-cy="contact-us-email"
           />
 
           <TextField
@@ -198,7 +195,6 @@ class CreateCustom extends PureComponent<Props, State> {
             fullWidth
             multiline
             rows={5}
-            data-cy="contact-us-email"
           />
         </DialogContent>
 
@@ -209,7 +205,6 @@ class CreateCustom extends PureComponent<Props, State> {
             fullWidth
             disabled={!this.canSubmit()}
             onClick={this.handleClickSave}
-            data-cy="contact-us-submit"
           >
             Send Message
           </Button>

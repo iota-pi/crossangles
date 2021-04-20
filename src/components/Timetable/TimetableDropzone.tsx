@@ -87,7 +87,6 @@ const Dropzone: React.FC<Props> = ({
     <div
       className={classes.root}
       style={styles}
-      data-cy={`timetable-dropzone-${session.day}${session.start}`}
     >
       <div
         className={classes.background}

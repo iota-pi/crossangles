@@ -131,7 +131,7 @@ const AutocompleteOption: React.FC<OptionProps> = ({ option, value }: OptionProp
   const clarification = getClarificationText(option);
 
   return (
-    <div data-cy="autocomplete-option" className={classes.autocompleteOption}>
+    <div className={classes.autocompleteOption}>
       {codeParts.map(part => (
         <span key={part.key} style={{ fontWeight: part.highlight ? 500 : 400 }}>
           {part.text}

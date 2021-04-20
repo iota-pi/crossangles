@@ -333,7 +333,6 @@ function TimetableTable({
   return (
     <div
       className={rootClasses.join(' ')}
-      data-cy="timetable"
       id="timetable-display"
     >
       <TransitionGroup>

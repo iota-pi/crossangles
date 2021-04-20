@@ -39,10 +39,7 @@ export const ColourPicker: React.FC<Props> = (
   const classes = useStyles();
 
   return (
-    <div
-      className={classes.root}
-      data-cy="colour-picker"
-    >
+    <div className={classes.root}>
       <div
         className={classes.colourContainer}
         style={{ width: size * columns }}

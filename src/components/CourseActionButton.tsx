@@ -43,7 +43,6 @@ export const CourseActionButton: React.FC<Props> = ({
       <IconButton
         size="small"
         onClick={onClick}
-        data-cy="hide-events"
         className={`${classes.expandIcon} ${flipped ? classes.flipped : ''}`}
       >
         {children}

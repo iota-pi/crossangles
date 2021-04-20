@@ -51,7 +51,6 @@ function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props)
         height: size,
         cursor: onClick ? 'pointer' : undefined,
       }}
-      data-cy="colour-selector"
       onClick={onClick}
     >
       {isSelected ? <Check /> : null}

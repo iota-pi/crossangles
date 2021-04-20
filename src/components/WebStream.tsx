@@ -46,7 +46,6 @@ function WebStream({ checked, stream, onChange }: Props) {
           value
         />
       )}
-      data-cy="web-stream-toggle"
     />
   );
 }

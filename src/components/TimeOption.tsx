@@ -133,20 +133,17 @@ export const TimeOption = ({
                       disableFocusRipple
                       size="small"
                       onClick={() => onClickClearDay(index)}
-                      data-cy="clear-input"
                     >
                       <CloseIcon />
                     </IconButton>
                   </InputAdornment>
                 ),
               }}
-              data-cy="custom-event-day"
             >
               {dayOptions.map(item => (
                 <MenuItem
                   value={item.letter}
                   key={item.text}
-                  data-cy="custom-event-day-item"
                 >
                   {item.text}
                 </MenuItem>
@@ -178,20 +175,17 @@ export const TimeOption = ({
                       disableFocusRipple
                       size="small"
                       onClick={() => onClickClearTime(index)}
-                      data-cy="clear-input"
                     >
                       <CloseIcon />
                     </IconButton>
                   </InputAdornment>
                 ),
               }}
-              data-cy="custom-event-time"
             >
               {timeOptions.map(item => (
                 <MenuItem
                   value={item.time}
                   key={item.text}
-                  data-cy="custom-event-time-item"
                 >
                   {item.text}
                 </MenuItem>

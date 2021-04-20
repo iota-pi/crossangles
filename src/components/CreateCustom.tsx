@@ -295,7 +295,6 @@ class CreateCustom extends PureComponent<Props, State> {
             aria-label="close"
             onClick={this.handleClose}
             className={classes.moveRight}
-            data-cy="close-dialog"
           >
             <CloseIcon />
           </IconButton>
@@ -312,7 +311,6 @@ class CreateCustom extends PureComponent<Props, State> {
             autoFocus
             className={classes.paddingBottom}
             fullWidth
-            data-cy="custom-event-name"
           />
 
           <Grid container spacing={1} className={classes.paddingBottom}>
@@ -328,13 +326,11 @@ class CreateCustom extends PureComponent<Props, State> {
                 error={this.durationError()}
                 onChange={this.handleChangeDuration}
                 helperText={this.durationError() ? 'Events cannot be timetabled past midnight' : ''}
-                data-cy="custom-event-duration"
               >
                 {durationOptions.map(item => (
                   <MenuItem
                     value={item.duration}
                     key={item.text}
-                    data-cy="custom-event-duration-item"
                   >
                     {item.text}
                   </MenuItem>
@@ -369,7 +365,6 @@ class CreateCustom extends PureComponent<Props, State> {
             fullWidth
             disabled={!this.canSubmit()}
             onClick={this.handleClickSave}
-            data-cy="custom-event-submit"
           >
             {!this.props.editing ? 'Add Event' : 'Save Event'}
           </Button>

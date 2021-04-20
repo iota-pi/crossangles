@@ -140,15 +140,11 @@ const Session: React.FC<Props> = ({
       <div
         className={rootClasses}
         style={styles}
-        data-cy="timetable-session"
-        data-session={`${course.code}-${stream.component}-${day}${start}-${end}`}
-        data-snapped={+isSnapped}
-        data-dragging={+isDragging}
+        data-session
       >
         <div
           className={classes.background}
           style={backgroundStyle}
-          data-cy="timetable-session-background"
         />
 
         <SessionDetails
