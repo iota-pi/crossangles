@@ -28,7 +28,6 @@ export const screenshot = async (
 
     logger.info('looking for a session in the timetable');
     await Promise.race([
-      page.waitForSelector('[data-cy="timetable-session"]', { timeout: 5000 }),
       page.waitForSelector('[data-session]', { timeout: 5000 }),
     ]);
 
