@@ -106,8 +106,12 @@ const SessionDetailsBase: React.FC<Props> = ({
 
       // Compress details onto two lines if duration is less than an hour
       if (getDuration(session) <= 1 && detailList.length >= 3) {
+        const weeks = detailList.find(d => d.key === 'weeks');
+        if (weeks) {
+          weeks.text = weeks?.text?.toString().replace(/–/g, '-');
+        }
         const enrolsIndex = detailList.findIndex(d => d.key === 'enrols');
-        const enrols = detailList.splice(enrolsIndex, 1)[0].text;
+        const enrols = detailList.splice(enrolsIndex, 1)[0].text?.toString().replace(/ \/ /g, '/');
         detailList[1].text += ` (${enrols})`;
       }
 
