@@ -30,19 +30,6 @@ const useStyles = makeStyles(theme => ({
       transition: theme.transitions.create(['box-shadow', 'height']),
       boxShadow: theme.shadows[8],
     },
-
-    // '&::after': {
-    //   content: '""',
-    //   display: 'block',
-    //   position: 'absolute',
-    //   top: 0,
-    //   left: 0,
-    //   right: 0,
-    //   bottom: 0,
-    //   borderWidth: 3,
-    //   borderStyle: 'solid',
-    //   borderColor: 'rgba(0, 0, 0, 0.15)',
-    // },
   },
   disableTransitions: {
     transition: 'none !important',
