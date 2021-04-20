@@ -78,16 +78,16 @@ const ScoringConfig = ({ onClose, open }: Props) => {
   const initialConfig = useSelector((state: RootState) => state.scoreConfig);
   const [config, setConfig] = React.useState(initialConfig);
   const onChange = React.useCallback(
-    (changedKey: keyof TimetableScoreConfig) => {
-      return (event: React.ChangeEvent<any>, _value: number | number[]) => {
+    (changedKey: keyof TimetableScoreConfig) => (
+      (event: React.ChangeEvent<any>, _value: number | number[]) => {
         const value = _value as number;
         const change = value - config[changedKey];
         const configEntries = Object.entries(config).filter(([key, _]) => key !== changedKey);
-        configEntries.sort(([_, a], [__, b]) => change < 0 ? b - a : a - b);
+        configEntries.sort(([_, a], [__, b]) => (change < 0 ? b - a : a - b));
         let remainingChange = -change;
         for (let i = 0; i < configEntries.length; ++i) {
-          let remainingEntries = configEntries.length - i;
-          let thisChange = remainingChange / remainingEntries;
+          const remainingEntries = configEntries.length - i;
+          const thisChange = remainingChange / remainingEntries;
           const tentativeValue = configEntries[i][1] + thisChange;
           const boundedValue = Math.min(MAX_WEIGHT, Math.max(MIN_WEIGHT, tentativeValue));
           const actualChange = boundedValue - configEntries[i][1];
@@ -97,8 +97,8 @@ const ScoringConfig = ({ onClose, open }: Props) => {
 
         const newConfig = { ...Object.fromEntries(configEntries), [changedKey]: value };
         setConfig(newConfig as typeof config);
-      };
-    },
+      }
+    ),
     [config],
   );
   const handleClose = React.useCallback(

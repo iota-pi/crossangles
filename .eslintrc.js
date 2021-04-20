@@ -22,8 +22,9 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+    '@typescript-eslint/no-shadow': "error",
     '@typescript-eslint/no-use-before-define': ['error', { 'functions': false }],
-    '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_$' }],
+    '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_+$' }],
     'arrow-parens': ['error', 'as-needed'],
     'class-methods-use-this': 'off',
     'import/no-cycle': 'off',
@@ -50,6 +51,7 @@ module.exports = {
         message: '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
       },
     ],
+    'no-shadow': 'off',
     'object-curly-newline': 'off',
     'prefer-destructuring': 'off',
     'radix': 'off',
