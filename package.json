@@ -3,5 +3,6 @@
     "test": "./ci.sh test",
     "build": "./ci.sh build"
   },
+  "license": "UNLICENSED",
   "dependencies": {}
 }
