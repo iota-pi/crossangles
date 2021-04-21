@@ -292,7 +292,7 @@ const unsw: CampusAdditional = {
         {
           component: 'Core Theology',
           times: [{ time: 'T16' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
