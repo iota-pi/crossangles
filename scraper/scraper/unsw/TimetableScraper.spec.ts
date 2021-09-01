@@ -23,7 +23,7 @@ const baseStreamTableData: StreamTableData = {
   'Class Nbr': '8765',
   'Class Notes': '',
   'Enrols/Capacity': '326/352',
-  'Instruction Mode': 'In Person',
+  'Mode of Delivery': 'In Person',
   'Meeting Dates': 'Standard dates',
   'Meeting Information': '',
   'Offering Period': '17/02/2020 - 17/05/2020',

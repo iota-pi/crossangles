@@ -32,7 +32,7 @@ export interface StreamTableData {
   'Offering Period': string,
   'Meeting Dates': string,
   'Census Date': string,
-  'Instruction Mode': string,
+  'Mode of Delivery': string,
   'Consent': string,
   'Meeting Information': string,
   'Class Notes': string,
@@ -180,7 +180,7 @@ export class TimetableScraper {
         }
         const stream: StreamData = {
           component: getComponent(data),
-          delivery: getDelivery(data['Instruction Mode']),
+          delivery: getDelivery(data['Mode of Delivery']),
           enrols: getEnrols(data['Enrols/Capacity']),
           full: getIsFull(data.Status),
           notes: data['Class Notes'] || undefined,
@@ -274,7 +274,7 @@ export function shouldSkipStream(data: StreamTableData) {
   }
 
   // Skip intensive courses
-  if (data['Instruction Mode'].toLowerCase() === 'intensive mode') {
+  if (data['Mode of Delivery'].toLowerCase() === 'intensive mode') {
     return true;
   }
 
