@@ -45,7 +45,13 @@ export class Scraper {
 
       const result = await handler(content, url).catch((error: Error) => {
         const { message, stack } = error;
-        this.logger.error('Error while scraping', { url, error: { message, stack }, });
+        this.logger.error(
+          'Error while scraping',
+          {
+            error: { message, stack },
+            url,
+          },
+        );
         return null;
       });
       this.parseTimes.push(performance.now() - preParseTime);
