@@ -43,8 +43,9 @@ export class Scraper {
       const preParseTime = performance.now();
       this.fetchTimes.push(preParseTime - preFetchTime);
 
-      const result = await handler(content, url).catch(error => {
-        this.logger.error('Error while scraping', { url, error });
+      const result = await handler(content, url).catch((error: Error) => {
+        const { message, stack } = error;
+        this.logger.error('Error while scraping', { url, error: { message, stack }, });
         return null;
       });
       this.parseTimes.push(performance.now() - preParseTime);
