@@ -2,3 +2,4 @@
 /node_modules
 /output
 /unsw-snapshot-full.json.br
+test_*.json
