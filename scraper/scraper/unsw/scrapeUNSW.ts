@@ -66,7 +66,7 @@ export async function scrapeUNSW(
   if (currentTerm !== null) {
     results[currentTerm].current = true;
   }
-  logger.info(`Current term is ${currentTerm}`);
+  logger.info(`Current term is ${currentTerm ? currentTerm + 1 : currentTerm}`);
 
   return results;
 }
