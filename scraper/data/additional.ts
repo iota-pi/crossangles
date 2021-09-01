@@ -27,8 +27,8 @@ const unsw: CampusAdditional = {
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/698/responses/new',
-        signupValidFor: [{ year: 2021, term: 1 }],
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/768/responses/new',
+        signupValidFor: [{ year: 2021, term: 3 }],
       },
       streams: [
         {
@@ -44,17 +44,17 @@ const unsw: CampusAdditional = {
         {
           component: 'The Bible Talks',
           times: [{ time: 'H12' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
         {
           component: 'Growth Groups',
-          times: [{ time: 'M12.5-14' }],
+          times: [{ time: 'M13-14.5' }],
           delivery: DeliveryType.either,
         },
         {
           component: 'Growth Groups',
           times: [{ time: 'T11-12.5' }],
-          delivery: DeliveryType.person,
+          delivery: DeliveryType.either,
         },
         {
           component: 'Growth Groups',
@@ -64,12 +64,12 @@ const unsw: CampusAdditional = {
         {
           component: 'Growth Groups',
           times: [{ time: 'H10-11.5' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
         {
           component: 'Growth Groups',
           times: [{ time: 'F11-12.5' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
@@ -79,7 +79,7 @@ const unsw: CampusAdditional = {
         {
           component: 'Core Theology',
           times: [{ time: 'H14' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
@@ -88,8 +88,13 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Core Training',
+          times: [{ time: 'W15' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Core Training',
           times: [{ time: 'H13' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
       ],
     },
@@ -416,7 +421,7 @@ const unsw: CampusAdditional = {
         {
           component: 'Core Training',
           times: [{ time: 'T15' }],
-          delivery: DeliveryType.either,
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
