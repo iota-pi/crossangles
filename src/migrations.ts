@@ -70,6 +70,45 @@ export const migrations = {
     }
     return { ...state, courses: newCourses };
   },
+  5: (state: any): any => {
+    // Change of times for term 3, 2021
+    const term = '2021~T3';
+    const timetable: SessionManagerData | undefined = state.timetables[term];
+    if (timetable !== undefined) {
+      const newTimetable: SessionManagerData = { ...timetable };
+      const updateIds: { [id: string]: string } = {
+        'CBS~Growth Groups~M13-14.5': 'CBS~Growth Groups~M13',
+        'CBS~Growth Groups~T11-12.5': 'CBS~Growth Groups~T11',
+        'CBS~Growth Groups~W11-12.5': 'CBS~Growth Groups~W12',
+        'CBS~Growth Groups~H10-11.5': 'CBS~Growth Groups~H10',
+        'CBS~Growth Groups~F11-12.5': 'CBS~Growth Groups~F11',
+        'CBS~The Bible Talks~T13': 'CBS~The Bible Talks~T12',
+        'CBS~The Bible Talks~H12': 'CBS~The Bible Talks~H11',
+      };
+      newTimetable.map = newTimetable.map.map(([id, placement]) => {
+        const oldStream = placement.session.stream;
+        const newStream = updateIds[oldStream] || oldStream;
+        if (newStream) {
+          const newPlacement: typeof placement = {
+            ...placement,
+            session: {
+              ...placement.session,
+              stream: newStream,
+            },
+          };
+          return [id, newPlacement];
+        }
+        return [id, placement];
+      });
+      newTimetable.order = newTimetable.order.map(id => updateIds[id] || id);
+      newTimetable.renderOrder = newTimetable.renderOrder.map(id => updateIds[id] || id);
+      return {
+        ...state,
+        timetables: { ...state.timetables, [term]: newTimetable },
+      };
+    }
+    return state;
+  },
 };
 
 export default migrations;
