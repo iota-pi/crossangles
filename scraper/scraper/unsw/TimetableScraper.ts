@@ -216,6 +216,10 @@ export class TimetableScraper {
         if (term === undefined) {
           continue;
         }
+        if (term < 1 || term > 3) {
+          logger.info(`Skipping ${code}; term "${term}" is not in expected range 1..3`);
+          continue;
+        }
 
         const course: CourseData = courses[term - 1];
         course.streams.push(stream);
