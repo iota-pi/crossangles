@@ -98,16 +98,23 @@ class TimetableContainer extends PureComponent<Props, State> {
     return state;
   }
 
+  componentDidMount() {
+    this.ensureTimetableCallback();
+  }
+
   componentDidUpdate() {
+    this.ensureTimetableCallback();
+  }
+
+  private ensureTimetableCallback = () => {
     if (!this.state.timetable.callback) {
-      // eslint-disable-next-line react/no-did-update-set-state
       this.setState(({ timetable }) => {
         const newTimetable = new SessionManager(timetable);
         newTimetable.callback = data => this.handleTimetableCallback(data);
         return { timetable: newTimetable };
       });
     }
-  }
+  };
 
   private handleUndo = () => {
     this.props.dispatch(undoTimetable());
