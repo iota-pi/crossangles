@@ -12,7 +12,7 @@ const persistConfig: PersistConfig = {
   key: 'root',
   storage,
   transforms,
-  version: 4,
+  version: 5,
   migrate: createMigrate(migrations),
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
