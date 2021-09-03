@@ -1,7 +1,7 @@
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 import { TimetableScorerCache } from './TimetableScorerCache';
-import { LinkedSession, LinkedStream } from '../state';
+import { DayLetter, LinkedSession, LinkedStream } from '../state';
 
 export interface TimetableScore {
   score: number,
@@ -59,6 +59,7 @@ export class TimetableScorer {
     score += scoreFreeDays(timetable) * this.customWeights.freeDays;
     score += scoreTimes(timetable) * this.customWeights.times;
     score += scoreDayLength(timetable) * this.customWeights.dayLength;
+    score += scoreGGAndTBTDays(timetable);
 
     if (cacheKey) {
       this.cache.set(cacheKey, score);
@@ -119,6 +120,30 @@ export function scoreDayLength(sessions: LinkedSession[]): number {
   if (ends.F > -1) total += ends.F - starts.F;
 
   return total * perHour;
+}
+
+export function scoreGGAndTBTDays(sessions: LinkedSession[]) {
+  let tbtDay: DayLetter | null = null;
+  let ggDay: DayLetter | null = null;
+
+  for (let i = 0; i < sessions.length; ++i) {
+    const s = sessions[i];
+    if (s.course.code === 'CBS') {
+      if (s.stream.component === 'The Bible Talks') {
+        tbtDay = s.day;
+        if (ggDay) {
+          break;
+        }
+      } else if (s.stream.component === 'Growth Groups') {
+        ggDay = s.day;
+        if (tbtDay) {
+          break;
+        }
+      }
+    }
+  }
+
+  return tbtDay && ggDay && tbtDay === ggDay ? 100 : 0;
 }
 
 export function countClashes(
