@@ -280,27 +280,27 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Core Theology',
-          times: [{ time: 'T16' }],
+          times: [{ time: 'T16', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
-          times: [{ time: 'W14' }],
+          times: [{ time: 'W14', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'T15' }],
+          times: [{ time: 'T15', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'W15' }],
+          times: [{ time: 'W15', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'H14' }],
+          times: [{ time: 'H14', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
