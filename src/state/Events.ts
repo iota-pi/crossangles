@@ -3,19 +3,24 @@ import { CourseMap, CourseId, CourseData, getCourseId } from './Course';
 export interface AdditionalEvent {
   id: string,
   name: string,
+  hideIfOnlyEvent?: boolean,
 }
 
 
-export const getEventId = (course: CourseData, component: string) => `${getCourseId(course)}~${component}`;
+export const getEventId = (
+  course: CourseData,
+  component: string,
+) => `${getCourseId(course)}~${component}`;
 
 export function getEvents(course: CourseData): AdditionalEvent[] {
   if (!course.isAdditional) {
     return [];
   }
 
-  const events = course.streams.map(s => ({
+  const events: AdditionalEvent[] = course.streams.map(s => ({
     id: getEventId(course, s.component),
     name: s.component,
+    hideIfOnlyEvent: getEventId(course, s.component) === 'CBS~Lunch',
   }));
   const eventIds = events.map(e => e.id);
   const uniqueEvents = events.filter((e, i) => eventIds.indexOf(e.id) === i);

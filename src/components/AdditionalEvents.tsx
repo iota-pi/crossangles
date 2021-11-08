@@ -55,8 +55,14 @@ const AdditionalEventsComponent = ({
   const classes = useStyles();
   const { darkMode } = useSelector(getOptions);
 
-  const eventList = getEvents(course);
-  const eventIds = events.map(e => e.id);
+  const baseEventList = getEvents(course);
+  const baseEventIds = baseEventList.map(e => e.id);
+  const selectedEventIds = events.map(e => e.id).filter(e => baseEventIds.indexOf(e) > -1);
+  const eventList = (
+    selectedEventIds.length > 0
+      ? baseEventList
+      : baseEventList.filter(e => !e.hideIfOnlyEvent)
+  );
 
   const eventContainerClasses = [classes.eventContainer];
   if (eventList.length === 4) {
@@ -73,7 +79,7 @@ const AdditionalEventsComponent = ({
           <FormControlLabel
             control={(
               <Checkbox
-                checked={eventIds.includes(event.id)}
+                checked={selectedEventIds.includes(event.id)}
                 onChange={() => onToggleEvent(event)}
                 color={darkMode ? 'primary' : 'secondary'}
                 value={event.id}
