@@ -20,7 +20,7 @@ export function getEvents(course: CourseData): AdditionalEvent[] {
   const events: AdditionalEvent[] = course.streams.map(s => ({
     id: getEventId(course, s.component),
     name: s.component,
-    hideIfOnlyEvent: getEventId(course, s.component) === 'CBS~Lunch',
+    hideIfOnlyEvent: getEventId(course, s.component) === 'CBS~Lunch' ? true : undefined,
   }));
   const eventIds = events.map(e => e.id);
   const uniqueEvents = events.filter((e, i) => eventIds.indexOf(e.id) === i);
