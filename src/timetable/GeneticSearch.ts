@@ -5,7 +5,8 @@
  * method with a lower `maxIterations` and run it multiple times, keeping
  * the best.
  *
- * Please note that `mutate` and `scoreFunction` are hot code
+ * Please note that `mutate` and `scoreFunction` are hot (performance-critical)
+ * code
  */
 /* eslint-disable no-param-reassign */
 
