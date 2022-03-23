@@ -27,18 +27,18 @@ const unsw: CampusAdditional = {
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/768/responses/new',
-        signupValidFor: [{ year: 2021, term: 3 }],
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/813/responses/new',
+        signupValidFor: [{ year: 2022, term: 1 }],
       },
       streams: [
         {
           component: 'The Bible Talks',
-          times: [{ time: 'T13' }],
-          delivery: DeliveryType.either,
+          times: [{ time: 'T12' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'The Bible Talks',
-          times: [{ time: 'W13' }],
+          times: [{ time: 'W12' }],
           delivery: DeliveryType.person,
         },
         {
@@ -47,59 +47,134 @@ const unsw: CampusAdditional = {
           delivery: DeliveryType.person,
         },
         {
-          component: 'Growth Groups',
-          times: [{ time: 'M13-14.5' }],
-          delivery: DeliveryType.either,
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'T11-12.5' }],
-          delivery: DeliveryType.either,
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'W11-12.5' }],
+          component: 'Bible Study',
+          times: [{ time: 'M12' }],
           delivery: DeliveryType.person,
         },
         {
-          component: 'Growth Groups',
-          times: [{ time: 'H10-11.5' }],
+          component: 'Bible Study (Art & Design)',
+          times: [{ time: 'M12' }],
           delivery: DeliveryType.person,
         },
         {
-          component: 'Growth Groups',
-          times: [{ time: 'F11-12.5' }],
+          component: 'Bible Study',
+          times: [{ time: 'M13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study (Art & Design)',
+          times: [{ time: 'T10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'T11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'T14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'W11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'W16' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study (Art & Design)',
+          times: [{ time: 'H10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'H11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'H15' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'F12' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
-          times: [{ time: 'T16' }],
+          times: [{ time: 'T16', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
-          times: [{ time: 'H14' }],
+          times: [{ time: 'W14', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'T15' }],
+          times: [{ time: 'T15', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'W15' }],
+          times: [{ time: 'W15', weeks: '2-10' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
+          times: [{ time: 'H14', weeks: '2-10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'M11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'T17' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'W10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'H10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'F13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Lunch',
+          times: [{ time: 'T13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Lunch',
+          times: [{ time: 'W13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Lunch',
           times: [{ time: 'H13' }],
           delivery: DeliveryType.person,
         },
       ],
     },
   ],
-  '2021~3': [
+  '2022~1': [
     {
       code: 'CBS',
       name: 'Campus Bible Study',
@@ -108,89 +183,154 @@ const unsw: CampusAdditional = {
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/768/responses/new',
-        signupValidFor: [{ year: 2021, term: 3 }],
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/813/responses/new',
+        signupValidFor: [{ year: 2022, term: 1 }],
       },
       streams: [
         {
           component: 'The Bible Talks',
-          times: [{ time: 'M12' }],
-          delivery: DeliveryType.online,
-        },
-        {
-          component: 'The Bible Talks',
           times: [{ time: 'T12' }],
-          delivery: DeliveryType.online,
+          delivery: DeliveryType.person,
         },
         {
           component: 'The Bible Talks',
-          times: [{ time: 'W13' }],
-          delivery: DeliveryType.online,
-        },
-        {
-          component: 'The Bible Talks',
-          times: [{ time: 'H11' }],
-          delivery: DeliveryType.online,
-        },
-        {
-          component: 'The Bible Talks',
-          times: [{ time: 'F12' }],
-          delivery: DeliveryType.online,
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'M13' }],
-          delivery: DeliveryType.online,
-        },
-        {
-          component: 'Growth Groups',
-          times: [{ time: 'T11' }],
-          delivery: DeliveryType.online,
-        },
-        {
-          component: 'Growth Groups',
           times: [{ time: 'W12' }],
-          delivery: DeliveryType.online,
+          delivery: DeliveryType.person,
         },
         {
-          component: 'Growth Groups',
+          component: 'The Bible Talks',
+          times: [{ time: 'H12' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'M12' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study (Art & Design)',
+          times: [{ time: 'M12' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'M13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study (Art & Design)',
+          times: [{ time: 'T10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'T11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'T14' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'W11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'W16' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study (Art & Design)',
           times: [{ time: 'H10' }],
-          delivery: DeliveryType.online,
+          delivery: DeliveryType.person,
         },
         {
-          component: 'Growth Groups',
-          times: [{ time: 'F11' }],
-          delivery: DeliveryType.online,
+          component: 'Bible Study',
+          times: [{ time: 'H11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'H15' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study',
+          times: [{ time: 'F12' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
-          times: [{ time: 'T16' }],
-          delivery: DeliveryType.online,
+          times: [{ time: 'T16', weeks: '2-10' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Theology',
-          times: [{ time: 'H14' }],
-          delivery: DeliveryType.online,
+          times: [{ time: 'W14', weeks: '2-10' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'T15' }],
-          delivery: DeliveryType.online,
+          times: [{ time: 'T15', weeks: '2-10' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
-          times: [{ time: 'W15' }],
-          delivery: DeliveryType.online,
+          times: [{ time: 'W15', weeks: '2-10' }],
+          delivery: DeliveryType.person,
         },
         {
           component: 'Core Training',
+          times: [{ time: 'H14', weeks: '2-10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'M11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'T17' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'W10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'H10' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Prayer Group',
+          times: [{ time: 'F13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Lunch',
+          times: [{ time: 'T13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Lunch',
+          times: [{ time: 'W13' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Lunch',
           times: [{ time: 'H13' }],
-          delivery: DeliveryType.online,
+          delivery: DeliveryType.person,
         },
       ],
     },
   ],
-  '2022~1': [
+  '2022~2': [
     {
       code: 'CBS',
       name: 'Campus Bible Study',
