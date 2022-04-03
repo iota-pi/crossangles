@@ -339,8 +339,8 @@ const unsw: CampusAdditional = {
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/813/responses/new',
-        signupValidFor: [{ year: 2022, term: 1 }],
+        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/849/responses/new',
+        signupValidFor: [{ year: 2022, term: 2 }],
       },
       streams: [
         {
@@ -360,11 +360,6 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Bible Study',
-          times: [{ time: 'M12' }],
-          delivery: DeliveryType.person,
-        },
-        {
-          component: 'Bible Study (Art & Design)',
           times: [{ time: 'M12' }],
           delivery: DeliveryType.person,
         },
@@ -394,11 +389,6 @@ const unsw: CampusAdditional = {
           delivery: DeliveryType.person,
         },
         {
-          component: 'Bible Study',
-          times: [{ time: 'W16' }],
-          delivery: DeliveryType.person,
-        },
-        {
           component: 'Bible Study (Art & Design)',
           times: [{ time: 'H10' }],
           delivery: DeliveryType.person,
@@ -406,6 +396,11 @@ const unsw: CampusAdditional = {
         {
           component: 'Bible Study',
           times: [{ time: 'H11' }],
+          delivery: DeliveryType.person,
+        },
+        {
+          component: 'Bible Study (Art & Design)',
+          times: [{ time: 'H13' }],
           delivery: DeliveryType.person,
         },
         {
@@ -450,7 +445,7 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Prayer Group',
-          times: [{ time: 'T17' }],
+          times: [{ time: 'T10' }],
           delivery: DeliveryType.person,
         },
         {
