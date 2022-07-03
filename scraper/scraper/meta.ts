@@ -1,7 +1,7 @@
 import { Meta } from '../../app/src/state/Meta';
 import getAEST from '../getAEST';
 
-function generateMetaData(term: number, sources: string[], year?: number): Meta {
+function generateMetaData(term: number, termStart: string, sources: string[], year?: number): Meta {
   const now = getAEST();
   const currentYear = now.year();
   const currentMonth = now.month();
@@ -10,11 +10,12 @@ function generateMetaData(term: number, sources: string[], year?: number): Meta 
   const guessedYear = term === 1 && currentMonth >= 6 ? currentYear + 1 : currentYear;
 
   return {
-    year: year || guessedYear,
-    term,
     sources,
+    term,
+    termStart,
     updateDate,
     updateTime,
+    year: year || guessedYear,
   };
 }
 

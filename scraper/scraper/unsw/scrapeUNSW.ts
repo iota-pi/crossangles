@@ -1,7 +1,7 @@
 import { ClassUtilScraper, CLASSUTIL } from './ClassUtilScraper';
 import { CampusData } from '../Scraper';
 import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
-import { getStreamId, StreamData } from '../../../app/src/state/Stream';
+import { getStreamId, getTermStart, StreamData } from '../../../app/src/state/Stream';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import generateMetaData from '../meta';
 import { getLogger } from '../../logging';
@@ -42,7 +42,8 @@ export async function scrapeUNSW(
   const results: CampusData[] = [];
   for (let i = 0; i < terms.length; ++i) {
     const term = i + 1;
-    const meta = generateMetaData(term, sources);
+    const termStart = getTermStart(timetableData[i].flatMap(c => c.streams));
+    const meta = generateMetaData(term, termStart.toDateString(), sources);
 
     logger.info(`Merging data for term ${term}`);
     const mergedData = mergeData(classutilData[i], timetableData[i]);

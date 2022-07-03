@@ -29,7 +29,7 @@ export async function scrapeUSYD(
   const currentTerm = chooseCurrentTerm(year);
   for (let i = 0; i < timetableData.length; ++i) {
     const term = i + 1;
-    const meta = generateMetaData(term, [timetable.baseUrl], year);
+    const meta = generateMetaData(term, '', [timetable.baseUrl], year);
 
     logger.info(`Including additional data for term ${term}`);
     const termString = getCurrentTerm(meta);
