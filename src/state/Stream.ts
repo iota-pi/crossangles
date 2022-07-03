@@ -52,6 +52,7 @@ export function getComponentName(stream: Pick<StreamData, 'component'>) {
   const code = stream.component;
   const nameMap: { [key: string]: string } = {
     CLN: 'Clinical',
+    EXM: 'Exam',
     FLD: 'Field Studies',
     HON: 'Honours',
     LAB: 'Lab',
