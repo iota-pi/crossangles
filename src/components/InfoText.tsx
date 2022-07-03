@@ -131,7 +131,7 @@ const InfoText = ({
         </Typography>
       )}
 
-      <Typography paragraph>
+      <Typography {...typographyProps} paragraph>
         If you would like to contribute or view the source code, you can find
         {' '}
         <a
