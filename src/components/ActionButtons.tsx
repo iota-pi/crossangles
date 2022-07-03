@@ -137,7 +137,7 @@ export const ActionButtons = withStyles(styles)(({
           onClick={onSaveAsICS}
           disabled={disabled || isSavingICS}
         >
-          Save to Calendar
+          Add to Calendar
 
           {isSavingICS && (
             <CircularProgress

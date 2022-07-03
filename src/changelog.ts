@@ -36,6 +36,13 @@ const rawChangelog: Omit<LogEntry, 'id'>[] = [
       'Accessible through settings menu',
     ],
   },
+  {
+    date: new Date(2022, 6, 3),
+    summary: 'Add timetable to calendar',
+    details: [
+      'Replaces the previous save-as-image feature',
+    ],
+  },
 ];
 
 const changelog: LogEntry[] = rawChangelog.map((item, i) => ({ ...item, id: i })).reverse();
