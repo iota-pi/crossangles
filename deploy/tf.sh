@@ -22,7 +22,6 @@ docker_args=()
   export TF_VAR_app_version="$(./version.sh app)"
   export TF_VAR_scraper_version="$(./version.sh scraper)"
   export TF_VAR_contact_version="$(./version.sh contact)"
-  export TF_VAR_image_version="$(./version.sh image)"
   export TF_IN_AUTOMATION="1"
 
   docker run \
@@ -37,7 +36,6 @@ docker_args=()
     -e "TF_VAR_app_version" \
     -e "TF_VAR_scraper_version" \
     -e "TF_VAR_contact_version" \
-    -e "TF_VAR_image_version" \
     -e "TF_IN_AUTOMATION" \
     -v "$(realpath ../infra):/infra" \
     -w "/infra" \

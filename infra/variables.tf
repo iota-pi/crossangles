@@ -20,10 +20,6 @@ variable "contact_version" {
   type = string
 }
 
-variable "image_version" {
-  type = string
-}
-
 variable "code_bucket" {
   type    = string
   default = "crossangles-lambda-code"

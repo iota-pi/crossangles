@@ -11,7 +11,7 @@ if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
 fi
 
 run_for_each () {
-  for module in app scraper contact image lambda-shared
+  for module in app scraper contact lambda-shared
   do
     (
       cd $module

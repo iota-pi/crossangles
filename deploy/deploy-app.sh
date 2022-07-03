@@ -4,7 +4,6 @@ cd "$(dirname "$(realpath "$0")")"
 
 outputs="$(./tf.sh output -json)"
 environment=$(echo "$outputs" | jq -r ".environment.value")
-image_endpoint=$(echo "$outputs" | jq -r ".image_endpoint.value" | sed 's@\.com/.*@.com@')
 contact_endpoint=$(echo "$outputs" | jq -r ".contact_endpoint.value" | sed 's@\.com/.*@.com@')
 data_uri=$(echo "$outputs" | jq -r ".scraper_endpoint.value")
 app_bucket=$(echo "$outputs" | jq -r ".app_bucket.value")
@@ -47,7 +46,6 @@ if [[ $environment != "production" ]]; then
 fi
 export REACT_APP_STAGE_NAME=$environment
 export REACT_APP_CONTACT_ENDPOINT=$contact_endpoint
-export REACT_APP_SAVE_IMAGE_ENDPOINT=$image_endpoint
 export REACT_APP_DATA_ROOT_URI=$data_uri
 
 max_age=0

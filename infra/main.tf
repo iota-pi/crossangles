@@ -28,15 +28,6 @@ module "scraper" {
   campuses    = var.campuses
 }
 
-module "image" {
-  source = "./image"
-
-  environment = local.environment
-  code_bucket = var.code_bucket
-  git_version = var.image_version
-  pjsc_key    = var.pjsc_key
-}
-
 module "contact" {
   source = "./contact"
 
