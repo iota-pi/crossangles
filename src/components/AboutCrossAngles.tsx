@@ -86,10 +86,10 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
             CrossAngles is provided by
             {' '}
             <a
+              className={classes.link}
               href="https://www.campusbiblestudy.org"
               rel="noopener noreferrer"
               target="_blank"
-              className={classes.link}
             >
               Campus Bible Study
             </a>
@@ -111,6 +111,20 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
               href="#contact"
             >
               contact us
+            </a>
+            .
+          </Typography>
+
+          <Typography paragraph>
+            If you would like to contribute or view the source code, you can find
+            {' '}
+            <a
+              className={classes.link}
+              href="https://github.com/iota-pi/crossangles"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              CrossAngles on GitHub
             </a>
             .
           </Typography>

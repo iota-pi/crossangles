@@ -130,6 +130,20 @@ const InfoText = ({
           .
         </Typography>
       )}
+
+      <Typography paragraph>
+        If you would like to contribute or view the source code, you can find
+        {' '}
+        <a
+          className={classes.link}
+          href="https://github.com/iota-pi/crossangles"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          CrossAngles on GitHub
+        </a>
+        .
+      </Typography>
     </div>
   );
 };
