@@ -184,6 +184,7 @@ export class TimetableScraper {
           enrols: getEnrols(data['Enrols/Capacity']),
           full: getIsFull(data.Status),
           notes: data['Class Notes'] || undefined,
+          offering: data['Offering Period'],
           times: [],
           web: getIsWeb(data.Section),
         };
