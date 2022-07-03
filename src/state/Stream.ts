@@ -106,11 +106,15 @@ export function linkStream(course: CourseData, stream: StreamData): LinkedStream
   return linkedStream;
 }
 
+export function getOfferingStart(offering: string) {
+  return offering.split(/[\s-]+/g)[0];
+}
+
 export function getTermStart(streams: StreamData[]): Date {
   const offeringStarts: Record<string, number> = {};
   for (const stream of streams) {
     if (stream.offering) {
-      const offeringStart = stream.offering.split(/[\s-]+/g)[0];
+      const offeringStart = getOfferingStart(stream.offering);
       offeringStarts[offeringStart] = (offeringStarts[offeringStart] || 0) + 1;
     }
   }

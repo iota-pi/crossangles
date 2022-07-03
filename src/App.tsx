@@ -31,6 +31,8 @@ import {
   CourseData,
   getDefaultDarkMode,
   getOption,
+  LinkedSession,
+  CourseMap,
 } from './state';
 import { getCurrentTimetable, getShowSignup, getAdditionalCourses } from './state/selectors';
 import CourseSelection from './containers/CourseSelection';
@@ -39,6 +41,8 @@ import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
 import { saveAsImage, getScreenshotViewport } from './saveAsImage';
 import changelog, { getUpdateMessage } from './changelog';
+import { saveAsICS } from './saveAsICS';
+import SessionManager from './components/Timetable/SessionManager';
 
 const AppBar = loadable(() => import('./components/AppBar'));
 const TimetableContainer = lazy(() => import('./containers/TimetableContainer'));
@@ -67,6 +71,7 @@ export interface StateProps {
   meta: Meta,
   timetable: SessionManagerData,
   colours: ColourMap,
+  courses: CourseMap,
   options: Options,
   changelogView: Date,
 }
@@ -84,6 +89,7 @@ export interface State {
   showChangelog: boolean,
   showContact: boolean,
   isSavingImage: boolean,
+  isSavingICS: boolean,
 }
 
 class App extends PureComponent<Props, State> {
@@ -93,6 +99,7 @@ class App extends PureComponent<Props, State> {
       showChangelog: false,
       showContact: false,
       isSavingImage: false,
+      isSavingICS: false,
     };
   }
 
@@ -174,6 +181,30 @@ class App extends PureComponent<Props, State> {
     });
   };
 
+  private handleSaveAsICS = () => {
+    this.setState({ isSavingICS: true });
+
+    ReactGA.event({
+      category: CATEGORY,
+      action: 'Save as ICS',
+    });
+
+    try {
+      const timetable = SessionManager.from(this.props.timetable, this.props.courses);
+
+      const meta = this.props.meta;
+      const sessions: LinkedSession[] = [];
+      for (const sid of timetable.renderOrder) {
+        const placement = timetable.getMaybe(sid);
+        if (!placement) continue;
+        sessions.push(placement.session);
+      }
+      saveAsICS({ sessions, meta });
+    } finally {
+      this.setState({ isSavingICS: false });
+    }
+  };
+
   private handleSnackbarClose = () => {
     this.props.clearNotice();
   };
@@ -240,8 +271,8 @@ class App extends PureComponent<Props, State> {
             meta={this.props.meta}
             disabled={this.props.timetable.order.length === 0}
             showSignup={this.props.showSignup}
-            isSavingImage={this.state.isSavingImage}
-            onSaveAsImage={this.handleSaveAsImage}
+            isSavingICS={this.state.isSavingICS}
+            onSaveAsICS={this.handleSaveAsICS}
             className={classes.spaceAbove}
           />
 
@@ -287,6 +318,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   meta: state.meta,
   timetable: getCurrentTimetable(state),
   colours: state.colours,
+  courses: state.courses,
   options: state.options,
   changelogView: state.changelogView,
 });

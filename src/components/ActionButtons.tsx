@@ -4,7 +4,7 @@ import ReactGA from 'react-ga';
 
 import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import CalendarIcon from '@material-ui/icons/CalendarToday';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { CourseData, Meta } from '../state';
 import { CATEGORY } from '../analytics';
@@ -60,8 +60,8 @@ export interface Props extends WithStyles<typeof styles> {
   meta: Meta,
   disabled?: boolean,
   showSignup: boolean,
-  isSavingImage: boolean,
-  onSaveAsImage: () => void,
+  isSavingICS: boolean,
+  onSaveAsICS: () => void,
   className?: string,
 }
 
@@ -70,8 +70,8 @@ export const ActionButtons = withStyles(styles)(({
   meta,
   disabled,
   showSignup,
-  isSavingImage,
-  onSaveAsImage,
+  isSavingICS,
+  onSaveAsICS,
   className,
   classes,
 }: Props) => {
@@ -133,12 +133,13 @@ export const ActionButtons = withStyles(styles)(({
           className={classes.baseButton}
           size="large"
           color="primary"
-          endIcon={<CameraAltIcon />}
-          onClick={onSaveAsImage}
-          disabled={disabled || isSavingImage}
+          endIcon={<CalendarIcon />}
+          onClick={onSaveAsICS}
+          disabled={disabled || isSavingICS}
         >
-          Save as Image
-          {isSavingImage && (
+          Save to Calendar
+
+          {isSavingICS && (
             <CircularProgress
               size={24}
               className={classes.buttonProgress}
