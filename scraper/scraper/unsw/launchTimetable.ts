@@ -9,4 +9,5 @@ const runScraper = async () => {
   const result = await timetable.scrape();
   writeFileSync('test_timetable.json', JSON.stringify(result, undefined, 2));
 };
+
 runScraper();
