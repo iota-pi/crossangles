@@ -20,7 +20,6 @@ import Container from '@material-ui/core/Container';
 import Skeleton from '@material-ui/lab/Skeleton';
 import Button from '@material-ui/core/Button';
 import { initialiseGA, pageView, CATEGORY } from './analytics';
-import { getCampus } from './getCampus';
 import { clearNotice, setChangelogView, setNotice, toggleOption } from './actions';
 import {
   RootState,
@@ -30,7 +29,6 @@ import {
   ColourMap,
   CourseData,
   getDefaultDarkMode,
-  getOption,
   LinkedSession,
   CourseMap,
 } from './state';
