@@ -53,7 +53,6 @@ export interface Props {
   colours: ColourMap,
   timetable: SessionManager,
   minimalHours?: boolean,
-  isStandalone?: boolean,
   isUpdating?: boolean,
   onToggleTwentyFourHours?: () => void,
 }
@@ -103,7 +102,6 @@ export function getDimensions(duration: number, options: Options): Dimensions | 
 
 function TimetableTable({
   colours,
-  isStandalone,
   isUpdating,
   minimalHours,
   options,
@@ -265,7 +263,7 @@ function TimetableTable({
 
   const classes = useStyles();
   const rootClasses = [classes.root];
-  const disabled = timetable.renderOrder.length === 0 && !isStandalone;
+  const disabled = timetable.renderOrder.length === 0;
   if (disabled) {
     rootClasses.push(classes.faded);
   }

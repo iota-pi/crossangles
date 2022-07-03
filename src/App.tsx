@@ -39,7 +39,6 @@ import CourseSelection from './containers/CourseSelection';
 import InfoText from './components/InfoText';
 import { submitContact } from './submitContact';
 import { SessionManagerData } from './components/Timetable/SessionManagerTypes';
-import { saveAsImage, getScreenshotViewport } from './saveAsImage';
 import changelog, { getUpdateMessage } from './changelog';
 import { saveAsICS } from './saveAsICS';
 import SessionManager from './components/Timetable/SessionManager';
@@ -88,7 +87,6 @@ export type Props = OwnProps & StateProps & DispatchProps;
 export interface State {
   showChangelog: boolean,
   showContact: boolean,
-  isSavingImage: boolean,
   isSavingICS: boolean,
 }
 
@@ -98,7 +96,6 @@ class App extends PureComponent<Props, State> {
     this.state = {
       showChangelog: false,
       showContact: false,
-      isSavingImage: false,
       isSavingICS: false,
     };
   }
@@ -145,40 +142,6 @@ class App extends PureComponent<Props, State> {
         () => this.props.setChangelogView(),
       );
     }
-  };
-
-  private handleSaveAsImage = async () => {
-    this.setState({ isSavingImage: true });
-
-    ReactGA.event({
-      category: CATEGORY,
-      action: 'Save as Image',
-    });
-
-    const { timetable, colours, options } = this.props;
-    const campus = getCampus();
-    const compactView = getOption(options, 'compactView');
-    const showMode = getOption(options, 'showMode');
-    const viewport = getScreenshotViewport(timetable, compactView, showMode);
-
-    const promise = saveAsImage({
-      timetable,
-      colours,
-      options,
-      viewport,
-      campus,
-    });
-
-    promise.then(success => {
-      if (!success) {
-        this.props.setNotice('Could not save as image');
-      }
-    }).catch(err => {
-      this.props.setNotice('Error while saving as image, please try again later');
-      console.error(err);
-    }).finally(() => {
-      this.setState({ isSavingImage: false });
-    });
   };
 
   private handleSaveAsICS = () => {
@@ -259,10 +222,7 @@ class App extends PureComponent<Props, State> {
 
           <div className={classes.moderateSpaceAbove}>
             <Suspense fallback={<Skeleton variant="rect" height={465} />}>
-              <TimetableContainer
-                isSavingImage={this.state.isSavingImage}
-                onSaveAsImage={this.handleSaveAsImage}
-              />
+              <TimetableContainer />
             </Suspense>
           </div>
 

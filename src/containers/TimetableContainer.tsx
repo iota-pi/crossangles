@@ -38,8 +38,6 @@ import { TimetableScoreConfig } from '../timetable/scoreTimetable';
 
 export interface OwnProps {
   className?: string,
-  isSavingImage: boolean,
-  onSaveAsImage: () => void,
 }
 
 export interface StateProps {
@@ -260,13 +258,11 @@ class TimetableContainer extends PureComponent<Props, State> {
           history={this.props.timetableHistory}
           improvementScore={this.getSuggestionImprovementScore()}
           isUpdating={this.state.isUpdating}
-          isSavingImage={this.props.isSavingImage}
           timetableIsEmpty={timetableIsEmpty}
           onUndo={this.handleUndo}
           onRedo={this.handleRedo}
           onUpdate={this.handleUpdate}
           onIncludeFull={this.handleIncludeFull}
-          onSaveAsImage={this.props.onSaveAsImage}
           onCreateCustom={this.handleClickCreateCustom}
         />
 

@@ -49,13 +49,11 @@ export interface Props {
   history: HistoryData,
   improvementScore: number,
   isUpdating: boolean,
-  isSavingImage: boolean,
   timetableIsEmpty: boolean,
   onUndo?: () => void,
   onRedo?: () => void,
   onUpdate?: () => void,
   onIncludeFull?: () => void,
-  onSaveAsImage?: () => void,
   onCreateCustom?: () => void,
 }
 
@@ -63,13 +61,11 @@ export const TimetableControls = ({
   history,
   improvementScore,
   isUpdating,
-  isSavingImage,
   timetableIsEmpty,
   onUndo,
   onRedo,
   onUpdate,
   onIncludeFull,
-  onSaveAsImage,
   onCreateCustom,
 }: Props) => {
   const classes = useStyles();
@@ -162,24 +158,6 @@ export const TimetableControls = ({
             <span className={classes.unplacedCount}>{unplacedCount}</span>
             <Warning />
           </ButtonBase>
-        </Tooltip>
-      )}
-
-      {onSaveAsImage && (
-        <Tooltip title="Save as Image">
-          <span>
-            <IconButton
-              onClick={onSaveAsImage}
-              color="primary"
-              disabled={isSavingImage}
-            >
-              {isSavingImage ? (
-                <CircularProgress size={24} />
-              ) : (
-                <CameraAltIcon />
-              )}
-            </IconButton>
-          </span>
         </Tooltip>
       )}
 

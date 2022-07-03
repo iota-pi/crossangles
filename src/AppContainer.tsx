@@ -7,7 +7,6 @@ import { getOptions } from './state/selectors';
 import { theme } from './theme';
 
 const App = loadable(() => import('./AppWrapper'));
-const StandaloneTimetable = loadable(() => import('./containers/StandaloneTimetable'));
 
 export const AppContainer = () => {
   const { darkMode } = useSelector(getOptions);
@@ -16,9 +15,6 @@ export const AppContainer = () => {
     <ThemeProvider theme={theme(darkMode)}>
       <Router>
         <Switch>
-          <Route path="/timetable">
-            <StandaloneTimetable />
-          </Route>
           <Route path="/">
             <App />
           </Route>
