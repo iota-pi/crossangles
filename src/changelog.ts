@@ -38,7 +38,7 @@ const rawChangelog: Omit<LogEntry, 'id'>[] = [
   },
   {
     date: new Date(2022, 6, 3),
-    summary: 'Add timetable to calendar',
+    summary: 'Save timetable to personal calendar',
     details: [
       'Replaces the previous save-as-image feature',
     ],
