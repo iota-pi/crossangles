@@ -1,6 +1,8 @@
 import { SessionData, DayLetter, LinkedSession, linkSession } from './Session';
 import { CourseData, getCourseId } from './Course';
 
+const ONE_DAY = 1000 * 60 * 60 * 24;
+
 export type StreamId = string;
 
 export enum DeliveryType {
@@ -16,6 +18,7 @@ export interface StreamData {
   enrols?: [number, number],
   full?: boolean,
   web?: boolean,
+  offering?: string,
   delivery?: DeliveryType,
   notes?: string,
 }
@@ -100,4 +103,37 @@ export function linkStream(course: CourseData, stream: StreamData): LinkedStream
   };
   linkedStream.sessions = sessionData.map(session => linkSession(course, linkedStream, session));
   return linkedStream;
+}
+
+export function getTermStart(streams: StreamData[]): Date {
+  const offeringStarts: Record<string, number> = {};
+  for (const stream of streams) {
+    if (stream.offering) {
+      const offeringStart = stream.offering.split(/[\s-]*/g)[0];
+      offeringStarts[offeringStart] = (offeringStarts[offeringStart] || 0) + 1;
+    }
+  }
+  let mostCommonOffering: string | null = null;
+  let mostCommonOfferingCount = 0;
+  for (const [offering, count] of Object.entries(offeringStarts)) {
+    if (count > mostCommonOfferingCount) {
+      mostCommonOffering = offering;
+      mostCommonOfferingCount = count;
+    }
+  }
+  const termStart = mostCommonOffering ? parseBackwardsDateString(mostCommonOffering) : new Date();
+  return closestMonday(termStart);
+}
+
+// Parse date strings in format: dd/mm/yyyy
+export function parseBackwardsDateString(dateString: string) {
+  const [day, month, year] = dateString.trim().split(/[/-]/g);
+  return new Date(+year, +month - 1, +day);
+}
+
+export function closestMonday(date: Date) {
+  const weekday = date.getDay();
+  const differenceInDays = weekday < 6 ? 1 - weekday : 2;
+  const differenceInMS = ONE_DAY * differenceInDays;
+  return new Date(date.getTime() + differenceInMS);
 }

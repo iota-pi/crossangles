@@ -6,6 +6,7 @@ export interface YearAndTerm {
 export interface Meta extends YearAndTerm {
   updateDate: string,
   updateTime: string,
+  termStart: string,
   sources: string[],
 }
 

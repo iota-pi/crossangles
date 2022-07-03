@@ -1,4 +1,4 @@
-import { getStreamId, getSessions, StreamData, linkStream, getComponentName } from './Stream';
+import { getStreamId, getSessions, StreamData, linkStream, getComponentName, closestMonday, parseBackwardsDateString } from './Stream';
 import { getCourse } from '../test_util';
 import { CourseData, getCourseId } from './Course';
 import { SessionData } from './Session';
@@ -70,4 +70,24 @@ it.each([
   ['QQQ', 'QQQ'],
 ])('getComponentName("%s") = "%s"', (code, name) => {
   expect(getComponentName({ component: code })).toEqual(name);
+});
+
+
+it.each([
+  ['04/07/2022', new Date(2022, 6, 4)],
+  ['1/2/2023', new Date(2023, 1, 1)],
+])('parseBackwardsDateString(%s) = %s', (input, output) => {
+  expect(parseBackwardsDateString(input)).toEqual(output);
+});
+
+
+it.each([
+  [new Date(2022, 6, 3), new Date(2022, 6, 4)],
+  [new Date(2022, 6, 4), new Date(2022, 6, 4)],
+  [new Date(2022, 6, 5), new Date(2022, 6, 4)],
+  [new Date(2022, 6, 8), new Date(2022, 6, 4)],
+  [new Date(2022, 6, 9), new Date(2022, 6, 11)],
+  [new Date(2022, 6, 10), new Date(2022, 6, 11)],
+])('closestMonday(%s) = %s', (input, output) => {
+  expect(closestMonday(input)).toEqual(output);
 });

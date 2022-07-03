@@ -106,9 +106,10 @@ export function getDimensions() {
 export function getMeta(): Meta {
   return {
     sources: [],
+    term: 3,
+    termStart: '',
     updateDate: 'today',
     updateTime: 'now',
-    term: 3,
     year: 2020,
   };
 }

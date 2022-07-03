@@ -62,11 +62,12 @@ export const initialTimetableState: TimetableState = {
 };
 
 export const meta: Meta = {
+  sources: [],
   term: 1,
-  year: 1960,
+  termStart: '',
   updateDate: '',
   updateTime: '',
-  sources: [],
+  year: 1960,
 };
 
 export const timetables: Timetables = { [getCurrentTerm(meta)]: getEmptySessionManagerData() };
