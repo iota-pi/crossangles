@@ -109,7 +109,7 @@ export function getTermStart(streams: StreamData[]): Date {
   const offeringStarts: Record<string, number> = {};
   for (const stream of streams) {
     if (stream.offering) {
-      const offeringStart = stream.offering.split(/[\s-]*/g)[0];
+      const offeringStart = stream.offering.split(/[\s-]+/g)[0];
       offeringStarts[offeringStart] = (offeringStarts[offeringStart] || 0) + 1;
     }
   }
