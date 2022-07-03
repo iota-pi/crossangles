@@ -105,6 +105,12 @@ export interface ToggleOptionAction extends Action {
 }
 
 export function toggleOption(option: OptionName, value?: boolean): ToggleOptionAction {
+  ReactGA.event({
+    category: CATEGORY,
+    action: 'Toggle Option',
+    label: option,
+  });
+
   return {
     type: TOGGLE_OPTION,
     option,
