@@ -511,7 +511,7 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Bible Study',
-          times: [{ time: 'M12' }],
+          times: [{ time: 'M11' }],
           delivery: DeliveryType.person,
         },
         {
@@ -526,7 +526,7 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Bible Study',
-          times: [{ time: 'T11' }],
+          times: [{ time: 'T10' }],
           delivery: DeliveryType.person,
         },
         {
@@ -546,7 +546,7 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Bible Study',
-          times: [{ time: 'H11' }],
+          times: [{ time: 'H10' }],
           delivery: DeliveryType.person,
         },
         {
@@ -586,12 +586,12 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Prayer Group',
-          times: [{ time: 'M11' }],
+          times: [{ time: 'M12' }],
           delivery: DeliveryType.person,
         },
         {
           component: 'Prayer Group',
-          times: [{ time: 'T10' }],
+          times: [{ time: 'T11' }],
           delivery: DeliveryType.person,
         },
         {
@@ -601,7 +601,7 @@ const unsw: CampusAdditional = {
         },
         {
           component: 'Prayer Group',
-          times: [{ time: 'H10' }],
+          times: [{ time: 'H11' }],
           delivery: DeliveryType.person,
         },
         {
