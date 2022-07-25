@@ -1,7 +1,8 @@
 {
   "scripts": {
     "test": "./ci.sh test",
-    "build": "./ci.sh build"
+    "build": "./ci.sh build",
+    "deploy": "./deploy/deploy.sh"
   },
   "license": "UNLICENSED",
   "dependencies": {}
