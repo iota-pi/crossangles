@@ -14,7 +14,7 @@ const CBS_BASE_META: MinistryMeta = {
 enum CBSComponent {
   TBT = 'The Bible Talks',
   BS = 'Bible Study',
-  BS_ADA = 'Bible Study (Art & Design)',
+  BS_PAD = 'Bible Study (Paddington)',
   CORE_THEO = 'Core Theology',
   CORE_TRAIN = 'Core Training',
   PRAYER = 'Prayer Group',
@@ -69,7 +69,7 @@ const unsw: CampusAdditional<CBSComponent> = {
           times: [{ time: 'W11' }],
         },
         {
-          component: CBSComponent.BS_ADA,
+          component: CBSComponent.BS_PAD,
           times: [{ time: 'W13' }],
         },
         {
@@ -77,7 +77,7 @@ const unsw: CampusAdditional<CBSComponent> = {
           times: [{ time: 'H10' }],
         },
         {
-          component: CBSComponent.BS_ADA,
+          component: CBSComponent.BS_PAD,
           times: [{ time: 'H13' }],
         },
         {
