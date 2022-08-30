@@ -40,6 +40,6 @@ docker_args=()
     -v "$(realpath ../infra):/infra" \
     -w "/infra" \
     -u "$(id -u):$(id -g)" \
-    hashicorp/terraform:0.13.1 \
+    hashicorp/terraform:1.2.8 \
     $tf_cmd $extra_args ${@:2}
 )

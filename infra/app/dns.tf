@@ -26,16 +26,24 @@ resource "aws_acm_certificate" "root_cert" {
 
 resource "aws_acm_certificate_validation" "root_cert" {
   certificate_arn         = aws_acm_certificate.root_cert.arn
-  validation_record_fqdns = [cloudflare_record.root_cert_validation.hostname]
+  validation_record_fqdns = [for record in cloudflare_record.root_cert_validation : record.hostname]
 
   provider = aws.us_east_1
 }
 
 resource "cloudflare_record" "root_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.root_cert.domain_validation_options : dvo.domain_name => {
+      name  = dvo.resource_record_name
+      type  = dvo.resource_record_type
+      value = dvo.resource_record_value
+    }
+  }
+
   zone_id = var.cloudflare_zone_id
-  name    = aws_acm_certificate.root_cert.domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.root_cert.domain_validation_options.0.resource_record_type
-  value   = trimsuffix(aws_acm_certificate.root_cert.domain_validation_options.0.resource_record_value, ".")
+  name    = each.value.name
+  type    = each.value.type
+  value   = trimsuffix(each.value.value, ".")
 }
 
 # Redirect www domain to root domain for production

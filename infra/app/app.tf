@@ -1,7 +1,3 @@
-provider "aws" {
-  alias  = "us_east_1"
-}
-
 locals {
   component   = "app"
   bucket_name = "crossangles-app-${var.environment}"
@@ -28,15 +24,28 @@ resource "aws_s3_bucket" "app" {
   count = var.campus == "unsw" ? 1 : 0
 
   bucket = local.bucket_name
-  acl    = "private"
 
   tags = local.standard_tags
+}
+
+resource "aws_s3_bucket_cors_configuration" "app_cors" {
+  count = var.campus == "unsw" ? 1 : 0
+
+  bucket = aws_s3_bucket.app[count.index].bucket
 
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "HEAD"]
     allowed_origins = ["*"]
   }
+}
+
+resource "aws_s3_bucket_acl" "app_acl" {
+  count = var.campus == "unsw" ? 1 : 0
+
+  bucket = aws_s3_bucket.app[count.index].bucket
+
+  acl = "private"
 }
 
 data "aws_s3_bucket" "selected" {

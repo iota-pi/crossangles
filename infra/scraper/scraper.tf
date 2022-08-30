@@ -135,9 +135,12 @@ resource "aws_dynamodb_table" "scraper_state_table" {
 
 resource "aws_s3_bucket" "scraper_output" {
   bucket = "crossangles-course-data${var.environment == "production" ? "" : "-${var.environment}"}"
-  acl    = "private"
 
   tags = local.standard_tags
+}
+
+resource "aws_s3_bucket_cors_configuration" "scraper_output_cors" {
+  bucket = aws_s3_bucket.scraper_output.bucket
 
   cors_rule {
     allowed_headers = ["*"]
@@ -146,6 +149,11 @@ resource "aws_s3_bucket" "scraper_output" {
   }
 }
 
+resource "aws_s3_bucket_acl" "app_acl" {
+  bucket = aws_s3_bucket.scraper_output.bucket
+
+  acl = "private"
+}
 
 resource "aws_cloudfront_origin_access_identity" "scraper_oai" {}
 
