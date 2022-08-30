@@ -19,9 +19,9 @@ jobs:
         ./tf.sh validate
 
     - name: Setup NodeJS
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
+        node-version: 16
 
     - name: Install dependencies
       run: ./ci.sh ci-install
