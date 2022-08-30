@@ -5,7 +5,7 @@ import { getStreamId, getTermStart, StreamData } from '../../../app/src/state/St
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import generateMetaData from '../meta';
 import { getLogger } from '../../logging';
-import getAdditional from '../../data/additional';
+import getAdditional from '../../data';
 import { getCurrentTerm } from '../../../app/src/state/Meta';
 import { ScrapeCampusArgs } from '../../scrapeCampus';
 

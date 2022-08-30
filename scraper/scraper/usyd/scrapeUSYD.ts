@@ -3,11 +3,13 @@ import { ScrapeCampusArgs } from '../../scrapeCampus';
 import { getLogger } from '../../logging';
 import UOSTimetableScraper from './UOSTimetableScraper';
 import generateMetaData from '../meta';
-import getAdditional from '../../data/additional';
+import getAdditional from '../../data';
 import getAEST from '../../getAEST';
 import { getCurrentTerm } from '../../../app/src/state/Meta';
 
-export const USYD = 'usyd';
+// NB! This won't work but just suppresses an annoying type check error
+// Would need to re-add USYD additional data if making this work for USYD again
+export const USYD = 'usyd' as 'unsw';
 const logger = getLogger('scrapeUSYD', { campus: USYD });
 
 
