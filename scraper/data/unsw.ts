@@ -10,6 +10,7 @@ const CBS_BASE_META: MinistryMeta = {
 };
 
 // CBS event names
+// To add a new event, add the name here before adding times below
 enum CBSComponent {
   TBT = 'The Bible Talks',
   BS = 'Bible Study',
@@ -56,10 +57,6 @@ const unsw: CampusAdditional<CBSComponent> = {
           times: [{ time: 'M13' }],
         },
         {
-          component: CBSComponent.BS_ADA,
-          times: [{ time: 'T10' }],
-        },
-        {
           component: CBSComponent.BS,
           times: [{ time: 'T10' }],
         },
@@ -73,7 +70,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS_ADA,
-          times: [{ time: 'H10' }],
+          times: [{ time: 'W13' }],
         },
         {
           component: CBSComponent.BS,
