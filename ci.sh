@@ -22,41 +22,41 @@ run_for_each () {
 
 
 if [[ $COMMAND == ci-install ]]; then
-  run_for_each npm ci
+  run_for_each yarn install --frozen-lockfile
 fi
 
 if [[ $COMMAND == install ]]; then
-  run_for_each npm install
+  run_for_each yarn install
 fi
 
 if [[ $COMMAND == build ]]; then
   if [[ ${2:-} == app ]]; then
     ./build-app.sh
   elif [[ -n "${2:-}" ]]; then
-    (cd $2; npm run build -- ${@:3})
+    (cd $2; yarn build -- ${@:3})
   else
-    run_for_each npm run build
+    run_for_each yarn build
   fi
 fi
 
 if [[ $COMMAND == lint ]]; then
   (
     cd app
-    npm run lint
+    yarn lint
   )
   (
     cd scraper
-    npm run lint
+    yarn lint
   )
 fi
 
 if [[ $COMMAND == test ]]; then
   if [[ -n "${2:-}" ]]; then
-    (cd $2; npm test)
+    (cd $2; yarn test)
   else
     (
       export CI=${CI:-1}
-      run_for_each npm test
+      run_for_each yarn test
     )
   fi
 fi
@@ -67,11 +67,11 @@ if [[ $COMMAND == run ]]; then
     npx serve build
   else
     cd app
-    npm start
+    yarn start
   fi
 fi
 
 if [[ $COMMAND == scrape ]]; then
   mkdir -p app/public/unsw
-  (cd scraper; npm start ${@:2})
+  (cd scraper; yarn start ${@:2})
 fi
