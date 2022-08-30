@@ -13,10 +13,11 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Validate Terraform IAC
       run: |
+        cd deploy
         ./tf.sh init
         ./tf.sh validate
 
