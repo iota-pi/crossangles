@@ -10,10 +10,10 @@ export enum Career {
   RSCH = 3,
 }
 
-export interface CourseData {
+export interface CourseData<C extends string = string> {
   code: string,
   name: string,
-  streams: StreamData[],
+  streams: StreamData<C>[],
   term?: string,
   section?: string,
   career?: Career,

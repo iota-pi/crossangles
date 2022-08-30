@@ -12,8 +12,8 @@ export enum DeliveryType {
   mixed,
 }
 
-export interface StreamData {
-  component: string,
+export interface StreamData<C extends string = string> {
+  component: C,
   times: ClassTime[],
   enrols?: [number, number],
   full?: boolean,
