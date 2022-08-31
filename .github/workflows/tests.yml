@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Validate IAC and Run Tests
+    name: Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -16,18 +16,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: true
-
-    - name: Validate Terraform IAC
-      run: |
-        cd deploy
-        ./tf.sh init
-        ./tf.sh validate
-      env:
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Setup NodeJS
       uses: actions/setup-node@v3
@@ -42,3 +30,33 @@ jobs:
 
     - name: Run unit tests
       run: ./ci.sh test
+
+  validate:
+    name: Validate IAC
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Validate Terraform IAC
+      run: |
+        cd deploy
+        ./tf.sh init
+        ./tf.sh validate
+      env:
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  push_to_deploy:
+    needs: [test, validate]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Push to deploy branch
+        run: |
+          git checkout master
+          git push origin master:deploy
