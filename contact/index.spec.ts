@@ -43,7 +43,14 @@ describe('HTTP methods', () => {
   })
 
   it.each`
-    httpMethod ${'GET'} ${'PUT'} ${'DELETE'} ${'HEAD'} ${'PATCH'} ${'CONNECT'} ${'TRACE'}
+    httpMethod
+    ${'GET'}
+    ${'PUT'}
+    ${'DELETE'}
+    ${'HEAD'}
+    ${'PATCH'}
+    ${'CONNECT'}
+    ${'TRACE'}
   `('gives error for $httpMethod requests', async ({ httpMethod }) => {
     const event: APIGatewayProxyEvent = {
       ...fakeEvent,
