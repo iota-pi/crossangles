@@ -11,7 +11,7 @@ To get started with developing locally, clone the repository, and install the
 dependencies using:
 
 ```bash
-npm install
+yarn install
 ```
 
 ## Running the app development server
@@ -19,17 +19,17 @@ npm install
 To build and serve the web app locally, you can use:
 
 ```bash
-npm start
+yarn start
 ```
 
 ## Running tests
 
 ```bash
 # Run the unit tests
-npm test
+yarn test
 
 # Lint the code
-npm run lint
+yarn lint
 ```
 
 The unit tests use Jest, and linting is done with ESLint.
