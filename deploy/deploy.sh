@@ -3,12 +3,15 @@ set -euo pipefail
 cd "$(dirname "$(realpath "$0")")"
 
 function stage() {
+  GREEN="\033[0;32m"
+  NC="\033[0m"
   echo -e "--- ${GREEN}${1}${NC}"
 }
 
 PRODUCTION="NO"
 AUTO_APPROVE="NO"
 FORCE_UPDATE=""
+SKIP_TESTS="NO"
 while [[ ${#} -gt 0 ]]
 do
   case "${1}" in
@@ -20,6 +23,10 @@ do
       FORCE_UPDATE="YES"
       shift
       ;;
+    --already-tested)
+      SKIP_TESTS="YES"
+      shift
+      ;;
     *)
       shift
       ;;
@@ -27,14 +34,16 @@ do
 done
 export FORCE_UPDATE
 
-GREEN="\033[0;32m"
-NC="\033[0m"
 stage "Running tests"
-(
-  cd ..
-  ./ci.sh lint
-  ./ci.sh test
-)
+if [[ "${SKIP_TESTS}" != "YES" ]]; then
+  (
+    cd ..
+    ./ci.sh lint
+    ./ci.sh test
+  )
+else
+  echo "Already ran tests in pipeline. Skipping."
+fi
 
 stage "Setting workspace"
 current_workspace="$(./tf.sh workspace show)"

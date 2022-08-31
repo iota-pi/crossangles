@@ -8,8 +8,6 @@ else
   lambdas="scraper contact"
 fi
 
-installed_shared_deps=0
-
 environment="$(./tf.sh output environment)"
 code_bucket="crossangles-lambda-code"
 
@@ -26,28 +24,15 @@ do
     continue
   fi
 
-  if [[ -n ${CI:-} && $lambda =~ ^contact$ && $installed_shared_deps = 0 ]]; then
-    (
-      cd ../lambda-shared
-      echo "Installing dependencies for lambda-shared"
-      npm ci --production >/dev/null 2>&1
-    )
-    installed_shared_deps=1
-  fi
-
   message="Deploying $lambda lambda to $environment"
   hyphens=$(echo $message | sed 's/./-/g')
   echo $message
   echo $hyphens
   (
     cd ../$lambda
-    if [[ -n ${CI:-} ]]; then
-      echo "Installing dependencies"
-      npm ci >/dev/null 2>&1
-    fi
 
     echo "Building $lambda lambda"
-    npm run build
+    yarn build
 
     echo "Copying to $dest/$lambda.zip"
     aws s3 cp "build/$lambda.zip" "$dest/"

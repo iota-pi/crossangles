@@ -54,9 +54,6 @@ if [[ $environment == production ]]; then
 fi
 
 cd ../app
-if [[ -n ${CI:-} ]]; then
-  npm ci --production
-fi
 for campus in $@
 do
   if [[ $campus != "unsw" ]]; then
@@ -64,7 +61,7 @@ do
   fi
 
   echo "Building app for $campus"
-  REACT_APP_CAMPUS=$campus npm run build
+  REACT_APP_CAMPUS=$campus yarn build
 
   campus_key_base="s3://$app_bucket/$campus"
   s3_app_params="--acl public-read --cache-control max-age=$max_age"
