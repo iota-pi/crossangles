@@ -4,6 +4,7 @@ cd "$(dirname "$(realpath "$0")")"
 tf_cmd="$1"
 
 docker_args=()
+rest=()
 
 (
   if [[ -f "./secrets.sh" ]]; then
@@ -15,7 +16,7 @@ docker_args=()
     extra_args+=" -input=false"
   fi
 
-  if [[ "$1" == "apply" && -n "${CI:-}" ]]; then
+  if [[ -n "${GIVE_TTY:-}" ]]; then
     docker_args+=("-it")
   fi
 
@@ -41,5 +42,5 @@ docker_args=()
     -w "/infra" \
     -u "$(id -u):$(id -g)" \
     hashicorp/terraform:1.2.8 \
-    $tf_cmd $extra_args ${@:2}
+    $tf_cmd $extra_args "${docker_args[@]}"
 )

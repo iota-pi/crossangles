@@ -27,6 +27,10 @@ do
       SKIP_TESTS="YES"
       shift
       ;;
+    -y)
+      AUTO_APPROVE="YES"
+      shift
+      ;;
     *)
       shift
       ;;
@@ -64,4 +68,8 @@ stage "Building App"
 ./deploy-app.sh unsw
 
 stage "Terraform Apply"
-./tf.sh apply
+if [[ "${AUTO_APPROVE}" != "YES" ]]; then
+  GIVE_TTY=1 ./tf.sh apply
+else
+  ./tf.sh apply -auto-approve
+fi
