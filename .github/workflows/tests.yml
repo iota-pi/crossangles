@@ -1,4 +1,4 @@
-name: CI
+name: Test & Deploy
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Run Tests
+    name: Run tests
     runs-on: ubuntu-latest
 
     steps:
@@ -51,12 +51,23 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-  push_to_deploy:
+  deploy:
+    name: Deploy
     needs: [test, validate]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Push to deploy branch
-        run: |
-          git checkout master
-          git push origin master:deploy
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: Validate Terraform IAC
+      run: |
+        ./deploy/deploy.sh --prod
+      env:
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
