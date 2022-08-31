@@ -40,12 +40,18 @@ if [[ $COMMAND == build ]]; then
 fi
 
 if [[ $COMMAND == lint ]]; then
+  echo "Running lint command for app"
   (
     cd app
+    pwd
+    ls
     yarn lint
   )
+  echo "Running lint command for scraper"
   (
     cd scraper
+    pwd
+    ls
     yarn lint
   )
 fi
