@@ -8,7 +8,7 @@ else
   lambdas="scraper contact"
 fi
 
-environment="$(./tf.sh output environment)"
+environment="$(./tf.sh output -raw environment)"
 code_bucket="crossangles-lambda-code"
 
 for lambda in $lambdas
