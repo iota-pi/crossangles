@@ -257,7 +257,6 @@ class App extends PureComponent<Props, State> {
 
         <Changelog
           open={this.state.showChangelog}
-          onShowContact={this.handleContactShow}
           onClose={this.handleChangelogClose}
         />
       </div>
