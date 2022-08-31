@@ -42,5 +42,5 @@ rest=()
     -w "/infra" \
     -u "$(id -u):$(id -g)" \
     hashicorp/terraform:1.2.8 \
-    $tf_cmd $extra_args "${docker_args[@]}"
+    $tf_cmd $extra_args ${@:2}
 )
