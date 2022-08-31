@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-./node_modules/.bin/tsc
-./node_modules/.bin/webpack
-(cd build/bundled; zip -r ../contact.zip .)
+esbuild index.ts \
+  --outfile=build/lambda.js \
+  --bundle \
+  --minify \
+  --platform=node \
+  --target=node16 \
+  --external:aws-sdk
+
+(cd build; zip -r ./contact.zip lambda.js)
