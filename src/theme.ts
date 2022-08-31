@@ -1,5 +1,5 @@
 /* eslint-disable no-lonely-if */
-import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { createTheme } from '@material-ui/core/styles';
 import indigo from '@material-ui/core/colors/indigo';
 import green from '@material-ui/core/colors/green';
 import lightBlue from '@material-ui/core/colors/blue';
@@ -40,7 +40,7 @@ export const theme = (dark = false) => {
       };
     }
   }
-  return createMuiTheme({
+  return createTheme({
     palette,
     overrides: {
       MuiSelect: {

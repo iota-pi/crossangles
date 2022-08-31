@@ -66,7 +66,6 @@ const useStyles = makeStyles(theme => ({
 
 export interface Props {
   onClose: () => void,
-  onShowContact: () => void,
   open: boolean,
 }
 

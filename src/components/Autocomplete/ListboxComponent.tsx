@@ -76,5 +76,6 @@ const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>(
     );
   },
 );
+ListboxComponent.displayName = 'ListboxComponent';
 
 export default ListboxComponent;

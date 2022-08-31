@@ -33,7 +33,13 @@ export interface Props {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void,
 }
 
-function ColourComponent({ colour, size, isSelected, isCircle, onClick }: Props) {
+function ColourComponent({
+  colour,
+  isSelected = false,
+  isCircle = false,
+  onClick,
+  size,
+}: Props) {
   const classes = useStyles();
   const { darkMode } = useSelector(getOptions);
   const appliedClasses = [

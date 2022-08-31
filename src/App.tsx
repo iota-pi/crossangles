@@ -9,7 +9,7 @@ import ReactGA from 'react-ga';
 import loadable from '@loadable/component';
 
 // Theme
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles';
 
 // Styles
 import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles';
@@ -25,8 +25,6 @@ import {
   RootState,
   Meta,
   Notice,
-  Options,
-  ColourMap,
   CourseData,
   getDefaultDarkMode,
   LinkedSession,
@@ -67,9 +65,7 @@ export interface StateProps {
   additional: CourseData[],
   meta: Meta,
   timetable: SessionManagerData,
-  colours: ColourMap,
   courses: CourseMap,
-  options: Options,
   changelogView: Date,
 }
 
@@ -275,9 +271,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   additional: getAdditionalCourses(state),
   meta: state.meta,
   timetable: getCurrentTimetable(state),
-  colours: state.colours,
   courses: state.courses,
-  options: state.options,
   changelogView: state.changelogView,
 });
 

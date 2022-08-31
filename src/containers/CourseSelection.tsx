@@ -1,7 +1,7 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Skeleton from '@material-ui/lab/Skeleton';

@@ -11,7 +11,6 @@ import { CourseData, getCourseId, getClarificationText } from '../../state';
 import { useFilterWorker } from './filter.worker.shim';
 
 export interface Props {
-  separator?: string,
   courses: CourseData[],
   chosen: CourseData[],
   additional: CourseData[],

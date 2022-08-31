@@ -1,7 +1,7 @@
 import React, { PureComponent, ChangeEvent } from 'react';
 
 // Styles
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { Theme } from '@material-ui/core/styles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
 import Dialog from '@material-ui/core/Dialog';
