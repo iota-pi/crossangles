@@ -18,7 +18,7 @@ export class LambdaResponder {
   logger?: Logger;
 
   constructor (event: APIGatewayProxyEvent, logger?: Logger) {
-    this.origin = event.headers.origin;
+    this.origin = event.headers.origin || '';
     this.originIsAllowed = this.checkOrigin(this.origin);
     this.logger = logger;
   }
