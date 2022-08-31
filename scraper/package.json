@@ -29,9 +29,9 @@
     "eslint-config-airbnb-typescript": "^9.0.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^23.20.0",
-    "jest": "^25.5.4",
-    "ts-jest": "^25.5.1",
-    "typescript": "^3.9.7",
+    "jest": "^28.0.8",
+    "ts-jest": "^28.0.8",
+    "typescript": "^4.8.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }

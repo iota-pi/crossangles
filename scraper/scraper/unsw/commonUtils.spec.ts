@@ -5,7 +5,10 @@ const baseStream: StreamData = { component: '', times: [] };
 
 describe('mergeDeliveryType', () => {
   it.each`
-    delivery ${DeliveryType.online} ${DeliveryType.person} ${DeliveryType.mixed}
+    delivery
+    ${DeliveryType.online}
+    ${DeliveryType.person}
+    ${DeliveryType.mixed}
   `('preserves type for single stream', ({ delivery }) => {
     const streams: StreamData[] = [
       { ...baseStream, delivery },
