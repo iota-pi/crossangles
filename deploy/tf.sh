@@ -15,7 +15,7 @@ docker_args=()
     extra_args+=" -input=false"
   fi
 
-  if [[ "$1" == "apply" ]]; then
+  if [[ "$1" == "apply" -a -n "${CI:-}" ]]; then
     docker_args+=("-it")
   fi
 
