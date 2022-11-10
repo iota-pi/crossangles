@@ -2,12 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$(realpath "$0")")"
 
-if [[ ${1:-} ]]; then
-  lambdas=$@
-else
-  lambdas="scraper contact"
-fi
-
+lambdas="scraper contact"
 environment="$(./tf.sh output -raw environment)"
 code_bucket="crossangles-lambda-code"
 
