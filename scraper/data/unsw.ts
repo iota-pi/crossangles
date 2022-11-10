@@ -1,5 +1,5 @@
-import { MinistryMeta } from '../../app/src/state/Meta';
-import { CampusAdditional } from './types';
+import type { MinistryMeta } from '../../app/src/state/Meta';
+import type { CampusAdditional } from './types';
 
 
 const CBS_BASE_META: MinistryMeta = {
