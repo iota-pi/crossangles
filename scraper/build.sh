@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Compile TypeScript
-esbuild index.ts \
+esbuild lambda.ts \
   --outfile=build/lambda.js \
   --bundle \
   --minify \
