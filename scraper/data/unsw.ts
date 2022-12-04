@@ -18,7 +18,7 @@ enum CBSComponent {
   CORE_THEO = 'Core Theology',
   CORE_TRAIN = 'Core Training',
   PRAYER = 'Prayer Group',
-  LUNCH = 'Lunch',
+  HANG = 'Sport + Hangs',
 }
 
 
@@ -38,15 +38,15 @@ const unsw: CampusAdditional<CBSComponent> = {
       streams: [
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'T12' }],
+          times: [{ time: 'T13' }],
         },
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'W12' }],
+          times: [{ time: 'W13' }],
         },
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'H12' }],
+          times: [{ time: 'H13' }],
         },
         {
           component: CBSComponent.BS,
@@ -58,7 +58,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS,
-          times: [{ time: 'T10' }],
+          times: [{ time: 'T11' }],
         },
         {
           component: CBSComponent.BS,
@@ -74,7 +74,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS,
-          times: [{ time: 'H10' }],
+          times: [{ time: 'H11' }],
         },
         {
           component: CBSComponent.BS_PAD,
@@ -82,7 +82,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS,
-          times: [{ time: 'F12' }],
+          times: [{ time: 'F11' }],
         },
         {
           component: CBSComponent.CORE_THEO,
@@ -106,35 +106,27 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'M12' }],
+          times: [{ time: 'M12', weeks: '2-10' }],
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'T11' }],
+          times: [{ time: 'T12', weeks: '2-10' }],
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'W10' }],
+          times: [{ time: 'W12', weeks: '2-10' }],
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'H11' }],
+          times: [{ time: 'H12', weeks: '2-10' }],
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'F13' }],
+          times: [{ time: 'F12', weeks: '2-10' }],
         },
         {
-          component: CBSComponent.LUNCH,
-          times: [{ time: 'T13' }],
-        },
-        {
-          component: CBSComponent.LUNCH,
-          times: [{ time: 'W13' }],
-        },
-        {
-          component: CBSComponent.LUNCH,
-          times: [{ time: 'H13' }],
+          component: CBSComponent.HANG,
+          times: [{ time: 'W16' }],
         },
       ],
     },
