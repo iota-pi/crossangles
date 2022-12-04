@@ -32,8 +32,8 @@ const unsw: CampusAdditional<CBSComponent> = {
       defaultColour: 'indigo',
       metadata: {
         ...CBS_BASE_META,
-        signupURL: 'https://campusbiblestudy.ccbchurch.com/goto/forms/876/responses/new',
-        signupValidFor: [{ year: 2022, term: 3 }],
+        signupURL: 'https://campusbiblestudy.org/sign-up',
+        signupValidFor: [{ year: 2023, term: 1 }],
       },
       streams: [
         {
