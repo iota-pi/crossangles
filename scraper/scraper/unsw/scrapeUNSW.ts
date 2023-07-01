@@ -1,7 +1,6 @@
-import { ClassUtilScraper, CLASSUTIL } from './ClassUtilScraper';
 import { CampusData } from '../Scraper';
-import { CourseData, CourseMap, getCourseId } from '../../../app/src/state/Course';
-import { getStreamId, getTermStart, StreamData } from '../../../app/src/state/Stream';
+import { CourseData } from '../../../app/src/state/Course';
+import { getTermStart } from '../../../app/src/state/Stream';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import generateMetaData from '../meta';
 import { getLogger } from '../../logging';
@@ -18,25 +17,20 @@ const terms = [1, 2, 3];
 export async function scrapeUNSW(
   { state, forceUpdate = false }: ScrapeCampusArgs,
 ): Promise<CampusData[] | null> {
-  const classutil = new ClassUtilScraper({ state });
   const timetable = new TimetableScraper({ state });
 
-  const rescrapeClassUtil = await classutil.setup() || forceUpdate;
   const rescrapeTimetable = await timetable.setup() || forceUpdate;
 
   // Don't need to update data if only using info from cache
-  if (!rescrapeClassUtil && !rescrapeTimetable) {
+  if (!rescrapeTimetable) {
     return null;
   }
 
-  const classutilPromise = scrapeClassUtil(classutil, !rescrapeClassUtil);
   const timetablePromise = scrapeTimetable(timetable, !rescrapeTimetable);
-  const classutilData = await classutilPromise;
   const timetableData = await timetablePromise;
   logger.info('Finished scraping for UNSW');
 
   const sources: string[] = [];
-  if (classutilData.length) { sources.push(CLASSUTIL); }
   if (timetableData.length) { sources.push(TIMETABLE_UNSW); }
 
   const results: CampusData[] = [];
@@ -46,7 +40,7 @@ export async function scrapeUNSW(
     const meta = generateMetaData(term, termStart.toDateString(), sources);
 
     logger.info(`Merging data for term ${term}`);
-    const mergedData = mergeData(classutilData[i], timetableData[i]);
+    const mergedData = timetableData[i];
 
     logger.info(`Including additional data for term ${term}`);
     const termString = getCurrentTerm(meta);
@@ -70,103 +64,6 @@ export async function scrapeUNSW(
   logger.info(`Current term is ${currentTerm ? currentTerm + 1 : currentTerm}`);
 
   return results;
-}
-
-export function mergeData(classutilData?: CourseData[], timetableData?: CourseData[]) {
-  // Just use data from one if the other has no data
-  if (!classutilData || !timetableData) {
-    if (timetableData) {
-      logger.warn('No data from classutil, using timetable data only');
-      return timetableData;
-    } else if (classutilData) {
-      logger.warn('No data from timetable, using classutil data only');
-      return classutilData;
-    }
-    logger.warn('No data from classutil or timetable!');
-    return [];
-  }
-
-  const timetableCourseMap: CourseMap = {};
-  for (const course of timetableData) {
-    const courseId = getCourseId(course, true);
-    timetableCourseMap[courseId] = course;
-  }
-
-  for (const course of classutilData) {
-    const simpleCourseId = getCourseId(course, true);
-    const timetableCourse = timetableCourseMap[simpleCourseId];
-    if (timetableCourse === undefined) {
-      continue;
-    }
-
-    // ClassUtil abbreviates long names
-    course.name = timetableCourse.name;
-
-    // ClassUtil doesn't include descriptions for courses
-    if (timetableCourse.description) {
-      course.description = timetableCourse.description;
-    }
-
-    const enrolmentStreams = filterEnrolmentStreams(timetableCourse.streams);
-    if (enrolmentStreams.length > 1) {
-      // Find corresponding course enrolment stream and update the course's description
-      const enrolment = timetableCourse.streams.find(s => s.component === course.section);
-      if (enrolment) {
-        course.description = enrolment.notes;
-      }
-    } else {
-      // No need to include section if there only is one section for the course
-      course.section = undefined;
-    }
-
-    if (timetableCourse !== undefined) {
-      for (const stream of course.streams) {
-        const timetableStream = timetableCourse.streams.find(
-          s => getStreamId(timetableCourse, s, true) === getStreamId(course, stream, true),
-        );
-
-        if (timetableStream) {
-          for (const time of stream.times) {
-            const timetableTime = timetableStream.times.find(
-              t => t.time === time.time,
-            );
-
-            if (timetableTime) {
-              // ClassUtil abbreviates location names
-              time.location = timetableTime.location;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return classutilData;
-}
-
-export function filterEnrolmentStreams(streams: StreamData[]) {
-  const regex = /^CR(?:[0-9]{2}|S)$/;
-  return streams.filter(s => regex.test(s.component));
-}
-
-export function scrapeClassUtil(
-  classutil: ClassUtilScraper,
-  useCache: boolean,
-): Promise<CourseData[][]> {
-  const classutilData: Promise<CourseData[]>[] = [];
-
-  for (const term of terms) {
-    if (useCache) {
-      classutilData.push(classutil.getCache(term));
-    } else {
-      try {
-        classutilData.push(classutil.scrape(term));
-      } catch (error) {
-        logger.error(`Error while scraping from ${CLASSUTIL} for term ${term}`, error);
-      }
-    }
-  }
-  return Promise.all(classutilData);
 }
 
 export async function scrapeTimetable(
