@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "target": "ES2020",
     "lib": [
-      "esnext",
+      "ES2020",
     ],
     "strict": true,
     "allowJs": true,
@@ -11,7 +11,7 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "ES2020",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -19,6 +19,11 @@
       "node_modules/@types",
     ],
     "outDir": "build",
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+    },
   },
   "include": [
     "**/*",
