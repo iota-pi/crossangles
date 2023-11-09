@@ -65,6 +65,7 @@ export class Scraper {
     let content: string;
     let loadedFromCache = false;
     if (this.cache.has(url)) {
+      this.logger.info(`Fetching page content from cache for ${url}`);
       content = this.cache.get(url)!;
       loadedFromCache = true;
     } else {
@@ -86,7 +87,7 @@ export class Scraper {
   }
 
   private get averageParseTime() {
-    return this.parseTimes.reduce((sum, x) => sum + x, 0) / this.fetchTimes.length;
+    return this.parseTimes.reduce((sum, x) => sum + x, 0) / this.parseTimes.length;
   }
 
   report() {
@@ -96,7 +97,7 @@ export class Scraper {
         averageFetchTime: this.averageFetchTime,
         averageParseTime: this.averageParseTime,
         pagesFetched: this.fetchTimes.length,
-        pagesParsed: this.fetchTimes.length,
+        pagesParsed: this.parseTimes.length,
       },
     );
   }

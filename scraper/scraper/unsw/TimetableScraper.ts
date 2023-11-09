@@ -15,7 +15,7 @@ export const courseSort = (a: CourseData, b: CourseData) => +(a.code > b.code) -
 const UPDATE_TIME_KEY = 'timetable_update_time';
 const CACHE_KEY = 'timetable_last_data';
 
-export const TIMETABLE_UNSW = 'http://timetable.unsw.edu.au';
+export const TIMETABLE_UNSW = 'https://timetable.unsw.edu.au';
 
 export interface TimetableScraperConfig {
   state?: StateManager | null,
@@ -103,9 +103,9 @@ export class TimetableScraper {
     }
 
     // Update data if source has changed
-    const lastUpdateTime = await this.state.get(this.uni, UPDATE_TIME_KEY);
-    logger.info(`Last successful update was recorded at ${lastUpdateTime}`);
-    if (lastUpdateTime !== this.dataUpdateTime) {
+    const lastScrapeTime = await this.state.get(this.uni, UPDATE_TIME_KEY);
+    logger.info(`Last successful update was recorded at ${lastScrapeTime}`);
+    if (lastScrapeTime !== this.dataUpdateTime) {
       return true;
     }
 
