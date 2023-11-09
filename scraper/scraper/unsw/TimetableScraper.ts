@@ -21,7 +21,6 @@ const ROOT_PAGE = '/subjectSearch.html';
 
 export interface TimetableScraperConfig {
   state?: StateManager | null,
-  year?: number,
 }
 
 export interface StreamTableData {
@@ -52,7 +51,7 @@ export class TimetableScraper {
 
   protected dataUpdateTime: string | null | undefined = null;
 
-  constructor({ state, year }: TimetableScraperConfig = {}) {
+  constructor({ state }: TimetableScraperConfig = {}) {
     this.scraper = new Scraper();
     this.scraper.logger = logger;
     this.state = state === undefined ? getStateManager() : state || undefined;
