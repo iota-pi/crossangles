@@ -104,6 +104,7 @@ export class TimetableScraper {
 
     // Update data if source has changed
     const lastUpdateTime = await this.state.get(this.uni, UPDATE_TIME_KEY);
+    logger.info(`Last successful update was recorded at ${lastUpdateTime}`);
     if (lastUpdateTime !== this.dataUpdateTime) {
       return true;
     }
@@ -113,11 +114,12 @@ export class TimetableScraper {
 
   private getUpdateTime($: CheerioStatic) {
     let timeText = $('td.note:contains("Data is correct as at")').text();
-    timeText = timeText.replace('Data is correct as at', '').trim();
+    timeText = timeText.replace(/Data is correct as at/i, '').trim();
 
     // Remove timezone because it confuses parsers and is inconsistent
     const withoutTZ = timeText.replace(/\bA?E[SD]T\b/, '');
-    this.dataUpdateTime = withoutTZ.replace(/\s\s{1,20}/g, ' ');
+    this.dataUpdateTime = withoutTZ.replace(/\s\s{1,20}/g, ' ').trim();
+    logger.info(`Data update time detected as "${this.dataUpdateTime}"`);
   }
 
   private async findFacultyPages() {
