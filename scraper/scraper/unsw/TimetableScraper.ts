@@ -220,7 +220,7 @@ export class TimetableScraper {
         }
 
         // Skip regular streams without any associated class times
-        const isRegularStream = !stream.web && !isCourseEnrolment(data);
+        const isRegularStream = !stream.web;
         if (stream.times.length === 0 && isRegularStream) {
           continue;
         }
@@ -293,6 +293,11 @@ export function shouldSkipStream(data: StreamTableData) {
 
   // Skip intensive courses
   if (data['Mode of Delivery'].toLowerCase() === 'intensive mode') {
+    return true;
+  }
+
+  // Skip course enrolment streams
+  if (isCourseEnrolment(data)) {
     return true;
   }
 
