@@ -1,5 +1,5 @@
-import { getInPersonTimes, mergeDeliveryType } from '../commonUtils';
-import { StreamData, DeliveryType } from '../../../app/src/state/Stream';
+import { getInPersonTimes, mergeDeliveryType } from './commonUtils';
+import { StreamData, DeliveryType } from '../../app/src/state/Stream';
 
 const baseStream: StreamData = { component: '', times: [] };
 
