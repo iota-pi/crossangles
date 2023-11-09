@@ -91,7 +91,7 @@ export function selectCurrentTerm(
     const hasStreamData = courses.filter(c => c.streams.length > 0);
     logger.info(
       `Term ${i + 1} has stream data for `
-      + `${Math.round(hasStreamData.length / courses.length * 100)}%`
+      + `${Math.round((hasStreamData.length / courses.length) * 100)}%`
       + ` of ${courses.length} courses.`,
     );
     if (hasStreamData.length > courses.length * DATA_THRESHOLD) {
