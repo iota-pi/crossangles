@@ -7,6 +7,7 @@ import getStateManager from '../../state/getStateManager';
 import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
 import { UNSW } from './scrapeUNSW';
+import axios from '../axios';
 
 const logger = getLogger('TimetableScraper', { campus: UNSW });
 
@@ -16,6 +17,7 @@ const UPDATE_TIME_KEY = 'timetable_update_time';
 const CACHE_KEY = 'timetable_last_data';
 
 export const TIMETABLE_UNSW = 'https://timetable.unsw.edu.au';
+const ROOT_PAGE = '/subjectSearch.html';
 
 export interface TimetableScraperConfig {
   state?: StateManager | null,
@@ -46,7 +48,6 @@ export class TimetableScraper {
   maxCourses = process.env.NODE_ENV === 'test' ? 1 : Infinity;
   facultyPages: string[] = [];
   baseURL: string;
-  year: number;
   facultyLinkFilter?: (links: string[]) => string[];
 
   protected dataUpdateTime: string | null | undefined = null;
@@ -55,11 +56,11 @@ export class TimetableScraper {
     this.scraper = new Scraper();
     this.scraper.logger = logger;
     this.state = state === undefined ? getStateManager() : state || undefined;
-    this.year = year || new Date().getFullYear();
-    this.baseURL = `${TIMETABLE_UNSW}/${this.year}`;
+    this.baseURL = `${TIMETABLE_UNSW}`;
   }
 
   async setup() {
+    await this.updateBaseURL();
     this.facultyPages = await this.findFacultyPages();
 
     if (!await this.checkIfDataUpdated()) {
@@ -112,6 +113,17 @@ export class TimetableScraper {
     return false;
   }
 
+  private async updateBaseURL() {
+    const response = await axios.get(this.baseURL);
+    const responseURL = response.request.res.responseUrl;
+    if (!responseURL) {
+      logger.warn(`Could not update base URL. Will use default: ${this.baseURL}`);
+      return;
+    }
+    this.baseURL = responseURL.replace(/\/[^/]*\.html$/i, '');
+    logger.info(`Updated base URL to: ${this.baseURL}`);
+  }
+
   private getUpdateTime($: CheerioStatic) {
     let timeText = $('td.note:contains("Data is correct as at")').text();
     timeText = timeText.replace(/Data is correct as at/i, '').trim();
@@ -125,7 +137,7 @@ export class TimetableScraper {
   private async findFacultyPages() {
     const links: string[] = [];
     const linkRegex = /[A-Y][A-Z]{3}(KENS|COFA)\.html$/i;
-    await this.scraper.scrapePages([this.baseURL], async $ => {
+    await this.scraper.scrapePages([`${this.baseURL}${ROOT_PAGE}`], async $ => {
       const pageLinks = Array.from($('a')).map(e => $(e).attr('href') || '');
       const matchingLinks = pageLinks.filter(link => linkRegex.test(link));
       links.push(...matchingLinks);
