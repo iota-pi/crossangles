@@ -116,7 +116,7 @@ const InfoText = ({
             Term {meta.term}, {meta.year}
           </span>
           .
-          CrossAngles comes without any guarantee of data accuracy or of optimality.
+          CrossAngles comes without any guarantee of data accuracy.
           If you have any questions or suggestions,
           please
           {' '}
