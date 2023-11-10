@@ -19,6 +19,7 @@ enum CBSComponent {
   CORE_TRAIN = 'Core Training',
   PRAYER = 'Prayer Group',
   HANG = 'Sport + Hangs',
+  SIMPLY_JESUS = 'Simply Jesus',
 }
 
 
@@ -127,6 +128,10 @@ const unsw: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.HANG,
           times: [{ time: 'W16' }],
+        },
+        {
+          component: CBSComponent.SIMPLY_JESUS,
+          times: [{ time: 'W12' }],
         },
       ],
     },
