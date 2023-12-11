@@ -13,7 +13,7 @@ resource "aws_lambda_function" "contact" {
   # is the name of the property under which the handler function was
   # exported in that file.
   handler     = "lambda.handler"
-  runtime     = "nodejs16.x"
+  runtime     = "nodejs20.x"
   memory_size = 256
   timeout     = 10
 
