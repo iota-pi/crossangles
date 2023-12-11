@@ -133,6 +133,7 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
                 rel="noopener noreferrer"
                 onClick={handleLinkClick}
                 className={`${classes.plainLink} ${classes.noShrink}`}
+                aria-hidden
               >
                 <OpenInNew className={classes.externalLinkIcon} fontSize="inherit" />
               </a>

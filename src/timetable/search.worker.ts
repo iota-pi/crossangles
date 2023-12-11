@@ -1,4 +1,4 @@
-import { LinkedSession, LinkedStream } from '../state';
+import type { CourseData, LinkedSession, LinkedStream } from '../state';
 import { TimetableScorer, TimetableScoreConfig } from './scoreTimetable';
 import { GeneticSearch, GeneticSearchOptionalConfig } from './GeneticSearch';
 import { ClashInfo } from './getClashInfo';
@@ -28,4 +28,11 @@ export function runSearch({
   });
   const result = searcher.search(streams);
   return result;
+}
+
+self.onmessage = (
+  event: MessageEvent<RunSearchOptions>,
+) => {
+  const results = runSearch(event.data);
+  self.postMessage(results);
 }

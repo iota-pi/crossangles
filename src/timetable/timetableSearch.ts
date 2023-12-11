@@ -1,13 +1,10 @@
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-import createSearchWorker, { Workerized } from 'workerize-loader!./search.worker';
 import { GeneticSearchOptionalConfig, Parent } from './GeneticSearch';
 import { Component } from './coursesToComponents';
 import { LinkedSession, LinkedStream } from '../state';
 import { getClashInfo, ClashInfo } from './getClashInfo';
 import { TimetableScoreConfig } from './scoreTimetable';
-import * as searchWorker from './search.worker';
-
-export type Worker = Workerized<typeof searchWorker>;
+import SearchWorker from './search.worker?worker';
+import { RunSearchOptions } from './search.worker';
 
 export interface TimetableSearchResult {
   timetable: LinkedSession[],
@@ -71,7 +68,7 @@ class TimetableSearch {
 
   private async spawnWorkers(count: number) {
     for (let i = 0; i < count; ++i) {
-      const worker = createSearchWorker<typeof searchWorker>();
+      const worker = new SearchWorker();
       this.workers.push(worker);
     }
   }
@@ -94,12 +91,16 @@ class TimetableSearch {
     const promises: Promise<Parent<LinkedStream>>[] = [];
     const workers = maxSpawn ? this.workers.slice(0, maxSpawn) : this.workers;
     for (const worker of workers) {
-      promises.push(worker.runSearch({
-        fixedSessions,
-        clashInfo,
-        streams,
-        config,
-        scoreConfig,
+      promises.push(new Promise<Parent<LinkedStream>>(resolve => {
+        const options: RunSearchOptions = {
+          fixedSessions,
+          clashInfo,
+          streams,
+          config,
+          scoreConfig,
+        };
+        worker.postMessage(options);
+        worker.onmessage = event => resolve(event.data);
       }));
     }
     return Promise.all(promises);

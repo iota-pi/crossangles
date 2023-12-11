@@ -76,18 +76,19 @@ class CreateCustom extends PureComponent<Props, State> {
       this.state.email,
       this.state.message,
     );
-    this.handleClose();
-  };
-
-  private handleClose = () => {
     this.props.onClose();
   };
 
-  private handleBackdropClick = () => {
-    const partiallyCompleted = this.state.name || this.state.email || this.state.message;
-    if (!partiallyCompleted) {
-      this.handleClose();
+  private handleClose = (event: Event, reason: string) => {
+    if (reason === "backdropClick") {
+      const partiallyCompleted = (
+        this.state.name || this.state.email || this.state.message
+      );
+      if (partiallyCompleted) {
+        return;
+      }
     }
+    this.props.onClose();
   };
 
   private handleExited = () => {
@@ -135,9 +136,10 @@ class CreateCustom extends PureComponent<Props, State> {
     return (
       <Dialog
         open={this.props.open}
-        onExited={this.handleExited}
-        onEscapeKeyDown={this.handleClose}
-        onBackdropClick={this.handleBackdropClick}
+        onClose={this.handleClose}
+        TransitionProps={{
+          onExited: this.handleExited,
+        }}
         aria-labelledby="contact-us-title"
         className={classes.dialog}
         fullWidth
@@ -150,7 +152,7 @@ class CreateCustom extends PureComponent<Props, State> {
 
           <IconButton
             aria-label="close"
-            onClick={this.handleClose}
+            onClick={this.props.onClose}
             className={classes.moveRight}
           >
             <CloseIcon />

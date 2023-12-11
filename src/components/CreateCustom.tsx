@@ -280,7 +280,9 @@ class CreateCustom extends PureComponent<Props, State> {
       <Dialog
         open={this.props.open}
         onClose={this.handleClose}
-        onExited={this.handleExited}
+        TransitionProps={{
+          onExited: this.handleExited,
+        }}
         aria-labelledby="custom-event-title"
         className={classes.dialog}
         fullWidth

@@ -30,11 +30,11 @@ export interface Props {
   onClick: () => void,
 }
 
-export const CourseActionButton: React.FC<Props> = ({
+export const CourseActionButton: React.FC<PropsWithChildren<Props>> = ({
   children,
   flipped,
   onClick,
-}: PropsWithChildren<Props>) => {
+}) => {
   const classes = useStyles();
   return (
     <ListItemIcon

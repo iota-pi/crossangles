@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import TextField from '@material-ui/core/TextField';
-import Autocomplete, { AutocompleteRenderInputParams } from '@material-ui/lab/Autocomplete';
+import Autocomplete, { AutocompleteRenderInputParams, AutocompleteRenderOptionState } from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import ListboxComponent from './ListboxComponent';
 import PaperComponent, { Props as PaperComponentProps } from './PaperComponent';
 import { CourseData, getCourseId, getClarificationText } from '../../state';
-import { useFilterWorker } from './filter.worker.shim';
+import FilterWorker from './filter.worker?worker';
 
 export interface Props {
   courses: CourseData[],
@@ -158,7 +158,16 @@ const AutocompleteControl: React.FC<Props> = ({
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const worker = useFilterWorker();
+  const worker = useMemo(
+    () => {
+      const worker = new FilterWorker();
+      worker.onmessage = event => {
+        setFilteredOptions(event.data);
+      };
+      return worker;
+    },
+    [],
+  );
 
   const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
   const allOptions = React.useMemo(
@@ -197,12 +206,11 @@ const AutocompleteControl: React.FC<Props> = ({
       );
 
       const fullSearch = setTimeout(
-        async () => {
+        () => {
           if (inputValue.length === 0) {
             setFilteredOptions(allOptions);
           } else {
-            const results = await worker.runFilter(allOptions, inputValue);
-            setFilteredOptions(results);
+            worker.postMessage({ options: allOptions, inputValue });
           }
         },
         SEARCH_DEBOUNCE,
@@ -241,7 +249,12 @@ const AutocompleteControl: React.FC<Props> = ({
   );
 
   const renderOption = React.useCallback(
-    (option, { inputValue: value }) => <AutocompleteOption option={option} value={value} />,
+    (
+      option: CourseData,
+      { inputValue: value }: AutocompleteRenderOptionState,
+    ) => (
+      <AutocompleteOption option={option} value={value} />
+    ),
     [],
   );
 

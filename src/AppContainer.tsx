@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core';
 import loadable from '@loadable/component';
@@ -13,13 +12,7 @@ export const AppContainer = () => {
 
   return (
     <ThemeProvider theme={theme(darkMode)}>
-      <Router>
-        <Switch>
-          <Route path="/">
-            <App />
-          </Route>
-        </Switch>
-      </Router>
+      <App />
     </ThemeProvider>
   );
 };

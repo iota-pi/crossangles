@@ -5,7 +5,7 @@ export async function submitContact({ name, email, message }: {
   email: string,
   message: string,
 }) {
-  const url = `${process.env.REACT_APP_CONTACT_ENDPOINT}/${process.env.REACT_APP_STAGE_NAME}/`;
+  const url = `${import.meta.env.VITE_CONTACT_ENDPOINT}/${import.meta.env.VITE_STAGE_NAME}/`;
 
   const response = await axios.post(url, {
     email,
