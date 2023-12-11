@@ -1,4 +1,4 @@
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 import { Action } from 'redux';
 import { CourseData, CourseId, getCourseId, AdditionalEvent, OptionName } from '../state';
 import { CATEGORY } from '../analytics';
@@ -15,7 +15,7 @@ export interface CourseAction extends Action {
 }
 
 export function addCourse(course: CourseData): CourseAction {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'Add Course',
     label: getCourseId(course),
@@ -28,7 +28,7 @@ export function addCourse(course: CourseData): CourseAction {
 }
 
 export function removeCourse(course: CourseData): CourseAction {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'Remove Course',
     label: getCourseId(course),
@@ -42,7 +42,7 @@ export function removeCourse(course: CourseData): CourseAction {
 
 // Web streams
 export function toggleWebStream(course: CourseData): CourseAction {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'Toggle Web Stream',
     label: getCourseId(course),
@@ -62,16 +62,16 @@ export interface EventAction extends Action {
   event: AdditionalEvent;
 }
 
-export function toggleEvent(event: AdditionalEvent): EventAction {
-  ReactGA.event({
+export function toggleEvent(additionalEvent: AdditionalEvent): EventAction {
+  event({
     category: CATEGORY,
     action: 'Toggle Event',
-    label: event.name,
+    label: additionalEvent.name,
   });
 
   return {
     type: TOGGLE_EVENT,
-    event,
+    event: additionalEvent,
   };
 }
 
@@ -83,7 +83,7 @@ export interface ToggleShowEventsAction extends Action {
 }
 
 export function toggleShowEvents(courseId: CourseId): ToggleShowEventsAction {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'Toggle Show Events',
     label: courseId,
@@ -105,7 +105,7 @@ export interface ToggleOptionAction extends Action {
 }
 
 export function toggleOption(option: OptionName, value?: boolean): ToggleOptionAction {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'Toggle Option',
     label: option,

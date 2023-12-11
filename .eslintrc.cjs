@@ -11,9 +11,13 @@ module.exports = {
     'jest',
     'react',
   ],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   extends: [
     'airbnb-typescript',
-    'airbnb/hooks',
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
@@ -61,4 +65,18 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',
   },
+  overrides: [
+    {
+      files: ['**/*.worker.ts'],
+      rules: {
+        'no-restricted-globals': 'off',
+      },
+    },
+    {
+      files: ['**/reducers/*'],
+      rules: {
+        '@typescript-eslint/default-param-last': 'off',
+      },
+    },
+  ],
 };

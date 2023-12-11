@@ -8,6 +8,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import ListboxComponent from './ListboxComponent';
 import PaperComponent, { Props as PaperComponentProps } from './PaperComponent';
 import { CourseData, getCourseId, getClarificationText } from '../../state';
+// eslint-disable-next-line import/no-unresolved
 import FilterWorker from './filter.worker?worker';
 
 export interface Props {
@@ -158,17 +159,6 @@ const AutocompleteControl: React.FC<Props> = ({
 
   const [inputValue, setInputValue] = React.useState('');
 
-  const worker = useMemo(
-    () => {
-      const worker = new FilterWorker();
-      worker.onmessage = event => {
-        setFilteredOptions(event.data);
-      };
-      return worker;
-    },
-    [],
-  );
-
   const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
   const allOptions = React.useMemo(
     () => {
@@ -185,6 +175,18 @@ const AutocompleteControl: React.FC<Props> = ({
   );
 
   const [filteredOptions, setFilteredOptions] = React.useState<typeof allOptions>(allOptions);
+
+  const worker = useMemo(
+    () => {
+      const filterWorker = new FilterWorker();
+      filterWorker.onmessage = event => {
+        setFilteredOptions(event.data);
+      };
+      return filterWorker;
+    },
+    [],
+  );
+
   React.useEffect(
     () => {
       const quickSearch = setTimeout(

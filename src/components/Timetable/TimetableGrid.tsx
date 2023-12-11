@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => {
 });
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-const daysToLetters: {[key: string]: string} = {
+const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
   Wednesday: 'W',

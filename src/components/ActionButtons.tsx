@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Theme, createStyles, WithStyles, withStyles } from '@material-ui/core/styles';
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 
 import Button from '@material-ui/core/Button';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -79,7 +79,7 @@ export const ActionButtons = withStyles(styles)(({
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
 
   const handleLinkClick = (destination?: string) => {
-    ReactGA.event({
+    event({
       category: CATEGORY,
       action: 'Signup Link',
       label: destination,

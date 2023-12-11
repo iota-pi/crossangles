@@ -45,7 +45,7 @@ const allGeneralOptions: OptionListItem[] = [
 ];
 export const generalOptionList = filterOptionList(allGeneralOptions);
 
-export const exclusiveOptions: {[key in keyof Options]: OptionName[]} = {
+export const exclusiveOptions: { [key in keyof Options]: OptionName[] } = {
   compactView: ['showMode'],
   showMode: ['compactView'],
 };

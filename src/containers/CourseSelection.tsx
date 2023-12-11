@@ -1,6 +1,6 @@
 import React, { lazy, PureComponent, Suspense } from 'react';
 import { connect } from 'react-redux';
-import ReactGA from 'react-ga';
+import { exception } from 'react-ga';
 import { Theme } from '@material-ui/core/styles';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
@@ -197,7 +197,7 @@ class CourseSelection extends PureComponent<Props, State> {
     try {
       return SessionManager.from(this.props.timetable, this.props.courses);
     } catch (error) {
-      ReactGA.exception({ description: `Could not process timetable data. ${error}` });
+      exception({ description: `Could not process timetable data. ${error}` });
       console.error('Could not process timetable data', this.props.timetable, this.props.courses);
       return new SessionManager();
     }

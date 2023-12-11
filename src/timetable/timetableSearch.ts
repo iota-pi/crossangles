@@ -3,8 +3,9 @@ import { Component } from './coursesToComponents';
 import { LinkedSession, LinkedStream } from '../state';
 import { getClashInfo, ClashInfo } from './getClashInfo';
 import { TimetableScoreConfig } from './scoreTimetable';
+// eslint-disable-next-line import/no-unresolved
 import SearchWorker from './search.worker?worker';
-import { RunSearchOptions } from './search.worker';
+import type { RunSearchOptions } from './search.worker';
 
 export interface TimetableSearchResult {
   timetable: LinkedSession[],

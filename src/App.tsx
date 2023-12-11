@@ -5,7 +5,7 @@ import React, {
   Suspense,
 } from 'react';
 import { connect, MapDispatchToPropsNonObject } from 'react-redux';
-import ReactGA from 'react-ga';
+import { exception, event, modalview } from 'react-ga';
 import loadable from '@loadable/component';
 
 // Theme
@@ -104,7 +104,7 @@ class App extends PureComponent<Props, State> {
   componentDidCatch(error: Error, info: ErrorInfo) {
     const infoText = info.componentStack;
 
-    ReactGA.exception({
+    exception({
       description: `Unhandled error catch by error boundary in App.\n${error.message}\n${error.stack}\n${infoText}`,
     });
     console.error(error);
@@ -141,7 +141,7 @@ class App extends PureComponent<Props, State> {
   private handleSaveAsICS = () => {
     this.setState({ isSavingICS: true });
 
-    ReactGA.event({
+    event({
       category: CATEGORY,
       action: 'Save as ICS',
     });
@@ -168,7 +168,7 @@ class App extends PureComponent<Props, State> {
 
   private handleContactShow = () => {
     this.setState({ showContact: true });
-    ReactGA.modalview('contact-us');
+    modalview('contact-us');
   };
 
   private handleContactSend = async (name: string, email: string, message: string) => {

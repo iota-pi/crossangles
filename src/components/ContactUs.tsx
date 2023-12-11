@@ -80,7 +80,7 @@ class CreateCustom extends PureComponent<Props, State> {
   };
 
   private handleClose = (event: Event, reason: string) => {
-    if (reason === "backdropClick") {
+    if (reason === 'backdropClick') {
       const partiallyCompleted = (
         this.state.name || this.state.email || this.state.message
       );
@@ -100,11 +100,11 @@ class CreateCustom extends PureComponent<Props, State> {
     });
   };
 
-  private handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
+  private handleChangeName = (event: ChangeEvent<{ value: unknown }>) => {
     this.setState({ name: event.target.value as string });
   };
 
-  private handleChangeEmail = (event: ChangeEvent<{value: unknown}>) => {
+  private handleChangeEmail = (event: ChangeEvent<{ value: unknown }>) => {
     const email = event.target.value as string;
     this.setState(({ showEmailError }) => ({
       email,
@@ -118,7 +118,7 @@ class CreateCustom extends PureComponent<Props, State> {
     ));
   };
 
-  private handleChangeMessage = (event: ChangeEvent<{value: unknown}>) => {
+  private handleChangeMessage = (event: ChangeEvent<{ value: unknown }>) => {
     this.setState({ message: event.target.value as string });
   };
 

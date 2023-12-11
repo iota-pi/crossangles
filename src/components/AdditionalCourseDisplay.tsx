@@ -1,6 +1,6 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
 import Collapse from '@material-ui/core/Collapse';
@@ -29,7 +29,7 @@ export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
   onToggleEvent: (event: AdditionalEvent) => void,
   onRemoveCourse: (course: CourseData) => void,
   onToggleShowEvents: (course: CourseData) => void,
-  onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
+  onShowPopover: (event: React.MouseEvent<HTMLElement>, course: CourseData) => void,
 }
 
 
@@ -94,7 +94,7 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
 
   const handleLinkClick = React.useCallback(
     () => {
-      ReactGA.event({
+      event({
         category: CATEGORY,
         action: 'Additional Link',
         label: website,
@@ -107,7 +107,7 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
     [course, onToggleShowEvents, onRemoveCourse],
   );
   const handleColourClick = React.useCallback(
-    (e: MouseEvent<HTMLElement>) => onShowPopover(e, course),
+    (e: React.MouseEvent<HTMLElement>) => onShowPopover(e, course),
     [course, onShowPopover],
   );
 

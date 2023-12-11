@@ -1,4 +1,4 @@
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 import { Action } from 'redux';
 import { CATEGORY } from '../analytics';
 
@@ -9,7 +9,7 @@ export interface HistoryAction extends Action {
 }
 
 export function undoTimetable() {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'History: Undo',
   });
@@ -18,7 +18,7 @@ export function undoTimetable() {
 }
 
 export function redoTimetable() {
-  ReactGA.event({
+  event({
     category: CATEGORY,
     action: 'History: Redo',
   });

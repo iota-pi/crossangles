@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Button, DialogActions, makeStyles, Paper, PaperProps } from '@material-ui/core';
-import Event from '@material-ui/icons/Event';
+import EventIcon from '@material-ui/icons/Event';
 import { getOption } from '../../state';
 import { getOptions } from '../../state/selectors';
 
@@ -36,7 +36,7 @@ const PaperComponent: React.FC<Props> = (props: Props) => {
           fullWidth
           id="add-personal-event"
           size="large"
-          startIcon={<Event />}
+          startIcon={<EventIcon />}
           onClick={onAddPersonalEvent}
           // Prevent default to stop blur on autocomplete input from triggering too early
           onMouseDown={e => e.preventDefault()}

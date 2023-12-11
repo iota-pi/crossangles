@@ -18,4 +18,4 @@ self.onmessage = (
   const { options, inputValue } = event.data;
   const results = runFilter(options, inputValue);
   self.postMessage(results);
-}
+};

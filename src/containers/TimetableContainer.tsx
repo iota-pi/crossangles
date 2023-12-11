@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 
 // Components
 import { TimetableControls } from '../components/TimetableControls';
@@ -134,7 +134,7 @@ class TimetableContainer extends PureComponent<Props, State> {
       scoreConfig,
     } = this.props;
 
-    ReactGA.event({
+    event({
       category: CATEGORY,
       action: 'Update Timetable',
     });

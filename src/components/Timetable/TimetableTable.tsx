@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fade from '@material-ui/core/Fade';
@@ -190,7 +190,7 @@ function TimetableTable({
       if (dragging) return;
 
       const { id, stream } = session;
-      ReactGA.event({
+      event({
         category: CATEGORY,
         action: 'Drag Session',
         label: stream.id,

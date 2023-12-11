@@ -2,7 +2,7 @@ import { SessionManagerData } from '../components/Timetable/SessionManagerTypes'
 import { getCurrentTimetable } from './selectors';
 import { RootState, TimetableHistoryState } from '.';
 
-export type Timetables = {[term: string]: SessionManagerData};
+export type Timetables = { [term: string]: SessionManagerData };
 
 type NoHistoryState = Omit<RootState, 'history'>;
 export function getTimetableState(state: NoHistoryState): TimetableHistoryState {

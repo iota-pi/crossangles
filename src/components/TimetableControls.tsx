@@ -8,7 +8,7 @@ import Undo from '@material-ui/icons/Undo';
 import Redo from '@material-ui/icons/Redo';
 import Refresh from '@material-ui/icons/Refresh';
 import Warning from '@material-ui/icons/Warning';
-import Event from '@material-ui/icons/Event';
+import EventIcon from '@material-ui/icons/Event';
 import { useSelector } from 'react-redux';
 import { HistoryData, RootState } from '../state';
 
@@ -165,7 +165,7 @@ export const TimetableControls = ({
             onClick={onCreateCustom}
             color="primary"
           >
-            <Event />
+            <EventIcon />
           </IconButton>
         </Tooltip>
       )}

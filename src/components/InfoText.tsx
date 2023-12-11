@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import { CourseData, Meta } from '../state';
@@ -38,7 +38,7 @@ const InfoText = ({
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
 
   const handleLinkClick = (action: string, destination?: string) => {
-    ReactGA.event({
+    event({
       category: CATEGORY,
       action,
       label: destination,
@@ -122,7 +122,7 @@ const InfoText = ({
           {' '}
           <a
             className={classes.link}
-            onClick={event => { event.preventDefault(); onShowContact(); }}
+            onClick={e => { e.preventDefault(); onShowContact(); }}
             href="#contact"
           >
             contact us

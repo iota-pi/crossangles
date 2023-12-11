@@ -7,7 +7,7 @@ import { CourseMap } from './state';
 export const migrations = {
   0: (state: any) => {
     // Change colours from simple strings to objects
-    const colours: {[course: string]: any} = state.colours;
+    const colours: { [course: string]: any } = state.colours;
     for (const c of Object.keys(colours)) {
       const COLOUR_MAP: { [colourName: string]: string } = {
         [pink[700]]: 'pink',

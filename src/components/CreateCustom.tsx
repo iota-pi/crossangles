@@ -1,5 +1,5 @@
 import React, { PureComponent, ChangeEvent } from 'react';
-import ReactGA from 'react-ga';
+import { modalview } from 'react-ga';
 
 // Styles
 import { Theme } from '@material-ui/core/styles';
@@ -111,7 +111,7 @@ class CreateCustom extends PureComponent<Props, State> {
     }
 
     if (this.props.open && !prevProps.open) {
-      ReactGA.modalview('create-custom');
+      modalview('create-custom');
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ placeholderName: this.pickPlaceholderName() });
     }
@@ -173,7 +173,7 @@ class CreateCustom extends PureComponent<Props, State> {
     }
   };
 
-  handleChangeName = (event: ChangeEvent<{value: unknown}>) => {
+  handleChangeName = (event: ChangeEvent<{ value: unknown }>) => {
     this.setState({ name: event.target.value as string });
   };
 
@@ -181,14 +181,14 @@ class CreateCustom extends PureComponent<Props, State> {
     this.setState({ duration: event.target.value as number });
   };
 
-  handleChangeDay = (event: ChangeEvent<{value: unknown}>, optionIndex: number) => {
+  handleChangeDay = (event: ChangeEvent<{ value: unknown }>, optionIndex: number) => {
     const options = this.state.options.slice();
     const day = event.target.value as DayLetter;
     options[optionIndex] = { ...options[optionIndex], day };
     this.updatedOptions(options, optionIndex);
   };
 
-  handleChangeTime = (event: ChangeEvent<{value: unknown}>, optionIndex: number) => {
+  handleChangeTime = (event: ChangeEvent<{ value: unknown }>, optionIndex: number) => {
     const options = this.state.options.slice();
     const start = event.target.value as number;
     options[optionIndex] = { ...options[optionIndex], start };

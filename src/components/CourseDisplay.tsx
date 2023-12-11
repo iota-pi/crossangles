@@ -1,6 +1,6 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import ReactGA from 'react-ga';
+import { event } from 'react-ga';
 
 import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
@@ -70,7 +70,7 @@ export interface BaseCourseDisplayProps {
   course: CourseData,
   colour: Colour,
   onRemoveCourse: (course: CourseData) => void,
-  onShowPopover: (event: MouseEvent<HTMLElement>, course: CourseData) => void,
+  onShowPopover: (event: React.MouseEvent<HTMLElement>, course: CourseData) => void,
 }
 
 export interface CourseDisplayProps extends BaseCourseDisplayProps {
@@ -123,7 +123,7 @@ export const CourseDisplay = ({
   const webStream = getWebStream(course);
 
   const handleLinkClick = (destination?: string) => {
-    ReactGA.event({
+    event({
       category: CATEGORY,
       action: 'Handbook Link',
       label: destination,

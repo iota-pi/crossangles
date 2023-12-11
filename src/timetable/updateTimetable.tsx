@@ -1,7 +1,7 @@
 import React from 'react';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import ReactGA from 'react-ga';
+import { exception } from 'react-ga';
 import Button from '@material-ui/core/Button';
 
 import {
@@ -31,13 +31,13 @@ import { TimetableScoreConfig } from './scoreTimetable';
 export interface UpdateTimetableArgs {
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
   sessionManager: SessionManager,
-  selection: Selection,
+  selection: TimetableSelection,
   searchConfig?: GeneticSearchOptionalConfig,
   cleanUpdate?: boolean,
   scoreConfig: TimetableScoreConfig,
 }
 
-export interface Selection {
+export interface TimetableSelection {
   chosen: CourseData[],
   custom: CourseData[],
   additional: CourseData[],
@@ -84,7 +84,7 @@ export async function updateTimetable(
       ignoreCache: cleanUpdate,
     });
   } catch (error) {
-    ReactGA.exception({ description: `Unexpected error in doTimetableSearch. ${error}` });
+    exception({ description: `Unexpected error in doTimetableSearch. ${error}` });
     console.error(error);
   }
 
@@ -96,7 +96,7 @@ export async function updateTimetable(
       sessionManager.update(newTimetable.timetable, newTimetable.score);
       sessionManager.snapAll();
     } catch (error) {
-      ReactGA.exception({ description: `Unexpected error when updating SessionManager. ${error}` });
+      exception({ description: `Unexpected error when updating SessionManager. ${error}` });
       console.error(error);
       await dispatch(setNotice('There was a problem generating a timetable'));
       return;
@@ -141,7 +141,7 @@ async function notifyUnplaced(
           const options = selection.options;
           const includeFull = options.includeFull;
           const newOptions: Options = { ...options, includeFull: !includeFull };
-          const newSelection: Selection = { ...selection, options: newOptions };
+          const newSelection: TimetableSelection = { ...selection, options: newOptions };
           const newArgs: UpdateTimetableArgs = { ...args, selection: newSelection };
           await updateTimetable(newArgs);
         }}
@@ -163,7 +163,7 @@ export async function recommendTimetable({
   scoreConfig,
 }: {
   dispatch: ThunkDispatch<{}, {}, AnyAction>,
-  selection: Selection,
+  selection: TimetableSelection,
   maxSpawn?: number,
   searchConfig?: GeneticSearchOptionalConfig,
   scoreConfig: TimetableScoreConfig,
@@ -223,7 +223,7 @@ export async function doTimetableSearch({
     result = await search(components, fixed, ignoreCache, searchConfig, scoreConfig, maxSpawn);
   } catch (error) {
     console.error(error);
-    ReactGA.exception({ description: `Unexpected error in search. ${error}` });
+    exception({ description: `Unexpected error in search. ${error}` });
     return null;
   }
 

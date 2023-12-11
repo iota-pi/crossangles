@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import { TransitionGroup } from 'react-transition-group';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import List from '@material-ui/core/List';
@@ -60,7 +60,7 @@ const CourseListComponent: React.FC<Props> = (props: Props) => {
   );
 
   const handleShowPopover = React.useCallback(
-    (event: MouseEvent<HTMLElement>, course: CourseData) => {
+    (event: React.MouseEvent<HTMLElement>, course: CourseData) => {
       setShowPopover({
         target: event.currentTarget,
         course,

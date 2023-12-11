@@ -83,9 +83,9 @@ export interface TimeOptionProps {
   option: CustomTimeOption,
   index: number,
   hasStartTimeError: boolean,
-  onChangeDay: (event: ChangeEvent<{value: unknown}>, optionIndex: number) => void,
+  onChangeDay: (event: ChangeEvent<{ value: unknown }>, optionIndex: number) => void,
   onClickClearDay: (optionIndex: number) => void,
-  onChangeTime: (event: ChangeEvent<{value: unknown}>, optionIndex: number) => void,
+  onChangeTime: (event: ChangeEvent<{ value: unknown }>, optionIndex: number) => void,
   onClickClearTime: (optionIndex: number) => void,
 }
 
