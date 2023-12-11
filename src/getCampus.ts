@@ -1,4 +1,6 @@
-export const getCampus = (): string => import.meta.env.VITE_CAMPUS!;
+import env from './env';
+
+export const getCampus = (): string => env.campus;
 
 export const isUNSW = () => getCampus() === 'unsw';
 export const isUSYD = () => getCampus() === 'usyd';

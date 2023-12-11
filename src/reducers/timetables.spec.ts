@@ -97,6 +97,7 @@ describe('timetables reducer', () => {
           ],
         },
       ],
+      isNewTerm: false,
     };
     const result = timetables(state, action);
     const expected = {
@@ -167,6 +168,7 @@ describe('timetables reducer', () => {
           ],
         },
       ],
+      isNewTerm: false,
     };
     const result = timetables(state, action);
     const expected = {
@@ -187,6 +189,7 @@ describe('timetables reducer', () => {
       courses: [
         { code: 'RING9731', name: '', streams: [] },
       ],
+      isNewTerm: false,
     };
     expect(() => timetables(state, action)).not.toThrow();
     expect(timetables(state, action)).toEqual(state);

@@ -29,6 +29,7 @@ describe('courses', () => {
       type: SET_COURSE_DATA,
       meta,
       courses: courseList,
+      isNewTerm: false,
     };
     const state = {};
     const result = courses(state, action);
@@ -47,6 +48,7 @@ describe('courses', () => {
       type: SET_COURSE_DATA,
       meta,
       courses: courseList,
+      isNewTerm: false,
     };
     const state: CourseMap = {
       // Unchanged course
@@ -251,6 +253,7 @@ describe('chosen', () => {
       type: SET_COURSE_DATA,
       meta,
       courses: courseList,
+      isNewTerm: false,
     };
     const state = ['extra1', courseIds[0], 'extra3', courseIds[1], 'extra3'];
     const result = chosen(state, action);
@@ -267,6 +270,7 @@ describe('chosen', () => {
       type: SET_COURSE_DATA,
       meta,
       courses: courseList,
+      isNewTerm: false,
     };
     const state = [...courseIds];
     const result = chosen(state, action);
@@ -414,6 +418,7 @@ describe('additional', () => {
         { code: 'CBS', name: 'Campus Bible Study', streams: [], isAdditional: true, autoSelect: true },
         { code: 'Street Talk', name: 'Street Talk', streams: [], isAdditional: true },
       ],
+      isNewTerm: false,
     };
     const result = additional([], action);
     expect(result).toEqual(['EU', 'CBS']);

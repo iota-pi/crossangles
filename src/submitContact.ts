@@ -1,11 +1,12 @@
 import axios from 'axios';
+import env from './env';
 
 export async function submitContact({ name, email, message }: {
   name: string,
   email: string,
   message: string,
 }) {
-  const url = `${import.meta.env.VITE_CONTACT_ENDPOINT}/${import.meta.env.VITE_STAGE_NAME}/`;
+  const url = env.contactURI;
 
   const response = await axios.post(url, {
     email,

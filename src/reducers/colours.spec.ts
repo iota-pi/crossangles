@@ -179,6 +179,7 @@ describe('colours reducer', () => {
       type: SET_COURSE_DATA,
       meta: getMeta(),
       courses,
+      isNewTerm: false,
     };
 
     const prevState = { ...initialState.colours };

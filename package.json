@@ -61,7 +61,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "react-scripts test",
+    "test": "jest",
     "lint": "./node_modules/.bin/eslint src/ --ext .ts,.tsx"
   },
   "eslintConfig": {

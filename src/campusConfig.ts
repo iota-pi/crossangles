@@ -1,3 +1,5 @@
+import env from './env';
+
 export interface AllCampusConfig {
   [campus: string]: CampusConfig,
 }
@@ -8,7 +10,7 @@ export interface CampusConfig {
   longname: string,
 }
 
-export const DATA_ROOT_URI = import.meta.env.VITE_DATA_ROOT_URI || '';
+export const DATA_ROOT_URI = env.rootURI;
 
 export const campusConfig: AllCampusConfig = {
   unsw: {

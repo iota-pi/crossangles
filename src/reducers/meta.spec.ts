@@ -25,11 +25,13 @@ describe('meta reducer', () => {
       sources: [],
       updateDate: '',
       updateTime: '',
+      termStart: '',
     };
     const action: CourseListAction = {
       type: SET_COURSE_DATA,
       courses: [],
       meta: newMeta,
+      isNewTerm: false,
     };
     const state = meta(testMeta, action);
     expect(testMeta).toEqual(initialState.meta);
