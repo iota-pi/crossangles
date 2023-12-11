@@ -18,7 +18,7 @@
     "react": "^18.2.0",
     "react-color": "^2.18.1",
     "react-dom": "^18.2.0",
-    "react-draggable": "^3.3.2",
+    "react-draggable": "^4.4.6",
     "react-ga": "^3.3.1",
     "react-redux": "^9.0.3",
     "react-select": "^5.8.0",

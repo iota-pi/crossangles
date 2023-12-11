@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { VariableSizeList, ListChildComponentProps } from 'react-window';
 import { useMediaQuery, useTheme } from '@material-ui/core';
 
@@ -38,7 +38,7 @@ function useResetCache(data: any) {
 
 // Adapter for react-window
 const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>(
-  (props: HTMLDivElement, ref) => {
+  (props: PropsWithChildren<any>, ref) => {
     const { children, ...other } = props;
     const itemData = React.Children.toArray(children);
     const theme = useTheme();

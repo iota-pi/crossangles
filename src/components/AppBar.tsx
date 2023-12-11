@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import AppBar from '@material-ui/core/AppBar';
-import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -14,6 +13,7 @@ import AboutCrossAngles from './AboutCrossAngles';
 import { RootState } from '../state';
 import { getOptions } from '../state/selectors';
 import { toggleOption } from '../actions';
+import { useMediaQuery, useTheme } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -48,6 +48,9 @@ export function CrossAnglesAppBar({
     [dispatch],
   );
 
+  const theme = useTheme();
+  const xs = useMediaQuery(theme.breakpoints.only('xs'));
+
   return (
     <AppBar
       position="fixed"
@@ -65,12 +68,12 @@ export function CrossAnglesAppBar({
           }
         >
           <Typography color="inherit" className={classes.term}>
-            <Hidden xsDown>{'Term '}</Hidden>
+            {!xs && 'Term '}
             <span className={classes.termNumber}>
-              <Hidden smUp>T</Hidden>
+              {xs && 'T'}
               {term}
             </span>
-            <Hidden xsDown>, {year}</Hidden>
+            {!xs && year}
           </Typography>
         </Tooltip>
 
