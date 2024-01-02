@@ -2,7 +2,7 @@ import {
   GetCommand,
   DynamoDBDocumentClient,
   PutCommand,
-  DeleteCommand
+  DeleteCommand,
 } from '@aws-sdk/lib-dynamodb';
 import zlib from 'zlib';
 
