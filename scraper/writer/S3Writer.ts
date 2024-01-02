@@ -1,11 +1,16 @@
-import S3 from 'aws-sdk/clients/s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  PutObjectRequest,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import crypto from 'crypto';
 import { Writer } from './Writer';
 
 const ENVIRONMENT = process.env.ENVIRONMENT || '';
 
 export class S3Writer implements Writer {
-  private readonly s3 = new S3();
+  private readonly s3 = new S3Client();
 
   constructor(
     private readonly bucket: string,
@@ -26,7 +31,7 @@ export class S3Writer implements Writer {
 
   async read() {
     const result = await this.getObject();
-    const content = result.Body?.toString('utf-8');
+    const content = await result.Body?.transformToString('utf-8');
     if (content) {
       return JSON.parse(content);
     }
@@ -44,9 +49,9 @@ export class S3Writer implements Writer {
     return this.upload(content, { Key: key, Tagging: 'data-type=backup' });
   }
 
-  private upload(content: string, additionalParams?: Partial<S3.PutObjectRequest>) {
+  private upload(content: string, additionalParams?: Partial<PutObjectRequest>) {
     const maxAge = ENVIRONMENT === 'staging' ? 600 : 7200;
-    return this.s3.upload({
+    const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: this.path,
       ContentType: 'application/json',
@@ -55,14 +60,15 @@ export class S3Writer implements Writer {
       ACL: 'public-read',
       CacheControl: `max-age=${maxAge}`,
       ...additionalParams,
-    }).promise();
+    });
+    return this.s3.send(command);
   }
 
   private getObject() {
-    return this.s3.getObject({
+    return this.s3.send(new GetObjectCommand({
       Bucket: this.bucket,
       Key: this.path,
-    }).promise();
+    }));
   }
 
   // Get base64 digest of md5 hash of content
