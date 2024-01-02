@@ -73,7 +73,7 @@ export function CrossAnglesAppBar({
               {xs && 'T'}
               {term}
             </span>
-            {!xs && year}
+            {!xs && ` ${year}`}
           </Typography>
         </Tooltip>
 
