@@ -34,7 +34,7 @@ const unsw: CampusAdditional<CBSComponent> = {
       metadata: {
         ...CBS_BASE_META,
         signupURL: 'https://campusbiblestudy.org/signup',
-        signupValidFor: [{ year: 2024, term: 1 }],
+        signupValidFor: [{ year: 2024, term: 2 }],
       },
       streams: [
         {
