@@ -34,16 +34,16 @@ const unsw: CampusAdditional<CBSComponent> = {
       metadata: {
         ...CBS_BASE_META,
         signupURL: 'https://campusbiblestudy.org/signup',
-        signupValidFor: [{ year: 2024, term: 2 }],
+        signupValidFor: [{ year: 2024, term: 3 }],
       },
       streams: [
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'T13' }],
+          times: [{ time: 'T12' }],
         },
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'W13' }],
+          times: [{ time: 'W12' }],
         },
         {
           component: CBSComponent.TBT,
@@ -51,7 +51,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS,
-          times: [{ time: 'M11' }],
+          times: [{ time: 'M12' }],
         },
         {
           component: CBSComponent.BS,
@@ -63,15 +63,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS,
-          times: [{ time: 'T14' }],
-        },
-        {
-          component: CBSComponent.BS,
           times: [{ time: 'W11' }],
-        },
-        {
-          component: CBSComponent.BS_PAD,
-          times: [{ time: 'W13' }],
         },
         {
           component: CBSComponent.BS,
@@ -79,15 +71,23 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BS_PAD,
+          times: [{ time: 'W13' }],
+        },
+        {
+          component: CBSComponent.BS,
+          times: [{ time: 'F12' }],
+        },
+        {
+          component: CBSComponent.BS_PAD,
           times: [{ time: 'H13' }],
         },
         {
           component: CBSComponent.BS,
-          times: [{ time: 'F11' }],
+          times: [{ time: 'F13' }],
         },
         {
           component: CBSComponent.CORE_THEO,
-          times: [{ time: 'T16', weeks: '2-10' }],
+          times: [{ time: 'T14', weeks: '2-10' }],
         },
         {
           component: CBSComponent.CORE_THEO,
@@ -103,27 +103,19 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.CORE_TRAIN,
-          times: [{ time: 'H14', weeks: '2-10' }],
-        },
-        {
-          component: CBSComponent.PRAYER,
-          times: [{ time: 'M12', weeks: '2-10' }],
-        },
-        {
-          component: CBSComponent.PRAYER,
-          times: [{ time: 'T12', weeks: '2-10' }],
-        },
-        {
-          component: CBSComponent.PRAYER,
-          times: [{ time: 'W12', weeks: '2-10' }],
-        },
-        {
-          component: CBSComponent.PRAYER,
           times: [{ time: 'H12', weeks: '2-10' }],
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'F12', weeks: '2-10' }],
+          times: [{ time: 'T10', weeks: '2-10' }],
+        },
+        {
+          component: CBSComponent.PRAYER,
+          times: [{ time: 'W09', weeks: '2-10' }],
+        },
+        {
+          component: CBSComponent.HANG,
+          times: [{ time: 'T16' }],
         },
         {
           component: CBSComponent.HANG,
