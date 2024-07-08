@@ -111,7 +111,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'W09', weeks: '2-10' }],
+          times: [{ time: 'W9', weeks: '2-10' }],
         },
         {
           component: CBSComponent.HANG,
