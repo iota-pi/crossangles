@@ -123,7 +123,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.SIMPLY_JESUS,
-          times: [{ time: 'W12' }],
+          times: [{ time: 'T16' }],
         },
       ],
     },
