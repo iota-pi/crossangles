@@ -20,6 +20,8 @@ enum CBSComponent {
   PRAYER = 'Prayer Group',
   HANG = 'Sport + Hangs',
   SIMPLY_JESUS = 'Simply Jesus',
+  LUNCH = 'Lunch',
+  ARVO_TEA = 'Afternoon Tea'
 }
 
 
@@ -124,6 +126,18 @@ const unsw: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.SIMPLY_JESUS,
           times: [{ time: 'T16' }],
+        },
+        {
+          component: CBSComponent.LUNCH,
+          times: [{ time: 'T13' }],
+        },
+        {
+          component: CBSComponent.LUNCH,
+          times: [{ time: 'W13' }],
+        },
+        {
+          component: CBSComponent.ARVO_TEA,
+          times: [{ time: 'H14' }],
         },
       ],
     },
