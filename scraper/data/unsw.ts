@@ -21,7 +21,7 @@ enum CBSComponent {
   HANG = 'Sport + Hangs',
   SIMPLY_JESUS = 'Simply Jesus',
   LUNCH = 'Lunch',
-  ARVO_TEA = 'Afternoon Tea'
+  BLT = 'Bible Study Leaders Training'
 }
 
 
@@ -41,7 +41,7 @@ const unsw: CampusAdditional<CBSComponent> = {
       streams: [
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'T12' }],
+          times: [{ time: 'T13' }],
         },
         {
           component: CBSComponent.TBT,
@@ -49,7 +49,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.TBT,
-          times: [{ time: 'H13' }],
+          times: [{ time: 'H12' }],
         },
         {
           component: CBSComponent.BS,
@@ -89,7 +89,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.CORE_THEO,
-          times: [{ time: 'T14', weeks: '2-10' }],
+          times: [{ time: 'T15', weeks: '2-10' }],
         },
         {
           component: CBSComponent.CORE_THEO,
@@ -97,7 +97,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.CORE_TRAIN,
-          times: [{ time: 'T15', weeks: '2-10' }],
+          times: [{ time: 'T14', weeks: '2-10' }],
         },
         {
           component: CBSComponent.CORE_TRAIN,
@@ -105,7 +105,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.CORE_TRAIN,
-          times: [{ time: 'H12', weeks: '2-10' }],
+          times: [{ time: 'H14', weeks: '2-10' }],
         },
         {
           component: CBSComponent.PRAYER,
@@ -129,15 +129,27 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.LUNCH,
-          times: [{ time: 'T13' }],
+          times: [{ time: 'T12' }],
         },
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'W13' }],
         },
         {
-          component: CBSComponent.ARVO_TEA,
-          times: [{ time: 'H14' }],
+          component: CBSComponent.LUNCH,
+          times: [{ time: 'H13' }],
+        },
+        {
+          component: CBSComponent.BLT,
+          times: [{ time: 'T16' }],
+        },
+        {
+          component: CBSComponent.BLT,
+          times: [{ time: 'W10' }],
+        },
+        {
+          component: CBSComponent.BLT,
+          times: [{ time: 'H13' }],
         },
       ],
     },
