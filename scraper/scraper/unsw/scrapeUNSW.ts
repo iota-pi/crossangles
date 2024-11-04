@@ -98,5 +98,8 @@ export function selectCurrentTerm(
       currentTerm = i;
     }
   }
+  if (currentTerm === null) {
+    logger.warn('No term has sufficient data, not selecting a current term');
+  }
   return currentTerm;
 }
