@@ -1,6 +1,6 @@
 import { parseBody as parseBody, RequestBody } from './parseBody';
 import { APIGatewayEvent } from 'aws-lambda';
-import { fakeEvent } from '../lambda-shared/test/util';
+import { fakeEvent } from './test/util';
 
 describe('parseBody', () => {
   it('returns correct object given suitable parameters', () => {

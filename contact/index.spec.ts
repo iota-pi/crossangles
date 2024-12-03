@@ -1,7 +1,7 @@
 import { handler, MAX_BODY_LENGTH } from '.';
 import { sendMail } from './sendMail';
 import { RequestBody } from './parseBody';
-import { fakeEvent } from '../lambda-shared/test/util';
+import { fakeEvent } from './test/util';
 import Mailgun = require('mailgun-js');
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
@@ -123,7 +123,7 @@ describe('POST method responses', () => {
   })
 
   it('sends mail successfully', async () => {
-    mock_sendMail.mockImplementationOnce(async () => ({ id:'', message: '' }));
+    mock_sendMail.mockImplementationOnce(async () => ({ id: '', message: '' }));
     const body: RequestBody = {
       name: 'Mithrandir',
       email: 'gandalf.the.grey@middle.earth',

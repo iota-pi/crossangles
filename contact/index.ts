@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
-import { LambdaResponder } from '../lambda-shared/LambdaResponder';
-import { standardiseHeaders } from '../lambda-shared/util';
+import { LambdaResponder } from './LambdaResponder';
+import { standardiseHeaders } from './util';
 import sendMail, { initMailgun } from './sendMail';
 import { parseBody } from './parseBody';
 import { getLogger } from './logging';
@@ -61,7 +61,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
 
   logger.info('Validated request data, initialising mailgun');
   initMailgun();
-  logger.info('Sending mail', {...body});
+  logger.info('Sending mail', { ...body });
   await sendMail(body);
   logger.info('Finished sending mail');
 
