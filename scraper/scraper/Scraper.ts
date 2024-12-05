@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import { performance } from 'perf_hooks';
 import { Logger } from 'winston';
 import axios from './axios';
@@ -30,7 +30,7 @@ export class Scraper {
     this.logger = getLogger('Scraper');
   }
 
-  async scrapePages<T>(urls: string[], handler: (page: CheerioStatic, url: string) => Promise<T>) {
+  async scrapePages<T>(urls: string[], handler: (page: cheerio.Root, url: string) => Promise<T>) {
     const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
     const processor = async (url: string) => {

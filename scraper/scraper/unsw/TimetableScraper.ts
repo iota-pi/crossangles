@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, DeliveryType, StreamData } from '../../../app/src/state/Stream';
@@ -123,7 +123,7 @@ export class TimetableScraper {
     logger.info(`Updated base URL to: ${this.baseURL}`);
   }
 
-  private getUpdateTime($: CheerioStatic) {
+  private getUpdateTime($: cheerio.Root) {
     let timeText = $('td.note:contains("Data is correct as at")').text();
     timeText = timeText.replace(/Data is correct as at/i, '').trim();
 
@@ -187,7 +187,7 @@ export class TimetableScraper {
 
       const streamTables = $('td.label:contains("Class Nbr")').parent().parent().toArray();
       for (const streamTable of streamTables) {
-        const data = this.parseTable($(streamTable));
+        const data = this.parseTable(cheerio.load(streamTable).root());
         if (shouldSkipStream(data)) {
           continue;
         }
@@ -249,13 +249,13 @@ export class TimetableScraper {
     return allCourses;
   }
 
-  private parseTable(table: Cheerio): StreamTableData {
+  private parseTable(table: cheerio.Cheerio): StreamTableData {
     const allLabels = table.find('td.label').toArray().map(
-      element => cheerio(element).text().trim(),
+      element => cheerio.load(element).root().text().trim(),
     );
     const labels = allLabels.filter(l => l.toLowerCase() !== 'meeting information');
     const data = table.children('tr').children('td.data').toArray().map(
-      element => cheerio(element).text().trim(),
+      element => cheerio.load(element).root().text().trim(),
     );
     const mapping: Partial<StreamTableData> = {};
     for (let i = 0; i < labels.length; i++) {
@@ -274,7 +274,7 @@ export function getTermNumber(termString: string): number | undefined {
   return term;
 }
 
-export function getCourseName($: CheerioStatic, code: string) {
+export function getCourseName($: cheerio.Root, code: string) {
   const codeAndName = $('td.classSearchMinorHeading').first().text().trim();
   const name = codeAndName.replace(new RegExp(`^${code}`), '').trim();
   return name;

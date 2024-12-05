@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import { Scraper } from '../Scraper';
 import { CourseData } from '../../../app/src/state/Course';
 import StateManager from '../../state/StateManager';
@@ -95,7 +95,7 @@ class UOSTimetableScraper {
     return false;
   }
 
-  getUpdateTime($: CheerioStatic) {
+  getUpdateTime($: cheerio.Root) {
     const timeText = $('p>small').text();
     // Remove timezone because it confuses parsers and is inconsistent
     this.dataUpdateTime = timeText.replace('This page generated at:', '').trim();
@@ -145,7 +145,7 @@ class UOSTimetableScraper {
     return courses;
   }
 
-  async scrapeCoursePage($: CheerioStatic, courseDetails: CoursePage): Promise<CourseData> {
+  async scrapeCoursePage($: cheerio.Root, courseDetails: CoursePage): Promise<CourseData> {
     // Find all top-level tables
     const courseTables = $('table').not('table table');
     const partTables = courseTables.slice(1).toArray();
@@ -166,11 +166,11 @@ class UOSTimetableScraper {
     return course;
   }
 
-  private parseStreamRows(streamRows: CheerioElement[], component: string): StreamData[] {
+  private parseStreamRows(streamRows: cheerio.Element[], component: string): StreamData[] {
     const streams: StreamData[] = [];
     for (const rowElement of streamRows.slice(2)) {
-      const row = cheerio(rowElement);
-      const cells = row.children('td');
+      const row = cheerio.load(rowElement);
+      const cells = row.root().children('td');
       const streamCode = cells.first().text();
       const full = isStreamClosed(streamCode);
       const detailsRows = cells.children('table').children('tbody').children('tr').toArray();
@@ -186,10 +186,11 @@ class UOSTimetableScraper {
     return streams;
   }
 
-  private parseDetailsRows(detailsRows: CheerioElement[]): ClassTime[] {
+  private parseDetailsRows(detailsRows: cheerio.Element[]): ClassTime[] {
     const allTimes: ClassTime[] = [];
     for (const detailRow of detailsRows) {
-      const cells = cheerio(detailRow).children('td').toArray().map(td => cheerio(td).text().trim());
+      const cellElements = cheerio.load(detailRow).root().children('td').toArray();
+      const cells = cellElements.map(td => cheerio.load(td).root().text().trim());
       // Skip notes on streams or other unexpected data
       if (cells.length !== 4) {
         continue;
