@@ -73,7 +73,12 @@ describe('LambdaResponder', () => {
   })
 
   it.each`
-    statusCode ${400} ${403} ${405} ${500} ${599}
+    statusCode
+    ${400}
+    ${403}
+    ${405}
+    ${500}
+    ${599}
   `('gives error based on status code', ({ statusCode }) => {
     const r = new LambdaResponder(fakeEvent);
     expect(r.getResponse({ statusCode })).toEqual({
