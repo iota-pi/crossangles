@@ -6,7 +6,7 @@ esbuild index.ts \
   --bundle \
   --minify \
   --platform=node \
-  --target=node16 \
+  --target=node20 \
   --external:aws-sdk
 
 (cd build; zip -r ./contact.zip lambda.js)

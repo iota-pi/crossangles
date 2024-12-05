@@ -7,7 +7,7 @@ esbuild lambda.ts \
   --bundle \
   --minify \
   --platform=node \
-  --target=node16 \
+  --target=node20 \
   --external:aws-sdk
 
 # Inject git version into compiled JS files
