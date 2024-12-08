@@ -1,5 +1,3 @@
-import { isUSYD } from '../getCampus';
-
 export interface Options {
   compactView?: boolean,
   darkMode?: boolean,
@@ -27,11 +25,11 @@ function filterOptionList(options: OptionListItem[]): OptionTuple[] {
   });
 }
 
-const fullClassName = isUSYD() ? 'closed' : 'full';
+const fullClassName = 'full';
 
 const allTimetableOptions: OptionListItem[] = [
   { key: 'showLocations', title: 'Show Locations', visible: true },
-  { key: 'showEnrolments', title: 'Show Enrolments', visible: !isUSYD() },
+  { key: 'showEnrolments', title: 'Show Enrolments', visible: true },
   { key: 'showWeeks', title: 'Show Weeks', visible: true },
   { key: 'showMode', title: 'Show Delivery Mode', visible: true },
   { key: 'includeFull', title: `Include ${fullClassName} classes`, visible: true },
