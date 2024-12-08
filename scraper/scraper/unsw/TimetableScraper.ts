@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
+import type { Element } from 'domhandler';
 import { Scraper } from '../Scraper';
-import { CourseData } from '../../../app/src/state/Course';
+import type { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, DeliveryType, StreamData } from '../../../app/src/state/Stream';
 import StateManager from '../../state/StateManager';
 import getStateManager from '../../state/getStateManager';
@@ -123,7 +124,7 @@ export class TimetableScraper {
     logger.info(`Updated base URL to: ${this.baseURL}`);
   }
 
-  private getUpdateTime($: cheerio.Root) {
+  private getUpdateTime($: cheerio.CheerioAPI) {
     let timeText = $('td.note:contains("Data is correct as at")').text();
     timeText = timeText.replace(/Data is correct as at/i, '').trim();
 
@@ -185,9 +186,9 @@ export class TimetableScraper {
         getBaseCourse(),
       ];
 
-      const streamTables = $('td.label:contains("Class Nbr")').parent().parent().toArray();
+      const streamTables = $('td.label:contains("Class Nbr")').parent().parent();
       for (const streamTable of streamTables) {
-        const data = this.parseTable(cheerio.load(streamTable).root());
+        const data = this.parseTable($, streamTable);
         if (shouldSkipStream(data)) {
           continue;
         }
@@ -249,13 +250,14 @@ export class TimetableScraper {
     return allCourses;
   }
 
-  private parseTable(table: cheerio.Cheerio): StreamTableData {
-    const allLabels = table.find('td.label').toArray().map(
-      element => cheerio.load(element).root().text().trim(),
+  private parseTable($: cheerio.CheerioAPI, table: Element): StreamTableData {
+    const tableAPI = $(table);
+    const allLabels = tableAPI.find('td.label').toArray().map(
+      element => $(element).text().trim(),
     );
     const labels = allLabels.filter(l => l.toLowerCase() !== 'meeting information');
-    const data = table.children('tr').children('td.data').toArray().map(
-      element => cheerio.load(element).root().text().trim(),
+    const data = tableAPI.children('tr').children('td.data').toArray().map(
+      element => $(element).text().trim(),
     );
     const mapping: Partial<StreamTableData> = {};
     for (let i = 0; i < labels.length; i++) {
@@ -274,7 +276,7 @@ export function getTermNumber(termString: string): number | undefined {
   return term;
 }
 
-export function getCourseName($: cheerio.Root, code: string) {
+export function getCourseName($: cheerio.CheerioAPI, code: string) {
   const codeAndName = $('td.classSearchMinorHeading').first().text().trim();
   const name = codeAndName.replace(new RegExp(`^${code}`), '').trim();
   return name;
