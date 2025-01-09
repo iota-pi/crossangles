@@ -1,10 +1,14 @@
+// Use "npx tsx launchTimetable.ts" to run the scraper locally
+
 import { writeFileSync } from 'fs';
 import { TimetableScraper } from './TimetableScraper';
 
-const runScraper = async () => {
+const runScraper = async (useFilters = false) => {
   const timetable = new TimetableScraper();
   timetable.state = undefined;
-  timetable.facultyLinkFilter = links => links.filter(l => l.includes('MATH'));
+  if (useFilters) {
+    timetable.facultyLinkFilter = links => links.filter(l => l.includes('MATH'));
+  }
   await timetable.setup();
   const result = await timetable.scrape();
   writeFileSync('test_timetable.json', JSON.stringify(result, undefined, 2));
