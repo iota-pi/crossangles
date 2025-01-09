@@ -1,12 +1,12 @@
-import { CampusData } from '../Scraper';
-import { CourseData } from '../../../app/src/state/Course';
+import type { CampusData } from '../Scraper';
+import type { CourseData } from '../../../app/src/state/Course';
 import { getTermStart } from '../../../app/src/state/Stream';
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper';
 import generateMetaData from '../meta';
 import { getLogger } from '../../logging';
 import getAdditional from '../../data';
 import { getCurrentTerm } from '../../../app/src/state/Meta';
-import { ScrapeCampusArgs } from '../../scrapeCampus';
+import type { ScrapeCampusArgs } from '../../scrapeCampus';
 
 export const UNSW = 'unsw';
 const logger = getLogger('scrapeUNSW', { campus: UNSW });
