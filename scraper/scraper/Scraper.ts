@@ -30,7 +30,10 @@ export class Scraper {
     this.logger = getLogger('Scraper');
   }
 
-  async scrapePages<T>(urls: string[], handler: (page: cheerio.CheerioAPI, url: string) => Promise<T>) {
+  async scrapePages<T>(
+    urls: string[],
+    handler: (page: cheerio.CheerioAPI, url: string) => Promise<T>,
+  ): Promise<T[]> {
     const queue = new AsyncQueue<string, T>(this.maxRequests);
     queue.enqueue(urls);
     const processor = async (url: string) => {
