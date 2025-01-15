@@ -269,6 +269,10 @@ export class TimetableScraper {
 
 
 export function getTermNumber(termString: string): number | undefined {
+  if (termString.includes('Hexamester ')) {
+    // we don't have any support for online hexamester courses
+    return undefined;
+  }
   const term = parseInt(termString.replace(/[^\d]+/, '').replace(/[^\d].*/, ''));
   if (Number.isNaN(term)) {
     return undefined;
