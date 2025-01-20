@@ -98,6 +98,7 @@ describe('parsing utilities', () => {
     ${'T3 - Teaching Period Three'}           | ${3}
     ${'MG1 - Management Teaching Period MG1'} | ${1}
     ${'AFB - ASU Fall Session B'}             | ${undefined}
+    ${'KB - Hexamester 1'}                    | ${undefined}
   `('getTermNumber("$term") = $expected', ({ term, expected }) => {
     expect(getTermNumber(term)).toEqual(expected);
   });
