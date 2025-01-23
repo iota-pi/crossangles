@@ -31,4 +31,5 @@ jobs:
 
     - name: Deploy IAC (terraform)
       run: |
+        ./deploy/tf.sh init
         ./deploy/tf.sh validate
