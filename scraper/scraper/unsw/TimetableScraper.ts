@@ -388,7 +388,11 @@ export function getShortActivity(activity: string) {
   const mapping: { [long: string]: string } = {
     'tutorial-laboratory': 'TLB',
   };
-  const short = mapping[activity.toLowerCase()] || activity.slice(0, 3).toUpperCase();
+  let short: string = mapping[activity.toLowerCase()] || activity.slice(0, 3).toUpperCase();
+  const sequenceNumber: string | undefined = activity.match(/([0-9]+) of ([0-9]+)/)?.[1];
+  if (sequenceNumber) {
+    short = short.slice(0, 2) + sequenceNumber;
+  }
   return short;
 }
 
