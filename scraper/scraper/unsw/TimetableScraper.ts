@@ -1,5 +1,7 @@
 import * as cheerio from 'cheerio';
 import type { Element } from 'domhandler';
+import { time } from 'console';
+import { find } from 'cheerio/dist/commonjs/api/traversing';
 import { Scraper } from '../Scraper';
 import type { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, DeliveryType, StreamData } from '../../../app/src/state/Stream';
@@ -9,8 +11,6 @@ import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
 import { UNSW } from './scrapeUNSW';
 import axios from '../axios';
-import { time } from 'console';
-import { find } from 'cheerio/dist/commonjs/api/traversing';
 
 const logger = getLogger('TimetableScraper', { campus: UNSW });
 
@@ -214,15 +214,15 @@ export class TimetableScraper {
           const timeObject: ClassTime = {
             time: timeStr,
             location: locationName || undefined,
-            weeks: weeks,
+            weeks,
           };
 
           // check if 'time' already exists in "times"
-          let toAppend = findWeekToMerge(stream, timeObject)
+          const toAppend = findWeekToMerge(stream, timeObject);
           // let toAppend = stream.times.find(obj => obj.time === timeObject.time);
           if (toAppend) {
-            toAppend.weeks = toAppend.weeks?.concat(',' + weeks);
-            continue; 
+            toAppend.weeks = toAppend.weeks?.concat(`,${weeks}`);
+            continue;
           }
 
           if (!shouldSkipTime(timeObject)) {
@@ -446,7 +446,7 @@ export function isCourseEnrolment(data: StreamTableData) {
 
 export function shouldMergeWeeks(curTime: string, times: ClassTime[], code: string) {
   return times.some(obj => obj.time === curTime);
-} 
+}
 
 export function findWeekToMerge(stream: StreamData, timeObject: ClassTime) {
   return stream.times.find(obj => obj.time === timeObject.time);
