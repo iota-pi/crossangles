@@ -1,15 +1,12 @@
-name: Test & Deploy
+name: Test
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
-  workflow_dispatch:
 
 jobs:
   deploy:
-    name: Run tests & deploy
+    name: Run tests
     runs-on: ubuntu-latest
 
     steps:
@@ -34,12 +31,4 @@ jobs:
 
     - name: Deploy IAC (terraform)
       run: |
-        ./deploy/tf.sh init
-        ./deploy/deploy.sh --prod --already-tested -y
-      env:
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_EC2_METADATA_DISABLED: true
+        ./deploy/tf.sh validate
