@@ -1,7 +1,5 @@
 import * as cheerio from 'cheerio';
 import type { Element } from 'domhandler';
-import { time } from 'console';
-import { find } from 'cheerio/dist/commonjs/api/traversing';
 import { Scraper } from '../Scraper';
 import type { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, DeliveryType, StreamData } from '../../../app/src/state/Stream';
@@ -217,12 +215,10 @@ export class TimetableScraper {
             weeks,
           };
 
-          // check if 'time' already exists in "times"
-          const toAppend = findWeekToMerge(stream, timeObject);
-          // let toAppend = stream.times.find(obj => obj.time === timeObject.time);
+          const toAppend = findDuplicateTimeInCourse(stream, timeObject)
           if (toAppend) {
-            toAppend.weeks = toAppend.weeks?.concat(`,${weeks}`);
-            continue;
+            toAppend.weeks = toAppend.weeks?.concat(',' + weeks);
+            continue; 
           }
 
           if (!shouldSkipTime(timeObject)) {
@@ -444,10 +440,6 @@ export function isCourseEnrolment(data: StreamTableData) {
   return data.Activity.toLowerCase() === 'course enrolment';
 }
 
-export function shouldMergeWeeks(curTime: string, times: ClassTime[], code: string) {
-  return times.some(obj => obj.time === curTime);
-}
-
-export function findWeekToMerge(stream: StreamData, timeObject: ClassTime) {
+export function findDuplicateTimeInCourse(stream: StreamData, timeObject: ClassTime) {
   return stream.times.find(obj => obj.time === timeObject.time);
 }
