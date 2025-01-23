@@ -1,0 +1,43 @@
+name: Test & Deploy
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Run tests & deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Setup NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      run: ./ci.sh ci-install
+
+    - name: Lint code
+      run: ./ci.sh lint
+
+    - name: Run unit tests
+      run: ./ci.sh test
+
+    - name: Deploy IAC (terraform)
+      run: |
+        ./deploy/tf.sh init
+        ./deploy/deploy.sh --prod --already-tested -y
+      env:
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_EC2_METADATA_DISABLED: true
