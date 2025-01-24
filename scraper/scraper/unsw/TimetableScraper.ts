@@ -217,7 +217,7 @@ export class TimetableScraper {
 
           const toAppend = findDuplicateTimeInCourse(stream, timeObject);
           if (toAppend) {
-            toAppend.weeks = toAppend.weeks + ',' + weeks;
+            toAppend.weeks = `${toAppend.weeks},${weeks}`;
             continue;
           }
 
