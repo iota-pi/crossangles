@@ -215,10 +215,10 @@ export class TimetableScraper {
             weeks,
           };
 
-          const toAppend = findDuplicateTimeInCourse(stream, timeObject)
+          const toAppend = findDuplicateTimeInCourse(stream, timeObject);
           if (toAppend) {
-            toAppend.weeks = toAppend.weeks?.concat(',' + weeks);
-            continue; 
+            toAppend.weeks = toAppend.weeks + ',' + weeks;
+            continue;
           }
 
           if (!shouldSkipTime(timeObject)) {
