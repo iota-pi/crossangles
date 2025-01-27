@@ -124,12 +124,17 @@ describe('parsing utilities', () => {
   });
 
   it.each`
-    long                     | short
-    ${'Tutorial-Laboratory'} | ${'TLB'}
-    ${'Lecture'}             | ${'LEC'}
-    ${'Tutorial'}            | ${'TUT'}
-    ${'Laboratory'}          | ${'LAB'}
-    ${'Other'}               | ${'OTH'}
+    long                          | short
+    ${'Tutorial-Laboratory'}      | ${'TLB'}
+    ${'Lecture'}                  | ${'LEC'}
+    ${'Tutorial'}                 | ${'TUT'}
+    ${'Laboratory'}               | ${'LAB'}
+    ${'Other'}                    | ${'OTH'}
+    ${'Lecture Sequence 1 of 2'}  | ${'LE1'}
+    ${'Lecture Sequence 2 of 2'}  | ${'LE2'}
+    ${'Tutorial Sequence 1 of 2'} | ${'TU1'}
+    ${'Tutorial 1 of 2'}          | ${'TU1'}
+    ${'Laboratory 1 of 2'}        | ${'LA1'}
   `('getShortActivity("$long") = "$short"', ({ long, short }) => {
     expect(getShortActivity(long)).toEqual(short);
   });
