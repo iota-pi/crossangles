@@ -11,7 +11,7 @@ import type { ScrapeCampusArgs } from '../../scrapeCampus';
 export const UNSW = 'unsw';
 const logger = getLogger('scrapeUNSW', { campus: UNSW });
 const DATA_THRESHOLD = 0.2;
-const terms = [1, 2, 3];
+const TERMS = [1, 2, 3];
 
 
 export async function scrapeUNSW(
@@ -30,22 +30,25 @@ export async function scrapeUNSW(
   const timetableData = await timetablePromise;
   logger.info('Finished scraping for UNSW');
 
+  return splitByTerm(timetableData);
+}
+
+export function splitByTerm(
+  timetableData: CourseData<string>[][],
+): CampusData[] {
   const sources: string[] = [];
   if (timetableData.length) { sources.push(TIMETABLE_UNSW); }
 
   const results: CampusData[] = [];
-  for (let i = 0; i < terms.length; ++i) {
+  for (let i = 0; i < TERMS.length; ++i) {
     const term = i + 1;
     const termStart = getTermStart(timetableData[i].flatMap(c => c.streams));
     const meta = generateMetaData(term, termStart.toDateString(), sources);
 
-    logger.info(`Merging data for term ${term}`);
-    const mergedData = timetableData[i];
-
     logger.info(`Including additional data for term ${term}`);
     const termString = getCurrentTerm(meta);
     const additional = getAdditional(UNSW, termString);
-    const courses = [...mergedData, ...additional];
+    const courses = [...timetableData[i], ...additional];
 
     results.push({
       campus: UNSW,
@@ -61,7 +64,7 @@ export async function scrapeUNSW(
   if (currentTerm !== null) {
     results[currentTerm].current = true;
   }
-  logger.info(`Current term is ${currentTerm ? currentTerm + 1 : currentTerm}`);
+  logger.info(`Current term is ${currentTerm !== null ? currentTerm + 1 : currentTerm}`);
 
   return results;
 }
