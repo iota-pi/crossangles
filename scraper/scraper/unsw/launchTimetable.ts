@@ -22,20 +22,20 @@ const runScraper = async ({
   const result = await timetable.scrape();
 
   if (saveToFile) {
-    const basePath = '../../../app/public'
+    const basePath = '../../../app/public';
     let path = `${basePath}/unsw/data.json`;
     if (!existsSync(basePath)) {
       console.warn('Could not find app/public/ directory, writing to working directory');
       path = 'data.json';
     } else {
-      const dir = path.slice(0, path.lastIndexOf('/'))
+      const dir = path.slice(0, path.lastIndexOf('/'));
       if (!existsSync(dir)) {
         mkdirSync(dir);
       }
     }
 
     const resultsByTerm = splitByTerm(result);
-    let current = resultsByTerm.find(t => t.current);
+    const current = resultsByTerm.find(t => t.current);
     writeFileSync(
       path,
       JSON.stringify(current, undefined, prettyPrint ? 2 : undefined),
