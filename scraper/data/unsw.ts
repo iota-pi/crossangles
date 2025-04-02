@@ -40,11 +40,19 @@ const unsw: CampusAdditional<CBSComponent> = {
       streams: [
         {
           component: CBSComponent.TBT,
+          times: [{ time: 'T12' }],
+        },
+        {
+          component: CBSComponent.TBT,
           times: [{ time: 'T13' }],
         },
         {
           component: CBSComponent.TBT,
           times: [{ time: 'W12' }],
+        },
+        {
+          component: CBSComponent.TBT,
+          times: [{ time: 'W13' }],
         },
         {
           component: CBSComponent.TBT,
@@ -125,6 +133,14 @@ const unsw: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'T12' }],
+        },
+        {
+          component: CBSComponent.LUNCH,
+          times: [{ time: 'T13' }],
+        },
+        {
+          component: CBSComponent.LUNCH,
+          times: [{ time: 'W12' }],
         },
         {
           component: CBSComponent.LUNCH,
