@@ -148,7 +148,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.LUNCH,
-          times: [{ time: 'H13' }],
+          times: [{ time: 'H12' }],
         },
         {
           component: CBSComponent.BLT,
@@ -160,7 +160,7 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.BLT,
-          times: [{ time: 'H13' }],
+          times: [{ time: 'H12' }],
         },
       ],
     },
