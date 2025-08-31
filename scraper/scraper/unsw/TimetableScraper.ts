@@ -9,6 +9,7 @@ import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
 import { UNSW } from './scrapeUNSW';
 import axios from '../axios';
+import { COURSE_COLOURS } from '../../../app/src/state/Colours';
 
 const logger = getLogger('TimetableScraper', { campus: UNSW });
 
@@ -209,17 +210,18 @@ export class TimetableScraper {
           const [day, time, location, weeks] = cells;
           const timeStr = abbreviateDay(day) + shortenTime(time);
           const locationName = splitLocation(location)[0];
-          const timeObject: ClassTime = {
+          let timeObject: ClassTime = {
             time: timeStr,
             location: locationName || undefined,
             weeks,
           };
 
-          const toAppend = findDuplicateTimeInCourse(stream, timeObject);
-          if (toAppend) {
-            toAppend.weeks = `${toAppend.weeks},${weeks}`;
-            continue;
-          }
+          // remove this somehow
+          // const toAppend = findDuplicateTimeInCourse(stream, timeObject);
+          // if (toAppend) {
+          //   toAppend.weeks = `${toAppend.weeks},${weeks}`;
+          //   continue;
+          // }
 
           if (!shouldSkipTime(timeObject)) {
             stream.times.push(timeObject);
@@ -249,10 +251,12 @@ export class TimetableScraper {
       for (let term = 0; term < courses.length; ++term) {
         const course = courses[term];
         removeDuplicateStreams(course);
+        removeDuplicateTimes(course, term)
+        
         allCourses[term].push(course);
       }
     });
-
+    
     return allCourses;
   }
 
@@ -442,4 +446,26 @@ export function isCourseEnrolment(data: StreamTableData) {
 
 export function findDuplicateTimeInCourse(stream: StreamData, timeObject: ClassTime) {
   return stream.times.find(obj => obj.time === timeObject.time);
+}
+
+export function removeDuplicateTimes(course: CourseData, term: number) {
+  if (course.streams[term] && course.streams[term]['times'].length > 1) { 
+    let courseTimesInTerm = course.streams[term]['times']
+    let noTimes: number = courseTimesInTerm.length
+
+    for (let cur in courseTimesInTerm) { // for each doesn't work on the customtype ClassTime which is annoying 
+      let curTime = courseTimesInTerm[cur]
+      for (let i = Number(cur) + 1; i < noTimes; i++) {
+        if (courseTimesInTerm[cur]['time'] === courseTimesInTerm[i]['time'] &&
+            courseTimesInTerm[cur]['location'] === courseTimesInTerm[i]['location'] && 
+            courseTimesInTerm[cur]['weeks'] !== courseTimesInTerm[i]['weeks']
+        ) {
+          courseTimesInTerm[cur]['weeks'] = courseTimesInTerm[cur]['weeks'] + ',' + courseTimesInTerm[i]['weeks']
+          courseTimesInTerm.splice(i, 1)
+          noTimes--;
+          i = i - 2;
+        }
+      }
+    }
+  }
 }
