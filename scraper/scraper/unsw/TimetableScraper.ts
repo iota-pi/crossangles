@@ -453,7 +453,7 @@ export function removeDuplicateTimes(course: CourseData, term: number) {
     let courseTimesInTerm = course.streams[term]['times']
     let noTimes: number = courseTimesInTerm.length
 
-    for (let cur in courseTimesInTerm) { // for each doesn't work on the customtype ClassTime which is annoying 
+    for (let cur in courseTimesInTerm) { 
       let curTime = courseTimesInTerm[cur]
       for (let i = Number(cur) + 1; i < noTimes; i++) {
         if (courseTimesInTerm[cur]['time'] === courseTimesInTerm[i]['time'] &&
