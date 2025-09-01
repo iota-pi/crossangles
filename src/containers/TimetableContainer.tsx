@@ -4,7 +4,7 @@ import { event } from 'react-ga';
 
 // Components
 import { TimetableControls } from '../components/TimetableControls';
-import { TimetableTable } from '../components/Timetable';
+import { Timetable } from '../components/Timetable';
 import CreateCustom from '../components/CreateCustom';
 
 // General
@@ -272,7 +272,7 @@ class TimetableContainer extends PureComponent<Props, State> {
           onClose={this.handleCloseCreateCustom}
         />
 
-        <TimetableTable
+        <Timetable
           options={this.props.options}
           colours={this.props.colours}
           timetable={this.state.timetable}
