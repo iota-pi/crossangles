@@ -437,14 +437,10 @@ export function isCourseEnrolment(data: StreamTableData) {
   return data.Activity.toLowerCase() === 'course enrolment';
 }
 
-export function findDuplicateTimeInCourse(stream: StreamData, timeObject: ClassTime) {
-  return stream.times.find(obj => obj.time === timeObject.time);
-}
-
 export function removeDuplicateTimes(course: CourseData, term: number) {
-  if (course.streams[term] && course.streams[term].times.length > 1) {
-    const courseTimesInTerm = course.streams[term].times;
+  if (course.streams[term] && course.streams[term].times && Array.isArray(course.streams[term].times)) {
     const seen: Map<string, ClassTime> = new Map();
+    const courseTimesInTerm = course.streams[term].times;
 
     for (let i = 0; i < courseTimesInTerm.length; i++) { 
       let curTime = courseTimesInTerm[i];
