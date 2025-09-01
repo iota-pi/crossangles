@@ -4,7 +4,7 @@
   "description": "CrossAngles scraper",
   "main": "index.ts",
   "scripts": {
-    "test": "./test.sh",
+    "test": "jest",
     "build": "./build.sh",
     "lint": "./node_modules/.bin/eslint . --ext .ts",
     "start": "node build/scraper",
