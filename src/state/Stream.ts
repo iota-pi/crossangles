@@ -1,4 +1,4 @@
-import { SessionData, DayLetter, LinkedSession, linkSession } from './Session';
+import { SessionData, DayLetter, LinkedSession, linkSession, ALL_DAYS } from './Session';
 import { CourseData, getCourseId } from './Course';
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -12,9 +12,13 @@ export enum DeliveryType {
   mixed,
 }
 
+export type StreamTimeOptions = ClassTime[] | {
+  placeholderEvent?: boolean,
+};
+
 export interface StreamData<C extends string = string> {
   component: C,
-  times: ClassTime[],
+  times: StreamTimeOptions,
   enrols?: [number, number],
   full?: boolean,
   web?: boolean,
@@ -38,8 +42,22 @@ export interface ClassTime {
 
 
 export function getStreamId(course: CourseData, stream: StreamData, simple = false) {
-  const timeString = stream.times ? stream.times.map(t => t.time).join(',') : 'WEB';
-  const id = `${getComponentId(course, stream, simple)}~${timeString}`;
+  const baseId = getComponentId(course, stream, simple);
+
+  let times = stream.times;
+  if (!times || Array.isArray(times) && times.length === 0) {
+    return `${baseId}~WEB`;
+  }
+  if (!Array.isArray(times)) {
+    if (times.placeholderEvent) {
+      return `${baseId}~PLACEHOLDER`;
+    } else {
+      throw new Error('Invalid stream times object');
+    }
+  }
+
+  const timeString = times.map(t => t.time).join(',');
+  const id = `${baseId}~${timeString}`;
   return id;
 }
 
@@ -79,8 +97,10 @@ export function getComponentName(stream: Pick<StreamData, 'component'>) {
 export function getSessions(course: CourseData, stream: StreamData): SessionData[] {
   const courseId = getCourseId(course);
   const streamId = getStreamId(course, stream);
-  return stream.times.map((t, i): SessionData => {
-    const [startHour, endHour] = t.time.substr(1).split('-').map(x => parseFloat(x));
+  const times = Array.isArray(stream.times) ? stream.times : getEveryTime();
+
+  return times.map((t, i): SessionData => {
+    const [startHour, endHour] = t.time.slice(1).split('-').map(x => parseFloat(x));
     return {
       start: startHour,
       end: endHour || (startHour + 1),
@@ -142,4 +162,17 @@ export function closestMonday(date: Date) {
   const differenceInDays = weekday < 6 ? 1 - weekday : 2;
   const differenceInMS = ONE_DAY * differenceInDays;
   return new Date(date.getTime() + differenceInMS);
+}
+
+export function getEveryTime(duration: number = 1): ClassTime[] {
+  const firstHour = 6;
+  const finalHour = 22;
+  const times: ClassTime[] = [];
+  for (let hour = firstHour; hour < finalHour; ++hour) {
+    for (const day of ALL_DAYS) {
+      const endHourStr = duration === 1 ? '' : `-${hour + duration}`;
+      times.push({ time: `${day}${hour}${endHourStr}` });
+    }
+  }
+  return times;
 }

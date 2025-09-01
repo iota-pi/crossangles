@@ -126,7 +126,14 @@ function TimetableTable({
         return getHours(sessions);
       }
       const courses = sessions.map(s => s.course).filter((c, i, arr) => arr.indexOf(c) === i);
-      const streams = courses.flatMap(c => c.streams.map(s => linkStream(c, s)));
+      const streams = courses.flatMap(
+        c => (
+          c.streams
+            // Ignore streams with no times (e.g. web-only) or placeholder events
+            .filter(s => Array.isArray(s.times) || (!s.times.placeholderEvent))
+            .map(s => linkStream(c, s)
+        )
+      ));
       return getHours(streams.flatMap(s => s.sessions));
     },
     [minimalHours, sessions],
