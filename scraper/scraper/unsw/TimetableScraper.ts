@@ -443,16 +443,15 @@ export function findDuplicateTimeInCourse(stream: StreamData, timeObject: ClassT
 
 export function removeDuplicateTimes(course: CourseData, term: number) {
   if (course.streams[term] && course.streams[term].times.length > 1) {
-    let courseTimesInTerm = course.streams[term].times
-    let seen: Map<string, ClassTime> = new Map()
+    const courseTimesInTerm = course.streams[term].times;
+    const seen: Map<string, ClassTime> = new Map();
 
-    for (let cur in courseTimesInTerm) { 
-      let curTime = courseTimesInTerm[cur];
+    for (let i = 0; i < courseTimesInTerm.length; i++) { 
+      let curTime = courseTimesInTerm[i];
       let key = `${curTime.time}-${curTime.location}`;
       if (!curTime.weeks) continue;
       let curWksStr: string = curTime.weeks; 
 
-      // if the key exists -> duplicate case
       if (seen.has(key)) {
         // check if it exists already
         let toUpdate: ClassTime | undefined = seen.get(key);
@@ -460,14 +459,13 @@ export function removeDuplicateTimes(course: CourseData, term: number) {
 
         // if we ever add a method that reduces weeks then we can get rid of this.
         if (!seen.get(key)?.weeks?.includes(curWksStr)) {
-          toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`
-          seen.set(key, toUpdate)
+          toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`;
+          seen.set(key, toUpdate);
         }
       } else {
         seen.set(key, {...curTime});
       }
     }
-    // finally, update 
     course.streams[term].times = Array.from(seen.values());
   }
 }
