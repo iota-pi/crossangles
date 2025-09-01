@@ -211,7 +211,6 @@ export class TimetableScraper {
           const timeStr = abbreviateDay(day) + shortenTime(time);
           const locationName = splitLocation(location)[0];
           let timeObject: ClassTime = {
-          let timeObject: ClassTime = {
             time: timeStr,
             location: locationName || undefined,
             weeks,
