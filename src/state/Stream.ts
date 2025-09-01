@@ -51,9 +51,8 @@ export function getStreamId(course: CourseData, stream: StreamData, simple = fal
   if (!Array.isArray(times)) {
     if (times.placeholderEvent) {
       return `${baseId}~PLACEHOLDER`;
-    } else {
-      throw new Error('Invalid stream times object');
     }
+    throw new Error('Invalid stream times object');
   }
 
   const timeString = times.map(t => t.time).join(',');

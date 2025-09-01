@@ -131,9 +131,9 @@ function TimetableTable({
           c.streams
             // Ignore streams with no times (e.g. web-only) or placeholder events
             .filter(s => Array.isArray(s.times) || (!s.times.placeholderEvent))
-            .map(s => linkStream(c, s)
-        )
-      ));
+            .map(s => linkStream(c, s))
+        ),
+      );
       return getHours(streams.flatMap(s => s.sessions));
     },
     [minimalHours, sessions],
