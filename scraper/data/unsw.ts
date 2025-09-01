@@ -20,7 +20,8 @@ enum CBSComponent {
   PRAYER = 'Prayer Group',
   HANG = 'Sport + Hangs',
   LUNCH = 'Lunch',
-  BLT = 'Bible Study Leaders Training'
+  BLT = 'Bible Study Leaders Training',
+  OUTREACH = 'Outreach',
 }
 
 
@@ -161,6 +162,10 @@ const unsw: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.BLT,
           times: [{ time: 'H12' }],
+        },
+        {
+          component: CBSComponent.OUTREACH,
+          times: { placeholderEvent: true },
         },
       ],
     },
