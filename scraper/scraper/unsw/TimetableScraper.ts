@@ -216,13 +216,6 @@ export class TimetableScraper {
             weeks,
           };
 
-          // remove this somehow
-          // const toAppend = findDuplicateTimeInCourse(stream, timeObject);
-          // if (toAppend) {
-          //   toAppend.weeks = `${toAppend.weeks},${weeks}`;
-          //   continue;
-          // }
-
           if (!shouldSkipTime(timeObject)) {
             stream.times.push(timeObject);
           }
@@ -449,23 +442,32 @@ export function findDuplicateTimeInCourse(stream: StreamData, timeObject: ClassT
 }
 
 export function removeDuplicateTimes(course: CourseData, term: number) {
-  if (course.streams[term] && course.streams[term]['times'].length > 1) { 
-    let courseTimesInTerm = course.streams[term]['times']
-    let noTimes: number = courseTimesInTerm.length
+  if (course.streams[term] && course.streams[term].times.length > 1) {
+    let courseTimesInTerm = course.streams[term].times
+    let seen: Map<string, ClassTime> = new Map()
 
     for (let cur in courseTimesInTerm) { 
-      let curTime = courseTimesInTerm[cur]
-      for (let i = Number(cur) + 1; i < noTimes; i++) {
-        if (courseTimesInTerm[cur]['time'] === courseTimesInTerm[i]['time'] &&
-            courseTimesInTerm[cur]['location'] === courseTimesInTerm[i]['location'] && 
-            courseTimesInTerm[cur]['weeks'] !== courseTimesInTerm[i]['weeks']
-        ) {
-          courseTimesInTerm[cur]['weeks'] = courseTimesInTerm[cur]['weeks'] + ',' + courseTimesInTerm[i]['weeks']
-          courseTimesInTerm.splice(i, 1)
-          noTimes--;
-          i = i - 2;
+      let curTime = courseTimesInTerm[cur];
+      let key = `${curTime.time}-${curTime.location}`;
+      if (!curTime.weeks) continue;
+      let curWksStr: string = curTime.weeks; 
+
+      // if the key exists -> duplicate case
+      if (seen.has(key)) {
+        // check if it exists already
+        let toUpdate: ClassTime | undefined = seen.get(key);
+        if(toUpdate == undefined) continue;
+
+        // if we ever add a method that reduces weeks then we can get rid of this.
+        if (!seen.get(key)?.weeks?.includes(curWksStr)) {
+          toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`
+          seen.set(key, toUpdate)
         }
+      } else {
+        seen.set(key, {...curTime});
       }
     }
+    // finally, update 
+    course.streams[term].times = Array.from(seen.values());
   }
 }
