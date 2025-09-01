@@ -1,6 +1,6 @@
 import download from 'downloadjs';
 import { createEvents, DateArray, EventAttributes } from 'ics';
-import { DayLetter, getDuration, LinkedSession, Meta } from './state';
+import { ALL_DAYS, DayLetter, getDuration, LinkedSession, Meta } from './state';
 import { getComponentName, getOfferingStart, parseBackwardsDateString } from './state/Stream';
 
 
@@ -129,7 +129,7 @@ export function getRealTime({
   termStart: Date,
   week: number,
 }): Date {
-  const dayIndex = ['M', 'T', 'W', 'H', 'F'].indexOf(day);
+  const dayIndex = ALL_DAYS.indexOf(day);
   const result = new Date(termStart);
   result.setUTCDate(result.getUTCDate() + 7 * (week - 1) + dayIndex);
   result.setHours(hour);

@@ -4,6 +4,7 @@ import { StreamData, StreamId, getStreamId, LinkedStream } from './Stream';
 export type SessionId = string;
 
 export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F';
+export const ALL_DAYS: DayLetter[] = ['M', 'T', 'W', 'H', 'F'];
 
 export interface SessionCommon {
   index: number,

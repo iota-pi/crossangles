@@ -1,4 +1,4 @@
-import { LinkedSession, getDuration } from '../../state';
+import { ALL_DAYS, LinkedSession, getDuration } from '../../state';
 import * as SessionPosition from './SessionPosition';
 import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
 import {
@@ -142,7 +142,7 @@ export abstract class TimetablePlacement {
   }
 
   get dayIndex(): number {
-    return ['M', 'T', 'W', 'H', 'F'].indexOf(this._session.day);
+    return ALL_DAYS.indexOf(this._session.day);
   }
 
   private calculateHeight(compact: boolean, showMode: boolean): number {
