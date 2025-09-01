@@ -9,7 +9,6 @@ import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
 import { UNSW } from './scrapeUNSW';
 import axios from '../axios';
-import { COURSE_COLOURS } from '../../../app/src/state/Colours';
 
 const logger = getLogger('TimetableScraper', { campus: UNSW });
 
@@ -210,7 +209,7 @@ export class TimetableScraper {
           const [day, time, location, weeks] = cells;
           const timeStr = abbreviateDay(day) + shortenTime(time);
           const locationName = splitLocation(location)[0];
-          let timeObject: ClassTime = {
+          const timeObject: ClassTime = {
             time: timeStr,
             location: locationName || undefined,
             weeks,
@@ -244,12 +243,10 @@ export class TimetableScraper {
       for (let term = 0; term < courses.length; ++term) {
         const course = courses[term];
         removeDuplicateStreams(course);
-        removeDuplicateTimes(course, term)
-        
+        removeDuplicateTimes(course, term);
         allCourses[term].push(course);
       }
     });
-    
     return allCourses;
   }
 
@@ -438,30 +435,29 @@ export function isCourseEnrolment(data: StreamTableData) {
 }
 
 export function removeDuplicateTimes(course: CourseData, term: number) {
-  if (course.streams[term] && course.streams[term].times && Array.isArray(course.streams[term].times)) {
+  if (course.streams[term] && course.streams[term].times
+    && Array.isArray(course.streams[term].times)) {
     const seen: Map<string, ClassTime> = new Map();
-    const courseTimesInTerm = course.streams[term].times;
+    let courseTimesInTerm = course.streams[term].times;
 
-    for (let i = 0; i < courseTimesInTerm.length; i++) { 
-      let curTime = courseTimesInTerm[i];
-      let key = `${curTime.time}-${curTime.location}`;
+    for (let i = 0; i < courseTimesInTerm.length; i++) {
+      const curTime = courseTimesInTerm[i];
+      const key = `${curTime.time}-${curTime.location}`;
       if (!curTime.weeks) continue;
-      let curWksStr: string = curTime.weeks; 
-
+      const curWksStr: string = curTime.weeks;
       if (seen.has(key)) {
-        // check if it exists already
-        let toUpdate: ClassTime | undefined = seen.get(key);
-        if(toUpdate == undefined) continue;
+        const toUpdate: ClassTime | undefined = seen.get(key);
+        if (toUpdate === undefined) continue;
 
-        // if we ever add a method that reduces weeks then we can get rid of this.
+        // 'normalise' times
         if (!seen.get(key)?.weeks?.includes(curWksStr)) {
           toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`;
           seen.set(key, toUpdate);
         }
       } else {
-        seen.set(key, {...curTime});
+        seen.set(key, { ...curTime });
       }
     }
-    course.streams[term].times = Array.from(seen.values());
+    courseTimesInTerm = Array.from(seen.values());
   }
 }
