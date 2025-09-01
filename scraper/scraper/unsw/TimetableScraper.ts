@@ -9,7 +9,6 @@ import { removeDuplicateStreams } from '../commonUtils';
 import { getLogger } from '../../logging';
 import { UNSW } from './scrapeUNSW';
 import axios from '../axios';
-import { COURSE_COLOURS } from '../../../app/src/state/Colours';
 
 const logger = getLogger('TimetableScraper', { campus: UNSW });
 
@@ -245,7 +244,6 @@ export class TimetableScraper {
         const course = courses[term];
         removeDuplicateStreams(course);
         removeDuplicateTimes(course, term)
-        
         allCourses[term].push(course);
       }
     });
@@ -445,25 +443,23 @@ export function removeDuplicateTimes(course: CourseData, term: number) {
   if (course.streams[term] && course.streams[term].times.length > 1) {
     const courseTimesInTerm = course.streams[term].times;
     const seen: Map<string, ClassTime> = new Map();
-
-    for (let i = 0; i < courseTimesInTerm.length; i++) { 
-      let curTime = courseTimesInTerm[i];
-      let key = `${curTime.time}-${curTime.location}`;
+    for (let i = 0; i < courseTimesInTerm.length; i++) {
+      const curTime = courseTimesInTerm[i];
+      const key = `${curTime.time}-${curTime.location}`;
       if (!curTime.weeks) continue;
-      let curWksStr: string = curTime.weeks; 
+      const curWksStr: string = curTime.weeks;
 
       if (seen.has(key)) {
-        // check if it exists already
         let toUpdate: ClassTime | undefined = seen.get(key);
         if(toUpdate == undefined) continue;
 
-        // if we ever add a method that reduces weeks then we can get rid of this.
+        // week 'normalisation'
         if (!seen.get(key)?.weeks?.includes(curWksStr)) {
           toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`;
           seen.set(key, toUpdate);
         }
       } else {
-        seen.set(key, {...curTime});
+        seen.set(key, curTime);
       }
     }
     course.streams[term].times = Array.from(seen.values());
