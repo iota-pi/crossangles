@@ -18,16 +18,23 @@ export async function scrapeUNSW(
   { state, forceUpdate = false }: ScrapeCampusArgs,
 ): Promise<CampusData[] | null> {
   const timetable = new TimetableScraper({ state });
+  await timetable.setup();
 
-  const rescrapeTimetable = await timetable.setup() || forceUpdate;
+  let dataUpdated = true;
+  const updated = await timetable.checkIfDataUpdated();
+  if (!updated) {
+    logger.info('Data has not been updated yet');
+    dataUpdated = false;
+  }
+
+  logger.info('scrapeUNSW decision', { forceUpdate, dataUpdated });
 
   // Don't need to update data if only using info from cache
-  if (!rescrapeTimetable) {
+  if (!forceUpdate && !dataUpdated) {
     return null;
   }
 
-  const timetablePromise = scrapeTimetable(timetable, !rescrapeTimetable);
-  const timetableData = await timetablePromise;
+  const timetableData = await scrapeTimetable(timetable);
   logger.info('Finished scraping for UNSW');
 
   return splitByTerm(timetableData);
@@ -71,7 +78,7 @@ export function splitByTerm(
 
 export async function scrapeTimetable(
   timetable: TimetableScraper,
-  useCache: boolean,
+  useCache = false,
 ): Promise<CourseData[][]> {
   if (useCache) {
     return timetable.getCache();

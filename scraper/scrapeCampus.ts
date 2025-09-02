@@ -29,6 +29,7 @@ async function scrapeCampus(
   }
 
   let data: CampusData[] | null = null;
+  logger.info('Invoking campus scraper', { campus, forceUpdate });
   switch (campus) {
     case UNSW:
       data = await scrapeUNSW({ state, forceUpdate });

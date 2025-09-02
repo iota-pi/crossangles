@@ -62,13 +62,6 @@ export class TimetableScraper {
   async setup() {
     await this.updateBaseURL();
     this.facultyPages = await this.findFacultyPages();
-
-    if (!await this.checkIfDataUpdated()) {
-      logger.info('data has not been updated yet');
-      return false;
-    }
-
-    return true;
   }
 
   async scrape(): Promise<CourseData[][]> {
