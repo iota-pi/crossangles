@@ -62,22 +62,15 @@ export class TimetableScraper {
   async setup() {
     await this.updateBaseURL();
     this.facultyPages = await this.findFacultyPages();
-
-    if (!await this.checkIfDataUpdated()) {
-      logger.info('data has not been updated yet');
-      return false;
-    }
-
-    return true;
   }
 
   async scrape(): Promise<CourseData[][]> {
-    logger.info(`scraping from ${TIMETABLE_UNSW}`);
+    logger.info(`Scraping from ${TIMETABLE_UNSW}`);
     const coursePages = await this.scrapeFacultyPages();
     const result = await this.scrapeCoursePages(coursePages);
-    logger.info('persisting state to DynamoDB');
+    logger.info('Persisting state to DynamoDB');
     await this.persistState(result);
-    logger.info('finished persisting state to DynamoDB');
+    logger.info('Finished persisting state to DynamoDB');
     this.scraper.report();
     return result;
   }
@@ -148,7 +141,7 @@ export class TimetableScraper {
     const uniqueLinks = links.filter((link, i) => links.indexOf(link) === i);
     uniqueLinks.length = Math.min(uniqueLinks.length, this.maxFaculties);
 
-    logger.info(`found ${uniqueLinks.length} faculty pages`);
+    logger.info(`Found ${uniqueLinks.length} faculty pages`);
     return uniqueLinks;
   }
 
@@ -168,7 +161,7 @@ export class TimetableScraper {
     }
     uniqueLinks.length = Math.min(uniqueLinks.length, this.maxCourses);
 
-    logger.info(`found ${uniqueLinks.length} course pages`);
+    logger.info(`Found ${uniqueLinks.length} course pages`);
     return uniqueLinks;
   }
 
