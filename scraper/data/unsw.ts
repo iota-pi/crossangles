@@ -199,6 +199,9 @@ function transformCBSEvents(data: CampusAdditional<CBSComponent>): CampusAdditio
           for (const day of ALL_DAYS) {
             for (let hour = startHour; hour < endHour; ++hour) {
               const time = `${day}${hour}`;
+              updatedCourse.streams.push({
+                ...stream,
+                times: [{ time }],
               });
             }
           }
