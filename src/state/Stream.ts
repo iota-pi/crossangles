@@ -1,4 +1,4 @@
-import { SessionData, DayLetter, LinkedSession, linkSession, ALL_DAYS } from './Session';
+import { SessionData, DayLetter, LinkedSession, linkSession } from './Session';
 import { CourseData, getCourseId } from './Course';
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -12,19 +12,16 @@ export enum DeliveryType {
   mixed,
 }
 
-export type StreamTimeOptions = ClassTime[] | {
-  placeholderEvent?: boolean,
-};
-
 export interface StreamData<C extends string = string> {
   component: C,
-  times: StreamTimeOptions,
+  times: ClassTime[],
   enrols?: [number, number],
   full?: boolean,
   web?: boolean,
   offering?: string,
   delivery?: DeliveryType,
   notes?: string,
+  options?: { placeHolder?: boolean, notOnlyEvent?: boolean },
 }
 
 export interface LinkedStream extends StreamData {
@@ -43,19 +40,10 @@ export interface ClassTime {
 
 export function getStreamId(course: CourseData, stream: StreamData, simple = false) {
   const baseId = getComponentId(course, stream, simple);
-
-  let times = stream.times;
-  if (!times || Array.isArray(times) && times.length === 0) {
+  if (stream.times.length === 0) {
     return `${baseId}~WEB`;
   }
-  if (!Array.isArray(times)) {
-    if (times.placeholderEvent) {
-      return `${baseId}~PLACEHOLDER`;
-    }
-    throw new Error('Invalid stream times object');
-  }
-
-  const timeString = times.map(t => t.time).join(',');
+  const timeString = stream.times.map(t => t.time).join(',');
   const id = `${baseId}~${timeString}`;
   return id;
 }
@@ -96,7 +84,7 @@ export function getComponentName(stream: Pick<StreamData, 'component'>) {
 export function getSessions(course: CourseData, stream: StreamData): SessionData[] {
   const courseId = getCourseId(course);
   const streamId = getStreamId(course, stream);
-  const times = Array.isArray(stream.times) ? stream.times : getEveryTime();
+  const times = stream.times;
 
   return times.map((t, i): SessionData => {
     const [startHour, endHour] = t.time.slice(1).split('-').map(x => parseFloat(x));
@@ -161,17 +149,4 @@ export function closestMonday(date: Date) {
   const differenceInDays = weekday < 6 ? 1 - weekday : 2;
   const differenceInMS = ONE_DAY * differenceInDays;
   return new Date(date.getTime() + differenceInMS);
-}
-
-export function getEveryTime(duration: number = 1): ClassTime[] {
-  const firstHour = 6;
-  const finalHour = 22;
-  const times: ClassTime[] = [];
-  for (let hour = firstHour; hour < finalHour; ++hour) {
-    for (const day of ALL_DAYS) {
-      const endHourStr = duration === 1 ? '' : `-${hour + duration}`;
-      times.push({ time: `${day}${hour}${endHourStr}` });
-    }
-  }
-  return times;
 }

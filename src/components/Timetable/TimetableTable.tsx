@@ -129,8 +129,8 @@ function TimetableTable({
       const streams = courses.flatMap(
         c => (
           c.streams
-            // Ignore streams with no times (e.g. web-only) or placeholder events
-            .filter(s => Array.isArray(s.times) || (!s.times.placeholderEvent))
+            // Don't expand timetable for placeholder events
+            .filter(s => !s.options?.placeHolder)
             .map(s => linkStream(c, s))
         ),
       );
