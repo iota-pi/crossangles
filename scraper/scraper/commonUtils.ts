@@ -27,7 +27,7 @@ export function removeDuplicateStreams(course: CourseData) {
 function getStreamGroupMapping(course: CourseData): Map<string, StreamData[]> {
   const mapping = new Map<string, StreamData[]>();
   for (const stream of course.streams) {
-    const times = Array.isArray(stream.times) ? stream.times.map(t => t.time) : [];
+    const times = stream.times.map(t => t.time);
     const key = `${stream.component}[${times}]`;
     const currentGroup = mapping.get(key) || [];
     const newGroup = currentGroup.concat(stream);
@@ -72,7 +72,7 @@ export function getInPersonTimes(streams: StreamData[]): ClassTime[] | null {
   // NB: assumes a set of streams which have identical times and component
   for (const stream of streams) {
     if (stream.delivery === DeliveryType.person) {
-      return Array.isArray(stream.times) ? stream.times : null;
+      return stream.times;
     }
   }
   return null;
