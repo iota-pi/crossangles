@@ -23,7 +23,7 @@ async function scrapeCampus(
 
   let forceUpdate = !useState;
   if (state && await checkVersionChange(campus, state)) {
-    updateVersion(campus, state);
+    await updateVersion(campus, state);
     forceUpdate = true;
     logger.info('Scraper code updated, forcing data update.');
   }
