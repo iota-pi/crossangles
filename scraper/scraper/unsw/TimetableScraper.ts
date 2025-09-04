@@ -209,13 +209,13 @@ export class TimetableScraper {
           };
 
           if (!shouldSkipTime(timeObject)) {
-            (stream.times as ClassTime[]).push(timeObject);
+            stream.times.push(timeObject);
           }
         }
 
         // Skip regular streams without any associated class times
         const isRegularStream = !stream.web;
-        if ((stream.times as ClassTime[]).length === 0 && isRegularStream) {
+        if (stream.times.length === 0 && isRegularStream) {
           continue;
         }
 
