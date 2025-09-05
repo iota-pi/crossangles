@@ -443,10 +443,10 @@ export function removeDuplicateTimes(course: CourseData, term: number) {
     for (const cur of courseTimesInTerm) {
       const curTime = cur;
       const key = `${curTime.time}-${curTime.location}`;
-      // console.log(curTime)
       if (!curTime.weeks) continue;
-      // if (Array.isArray(curTime)) continue;
+      if (Array.isArray(curTime)) continue;
       const curWksStr: string = curTime.weeks;
+
       if (seen.has(key)) {
         const toUpdate: ClassTime | undefined = seen.get(key);
         if (toUpdate === undefined) continue;
