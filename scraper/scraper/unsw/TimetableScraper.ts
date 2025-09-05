@@ -436,19 +436,20 @@ export function isCourseEnrolment(data: StreamTableData) {
 
 export function removeDuplicateTimes(course: CourseData, term: number) {
   if (course.streams[term] && course.streams[term].times
-    && Array.isArray(course.streams[term].times)) {
+    && Array.isArray(course.streams[term]?.times)) {
     const seen: Map<string, ClassTime> = new Map();
-    let courseTimesInTerm = course.streams[term].times;
+    let courseTimesInTerm: ClassTime[] = course.streams[term].times as ClassTime[];
 
-    for (let i = 0; i < courseTimesInTerm.length; i++) {
-      const curTime = courseTimesInTerm[i];
+    for (const cur of courseTimesInTerm) {
+      const curTime = cur;
       const key = `${curTime.time}-${curTime.location}`;
+      // console.log(curTime)
       if (!curTime.weeks) continue;
+      // if (Array.isArray(curTime)) continue;
       const curWksStr: string = curTime.weeks;
       if (seen.has(key)) {
         const toUpdate: ClassTime | undefined = seen.get(key);
         if (toUpdate === undefined) continue;
-
         // 'normalise' times
         if (!seen.get(key)?.weeks?.includes(curWksStr)) {
           toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`;
