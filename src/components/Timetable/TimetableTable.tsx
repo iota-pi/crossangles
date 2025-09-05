@@ -182,7 +182,12 @@ function TimetableTable({
     () => {
       if (dragging) {
         setDropzones(
-          getDropzones(dragging, includeFull),
+          getDropzones({
+            dragging,
+            includeFull,
+            startHour: start,
+            endHour: end,
+          }),
         );
       }
     },

@@ -6,7 +6,12 @@ import { DropzonePlacement } from './DropzonePlacement';
 describe('filterStreams', () => {
   it('filterStreams([], ...) = []', () => {
     const dm = new DropzoneManager();
-    const result = dm.filterStreams([], 'LEC', 0, false);
+    const result = dm.filterStreams({
+      streams: [],
+      component: 'LEC',
+      index: 0,
+      includeFull: false,
+    });
     expect(result).toEqual([]);
   });
 
@@ -15,7 +20,12 @@ describe('filterStreams', () => {
     const skipStreams: LinkedStream[] = [getLinkedStream(2)];
     const streams = [...keepStreams, ...skipStreams];
     const dm = new DropzoneManager();
-    const result = dm.filterStreams(streams, keepStreams[0].component, 0, false);
+    const result = dm.filterStreams({
+      streams,
+      component: keepStreams[0].component,
+      index: 0,
+      includeFull: false,
+    });
     expect(result).toEqual(keepStreams);
   });
 
@@ -25,9 +35,9 @@ describe('filterStreams', () => {
     const skipStreams: LinkedStream[] = [getLinkedStream(2, { component })];
     const streams = [...keepStreams, ...skipStreams];
     const dm = new DropzoneManager();
-    expect(dm.filterStreams(streams, component, 1, false)).toEqual(keepStreams);
-    expect(dm.filterStreams(streams, component, 2, false)).toEqual(keepStreams);
-    expect(dm.filterStreams(streams, component, 3, false)).toEqual([]);
+    expect(dm.filterStreams({ streams, component, index: 1, includeFull: false })).toEqual(keepStreams);
+    expect(dm.filterStreams({ streams, component, index: 2, includeFull: false })).toEqual(keepStreams);
+    expect(dm.filterStreams({ streams, component, index: 3, includeFull: false })).toEqual([]);
   });
 
   it('skips full classes if includeFull = False', () => {
@@ -36,7 +46,7 @@ describe('filterStreams', () => {
     const skipStreams: LinkedStream[] = [getLinkedStream(2, { component, full: true })];
     const streams = [...keepStreams, ...skipStreams];
     const dm = new DropzoneManager();
-    expect(dm.filterStreams(streams, component, 0, false)).toEqual(keepStreams);
+    expect(dm.filterStreams({ streams, component, index: 0, includeFull: false })).toEqual(keepStreams);
   });
 
   it('includes full classes if includeFull = True', () => {
@@ -46,7 +56,7 @@ describe('filterStreams', () => {
       getLinkedStream(2, { component, full: true }),
     ];
     const dm = new DropzoneManager();
-    expect(dm.filterStreams(streams, component, 0, true)).toEqual(streams);
+    expect(dm.filterStreams({ streams, component, index: 0, includeFull: true })).toEqual(streams);
   });
 });
 

@@ -12,10 +12,27 @@ export function dropzoneCompare(a: DropzonePlacement, b: DropzonePlacement) {
 
 
 export class DropzoneManager {
-  getDropzones(dragging: LinkedSession, includeFull: boolean): DropzonePlacement[] {
+  getDropzones({
+    dragging,
+    includeFull,
+    startHour = 0,
+    endHour = 24,
+  }: {
+    dragging: LinkedSession,
+    includeFull: boolean,
+    startHour?: number,
+    endHour?: number,
+  }): DropzonePlacement[] {
     const { course, stream: { component }, index } = dragging;
     const allStreams = course.streams.map(s => linkStream(course, s));
-    const filteredStreams = this.filterStreams(allStreams, component, index, includeFull);
+    const filteredStreams = this.filterStreams({
+      streams: allStreams,
+      component,
+      index,
+      includeFull,
+      startHour,
+      endHour,
+    });
 
     const dropzones = this.streamsToDropzones(filteredStreams, index);
     dropzones.sort(dropzoneCompare);
@@ -31,10 +48,21 @@ export class DropzoneManager {
   }
 
   filterStreams(
-    streams: LinkedStream[],
-    component: string,
-    index: number,
-    includeFull: boolean,
+    {
+      streams,
+      component,
+      index,
+      includeFull,
+      startHour = 0,
+      endHour = 24,
+    }: {
+      streams: LinkedStream[],
+      component: string,
+      index: number,
+      includeFull: boolean,
+      startHour?: number,
+      endHour?: number,
+    },
   ): LinkedStream[] {
     return streams.filter(s => {
       // Skip streams that are for a different component
@@ -45,6 +73,13 @@ export class DropzoneManager {
 
       // Skip full streams unless asked to include them
       if (s.full && !includeFull) { return false; }
+
+      // Skip placeholder event streams that are outside displayed hours
+      if (s.options?.placeHolder) {
+        if (s.sessions[0].start < startHour || s.sessions[0].end > endHour) {
+          return false;
+        }
+      }
 
       return true;
     });
