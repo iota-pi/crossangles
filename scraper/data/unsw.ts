@@ -1,4 +1,5 @@
 import type { MinistryMeta } from '../../app/src/state/Meta';
+import { ALL_DAYS } from '../../app/src/state/Session';
 import type { CampusAdditional } from './types';
 
 
@@ -25,7 +26,7 @@ enum CBSComponent {
 }
 
 
-const unsw: CampusAdditional<CBSComponent> = {
+const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
   default: [
     {
       code: 'CBS',
@@ -134,22 +135,27 @@ const unsw: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'T12' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'T13' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'W12' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'W13' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.LUNCH,
           times: [{ time: 'H12' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.BLT,
@@ -165,11 +171,50 @@ const unsw: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.OUTREACH,
-          times: { placeholderEvent: true },
+          times: [],
+          options: {
+            placeHolder: true,
+            notOnlyEvent: true,
+          },
         },
       ],
     },
   ],
 };
+
+function transformCBSEvents(data: CampusAdditional<CBSComponent>): CampusAdditional<CBSComponent> {
+  const updatedData: typeof data = { default: [] };
+  for (const term of Object.keys(data)) {
+    const updatedTerm: typeof data[typeof term] = [];
+
+    for (const course of data[term]) {
+      const updatedCourse: typeof course = { ...course, streams: [] };
+      for (const stream of course.streams) {
+        if (stream.times.length > 0) {
+          updatedCourse.streams.push(stream);
+        } else if (stream.options?.placeHolder) {
+          // Add a stream for every possible time slot if it's a placeholder event
+          const startHour = 8;
+          const endHour = 21;
+          for (const day of ALL_DAYS) {
+            for (let hour = startHour; hour < endHour; ++hour) {
+              const time = `${day}${hour}`;
+              updatedCourse.streams.push({
+                ...stream,
+                times: [{ time }],
+              });
+            }
+          }
+        }
+      }
+      updatedTerm.push(updatedCourse);
+    }
+    updatedData[term] = updatedTerm;
+  }
+
+  return updatedData;
+}
+
+const unsw = transformCBSEvents(BASE_UNSW_DATA);
 
 export default unsw;

@@ -23,12 +23,13 @@ async function scrapeCampus(
 
   let forceUpdate = !useState;
   if (state && await checkVersionChange(campus, state)) {
-    updateVersion(campus, state);
+    await updateVersion(campus, state);
     forceUpdate = true;
     logger.info('Scraper code updated, forcing data update.');
   }
 
   let data: CampusData[] | null = null;
+  logger.info('Invoking campus scraper', { campus, forceUpdate });
   switch (campus) {
     case UNSW:
       data = await scrapeUNSW({ state, forceUpdate });
@@ -50,7 +51,7 @@ async function scrapeCampus(
     }
     await Promise.all(writeDataPromises);
   } else {
-    logger.info('no data written');
+    logger.info('No data written');
   }
 }
 
@@ -69,7 +70,7 @@ async function writeTermData(
   }
   const output = getWriter(destination);
   const size = await output.write(termData);
-  logger.info('data written', { dataFileSize: size, term, current });
+  logger.info('Data written', { dataFileSize: size, term, current });
 }
 
 export default scrapeCampus;
