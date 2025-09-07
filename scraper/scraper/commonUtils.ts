@@ -1,4 +1,5 @@
 import { CourseData } from '../../app/src/state/Course';
+import { ALL_DAYS, DayLetter } from '../../app/src/state/Session';
 import { ClassTime, DeliveryType, StreamData } from '../../app/src/state/Stream';
 
 export function removeDuplicateStreams(course: CourseData) {
@@ -27,7 +28,7 @@ export function removeDuplicateStreams(course: CourseData) {
 function getStreamGroupMapping(course: CourseData): Map<string, StreamData[]> {
   const mapping = new Map<string, StreamData[]>();
   for (const stream of course.streams) {
-    const times = stream.times.map(t => t.time);
+    const times = normaliseTimes(stream.times).map(t => t.time);
     const key = `${stream.component}[${times}]`;
     const currentGroup = mapping.get(key) || [];
     const newGroup = currentGroup.concat(stream);
@@ -76,4 +77,97 @@ export function getInPersonTimes(streams: StreamData[]): ClassTime[] | null {
     }
   }
   return null;
+}
+
+export function normaliseTimes(times: ClassTime[]): ClassTime[] {
+  const map = new Map<string, ClassTime>();
+  for (const t of times) {
+    const key = t.time;
+    const existing = map.get(key);
+    if (!existing) {
+      map.set(key, t);
+    } else {
+      existing.weeks = mergeWeeks(t.weeks || '', existing.weeks || '');
+    }
+  }
+
+  const results = Array.from(map.values())
+  return results.sort(sortClassTimes);
+}
+
+function mergeWeeks(weeks: string, other: string): string {
+  const weekSet = new Set<number>(weekStringToArray(weeks));
+  const otherWeeks = weekStringToArray(other);
+  for (const w of otherWeeks) {
+    weekSet.add(w);
+  }
+  return weekArrayToString(Array.from(weekSet)) as string;
+}
+
+function weekStringToArray(weeks: string): number[] {
+  const result: number[] = [];
+  const parts = weeks.split(',');
+  for (const part of parts) {
+    if (part.includes('-')) {
+      const [start, end] = part.split('-').map(x => parseInt(x, 10));
+      if (isNaN(start) || isNaN(end)) continue;
+      for (let i = start; i <= end; ++i) {
+        result.push(i);
+      }
+    } else {
+      const week = parseInt(part, 10);
+      if (!isNaN(week)) {
+        result.push(week);
+      }
+    }
+  }
+  return result;
+}
+
+function weekArrayToString(weeks: number[]): string | undefined {
+  if (weeks.length === 0) {
+    return undefined;
+  }
+  weeks.sort((a, b) => a - b);
+
+  const parts: string[] = [];
+  let rangeStart: number | null = null;
+  let lastWeek: number | null = null;
+  for (const week of weeks) {
+    if (rangeStart === null) {
+      rangeStart = week;
+      lastWeek = week;
+    } else if (lastWeek !== null && week === lastWeek + 1) {
+      lastWeek = week;
+    } else {
+      if (rangeStart === lastWeek) {
+        parts.push(`${rangeStart}`);
+      } else {
+        parts.push(`${rangeStart}-${lastWeek}`);
+      }
+      rangeStart = week;
+      lastWeek = week;
+    }
+  }
+  if (rangeStart !== null) {
+    if (rangeStart === lastWeek) {
+      parts.push(`${rangeStart}`);
+    } else if (lastWeek !== null) {
+      parts.push(`${rangeStart}-${lastWeek}`);
+    }
+  }
+
+  return parts.join(',');
+}
+
+function sortClassTimes(a: ClassTime, b: ClassTime): number {
+  const dayA = a.time.charAt(0);
+  const dayB = b.time.charAt(0);
+  if (dayA !== dayB) {
+    return ALL_DAYS.indexOf(dayA as DayLetter) - ALL_DAYS.indexOf(dayB as DayLetter);
+  }
+
+  const startA = parseFloat(a.time.slice(1).split('-')[0]);
+  const startB = parseFloat(b.time.slice(1).split('-')[0]);
+  return startA - startB;
 }
