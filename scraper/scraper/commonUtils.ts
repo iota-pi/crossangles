@@ -91,7 +91,7 @@ export function normaliseTimes(times: ClassTime[]): ClassTime[] {
     }
   }
 
-  const results = Array.from(map.values())
+  const results = Array.from(map.values());
   return results.sort(sortClassTimes);
 }
 
@@ -110,13 +110,13 @@ function weekStringToArray(weeks: string): number[] {
   for (const part of parts) {
     if (part.includes('-')) {
       const [start, end] = part.split('-').map(x => parseInt(x, 10));
-      if (isNaN(start) || isNaN(end)) continue;
+      if (Number.isNaN(start) || Number.isNaN(end)) continue;
       for (let i = start; i <= end; ++i) {
         result.push(i);
       }
     } else {
       const week = parseInt(part, 10);
-      if (!isNaN(week)) {
+      if (!Number.isNaN(week)) {
         result.push(week);
       }
     }
