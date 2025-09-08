@@ -235,8 +235,8 @@ export class TimetableScraper {
 
       for (let term = 0; term < courses.length; ++term) {
         const course = courses[term];
-        removeDuplicateStreams(course);
         removeDuplicateTimes(course, term);
+        removeDuplicateStreams(course);
         allCourses[term].push(course);
       }
     });
