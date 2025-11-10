@@ -37,7 +37,7 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
       metadata: {
         ...CBS_BASE_META,
         signupURL: 'https://campusbiblestudy.org/signup',
-        signupValidFor: [{ year: 2025, term: 3 }],
+        signupValidFor: [{ year: 2026, term: 1 }],
       },
       streams: [
         {
@@ -102,7 +102,7 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.CORE_THEO,
-          times: [{ time: 'W14', weeks: '2-10' }],
+          times: [{ time: 'W15', weeks: '2-10' }],
         },
         {
           component: CBSComponent.CORE_TRAIN,
@@ -110,7 +110,7 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.CORE_TRAIN,
-          times: [{ time: 'W15', weeks: '2-10' }],
+          times: [{ time: 'W14', weeks: '2-10' }],
         },
         {
           component: CBSComponent.CORE_TRAIN,
@@ -118,11 +118,15 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'T10', weeks: '2-10' }],
+          times: [{ time: 'T10'}],
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'W9', weeks: '2-10' }],
+          times: [{ time: 'W9' }],
+        },
+        {
+          component: CBSComponent.PRAYER,
+          times: [{ time: 'H15' }],
         },
         {
           component: CBSComponent.HANG,
