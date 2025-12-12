@@ -14,6 +14,7 @@ export function removeDuplicateStreams(course: CourseData) {
     if (inPersonTimes !== null) {
       bestStream.times = inPersonTimes;
     }
+    bestStream.times = normaliseTimes(bestStream.times);
 
     // Remove all other streams
     for (const stream of streamGroup) {
@@ -28,7 +29,7 @@ export function removeDuplicateStreams(course: CourseData) {
 function getStreamGroupMapping(course: CourseData): Map<string, StreamData[]> {
   const mapping = new Map<string, StreamData[]>();
   for (const stream of course.streams) {
-    const times = normaliseTimes(stream.times).map(t => t.time);
+    const times = stream.times.map(t => t.time);
     const key = `${stream.component}[${times}]`;
     const currentGroup = mapping.get(key) || [];
     const newGroup = currentGroup.concat(stream);
@@ -82,7 +83,7 @@ export function getInPersonTimes(streams: StreamData[]): ClassTime[] | null {
 export function normaliseTimes(times: ClassTime[]): ClassTime[] {
   const map = new Map<string, ClassTime>();
   for (const t of times) {
-    const key = t.time;
+    const key = `${t.time}`;
     const existing = map.get(key);
     if (!existing) {
       map.set(key, t);
