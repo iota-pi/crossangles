@@ -89,7 +89,7 @@ export function normaliseTimes(times: ClassTime[]): ClassTime[] {
       map.set(key, t);
     } else {
       if (existing.location !== t.location) {
-        existing.location = 'See school for location'
+        existing.location = 'See school for location';
       }
       existing.weeks = mergeWeeks(t.weeks || '', existing.weeks || '');
     }
