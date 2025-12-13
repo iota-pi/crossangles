@@ -83,7 +83,7 @@ export function getInPersonTimes(streams: StreamData[]): ClassTime[] | null {
 export function normaliseTimes(times: ClassTime[]): ClassTime[] {
   const map = new Map<string, ClassTime>();
   for (const t of times) {
-    const key = `${t.time}`;
+    const key = t.time;
     const existing = map.get(key);
     if (!existing) {
       map.set(key, t);
