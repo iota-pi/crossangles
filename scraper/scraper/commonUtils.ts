@@ -88,6 +88,9 @@ export function normaliseTimes(times: ClassTime[]): ClassTime[] {
     if (!existing) {
       map.set(key, t);
     } else {
+      if (existing.location !== t.location) {
+        existing.location = 'Variable location - Check with school or course admin'
+      }
       existing.weeks = mergeWeeks(t.weeks || '', existing.weeks || '');
     }
   }
