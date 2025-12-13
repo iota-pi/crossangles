@@ -235,7 +235,6 @@ export class TimetableScraper {
 
       for (let term = 0; term < courses.length; ++term) {
         const course = courses[term];
-        removeDuplicateTimes(course, term);
         removeDuplicateStreams(course);
         allCourses[term].push(course);
       }
@@ -425,34 +424,4 @@ export function isOnWeekend(time: string) {
 
 export function isCourseEnrolment(data: StreamTableData) {
   return data.Activity.toLowerCase() === 'course enrolment';
-}
-
-export function removeDuplicateTimes(course: CourseData, term: number) {
-  if (course.streams[term] && course.streams[term].times
-    && Array.isArray(course.streams[term]?.times)) {
-    const seen: Map<string, ClassTime> = new Map();
-    let courseTimesInTerm: ClassTime[] = course.streams[term].times;
-
-    for (const cur of courseTimesInTerm) {
-      const curTime = cur;
-      if (!curTime.weeks) continue;
-      if (Array.isArray(curTime)) continue;
-
-      const key = `${curTime.time}-${curTime.location}`;
-      if (seen.has(key)) {
-        const toUpdate: ClassTime | undefined = seen.get(key);
-        if (toUpdate === undefined) continue;
-
-        // 'normalise' times
-        const curWksStr: string = curTime.weeks;
-        if (!seen.get(key)?.weeks?.includes(curWksStr)) {
-          toUpdate.weeks = `${toUpdate.weeks},${curWksStr}`;
-          seen.set(key, toUpdate);
-        }
-      } else {
-        seen.set(key, { ...curTime });
-      }
-    }
-    courseTimesInTerm = Array.from(seen.values());
-  }
 }
