@@ -8,7 +8,7 @@ import {
   TIMETABLE_BORDER_WIDTH,
   TIMETABLE_FIRST_CELL_WIDTH,
   TIMETABLE_CELL_MIN_WIDTH,
-  TIMETABLE_DAYS
+  TIMETABLE_DAYS,
 } from './timetableUtil';
 
 const noSelect: CSSProperties = {
@@ -104,13 +104,17 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+// variable, need to check what selected days exist
+// use TIMETABLE_DAYS to determine how long this should be 
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; // this to become a variable upon generation
 const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
   Wednesday: 'W',
   Thursday: 'H',
   Friday: 'F',
+  Saturday: 'S',
+  Sunday: 's',
 };
 
 export interface Props {

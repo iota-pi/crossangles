@@ -39,8 +39,9 @@ export function arraysEqual<T>(a: T[], b: T[]): boolean {
   return true;
 }
 
-export function getCellWidth(timetableWidth: number): number {
-  return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
+export function getCellWidth(timetableWidth: number,  numDaysActive: number): number {
+  console.log('bar', numDaysActive)
+  return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / numDaysActive;
 }
 
 export function getCellHeight(compact: boolean, showMode: boolean) {
@@ -86,9 +87,10 @@ export function getCustomCode() {
 }
 
 export function findDaysToDisplay(occurrences: string[] | null): number {
+  console.log('buh', occurrences);
   if (occurrences === null || occurrences.length === 0) return 5;
   const scheduleParts = occurrences.map(item => item.split('~')[2] || "");
-
+  console.log('rah', scheduleParts)
   if (scheduleParts.some(part => part.includes('s'))) return 7; // Sunday
   if (scheduleParts.some(part => part.includes('S'))) return 6; // Saturday
 
