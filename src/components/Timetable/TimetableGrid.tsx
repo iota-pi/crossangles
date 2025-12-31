@@ -194,7 +194,7 @@ const Grid: React.FC<Props> = props => {
       </div>
 
       {hoursArray.map(([hour, am]) => (
-        <div className={rowClasses} key={`${hour}-${am}`}>
+        <div className={rowClasses} key={hour + am.toString()}>
           <div className={`${classes.cell} ${classes.time}`}>
             <span>{hour}</span>
             <span className={twentyFourHours ? undefined : classes.timeSuffix}>
