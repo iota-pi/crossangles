@@ -84,3 +84,11 @@ export function findFreeDepth(takenDepths: Set<number>): number {
 export function getCustomCode() {
   return `custom_${Math.random()}`;
 }
+
+export function findDaysToDisplay(occurrences: string[]): number {
+  const occurrenceSet = new Set(occurrences);
+
+  if (occurrenceSet.has('s')) return 7;
+  if (occurrenceSet.has('S')) return 6;
+  return 5;
+}

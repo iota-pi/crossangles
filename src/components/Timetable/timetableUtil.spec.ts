@@ -1,4 +1,4 @@
-import { getOverlapArea, getTimetableHeight } from './timetableUtil';
+import { findDaysToDisplay, getOverlapArea, getTimetableHeight } from './timetableUtil';
 
 describe('getTimetableHeight', () => {
   it.each(
@@ -40,5 +40,23 @@ describe('getOverlapArea', () => {
       { x: 5, y: 5, width: 5, height: 5 },
     );
     expect(result).toEqual(3 * 2);
+  });
+});
+
+// S -> Saturday, s -> sunday
+describe('findDaysToDisplay', () => {
+  it.each(
+    [
+      [['M', 'T', 'W', 'H', 'F'], 5],
+      [['M', 'F'], 5],
+      [['M'], 5],
+      [['M', 'S'], 6],
+      [['S'], 6],
+      [['T', 's'], 7],
+      [['s'], 7],
+    ],
+  )('returns correct value', (arrayDays, expected) => {
+    const result = findDaysToDisplay(arrayDays);
+    expect(result).toBe(expected);
   });
 });
