@@ -10,6 +10,7 @@ import {
   TIMETABLE_CELL_MIN_WIDTH,
   TIMETABLE_DAYS,
 } from './timetableUtil';
+import { push } from '../../state';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
+      // wow this line actually does nothing might just remove it 
       minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * TIMETABLE_DAYS + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
@@ -106,7 +108,7 @@ const useStyles = makeStyles(theme => {
 
 // variable, need to check what selected days exist
 // use TIMETABLE_DAYS to determine how long this should be 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']; // this to become a variable upon generation
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']; // this to become a variable upon generation
 const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
@@ -122,6 +124,7 @@ export interface Props {
   timetableGridId: string,
   start: number,
   end: number,
+  numActiveDays: number,
   compact: boolean,
   showMode: boolean,
   twentyFourHours: boolean,
@@ -148,6 +151,7 @@ const Grid: React.FC<Props> = ({
   timetableGridId,
   start,
   end,
+  numActiveDays,
   compact,
   showMode,
   twentyFourHours,
@@ -176,6 +180,9 @@ const Grid: React.FC<Props> = ({
     rowClassList.push(classes.disableTransitions);
   }
   const rowClasses = rowClassList.join(' ');
+
+  if (numActiveDays > 5) days.push('Saturday');
+  if (numActiveDays > 6) days.push('Sunday');
 
   return (
     <div id={timetableGridId} className={classes.grid}>

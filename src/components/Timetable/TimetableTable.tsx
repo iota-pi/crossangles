@@ -117,7 +117,7 @@ function TimetableTable({
   const numActiveDays = React.useMemo(
     // might not be wise to only update findDays when renderOrder changes... 
     () => findDaysToDisplay(timetable.renderOrder),
-    [timetable.renderOrder] // Only re-runs if the renderOrder changes
+    [timetable.renderOrder] 
   );
 
   const sessions = React.useMemo(
@@ -416,6 +416,7 @@ function TimetableTable({
         timetableGridId={timetableGridId}
         start={start}
         end={end}
+        numActiveDays={numActiveDays}
         disabled={disabled}
         compact={compact}
         showMode={showMode}
