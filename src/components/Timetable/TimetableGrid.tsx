@@ -8,6 +8,7 @@ import {
   TIMETABLE_BORDER_WIDTH,
   TIMETABLE_FIRST_CELL_WIDTH,
   TIMETABLE_CELL_MIN_WIDTH,
+  TIMETABLE_DAYS
 } from './timetableUtil';
 
 const noSelect: CSSProperties = {
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * 5 + TIMETABLE_BORDER_WIDTH,
+      minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * TIMETABLE_DAYS + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
     row: {
