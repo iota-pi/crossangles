@@ -53,6 +53,7 @@ export abstract class TimetablePlacement {
   basePlacement(
     timetableDimensions: Dimensions,
     firstHour: number,
+    numDaysActive: number,
     compact: boolean,
     showMode: boolean,
   ): Placement {
@@ -69,14 +70,15 @@ export abstract class TimetablePlacement {
       }
     }
 
-    const { width, height } = this.baseDimensions(timetableDimensions, compact, showMode);
+    const { width, height } = this.baseDimensions(timetableDimensions, compact, showMode, numDaysActive);
 
     const hourIndex = this._session.start - firstHour;
 
-    const sessionWidth = getCellWidth(timetableDimensions.width);
+    const sessionWidth = getCellWidth(timetableDimensions.width, numDaysActive);
 
     const baseX = TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_BORDER_WIDTH;
     const baseY = getCellHeight(true, false) + TIMETABLE_BORDER_WIDTH;
+    // this.dayIndex is sus
     const dayOffsetX = sessionWidth * this.dayIndex;
     const hourOffsetY = getCellHeight(compact, showMode) * hourIndex;
 
@@ -91,10 +93,11 @@ export abstract class TimetablePlacement {
   getPosition(
     timetableDimensions: Dimensions,
     startHour: number,
+    numDaysActive: number,
     compact: boolean,
     showMode: boolean,
   ): Required<Placement> {
-    const base = this.basePlacement(timetableDimensions, startHour, compact, showMode);
+    const base = this.basePlacement(timetableDimensions, startHour, numDaysActive, compact, showMode);
     const dependencies = [
       timetableDimensions,
       startHour,
@@ -133,8 +136,9 @@ export abstract class TimetablePlacement {
     timetableDimensions: Dimensions,
     compact: boolean,
     showMode: boolean,
+    numDaysActive: number,
   ): Dimensions {
-    const sessionWidth = getCellWidth(timetableDimensions.width);
+    const sessionWidth = getCellWidth(timetableDimensions.width, numDaysActive);
     const sessionHeight = this.calculateHeight(compact, showMode);
     const width = sessionWidth - TIMETABLE_BORDER_WIDTH;
     const height = sessionHeight - TIMETABLE_BORDER_WIDTH;

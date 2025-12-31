@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { DROPZONE_Z, getSnapDistance, getTimetableHeight } from './timetableUtil';
+import { DROPZONE_Z, findDaysToDisplay, getSnapDistance, getTimetableHeight } from './timetableUtil';
 import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import SessionManager from './SessionManager';
@@ -114,6 +114,10 @@ function TimetableTable({
   const disableTransitions = getOption(options, 'reducedMotion');
   const twentyFourHours = getOption(options, 'twentyFourHours');
   const includeFull = getOption(options, 'includeFull');
+  const numActiveDays = React.useMemo(
+    () => findDaysToDisplay(timetable.renderOrder),
+    [timetable.renderOrder], 
+  );
 
   const sessions = React.useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
@@ -229,7 +233,7 @@ function TimetableTable({
       const centreX = placement.x + placement.width / 2;
       const centreY = placement.y + placement.height / 2;
       for (const dropzone of dropzones) {
-        const dropzonePosition = dropzone.getPosition(dimensions, start, compact, showMode);
+        const dropzonePosition = dropzone.getPosition(dimensions, start, numActiveDays, compact, showMode);
         const deltaX = (dropzonePosition.x + dropzonePosition.width / 2) - centreX;
         const deltaY = (dropzonePosition.y + dropzonePosition.height / 2) - centreY;
 
@@ -248,7 +252,7 @@ function TimetableTable({
     (session: LinkedSession, delta: TimetablePosition) => {
       timetable.move(session.id, delta);
       const sessionPlacement = timetable.get(session.id);
-      const position = sessionPlacement.getPosition(dimensions, start, compact, showMode);
+      const position = sessionPlacement.getPosition(dimensions, start, numActiveDays, compact, showMode);
       const dropzone = getNearestDropzone(position);
       setHighlightedZone(dropzone);
       forceUpdate();
@@ -262,9 +266,9 @@ function TimetableTable({
 
       // Snap session to nearest dropzone
       const sessionPlacement = timetable.get(session.id);
-      const position = sessionPlacement.getPosition(dimensions, start, compact, showMode);
+      const position = sessionPlacement.getPosition(dimensions, start, numActiveDays, compact, showMode);
       const dropzone = getNearestDropzone(position);
-      timetable.drop(session.id, dropzone, dimensions, start, compact, showMode);
+      timetable.drop(session.id, dropzone, dimensions, start, numActiveDays, compact, showMode);
 
       setDragging(null);
       setHighlightedZone(null);
@@ -318,9 +322,9 @@ function TimetableTable({
 
       const { clashDepth, isDragging, isSnapped } = placement;
       const { course, id, index, stream } = session;
-      const position = placement.getPosition(dimensions, start, compact, showMode);
+      const position = placement.getPosition(dimensions, start, numActiveDays, compact, showMode);
       if (placement.isDragging && isStreamBeingDragged && highlightedZone) {
-        position.height = highlightedZone.getPosition(dimensions, start, compact, showMode).height;
+        position.height = highlightedZone.getPosition(dimensions, start, numActiveDays, compact, showMode).height;
       }
       const courseId = getCourseId(course);
       const key = `${courseId}-${stream.component}-${index}`;
@@ -395,7 +399,7 @@ function TimetableTable({
               key={dropzone.session.stream.id}
               colour={draggingColour}
               highlighted={highlightedZone ? highlightedZone.id === dropzone.id : false}
-              position={dropzone.getPosition(dimensions, start, compact, showMode)}
+              position={dropzone.getPosition(dimensions, start, numActiveDays, compact, showMode)}
               session={dropzone.session}
               options={options}
             />
@@ -411,6 +415,7 @@ function TimetableTable({
         timetableGridId={timetableGridId}
         start={start}
         end={end}
+        numActiveDays={numActiveDays}
         disabled={disabled}
         compact={compact}
         showMode={showMode}
