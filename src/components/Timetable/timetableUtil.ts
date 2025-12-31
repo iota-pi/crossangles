@@ -85,10 +85,29 @@ export function getCustomCode() {
   return `custom_${Math.random()}`;
 }
 
-export function findDaysToDisplay(occurrences: string[]): number {
-  const occurrenceSet = new Set(occurrences);
+// helper for findDaysToDisplay 
+// takes array and splits it to day letters
+function turnOccurenceToDays(schedule: string[]): Set<string> {
+  const letters = schedule.flatMap(item => {
+      const occurrences = item.split('~')[2] || "";
+      
+      // 2. Match all standard day letters (M, T, W, H, F, S, s)
+      // This finds every instance of these specific characters
+      const matches = occurrences.match(/[MTWHFSs]/g);
+      
+      return matches || [];
+    });
 
-  if (occurrenceSet.has('s')) return 7;
-  if (occurrenceSet.has('S')) return 6;
+    return new Set(letters);
+}
+
+export function findDaysToDisplay(occurrences: string[] | null): number {
+  if (occurrences === null) return 5;
+  const days = turnOccurenceToDays(occurrences);
+
+  console.log(days)
+
+  if (days.has('s')) return 7;
+  if (days.has('S')) return 6;
   return 5;
 }

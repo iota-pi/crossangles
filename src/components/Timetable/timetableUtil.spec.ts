@@ -47,13 +47,11 @@ describe('getOverlapArea', () => {
 describe('findDaysToDisplay', () => {
   it.each(
     [
-      [['M', 'T', 'W', 'H', 'F'], 5],
-      [['M', 'F'], 5],
-      [['M'], 5],
-      [['M', 'S'], 6],
-      [['S'], 6],
-      [['T', 's'], 7],
-      [['s'], 7],
+      [null, 5],
+      [["A~B~W13~C"], 5],
+      [["A~B~S13~C"], 6],
+      [["A~B~s13~C"], 7],
+      [["A~B~M13~C", "A~B~H13~C", "A~B~T13~C", "A~B~F13~C"], 5],
     ],
   )('returns correct value', (arrayDays, expected) => {
     const result = findDaysToDisplay(arrayDays);
