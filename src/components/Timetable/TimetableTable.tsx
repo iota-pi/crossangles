@@ -8,7 +8,7 @@ import { TransitionGroup } from 'react-transition-group';
 import TimetableGrid from './TimetableGrid';
 import TimetableSession from './TimetableSession';
 import TimetableDropzone from './TimetableDropzone';
-import { DROPZONE_Z, getSnapDistance, getTimetableHeight } from './timetableUtil';
+import { DROPZONE_Z, findDaysToDisplay, getSnapDistance, getTimetableHeight } from './timetableUtil';
 import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
 import { DropzonePlacement } from './DropzonePlacement';
 import SessionManager from './SessionManager';
@@ -114,7 +114,11 @@ function TimetableTable({
   const disableTransitions = getOption(options, 'reducedMotion');
   const twentyFourHours = getOption(options, 'twentyFourHours');
   const includeFull = getOption(options, 'includeFull');
-
+  const numDays = React.useMemo(
+    () => findDaysToDisplay(timetable.renderOrder),
+    [timetable.renderOrder] // Only re-runs if the renderOrder changes
+  );
+  
   const sessions = React.useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
     [timetable],
