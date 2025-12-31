@@ -116,7 +116,7 @@ function TimetableTable({
   const includeFull = getOption(options, 'includeFull');
   const numActiveDays = React.useMemo(
     () => findDaysToDisplay(timetable.renderOrder),
-    [timetable.renderOrder] 
+    [timetable.renderOrder], 
   );
 
   const sessions = React.useMemo(

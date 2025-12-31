@@ -24,6 +24,9 @@ export const DISPLACE_RADIUS_Y = 10;
 export const RAISE_DIST_X = -5;
 export const RAISE_DIST_Y = -5;
 
+const SUNDAY = 7;
+const SATURDAY = 6;
+const FRIDAY = 5;
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) {
@@ -40,7 +43,6 @@ export function arraysEqual<T>(a: T[], b: T[]): boolean {
 }
 
 export function getCellWidth(timetableWidth: number,  numDaysActive: number): number {
-  console.log('bar', numDaysActive)
   return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / numDaysActive;
 }
 
@@ -86,13 +88,13 @@ export function getCustomCode() {
   return `custom_${Math.random()}`;
 }
 
+// find the last day to display from monday on the timetable page
 export function findDaysToDisplay(occurrences: string[] | null): number {
-  console.log('buh', occurrences);
   if (occurrences === null || occurrences.length === 0) return 5;
-  const scheduleParts = occurrences.map(item => item.split('~')[2] || "");
-  console.log('rah', scheduleParts)
-  if (scheduleParts.some(part => part.includes('s'))) return 7; // Sunday
-  if (scheduleParts.some(part => part.includes('S'))) return 6; // Saturday
+  const scheduleParts = occurrences.map(item => item.split('~')[2] || '');
 
-  return 5
+  if (scheduleParts.some(part => part.includes('s'))) return SUNDAY; //with 
+  if (scheduleParts.some(part => part.includes('S'))) return SATURDAY; // Saturday
+
+  return FRIDAY;
 }

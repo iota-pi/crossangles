@@ -136,7 +136,7 @@ export function timeToString(hour: number, twentyFourHours: boolean) {
   return [hourString, suffix];
 }
 
-const Grid: React.FC<Props> = (props) => {
+const Grid: React.FC<Props> = props => {
   const {
     disabled,
     timetableGridId,

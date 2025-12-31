@@ -136,7 +136,7 @@ export abstract class TimetablePlacement {
     timetableDimensions: Dimensions,
     compact: boolean,
     showMode: boolean,
-    numDaysActive: number
+    numDaysActive: number,
   ): Dimensions {
     const sessionWidth = getCellWidth(timetableDimensions.width, numDaysActive);
     const sessionHeight = this.calculateHeight(compact, showMode);
