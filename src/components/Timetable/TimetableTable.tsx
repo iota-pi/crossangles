@@ -114,11 +114,7 @@ function TimetableTable({
   const disableTransitions = getOption(options, 'reducedMotion');
   const twentyFourHours = getOption(options, 'twentyFourHours');
   const includeFull = getOption(options, 'includeFull');
-  const numActiveDays = React.useMemo(
-    // might not be wise to only update findDays when renderOrder changes... 
-    () => findDaysToDisplay(timetable.renderOrder),
-    [timetable.renderOrder] 
-  );
+  const numActiveDays =findDaysToDisplay(timetable.renderOrder)
 
   const sessions = React.useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),

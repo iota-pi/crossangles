@@ -8,9 +8,7 @@ import {
   TIMETABLE_BORDER_WIDTH,
   TIMETABLE_FIRST_CELL_WIDTH,
   TIMETABLE_CELL_MIN_WIDTH,
-  TIMETABLE_DAYS,
 } from './timetableUtil';
-import { push } from '../../state';
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -30,22 +28,20 @@ const useStyles = makeStyles(theme => {
       position: 'relative',
       overflowX: 'visible',
       ...noSelect,
-
-      // Outside border
       borderStyle: 'solid',
       borderColor: DARKER_BORDER,
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      // wow this line actually does nothing might just remove it 
-      minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * TIMETABLE_DAYS + TIMETABLE_BORDER_WIDTH,
+      // Dynamic minWidth based on numActiveDays passed via props
+      minWidth: (props: Props) => 
+        TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numActiveDays) + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
     row: {
       display: 'flex',
       height: getCellHeight(false, false),
       transition: theme.transitions.create('height'),
-
       borderStyle: 'solid',
       borderColor: STANDARD_BORDER,
       borderWidth: 0,
@@ -74,11 +70,9 @@ const useStyles = makeStyles(theme => {
     cell: {
       flex: '1 1 100%',
       minWidth: TIMETABLE_CELL_MIN_WIDTH,
-
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-
       borderStyle: 'solid',
       borderColor: STANDARD_BORDER,
       borderWidth: 0,
@@ -106,9 +100,7 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-// variable, need to check what selected days exist
-// use TIMETABLE_DAYS to determine how long this should be 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']; // this to become a variable upon generation
+const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
@@ -120,16 +112,16 @@ const daysToLetters: { [key: string]: string } = {
 };
 
 export interface Props {
-  disabled: boolean,
-  timetableGridId: string,
-  start: number,
-  end: number,
-  numActiveDays: number,
-  compact: boolean,
-  showMode: boolean,
-  twentyFourHours: boolean,
-  disableTransitions: boolean,
-  onToggleTwentyFourHours?: () => void,
+  disabled: boolean;
+  timetableGridId: string;
+  start: number;
+  end: number;
+  numActiveDays: number;
+  compact: boolean;
+  showMode: boolean;
+  twentyFourHours: boolean;
+  disableTransitions: boolean;
+  onToggleTwentyFourHours?: () => void;
 }
 
 export function timeToString(hour: number, twentyFourHours: boolean) {
@@ -146,29 +138,31 @@ export function timeToString(hour: number, twentyFourHours: boolean) {
   return [hourString, suffix];
 }
 
-const Grid: React.FC<Props> = ({
-  disabled,
-  timetableGridId,
-  start,
-  end,
-  numActiveDays,
-  compact,
-  showMode,
-  twentyFourHours,
-  disableTransitions,
-  onToggleTwentyFourHours,
-}: Props) => {
-  const classes = useStyles();
-  const hoursArray = React.useMemo(
-    () => {
-      const duration = end - start;
-      return new Array(duration).fill(0).map((_, i) => {
-        const hour = start + i;
-        return timeToString(hour, twentyFourHours);
-      });
-    },
-    [start, end, twentyFourHours],
-  );
+const Grid: React.FC<Props> = (props) => {
+  const {
+    disabled,
+    timetableGridId,
+    start,
+    end,
+    numActiveDays,
+    compact,
+    showMode,
+    twentyFourHours,
+    disableTransitions,
+    onToggleTwentyFourHours,
+  } = props;
+
+  const classes = useStyles(props);
+  
+  const hoursArray = React.useMemo(() => {
+    const duration = end - start;
+    return new Array(duration).fill(0).map((_, i) => {
+      const hour = start + i;
+      return timeToString(hour, twentyFourHours);
+    });
+  }, [start, end, twentyFourHours]);
+
+  const days = React.useMemo(() => week.slice(0, numActiveDays), [numActiveDays]);
 
   const rowClassList = [classes.row];
   if (showMode) {
@@ -180,9 +174,6 @@ const Grid: React.FC<Props> = ({
     rowClassList.push(classes.disableTransitions);
   }
   const rowClasses = rowClassList.join(' ');
-
-  if (numActiveDays > 5) days.push('Saturday');
-  if (numActiveDays > 6) days.push('Sunday');
 
   return (
     <div id={timetableGridId} className={classes.grid}>
@@ -205,11 +196,9 @@ const Grid: React.FC<Props> = ({
       </div>
 
       {hoursArray.map(([hour, am]) => (
-        <div className={rowClasses} key={hour + am.toString()}>
+        <div className={rowClasses} key={`${hour}-${am}`}>
           <div className={`${classes.cell} ${classes.time}`}>
-            <span>
-              {hour}
-            </span>
+            <span>{hour}</span>
             <span className={twentyFourHours ? undefined : classes.timeSuffix}>
               {am}
             </span>
