@@ -88,8 +88,8 @@ export function getCustomCode() {
   return `custom_${Math.random()}`;
 }
 
-// find the last day to display from monday on the timetable page
-export function findDaysToDisplay(occurrences: string[] | null): number {
+// From Monday, find number of days to display.
+export function getNumDisplayDays(occurrences: string[] | null): number {
   if (occurrences === null || occurrences.length === 0) return 5;
   const scheduleParts = occurrences.map(item => item.split('~')[2] || '');
 
