@@ -178,7 +178,7 @@ function TimetableTable({
   );
   const { version } = timetable;
   useEffect(forceUpdate, [version, forceUpdate]);
-  useEffect(updateDimensions, [updateDimensions]);
+  useEffect(updateDimensions, [updateDimensions, timetable]);
 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
   const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
