@@ -33,9 +33,9 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      // Dynamic minWidth based on numActiveDays passed via props
+      // Dynamic minWidth based on numDaysToDisplay passed via props
       minWidth: (props: Props) => 
-        TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numActiveDays) + TIMETABLE_BORDER_WIDTH,
+        TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numDaysToDisplay) + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
     row: {
@@ -114,7 +114,7 @@ export interface Props {
   timetableGridId: string;
   start: number;
   end: number;
-  numActiveDays: number;
+  numDaysToDisplay: number;
   compact: boolean;
   showMode: boolean;
   twentyFourHours: boolean;
@@ -142,7 +142,7 @@ const Grid: React.FC<Props> = props => {
     timetableGridId,
     start,
     end,
-    numActiveDays,
+    numDaysToDisplay,
     compact,
     showMode,
     twentyFourHours,
@@ -160,7 +160,7 @@ const Grid: React.FC<Props> = props => {
     });
   }, [start, end, twentyFourHours]);
 
-  const days = React.useMemo(() => week.slice(0, numActiveDays), [numActiveDays]);
+  const days = React.useMemo(() => week.slice(0, numDaysToDisplay), [numDaysToDisplay]);
 
   const rowClassList = [classes.row];
   if (showMode) {
