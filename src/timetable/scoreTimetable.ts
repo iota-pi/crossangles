@@ -1,7 +1,7 @@
 import { notUndefined } from '../typeHelpers';
 import { ClashInfo } from './getClashInfo';
 import { TimetableScorerCache } from './TimetableScorerCache';
-import { ALL_DAYS, DayLetter, LinkedSession, LinkedStream } from '../state';
+import { DayLetter, LinkedSession, LinkedStream } from '../state';
 
 const DEFAULT_SCORE: number = 1;
 const CLASH_PENALTY: number = -1000;
@@ -102,8 +102,8 @@ export function scoreTimes(sessions: LinkedSession[]): number {
 
 export function scoreDayLength(sessions: LinkedSession[]): number {
   const perHour = -10;
-  const starts = Object.fromEntries(ALL_DAYS.map(day => [day, 24]));
-  const ends = Object.fromEntries(ALL_DAYS.map(day => [day, -1]));
+  const starts = { M: 24, T: 24, W: 24, H: 24, F: 24, S: 24, s: 24 };
+  const ends = { M: -1, T: -1, W: -1, H: -1, F: -1, S: -1, s: -1 };
 
   for (let i = 0; i < sessions.length; ++i) {
     const { day, start, end } = sessions[i];
