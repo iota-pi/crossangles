@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      // Dynamic minWidth based on numDisplayDays passed via props
       minWidth: (props: Props) => 
         TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numDisplayDays) + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
