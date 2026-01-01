@@ -100,13 +100,15 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
   Wednesday: 'W',
   Thursday: 'H',
   Friday: 'F',
+  Saturday: 'S',
+  Sunday: 's',
 };
 
 export interface Props {
