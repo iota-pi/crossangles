@@ -3,6 +3,9 @@ import { ClashInfo } from './getClashInfo';
 import { TimetableScorerCache } from './TimetableScorerCache';
 import { ALL_DAYS, DayLetter, LinkedSession, LinkedStream } from '../state';
 
+const DEFAULT_SCORE: number = 1;
+const CLASH_PENALTY: number = -1000;
+
 export interface TimetableScore {
   score: number,
   timetable: LinkedSession[],
@@ -16,10 +19,10 @@ export interface TimetableScoreConfig {
 }
 
 export const defaultScoreConfig: TimetableScoreConfig = {
-  clash: 1,
-  freeDays: 1,
-  times: 1,
-  dayLength: 1,
+  clash: DEFAULT_SCORE,
+  freeDays: DEFAULT_SCORE,
+  times: DEFAULT_SCORE,
+  dayLength: DEFAULT_SCORE,
 };
 
 export class TimetableScorer {
@@ -169,6 +172,5 @@ export function countClashes(
 }
 
 export function scoreClashes(counts: number): number {
-  const clashPenalty = -1000;
-  return counts * clashPenalty;
+  return counts * CLASH_PENALTY;
 }
