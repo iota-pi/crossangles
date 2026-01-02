@@ -78,7 +78,7 @@ export class TimetableScorer {
 }
 
 export function scoreFreeDays(sessions: LinkedSession[]): number {
-  const scores = { M: 290, T: 250, W: 280, H: 260, F: 300, S: 310, s: 310 };
+  const scores = { M: 290, T: 250, W: 280, H: 260, F: 300, S: 400, s: 500 };
 
   for (let i = 0; i < sessions.length; ++i) {
     scores[sessions[i].day] = 0;
