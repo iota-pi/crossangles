@@ -259,6 +259,7 @@ class SessionManager {
     dropzone: DropzonePlacement | null,
     timetableDimensions: Dimensions,
     firstHour: number,
+    numDaysActive: number,
     compact: boolean,
     showMode: boolean,
     shouldCallback = true,
@@ -267,7 +268,7 @@ class SessionManager {
 
     // Drop this placement
     const session = this.get(sessionId);
-    session.drop(timetableDimensions, firstHour, compact, showMode);
+    session.drop(timetableDimensions, firstHour, numDaysActive, compact, showMode);
 
     // Lower all linked placements
     const stream = session.session.stream;

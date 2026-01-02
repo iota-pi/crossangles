@@ -24,6 +24,9 @@ export const DISPLACE_RADIUS_Y = 10;
 export const RAISE_DIST_X = -5;
 export const RAISE_DIST_Y = -5;
 
+const FRIDAY = 5;
+const SATURDAY = 6;
+const SUNDAY = 7;
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) {
@@ -39,8 +42,8 @@ export function arraysEqual<T>(a: T[], b: T[]): boolean {
   return true;
 }
 
-export function getCellWidth(timetableWidth: number): number {
-  return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
+export function getCellWidth(timetableWidth: number,  numDaysActive: number): number {
+  return (timetableWidth - TIMETABLE_FIRST_CELL_WIDTH) / numDaysActive;
 }
 
 export function getCellHeight(compact: boolean, showMode: boolean) {
@@ -83,4 +86,16 @@ export function findFreeDepth(takenDepths: Set<number>): number {
 
 export function getCustomCode() {
   return `custom_${Math.random()}`;
+}
+
+// From Monday, find number of days to display on the grid
+// input: [ 'A~B~[day][time]~C', ...]
+export function getNumDisplayDays(occurrences: string[] | null): number {
+  if (occurrences === null || occurrences.length === 0) return FRIDAY;
+  const scheduleParts = occurrences.map(item => item.split('~')[2] || '');
+
+  if (scheduleParts.some(part => part.includes('s'))) return SUNDAY;
+  if (scheduleParts.some(part => part.includes('S'))) return SATURDAY;
+
+  return FRIDAY;
 }

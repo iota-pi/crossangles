@@ -28,21 +28,19 @@ const useStyles = makeStyles(theme => {
       position: 'relative',
       overflowX: 'visible',
       ...noSelect,
-
-      // Outside border
       borderStyle: 'solid',
       borderColor: DARKER_BORDER,
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      minWidth: TIMETABLE_FIRST_CELL_WIDTH + TIMETABLE_CELL_MIN_WIDTH * 5 + TIMETABLE_BORDER_WIDTH,
+      minWidth: (props: Props) => 
+        TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numDisplayDays) + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
     row: {
       display: 'flex',
       height: getCellHeight(false, false),
       transition: theme.transitions.create('height'),
-
       borderStyle: 'solid',
       borderColor: STANDARD_BORDER,
       borderWidth: 0,
@@ -71,11 +69,9 @@ const useStyles = makeStyles(theme => {
     cell: {
       flex: '1 1 100%',
       minWidth: TIMETABLE_CELL_MIN_WIDTH,
-
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-
       borderStyle: 'solid',
       borderColor: STANDARD_BORDER,
       borderWidth: 0,
@@ -103,25 +99,28 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
   Wednesday: 'W',
   Thursday: 'H',
   Friday: 'F',
+  Saturday: 'S',
+  Sunday: 's',
 };
 
 export interface Props {
-  disabled: boolean,
-  timetableGridId: string,
-  start: number,
-  end: number,
-  compact: boolean,
-  showMode: boolean,
-  twentyFourHours: boolean,
-  disableTransitions: boolean,
-  onToggleTwentyFourHours?: () => void,
+  disabled: boolean;
+  timetableGridId: string;
+  start: number;
+  end: number;
+  numDisplayDays: number;
+  compact: boolean;
+  showMode: boolean;
+  twentyFourHours: boolean;
+  disableTransitions: boolean;
+  onToggleTwentyFourHours?: () => void;
 }
 
 export function timeToString(hour: number, twentyFourHours: boolean) {
@@ -138,28 +137,31 @@ export function timeToString(hour: number, twentyFourHours: boolean) {
   return [hourString, suffix];
 }
 
-const Grid: React.FC<Props> = ({
-  disabled,
-  timetableGridId,
-  start,
-  end,
-  compact,
-  showMode,
-  twentyFourHours,
-  disableTransitions,
-  onToggleTwentyFourHours,
-}: Props) => {
-  const classes = useStyles();
-  const hoursArray = React.useMemo(
-    () => {
-      const duration = end - start;
-      return new Array(duration).fill(0).map((_, i) => {
-        const hour = start + i;
-        return timeToString(hour, twentyFourHours);
-      });
-    },
-    [start, end, twentyFourHours],
-  );
+const Grid: React.FC<Props> = props => {
+  const {
+    disabled,
+    timetableGridId,
+    start,
+    end,
+    numDisplayDays,
+    compact,
+    showMode,
+    twentyFourHours,
+    disableTransitions,
+    onToggleTwentyFourHours,
+  } = props;
+
+  const classes = useStyles(props);
+  
+  const hoursArray = React.useMemo(() => {
+    const duration = end - start;
+    return new Array(duration).fill(0).map((_, i) => {
+      const hour = start + i;
+      return timeToString(hour, twentyFourHours);
+    });
+  }, [start, end, twentyFourHours]);
+
+  const days = React.useMemo(() => week.slice(0, numDisplayDays), [numDisplayDays]);
 
   const rowClassList = [classes.row];
   if (showMode) {
@@ -195,9 +197,7 @@ const Grid: React.FC<Props> = ({
       {hoursArray.map(([hour, am]) => (
         <div className={rowClasses} key={hour + am.toString()}>
           <div className={`${classes.cell} ${classes.time}`}>
-            <span>
-              {hour}
-            </span>
+            <span>{hour}</span>
             <span className={twentyFourHours ? undefined : classes.timeSuffix}>
               {am}
             </span>

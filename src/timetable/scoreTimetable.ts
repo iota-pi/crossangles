@@ -3,6 +3,9 @@ import { ClashInfo } from './getClashInfo';
 import { TimetableScorerCache } from './TimetableScorerCache';
 import { DayLetter, LinkedSession, LinkedStream } from '../state';
 
+const DEFAULT_SCORE: number = 1;
+const CLASH_PENALTY: number = -1000;
+
 export interface TimetableScore {
   score: number,
   timetable: LinkedSession[],
@@ -16,10 +19,10 @@ export interface TimetableScoreConfig {
 }
 
 export const defaultScoreConfig: TimetableScoreConfig = {
-  clash: 1,
-  freeDays: 1,
-  times: 1,
-  dayLength: 1,
+  clash: DEFAULT_SCORE,
+  freeDays: DEFAULT_SCORE,
+  times: DEFAULT_SCORE,
+  dayLength: DEFAULT_SCORE,
 };
 
 export class TimetableScorer {
@@ -75,13 +78,13 @@ export class TimetableScorer {
 }
 
 export function scoreFreeDays(sessions: LinkedSession[]): number {
-  const scores = { M: 290, T: 250, W: 280, H: 260, F: 300 };
+  const scores = { M: 290, T: 250, W: 280, H: 260, F: 300, S: 400, s: 500 };
 
   for (let i = 0; i < sessions.length; ++i) {
     scores[sessions[i].day] = 0;
   }
 
-  return scores.M + scores.T + scores.W + scores.H + scores.F;
+  return scores.M + scores.T + scores.W + scores.H + scores.F + scores.S + scores.s;
 }
 
 export function scoreTimes(sessions: LinkedSession[]): number {
@@ -99,8 +102,8 @@ export function scoreTimes(sessions: LinkedSession[]): number {
 
 export function scoreDayLength(sessions: LinkedSession[]): number {
   const perHour = -10;
-  const starts = { M: 24, T: 24, W: 24, H: 24, F: 24 };
-  const ends = { M: -1, T: -1, W: -1, H: -1, F: -1 };
+  const starts = { M: 24, T: 24, W: 24, H: 24, F: 24, S: 24, s: 24 };
+  const ends = { M: -1, T: -1, W: -1, H: -1, F: -1, S: -1, s: -1 };
 
   for (let i = 0; i < sessions.length; ++i) {
     const { day, start, end } = sessions[i];
@@ -169,6 +172,5 @@ export function countClashes(
 }
 
 export function scoreClashes(counts: number): number {
-  const clashPenalty = -1000;
-  return counts * clashPenalty;
+  return counts * CLASH_PENALTY;
 }

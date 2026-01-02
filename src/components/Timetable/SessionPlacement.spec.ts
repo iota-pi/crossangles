@@ -35,7 +35,7 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     expect(p.session).toBe(session);
 
-    const basePlacement = p.basePlacement(dimensions, startHour, compact, showMode);
+    const basePlacement = p.basePlacement(dimensions, startHour, 5, compact, showMode);
     const cellWidth = (1000 - TIMETABLE_FIRST_CELL_WIDTH) / TIMETABLE_DAYS;
     const expectedX = TIMETABLE_BORDER_WIDTH + TIMETABLE_FIRST_CELL_WIDTH + cellWidth * 2;
     const expectedY = (
@@ -79,7 +79,7 @@ describe('SessionPlacement', () => {
     const p = new SessionPlacement(session);
     p.drag();
 
-    p.drop({ width: 500, height: 500 }, session.start, false, false);
+    p.drop({ width: 500, height: 500 }, session.start, 5, false, false);
 
     expect(p['_isDragging']).toBe(false);
     expect(p['_isSnapped']).toBe(false);
@@ -164,9 +164,9 @@ describe('SessionPlacement', () => {
 
   test('result object doesn\'t change if position is the same', () => {
     const p = new SessionPlacement(session);
-    const pos1 = p.getPosition(dimensions, startHour, false, false);
-    expect(p.getPosition(dimensions, startHour, false, false)).toBe(pos1);
-    expect(p.getPosition(dimensions, startHour, false, false)).toBe(pos1);
+    const pos1 = p.getPosition(dimensions, startHour, 5, false, false);
+    expect(p.getPosition(dimensions, startHour, 5, false, false)).toBe(pos1);
+    expect(p.getPosition(dimensions, startHour, 5, false, false)).toBe(pos1);
   });
 
   test('position can\'t be negative after drag', () => {
@@ -174,8 +174,8 @@ describe('SessionPlacement', () => {
     p.drag();
     p.move({ x: -1000, y: -1000 });
     const dims = { width: 500, height: 500 };
-    p.drop(dims, session.start, false, false);
-    const { x, y } = p.getPosition(dims, session.start, false, false);
+    p.drop(dims, session.start, 5, false, false);
+    const { x, y } = p.getPosition(dims, session.start, 5, false, false);
     expect({ x, y }).toEqual({ x: TIMETABLE_BORDER_WIDTH, y: TIMETABLE_BORDER_WIDTH });
   });
 
@@ -186,9 +186,9 @@ describe('SessionPlacement', () => {
 
     p.drag();
     p.move({ x: 1000, y: 1000 });
-    p.drop(dims, session.start, false, false);
+    p.drop(dims, session.start, 5, false, false);
 
-    const { x, y } = p.getPosition(dims, session.start, false, false);
+    const { x, y } = p.getPosition(dims, session.start, 5, false, false);
     expect({ x, y }).toEqual({
       x: dims.width - cellWidth + TIMETABLE_BORDER_WIDTH,
       y: dims.height - getCellHeight(false, false) + TIMETABLE_BORDER_WIDTH,

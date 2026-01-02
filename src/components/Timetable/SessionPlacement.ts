@@ -75,6 +75,7 @@ class SessionPlacement extends TimetablePlacement {
   drop(
     timetableDimensions: Dimensions,
     firstHour: number,
+    numDaysActive: number,
     compact: boolean,
     showMode: boolean,
   ): void {
@@ -82,8 +83,8 @@ class SessionPlacement extends TimetablePlacement {
 
     // Update offset based on current (rendered) position and base position
     // NB: this is done to ensure the offset stays bounded within the timetable element
-    const base = this.basePlacement(timetableDimensions, firstHour, compact, showMode);
-    const current = this.getPosition(timetableDimensions, firstHour, compact, showMode);
+    const base = this.basePlacement(timetableDimensions, firstHour, numDaysActive, compact, showMode);
+    const current = this.getPosition(timetableDimensions, firstHour, numDaysActive, compact, showMode);
     this._offset.x = current.x - base.x;
     this._offset.y = current.y - base.y;
   }
