@@ -24,9 +24,9 @@ export const DISPLACE_RADIUS_Y = 10;
 export const RAISE_DIST_X = -5;
 export const RAISE_DIST_Y = -5;
 
-const SUNDAY = 7;
-const SATURDAY = 6;
 const FRIDAY = 5;
+const SATURDAY = 6;
+const SUNDAY = 7;
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {
   if (a.length !== b.length) {
@@ -88,13 +88,14 @@ export function getCustomCode() {
   return `custom_${Math.random()}`;
 }
 
-// find the last day to display from monday on the timetable page
-export function findDaysToDisplay(occurrences: string[] | null): number {
-  if (occurrences === null || occurrences.length === 0) return 5;
+// From Monday, find number of days to display on the grid
+// input: [ 'A~B~[day][time]~C', ...]
+export function getNumDisplayDays(occurrences: string[] | null): number {
+  if (occurrences === null || occurrences.length === 0) return FRIDAY;
   const scheduleParts = occurrences.map(item => item.split('~')[2] || '');
 
-  if (scheduleParts.some(part => part.includes('s'))) return SUNDAY; //with 
-  if (scheduleParts.some(part => part.includes('S'))) return SATURDAY; // Saturday
+  if (scheduleParts.some(part => part.includes('s'))) return SUNDAY;
+  if (scheduleParts.some(part => part.includes('S'))) return SATURDAY;
 
   return FRIDAY;
 }

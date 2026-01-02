@@ -37,6 +37,8 @@ const dayOptions = [
   { text: 'Wednesday', letter: 'W' },
   { text: 'Thursday',  letter: 'H' },
   { text: 'Friday',    letter: 'F' },
+  { text: 'Saturday',  letter: 'S' },
+  { text: 'Sunday',    letter: 's' },
 ];
 
 const timeOptions = [
