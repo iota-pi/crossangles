@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => {
     },
     cell: {
       flex: '1 1 100%',
-      minWidth: 100,
+      minWidth: TIMETABLE_CELL_MIN_WIDTH,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -161,7 +161,7 @@ const Grid: React.FC<Props> = props => {
   }, [start, end, twentyFourHours]);
 
   const days = React.useMemo(() => week.slice(0, numDisplayDays), [numDisplayDays]);
-  // these change horizontal length
+  // these change horizontal length of timetable cells 
   const rowClassList = [classes.row];
   if (showMode) {
     rowClassList.push(classes.spacious);

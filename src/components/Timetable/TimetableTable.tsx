@@ -282,7 +282,7 @@ function TimetableTable({
   const classes = useStyles();
   const rootClasses = [classes.root];
   const disabled = timetable.renderOrder.length === 0;
-  // console.log(rootClasses)
+
   if (disabled) {
     rootClasses.push(classes.faded);
   }
@@ -331,7 +331,6 @@ function TimetableTable({
       }
       const courseId = getCourseId(course);
       const key = `${courseId}-${stream.component}-${index}`;
-      // console.log(key)
       const renderData = {
         course,
         id,
