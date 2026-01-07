@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     overflowX: 'auto',
     overflowY: 'hidden',
-    // zIndex: 0,
+    zIndex: 0,
     backgroundColor: theme.palette.background.paper,
     transition: theme.transitions.create('opacity'),
   },
