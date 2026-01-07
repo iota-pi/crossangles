@@ -1,5 +1,5 @@
 import axios from 'axios';
-import axiosRetry from 'axios-retry';
+import axiosRetry, { exponentialDelay } from 'axios-retry';
 import http from 'http';
 import https from 'https';
 
@@ -9,6 +9,6 @@ const customisedAxios = axios.create({
   maxContentLength: 50 * 1000 * 1000,
   timeout: 10000,
 });
-axiosRetry(customisedAxios, { retryDelay: axiosRetry.exponentialDelay });
+axiosRetry(customisedAxios, { retryDelay: exponentialDelay });
 
 export default customisedAxios;
