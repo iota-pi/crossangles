@@ -1,7 +1,7 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import ColourControl from './Colour';
-import { Colour } from '../state';
+import React from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import ColourControl from './Colour'
+import { Colour } from '../state'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   selected: {},
-}));
+}))
 
 export interface Props {
   colours: Colour[],
@@ -36,7 +36,7 @@ export interface Props {
 export const ColourPicker: React.FC<Props> = (
   { colours, columns, onChange, size, value }: Props,
 ) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -45,7 +45,7 @@ export const ColourPicker: React.FC<Props> = (
         style={{ width: size * columns }}
       >
         {colours.map(colour => {
-          const isSelected = !!value && colour === value;
+          const isSelected = !!value && colour === value
 
           return (
             <ColourControl
@@ -55,11 +55,11 @@ export const ColourPicker: React.FC<Props> = (
               size={size}
               isSelected={isSelected}
             />
-          );
+          )
         })}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ColourPicker;
+export default ColourPicker

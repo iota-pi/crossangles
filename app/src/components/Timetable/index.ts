@@ -1,4 +1,4 @@
-import Timetable from './TimetableTable';
+import Timetable from './TimetableTable'
 
-export { Timetable };
-export default Timetable;
+export { Timetable }
+export default Timetable

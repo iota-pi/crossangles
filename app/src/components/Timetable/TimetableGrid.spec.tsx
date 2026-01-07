@@ -1,4 +1,4 @@
-import { timeToString } from './TimetableGrid';
+import { timeToString } from './TimetableGrid'
 
 it.each([
   [8, true, ['08', ':00']],
@@ -12,5 +12,5 @@ it.each([
   [20, true, ['20', ':00']],
   [20, false, ['8', 'pm']],
 ])('timeToString(%s, %s) = %s', (hour, twentyFourHours, expected) => {
-  expect(timeToString(hour, twentyFourHours)).toStrictEqual(expected);
-});
+  expect(timeToString(hour, twentyFourHours)).toStrictEqual(expected)
+})

@@ -1,4 +1,4 @@
-import { APIGatewayEvent } from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda'
 
 export interface RequestBody {
   email: string,
@@ -8,19 +8,19 @@ export interface RequestBody {
 
 export const parseBody = (event: APIGatewayEvent): RequestBody | null => {
   if (!event.body) {
-    return null;
+    return null
   }
 
-  let body: Partial<RequestBody>;
+  let body: Partial<RequestBody>
   try {
-    body = JSON.parse(event.body);
-  } catch (error) {
-    return null;
+    body = JSON.parse(event.body)
+  } catch (_) {
+    return null
   }
 
   if (body && body.email && body.message && body.name) {
-    return body as RequestBody;
+    return body as RequestBody
   } else {
-    return null;
+    return null
   }
 }

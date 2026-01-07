@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 export function useCache<T>(value: T | undefined): T | undefined {
-  const [cache, setCache] = useState(value);
+  const [cache, setCache] = useState(value)
   useEffect(() => {
     if (value !== undefined) {
-      setCache(value);
+      setCache(value)
     }
-  }, [value]);
-  return cache;
+  }, [value])
+  return cache
 }
 
-export default { useCache };
+export default { useCache }

@@ -1,6 +1,6 @@
-import { getCurrentTimetable } from './selectors';
-import { initialState } from '.';
-import { getEmptySessionManagerData, SessionManagerData } from '../components/Timetable/SessionManagerTypes';
+import { getCurrentTimetable } from './selectors'
+import { initialState } from '.'
+import { getEmptySessionManagerData, SessionManagerData } from '../components/Timetable/SessionManagerTypes'
 
 
 describe('getCurrentTimetable', () => {
@@ -11,7 +11,7 @@ describe('getCurrentTimetable', () => {
       renderOrder: [],
       score: 0,
       version: 0,
-    };
+    }
     const state = {
       timetables: { '2020~2': timetable },
       meta: {
@@ -19,16 +19,16 @@ describe('getCurrentTimetable', () => {
         year: 2020,
         term: 2,
       },
-    };
-    expect(getCurrentTimetable(state)).toBe(timetable);
-    expect(getCurrentTimetable(state)).toBe(timetable);
-  });
+    }
+    expect(getCurrentTimetable(state)).toBe(timetable)
+    expect(getCurrentTimetable(state)).toBe(timetable)
+  })
 
   it('defaults to an empty timetable', () => {
     const state = {
       timetables: {},
       meta: initialState.meta,
-    };
-    expect(getCurrentTimetable(state)).toEqual(getEmptySessionManagerData());
-  });
-});
+    }
+    expect(getCurrentTimetable(state)).toEqual(getEmptySessionManagerData())
+  })
+})

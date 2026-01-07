@@ -1,20 +1,20 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { event } from 'react-ga';
+import React from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import { event } from 'react-ga'
 
-import ListItem from '@material-ui/core/ListItem';
-import IconButton from '@material-ui/core/IconButton';
-import Close from '@material-ui/icons/Close';
-import Edit from '@material-ui/icons/Edit';
-import OpenInNew from '@material-ui/icons/OpenInNew';
-import WebStream from './WebStream';
-import { CourseActionButton } from './CourseActionButton';
-import ColourControl from './Colour';
+import ListItem from '@material-ui/core/ListItem'
+import IconButton from '@material-ui/core/IconButton'
+import Close from '@material-ui/icons/Close'
+import Edit from '@material-ui/icons/Edit'
+import OpenInNew from '@material-ui/icons/OpenInNew'
+import WebStream from './WebStream'
+import { CourseActionButton } from './CourseActionButton'
+import ColourControl from './Colour'
 import {
   Colour, CourseData, CourseId, getCourseId, getClarificationText, getWebStream, Meta,
-} from '../state';
-import { isUNSW } from '../getCampus';
-import { CATEGORY } from '../analytics';
+} from '../state'
+import { isUNSW } from '../getCampus'
+import { CATEGORY } from '../analytics'
 
 
 const useStyles = makeStyles(theme => ({
@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   marginRight: {
     marginRight: theme.spacing(1),
   },
-}));
+}))
 
 
 export interface BaseCourseDisplayProps {
@@ -83,11 +83,11 @@ export interface CourseDisplayProps extends BaseCourseDisplayProps {
 
 const getHandbookLink = (course: CourseData, meta: Meta) => {
   if (isUNSW()) {
-    return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`;
+    return `https://www.handbook.unsw.edu.au/undergraduate/courses/${meta.year}/${course.code}`
   }
 
-  return undefined;
-};
+  return undefined
+}
 
 
 export const CourseDisplay = ({
@@ -100,9 +100,9 @@ export const CourseDisplay = ({
   onToggleWeb,
   onShowPopover,
 }: CourseDisplayProps) => {
-  const classes = useStyles();
-  const handbookLink = getHandbookLink(course, meta);
-  const clarification = getClarificationText(course);
+  const classes = useStyles()
+  const handbookLink = getHandbookLink(course, meta)
+  const clarification = getClarificationText(course)
   const courseTitle = (
     <>
       <span>{course.code}</span>
@@ -117,22 +117,22 @@ export const CourseDisplay = ({
         </span>
       )}
     </>
-  );
-  const webStream = getWebStream(course);
+  )
+  const webStream = getWebStream(course)
 
   const handleLinkClick = (destination?: string) => {
     event({
       category: CATEGORY,
       action: 'Handbook Link',
       label: destination,
-    });
-  };
+    })
+  }
   const linkProps = {
     href: handbookLink,
     target: '_blank',
     rel: 'noopener noreferrer',
     onClick: () => handleLinkClick(handbookLink),
-  };
+  }
 
   return (
     <>
@@ -196,7 +196,7 @@ export const CourseDisplay = ({
         </ListItem>
       ) : <></>}
     </>
-  );
-};
+  )
+}
 
-export default CourseDisplay;
+export default CourseDisplay

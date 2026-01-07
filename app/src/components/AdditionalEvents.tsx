@@ -1,10 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { AdditionalEvent, CourseData, getEvents } from '../state';
-import { getOptions } from '../state/selectors';
+import { useSelector } from 'react-redux'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import { AdditionalEvent, CourseData, getEvents } from '../state'
+import { getOptions } from '../state/selectors'
+import { memo } from 'react'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   secondaryText: {
     color: theme.palette.text.secondary,
   },
-}));
+}))
 
 export interface Props {
   course: CourseData,
@@ -52,21 +52,21 @@ const AdditionalEventsComponent = ({
   events,
   onToggleEvent,
 }: Props) => {
-  const classes = useStyles();
-  const { darkMode } = useSelector(getOptions);
+  const classes = useStyles()
+  const { darkMode } = useSelector(getOptions)
 
-  const baseEventList = getEvents(course);
-  const baseEventIds = baseEventList.map(e => e.id);
-  const selectedEventIds = events.map(e => e.id).filter(e => baseEventIds.indexOf(e) > -1);
+  const baseEventList = getEvents(course)
+  const baseEventIds = baseEventList.map(e => e.id)
+  const selectedEventIds = events.map(e => e.id).filter(e => baseEventIds.indexOf(e) > -1)
   const eventList = (
     selectedEventIds.length > 0
       ? baseEventList
       : baseEventList.filter(e => !e.hideIfOnlyEvent)
-  );
+  )
 
-  const eventContainerClasses = [classes.eventContainer];
+  const eventContainerClasses = [classes.eventContainer]
   if (eventList.length === 4) {
-    eventContainerClasses.push(classes.quarterContainer);
+    eventContainerClasses.push(classes.quarterContainer)
   }
 
   return (
@@ -91,8 +91,8 @@ const AdditionalEventsComponent = ({
         </div>
       ))}
     </div>
-  );
-};
-export const AdditionalEvents = React.memo(AdditionalEventsComponent);
+  )
+}
+export const AdditionalEvents = memo(AdditionalEventsComponent)
 
-export default AdditionalEvents;
+export default AdditionalEvents

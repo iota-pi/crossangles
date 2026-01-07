@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode } from 'react'
 
-export const DEFAULT_NOTICE_TIMEOUT = 6000;
+export const DEFAULT_NOTICE_TIMEOUT = 6000
 
 export interface Notice {
   message: string,

@@ -1,15 +1,14 @@
-import React, { useMemo } from 'react';
-import parse from 'autosuggest-highlight/parse';
-import match from 'autosuggest-highlight/match';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete, { AutocompleteRenderInputParams, AutocompleteRenderOptionState } from '@material-ui/lab/Autocomplete';
-import SearchIcon from '@material-ui/icons/Search';
-import ListboxComponent from './ListboxComponent';
-import PaperComponent, { Props as PaperComponentProps } from './PaperComponent';
-import { CourseData, getCourseId, getClarificationText } from '../../state';
-// eslint-disable-next-line import/no-unresolved
-import FilterWorker from './filter.worker?worker';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import parse from 'autosuggest-highlight/parse'
+import match from 'autosuggest-highlight/match'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import TextField from '@material-ui/core/TextField'
+import Autocomplete, { AutocompleteRenderInputParams, AutocompleteRenderOptionState } from '@material-ui/lab/Autocomplete'
+import SearchIcon from '@material-ui/icons/Search'
+import ListboxComponent from './ListboxComponent'
+import PaperComponent, { Props as PaperComponentProps } from './PaperComponent'
+import { CourseData, getCourseId, getClarificationText } from '../../state'
+import FilterWorker from './filter.worker?worker'
 
 export interface Props {
   courses: CourseData[],
@@ -19,21 +18,21 @@ export interface Props {
   onAddPersonalEvent: (search: string) => void,
 }
 
-const SEARCH_DEBOUNCE = 100;
-const QUICK_SEARCH_DEBOUNCE = 10;
+const SEARCH_DEBOUNCE = 100
+const QUICK_SEARCH_DEBOUNCE = 10
 
 function earlyExitFilter<T>(items: T[], func: (item: T) => boolean) {
-  const results: T[] = [];
+  const results: T[] = []
   for (let i = 0; i < items.length; ++i) {
-    const o = items[i];
+    const o = items[i]
     if (func(o)) {
-      results.push(o);
+      results.push(o)
     } else if (results.length > 0) {
       // Early exit on the first non-match after at least one successful match
-      break;
+      break
     }
   }
-  return results;
+  return results
 }
 
 
@@ -64,20 +63,20 @@ const useStyles = makeStyles(theme => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-}));
+}))
 
-function noFilter<T>(x: T) { return x; }
+function noFilter<T>(x: T) { return x }
 
 type InputProps = AutocompleteRenderInputParams & {
   inputValue: string,
-};
+}
 
-const AutocompleteInput: React.FC<InputProps> = (props: InputProps) => {
-  const classes = useStyles();
-  const [focused, setFocused] = React.useState(true);
-  const onFocus = React.useCallback(() => setFocused(true), []);
-  const onBlur = React.useCallback(() => setFocused(false), []);
-  const { inputValue, ...textFieldProps } = props;
+const AutocompleteInput: FC<InputProps> = (props: InputProps) => {
+  const classes = useStyles()
+  const [focused, setFocused] = useState(true)
+  const onFocus = useCallback(() => setFocused(true), [])
+  const onBlur = useCallback(() => setFocused(false), [])
+  const { inputValue, ...textFieldProps } = props
 
   return (
     <div className={classes.root}>
@@ -107,8 +106,8 @@ const AutocompleteInput: React.FC<InputProps> = (props: InputProps) => {
         }}
       />
     </div>
-  );
-};
+  )
+}
 
 
 export interface OptionProps {
@@ -116,19 +115,19 @@ export interface OptionProps {
   value: string,
 }
 
-const AutocompleteOption: React.FC<OptionProps> = ({ option, value }: OptionProps) => {
-  const classes = useStyles();
+const AutocompleteOption: FC<OptionProps> = ({ option, value }: OptionProps) => {
+  const classes = useStyles()
 
-  const name = ` — ${option.name}`;
-  const codeMatches = match(option.code, value);
-  const nameMatches = match(name, value);
+  const name = ` — ${option.name}`
+  const codeMatches = match(option.code, value)
+  const nameMatches = match(name, value)
   const codeParts = parse(option.code, codeMatches).map(
     (part, i) => ({ ...part, key: `${part.text}-${i}` }),
-  );
+  )
   const nameParts = parse(name, nameMatches).map(
     (part, i) => ({ ...part, key: `${part.text}-${i}` }),
-  );
-  const clarification = getClarificationText(option);
+  )
+  const clarification = getClarificationText(option)
 
   return (
     <div className={classes.autocompleteOption}>
@@ -144,113 +143,113 @@ const AutocompleteOption: React.FC<OptionProps> = ({ option, value }: OptionProp
       ))}
       {clarification ? ` (${clarification})` : ''}
     </div>
-  );
-};
+  )
+}
 
 
-const AutocompleteControl: React.FC<Props> = ({
+const AutocompleteControl: FC<Props> = ({
   courses,
   chosen,
   additional,
   chooseCourse,
   onAddPersonalEvent,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = useState('')
 
-  const allChosen = React.useMemo(() => [...chosen, ...additional], [chosen, additional]);
-  const allOptions = React.useMemo(
+  const allChosen = useMemo(() => [...chosen, ...additional], [chosen, additional])
+  const allOptions = useMemo(
     () => {
-      const allChosenIds = allChosen.map(c => getCourseId(c));
-      let availableOptions = courses.filter(course => !course.isCustom);
+      const allChosenIds = allChosen.map(c => getCourseId(c))
+      let availableOptions = courses.filter(course => !course.isCustom)
       availableOptions = availableOptions.filter(
         course => !allChosenIds.includes(getCourseId(course)),
-      );
-      availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code));
-      const cachedOptions: CourseData[] = availableOptions.map(o => ({ ...o, lowerCode: o.code }));
-      return cachedOptions;
+      )
+      availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code))
+      const cachedOptions: CourseData[] = availableOptions.map(o => ({ ...o, lowerCode: o.code }))
+      return cachedOptions
     },
     [courses, allChosen],
-  );
+  )
 
-  const [filteredOptions, setFilteredOptions] = React.useState<typeof allOptions>(allOptions);
+  const [filteredOptions, setFilteredOptions] = useState<typeof allOptions>(allOptions)
 
   const worker = useMemo(
     () => {
-      const filterWorker = new FilterWorker();
+      const filterWorker = new FilterWorker()
       filterWorker.onmessage = event => {
-        setFilteredOptions(event.data);
-      };
-      return filterWorker;
+        setFilteredOptions(event.data)
+      }
+      return filterWorker
     },
     [],
-  );
+  )
 
-  React.useEffect(
+  useEffect(
     () => {
       const quickSearch = setTimeout(
         () => {
           if (inputValue.length === 0) {
-            setFilteredOptions(allOptions);
+            setFilteredOptions(allOptions)
           } else {
-            const lowerInputValue = inputValue.toLowerCase().trim();
+            const lowerInputValue = inputValue.toLowerCase().trim()
             const results = earlyExitFilter(
               allOptions,
               o => o.lowerCode?.startsWith(lowerInputValue) || false,
-            );
+            )
             if (results.length) {
-              setFilteredOptions(results);
+              setFilteredOptions(results)
             }
           }
         },
         QUICK_SEARCH_DEBOUNCE,
-      );
+      )
 
       const fullSearch = setTimeout(
         () => {
           if (inputValue.length === 0) {
-            setFilteredOptions(allOptions);
+            setFilteredOptions(allOptions)
           } else {
-            worker.postMessage({ options: allOptions, inputValue });
+            worker.postMessage({ options: allOptions, inputValue })
           }
         },
         SEARCH_DEBOUNCE,
-      );
+      )
 
       return () => {
-        clearTimeout(quickSearch);
-        clearTimeout(fullSearch);
-      };
+        clearTimeout(quickSearch)
+        clearTimeout(fullSearch)
+      }
     },
     [inputValue, allOptions, worker],
-  );
+  )
 
   // This hack prevents the ref of this dummy value array from changing
-  const constantValue = React.useState([])[0];
+  const constantValue = useState([])[0]
 
-  const handleChange = React.useCallback(
+  const handleChange = useCallback(
     (_: any, newCourses: CourseData[] | null) => {
       if (newCourses) {
-        const newCourse = newCourses[newCourses.length - 1];
-        chooseCourse(newCourse);
+        const newCourse = newCourses[newCourses.length - 1]
+        chooseCourse(newCourse)
       }
     },
     [chooseCourse],
-  );
-  const handleInputChange = React.useCallback(
+  )
+  const handleInputChange = useCallback(
     (_: any, value: string) => setInputValue(value),
     [setInputValue],
-  );
+  )
 
-  const renderInput = React.useCallback(
+  const renderInput = useCallback(
     (props: AutocompleteRenderInputParams) => (
       <AutocompleteInput {...props} inputValue={inputValue} />
     ),
     [inputValue],
-  );
+  )
 
-  const renderOption = React.useCallback(
+  const renderOption = useCallback(
     (
       option: CourseData,
       { inputValue: value }: AutocompleteRenderOptionState,
@@ -258,36 +257,36 @@ const AutocompleteControl: React.FC<Props> = ({
       <AutocompleteOption option={option} value={value} />
     ),
     [],
-  );
+  )
 
-  const renderTags = React.useCallback(() => null, []);
+  const renderTags = useCallback(() => null, [])
 
-  const childClasses = React.useMemo(
+  const childClasses = useMemo(
     () => ({ popupIndicator: classes.popupIndicator }),
     [classes],
-  );
+  )
 
-  const getOptionLabel = React.useCallback((option: CourseData) => option.code, []);
+  const getOptionLabel = useCallback((option: CourseData) => option.code, [])
 
-  const handleAddPersonalEvent = React.useCallback(
+  const handleAddPersonalEvent = useCallback(
     () => {
-      onAddPersonalEvent(inputValue);
-      setInputValue('');
+      onAddPersonalEvent(inputValue)
+      setInputValue('')
     },
     [inputValue, onAddPersonalEvent],
-  );
+  )
 
-  const Paper = React.useCallback(
+  const Paper = useCallback(
     (props: Omit<PaperComponentProps, 'onAddPersonalEvent'>) => {
-      const { children, ...other } = props;
+      const { children, ...other } = props
       return (
         <PaperComponent onAddPersonalEvent={handleAddPersonalEvent} {...other}>
           {children}
         </PaperComponent>
-      );
+      )
     },
     [handleAddPersonalEvent],
-  );
+  )
 
 
   return (
@@ -312,7 +311,7 @@ const AutocompleteControl: React.FC<Props> = ({
       renderTags={renderTags}
       classes={childClasses}
     />
-  );
-};
+  )
+}
 
-export default AutocompleteControl;
+export default AutocompleteControl

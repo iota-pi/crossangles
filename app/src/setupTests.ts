@@ -4,4 +4,4 @@ vi.mock('./env', () => ({
     campus: '',
     contactURI: '',
   },
-}));
+}))

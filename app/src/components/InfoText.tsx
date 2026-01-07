@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
-import { event } from 'react-ga';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import { CourseData, Meta } from '../state';
-import { CATEGORY } from '../analytics';
+import React, { ReactNode } from 'react'
+import { event } from 'react-ga'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import Typography, { TypographyProps } from '@material-ui/core/Typography'
+import { CourseData, Meta } from '../state'
+import { CATEGORY } from '../analytics'
 
 export interface Props {
   additional: CourseData[],
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'underline',
     cursor: 'pointer',
   },
-}));
+}))
 
 const InfoText = ({
   additional,
@@ -32,25 +32,25 @@ const InfoText = ({
   className,
   onShowContact,
 }: Props) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   // Assumption: only one additional course will be auto-selected and has metadata
-  const ministry = additional.filter(c => c.autoSelect && c.metadata)[0];
+  const ministry = additional.filter(c => c.autoSelect && c.metadata)[0]
 
   const handleLinkClick = (action: string, destination?: string) => {
     event({
       category: CATEGORY,
       action,
       label: destination,
-    });
-  };
+    })
+  }
 
-  let ministryPromo: ReactNode = null;
+  let ministryPromo: ReactNode = null
   if (ministry) {
-    const ministryMeta = ministry.metadata!;
+    const ministryMeta = ministry.metadata!
 
-    const textParts = ministryMeta.promoText.split('{link}');
-    const items: ReactNode[] = [textParts.shift() || ''];
+    const textParts = ministryMeta.promoText.split('{link}')
+    const items: ReactNode[] = [textParts.shift() || '']
     for (const [i, textPart] of textParts.entries()) {
       const linkEl = link ? (
         <a
@@ -65,16 +65,16 @@ const InfoText = ({
         </a>
       ) : (
         <React.Fragment key={`linkPart-${i}`}>{ministry.name}</React.Fragment>
-      );
-      const textEl = <React.Fragment key={`textPart-${i}`}>{textPart}</React.Fragment>;
-      items.push(linkEl, textEl);
+      )
+      const textEl = <React.Fragment key={`textPart-${i}`}>{textPart}</React.Fragment>
+      items.push(linkEl, textEl)
     }
 
     ministryPromo = (
       <Typography {...typographyProps} paragraph>
         {items}
       </Typography>
-    );
+    )
   }
 
   const sources = (
@@ -95,7 +95,7 @@ const InfoText = ({
         </React.Fragment>
       ))}
     </>
-  );
+  )
 
 
   return (
@@ -122,7 +122,7 @@ const InfoText = ({
           {' '}
           <a
             className={classes.link}
-            onClick={e => { e.preventDefault(); onShowContact(); }}
+            onClick={e => { e.preventDefault(); onShowContact() }}
             href="#contact"
           >
             contact us
@@ -145,7 +145,7 @@ const InfoText = ({
         .
       </Typography>
     </div>
-  );
-};
+  )
+}
 
-export default InfoText;
+export default InfoText

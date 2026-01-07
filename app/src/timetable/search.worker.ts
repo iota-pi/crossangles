@@ -1,7 +1,7 @@
-import type { LinkedSession, LinkedStream } from '../state';
-import { TimetableScorer, TimetableScoreConfig } from './scoreTimetable';
-import { GeneticSearch, GeneticSearchOptionalConfig } from './GeneticSearch';
-import { ClashInfo } from './getClashInfo';
+import type { LinkedSession, LinkedStream } from '../state'
+import { TimetableScorer, TimetableScoreConfig } from './scoreTimetable'
+import { GeneticSearch, GeneticSearchOptionalConfig } from './GeneticSearch'
+import { ClashInfo } from './getClashInfo'
 
 export interface RunSearchOptions {
   clashInfo: ClashInfo,
@@ -19,20 +19,20 @@ export function runSearch({
   config,
   scoreConfig,
 }: RunSearchOptions) {
-  const scorer = new TimetableScorer(clashInfo, fixedSessions);
-  if (scoreConfig) scorer.updateConfig(scoreConfig);
+  const scorer = new TimetableScorer(clashInfo, fixedSessions)
+  if (scoreConfig) scorer.updateConfig(scoreConfig)
 
   const searcher = new GeneticSearch({
     ...config,
     scoreFunction: scorer.score.bind(scorer),
-  });
-  const result = searcher.search(streams);
-  return result;
+  })
+  const result = searcher.search(streams)
+  return result
 }
 
 self.onmessage = (
   event: MessageEvent<RunSearchOptions>,
 ) => {
-  const results = runSearch(event.data);
-  self.postMessage(results);
-};
+  const results = runSearch(event.data)
+  self.postMessage(results)
+}

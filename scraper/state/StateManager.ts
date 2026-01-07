@@ -3,11 +3,11 @@ import {
   DynamoDBDocumentClient,
   PutCommand,
   DeleteCommand,
-} from '@aws-sdk/lib-dynamodb';
-import zlib from 'zlib';
+} from '@aws-sdk/lib-dynamodb'
+import zlib from 'zlib'
 
 class StateManager {
-  private readonly tableName = process.env.STATE_TABLE || '';
+  private readonly tableName = process.env.STATE_TABLE || ''
 
   constructor(
     private readonly client: DynamoDBDocumentClient,
@@ -18,11 +18,11 @@ class StateManager {
       const response = await this.client.send(new GetCommand({
         TableName: this.tableName,
         Key: { campus, key },
-      }));
-      const result = response.Item?.value;
-      return result;
-    } catch (err) {
-      return undefined;
+      }))
+      const result = response.Item?.value
+      return result
+    } catch (_) {
+      return undefined
     }
   }
 
@@ -34,22 +34,22 @@ class StateManager {
         key,
         value,
       },
-    }));
+    }))
   }
 
   async getBlob(campus: string, key: string) {
-    const blob = await this.get(campus, key);
+    const blob = await this.get(campus, key)
     if (blob) {
-      const json = zlib.brotliDecompressSync(blob).toString('utf-8');
-      return JSON.parse(json) || [];
+      const json = zlib.brotliDecompressSync(blob).toString('utf-8')
+      return JSON.parse(json) || []
     }
-    return blob;
+    return blob
   }
 
   async setBlob(campus: string, key: string, value: any) {
-    const json = JSON.stringify(value);
-    const compressedData = zlib.brotliCompressSync(Buffer.from(json));
-    await this.set(campus, key, compressedData);
+    const json = JSON.stringify(value)
+    const compressedData = zlib.brotliCompressSync(Buffer.from(json))
+    await this.set(campus, key, compressedData)
   }
 
   async delete(campus: string, key: string) {
@@ -59,8 +59,8 @@ class StateManager {
         campus,
         key,
       },
-    }));
+    }))
   }
 }
 
-export default StateManager;
+export default StateManager

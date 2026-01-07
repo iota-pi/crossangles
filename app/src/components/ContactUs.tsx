@@ -1,18 +1,18 @@
-import React, { PureComponent, ChangeEvent } from 'react';
+import React, { PureComponent, ChangeEvent } from 'react'
 
 // Styles
-import { Theme } from '@material-ui/core/styles';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import DialogContent from '@material-ui/core/DialogContent';
-import Button from '@material-ui/core/Button';
-import DialogActions from '@material-ui/core/DialogActions';
-import TextField from '@material-ui/core/TextField';
-import CloseIcon from '@material-ui/icons/Close';
+import { Theme } from '@material-ui/core/styles'
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles'
+import createStyles from '@material-ui/core/styles/createStyles'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import DialogContent from '@material-ui/core/DialogContent'
+import Button from '@material-ui/core/Button'
+import DialogActions from '@material-ui/core/DialogActions'
+import TextField from '@material-ui/core/TextField'
+import CloseIcon from '@material-ui/icons/Close'
 
 const styles = (theme: Theme) => createStyles({
   dialog: {},
@@ -37,7 +37,7 @@ const styles = (theme: Theme) => createStyles({
     marginRight: theme.spacing(3),
     cursor: 'pointer',
   },
-});
+})
 
 export interface Props extends WithStyles<typeof styles> {
   open: boolean,
@@ -53,21 +53,21 @@ export interface State {
 }
 
 
-const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 function isValidEmail(email: string) {
-  return emailRegex.test(email);
+  return emailRegex.test(email)
 }
 
 
 class CreateCustom extends PureComponent<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       name: '',
       email: '',
       showEmailError: false,
       message: '',
-    };
+    }
   }
 
   private handleClickSave = () => {
@@ -75,21 +75,21 @@ class CreateCustom extends PureComponent<Props, State> {
       this.state.name,
       this.state.email,
       this.state.message,
-    );
-    this.props.onClose();
-  };
+    )
+    this.props.onClose()
+  }
 
   private handleClose = (event: Event, reason: string) => {
     if (reason === 'backdropClick') {
       const partiallyCompleted = (
         this.state.name || this.state.email || this.state.message
-      );
+      )
       if (partiallyCompleted) {
-        return;
+        return
       }
     }
-    this.props.onClose();
-  };
+    this.props.onClose()
+  }
 
   private handleExited = () => {
     this.setState({
@@ -97,41 +97,41 @@ class CreateCustom extends PureComponent<Props, State> {
       email: '',
       showEmailError: false,
       message: '',
-    });
-  };
+    })
+  }
 
   private handleChangeName = (event: ChangeEvent<{ value: unknown }>) => {
-    this.setState({ name: event.target.value as string });
-  };
+    this.setState({ name: event.target.value as string })
+  }
 
   private handleChangeEmail = (event: ChangeEvent<{ value: unknown }>) => {
-    const email = event.target.value as string;
+    const email = event.target.value as string
     this.setState(({ showEmailError }) => ({
       email,
       showEmailError: showEmailError && !isValidEmail(email),
-    }));
-  };
+    }))
+  }
 
   private handleBlurEmail = () => {
     this.setState(({ email }) => (
       { showEmailError: !isValidEmail(email) && email.length > 0 }
-    ));
-  };
+    ))
+  }
 
   private handleChangeMessage = (event: ChangeEvent<{ value: unknown }>) => {
-    this.setState({ message: event.target.value as string });
-  };
+    this.setState({ message: event.target.value as string })
+  }
 
   private canSubmit = (): boolean => {
-    const nameError = !this.state.name;
-    const emailError = !this.state.email || !isValidEmail(this.state.email);
-    const messageError = !this.state.message;
+    const nameError = !this.state.name
+    const emailError = !this.state.email || !isValidEmail(this.state.email)
+    const messageError = !this.state.message
 
-    return !nameError && !emailError && !messageError;
-  };
+    return !nameError && !emailError && !messageError
+  }
 
   render() {
-    const classes = this.props.classes;
+    const classes = this.props.classes
 
     return (
       <Dialog
@@ -212,8 +212,8 @@ class CreateCustom extends PureComponent<Props, State> {
           </Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(CreateCustom);
+export default withStyles(styles)(CreateCustom)

@@ -1,7 +1,7 @@
-import { CourseData, linkStream, LinkedStream, LinkedSession, Meta } from './state';
-import SessionPlacement from './components/Timetable/SessionPlacement';
-import SessionManager from './components/Timetable/SessionManager';
-import { Dimensions } from './components/Timetable/timetableTypes';
+import { CourseData, linkStream, LinkedStream, LinkedSession, Meta } from './state'
+import SessionPlacement from './components/Timetable/SessionPlacement'
+import SessionManager from './components/Timetable/SessionManager'
+import { Dimensions } from './components/Timetable/timetableTypes'
 
 export function getCourse(override?: Partial<CourseData>): CourseData {
   return {
@@ -42,7 +42,7 @@ export function getCourse(override?: Partial<CourseData>): CourseData {
       },
     ],
     ...override,
-  };
+  }
 }
 
 export function getAdditionalCourse(override?: Partial<CourseData>): CourseData {
@@ -57,16 +57,16 @@ export function getAdditionalCourse(override?: Partial<CourseData>): CourseData 
     isAdditional: true,
     autoSelect: true,
     ...override,
-  };
+  }
 }
 
 export function getLinkedStream(
   streamIndex = 0,
   override?: Partial<LinkedStream>,
 ): LinkedStream {
-  const course = getCourse();
-  const stream = linkStream(course, course.streams[streamIndex]);
-  return { ...stream, ...override };
+  const course = getCourse()
+  const stream = linkStream(course, course.streams[streamIndex])
+  return { ...stream, ...override }
 }
 
 export function getLinkedSession(
@@ -74,33 +74,33 @@ export function getLinkedSession(
   sessionIndex = 0,
   override?: Partial<LinkedSession>,
 ): LinkedSession {
-  const stream = getLinkedStream(streamIndex);
-  const session = stream.sessions[sessionIndex];
-  return { ...session, ...override };
+  const stream = getLinkedStream(streamIndex)
+  const session = stream.sessions[sessionIndex]
+  return { ...session, ...override }
 }
 
 export function getSessionPlacement(streamIndex = 0, sessionIndex = 0): SessionPlacement {
-  const session = getLinkedSession(streamIndex, sessionIndex);
-  return new SessionPlacement(session);
+  const session = getLinkedSession(streamIndex, sessionIndex)
+  return new SessionPlacement(session)
 }
 
 export function getSessionManager() {
-  const manager = new SessionManager();
-  const p1 = getSessionPlacement(0);
-  const p2 = getSessionPlacement(2);
-  const p3 = getSessionPlacement(3);
-  manager.set(p1.session.id, p1);
-  manager.set(p2.session.id, p2);
-  manager.set(p3.session.id, p3);
-  return manager;
+  const manager = new SessionManager()
+  const p1 = getSessionPlacement(0)
+  const p2 = getSessionPlacement(2)
+  const p3 = getSessionPlacement(3)
+  manager.set(p1.session.id, p1)
+  manager.set(p2.session.id, p2)
+  manager.set(p3.session.id, p3)
+  return manager
 }
 
 export function getDimensions() {
   const dimensions: Dimensions = {
     width: 800,
     height: 500,
-  };
-  return dimensions;
+  }
+  return dimensions
 }
 
 export function getMeta(): Meta {
@@ -111,5 +111,5 @@ export function getMeta(): Meta {
     updateDate: 'today',
     updateTime: 'now',
     year: 2020,
-  };
+  }
 }

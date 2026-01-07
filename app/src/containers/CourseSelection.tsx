@@ -1,11 +1,11 @@
-import React, { lazy, PureComponent, Suspense } from 'react';
-import { connect } from 'react-redux';
-import { exception } from 'react-ga';
-import { Theme } from '@material-ui/core/styles';
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
-import createStyles from '@material-ui/core/styles/createStyles';
-import Skeleton from '@material-ui/lab/Skeleton';
-import loadable from '@loadable/component';
+import React, { lazy, PureComponent, Suspense } from 'react'
+import { connect } from 'react-redux'
+import { exception } from 'react-ga'
+import { Theme } from '@material-ui/core/styles'
+import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles'
+import createStyles from '@material-ui/core/styles/createStyles'
+import Skeleton from '@material-ui/lab/Skeleton'
+import loadable from '@loadable/component'
 import {
   AdditionalEvent,
   ColourMap,
@@ -19,14 +19,14 @@ import {
   OptionName,
   RootState,
   hasWebStream,
-} from '../state';
+} from '../state'
 import {
   getAdditionalCourses,
   getChosenCourses,
   getCourseList,
   getCustomCourses,
   getCurrentTimetable,
-} from '../state/selectors';
+} from '../state/selectors'
 import {
   addCourse,
   removeCourse,
@@ -35,17 +35,17 @@ import {
   toggleOption,
   toggleShowEvents,
   setColour,
-} from '../actions';
-import { WithDispatch } from '../typeHelpers';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { updateTimetable } from '../timetable/updateTimetable';
-import { getCustomCode } from '../components/Timetable/timetableUtil';
-import { TimetableScoreConfig } from '../timetable/scoreTimetable';
+} from '../actions'
+import { WithDispatch } from '../typeHelpers'
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager'
+import { updateTimetable } from '../timetable/updateTimetable'
+import { getCustomCode } from '../components/Timetable/timetableUtil'
+import { TimetableScoreConfig } from '../timetable/scoreTimetable'
 
-const Autocomplete = lazy(() => import('../components/Autocomplete'));
-const CourseList = lazy(() => import('../components/CourseList'));
-const TimetableOptions = lazy(() => import('../components/TimetableOptions'));
-const CreateCustom = loadable(() => import('../components/CreateCustom'));
+const Autocomplete = lazy(() => import('../components/Autocomplete'))
+const CourseList = lazy(() => import('../components/CourseList'))
+const TimetableOptions = lazy(() => import('../components/TimetableOptions'))
+const CreateCustom = loadable(() => import('../components/CreateCustom'))
 
 
 const styles = (theme: Theme) => createStyles({
@@ -61,7 +61,7 @@ const styles = (theme: Theme) => createStyles({
   flexGrow: {
     flexGrow: 1,
   },
-});
+})
 
 export interface OwnProps extends WithStyles<typeof styles> {}
 
@@ -81,7 +81,7 @@ export interface StateProps {
   webStreams: CourseId[],
 }
 
-export type Props = WithDispatch<OwnProps & StateProps>;
+export type Props = WithDispatch<OwnProps & StateProps>
 
 export interface State {
   defaultName: string | null,
@@ -89,119 +89,119 @@ export interface State {
   showCreateCustom: boolean,
 }
 
-const courseHeight = 52;
-const webStreamHeight = 34;
-const eventsHeight = 32;
+const courseHeight = 52
+const webStreamHeight = 34
+const eventsHeight = 32
 
 class CourseSelection extends PureComponent<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       defaultName: null,
       editingCourse: null,
       showCreateCustom: false,
-    };
+    }
   }
 
   private get courseListSkeletonHeight() {
-    const { chosen, additional, custom, hiddenEvents } = this.props;
-    const courseCount = chosen.length + additional.length + custom.length;
-    const webStreamCount = chosen.filter(c => hasWebStream(c)).length;
-    const eventsCount = additional.length - hiddenEvents.length;
+    const { chosen, additional, custom, hiddenEvents } = this.props
+    const courseCount = chosen.length + additional.length + custom.length
+    const webStreamCount = chosen.filter(c => hasWebStream(c)).length
+    const eventsCount = additional.length - hiddenEvents.length
     return (
       courseHeight * courseCount
       + webStreamHeight * webStreamCount
       + eventsHeight * eventsCount
-    );
+    )
   }
 
   private handleAddCustomCourse = (title: string) => {
-    this.setState({ editingCourse: null, defaultName: title, showCreateCustom: true });
-  };
+    this.setState({ editingCourse: null, defaultName: title, showCreateCustom: true })
+  }
 
   private editCustomCourse = (course: CourseData) => {
-    this.setState({ editingCourse: course, defaultName: null, showCreateCustom: true });
-  };
+    this.setState({ editingCourse: course, defaultName: null, showCreateCustom: true })
+  }
 
   private handleCloseCustom = () => {
-    this.setState({ showCreateCustom: false });
-  };
+    this.setState({ showCreateCustom: false })
+  }
 
   private handleExitedCustom = () => {
-    this.setState({ editingCourse: null, defaultName: null });
-  };
+    this.setState({ editingCourse: null, defaultName: null })
+  }
 
   private chooseCourse = async (course: CourseData) => {
     // NB: getSessionManager should come *before* any dispatches in these methods
-    const sessionManager = this.getSessionManager();
-    await this.props.dispatch(addCourse(course));
-    await this.updateTimetable(sessionManager);
-  };
+    const sessionManager = this.getSessionManager()
+    await this.props.dispatch(addCourse(course))
+    await this.updateTimetable(sessionManager)
+  }
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
-    const sessionManager = this.getSessionManager();
+    const sessionManager = this.getSessionManager()
     const baseData = this.state.editingCourse || {
       code: getCustomCode(),
       isCustom: true,
-    };
+    }
 
     const course: CourseData = {
       ...baseData,
       ...courseData,
-    };
-    await this.props.dispatch(addCourse(course));
-    await this.updateTimetable(sessionManager);
-  };
+    }
+    await this.props.dispatch(addCourse(course))
+    await this.updateTimetable(sessionManager)
+  }
 
   private removeCourse = async (course: CourseData) => {
-    const sessionManager = this.getSessionManager();
-    await this.props.dispatch(removeCourse(course));
-    await this.updateTimetable(sessionManager);
-  };
+    const sessionManager = this.getSessionManager()
+    await this.props.dispatch(removeCourse(course))
+    await this.updateTimetable(sessionManager)
+  }
 
   private changeColour = async (course: CourseData, colour: Colour) => {
-    await this.props.dispatch(setColour(getCourseId(course), colour));
-  };
+    await this.props.dispatch(setColour(getCourseId(course), colour))
+  }
 
   private toggleWebStream = async (course: CourseData) => {
-    const sessionManager = this.getSessionManager();
-    await this.props.dispatch(toggleWebStream(course));
-    await this.updateTimetable(sessionManager);
-  };
+    const sessionManager = this.getSessionManager()
+    await this.props.dispatch(toggleWebStream(course))
+    await this.updateTimetable(sessionManager)
+  }
 
   private toggleShowEvents = async (course: CourseData) => {
-    await this.props.dispatch(toggleShowEvents(getCourseId(course)));
-  };
+    await this.props.dispatch(toggleShowEvents(getCourseId(course)))
+  }
 
   private toggleEvent = async (event: AdditionalEvent) => {
-    const sessionManager = this.getSessionManager();
-    await this.props.dispatch(toggleEvent(event));
-    await this.updateTimetable(sessionManager);
-  };
+    const sessionManager = this.getSessionManager()
+    await this.props.dispatch(toggleEvent(event))
+    await this.updateTimetable(sessionManager)
+  }
 
   private toggleOption = async (option: OptionName) => {
-    const generationOptions: OptionName[] = ['includeFull'];
-    let sessionManager: SessionManager | null = null;
+    const generationOptions: OptionName[] = ['includeFull']
+    let sessionManager: SessionManager | null = null
     if (generationOptions.includes(option)) {
-      sessionManager = this.getSessionManager();
+      sessionManager = this.getSessionManager()
     }
 
-    await this.props.dispatch(toggleOption(option));
+    await this.props.dispatch(toggleOption(option))
 
     if (sessionManager) {
-      await this.updateTimetable(sessionManager);
+      await this.updateTimetable(sessionManager)
     }
-  };
+  }
 
   private getSessionManager = () => {
     try {
-      return SessionManager.from(this.props.timetable, this.props.courses);
+      return SessionManager.from(this.props.timetable, this.props.courses)
     } catch (error) {
-      exception({ description: `Could not process timetable data. ${error}` });
-      console.error('Could not process timetable data', this.props.timetable, this.props.courses);
-      return new SessionManager();
+      exception({ description: `Could not process timetable data. ${error}` })
+      console.error('Could not process timetable data', this.props.timetable, this.props.courses)
+      return new SessionManager()
     }
-  };
+  }
 
   private updateTimetable = async (sessionManager: SessionManager) => {
     const {
@@ -213,7 +213,7 @@ class CourseSelection extends PureComponent<Props, State> {
       options,
       webStreams,
       scoreConfig,
-    } = this.props;
+    } = this.props
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
@@ -222,11 +222,11 @@ class CourseSelection extends PureComponent<Props, State> {
       },
       searchConfig: { timeout: 100 },
       scoreConfig,
-    });
-  };
+    })
+  }
 
   render() {
-    const classes = this.props.classes;
+    const classes = this.props.classes
 
     return (
       <>
@@ -283,7 +283,7 @@ class CourseSelection extends PureComponent<Props, State> {
           onExited={this.handleExitedCustom}
         />
       </>
-    );
+    )
   }
 }
 
@@ -301,7 +301,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   timetable: getCurrentTimetable(state),
   scoreConfig: state.scoreConfig,
   webStreams: state.webStreams,
-});
+})
 
-const connection = connect(mapStateToProps);
-export default withStyles(styles)(connection(CourseSelection));
+const connection = connect(mapStateToProps)
+export default withStyles(styles)(connection(CourseSelection))

@@ -1,5 +1,5 @@
-/* eslint-disable quote-props */
-import { DeliveryType } from '../../../app/src/state/Stream';
+ 
+import { DeliveryType } from '../../../app/src/state/Stream'
 import {
   abbreviateDay,
   getComponent,
@@ -15,7 +15,7 @@ import {
   splitLocation,
   StreamTableData,
   weeksAreOutsideTerm,
-} from './TimetableScraper';
+} from './TimetableScraper'
 
 const baseStreamTableData: StreamTableData = {
   'Activity': 'Lecture',
@@ -31,7 +31,7 @@ const baseStreamTableData: StreamTableData = {
   'Consent': 'Consent not required',
   'Section': 'A',
   'Status': 'Open',
-};
+}
 
 describe('parsing utilities', () => {
   it('shouldSkipStream() = false', () => {
@@ -47,10 +47,10 @@ describe('parsing utilities', () => {
         ...baseStreamTableData,
         'Enrols/Capacity': '0/1',
       },
-    ];
-    const results = data.filter(x => !shouldSkipStream(x));
-    expect(results.length).toBe(data.length);
-  });
+    ]
+    const results = data.filter(x => !shouldSkipStream(x))
+    expect(results.length).toBe(data.length)
+  })
 
   it('shouldSkipStream() = true', () => {
     const data: StreamTableData[] = [
@@ -70,10 +70,10 @@ describe('parsing utilities', () => {
         ...baseStreamTableData,
         'Enrols/Capacity': '1/0',
       },
-    ];
-    const results = data.filter(x => !shouldSkipStream(x));
-    expect(results.length).toBe(0);
-  });
+    ]
+    const results = data.filter(x => !shouldSkipStream(x))
+    expect(results.length).toBe(0)
+  })
 
   it.each`
     time         | expected
@@ -88,8 +88,8 @@ describe('parsing utilities', () => {
     ${'N2,11'}   | ${true}
     ${'1,N2,11'} | ${false}
   `('weeksAreOutsideTerm("$time") = $expected', ({ time, expected }) => {
-    expect(weeksAreOutsideTerm(time)).toEqual(expected);
-  });
+    expect(weeksAreOutsideTerm(time)).toEqual(expected)
+  })
 
   it.each`
     term                                      | expected
@@ -100,8 +100,8 @@ describe('parsing utilities', () => {
     ${'AFB - ASU Fall Session B'}             | ${undefined}
     ${'KB - Hexamester 1'}                    | ${undefined}
   `('getTermNumber("$term") = $expected', ({ term, expected }) => {
-    expect(getTermNumber(term)).toEqual(expected);
-  });
+    expect(getTermNumber(term)).toEqual(expected)
+  })
 
   it.each`
     location                         | result
@@ -109,8 +109,8 @@ describe('parsing utilities', () => {
     ${'See School'}                  | ${[undefined, undefined]}
     ${'Online (ONLINE)'}             | ${['Online', 'ONLINE']}
   `('splitLocation("$location") === $result', ({ location, result }) => {
-    expect(splitLocation(location)).toEqual(result);
-  });
+    expect(splitLocation(location)).toEqual(result)
+  })
 
   it.each`
     Activity                 | Section   | expected
@@ -118,10 +118,10 @@ describe('parsing utilities', () => {
     ${'Tutorial-Laboratory'} | ${'T11A'} | ${'TLB'}
     ${'Lecture'}             | ${'A'}    | ${'LEC'}
   `('getComponent', ({ Activity, Section, expected }) => {
-    const data: StreamTableData = { ...baseStreamTableData, Activity, Section };
-    const result = getComponent(data);
-    expect(result).toBe(expected);
-  });
+    const data: StreamTableData = { ...baseStreamTableData, Activity, Section }
+    const result = getComponent(data)
+    expect(result).toBe(expected)
+  })
 
   it.each`
     long                          | short
@@ -136,16 +136,16 @@ describe('parsing utilities', () => {
     ${'Tutorial 1 of 2'}          | ${'TU1'}
     ${'Laboratory 1 of 2'}        | ${'LA1'}
   `('getShortActivity("$long") = "$short"', ({ long, short }) => {
-    expect(getShortActivity(long)).toEqual(short);
-  });
+    expect(getShortActivity(long)).toEqual(short)
+  })
 
   it.each([
     ['World Wide Web', DeliveryType.online],
     ['In Person', DeliveryType.person],
     ['Something Else', undefined],
   ])('getDelivery("%s") = %d', (input, expected) => {
-    expect(getDelivery(input)).toEqual(expected);
-  });
+    expect(getDelivery(input)).toEqual(expected)
+  })
 
   it.each`
     day              | abbrev
@@ -174,8 +174,8 @@ describe('parsing utilities', () => {
     ${'s'}           | ${'s'}
     ${'Mon, Tue, Wed'} | ${'MTW'}
   `('abbreviateDay("$day") = "$abbrev"', ({ day, abbrev }) => {
-    expect(abbreviateDay(day)).toEqual(abbrev);
-  });
+    expect(abbreviateDay(day)).toEqual(abbrev)
+  })
 
   it.each`
     time               | short
@@ -187,8 +187,8 @@ describe('parsing utilities', () => {
     ${'12:30 - 13:30'} | ${'12.5'}
     ${'12:00 - 13:30'} | ${'12-13.5'}
   `('shortenTime("$time") = "$short"', ({ time, short }) => {
-    expect(shortenTime(time)).toEqual(short);
-  });
+    expect(shortenTime(time)).toEqual(short)
+  })
 
   it.each`
     section   | expected
@@ -197,8 +197,8 @@ describe('parsing utilities', () => {
     ${'TUT'} | ${undefined}
     ${'CR01'} | ${undefined}
   `('getIsWeb("$section") = $expected', ({ section, expected }) => {
-    expect(getIsWeb(section)).toEqual(expected);
-  });
+    expect(getIsWeb(section)).toEqual(expected)
+  })
 
   it.each`
     status         | expected
@@ -211,8 +211,8 @@ describe('parsing utilities', () => {
     ${'Stop'}      | ${undefined}
     ${'Cancelled'} | ${undefined}
   `('getIsFull("$status") = $expected', ({ status, expected }) => {
-    expect(getIsFull(status)).toEqual(expected);
-  });
+    expect(getIsFull(status)).toEqual(expected)
+  })
 
   it.each`
     status        | expected
@@ -223,8 +223,8 @@ describe('parsing utilities', () => {
     ${'S14-16'}   | ${false}
     ${'MTW10-16'} | ${true}
   `('isIntensive("$status") = $expected', ({ status, expected }) => {
-    expect(isIntensive(status)).toEqual(expected);
-  });
+    expect(isIntensive(status)).toEqual(expected)
+  })
 
   it.each`
     status        | expected
@@ -237,6 +237,6 @@ describe('parsing utilities', () => {
     ${'MTW10-16'} | ${false}
     ${'MTS10-16'} | ${true}
   `('isOnWeekend("$status") = $expected', ({ status, expected }) => {
-    expect(isOnWeekend(status)).toEqual(expected);
-  });
-});
+    expect(isOnWeekend(status)).toEqual(expected)
+  })
+})

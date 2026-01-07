@@ -1,9 +1,9 @@
-import { SessionData, DayLetter, LinkedSession, linkSession } from './Session';
-import { CourseData, getCourseId } from './Course';
+import { SessionData, DayLetter, LinkedSession, linkSession } from './Session'
+import { CourseData, getCourseId } from './Course'
 
-const ONE_DAY = 1000 * 60 * 60 * 24;
+const ONE_DAY = 1000 * 60 * 60 * 24
 
-export type StreamId = string;
+export type StreamId = string
 
 export enum DeliveryType {
   person,
@@ -39,22 +39,22 @@ export interface ClassTime {
 
 
 export function getStreamId(course: CourseData, stream: StreamData, simple = false) {
-  const baseId = getComponentId(course, stream, simple);
+  const baseId = getComponentId(course, stream, simple)
   if (stream.times.length === 0) {
-    return `${baseId}~WEB`;
+    return `${baseId}~WEB`
   }
-  const timeString = stream.times.map(t => t.time).join(',');
-  const id = `${baseId}~${timeString}`;
-  return id;
+  const timeString = stream.times.map(t => t.time).join(',')
+  const id = `${baseId}~${timeString}`
+  return id
 }
 
 export function getComponentId(course: CourseData, stream: StreamData, simple = false) {
-  const componentString = course.isCustom ? '' : stream.component;
-  return `${getCourseId(course, simple)}~${componentString}`;
+  const componentString = course.isCustom ? '' : stream.component
+  return `${getCourseId(course, simple)}~${componentString}`
 }
 
 export function getComponentName(stream: Pick<StreamData, 'component'>) {
-  const code = stream.component;
+  const code = stream.component
   const nameMap: { [key: string]: string } = {
     CLN: 'Clinical',
     EXA: 'Exam',
@@ -77,17 +77,17 @@ export function getComponentName(stream: Pick<StreamData, 'component'>) {
     TU1: 'Tutorial (1)',
     TU2: 'Tutorial (2)',
     WEB: 'Lecture',
-  };
-  return nameMap[code.toUpperCase()] || code;
+  }
+  return nameMap[code.toUpperCase()] || code
 }
 
 export function getSessions(course: CourseData, stream: StreamData): SessionData[] {
-  const courseId = getCourseId(course);
-  const streamId = getStreamId(course, stream);
-  const times = stream.times;
+  const courseId = getCourseId(course)
+  const streamId = getStreamId(course, stream)
+  const times = stream.times
 
   return times.map((t, i): SessionData => {
-    const [startHour, endHour] = t.time.slice(1).split('-').map(x => parseFloat(x));
+    const [startHour, endHour] = t.time.slice(1).split('-').map(x => parseFloat(x))
     return {
       start: startHour,
       end: endHour || (startHour + 1),
@@ -98,55 +98,55 @@ export function getSessions(course: CourseData, stream: StreamData): SessionData
       weeks: t.weeks,
       stream: streamId,
       course: courseId,
-    };
-  });
+    }
+  })
 }
 
 export function linkStream(course: CourseData, stream: StreamData): LinkedStream {
-  const sessionData = getSessions(course, stream);
+  const sessionData = getSessions(course, stream)
   const linkedStream: LinkedStream = {
     ...stream,
     course,
     sessions: [],
     id: getStreamId(course, stream),
-  };
-  linkedStream.sessions = sessionData.map(session => linkSession(course, linkedStream, session));
-  return linkedStream;
+  }
+  linkedStream.sessions = sessionData.map(session => linkSession(course, linkedStream, session))
+  return linkedStream
 }
 
 export function getOfferingStart(offering: string) {
-  return offering.split(/[\s-]+/g)[0];
+  return offering.split(/[\s-]+/g)[0]
 }
 
 export function getTermStart(streams: StreamData[]): Date {
-  const offeringStarts: Record<string, number> = {};
+  const offeringStarts: Record<string, number> = {}
   for (const stream of streams) {
     if (stream.offering) {
-      const offeringStart = getOfferingStart(stream.offering);
-      offeringStarts[offeringStart] = (offeringStarts[offeringStart] || 0) + 1;
+      const offeringStart = getOfferingStart(stream.offering)
+      offeringStarts[offeringStart] = (offeringStarts[offeringStart] || 0) + 1
     }
   }
-  let mostCommonOffering: string | null = null;
-  let mostCommonOfferingCount = 0;
+  let mostCommonOffering: string | null = null
+  let mostCommonOfferingCount = 0
   for (const [offering, count] of Object.entries(offeringStarts)) {
     if (count > mostCommonOfferingCount) {
-      mostCommonOffering = offering;
-      mostCommonOfferingCount = count;
+      mostCommonOffering = offering
+      mostCommonOfferingCount = count
     }
   }
-  const termStart = mostCommonOffering ? parseBackwardsDateString(mostCommonOffering) : new Date();
-  return closestMonday(termStart);
+  const termStart = mostCommonOffering ? parseBackwardsDateString(mostCommonOffering) : new Date()
+  return closestMonday(termStart)
 }
 
 // Parse date strings in format: dd/mm/yyyy
 export function parseBackwardsDateString(dateString: string) {
-  const [day, month, year] = dateString.trim().split(/[/-]/g);
-  return new Date(+year, +month - 1, +day);
+  const [day, month, year] = dateString.trim().split(/[/-]/g)
+  return new Date(+year, +month - 1, +day)
 }
 
 export function closestMonday(date: Date) {
-  const weekday = date.getDay();
-  const differenceInDays = weekday < 6 ? 1 - weekday : 2;
-  const differenceInMS = ONE_DAY * differenceInDays;
-  return new Date(date.getTime() + differenceInMS);
+  const weekday = date.getDay()
+  const differenceInDays = weekday < 6 ? 1 - weekday : 2
+  const differenceInMS = ONE_DAY * differenceInDays
+  return new Date(date.getTime() + differenceInMS)
 }

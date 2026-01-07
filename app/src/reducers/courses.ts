@@ -1,44 +1,44 @@
-import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, AllActions } from '../actions';
-import { CourseMap, CourseId, getCourseId, initialState } from '../state';
+import { SET_COURSE_DATA, ADD_COURSE, REMOVE_COURSE, AllActions } from '../actions'
+import { CourseMap, CourseId, getCourseId, initialState } from '../state'
 
 export function courses(
   state: CourseMap = initialState.courses,
   action: AllActions,
 ): CourseMap {
   if (action.type === SET_COURSE_DATA) {
-    const continuingCourses: CourseMap = {};
+    const continuingCourses: CourseMap = {}
     for (const code of Object.keys(state)) {
-      const course = state[code];
+      const course = state[code]
       if (course.isCustom) {
-        continuingCourses[code] = course;
+        continuingCourses[code] = course
       }
     }
 
-    const allCourses: CourseMap = continuingCourses;
+    const allCourses: CourseMap = continuingCourses
 
     // Return with new course data
     for (const course of action.courses) {
-      const id = getCourseId(course);
-      allCourses[id] = course;
+      const id = getCourseId(course)
+      allCourses[id] = course
     }
 
-    return allCourses;
+    return allCourses
   }
 
   if (action.type === ADD_COURSE && action.course.isCustom) {
     return {
       ...state,
       [getCourseId(action.course)]: action.course,
-    };
+    }
   }
 
   if (action.type === REMOVE_COURSE && action.course.isCustom) {
-    const newState = { ...state };
-    delete newState[getCourseId(action.course)];
-    return newState;
+    const newState = { ...state }
+    delete newState[getCourseId(action.course)]
+    return newState
   }
 
-  return state;
+  return state
 }
 
 export function chosen(
@@ -49,35 +49,35 @@ export function chosen(
     return [
       ...state,
       getCourseId(action.course),
-    ];
+    ]
   }
 
   if (action.type === REMOVE_COURSE && !action.course.isCustom) {
-    const i = state.indexOf(getCourseId(action.course));
+    const i = state.indexOf(getCourseId(action.course))
     return [
       ...state.slice(0, i),
       ...state.slice(i + 1),
-    ];
+    ]
   }
 
   if (action.type === SET_COURSE_DATA) {
     // Clear chosen courses when moving to new term
     if (action.isNewTerm) {
-      return [];
+      return []
     }
 
     // Only keep chosen courses which have current data
     // This would be necessary if a course stops being offered (or part of its
     // id changes) for a particular term
-    const newIds = new Set(action.courses.map(c => getCourseId(c)));
-    const newState = state.filter(id => newIds.has(id));
+    const newIds = new Set(action.courses.map(c => getCourseId(c)))
+    const newState = state.filter(id => newIds.has(id))
     if (newState.length === state.length) {
-      return state;
+      return state
     }
-    return newState;
+    return newState
   }
 
-  return state;
+  return state
 }
 
 export function custom(
@@ -85,22 +85,22 @@ export function custom(
   action: AllActions,
 ): CourseId[] {
   if (action.type === ADD_COURSE && action.course.isCustom) {
-    const courseId = getCourseId(action.course);
+    const courseId = getCourseId(action.course)
 
     // Don't need to change state for an update event
     if (state.includes(courseId)) {
-      return state;
+      return state
     }
 
-    return [...state, courseId];
+    return [...state, courseId]
   }
 
   if (action.type === REMOVE_COURSE && action.course.isCustom) {
-    const i = state.indexOf(getCourseId(action.course));
-    return [...state.slice(0, i), ...state.slice(i + 1)];
+    const i = state.indexOf(getCourseId(action.course))
+    return [...state.slice(0, i), ...state.slice(i + 1)]
   }
 
-  return state;
+  return state
 }
 
 export function additional(
@@ -108,12 +108,12 @@ export function additional(
   action: AllActions,
 ): CourseId[] {
   if (action.type === SET_COURSE_DATA) {
-    return action.courses.filter(c => c.isAdditional && c.autoSelect).map(c => getCourseId(c));
+    return action.courses.filter(c => c.isAdditional && c.autoSelect).map(c => getCourseId(c))
   } else if (action.type === REMOVE_COURSE) {
     if (action.course.isAdditional) {
-      return state.filter(c => c !== getCourseId(action.course));
+      return state.filter(c => c !== getCourseId(action.course))
     }
   }
 
-  return state;
+  return state
 }

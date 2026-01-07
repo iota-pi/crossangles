@@ -1,10 +1,10 @@
-import { CourseData, getCourseId } from '../../app/src/state/Course';
-import unsw from './unsw';
+import { CourseData, getCourseId } from '../../app/src/state/Course'
+import unsw from './unsw'
 
 
 const additional = {
   unsw,
-};
+}
 
 /**
  * Returns the additional data for the given campus and term. If there is
@@ -13,13 +13,13 @@ const additional = {
  * @param term the year and term in the form of e.g. "2020~3"
  */
 function getAdditional(campus: keyof typeof additional, term?: string): CourseData[] {
-  const baseData = additional[campus].default;
-  const override = term !== undefined ? additional[campus][term] : undefined;
-  if (override === undefined) return baseData;
+  const baseData = additional[campus].default
+  const override = term !== undefined ? additional[campus][term] : undefined
+  if (override === undefined) return baseData
   return override.map(course => {
-    const baseCourse = baseData.find(c => getCourseId(c) === getCourseId(course));
-    return { ...baseCourse, ...course };
-  });
+    const baseCourse = baseData.find(c => getCourseId(c) === getCourseId(course))
+    return { ...baseCourse, ...course }
+  })
 }
 
-export default getAdditional;
+export default getAdditional

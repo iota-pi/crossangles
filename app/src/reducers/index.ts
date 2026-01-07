@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux';
-import { meta } from './meta';
-import { courses, chosen, custom, additional } from './courses';
-import { events, hiddenEvents, options, scoreConfig } from './options';
-import { timetables, suggestionScore, unplacedCount } from './timetables';
-import { colours } from './colours';
-import { webStreams } from './webStreams';
-import { notice } from './notice';
-import { changelogView } from './changelogView';
-import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions';
+import { combineReducers } from 'redux'
+import { meta } from './meta'
+import { courses, chosen, custom, additional } from './courses'
+import { events, hiddenEvents, options, scoreConfig } from './options'
+import { timetables, suggestionScore, unplacedCount } from './timetables'
+import { colours } from './colours'
+import { webStreams } from './webStreams'
+import { notice } from './notice'
+import { changelogView } from './changelogView'
+import { AllActions, UPDATE_SESSION_MANAGER, SET_COURSE_DATA, UNDO, REDO } from '../actions'
 import {
   getCurrentTerm,
   getTimetableState,
@@ -17,9 +17,9 @@ import {
   redo,
   RootState,
   undo,
-} from '../state';
-import { getCurrentTimetable } from '../state/selectors';
-import { SessionManagerData } from '../components/Timetable/SessionManagerTypes';
+} from '../state'
+import { getCurrentTimetable } from '../state/selectors'
+import { SessionManagerData } from '../components/Timetable/SessionManagerTypes'
 
 const basicReducer = combineReducers<RootState>({
   additional,
@@ -39,7 +39,7 @@ const basicReducer = combineReducers<RootState>({
   timetables,
   unplacedCount,
   webStreams,
-});
+})
 
 
 function getStateFromHistory(
@@ -47,32 +47,32 @@ function getStateFromHistory(
   nextTimetable: SessionManagerData,
   nextState: RootState,
 ): RootState {
-  const { timetable, ...otherHistory } = history.present;
-  timetable.version = nextTimetable.version + 1;
+  const { timetable, ...otherHistory } = history.present
+  timetable.version = nextTimetable.version + 1
   return {
     ...nextState,
     ...otherHistory,
     timetables: { ...nextState.timetables, [getCurrentTerm(nextState.meta)]: timetable },
     history,
-  };
+  }
 }
 
 const historyReducer = (nextState: RootState, action: AllActions): RootState => {
-  const nextTimetable = getCurrentTimetable(nextState);
-  let history = nextState.history;
+  const nextTimetable = getCurrentTimetable(nextState)
+  let history = nextState.history
 
   if (action.type === UNDO) {
-    history = undo(history);
-    return getStateFromHistory(history, nextTimetable, nextState);
+    history = undo(history)
+    return getStateFromHistory(history, nextTimetable, nextState)
   } else if (action.type === REDO) {
-    history = redo(history);
-    return getStateFromHistory(history, nextTimetable, nextState);
+    history = redo(history)
+    return getStateFromHistory(history, nextTimetable, nextState)
   } else if (action.type === UPDATE_SESSION_MANAGER) {
-    history = push(history, getTimetableState(nextState));
+    history = push(history, getTimetableState(nextState))
     return {
       ...nextState,
       history,
-    };
+    }
   } else if (action.type === SET_COURSE_DATA) {
     return {
       ...nextState,
@@ -80,18 +80,18 @@ const historyReducer = (nextState: RootState, action: AllActions): RootState => 
         ...history,
         present: getTimetableState(nextState),
       },
-    };
+    }
   }
 
-  return nextState;
-};
+  return nextState
+}
 
 const rootReducer = (state: RootState | undefined, action: AllActions): RootState => {
-  const baseState = state || { ...initialState };
-  let nextState = basicReducer(baseState, action);
-  nextState = historyReducer(nextState, action);
+  const baseState = state || { ...initialState }
+  let nextState = basicReducer(baseState, action)
+  nextState = historyReducer(nextState, action)
 
-  return nextState;
-};
+  return nextState
+}
 
-export default rootReducer;
+export default rootReducer

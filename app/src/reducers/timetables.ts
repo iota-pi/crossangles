@@ -1,56 +1,56 @@
-import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT, SET_COURSE_DATA } from '../actions';
-import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId, getStreamId, CourseId, CourseData } from '../state';
-import { SessionManagerData, SessionManagerEntriesData } from '../components/Timetable/SessionManager';
+import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT, SET_COURSE_DATA } from '../actions'
+import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId, getStreamId, CourseId, CourseData } from '../state'
+import { SessionManagerData, SessionManagerEntriesData } from '../components/Timetable/SessionManager'
 
 export function timetables(
   state: Timetables = initialState.timetables,
   action: AllActions,
 ): Timetables {
   if (action.type === UPDATE_SESSION_MANAGER) {
-    const term = action.term;
+    const term = action.term
     if (state[term] !== action.sessionManager) {
-      return { ...state, [term]: action.sessionManager };
+      return { ...state, [term]: action.sessionManager }
     }
-    return state;
+    return state
   }
 
   if (action.type === SET_COURSE_DATA) {
-    const courses = new Map(action.courses.map(c => [getCourseId(c), c]));
-    const term = getCurrentTerm(action.meta);
-    const timetable: SessionManagerData | undefined = state[term];
+    const courses = new Map(action.courses.map(c => [getCourseId(c), c]))
+    const term = getCurrentTerm(action.meta)
+    const timetable: SessionManagerData | undefined = state[term]
     if (!timetable) {
-      return state;
+      return state
     }
-    const sessionsToRemove = findMissingSessions(courses, timetable.map);
-    const newTimetable = { ...timetable };
-    newTimetable.map = newTimetable.map.filter(([id, _]) => !sessionsToRemove.has(id));
-    newTimetable.order = newTimetable.order.filter(id => !sessionsToRemove.has(id));
-    newTimetable.renderOrder = newTimetable.renderOrder.filter(id => !sessionsToRemove.has(id));
-    return { ...state, [term]: newTimetable };
+    const sessionsToRemove = findMissingSessions(courses, timetable.map)
+    const newTimetable = { ...timetable }
+    newTimetable.map = newTimetable.map.filter(([id, _]) => !sessionsToRemove.has(id))
+    newTimetable.order = newTimetable.order.filter(id => !sessionsToRemove.has(id))
+    newTimetable.renderOrder = newTimetable.renderOrder.filter(id => !sessionsToRemove.has(id))
+    return { ...state, [term]: newTimetable }
   }
 
-  return state;
+  return state
 }
 
 function findMissingSessions(
   courses: Map<CourseId, CourseData>,
   timetableData: SessionManagerEntriesData,
 ): Set<SessionId> {
-  const sessionsToRemove = new Set<SessionId>();
+  const sessionsToRemove = new Set<SessionId>()
   for (const [sessionId, placement] of timetableData) {
-    const course = courses.get(placement.session.course);
+    const course = courses.get(placement.session.course)
     if (course === undefined) {
-      sessionsToRemove.add(sessionId);
+      sessionsToRemove.add(sessionId)
     } else {
       const streamExists = course.streams.find(
         s => getStreamId(course, s) === placement.session.stream,
-      );
+      )
       if (streamExists === undefined) {
-        sessionsToRemove.add(sessionId);
+        sessionsToRemove.add(sessionId)
       }
     }
   }
-  return sessionsToRemove;
+  return sessionsToRemove
 }
 
 export function suggestionScore(
@@ -58,10 +58,10 @@ export function suggestionScore(
   action: AllActions,
 ): number | null {
   if (action.type === UPDATE_SUGGESTED_TIMETABLE) {
-    return action.score;
+    return action.score
   }
 
-  return state;
+  return state
 }
 
 export function unplacedCount(
@@ -69,8 +69,8 @@ export function unplacedCount(
   action: AllActions,
 ): number {
   if (action.type === UPDATE_UNPLACED_COUNT) {
-    return action.count;
+    return action.count
   }
 
-  return state;
+  return state
 }

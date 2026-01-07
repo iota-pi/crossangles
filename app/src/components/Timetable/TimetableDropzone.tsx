@@ -1,9 +1,9 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { DROPZONE_Z } from './timetableUtil';
-import { Placement } from './timetableTypes';
-import { LinkedSession, Options } from '../../state';
-import SessionDetails from './SessionDetails';
+import { FC, memo, useMemo } from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import { DROPZONE_Z } from './timetableUtil'
+import { Placement } from './timetableTypes'
+import { LinkedSession, Options } from '../../state'
+import SessionDetails from './SessionDetails'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   shadow: {
     boxShadow: theme.shadows[3],
   },
-}));
+}))
 
 export interface Props {
   colour?: string,
@@ -50,17 +50,17 @@ export interface Props {
   session: LinkedSession,
 }
 
-const Dropzone: React.FC<Props> = ({
+const Dropzone: FC<Props> = ({
   colour,
   highlighted,
   options,
   position,
   session,
 }: Props) => {
-  const classes = useStyles();
-  const styles = React.useMemo(
+  const classes = useStyles()
+  const styles = useMemo(
     () => {
-      const { width, height, x, y, z } = position;
+      const { width, height, x, y, z } = position
 
       return {
         left: x,
@@ -68,20 +68,20 @@ const Dropzone: React.FC<Props> = ({
         zIndex: z,
         width,
         height,
-      };
+      }
     },
     [position],
-  );
-  const alpha = highlighted ? 'DD' : 'A0';
-  const backgroundColor = colour ? `${colour}${alpha}` : 'none';
-  const borderColor = colour || 'none';
+  )
+  const alpha = highlighted ? 'DD' : 'A0'
+  const backgroundColor = colour ? `${colour}${alpha}` : 'none'
+  const borderColor = colour || 'none'
   const dropzoneOptions: Options = {
     ...options,
     showEnrolments: true,
     showMode: true,
     showLocations: false,
     showWeeks: false,
-  };
+  }
 
   return (
     <div
@@ -102,8 +102,8 @@ const Dropzone: React.FC<Props> = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-const TimetableDropzone: React.FC<Props> = React.memo(Dropzone);
-export default TimetableDropzone;
+const TimetableDropzone: FC<Props> = memo(Dropzone)
+export default TimetableDropzone

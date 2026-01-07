@@ -1,14 +1,14 @@
-import React from 'react';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import IconButton from '@material-ui/core/IconButton';
-import Schedule from '@material-ui/icons/Schedule';
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import IconButton from '@material-ui/core/IconButton'
+import Schedule from '@material-ui/icons/Schedule'
 import {
   getCellHeight,
   TIMETABLE_BORDER_WIDTH,
   TIMETABLE_FIRST_CELL_WIDTH,
   TIMETABLE_CELL_MIN_WIDTH,
-} from './timetableUtil';
+} from './timetableUtil'
+import { FC, memo, useMemo } from 'react'
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -17,11 +17,11 @@ const noSelect: CSSProperties = {
   MozUserSelect: 'none',
   msUserSelect: 'none',
   userSelect: 'none',
-};
+}
 
 const useStyles = makeStyles(theme => {
-  const STANDARD_BORDER = theme.palette.divider;
-  const DARKER_BORDER = theme.palette.action.disabled;
+  const STANDARD_BORDER = theme.palette.divider
+  const DARKER_BORDER = theme.palette.action.disabled
 
   return {
     grid: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      minWidth: (props: Props) => 
+      minWidth: (props: Props) =>
         TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numDisplayDays) + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
@@ -96,10 +96,10 @@ const useStyles = makeStyles(theme => {
       fontWeight: 300,
       marginLeft: 2,
     },
-  };
-});
+  }
+})
 
-const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const daysToLetters: { [key: string]: string } = {
   Monday: 'M',
   Tuesday: 'T',
@@ -108,7 +108,7 @@ const daysToLetters: { [key: string]: string } = {
   Friday: 'F',
   Saturday: 'S',
   Sunday: 's',
-};
+}
 
 export interface Props {
   disabled: boolean;
@@ -124,20 +124,20 @@ export interface Props {
 }
 
 export function timeToString(hour: number, twentyFourHours: boolean) {
-  let hourString = hour.toString();
-  let suffix = '';
+  let hourString = hour.toString()
+  let suffix = ''
   if (twentyFourHours) {
-    hourString = hourString.padStart(2, '0');
-    suffix = ':00';
+    hourString = hourString.padStart(2, '0')
+    suffix = ':00'
   } else {
-    const hour12 = (hour % 12) || 12;
-    hourString = hour12.toString();
-    suffix = hour < 12 ? 'am' : 'pm';
+    const hour12 = (hour % 12) || 12
+    hourString = hour12.toString()
+    suffix = hour < 12 ? 'am' : 'pm'
   }
-  return [hourString, suffix];
+  return [hourString, suffix]
 }
 
-const Grid: React.FC<Props> = props => {
+const Grid: FC<Props> = props => {
   const {
     disabled,
     timetableGridId,
@@ -149,30 +149,30 @@ const Grid: React.FC<Props> = props => {
     twentyFourHours,
     disableTransitions,
     onToggleTwentyFourHours,
-  } = props;
+  } = props
 
-  const classes = useStyles(props);
-  
-  const hoursArray = React.useMemo(() => {
-    const duration = end - start;
+  const classes = useStyles(props)
+
+  const hoursArray = useMemo(() => {
+    const duration = end - start
     return new Array(duration).fill(0).map((_, i) => {
-      const hour = start + i;
-      return timeToString(hour, twentyFourHours);
-    });
-  }, [start, end, twentyFourHours]);
+      const hour = start + i
+      return timeToString(hour, twentyFourHours)
+    })
+  }, [start, end, twentyFourHours])
 
-  const days = React.useMemo(() => week.slice(0, numDisplayDays), [numDisplayDays]);
+  const days = useMemo(() => week.slice(0, numDisplayDays), [numDisplayDays])
 
-  const rowClassList = [classes.row];
+  const rowClassList = [classes.row]
   if (showMode) {
-    rowClassList.push(classes.spacious);
+    rowClassList.push(classes.spacious)
   } else if (compact) {
-    rowClassList.push(classes.compact);
+    rowClassList.push(classes.compact)
   }
   if (disableTransitions) {
-    rowClassList.push(classes.disableTransitions);
+    rowClassList.push(classes.disableTransitions)
   }
-  const rowClasses = rowClassList.join(' ');
+  const rowClasses = rowClassList.join(' ')
 
   return (
     <div id={timetableGridId} className={classes.grid}>
@@ -213,8 +213,8 @@ const Grid: React.FC<Props> = props => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-const TimetableGrid = React.memo(Grid);
-export default TimetableGrid;
+const TimetableGrid = memo(Grid)
+export default TimetableGrid

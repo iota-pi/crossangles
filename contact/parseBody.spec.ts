@@ -1,6 +1,6 @@
-import { parseBody as parseBody, RequestBody } from './parseBody';
-import { APIGatewayEvent } from 'aws-lambda';
-import { fakeEvent } from './test/util';
+import { parseBody as parseBody, RequestBody } from './parseBody'
+import { APIGatewayEvent } from 'aws-lambda'
+import { fakeEvent } from './test/util'
 
 describe('parseBody', () => {
   it('returns correct object given suitable parameters', () => {
@@ -10,36 +10,36 @@ describe('parseBody', () => {
       message:
         'Gandalf! I thought you were dead! But then I thought I was dead myself.\n' +
         'Is everything sad going to come untrue?',
-    };
+    }
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toEqual(body);
+    }
+    expect(parseBody(event)).toEqual(body)
   })
 
   it('returns null for empty body', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: '',
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for invalid JSON', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: '"',
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for empty string', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: '""',
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for missing email', () => {
@@ -50,8 +50,8 @@ describe('parseBody', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for empty email', () => {
@@ -63,8 +63,8 @@ describe('parseBody', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for missing message', () => {
@@ -75,8 +75,8 @@ describe('parseBody', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for empty message', () => {
@@ -88,8 +88,8 @@ describe('parseBody', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for missing message', () => {
@@ -100,8 +100,8 @@ describe('parseBody', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 
   it('returns null for empty message', () => {
@@ -113,7 +113,7 @@ describe('parseBody', () => {
     const event: APIGatewayEvent = {
       ...fakeEvent,
       body: JSON.stringify(body),
-    };
-    expect(parseBody(event)).toBeNull();
+    }
+    expect(parseBody(event)).toBeNull()
   })
 })

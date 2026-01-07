@@ -1,5 +1,5 @@
-import { sessionClashLength } from './getClashInfo';
-import { SessionData } from '../state';
+import { sessionClashLength } from './getClashInfo'
+import { SessionData } from '../state'
 
 const baseSession: SessionData = {
   course: 'RING1379',
@@ -8,7 +8,7 @@ const baseSession: SessionData = {
   day: 'M',
   start: 10,
   end: 11,
-};
+}
 
 it.each`
   sessionA                                  | sessionB                                  | expected
@@ -24,8 +24,8 @@ it.each`
   ${{ start: 11, end: 13, canClash: true }} | ${{ start: 10, end: 14, canClash: true }} | ${1}
   ${{ start: 11, end: 12, canClash: true }} | ${{ start: 11, end: 12 }}                 | ${0.5}
 `('sessionClashLength($day$start-$end) = $expected', ({ sessionA, sessionB, expected }) => {
-  const a = { ...baseSession, ...sessionA } as SessionData;
-  const b = { ...baseSession, ...sessionB } as SessionData;
-  const result = sessionClashLength(a, b);
-  expect(result).toBe(expected);
-});
+  const a = { ...baseSession, ...sessionA } as SessionData
+  const b = { ...baseSession, ...sessionB } as SessionData
+  const result = sessionClashLength(a, b)
+  expect(result).toBe(expected)
+})

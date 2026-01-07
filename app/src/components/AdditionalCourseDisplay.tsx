@@ -1,14 +1,13 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { event } from 'react-ga';
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import { event } from 'react-ga'
 
-import ListItem from '@material-ui/core/ListItem';
-import Collapse from '@material-ui/core/Collapse';
-import Expand from '@material-ui/icons/ExpandMore';
-import Close from '@material-ui/icons/Close';
-import OpenInNew from '@material-ui/icons/OpenInNew';
-import { AdditionalEvents } from './AdditionalEvents';
-import ColourControl from './Colour';
+import ListItem from '@material-ui/core/ListItem'
+import Collapse from '@material-ui/core/Collapse'
+import Expand from '@material-ui/icons/ExpandMore'
+import Close from '@material-ui/icons/Close'
+import OpenInNew from '@material-ui/icons/OpenInNew'
+import { AdditionalEvents } from './AdditionalEvents'
+import ColourControl from './Colour'
 import {
   getCourseId,
   CourseData,
@@ -16,10 +15,11 @@ import {
   getEvents,
   AdditionalEvent,
   Colour,
-} from '../state';
-import { CATEGORY } from '../analytics';
-import { CourseActionButton } from './CourseActionButton';
-import { BaseCourseDisplayProps } from './CourseDisplay';
+} from '../state'
+import { CATEGORY } from '../analytics'
+import { CourseActionButton } from './CourseActionButton'
+import { BaseCourseDisplayProps } from './CourseDisplay'
+import { memo, useCallback } from 'react'
 
 export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
   course: CourseData,
@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => ({
   marginRight: {
     marginRight: theme.spacing(1),
   },
-}));
+}))
 
 const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> = ({
   course,
@@ -84,32 +84,32 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
   onRemoveCourse,
   onToggleShowEvents,
 }: AdditionalCourseDisplayProps) => {
-  const classes = useStyles();
-  const eventList = getEvents(course);
+  const classes = useStyles()
+  const eventList = getEvents(course)
 
-  const courseId = getCourseId(course);
-  const minimiseEvents = hiddenEvents.includes(courseId);
-  const showEvents = eventList.length > 1 || course.autoSelect;
-  const website = course.metadata ? course.metadata.website : undefined;
+  const courseId = getCourseId(course)
+  const minimiseEvents = hiddenEvents.includes(courseId)
+  const showEvents = eventList.length > 1 || course.autoSelect
+  const website = course.metadata ? course.metadata.website : undefined
 
-  const handleLinkClick = React.useCallback(
+  const handleLinkClick = useCallback(
     () => {
       event({
         category: CATEGORY,
         action: 'Additional Link',
         label: website,
-      });
+      })
     },
     [website],
-  );
-  const handleActionClick = React.useCallback(
+  )
+  const handleActionClick = useCallback(
     () => (course.autoSelect ? onToggleShowEvents(course) : onRemoveCourse(course)),
     [course, onToggleShowEvents, onRemoveCourse],
-  );
-  const handleColourClick = React.useCallback(
+  )
+  const handleColourClick = useCallback(
     (e: React.MouseEvent<HTMLElement>) => onShowPopover(e, course),
     [course, onShowPopover],
-  );
+  )
 
   return (
     <>
@@ -176,8 +176,8 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
         </Collapse>
       )}
     </>
-  );
-};
+  )
+}
 
-export const AdditionalCourseDisplay = React.memo(AdditionalCourseDisplayComponent);
-export default AdditionalCourseDisplay;
+export const AdditionalCourseDisplay = memo(AdditionalCourseDisplayComponent)
+export default AdditionalCourseDisplay

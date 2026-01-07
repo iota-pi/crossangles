@@ -1,56 +1,56 @@
 export interface ICache<T> extends Array<T | undefined | ICache<T>> {}
 
 export class TimetableScorerCache<T> {
-  private cache: ICache<T>;
+  private cache: ICache<T>
 
   constructor() {
-    this.cache = [];
+    this.cache = []
   }
 
   get(key: number[]): T | undefined {
-    let current = this.cache;
+    let current = this.cache
     for (let i = 0; i < key.length; ++i) {
-      const next = current[key[i]];
+      const next = current[key[i]]
       if (!Array.isArray(next)) {
-        return next;
+        return next
       }
-      current = next;
+      current = next
     }
 
-    return undefined;
+    return undefined
   }
 
   set(key: number[], value: T): void {
-    this.setInternal(key, value);
+    this.setInternal(key, value)
   }
 
   has(key: number[]) {
-    return this.get(key) !== undefined;
+    return this.get(key) !== undefined
   }
 
   delete(key: number[]): void {
-    this.setInternal(key, undefined);
+    this.setInternal(key, undefined)
   }
 
   clear(): void {
-    this.cache = [];
+    this.cache = []
   }
 
   private setInternal(key: number[], value: T | undefined): void {
-    let current = this.cache;
+    let current = this.cache
     for (let i = 0; i < key.length - 1; ++i) {
-      const next = current[key[i]];
+      const next = current[key[i]]
       if (!Array.isArray(next)) {
-        const newItem: ICache<T> = [];
-        current[key[i]] = newItem;
-        current = newItem;
+        const newItem: ICache<T> = []
+        current[key[i]] = newItem
+        current = newItem
       } else {
-        current = next;
+        current = next
       }
     }
 
-    current[key[key.length - 1]] = value;
+    current[key[key.length - 1]] = value
   }
 }
 
-export default TimetableScorerCache;
+export default TimetableScorerCache

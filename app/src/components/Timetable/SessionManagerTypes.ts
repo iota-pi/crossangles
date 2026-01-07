@@ -1,7 +1,7 @@
-import { SessionId } from '../../state';
-import { SessionPlacementData } from './SessionPlacement';
+import { SessionId } from '../../state'
+import { SessionPlacementData } from './SessionPlacement'
 
-export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>;
+export type SessionManagerEntriesData = Array<[SessionId, SessionPlacementData]>
 
 export interface SessionManagerData {
   map: SessionManagerEntriesData,
@@ -17,4 +17,4 @@ export const getEmptySessionManagerData = (): SessionManagerData => ({
   renderOrder: [],
   score: 0,
   version: 0,
-});
+})

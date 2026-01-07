@@ -1,10 +1,10 @@
-import { CourseData, CourseId, getCourseId } from './Course';
-import { StreamData, StreamId, getStreamId, LinkedStream } from './Stream';
+import { CourseData, CourseId, getCourseId } from './Course'
+import { StreamData, StreamId, getStreamId, LinkedStream } from './Stream'
 
-export type SessionId = string;
+export type SessionId = string
 
-export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F' | 'S' | 's';
-export const ALL_DAYS: DayLetter[] = ['M', 'T', 'W', 'H', 'F', 'S', 's'];
+export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F' | 'S' | 's'
+export const ALL_DAYS: DayLetter[] = ['M', 'T', 'W', 'H', 'F', 'S', 's']
 
 export interface SessionCommon {
   index: number,
@@ -29,25 +29,25 @@ export interface LinkedSession extends SessionCommon {
 
 
 export function getSessionId(course: CourseData, stream: StreamData, session: SessionData) {
-  const streamId = getStreamId(course, stream);
-  return `${streamId}~${session.index}`;
+  const streamId = getStreamId(course, stream)
+  return `${streamId}~${session.index}`
 }
 
 export function getDuration(session: SessionData | LinkedSession): number {
-  return session.end - session.start;
+  return session.end - session.start
 }
 
 export function linkSession(
   course: CourseData, stream: LinkedStream, session: SessionData,
 ): LinkedSession {
-  const id = getSessionId(course, stream, session);
-  return { ...session, course, stream, id };
+  const id = getSessionId(course, stream, session)
+  return { ...session, course, stream, id }
 }
 
 export function unlinkSession(session: LinkedSession): SessionData {
-  const course = getCourseId(session.course);
-  const stream = getStreamId(session.course, session.stream);
-  const { index, day, start, end, canClash, location, weeks } = session;
+  const course = getCourseId(session.course)
+  const stream = getStreamId(session.course, session.stream)
+  const { index, day, start, end, canClash, location, weeks } = session
   return {
     course,
     stream,
@@ -58,5 +58,5 @@ export function unlinkSession(session: LinkedSession): SessionData {
     canClash,
     location,
     weeks,
-  };
+  }
 }

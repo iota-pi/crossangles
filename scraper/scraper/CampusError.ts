@@ -1,8 +1,8 @@
 class CampusError extends Error {
-  readonly name = 'CampusError';
+  readonly name = 'CampusError'
 
   toString() {
-    return `${this.name}: ${this.message}`;
+    return `${this.name}: ${this.message}`
   }
 }
-export default CampusError;
+export default CampusError

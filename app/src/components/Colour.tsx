@@ -1,10 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Check from '@material-ui/icons/Check';
-import { Colour, getColour } from '../state';
-import { getOptions } from '../state/selectors';
+import React from 'react'
+import { useSelector } from 'react-redux'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import ButtonBase from '@material-ui/core/ButtonBase'
+import Check from '@material-ui/icons/Check'
+import { Colour, getColour } from '../state'
+import { getOptions } from '../state/selectors'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
   selected: {},
   rounded: {},
-}));
+}))
 
 export interface Props {
   colour: Colour,
@@ -40,13 +40,13 @@ function ColourComponent({
   onClick,
   size,
 }: Props) {
-  const classes = useStyles();
-  const { darkMode } = useSelector(getOptions);
+  const classes = useStyles()
+  const { darkMode } = useSelector(getOptions)
   const appliedClasses = [
     classes.root,
     isSelected ? classes.selected : '',
     isCircle ? classes.rounded : '',
-  ].join(' ');
+  ].join(' ')
 
   return (
     <ButtonBase
@@ -61,7 +61,7 @@ function ColourComponent({
     >
       {isSelected ? <Check /> : null}
     </ButtonBase>
-  );
+  )
 }
 
-export default ColourComponent;
+export default ColourComponent

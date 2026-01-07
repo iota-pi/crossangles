@@ -1,6 +1,6 @@
-import { getAutoSelectedEvents, getEvents, getEventId } from './Events';
-import { CourseMap, CourseId, CourseData } from './Course';
-import { ClassTime } from './Stream';
+import { getAutoSelectedEvents, getEvents, getEventId } from './Events'
+import { CourseMap, CourseId, CourseData } from './Course'
+import { ClassTime } from './Stream'
 
 
 describe('getEventId', () => {
@@ -12,11 +12,11 @@ describe('getEventId', () => {
         { component: 'Secret Forging', times: [{ time: 'M8', location: 'Mount Doom' }] },
       ],
       isAdditional: true,
-    };
-    const result = getEventId(course, 'Secret Forging');
-    expect(result).toBe('RING1379~Secret Forging');
-  });
-});
+    }
+    const result = getEventId(course, 'Secret Forging')
+    expect(result).toBe('RING1379~Secret Forging')
+  })
+})
 
 
 describe('getEvents', () => {
@@ -27,21 +27,21 @@ describe('getEvents', () => {
       { component: 'a', times: [] },
       { component: 'b', times: [] },
     ],
-  };
+  }
 
   it('gets events from additional course', () => {
-    const course: CourseData = { ...baseCourse, isAdditional: true };
-    const result = getEvents(course);
+    const course: CourseData = { ...baseCourse, isAdditional: true }
+    const result = getEvents(course)
     expect(result).toEqual([
       { id: 'code~a', name: 'a' },
       { id: 'code~b', name: 'b' },
-    ]);
-  });
+    ])
+  })
 
   it('gives no events for non-additional courses', () => {
-    expect(getEvents(baseCourse)).toEqual([]);
-    expect(getEvents({ ...baseCourse, isAdditional: false })).toEqual([]);
-  });
+    expect(getEvents(baseCourse)).toEqual([])
+    expect(getEvents({ ...baseCourse, isAdditional: false })).toEqual([])
+  })
 
   it('doesn\'t give duplicate events', () => {
     const course: CourseData = {
@@ -52,17 +52,17 @@ describe('getEvents', () => {
         { component: 'a', times: [] },
         { component: 'a', times: [] },
       ],
-    };
-    const result = getEvents(course);
+    }
+    const result = getEvents(course)
     expect(result).toEqual([
       { id: 'code~a', name: 'a' },
-    ]);
-  });
-});
+    ])
+  })
+})
 
 describe('getAutoSelectedEvents', () => {
   it('gets events from auto-selected courses', () => {
-    const times: ClassTime[] = [];
+    const times: ClassTime[] = []
     const courseMap: CourseMap = {
       a: {
         code: 'a',
@@ -90,12 +90,12 @@ describe('getAutoSelectedEvents', () => {
           { component: 'd', times },
         ],
       },
-    };
-    const additional: CourseId[] = ['a', 'd'];
-    const result = getAutoSelectedEvents(courseMap, additional);
+    }
+    const additional: CourseId[] = ['a', 'd']
+    const result = getAutoSelectedEvents(courseMap, additional)
     expect(result).toEqual([
       { id: 'a~a', name: 'a' },
       { id: 'a~b', name: 'b' },
-    ]);
-  });
-});
+    ])
+  })
+})

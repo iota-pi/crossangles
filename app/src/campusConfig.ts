@@ -1,4 +1,4 @@
-import env from './env';
+import env from './env'
 
 export interface AllCampusConfig {
   [campus: string]: CampusConfig,
@@ -10,7 +10,7 @@ export interface CampusConfig {
   longname: string,
 }
 
-export const DATA_ROOT_URI = env.rootURI;
+export const DATA_ROOT_URI = env.rootURI
 
 export const campusConfig: AllCampusConfig = {
   unsw: {
@@ -18,6 +18,6 @@ export const campusConfig: AllCampusConfig = {
     name: 'UNSW',
     longname: 'University of New South Wales',
   },
-};
+}
 
-export default campusConfig;
+export default campusConfig

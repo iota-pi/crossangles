@@ -1,13 +1,13 @@
-import React, { PropsWithChildren } from 'react';
-import { makeStyles } from '@material-ui/core';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import IconButton from '@material-ui/core/IconButton';
+import React, { PropsWithChildren } from 'react'
+import { makeStyles } from '@material-ui/core'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import IconButton from '@material-ui/core/IconButton'
 
 
 const useStyles = makeStyles(theme => {
   const transition = {
     duration: theme.transitions.duration.shorter,
-  };
+  }
 
   return {
     expandIcon: {
@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => {
     listIcon: {
       minWidth: 'initial',
     },
-  };
-});
+  }
+})
 
 export interface Props {
   flipped?: boolean,
@@ -35,7 +35,7 @@ export const CourseActionButton: React.FC<PropsWithChildren<Props>> = ({
   flipped,
   onClick,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
     <ListItemIcon
       className={classes.listIcon}
@@ -48,7 +48,7 @@ export const CourseActionButton: React.FC<PropsWithChildren<Props>> = ({
         {children}
       </IconButton>
     </ListItemIcon>
-  );
-};
+  )
+}
 
-export default CourseActionButton;
+export default CourseActionButton

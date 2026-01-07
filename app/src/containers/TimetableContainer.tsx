@@ -1,11 +1,11 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { event } from 'react-ga';
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import { event } from 'react-ga'
 
 // Components
-import { TimetableControls } from '../components/TimetableControls';
-import { Timetable } from '../components/Timetable';
-import CreateCustom from '../components/CreateCustom';
+import { TimetableControls } from '../components/TimetableControls'
+import { Timetable } from '../components/Timetable'
+import CreateCustom from '../components/CreateCustom'
 
 // General
 import {
@@ -18,22 +18,22 @@ import {
   Meta,
   Options,
   RootState,
-} from '../state';
+} from '../state'
 import {
   getCurrentTimetable,
   getChosenCourses,
   getCustomCourses,
   getAdditionalCourses,
-} from '../state/selectors';
-import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager';
-import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable';
+} from '../state/selectors'
+import SessionManager, { SessionManagerData } from '../components/Timetable/SessionManager'
+import { updateTimetable, recommendTimetable } from '../timetable/updateTimetable'
 import {
   setTimetable, addCourse, undoTimetable, redoTimetable, toggleOption,
-} from '../actions';
-import { WithDispatch } from '../typeHelpers';
-import { CATEGORY } from '../analytics';
-import { getCustomCode } from '../components/Timetable/timetableUtil';
-import { TimetableScoreConfig } from '../timetable/scoreTimetable';
+} from '../actions'
+import { WithDispatch } from '../typeHelpers'
+import { CATEGORY } from '../analytics'
+import { getCustomCode } from '../components/Timetable/timetableUtil'
+import { TimetableScoreConfig } from '../timetable/scoreTimetable'
 
 
 export interface OwnProps {
@@ -56,7 +56,7 @@ export interface StateProps {
   webStreams: CourseId[],
 }
 
-export type Props = WithDispatch<OwnProps & StateProps>;
+export type Props = WithDispatch<OwnProps & StateProps>
 
 export interface State {
   timetable: SessionManager,
@@ -66,61 +66,61 @@ export interface State {
 
 class TimetableContainer extends PureComponent<Props, State> {
   constructor(props: Props) {
-    super(props);
+    super(props)
     this.state = {
       timetable: new SessionManager(),
       showCreateCustom: false,
       isUpdating: false,
-    };
+    }
   }
 
   static getDerivedStateFromProps(props: Props, state: State) {
     // Update session manager if timetable data has been updated
-    let timetable = state.timetable;
+    let timetable = state.timetable
     if (props.timetableData.version > timetable.version) {
-      const { timetableData, courses } = props;
+      const { timetableData, courses } = props
 
       try {
-        timetable = SessionManager.from(timetableData, courses);
+        timetable = SessionManager.from(timetableData, courses)
 
         return {
           ...state,
           timetable,
-        };
+        }
       } catch (error) {
-        console.error('An error occurred while generating timetable');
-        console.error(error);
+        console.error('An error occurred while generating timetable')
+        console.error(error)
       }
     }
 
-    return state;
+    return state
   }
 
   componentDidMount() {
-    this.ensureTimetableCallback();
+    this.ensureTimetableCallback()
   }
 
   componentDidUpdate() {
-    this.ensureTimetableCallback();
+    this.ensureTimetableCallback()
   }
 
   private ensureTimetableCallback = () => {
     if (!this.state.timetable.callback) {
       this.setState(({ timetable }) => {
-        const newTimetable = new SessionManager(timetable);
-        newTimetable.callback = data => this.handleTimetableCallback(data);
-        return { timetable: newTimetable };
-      });
+        const newTimetable = new SessionManager(timetable)
+        newTimetable.callback = data => this.handleTimetableCallback(data)
+        return { timetable: newTimetable }
+      })
     }
-  };
+  }
 
   private handleUndo = () => {
-    this.props.dispatch(undoTimetable());
-  };
+    this.props.dispatch(undoTimetable())
+  }
 
   private handleRedo = () => {
-    this.props.dispatch(redoTimetable());
-  };
+    this.props.dispatch(redoTimetable())
+  }
 
   private handleUpdate = async () => {
     const {
@@ -132,14 +132,14 @@ class TimetableContainer extends PureComponent<Props, State> {
       options,
       webStreams,
       scoreConfig,
-    } = this.props;
+    } = this.props
 
     event({
       category: CATEGORY,
       action: 'Update Timetable',
-    });
+    })
 
-    this.setState({ isUpdating: true });
+    this.setState({ isUpdating: true })
     try {
       await updateTimetable({
         dispatch: this.props.dispatch,
@@ -153,46 +153,46 @@ class TimetableContainer extends PureComponent<Props, State> {
           maxIterations: 100000,
         },
         scoreConfig,
-      });
+      })
     } finally {
-      this.setState({ isUpdating: false });
+      this.setState({ isUpdating: false })
     }
-  };
+  }
 
   private handleIncludeFull = async () => {
-    const sessionManager = this.getSessionManager();
-    await this.props.dispatch(toggleOption('includeFull'));
-    await this.updateTimetable(sessionManager);
-  };
+    const sessionManager = this.getSessionManager()
+    await this.props.dispatch(toggleOption('includeFull'))
+    await this.updateTimetable(sessionManager)
+  }
 
   private handleClickCreateCustom = () => {
-    this.setState({ showCreateCustom: true });
-  };
+    this.setState({ showCreateCustom: true })
+  }
 
   private handleCloseCreateCustom = () => {
-    this.setState({ showCreateCustom: false });
-  };
+    this.setState({ showCreateCustom: false })
+  }
 
   private handleToggleTwentyFourHours = () => {
-    this.props.dispatch(toggleOption('twentyFourHours'));
-  };
+    this.props.dispatch(toggleOption('twentyFourHours'))
+  }
 
   private addCustom = async (courseData: Omit<CourseData, 'code'>) => {
-    const sessionManager = this.getSessionManager();
+    const sessionManager = this.getSessionManager()
 
     const course: CourseData = {
       code: getCustomCode(),
       isCustom: true,
       ...courseData,
-    };
-    await this.props.dispatch(addCourse(course));
-    await this.updateTimetable(sessionManager);
-  };
+    }
+    await this.props.dispatch(addCourse(course))
+    await this.updateTimetable(sessionManager)
+  }
 
   private getSessionManager = () => {
-    const { timetableData, courses } = this.props;
-    return SessionManager.from(timetableData, courses);
-  };
+    const { timetableData, courses } = this.props
+    return SessionManager.from(timetableData, courses)
+  }
 
   private updateTimetable = async (sessionManager: SessionManager) => {
     const {
@@ -204,7 +204,7 @@ class TimetableContainer extends PureComponent<Props, State> {
       options,
       webStreams,
       scoreConfig,
-    } = this.props;
+    } = this.props
     await updateTimetable({
       dispatch: this.props.dispatch,
       sessionManager,
@@ -213,8 +213,8 @@ class TimetableContainer extends PureComponent<Props, State> {
       },
       searchConfig: { timeout: 100 },
       scoreConfig,
-    });
-  };
+    })
+  }
 
   private recommendTimetable = async () => {
     const {
@@ -226,32 +226,32 @@ class TimetableContainer extends PureComponent<Props, State> {
       options,
       webStreams,
       scoreConfig,
-    } = this.props;
+    } = this.props
     recommendTimetable({
       dispatch: this.props.dispatch,
       selection: {
         additional, chosen, custom, events, meta, options, webStreams,
       },
       scoreConfig,
-    });
-  };
+    })
+  }
 
   private getSuggestionImprovementScore = () => {
-    const { suggestionScore } = this.props;
+    const { suggestionScore } = this.props
     if (suggestionScore !== null) {
-      return suggestionScore - this.state.timetable.score;
+      return suggestionScore - this.state.timetable.score
     }
 
-    return 0;
-  };
+    return 0
+  }
 
   private handleTimetableCallback = async (timetable: SessionManagerData) => {
-    await this.props.dispatch(setTimetable(timetable, this.props.meta));
-    this.recommendTimetable();
-  };
+    await this.props.dispatch(setTimetable(timetable, this.props.meta))
+    this.recommendTimetable()
+  }
 
   render() {
-    const timetableIsEmpty = this.props.timetableData.order.length === 0;
+    const timetableIsEmpty = this.props.timetableData.order.length === 0
     return (
       <div className={this.props.className}>
         <TimetableControls
@@ -280,7 +280,7 @@ class TimetableContainer extends PureComponent<Props, State> {
           onToggleTwentyFourHours={this.handleToggleTwentyFourHours}
         />
       </div>
-    );
+    )
   }
 }
 
@@ -298,7 +298,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   timetableData: getCurrentTimetable(state),
   timetableHistory: state.history,
   webStreams: state.webStreams,
-});
+})
 
-const connected = connect(mapStateToProps);
-export default connected(TimetableContainer);
+const connected = connect(mapStateToProps)
+export default connected(TimetableContainer)

@@ -1,6 +1,6 @@
-import React from 'react';
-import Snackbar from '@material-ui/core/Snackbar';
-import { DEFAULT_NOTICE_TIMEOUT, Notice } from '../state';
+import { useCallback, useMemo } from 'react'
+import Snackbar from '@material-ui/core/Snackbar'
+import { DEFAULT_NOTICE_TIMEOUT, Notice } from '../state'
 
 export interface Props {
   notice: Notice | null,
@@ -11,20 +11,20 @@ export const NoticeDisplay = ({
   notice,
   onSnackbarClose,
 }: Props) => {
-  const { message = '', actions = null, timeout = DEFAULT_NOTICE_TIMEOUT } = notice || {};
-  const paragraphs = React.useMemo(
-    () => message.split(/\n/g).map(p => ({ text: p, key: Math.random().toString() })),
+  const { message = '', actions = null, timeout = DEFAULT_NOTICE_TIMEOUT } = notice || {}
+  const paragraphs = useMemo(
+    () => message.split(/\n/g).map((p, i) => ({ text: p, key: i.toString() })),
     [message],
-  );
-  const handleClose = React.useCallback(
+  )
+  const handleClose = useCallback(
     () => {
       if (notice && notice.callback) {
-        notice.callback();
+        notice.callback()
       }
-      onSnackbarClose();
+      onSnackbarClose()
     },
     [notice, onSnackbarClose],
-  );
+  )
 
   return (
     <Snackbar
@@ -43,7 +43,7 @@ export const NoticeDisplay = ({
       )}
       action={actions}
     />
-  );
-};
+  )
+}
 
-export default NoticeDisplay;
+export default NoticeDisplay

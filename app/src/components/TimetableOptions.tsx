@@ -1,10 +1,10 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import { timetableOptionList, Options, OptionName } from '../state';
-import { getOptions } from '../state/selectors';
+import { memo } from 'react'
+import { useSelector } from 'react-redux'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import { timetableOptionList, Options, OptionName } from '../state'
+import { getOptions } from '../state/selectors'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   selectTrack: {
     opacity: 0.6 * 0.38,
   },
-}));
+}))
 
 export interface Props {
   options: Options,
@@ -43,8 +43,8 @@ const TimetableOptionsComponent = ({
   options,
   onToggleOption,
 }: Props) => {
-  const classes = useStyles();
-  const { darkMode } = useSelector(getOptions);
+  const classes = useStyles()
+  const { darkMode } = useSelector(getOptions)
 
   return (
     <div className={classes.root}>
@@ -66,8 +66,8 @@ const TimetableOptionsComponent = ({
         </div>
       ))}
     </div>
-  );
-};
-const TimetableOptions = React.memo(TimetableOptionsComponent);
+  )
+}
+const TimetableOptions = memo(TimetableOptionsComponent)
 
-export default TimetableOptions;
+export default TimetableOptions

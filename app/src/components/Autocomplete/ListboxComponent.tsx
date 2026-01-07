@@ -1,59 +1,59 @@
-import React, { PropsWithChildren } from 'react';
-import { VariableSizeList, ListChildComponentProps } from 'react-window';
-import { useMediaQuery, useTheme } from '@material-ui/core';
+import { Children, cloneElement, createContext, forwardRef, PropsWithChildren, useContext, useEffect, useRef } from 'react'
+import { VariableSizeList, ListChildComponentProps } from 'react-window'
+import { useMediaQuery, useTheme } from '@material-ui/core'
 
-const LISTBOX_PADDING = 8;
-const MAX_ITEMS = 8;
+const LISTBOX_PADDING = 8
+const MAX_ITEMS = 8
 function renderRow(props: ListChildComponentProps) {
-  const { data, index, style } = props;
-  return React.cloneElement(data[index], {
+  const { data, index, style } = props
+  return cloneElement(data[index], {
     style: {
       ...style,
       top: (style.top as number) + LISTBOX_PADDING,
     },
-  });
+  })
 }
 
-const OuterElementContext = React.createContext({});
+const OuterElementContext = createContext({})
 
 /* eslint-disable react/display-name */
-const OuterElementType = React.forwardRef<HTMLDivElement>((props, ref) => {
-  const outerProps = React.useContext(OuterElementContext);
-  return <div ref={ref} {...props} {...outerProps} />;
-});
-const InnerElementType = React.forwardRef<HTMLUListElement>((props, ref) => (
+const OuterElementType = forwardRef<HTMLDivElement>((props, ref) => {
+  const outerProps = useContext(OuterElementContext)
+  return <div ref={ref} {...props} {...outerProps} />
+})
+const InnerElementType = forwardRef<HTMLUListElement>((props, ref) => (
   <ul ref={ref} {...props} style={{ margin: 0 }} />
-));
+))
 /* eslint-enable react/display-name */
 
 function useResetCache(data: any) {
-  const ref = React.useRef<VariableSizeList>(null);
-  React.useEffect(() => {
+  const ref = useRef<VariableSizeList>(null)
+  useEffect(() => {
     if (ref.current != null) {
-      ref.current.resetAfterIndex(0, true);
+      ref.current.resetAfterIndex(0, true)
     }
-  }, [data]);
-  return ref;
+  }, [data])
+  return ref
 }
 
 // Adapter for react-window
-const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>(
+const ListboxComponent = forwardRef<HTMLDivElement, HTMLDivElement>(
   (props: PropsWithChildren<any>, ref) => {
-    const { children, ...other } = props;
-    const itemData = React.Children.toArray(children);
-    const theme = useTheme();
-    const smUp = useMediaQuery(theme.breakpoints.up('sm'), { noSsr: true });
-    const itemCount = itemData.length;
-    const itemSize = smUp ? 36 : 48;
+    const { children, ...other } = props
+    const itemData = Children.toArray(children)
+    const theme = useTheme()
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'), { noSsr: true })
+    const itemCount = itemData.length
+    const itemSize = smUp ? 36 : 48
 
     const getHeight = () => {
       if (itemCount > MAX_ITEMS) {
-        return MAX_ITEMS * itemSize;
+        return MAX_ITEMS * itemSize
       }
-      return itemSize * itemCount;
-    };
+      return itemSize * itemCount
+    }
 
-    const gridRef = useResetCache(itemCount);
+    const gridRef = useResetCache(itemCount)
 
     return (
       <div ref={ref}>
@@ -73,9 +73,9 @@ const ListboxComponent = React.forwardRef<HTMLDivElement, HTMLDivElement>(
           </VariableSizeList>
         </OuterElementContext.Provider>
       </div>
-    );
+    )
   },
-);
-ListboxComponent.displayName = 'ListboxComponent';
+)
+ListboxComponent.displayName = 'ListboxComponent'
 
-export default ListboxComponent;
+export default ListboxComponent

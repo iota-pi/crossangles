@@ -1,8 +1,8 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import makeStyles from '@material-ui/core/styles/makeStyles'
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@material-ui/icons/Close'
 import {
   Button,
   Dialog,
@@ -11,7 +11,7 @@ import {
   DialogContent,
   IconButton,
   Typography,
-} from '@material-ui/core';
+} from '@material-ui/core'
 import {
   Timeline,
   TimelineConnector,
@@ -20,10 +20,10 @@ import {
   TimelineItem,
   TimelineOppositeContent,
   TimelineSeparator,
-} from '@material-ui/lab';
-import changelog from '../changelog';
-import { setChangelogView } from '../actions';
-import { RootState } from '../state';
+} from '@material-ui/lab'
+import changelog from '../changelog'
+import { setChangelogView } from '../actions'
+import { RootState } from '../state'
 
 
 const useStyles = makeStyles(theme => ({
@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
       left: -theme.spacing(1.5),
     },
   },
-}));
+}))
 
 
 export interface Props {
@@ -70,24 +70,24 @@ export interface Props {
 }
 
 export function formatTimelineDate(date: Date) {
-  const day = date.getDate();
-  const month = date.toLocaleDateString(undefined, { month: 'short' });
-  const year = date.getFullYear();
-  return `${month} ${day}, ${year}`;
+  const day = date.getDate()
+  const month = date.toLocaleDateString(undefined, { month: 'short' })
+  const year = date.getFullYear()
+  return `${month} ${day}, ${year}`
 }
 
 
 const Changelog = ({ onClose, open }: Props) => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const lastView = useSelector((state: RootState) => state.changelogView);
-  const handleClose = React.useCallback(
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const lastView = useSelector((state: RootState) => state.changelogView)
+  const handleClose = useCallback(
     () => {
-      dispatch(setChangelogView());
-      onClose();
+      dispatch(setChangelogView())
+      onClose()
     },
     [dispatch, onClose],
-  );
+  )
 
   return (
     <Dialog
@@ -155,7 +155,7 @@ const Changelog = ({ onClose, open }: Props) => {
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default Changelog;
+export default Changelog

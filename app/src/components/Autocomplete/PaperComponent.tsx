@@ -1,9 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Button, DialogActions, makeStyles, Paper, PaperProps } from '@material-ui/core';
-import EventIcon from '@material-ui/icons/Event';
-import { getOption } from '../../state';
-import { getOptions } from '../../state/selectors';
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { Button, DialogActions, makeStyles, Paper, PaperProps } from '@material-ui/core'
+import EventIcon from '@material-ui/icons/Event'
+import { getOption } from '../../state'
+import { getOptions } from '../../state/selectors'
 
 
 const useStyles = makeStyles(theme => ({
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[2],
     padding: 0,
   },
-}));
+}))
 
 
 export interface Props extends PaperProps {
@@ -21,10 +21,10 @@ export interface Props extends PaperProps {
 
 // Adapter for react-window
 const PaperComponent: React.FC<Props> = (props: Props) => {
-  const { children, onAddPersonalEvent, ...other } = props;
-  const options = useSelector(getOptions);
-  const darkMode = getOption(options, 'darkMode');
-  const classes = useStyles();
+  const { children, onAddPersonalEvent, ...other } = props
+  const options = useSelector(getOptions)
+  const darkMode = getOption(options, 'darkMode')
+  const classes = useStyles()
 
   return (
     <Paper {...other}>
@@ -45,7 +45,7 @@ const PaperComponent: React.FC<Props> = (props: Props) => {
         </Button>
       </DialogActions>
     </Paper>
-  );
-};
+  )
+}
 
-export default PaperComponent;
+export default PaperComponent

@@ -1,4 +1,4 @@
-import { TimetableHistoryState } from '.';
+import { TimetableHistoryState } from '.'
 
 export interface HistoryData {
   past: TimetableHistoryState[],
@@ -7,67 +7,67 @@ export interface HistoryData {
 }
 
 export function undo(history: HistoryData): HistoryData {
-  const { past, present, future } = history;
+  const { past, present, future } = history
   return {
     past: [...past.slice(0, past.length - 1)],
     present: past[past.length - 1],
     future: [present, ...future],
-  };
+  }
 }
 
 export function redo(history: HistoryData): HistoryData {
-  const { past, present, future } = history;
+  const { past, present, future } = history
   return {
     past: [...past, present],
     present: future[0],
     future: future.slice(1),
-  };
+  }
 }
 
 export function push(history: HistoryData, next: TimetableHistoryState): HistoryData {
-  const { past, present } = history;
+  const { past, present } = history
 
   if (noStateChange(present, next)) {
-    return history;
+    return history
   }
 
   return {
     past: [...past, present],
     present: next,
     future: [],
-  };
+  }
 }
 
 function noStateChange(current: TimetableHistoryState, next: TimetableHistoryState) {
   if (current.custom !== next.custom) {
-    return false;
+    return false
   }
   if (current.additional !== next.additional) {
-    return false;
+    return false
   }
   if (current.chosen !== next.chosen) {
-    return false;
+    return false
   }
   if (current.events !== next.events) {
-    return false;
+    return false
   }
   if (current.options !== next.options) {
-    return false;
+    return false
   }
   if (current.colours !== next.colours) {
-    return false;
+    return false
   }
   if (current.webStreams !== next.webStreams) {
-    return false;
+    return false
   }
   if (current.timetable !== next.timetable) {
     if (current.timetable.map.length !== next.timetable.map.length) {
-      return false;
+      return false
     }
     if (JSON.stringify(current.timetable.map) !== JSON.stringify(next.timetable.map)) {
-      return false;
+      return false
     }
   }
 
-  return true;
+  return true
 }

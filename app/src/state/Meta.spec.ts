@@ -1,4 +1,4 @@
-import { getCurrentTerm } from './Meta';
+import { getCurrentTerm } from './Meta'
 
 it.each`
   term | year    | expected
@@ -6,5 +6,5 @@ it.each`
   ${2} | ${2000} | ${'2000~2'}
   ${3} | ${2222} | ${'2222~3'}
 `('getCurrentTerm({term:$term, year:$year}) = $expected', ({ term, year, expected }) => {
-  expect(getCurrentTerm({ term, year })).toBe(expected);
-});
+  expect(getCurrentTerm({ term, year })).toBe(expected)
+})

@@ -41,6 +41,6 @@ export const handbookRequestPayload = {
   sort: [{
     'subject.code': 'asc',
   }],
-};
+}
 
-export default handbookRequestPayload;
+export default handbookRequestPayload

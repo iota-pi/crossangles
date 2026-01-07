@@ -1,6 +1,6 @@
-import { TimetablePlacement } from './Placement';
+import { TimetablePlacement } from './Placement'
 
 export class DropzonePlacement extends TimetablePlacement {
-  protected clashDepthMultiplier = 1.5;
+  protected clashDepthMultiplier = 1.5
 }
-export default DropzonePlacement;
+export default DropzonePlacement

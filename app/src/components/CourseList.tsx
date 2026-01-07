@@ -1,14 +1,13 @@
-import React from 'react';
-import { TransitionGroup } from 'react-transition-group';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import Popover from '@material-ui/core/Popover';
-import { Collapse } from '@material-ui/core';
-import { useSelector } from 'react-redux';
-import { CourseDisplay } from './CourseDisplay';
-import { AdditionalCourseDisplay } from './AdditionalCourseDisplay';
-import { ColourPicker } from './ColourPicker';
+import { TransitionGroup } from 'react-transition-group'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
+import Popover from '@material-ui/core/Popover'
+import { Collapse } from '@material-ui/core'
+import { useSelector } from 'react-redux'
+import { CourseDisplay } from './CourseDisplay'
+import { AdditionalCourseDisplay } from './AdditionalCourseDisplay'
+import { ColourPicker } from './ColourPicker'
 import {
   COURSE_COLOURS,
   ColourMap,
@@ -19,13 +18,14 @@ import {
   Meta,
   AdditionalEvent,
   RootState,
-} from '../state';
+} from '../state'
+import { FC, memo, MouseEvent, useCallback, useMemo, useState } from 'react'
 
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
   },
-}));
+}))
 
 export interface Props {
   chosen: CourseData[],
@@ -49,40 +49,40 @@ export interface PopoverState {
   course: CourseData,
 }
 
-const CourseListComponent: React.FC<Props> = (props: Props) => {
-  const classes = useStyles();
-  const [showPopover, setShowPopover] = React.useState<PopoverState>();
-  const reducedMotion = useSelector((state: RootState) => state.options.reducedMotion);
-  const { chosen, custom, additional, onColourChange } = props;
-  const allCourses = React.useMemo(
+const CourseListComponent: FC<Props> = (props: Props) => {
+  const classes = useStyles()
+  const [showPopover, setShowPopover] = useState<PopoverState>()
+  const reducedMotion = useSelector((state: RootState) => state.options.reducedMotion)
+  const { chosen, custom, additional, onColourChange } = props
+  const allCourses = useMemo(
     () => [...chosen, ...custom, ...additional],
     [chosen, custom, additional],
-  );
+  )
 
-  const handleShowPopover = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>, course: CourseData) => {
+  const handleShowPopover = useCallback(
+    (event: MouseEvent<HTMLElement>, course: CourseData) => {
       setShowPopover({
         target: event.currentTarget,
         course,
-      });
+      })
     },
     [],
-  );
+  )
 
-  const handleHidePopover = React.useCallback(
+  const handleHidePopover = useCallback(
     () => {
-      setShowPopover(undefined);
+      setShowPopover(undefined)
     },
     [],
-  );
+  )
 
-  const handleChange = React.useCallback(
+  const handleChange = useCallback(
     (colour: Colour) => {
-      onColourChange(showPopover!.course, colour);
-      handleHidePopover();
+      onColourChange(showPopover!.course, colour)
+      handleHidePopover()
     },
     [showPopover, handleHidePopover, onColourChange],
-  );
+  )
 
   return (
     <List className={classes.root} disablePadding id="course-display">
@@ -146,7 +146,7 @@ const CourseListComponent: React.FC<Props> = (props: Props) => {
         />
       </Popover>
     </List>
-  );
-};
-export const CourseList = React.memo(CourseListComponent);
-export default CourseList;
+  )
+}
+export const CourseList = memo(CourseListComponent)
+export default CourseList

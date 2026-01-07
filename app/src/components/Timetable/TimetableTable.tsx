@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { event } from 'react-ga';
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import { event } from 'react-ga'
 
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Fade from '@material-ui/core/Fade';
-import { TransitionGroup } from 'react-transition-group';
-import TimetableGrid from './TimetableGrid';
-import TimetableSession from './TimetableSession';
-import TimetableDropzone from './TimetableDropzone';
-import { DROPZONE_Z, getNumDisplayDays, getSnapDistance, getTimetableHeight } from './timetableUtil';
-import { Dimensions, Placement, TimetablePosition } from './timetableTypes';
-import { DropzonePlacement } from './DropzonePlacement';
-import SessionManager from './SessionManager';
-import SessionPlacement from './SessionPlacement';
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Fade from '@material-ui/core/Fade'
+import { TransitionGroup } from 'react-transition-group'
+import TimetableGrid from './TimetableGrid'
+import TimetableSession from './TimetableSession'
+import TimetableDropzone from './TimetableDropzone'
+import { DROPZONE_Z, getNumDisplayDays, getSnapDistance, getTimetableHeight } from './timetableUtil'
+import { Dimensions, Placement, TimetablePosition } from './timetableTypes'
+import { DropzonePlacement } from './DropzonePlacement'
+import SessionManager from './SessionManager'
+import SessionPlacement from './SessionPlacement'
 import {
   ColourMap,
   getColour,
@@ -22,10 +28,10 @@ import {
   LinkedSession,
   linkStream,
   getOption,
-} from '../../state';
-import { getHours } from './getHours';
-import { CATEGORY } from '../../analytics';
-import { getDropzones } from './dropzones';
+} from '../../state'
+import { getHours } from './getHours'
+import { CATEGORY } from '../../analytics'
+import { getDropzones } from './dropzones'
 
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   faded: {
     opacity: 0.65,
   },
-}));
+}))
 
 export interface Props {
   options: Options,
@@ -78,25 +84,25 @@ export function getCourseColour(
   colourMap: ColourMap,
   darkMode = false,
 ): string | undefined {
-  const courseId = getCourseId(course);
-  const colourName = colourMap[courseId];
+  const courseId = getCourseId(course)
+  const colourName = colourMap[courseId]
   if (colourName) {
-    return getColour(colourName, darkMode);
+    return getColour(colourName, darkMode)
   }
-  return undefined;
+  return undefined
 }
 
-const timetableGridId = `TimetableGrid-${Math.random()}`;
+const timetableGridId = `TimetableGrid-${Math.random()}`
 
 export function getDimensions(duration: number, options: Options): Dimensions | undefined {
-  const timetableElement = document.getElementById(timetableGridId);
+  const timetableElement = document.getElementById(timetableGridId)
   if (timetableElement === null) {
-    return undefined;
+    return undefined
   }
   return {
     width: timetableElement.scrollWidth,
     height: getTimetableHeight(duration, getOption(options, 'compactView'), getOption(options, 'showMode')),
-  };
+  }
 }
 
 
@@ -108,28 +114,28 @@ function TimetableTable({
   onToggleTwentyFourHours,
   timetable,
 }: Props) {
-  const compact = getOption(options, 'compactView');
-  const showMode = getOption(options, 'showMode');
-  const darkMode = getOption(options, 'darkMode');
-  const disableTransitions = getOption(options, 'reducedMotion');
-  const twentyFourHours = getOption(options, 'twentyFourHours');
-  const includeFull = getOption(options, 'includeFull');
-  const numDisplayDays = React.useMemo(
+  const compact = getOption(options, 'compactView')
+  const showMode = getOption(options, 'showMode')
+  const darkMode = getOption(options, 'darkMode')
+  const disableTransitions = getOption(options, 'reducedMotion')
+  const twentyFourHours = getOption(options, 'twentyFourHours')
+  const includeFull = getOption(options, 'includeFull')
+  const numDisplayDays = useMemo(
     () => getNumDisplayDays(timetable.renderOrder),
-    [timetable.renderOrder], 
-  );
+    [timetable.renderOrder],
+  )
 
-  const sessions = React.useMemo(
+  const sessions = useMemo(
     () => timetable.renderOrder.map(sid => timetable.getSession(sid)),
     [timetable],
-  );
-  const hours = React.useMemo(
+  )
+  const hours = useMemo(
     () => {
       if (minimalHours) {
         // Only consider times for currently placed sessions
-        return getHours(sessions);
+        return getHours(sessions)
       }
-      const courses = sessions.map(s => s.course).filter((c, i, arr) => arr.indexOf(c) === i);
+      const courses = sessions.map(s => s.course).filter((c, i, arr) => arr.indexOf(c) === i)
       const streams = courses.flatMap(
         c => (
           c.streams
@@ -137,52 +143,52 @@ function TimetableTable({
             .filter(s => !s.options?.placeHolder)
             .map(s => linkStream(c, s))
         ),
-      );
-      return getHours(streams.flatMap(s => s.sessions));
+      )
+      return getHours(streams.flatMap(s => s.sessions))
     },
     [minimalHours, sessions],
-  );
-  const { start, end } = hours;
-  const duration = end - start;
+  )
+  const { start, end } = hours
+  const duration = end - start
 
-  const [dimensions, setDimensions] = React.useState<Dimensions>({ width: 0, height: 0 });
-  const updateDimensions = React.useCallback(
+  const [dimensions, setDimensions] = useState<Dimensions>({ width: 0, height: 0 })
+  const updateDimensions = useCallback(
     () => {
-      const newDimensions = getDimensions(duration, options);
+      const newDimensions = getDimensions(duration, options)
       if (newDimensions) {
         setDimensions(oldDimensions => {
           if (
             newDimensions.width !== oldDimensions.width
             || newDimensions.height !== oldDimensions.height
           ) {
-            return newDimensions;
+            return newDimensions
           }
-          return oldDimensions;
-        });
+          return oldDimensions
+        })
       }
     },
     [options, duration],
-  );
-  React.useEffect(() => {
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, [updateDimensions]);
+  )
+  useEffect(() => {
+    window.addEventListener('resize', updateDimensions)
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [updateDimensions])
 
-  const [, setVersion] = React.useState(false);
-  const forceUpdate = React.useCallback(
+  const [, setVersion] = useState(false)
+  const forceUpdate = useCallback(
     () => {
-      if (dimensions.width === 0) updateDimensions();
-      setVersion(v => !v);
+      if (dimensions.width === 0) updateDimensions()
+      setVersion(v => !v)
     },
     [dimensions.width, updateDimensions],
-  );
-  const { version } = timetable;
-  useEffect(forceUpdate, [version, forceUpdate]);
-  useEffect(updateDimensions, [updateDimensions, timetable]);
+  )
+  const { version } = timetable
+  useEffect(forceUpdate, [version, forceUpdate])
+  useEffect(updateDimensions, [updateDimensions, timetable])
 
-  const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
-  const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
-  React.useEffect(
+  const [dragging, setDragging] = useState<LinkedSession | null>(null)
+  const [dropzones, setDropzones] = useState<DropzonePlacement[]>([])
+  useEffect(
     () => {
       if (dragging) {
         setDropzones(
@@ -192,142 +198,142 @@ function TimetableTable({
             startHour: start,
             endHour: end,
           }),
-        );
+        )
       }
     },
-    [dragging, includeFull],
-  );
-  const [highlightedZone, setHighlightedZone] = React.useState<DropzonePlacement | null>(null);
+    [dragging, end, includeFull, start],
+  )
+  const [highlightedZone, setHighlightedZone] = useState<DropzonePlacement | null>(null)
 
 
-  const handleDrag = React.useCallback(
+  const handleDrag = useCallback(
     (session: LinkedSession): void => {
       // Don't drag if something else is being dragged already
-      if (dragging) return;
+      if (dragging) return
 
-      const { id, stream } = session;
+      const { id, stream } = session
       event({
         category: CATEGORY,
         action: 'Drag Session',
         label: stream.id,
-      });
+      })
 
       // Bump dragged stream, keeping the dragged session on top
-      timetable.bumpStream(id);
-      timetable.bumpSession(id);
+      timetable.bumpStream(id)
+      timetable.bumpSession(id)
 
-      timetable.drag(id);
-      timetable.updateClashDepths();
+      timetable.drag(id)
+      timetable.updateClashDepths()
 
       // Mark this session as being dragged
-      setDragging(session);
+      setDragging(session)
     },
     [timetable, dragging, setDragging],
-  );
+  )
 
-  const getNearestDropzone = React.useCallback(
+  const getNearestDropzone = useCallback(
     (placement: Placement): DropzonePlacement | null => {
-      let nearest: DropzonePlacement | null = null;
-      const snapDistance = getSnapDistance(placement.height);
-      let bestDistance = snapDistance * snapDistance;
-      const centreX = placement.x + placement.width / 2;
-      const centreY = placement.y + placement.height / 2;
+      let nearest: DropzonePlacement | null = null
+      const snapDistance = getSnapDistance(placement.height)
+      let bestDistance = snapDistance * snapDistance
+      const centreX = placement.x + placement.width / 2
+      const centreY = placement.y + placement.height / 2
       for (const dropzone of dropzones) {
-        const dropzonePosition = dropzone.getPosition(dimensions, start, numDisplayDays, compact, showMode);
-        const deltaX = (dropzonePosition.x + dropzonePosition.width / 2) - centreX;
-        const deltaY = (dropzonePosition.y + dropzonePosition.height / 2) - centreY;
+        const dropzonePosition = dropzone.getPosition(dimensions, start, numDisplayDays, compact, showMode)
+        const deltaX = (dropzonePosition.x + dropzonePosition.width / 2) - centreX
+        const deltaY = (dropzonePosition.y + dropzonePosition.height / 2) - centreY
 
-        const distSq = (deltaX * deltaX) + (deltaY * deltaY);
+        const distSq = (deltaX * deltaX) + (deltaY * deltaY)
         if (distSq < bestDistance) {
-          nearest = dropzone;
-          bestDistance = distSq;
+          nearest = dropzone
+          bestDistance = distSq
         }
       }
-      return nearest;
+      return nearest
     },
-    [compact, dropzones, dimensions, showMode, start],
-  );
+    [compact, dropzones, dimensions, numDisplayDays, showMode, start],
+  )
 
-  const handleMove = React.useCallback(
+  const handleMove = useCallback(
     (session: LinkedSession, delta: TimetablePosition) => {
-      timetable.move(session.id, delta);
-      const sessionPlacement = timetable.get(session.id);
-      const position = sessionPlacement.getPosition(dimensions, start, numDisplayDays, compact, showMode);
-      const dropzone = getNearestDropzone(position);
-      setHighlightedZone(dropzone);
-      forceUpdate();
+      timetable.move(session.id, delta)
+      const sessionPlacement = timetable.get(session.id)
+      const position = sessionPlacement.getPosition(dimensions, start, numDisplayDays, compact, showMode)
+      const dropzone = getNearestDropzone(position)
+      setHighlightedZone(dropzone)
+      forceUpdate()
     },
-    [compact, dimensions, forceUpdate, getNearestDropzone, showMode, start, timetable],
-  );
+    [compact, dimensions, forceUpdate, getNearestDropzone, numDisplayDays, showMode, start, timetable],
+  )
 
-  const handleDrop = React.useCallback(
+  const handleDrop = useCallback(
     (session: LinkedSession): void => {
-      if (!dragging) return;
+      if (!dragging) return
 
       // Snap session to nearest dropzone
-      const sessionPlacement = timetable.get(session.id);
-      const position = sessionPlacement.getPosition(dimensions, start, numDisplayDays, compact, showMode);
-      const dropzone = getNearestDropzone(position);
-      timetable.drop(session.id, dropzone, dimensions, start, numDisplayDays, compact, showMode);
+      const sessionPlacement = timetable.get(session.id)
+      const position = sessionPlacement.getPosition(dimensions, start, numDisplayDays, compact, showMode)
+      const dropzone = getNearestDropzone(position)
+      timetable.drop(session.id, dropzone, dimensions, start, numDisplayDays, compact, showMode)
 
-      setDragging(null);
-      setHighlightedZone(null);
+      setDragging(null)
+      setHighlightedZone(null)
     },
-    [compact, dragging, dimensions, getNearestDropzone, showMode, start, timetable],
-  );
+    [compact, dragging, dimensions, getNearestDropzone, numDisplayDays, showMode, start, timetable],
+  )
 
 
-  const classes = useStyles();
-  const rootClasses = [classes.root];
-  const disabled = timetable.renderOrder.length === 0;
+  const classes = useStyles()
+  const rootClasses = [classes.root]
+  const disabled = timetable.renderOrder.length === 0
   if (disabled) {
-    rootClasses.push(classes.faded);
+    rootClasses.push(classes.faded)
   }
 
-  const draggingColour = dragging ? getCourseColour(dragging.course, colours, darkMode) : undefined;
-  const dropzoneStyles = React.useMemo<React.CSSProperties>(
+  const draggingColour = dragging ? getCourseColour(dragging.course, colours, darkMode) : undefined
+  const dropzoneStyles = useMemo<CSSProperties>(
     () => ({
       position: 'absolute',
       zIndex: dragging ? DROPZONE_Z : undefined,
     }),
     [dragging],
-  );
+  )
 
   const sessionRenderData: SessionRenderData[] = (() => {
     if (!dimensions.width) {
-      return [];
+      return []
     }
 
-    const results: SessionRenderData[] = [];
+    const results: SessionRenderData[] = []
     for (const sid of timetable.renderOrder) {
-      let placement = timetable.getMaybe(sid);
-      if (!placement) continue;
+      let placement = timetable.getMaybe(sid)
+      if (!placement) continue
 
-      let session = placement.session;
-      const isStreamBeingDragged = dragging ? dragging.stream.id === session.stream.id : false;
+      let session = placement.session
+      const isStreamBeingDragged = dragging ? dragging.stream.id === session.stream.id : false
       // Check if another session in this stream is being dragged and hovering over a dropzone
       if (!placement.isDragging && isStreamBeingDragged && highlightedZone) {
         // Move this session to its tentative location
-        const tentStream = highlightedZone.session.stream;
+        const tentStream = highlightedZone.session.stream
         if (tentStream.sessions.length > session.index) {
-          const tentSession = tentStream.sessions[session.index];
-          const tentPlacement = new SessionPlacement(tentSession);
-          if (placement.isDragging) tentPlacement.drag();
-          if (placement.isRaised) tentPlacement.raise();
-          if (placement.isSnapped) tentPlacement.snap();
-          placement = tentPlacement;
-          session = tentSession;
+          const tentSession = tentStream.sessions[session.index]
+          const tentPlacement = new SessionPlacement(tentSession)
+          if (placement.isDragging) tentPlacement.drag()
+          if (placement.isRaised) tentPlacement.raise()
+          if (placement.isSnapped) tentPlacement.snap()
+          placement = tentPlacement
+          session = tentSession
         }
       }
 
-      const { clashDepth, isDragging, isSnapped } = placement;
-      const { course, id, index, stream } = session;
-      const position = placement.getPosition(dimensions, start, numDisplayDays, compact, showMode);
+      const { clashDepth, isDragging, isSnapped } = placement
+      const { course, id, index, stream } = session
+      const position = placement.getPosition(dimensions, start, numDisplayDays, compact, showMode)
       if (placement.isDragging && isStreamBeingDragged && highlightedZone) {
-        position.height = highlightedZone.getPosition(dimensions, start, numDisplayDays, compact, showMode).height;
+        position.height = highlightedZone.getPosition(dimensions, start, numDisplayDays, compact, showMode).height
       }
-      const courseId = getCourseId(course);
-      const key = `${courseId}-${stream.component}-${index}`;
+      const courseId = getCourseId(course)
+      const key = `${courseId}-${stream.component}-${index}`
 
       const renderData = {
         course,
@@ -338,11 +344,11 @@ function TimetableTable({
         isDragging,
         isSnapped,
         clashDepth,
-      };
-      results.push(renderData);
+      }
+      results.push(renderData)
     }
-    return results;
-  })();
+    return results
+  })()
 
   return (
     <div
@@ -424,7 +430,7 @@ function TimetableTable({
         onToggleTwentyFourHours={onToggleTwentyFourHours}
       />
     </div>
-  );
+  )
 }
 
-export default TimetableTable;
+export default TimetableTable

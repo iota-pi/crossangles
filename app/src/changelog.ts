@@ -43,26 +43,26 @@ const rawChangelog: Omit<LogEntry, 'id'>[] = [
       'Replaces the previous save-as-image feature',
     ],
   },
-];
+]
 
-const changelog: LogEntry[] = rawChangelog.map((item, i) => ({ ...item, id: i })).reverse();
+const changelog: LogEntry[] = rawChangelog.map((item, i) => ({ ...item, id: i })).reverse()
 
-export default changelog;
+export default changelog
 
 export function getUpdateMessage(updateCount: number) {
-  const n = updateCount === 1 ? 'A' : updateCount.toString();
-  const s = updateCount === 1 ? '' : 's';
-  const have = updateCount === 1 ? 'has' : 'have';
-  const choices: string[] = [];
+  const n = updateCount === 1 ? 'A' : updateCount.toString()
+  const s = updateCount === 1 ? '' : 's'
+  const have = updateCount === 1 ? 'has' : 'have'
+  const choices: string[] = []
   if (updateCount === 1) {
     choices.push(
       'CrossAngles just got even better!',
-    );
+    )
   } else {
     choices.push(
       `${n} new update${s} just landed!`,
       `There ${have} been ${n} new update${s}`,
-    );
+    )
   }
-  return choices[Math.floor(Math.random() * choices.length)];
+  return choices[Math.floor(Math.random() * choices.length)]
 }

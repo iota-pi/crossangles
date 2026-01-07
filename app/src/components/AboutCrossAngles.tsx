@@ -1,13 +1,13 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import IconButton from '@material-ui/core/IconButton';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import Typography from '@material-ui/core/Typography';
-import InfoIcon from '@material-ui/icons/InfoOutlined';
-import CloseIcon from '@material-ui/icons/Close';
-import { modalview } from 'react-ga';
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import IconButton from '@material-ui/core/IconButton'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import Typography from '@material-ui/core/Typography'
+import InfoIcon from '@material-ui/icons/InfoOutlined'
+import CloseIcon from '@material-ui/icons/Close'
+import { modalview } from 'react-ga'
+import { useCallback, useState } from 'react'
 
 
 const useStyles = makeStyles(theme => ({
@@ -27,24 +27,24 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'underline',
     cursor: 'pointer',
   },
-}));
+}))
 
 
 const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
-  const classes = useStyles();
-  const [showDialog, setShowDialog] = React.useState(false);
+  const classes = useStyles()
+  const [showDialog, setShowDialog] = useState(false)
 
-  const handleOpen = React.useCallback(
+  const handleOpen = useCallback(
     () => {
-      setShowDialog(true);
-      modalview('about-crossangles');
+      setShowDialog(true)
+      modalview('about-crossangles')
     },
     [],
-  );
-  const handleClose = React.useCallback(
+  )
+  const handleClose = useCallback(
     () => setShowDialog(false),
     [],
-  );
+  )
 
   return (
     <div>
@@ -107,7 +107,7 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
             {' '}
             <a
               className={classes.link}
-              onClick={event => { event.preventDefault(); onShowContact(); }}
+              onClick={event => { event.preventDefault(); onShowContact() }}
               href="#contact"
             >
               contact us
@@ -131,6 +131,6 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
         </DialogContent>
       </Dialog>
     </div>
-  );
-};
-export default AboutCrossAngles;
+  )
+}
+export default AboutCrossAngles

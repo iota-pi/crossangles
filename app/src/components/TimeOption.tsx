@@ -1,17 +1,17 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent } from 'react'
 
 // Styles
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Grid from '@material-ui/core/Grid';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import CloseIcon from '@material-ui/icons/Close';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import AccessTime from '@material-ui/icons/AccessTime';
-import { DayLetter } from '../state';
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import Typography from '@material-ui/core/Typography'
+import IconButton from '@material-ui/core/IconButton'
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem'
+import Grid from '@material-ui/core/Grid'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import CloseIcon from '@material-ui/icons/Close'
+import CalendarToday from '@material-ui/icons/CalendarToday'
+import AccessTime from '@material-ui/icons/AccessTime'
+import { DayLetter } from '../state'
 
 const useStyles = makeStyles(theme => ({
   flexGrow: {
@@ -27,10 +27,9 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(3),
     cursor: 'pointer',
   },
-}));
+}))
 
-
-/* eslint-disable no-multi-spaces */
+ 
 const dayOptions = [
   { text: 'Monday',    letter: 'M' },
   { text: 'Tuesday',   letter: 'T' },
@@ -39,7 +38,7 @@ const dayOptions = [
   { text: 'Friday',    letter: 'F' },
   { text: 'Saturday',  letter: 'S' },
   { text: 'Sunday',    letter: 's' },
-];
+]
 
 const timeOptions = [
   { text: '06:00 AM', time: 6 },
@@ -71,8 +70,7 @@ const timeOptions = [
   { text: '07:00 PM', time: 19 },
   { text: '07:30 PM', time: 19.5 },
   { text: '08:00 PM', time: 20 },
-];
-/* eslint-enable no-multi-spaces */
+]
 
 
 export interface CustomTimeOption {
@@ -100,7 +98,7 @@ export const TimeOption = ({
   onChangeTime,
   onClickClearTime,
 }: TimeOptionProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Grid
@@ -197,6 +195,6 @@ export const TimeOption = ({
         </Grid>
       </Grid>
     </Grid>
-  );
-};
-export default TimeOption;
+  )
+}
+export default TimeOption

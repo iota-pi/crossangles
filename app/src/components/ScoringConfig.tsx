@@ -1,8 +1,8 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { ChangeEvent, Fragment, useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import makeStyles from '@material-ui/core/styles/makeStyles'
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from '@material-ui/icons/Close'
 import {
   Button,
   Dialog,
@@ -12,10 +12,10 @@ import {
   IconButton,
   Slider,
   Typography,
-} from '@material-ui/core';
-import { setScoreConfig } from '../actions';
-import { RootState } from '../state';
-import { defaultScoreConfig, TimetableScoreConfig } from '../timetable/scoreTimetable';
+} from '@material-ui/core'
+import { setScoreConfig } from '../actions'
+import { RootState } from '../state'
+import { defaultScoreConfig, TimetableScoreConfig } from '../timetable/scoreTimetable'
 
 
 const useStyles = makeStyles(theme => ({
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
       left: -theme.spacing(1.5),
     },
   },
-}));
+}))
 
 
 export interface Props {
@@ -66,54 +66,54 @@ const customWeightLabels: [keyof TimetableScoreConfig, string][] = [
   ['freeDays', 'Minimise days at uni'],
   ['dayLength', 'Prefer shorter days'],
   ['times', 'Avoid early and late classes'],
-];
+]
 
-const MIN_WEIGHT = 0.1;
-const MAX_WEIGHT = 2;
+const MIN_WEIGHT = 0.1
+const MAX_WEIGHT = 2
 
 
 const ScoringConfig = ({ onClose, open }: Props) => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const initialConfig = useSelector((state: RootState) => state.scoreConfig);
-  const [config, setConfig] = React.useState(initialConfig);
-  const onChange = React.useCallback(
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const initialConfig = useSelector((state: RootState) => state.scoreConfig)
+  const [config, setConfig] = useState(initialConfig)
+  const onChange = useCallback(
     (changedKey: keyof TimetableScoreConfig) => (
-      (event: React.ChangeEvent<any>, _value: number | number[]) => {
-        const value = _value as number;
-        const change = value - config[changedKey];
-        const configEntries = Object.entries(config).filter(([key, _]) => key !== changedKey);
-        configEntries.sort(([_, a], [__, b]) => (change < 0 ? b - a : a - b));
-        let remainingChange = -change;
+      (event: ChangeEvent<any>, _value: number | number[]) => {
+        const value = _value as number
+        const change = value - config[changedKey]
+        const configEntries = Object.entries(config).filter(([key, _]) => key !== changedKey)
+        configEntries.sort(([, a], [, b]) => (change < 0 ? b - a : a - b))
+        let remainingChange = -change
         for (let i = 0; i < configEntries.length; ++i) {
-          const remainingEntries = configEntries.length - i;
-          const thisChange = remainingChange / remainingEntries;
-          const tentativeValue = configEntries[i][1] + thisChange;
-          const boundedValue = Math.min(MAX_WEIGHT, Math.max(MIN_WEIGHT, tentativeValue));
-          const actualChange = boundedValue - configEntries[i][1];
-          remainingChange -= actualChange;
-          configEntries[i][1] = boundedValue;
+          const remainingEntries = configEntries.length - i
+          const thisChange = remainingChange / remainingEntries
+          const tentativeValue = configEntries[i][1] + thisChange
+          const boundedValue = Math.min(MAX_WEIGHT, Math.max(MIN_WEIGHT, tentativeValue))
+          const actualChange = boundedValue - configEntries[i][1]
+          remainingChange -= actualChange
+          configEntries[i][1] = boundedValue
         }
 
-        const newConfig = { ...Object.fromEntries(configEntries), [changedKey]: value };
-        setConfig(newConfig as typeof config);
+        const newConfig = { ...Object.fromEntries(configEntries), [changedKey]: value }
+        setConfig(newConfig as typeof config)
       }
     ),
     [config],
-  );
-  const handleClose = React.useCallback(
+  )
+  const handleClose = useCallback(
     () => {
-      dispatch(setScoreConfig(config));
-      onClose();
+      dispatch(setScoreConfig(config))
+      onClose()
     },
     [config, dispatch, onClose],
-  );
-  const handleReset = React.useCallback(
+  )
+  const handleReset = useCallback(
     () => {
-      setConfig(defaultScoreConfig);
+      setConfig(defaultScoreConfig)
     },
     [],
-  );
+  )
 
   return (
     <Dialog
@@ -139,7 +139,7 @@ const ScoringConfig = ({ onClose, open }: Props) => {
 
       <DialogContent>
         {customWeightLabels.map(([key, label]) => (
-          <React.Fragment key={key}>
+          <Fragment key={key}>
             <Typography gutterBottom>
               {label}
             </Typography>
@@ -151,7 +151,7 @@ const ScoringConfig = ({ onClose, open }: Props) => {
               max={MAX_WEIGHT}
               onChange={onChange(key)}
             />
-          </React.Fragment>
+          </Fragment>
         ))}
       </DialogContent>
 
@@ -174,7 +174,7 @@ const ScoringConfig = ({ onClose, open }: Props) => {
         </Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-export default ScoringConfig;
+export default ScoringConfig

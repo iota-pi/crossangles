@@ -1,13 +1,13 @@
-import { DropzonePlacement } from './DropzonePlacement';
-import { LinkedSession, linkStream, LinkedStream, getDuration } from '../../state';
-import { findFreeDepth } from './timetableUtil';
+import { DropzonePlacement } from './DropzonePlacement'
+import { LinkedSession, linkStream, LinkedStream, getDuration } from '../../state'
+import { findFreeDepth } from './timetableUtil'
 
 
 export function dropzoneCompare(a: DropzonePlacement, b: DropzonePlacement) {
-  const daySort = +(a.dayIndex > b.dayIndex) - +(a.dayIndex < b.dayIndex);
-  const startSort = +(a.session.start > b.session.start) - +(a.session.start < b.session.start);
-  const endSort = +(a.session.end < b.session.end) - +(a.session.end > b.session.end);
-  return daySort || startSort || endSort;
+  const daySort = +(a.dayIndex > b.dayIndex) - +(a.dayIndex < b.dayIndex)
+  const startSort = +(a.session.start > b.session.start) - +(a.session.start < b.session.start)
+  const endSort = +(a.session.end < b.session.end) - +(a.session.end > b.session.end)
+  return daySort || startSort || endSort
 }
 
 
@@ -23,8 +23,8 @@ export class DropzoneManager {
     startHour?: number,
     endHour?: number,
   }): DropzonePlacement[] {
-    const { course, stream: { component }, index } = dragging;
-    const allStreams = course.streams.map(s => linkStream(course, s));
+    const { course, stream: { component }, index } = dragging
+    const allStreams = course.streams.map(s => linkStream(course, s))
     const filteredStreams = this.filterStreams({
       streams: allStreams,
       component,
@@ -32,19 +32,19 @@ export class DropzoneManager {
       includeFull,
       startHour,
       endHour,
-    });
+    })
 
-    const dropzones = this.streamsToDropzones(filteredStreams, index);
-    dropzones.sort(dropzoneCompare);
-    const uniqueDropzones: DropzonePlacement[] = [dropzones[0]];
+    const dropzones = this.streamsToDropzones(filteredStreams, index)
+    dropzones.sort(dropzoneCompare)
+    const uniqueDropzones: DropzonePlacement[] = [dropzones[0]]
     for (let i = 1; i < dropzones.length; i++) {
       if (dropzoneCompare(dropzones[i - 1], dropzones[i]) !== 0) {
-        uniqueDropzones.push(dropzones[i]);
+        uniqueDropzones.push(dropzones[i])
       }
     }
-    this.calculateClashDepth(uniqueDropzones);
+    this.calculateClashDepth(uniqueDropzones)
 
-    return uniqueDropzones;
+    return uniqueDropzones
   }
 
   filterStreams(
@@ -66,77 +66,77 @@ export class DropzoneManager {
   ): LinkedStream[] {
     return streams.filter(s => {
       // Skip streams that are for a different component
-      if (s.component !== component) { return false; }
+      if (s.component !== component) { return false }
 
       // Skip streams which don't have enough sessions
-      if (index >= s.sessions.length) { return false; }
+      if (index >= s.sessions.length) { return false }
 
       // Skip full streams unless asked to include them
-      if (s.full && !includeFull) { return false; }
+      if (s.full && !includeFull) { return false }
 
       // Skip placeholder event streams that are outside displayed hours
       if (s.options?.placeHolder) {
         if (s.sessions[0].start < startHour || s.sessions[0].end > endHour) {
-          return false;
+          return false
         }
       }
 
-      return true;
-    });
+      return true
+    })
   }
 
   streamsToDropzones(streams: LinkedStream[], index: number): DropzonePlacement[] {
     return streams.map(s => {
-      const session = s.sessions[index];
-      return new DropzonePlacement(session);
-    });
+      const session = s.sessions[index]
+      return new DropzonePlacement(session)
+    })
   }
 
   filterDropzones(dropzones: DropzonePlacement[], dragging: LinkedSession): DropzonePlacement[] {
-    const selected = new Map<string, DropzonePlacement>();
-    const targetDuration = getDuration(dragging);
+    const selected = new Map<string, DropzonePlacement>()
+    const targetDuration = getDuration(dragging)
 
-    const sortedDropzones = dropzones.slice().sort((a, b) => b.duration - a.duration);
+    const sortedDropzones = dropzones.slice().sort((a, b) => b.duration - a.duration)
     for (const dropzone of sortedDropzones) {
-      const id = dropzone.id;
-      const other = selected.get(id);
-      let select = false;
+      const id = dropzone.id
+      const other = selected.get(id)
+      let select = false
       if (other) {
         if (dropzone.session.id === dragging.id) {
-          select = true;
+          select = true
         } else if (dropzone.duration === targetDuration && other.duration !== targetDuration) {
-          select = true;
+          select = true
         }
       } else {
-        select = true;
+        select = true
       }
 
       if (select) {
-        selected.set(id, dropzone);
+        selected.set(id, dropzone)
       }
     }
 
-    return dropzones.filter(d => selected.get(d.id) === d);
+    return dropzones.filter(d => selected.get(d.id) === d)
   }
 
   calculateClashDepth(
     dropzones: DropzonePlacement[],
   ) {
     for (let i = 0; i < dropzones.length; ++i) {
-      const dropzone1 = dropzones[i];
-      const clashingZones = new Set<number>();
+      const dropzone1 = dropzones[i]
+      const clashingZones = new Set<number>()
       for (let j = 0; j < i; ++j) {
-        const dropzone2 = dropzones[j];
-        if (dropzone2.session.day !== dropzone1.session.day) continue;
-        if (dropzone2.session.end <= dropzone1.session.start) continue;
+        const dropzone2 = dropzones[j]
+        if (dropzone2.session.day !== dropzone1.session.day) continue
+        if (dropzone2.session.end <= dropzone1.session.start) continue
 
-        clashingZones.add(dropzone2.clashDepth);
+        clashingZones.add(dropzone2.clashDepth)
       }
 
-      dropzone1.clashDepth = findFreeDepth(clashingZones);
+      dropzone1.clashDepth = findFreeDepth(clashingZones)
     }
   }
 }
 
-const dm = new DropzoneManager();
-export const getDropzones = dm.getDropzones.bind(dm);
+const dm = new DropzoneManager()
+export const getDropzones = dm.getDropzones.bind(dm)

@@ -1,8 +1,8 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import OnlineIcon from '@material-ui/icons/Laptop';
-import PersonIcon from '@material-ui/icons/Person';
-import { DeliveryType } from '../../state';
+import { memo } from 'react'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import OnlineIcon from '@material-ui/icons/Laptop'
+import PersonIcon from '@material-ui/icons/Person'
+import { DeliveryType } from '../../state'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
   },
-}));
+}))
 
 export interface Props {
   delivery: DeliveryType,
@@ -28,10 +28,10 @@ export interface Props {
 }
 
 const DeliveryTypeIconBase: React.FC<Props> = ({ delivery, padded }: Props) => {
-  const classes = useStyles();
-  const rootClasses = [classes.root];
+  const classes = useStyles()
+  const rootClasses = [classes.root]
   if (padded) {
-    rootClasses.push(classes.padded);
+    rootClasses.push(classes.padded)
   }
 
   return (
@@ -42,8 +42,8 @@ const DeliveryTypeIconBase: React.FC<Props> = ({ delivery, padded }: Props) => {
       ) : null}
       {delivery !== DeliveryType.online && <PersonIcon />}
     </div>
-  );
-};
-export const DeliveryTypeIcon: React.FC<Props> = React.memo(DeliveryTypeIconBase);
+  )
+}
+export const DeliveryTypeIcon: React.FC<Props> = memo(DeliveryTypeIconBase)
 
-export default DeliveryTypeIcon;
+export default DeliveryTypeIcon

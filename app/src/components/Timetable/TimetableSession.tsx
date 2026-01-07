@@ -1,11 +1,11 @@
-import React from 'react';
-import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import { TimetablePosition, Placement } from './timetableTypes';
-import { Options, LinkedSession } from '../../state';
-import { useCache } from '../../hooks';
-import SessionDetails from './SessionDetails';
+import { useMemo, useCallback, memo } from 'react'
+import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import { CSSProperties } from '@material-ui/core/styles/withStyles'
+import { TimetablePosition, Placement } from './timetableTypes'
+import { Options, LinkedSession } from '../../state'
+import { useCache } from '../../hooks'
+import SessionDetails from './SessionDetails'
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   dragging: {},
   snapped: {},
   hovering: {},
-}));
+}))
 
 export interface Props {
   session: LinkedSession,
@@ -74,61 +74,61 @@ const Session: React.FC<Props> = ({
   position,
   session,
 }: Props) => {
-  const classes = useStyles();
+  const classes = useStyles()
   const rootClasses = [
     classes.main,
     isDragging ? classes.dragging : '',
     isSnapped ? classes.snapped : '',
     clashDepth > 0 ? classes.hovering : '',
     options.reducedMotion ? classes.disableTransitions : '',
-  ].join(' ');
-  const colour = useCache(propColour);
+  ].join(' ')
+  const colour = useCache(propColour)
 
-  const styles: CSSProperties = React.useMemo(
+  const styles: CSSProperties = useMemo(
     () => {
-      const { x, y, z, width, height } = position;
+      const { x, y, z, width, height } = position
 
       return {
         transform: `translate(${x}px, ${y}px)`,
         width,
         height,
         zIndex: z,
-      };
+      }
     },
     [position],
-  );
+  )
 
-  const backgroundStyle = React.useMemo(
+  const backgroundStyle = useMemo(
     () => ({ backgroundColor: colour }),
     [colour],
-  );
+  )
 
-  const handleStart = React.useCallback(
+  const handleStart = useCallback(
     () => {
       if (onDrag) {
-        onDrag(session);
+        onDrag(session)
       }
     },
     [onDrag, session],
-  );
-  const handleDrag = React.useCallback(
+  )
+  const handleDrag = useCallback(
     (e: DraggableEvent, data: DraggableData) => {
       if (isDragging && onMove) {
-        const x = data.deltaX;
-        const y = data.deltaY;
-        onMove(session, { x, y });
+        const x = data.deltaX
+        const y = data.deltaY
+        onMove(session, { x, y })
       }
     },
     [isDragging, onMove, session],
-  );
-  const handleStop = React.useCallback(
+  )
+  const handleStop = useCallback(
     () => {
       if (onDrop) {
-        onDrop(session);
+        onDrop(session)
       }
     },
     [onDrop, session],
-  );
+  )
 
   return (
     <DraggableCore
@@ -154,8 +154,8 @@ const Session: React.FC<Props> = ({
         />
       </div>
     </DraggableCore>
-  );
-};
+  )
+}
 
-const TimetableSession = React.memo(Session);
-export default TimetableSession;
+const TimetableSession = memo(Session)
+export default TimetableSession

@@ -1,21 +1,21 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Switch from '@material-ui/core/Switch';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Typography from '@material-ui/core/Typography';
-import Settings from '@material-ui/icons/Settings';
-import CloseIcon from '@material-ui/icons/Close';
-import { modalview } from 'react-ga';
-import { generalOptionList, OptionName } from '../state';
-import { getOptions } from '../state/selectors';
-import { toggleOption } from '../actions';
-import ScoringConfig from './ScoringConfig';
+import { useSelector, useDispatch } from 'react-redux'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import IconButton from '@material-ui/core/IconButton'
+import Button from '@material-ui/core/Button'
+import Switch from '@material-ui/core/Switch'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import Typography from '@material-ui/core/Typography'
+import Settings from '@material-ui/icons/Settings'
+import CloseIcon from '@material-ui/icons/Close'
+import { modalview } from 'react-ga'
+import { generalOptionList, OptionName } from '../state'
+import { getOptions } from '../state/selectors'
+import { toggleOption } from '../actions'
+import ScoringConfig from './ScoringConfig'
+import { useCallback, useState } from 'react'
 
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
   optionLabel: {
     cursor: 'pointer',
   },
-}));
+}))
 
 
 export interface Props {
@@ -60,48 +60,48 @@ export interface Props {
 
 
 const AppOptions = ({ onViewChangelog }: Props) => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const options = useSelector(getOptions);
-  const { darkMode } = options;
-  const [showDialog, setShowDialog] = React.useState(false);
-  const [showScoreConfig, setShowScoreConfig] = React.useState(false);
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const options = useSelector(getOptions)
+  const { darkMode } = options
+  const [showDialog, setShowDialog] = useState(false)
+  const [showScoreConfig, setShowScoreConfig] = useState(false)
 
-  const handleOpen = React.useCallback(
+  const handleOpen = useCallback(
     () => {
-      setShowDialog(true);
-      modalview('about-crossangles');
+      setShowDialog(true)
+      modalview('about-crossangles')
     },
     [],
-  );
-  const handleClose = React.useCallback(() => setShowDialog(false), []);
-  const handleChange = React.useCallback(
+  )
+  const handleClose = useCallback(() => setShowDialog(false), [])
+  const handleChange = useCallback(
     (option: OptionName) => dispatch(toggleOption(option)),
     [dispatch],
-  );
-  const handleViewChangelog = React.useCallback(
+  )
+  const handleViewChangelog = useCallback(
     () => {
-      handleClose();
-      onViewChangelog();
-      modalview('changelog');
+      handleClose()
+      onViewChangelog()
+      modalview('changelog')
     },
     [handleClose, onViewChangelog],
-  );
-  const handleClickScoreConfig = React.useCallback(
+  )
+  const handleClickScoreConfig = useCallback(
     () => {
-      handleClose();
-      setShowScoreConfig(true);
-      modalview('score-config');
+      handleClose()
+      setShowScoreConfig(true)
+      modalview('score-config')
     },
     [handleClose],
-  );
-  const handleCloseScoreConfig = React.useCallback(
+  )
+  const handleCloseScoreConfig = useCallback(
     () => {
-      setShowDialog(true);
-      setShowScoreConfig(false);
+      setShowDialog(true)
+      setShowScoreConfig(false)
     },
     [],
-  );
+  )
 
   return (
     <div>
@@ -191,6 +191,6 @@ const AppOptions = ({ onViewChangelog }: Props) => {
         onClose={handleCloseScoreConfig}
       />
     </div>
-  );
-};
-export default AppOptions;
+  )
+}
+export default AppOptions

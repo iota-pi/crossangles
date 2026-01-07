@@ -9,4 +9,4 @@ export interface TimetablePosition {
   z?: number,
 }
 
-export type Placement = Dimensions & TimetablePosition;
+export type Placement = Dimensions & TimetablePosition

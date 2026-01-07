@@ -1,26 +1,30 @@
-import winston from 'winston';
+import {
+  transports,
+  format,
+  createLogger,
+  LoggerOptions,
+} from 'winston'
 
 export interface ExtraLogFields {
   campus?: string,
 }
 
-
 export const defaultTransports = [
-  new winston.transports.Console({
+  new transports.Console({
     silent: process.env.NODE_ENV === 'test',
   }),
-];
+]
 
-export const defaultConfig: winston.LoggerOptions = {
+export const defaultConfig: LoggerOptions = {
   level: 'info',
-  format: winston.format.json(),
+  format: format.json(),
   defaultMeta: { component: 'scraper' },
   transports: defaultTransports,
-};
+}
 
-export function getLogger(section: string, extra?: ExtraLogFields) {
-  return winston.createLogger({
+export function getLogger(section?: string, extra?: ExtraLogFields) {
+  return createLogger({
     ...defaultConfig,
     defaultMeta: { ...defaultConfig.defaultMeta, ...extra, section },
-  });
+  })
 }

@@ -1,23 +1,23 @@
-import scrapeCampus from './scrapeCampus';
-import { getLogger } from './logging';
+import scrapeCampus from './scrapeCampus'
+import { getLogger } from './logging'
 
-const logger = getLogger('LocalEntry');
+const logger = getLogger('LocalEntry')
 
 const main = async () => {
-  const args = process.argv.slice(2);
-  const promises: Promise<void>[] = [];
+  const args = process.argv.slice(2)
+  const promises: Promise<void>[] = []
   for (const arg of args) {
-    const campus = arg.toLowerCase();
-    const outputDir = '../app/public/';
-    // eslint-disable-next-line @typescript-eslint/no-loop-func
+    const campus = arg.toLowerCase()
+    const outputDir = '../app/public/'
+     
     const promise = scrapeCampus(campus, outputDir, false).catch(e => {
-      logger.error(e.toString());
-      process.exitCode = 1;
-    });
-    promises.push(promise);
+      logger.error(e.toString())
+      process.exitCode = 1
+    })
+    promises.push(promise)
   }
 
-  await Promise.all(promises);
-};
+  await Promise.all(promises)
+}
 
-main();
+main()

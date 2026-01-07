@@ -1,12 +1,12 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './configureStore';
-import { fetchData } from './actions';
-import App from './App';
+import React from 'react'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from './configureStore'
+import { fetchData } from './actions'
+import App from './App'
 
-const previousMeta = store.getState().meta;
-store.dispatch(fetchData(previousMeta));
+const previousMeta = store.getState().meta
+store.dispatch(fetchData(previousMeta))
 
 export function wrapApp(AppComponent: typeof App) {
   const AppWraper = () => (
@@ -15,8 +15,8 @@ export function wrapApp(AppComponent: typeof App) {
         <AppComponent />
       </PersistGate>
     </Provider>
-  );
-  return AppWraper;
+  )
+  return AppWraper
 }
 
-export default wrapApp(App);
+export default wrapApp(App)

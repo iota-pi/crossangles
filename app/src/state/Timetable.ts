@@ -1,10 +1,10 @@
-import { SessionManagerData } from '../components/Timetable/SessionManagerTypes';
-import { getCurrentTimetable } from './selectors';
-import { RootState, TimetableHistoryState } from '.';
+import { SessionManagerData } from '../components/Timetable/SessionManagerTypes'
+import { getCurrentTimetable } from './selectors'
+import { RootState, TimetableHistoryState } from '.'
 
-export type Timetables = { [term: string]: SessionManagerData };
+export type Timetables = { [term: string]: SessionManagerData }
 
-type NoHistoryState = Omit<RootState, 'history'>;
+type NoHistoryState = Omit<RootState, 'history'>
 export function getTimetableState(state: NoHistoryState): TimetableHistoryState {
   const {
     courses,
@@ -15,8 +15,8 @@ export function getTimetableState(state: NoHistoryState): TimetableHistoryState 
     options,
     colours,
     webStreams,
-  } = state;
-  const timetable = getCurrentTimetable(state);
+  } = state
+  const timetable = getCurrentTimetable(state)
   return {
     courses,
     custom,
@@ -27,5 +27,5 @@ export function getTimetableState(state: NoHistoryState): TimetableHistoryState 
     timetable,
     colours,
     webStreams,
-  };
+  }
 }

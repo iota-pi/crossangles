@@ -1,2 +1,2 @@
-export * from './Autocomplete';
-export { default } from './Autocomplete';
+export * from './Autocomplete'
+export { default } from './Autocomplete'

@@ -1,16 +1,16 @@
-import React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import IconButton from '@material-ui/core/IconButton';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
-import Undo from '@material-ui/icons/Undo';
-import Redo from '@material-ui/icons/Redo';
-import Refresh from '@material-ui/icons/Refresh';
-import Warning from '@material-ui/icons/Warning';
-import EventIcon from '@material-ui/icons/Event';
-import { useSelector } from 'react-redux';
-import { HistoryData, RootState } from '../state';
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import ButtonBase from '@material-ui/core/ButtonBase'
+import IconButton from '@material-ui/core/IconButton'
+import Toolbar from '@material-ui/core/Toolbar'
+import Tooltip from '@material-ui/core/Tooltip'
+import Undo from '@material-ui/icons/Undo'
+import Redo from '@material-ui/icons/Redo'
+import Refresh from '@material-ui/icons/Refresh'
+import Warning from '@material-ui/icons/Warning'
+import EventIcon from '@material-ui/icons/Event'
+import { useSelector } from 'react-redux'
+import { HistoryData, RootState } from '../state'
+import { useCallback, useEffect } from 'react'
 
 const useStyles = makeStyles(theme => ({
   primary: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 500,
     paddingRight: theme.spacing(0.25),
   },
-}));
+}))
 
 export interface Props {
   history: HistoryData,
@@ -66,42 +66,42 @@ export const TimetableControls = ({
   onIncludeFull,
   onCreateCustom,
 }: Props) => {
-  const classes = useStyles();
-  let updateClass = classes.primary;
+  const classes = useStyles()
+  let updateClass = classes.primary
   if (improvementScore > 100) {
     if (improvementScore < 800) {
-      updateClass = classes.amber;
+      updateClass = classes.amber
     } else {
-      updateClass = classes.red;
+      updateClass = classes.red
     }
   }
-  const unplacedCount = useSelector((state: RootState) => state.unplacedCount);
-  const canUndo = history.past.length > 0;
-  const canRedo = history.future.length > 0;
+  const unplacedCount = useSelector((state: RootState) => state.unplacedCount)
+  const canUndo = history.past.length > 0
+  const canRedo = history.future.length > 0
 
-  const handleKeyDown = React.useCallback(
+  const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (event.ctrlKey) {
         if (event.key === 'z') {
-          if (onUndo && canUndo) onUndo();
+          if (onUndo && canUndo) onUndo()
         }
 
         if (event.key === 'Z' || event.key === 'y') {
-          if (onRedo && canRedo) onRedo();
+          if (onRedo && canRedo) onRedo()
         }
       }
     },
     [onUndo, onRedo, canUndo, canRedo],
-  );
+  )
 
-  React.useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown)
 
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [handleKeyDown])
 
-  const classesPlural = unplacedCount === 1 ? 'class is' : 'classes are';
-  const fullClassMessage = `${unplacedCount} full ${classesPlural} not visible`;
+  const classesPlural = unplacedCount === 1 ? 'class is' : 'classes are'
+  const fullClassMessage = `${unplacedCount} full ${classesPlural} not visible`
 
   return (
     <Toolbar>
@@ -170,7 +170,7 @@ export const TimetableControls = ({
         </Tooltip>
       )}
     </Toolbar>
-  );
-};
+  )
+}
 
-export default TimetableControls;
+export default TimetableControls

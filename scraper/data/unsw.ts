@@ -1,6 +1,6 @@
-import type { MinistryMeta } from '../../app/src/state/Meta';
-import { ALL_DAYS } from '../../app/src/state/Session';
-import type { CampusAdditional } from './types';
+import type { MinistryMeta } from '../../app/src/state/Meta'
+import { ALL_DAYS } from '../../app/src/state/Session'
+import type { CampusAdditional } from './types'
 
 
 const CBS_BASE_META: MinistryMeta = {
@@ -8,7 +8,7 @@ const CBS_BASE_META: MinistryMeta = {
   website: 'https://www.campusbiblestudy.org',
   signupURL: '',
   signupValidFor: [],
-};
+}
 
 // CBS event names
 // To add a new event, add the name here before adding times below
@@ -184,41 +184,41 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
       ],
     },
   ],
-};
+}
 
 function transformCBSEvents(data: CampusAdditional<CBSComponent>): CampusAdditional<CBSComponent> {
-  const updatedData: typeof data = { default: [] };
+  const updatedData: typeof data = { default: [] }
   for (const term of Object.keys(data)) {
-    const updatedTerm: typeof data[typeof term] = [];
+    const updatedTerm: typeof data[typeof term] = []
 
     for (const course of data[term]) {
-      const updatedCourse: typeof course = { ...course, streams: [] };
+      const updatedCourse: typeof course = { ...course, streams: [] }
       for (const stream of course.streams) {
         if (stream.times.length > 0) {
-          updatedCourse.streams.push(stream);
+          updatedCourse.streams.push(stream)
         } else if (stream.options?.placeHolder) {
           // Add a stream for every possible time slot if it's a placeholder event
-          const startHour = 8;
-          const endHour = 21;
+          const startHour = 8
+          const endHour = 21
           for (const day of ALL_DAYS) {
             for (let hour = startHour; hour < endHour; ++hour) {
-              const time = `${day}${hour}`;
+              const time = `${day}${hour}`
               updatedCourse.streams.push({
                 ...stream,
                 times: [{ time }],
-              });
+              })
             }
           }
         }
       }
-      updatedTerm.push(updatedCourse);
+      updatedTerm.push(updatedCourse)
     }
-    updatedData[term] = updatedTerm;
+    updatedData[term] = updatedTerm
   }
 
-  return updatedData;
+  return updatedData
 }
 
-const unsw = transformCBSEvents(BASE_UNSW_DATA);
+const unsw = transformCBSEvents(BASE_UNSW_DATA)
 
-export default unsw;
+export default unsw
