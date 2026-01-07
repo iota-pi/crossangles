@@ -10,61 +10,30 @@ if [[ ! $COMMAND =~ ^$COMMAND_LIST$ ]]; then
   exit 1
 fi
 
-run_for_each () {
-  for module in app scraper contact
-  do
-    (
-      cd $module
-      $1 ${@:2}
-    )
-  done
-}
-
-
 if [[ $COMMAND == ci-install ]]; then
-  run_for_each yarn install --frozen-lockfile
+  yarn install --frozen-lockfile
 fi
 
 if [[ $COMMAND == install ]]; then
-  run_for_each yarn install
+  yarn install
 fi
 
 if [[ $COMMAND == build ]]; then
   if [[ ${2:-} == app ]]; then
-    ./build-app.sh
+    yarn build:app
   elif [[ -n "${2:-}" ]]; then
-    (cd $2; yarn build -- ${@:3})
+    yarn build:$2 ${@:3}
   else
-    run_for_each yarn build
+    yarn build
   fi
 fi
 
 if [[ $COMMAND == lint ]]; then
-  echo "Running lint command for app"
-  (
-    cd app
-    pwd
-    ls
-    yarn lint
-  )
-  echo "Running lint command for scraper"
-  (
-    cd scraper
-    pwd
-    ls
-    yarn lint
-  )
+  yarn lint
 fi
 
 if [[ $COMMAND == test ]]; then
-  if [[ -n "${2:-}" ]]; then
-    (cd $2; yarn test)
-  else
-    (
-      export CI=${CI:-1}
-      run_for_each yarn test
-    )
-  fi
+  yarn test
 fi
 
 if [[ $COMMAND == run ]]; then

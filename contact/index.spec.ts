@@ -2,7 +2,7 @@ import { handler, MAX_BODY_LENGTH } from '.';
 import { sendMail } from './sendMail';
 import { RequestBody } from './parseBody';
 import { fakeEvent } from './test/util';
-import Mailgun = require('mailgun-js');
+import Mailgun from 'mailgun-js';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
 jest.mock('./sendMail');

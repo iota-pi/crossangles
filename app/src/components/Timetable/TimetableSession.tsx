@@ -138,7 +138,8 @@ const Session: React.FC<Props> = ({
     >
       <div
         className={rootClasses}
-        style={styles}
+        // TODO this cast shouldn't be necessary after updating React and MUI
+        style={styles as React.CSSProperties}
         data-session
       >
         <div

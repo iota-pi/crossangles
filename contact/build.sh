@@ -9,4 +9,4 @@ esbuild index.ts \
   --target=node20 \
   --external:aws-sdk
 
-(cd build; zip -r ./contact.zip lambda.js)
+(cd build; npx bestzip ./contact.zip lambda.js)

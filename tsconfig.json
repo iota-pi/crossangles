@@ -2,35 +2,39 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": [
-      "ES2020",
+      "dom",
+      "dom.iterable",
+      "esnext"
     ],
-    "strict": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ES2020",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "typeRoots": [
-      "node_modules/@types",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": [
+      "vite/client",
+      "jest",
+      "node"
     ],
-    "outDir": "build",
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS",
-    },
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "**/*",
+    "app",
+    "contact",
+    "lambda-shared",
+    "scraper"
   ],
   "exclude": [
     "node_modules",
-    "build",
-    "**/*.js",
-  ],
+    "**/build",
+    "**/dist"
+  ]
 }

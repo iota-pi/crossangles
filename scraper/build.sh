@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Compile TypeScript
-yarn esbuild lambda.ts \
+esbuild lambda.ts \
   --outfile=build/lambda.js \
   --bundle \
   --minify \
@@ -15,4 +15,4 @@ version=$(../deploy/version.sh .)
 sed -i "s/git_version_will_be_injected_in_built_file/$version/" build/lambda.js
 
 # Zip the bundled files
-(cd build; zip -r ./scraper.zip lambda.js)
+(cd build; npx bestzip ./scraper.zip lambda.js)
