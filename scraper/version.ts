@@ -1,0 +1,1 @@
+export default 'git_version_will_be_injected_in_built_file';

@@ -1,0 +1,13 @@
+# Terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+tfplan
+*.tfplan
+
+# Misc/IDE
+.vscode
+
+# Jest coverage
+coverage/
