@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     overflowX: 'auto',
     overflowY: 'hidden',
-    zIndex: 0,
+    // zIndex: 0,
     backgroundColor: theme.palette.background.paper,
     transition: theme.transitions.create('opacity'),
   },
@@ -88,6 +88,7 @@ export function getCourseColour(
 
 const timetableGridId = `TimetableGrid-${Math.random()}`;
 
+// duration here refers to number of displayed hours on timetable 
 export function getDimensions(duration: number, options: Options): Dimensions | undefined {
   const timetableElement = document.getElementById(timetableGridId);
   if (timetableElement === null) {
@@ -180,6 +181,7 @@ function TimetableTable({
   useEffect(forceUpdate, [version, forceUpdate]);
   useEffect(updateDimensions, [updateDimensions, timetable]);
 
+  // make shadows of avaliable timeslots appear when a class is dragged 
   const [dragging, setDragging] = React.useState<LinkedSession | null>(null);
   const [dropzones, setDropzones] = React.useState<DropzonePlacement[]>([]);
   React.useEffect(
@@ -280,6 +282,7 @@ function TimetableTable({
   const classes = useStyles();
   const rootClasses = [classes.root];
   const disabled = timetable.renderOrder.length === 0;
+  // console.log(rootClasses)
   if (disabled) {
     rootClasses.push(classes.faded);
   }
@@ -328,7 +331,7 @@ function TimetableTable({
       }
       const courseId = getCourseId(course);
       const key = `${courseId}-${stream.component}-${index}`;
-
+      // console.log(key)
       const renderData = {
         course,
         id,
