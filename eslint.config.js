@@ -5,7 +5,6 @@ import importPlugin from 'eslint-plugin-import-x'
 import stylistic from '@stylistic/eslint-plugin'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactPlugin from 'eslint-plugin-react'
-import globals from 'globals'
 
 export default defineConfig([
   globalIgnores([
@@ -13,21 +12,19 @@ export default defineConfig([
     'build',
     'dist',
     'coverage',
+    '**/setupTests.ts',
+    '**/*.d.ts',
     'eslint.config.js',
-    'src/setupTests.ts',
-    'src/sst-env.d.ts',
-    'src/types/react.d.ts',
-    'sst-env.d.ts',
-    'app/build',
-    'contact/build',
-    'scraper/build',
+    'vite.config.ts',
+    'vitest.config.ts',
+    'sst.config.ts',
+    '**/build',
+    '**/build',
+    '**/build',
+    '.sst',
   ]),
   {
     languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...globals.node,
-      },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -40,9 +37,6 @@ export default defineConfig([
           alwaysTryTypes: true,
           project: [
             'tsconfig.json',
-            'app/tsconfig.json',
-            'contact/tsconfig.json',
-            'scraper/tsconfig.json',
           ],
         },
       },
