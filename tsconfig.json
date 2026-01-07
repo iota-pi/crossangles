@@ -21,15 +21,14 @@
     "jsx": "react-jsx",
     "types": [
       "vite/client",
-      "jest",
-      "node"
+      "node",
+      "vitest/globals"
     ],
     "noFallthroughCasesInSwitch": true
   },
   "include": [
     "app",
     "contact",
-    "lambda-shared",
     "scraper"
   ],
   "exclude": [

@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import type { Element } from 'domhandler';
+import type { Element as DomElement } from 'domhandler';
 import { Scraper } from '../Scraper';
 import type { CourseData } from '../../../app/src/state/Course';
 import { ClassTime, DeliveryType, StreamData } from '../../../app/src/state/Stream';
@@ -242,7 +242,7 @@ export class TimetableScraper {
     return allCourses;
   }
 
-  private parseTable($: cheerio.CheerioAPI, table: Element): StreamTableData {
+  private parseTable($: cheerio.CheerioAPI, table: DomElement): StreamTableData {
     const tableAPI = $(table);
     const allLabels = tableAPI.find('td.label').toArray().map(
       element => $(element).text().trim(),

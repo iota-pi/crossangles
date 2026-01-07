@@ -1,12 +1,11 @@
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import { handler, MAX_BODY_LENGTH } from '.';
 import { sendMail } from './sendMail';
 import { RequestBody } from './parseBody';
 import { fakeEvent } from './test/util';
-import Mailgun from 'mailgun-js';
-import { APIGatewayProxyEvent } from 'aws-lambda';
 
-jest.mock('./sendMail');
-const mock_sendMail = <jest.Mock<Promise<Mailgun.messages.SendResponse>>>sendMail;
+vi.mock('./sendMail');
+const mock_sendMail = vi.mocked(sendMail);
 
 
 describe('HTTP methods', () => {

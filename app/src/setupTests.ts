@@ -1,5 +1,7 @@
-jest.mock('./env', () => ({
-  rootURI: '',
-  campus: '',
-  contactURI: '',
+vi.mock('./env', () => ({
+  default: {
+    rootURI: '',
+    campus: '',
+    contactURI: '',
+  },
 }));

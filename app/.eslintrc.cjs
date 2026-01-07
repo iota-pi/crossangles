@@ -8,7 +8,6 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
     'import',
-    'jest',
     'react',
   ],
   settings: {
@@ -21,7 +20,6 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
-    'plugin:jest/recommended',
     'plugin:react/recommended',
   ],
   rules: {
@@ -60,7 +58,7 @@ module.exports = {
     'prefer-destructuring': 'off',
     'radix': 'off',
     'react/destructuring-assignment': 'off',
-    'react/jsx-indent': ['error', 2, {checkAttributes: true, indentLogicalExpressions: true}],
+    'react/jsx-indent': ['error', 2, { checkAttributes: true, indentLogicalExpressions: true }],
     'react/jsx-one-expression-per-line': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/require-default-props': 'off',

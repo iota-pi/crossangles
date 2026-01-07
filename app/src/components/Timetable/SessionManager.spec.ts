@@ -48,7 +48,7 @@ describe('SessionManager basic functionality', () => {
   test('set advances version and calls callback', () => {
     const s = new SessionManager();
     const v = s.version;
-    const cb = jest.fn();
+    const cb = vi.fn();
     s.callback = cb;
     s.set('a', getSessionPlacement());
     expect(s.version).toBe(v + 1);
@@ -132,7 +132,7 @@ describe('SessionManager basic functionality', () => {
     s.set('r', getSessionPlacement(1));
     s.set('d', getSessionPlacement(2));
     const v = s.version;
-    const cb = jest.fn();
+    const cb = vi.fn();
     s.callback = cb;
     s.remove('r');
     expect(s.version).toBe(v + 1);
@@ -166,8 +166,8 @@ describe('SessionManager basic functionality', () => {
     const s = new SessionManager();
     const p1 = getSessionPlacement(2);
     const p2 = getSessionPlacement(3);
-    p1.drag = jest.fn();
-    p2.drag = jest.fn();
+    p1.drag = vi.fn();
+    p2.drag = vi.fn();
     s.set(p1.session.id, p1);
     s.set(p2.session.id, p2);
     const v = s.version;
@@ -183,11 +183,11 @@ describe('SessionManager basic functionality', () => {
     const p2 = getSessionPlacement(0, 1);
     const p3 = getSessionPlacement(0, 2);
     const p4 = getSessionPlacement(1);
-    p1.drag = jest.fn();
-    p1.raise = jest.fn();
-    p2.raise = jest.fn();
-    p3.raise = jest.fn();
-    p4.raise = jest.fn();
+    p1.drag = vi.fn();
+    p1.raise = vi.fn();
+    p2.raise = vi.fn();
+    p3.raise = vi.fn();
+    p4.raise = vi.fn();
     s.set(p1.session.id, p1);
     s.set(p2.session.id, p2);
     s.set(p3.session.id, p3);
@@ -204,7 +204,7 @@ describe('SessionManager basic functionality', () => {
   test('can move session with given delta', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
-    p.move = jest.fn();
+    p.move = vi.fn();
     s.set(p.session.id, p);
     const v = s.version;
     const delta = { x: -10, y: 10 };
@@ -216,11 +216,11 @@ describe('SessionManager basic functionality', () => {
 
   test('can drop a session', () => {
     const s = new SessionManager();
-    const updateScore = jest.spyOn(s as any, 'updateScore').mockImplementation();
+    const updateScore = vi.spyOn(s as any, 'updateScore').mockImplementation(() => {});
     const p1 = getSessionPlacement(2);
     const p2 = getSessionPlacement(3);
-    p1.drop = jest.fn();
-    p2.drop = jest.fn();
+    p1.drop = vi.fn();
+    p2.drop = vi.fn();
     s.set(p1.session.id, p1);
     s.set(p2.session.id, p2);
     const v = s.version;
@@ -233,14 +233,14 @@ describe('SessionManager basic functionality', () => {
 
   test('dropping lowers linked sessions', () => {
     const s = new SessionManager();
-    const updateScore = jest.spyOn(s as any, 'updateScore').mockImplementation();
+    const updateScore = vi.spyOn(s as any, 'updateScore').mockImplementation(() => {});
     const p1 = getSessionPlacement(0, 0);
     const p2 = getSessionPlacement(0, 1);
     const p3 = getSessionPlacement(0, 2);
-    p1.drop = jest.fn();
-    p1.lower = jest.fn();
-    p2.lower = jest.fn();
-    p3.lower = jest.fn();
+    p1.drop = vi.fn();
+    p1.lower = vi.fn();
+    p2.lower = vi.fn();
+    p3.lower = vi.fn();
     s.set(p1.session.id, p1);
     s.set(p2.session.id, p2);
     s.set(p3.session.id, p3);
@@ -256,7 +256,7 @@ describe('SessionManager basic functionality', () => {
   test('can raise a session', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
-    p.raise = jest.fn();
+    p.raise = vi.fn();
     s.set(p.session.id, p);
     const v = s.version;
     s['raise'](p.session.id);
@@ -267,7 +267,7 @@ describe('SessionManager basic functionality', () => {
   test('can lower a session', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
-    p.lower = jest.fn();
+    p.lower = vi.fn();
     s.set(p.session.id, p);
     const v = s.version;
     s['lower'](p.session.id);
@@ -280,9 +280,9 @@ describe('SessionManager basic functionality', () => {
     const p1 = getSessionPlacement(0, 0);
     const p2 = getSessionPlacement(0, 1);
     const p3 = getSessionPlacement(0, 2);
-    p1.snap = jest.fn();
-    p2.snap = jest.fn();
-    p3.snap = jest.fn();
+    p1.snap = vi.fn();
+    p2.snap = vi.fn();
+    p3.snap = vi.fn();
 
     s.set(p1.session.id, p1);
     s.set(p2.session.id, p2);
@@ -298,7 +298,7 @@ describe('SessionManager basic functionality', () => {
   test('can snap one session', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
-    p.snap = jest.fn();
+    p.snap = vi.fn();
     s.set(p.session.id, p);
     const v = s.version;
     s.snap(p.session.id);
@@ -309,7 +309,7 @@ describe('SessionManager basic functionality', () => {
   test('can displace one session', () => {
     const s = new SessionManager();
     const p = getSessionPlacement();
-    p.displace = jest.fn();
+    p.displace = vi.fn();
     s.set(p.session.id, p);
     const v = s.version;
     s.displace(p.session.id);

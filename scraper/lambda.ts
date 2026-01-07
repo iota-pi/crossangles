@@ -16,6 +16,7 @@ export const handler = async (event: CloudwatchScraperEvent) => {
   logger.info('Scraper invoked', { code_version, event });
   const promises: Promise<void>[] = [];
   for (const campus of campuses) {
+    // eslint-disable-next-line @typescript-eslint/no-loop-func
     const promise = scrapeCampus(campus, S3_BUCKET).catch(e => {
       logger.error(`Error while scraping for ${campus.toUpperCase()}`, e);
       process.exitCode = 1;

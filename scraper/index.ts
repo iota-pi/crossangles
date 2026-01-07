@@ -9,6 +9,7 @@ const main = async () => {
   for (const arg of args) {
     const campus = arg.toLowerCase();
     const outputDir = '../app/public/';
+    // eslint-disable-next-line @typescript-eslint/no-loop-func
     const promise = scrapeCampus(campus, outputDir, false).catch(e => {
       logger.error(e.toString());
       process.exitCode = 1;

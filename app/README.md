@@ -25,14 +25,12 @@ yarn start
 ## Running tests
 
 ```bash
-# Run the unit tests
+# Run the unit tests with Vitest
 yarn test
 
-# Lint the code
+# Lint the code with ESLint
 yarn lint
 ```
-
-The unit tests use Jest, and linting is done with ESLint.
 
 ## Contributing
 

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`linkStream gives consistent output 1`] = `
+exports[`linkStream > gives consistent output 1`] = `
 {
   "component": "LEC",
   "course": {
@@ -383,7 +383,7 @@ exports[`linkStream gives consistent output 1`] = `
 }
 `;
 
-exports[`linkStream gives consistent output 2`] = `
+exports[`linkStream > gives consistent output 2`] = `
 {
   "component": "LEC",
   "course": {
@@ -766,7 +766,7 @@ exports[`linkStream gives consistent output 2`] = `
 }
 `;
 
-exports[`linkStream gives consistent output 3`] = `
+exports[`linkStream > gives consistent output 3`] = `
 {
   "component": "TUT",
   "course": {
@@ -956,7 +956,7 @@ exports[`linkStream gives consistent output 3`] = `
 }
 `;
 
-exports[`linkStream gives consistent output 4`] = `
+exports[`linkStream > gives consistent output 4`] = `
 {
   "component": "TUT",
   "course": {
