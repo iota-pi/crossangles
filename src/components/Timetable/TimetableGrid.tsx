@@ -33,8 +33,9 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      width: '100%',
-      zIndex: 0,
+      minWidth: (props: Props) => 
+        TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numDisplayDays) + TIMETABLE_BORDER_WIDTH,
+      zIndex: -1,
     },
     row: {
       display: 'flex',
@@ -161,7 +162,7 @@ const Grid: React.FC<Props> = props => {
   }, [start, end, twentyFourHours]);
 
   const days = React.useMemo(() => week.slice(0, numDisplayDays), [numDisplayDays]);
-  // these change horizontal length of timetable cells 
+
   const rowClassList = [classes.row];
   if (showMode) {
     rowClassList.push(classes.spacious);
