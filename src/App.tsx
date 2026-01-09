@@ -54,6 +54,14 @@ const styles = (theme: Theme): StyleRules => ({
   spaceAbove: { marginTop: theme.spacing(8) },
   moderateSpaceAbove: { paddingTop: theme.spacing(4) },
   spaceBelow: { marginBottom: theme.spacing(8) },
+  customContainer: {
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    paddingLeft: theme.spacing(3),
+    paddingRight: theme.spacing(3),
+    maxWidth: 1080,
+  },
 });
 
 export interface OwnProps extends WithStyles<typeof styles> {
@@ -197,7 +205,7 @@ class App extends PureComponent<Props, State> {
 
   render() {
     const classes = this.props.classes;
-
+    console.log(classes)
     return (
       <div>
         <CssBaseline />
@@ -210,16 +218,21 @@ class App extends PureComponent<Props, State> {
 
         <Container
           maxWidth="md"
-          className={classes.spaceBelow}
+          className={classes.spaceAbove}
         >
           <CourseSelection />
+        </Container>
 
-          <div className={classes.moderateSpaceAbove}>
-            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
-              <TimetableContainer />
-            </Suspense>
-          </div>
+        <div className={`${classes.customContainer} ${classes.moderateSpaceAbove}`}>
+          <Suspense fallback={<Skeleton variant="rect" height={465} />}>
+            <TimetableContainer />
+          </Suspense>
+        </div>
 
+        <Container
+          maxWidth="md"
+          className={classes.spaceBelow}
+        >
           <ActionButtons
             additional={this.props.additional}
             meta={this.props.meta}
