@@ -205,7 +205,6 @@ class App extends PureComponent<Props, State> {
 
   render() {
     const classes = this.props.classes;
-    console.log(classes)
     return (
       <div>
         <CssBaseline />
