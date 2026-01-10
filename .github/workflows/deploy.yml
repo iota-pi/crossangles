@@ -1,43 +1,77 @@
-name: Test & Deploy
+name: Deploy
 
 on:
   push:
-    branches: [ master ]
-  workflow_dispatch:
+    branches: [master]
 
 jobs:
-  deploy:
-    name: Run tests & deploy
+  # 1. Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
     runs-on: ubuntu-latest
-
+    concurrency:
+      group: deploy-staging
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    environment: production
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        submodules: true
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: yarn install --immutable
 
-    - name: Setup NodeJS
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ap-southeast-2
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
-    - name: Install dependencies
-      run: ./ci.sh ci-install
+      - run: yarn deploy --stage staging --print-logs
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-    - name: Lint code
-      run: ./ci.sh lint
+  # 2. Run E2E Tests against Staging
+  # e2e-staging:
+  #   name: Cypress on Staging
+  #   needs: deploy-staging
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+  #     - run: corepack enable
+  #     - uses: cypress-io/github-action@v6
+  #       env:
+  #         CYPRESS_BASE_URL: https://staging.crossangles.app
 
-    - name: Run unit tests
-      run: ./ci.sh test
+  # 3. Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    needs: e2e-staging
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: yarn install --immutable
 
-    - name: Deploy IAC (terraform)
-      run: |
-        ./deploy/tf.sh init
-        ./deploy/deploy.sh --prod --already-tested -y
-      env:
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_mailgun_key: ${{ secrets.MAILGUN_KEY }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_EC2_METADATA_DISABLED: true
+      - uses: aws-actions/configure-aws-credentials@v5
+        with:
+          aws-region: ap-southeast-2
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_PRODUCTION }}
+
+      - run: yarn deploy --stage production --print-logs
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
