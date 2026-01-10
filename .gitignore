@@ -19,9 +19,10 @@ yarn-debug.log*
 yarn-error.log*
 coverage/
 
-# Production
+# Build / Deploy
 build/
 dist/
+.sst/
 
 # Other
 app/public/data*.json

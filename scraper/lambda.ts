@@ -12,11 +12,10 @@ export interface CloudwatchScraperEvent {
 }
 
 export const handler = async (event: CloudwatchScraperEvent) => {
-  const { campuses } = event
-  logger.info('Scraper invoked', { code_version, event })
+  const { campuses = ['unsw'] } = event
+  logger.info('Scraper invoked', { code_version, event, campuses })
   const promises: Promise<void>[] = []
   for (const campus of campuses) {
-     
     const promise = scrapeCampus(campus, S3_BUCKET).catch(e => {
       logger.error(`Error while scraping for ${campus.toUpperCase()}`, e)
       process.exitCode = 1

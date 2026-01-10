@@ -6,14 +6,12 @@
   "type": "module",
   "packageManager": "yarn@4.12.0",
   "scripts": {
-    "start": "cd app && vite",
-    "build": "yarn build:contact && yarn build:scraper && yarn build:app",
-    "build:app": "cd app && tsc --noEmit && vite build",
-    "build:contact": "cd contact && ./build.sh",
-    "build:scraper": "cd scraper && ./build.sh",
-    "test": "vitest run --globals",
-    "deploy": "./deploy/deploy.sh",
-    "lint": "eslint app/ contact/ scraper/ --ext .ts,.tsx"
+    "start": "vite",
+    "dev": "sst dev --stage staging",
+    "deploy": "sst deploy --stage staging",
+    "test": "vitest",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.484.0",
@@ -76,6 +74,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^27.4.0",
+    "sst": "^3.17.25",
     "typescript": "^5.9.3",
     "vitest": "^4.0.16"
   },

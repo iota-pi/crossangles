@@ -53,10 +53,10 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
   })
 }
 
-export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = async (event: any): Promise<APIGatewayProxyResult> => {
   standardiseHeaders(event)
   const responder = new LambdaResponder(event, logger)
-  const method = event.httpMethod.toUpperCase()
+  const method = (event.httpMethod || event.requestContext?.http?.method || '').toUpperCase()
 
   switch (method) {
     case 'OPTIONS':
