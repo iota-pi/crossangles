@@ -43,6 +43,16 @@ export default $config({
 
     const bucket = new sst.aws.Bucket("CourseData", {
       public: true,
+      cors: {
+        allowHeaders: ["*"],
+        allowMethods: ["GET", "HEAD"],
+        allowOrigins: [
+          "https://crossangles.app",
+          "https://*.crossangles.app",
+          "http://localhost",
+          "http://*.localhost",
+        ],
+      },
       transform: {
         bucket: args => {
           args.bucket = bucketName
