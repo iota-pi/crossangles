@@ -58,6 +58,8 @@ function ColourComponent({
         cursor: onClick ? 'pointer' : undefined,
       }}
       onClick={onClick}
+      data-cy={`colour-control`}
+      data-colour={colour}
     >
       {isSelected ? <Check /> : null}
     </ButtonBase>

@@ -83,6 +83,7 @@ const AdditionalEventsComponent = ({
                 onChange={() => onToggleEvent(event)}
                 color={darkMode ? 'primary' : 'secondary'}
                 value={event.id}
+                inputProps={{ 'data-cy': `event-${event.id}` } as any}
               />
             )}
             className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}

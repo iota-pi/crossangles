@@ -354,6 +354,7 @@ function TimetableTable({
     <div
       className={rootClasses.join(' ')}
       id="timetable-display"
+      data-cy="timetable-table"
     >
       <TransitionGroup>
         {sessionRenderData.map(
