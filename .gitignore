@@ -19,6 +19,10 @@ yarn-debug.log*
 yarn-error.log*
 coverage/
 
+# Cypress
+cypress/screenshots
+cypress/videos
+
 # Build / Deploy
 build/
 dist/

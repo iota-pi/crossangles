@@ -84,6 +84,7 @@ const AutocompleteInput: FC<InputProps> = (props: InputProps) => {
         {...textFieldProps}
         label="Select your courses"
         variant="outlined"
+        data-cy="autocomplete-input"
         autoFocus
         onFocus={onFocus}
         onBlur={onBlur}
