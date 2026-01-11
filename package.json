@@ -8,7 +8,7 @@
   "scripts": {
     "start": "vite",
     "dev": "sst dev --stage staging",
-    "deploy": "sst deploy --stage staging",
+    "deploy": "sst deploy",
     "test": "vitest",
     "lint": "eslint",
     "typecheck": "tsc --noEmit"
