@@ -11,11 +11,3 @@ export function runFilter(options: CourseData[], inputValue: string): CourseData
   const results = matchSorter<CourseData>(options, query, matchSorterOptions)
   return results
 }
-
-self.onmessage = (
-  event: MessageEvent<{ options: CourseData[], inputValue: string }>,
-) => {
-  const { options, inputValue } = event.data
-  const results = runFilter(options, inputValue)
-  self.postMessage(results)
-}
