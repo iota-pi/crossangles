@@ -1,6 +1,7 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
 const PROD = "production"
+const STAGING = "staging"
 
 export default $config({
   app(input) {
@@ -20,6 +21,7 @@ export default $config({
   async run() {
     const stage = $app.stage
     const isProd = stage === PROD
+    const isStaging = stage === STAGING
 
     // 1. Storage (Existing Resources)
     // We import existing resources so SST controls them.
@@ -50,7 +52,7 @@ export default $config({
           "https://crossangles.app",
           "https://*.crossangles.app",
           "http://localhost",
-          "http://*.localhost",
+          "http://localhost:*",
         ],
       },
       transform: {
@@ -102,7 +104,13 @@ export default $config({
         command: "tsc --noEmit && vite build",
         output: "dist",
       },
-      domain: isProd ? "crossangles.app" : undefined,
+      domain: (
+        isProd
+          ? "crossangles.app"
+          : isStaging
+            ? "staging.crossangles.app"
+            : undefined
+      ),
       environment: {
         VITE_CONTACT_ENDPOINT: api.url,
         VITE_DATA_ROOT_URI: `https://${bucketName}.s3.amazonaws.com`,

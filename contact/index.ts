@@ -53,6 +53,7 @@ const handlePost = async (event: APIGatewayProxyEvent, responder: LambdaResponde
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handler = async (event: any): Promise<APIGatewayProxyResult> => {
   standardiseHeaders(event)
   const responder = new LambdaResponder(event, logger)

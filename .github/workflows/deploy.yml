@@ -35,16 +35,16 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
   # 2. Run E2E Tests against Staging
-  # e2e-staging:
-  #   name: Cypress on Staging
-  #   needs: deploy-staging
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v6
-  #     - run: corepack enable
-  #     - uses: cypress-io/github-action@v6
-  #       env:
-  #         CYPRESS_BASE_URL: https://staging.crossangles.app
+  e2e-staging:
+    name: Cypress on Staging
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: corepack enable
+      - uses: cypress-io/github-action@v6
+        env:
+          CYPRESS_BASE_URL: https://staging.crossangles.app
 
   # 3. Deploy to Production
   deploy-production:

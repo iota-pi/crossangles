@@ -69,6 +69,7 @@
     "@types/react-window": "^1.8.2",
     "@vitest/coverage-v8": "^4.0.16",
     "bestzip": "^2.2.1",
+    "cypress": "^15.8.2",
     "eslint": "^9.39.2",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-react": "^7.37.5",
