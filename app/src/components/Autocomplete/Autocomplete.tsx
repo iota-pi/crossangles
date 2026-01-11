@@ -8,7 +8,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import ListboxComponent from './ListboxComponent'
 import PaperComponent, { Props as PaperComponentProps } from './PaperComponent'
 import { CourseData, getCourseId, getClarificationText } from '../../state'
-import FilterWorker from './filter.worker?worker'
+import { runFilter } from './filter'
 
 export interface Props {
   courses: CourseData[],
@@ -84,6 +84,7 @@ const AutocompleteInput: FC<InputProps> = (props: InputProps) => {
         {...textFieldProps}
         label="Select your courses"
         variant="outlined"
+        data-cy="autocomplete-input"
         autoFocus
         onFocus={onFocus}
         onBlur={onBlur}
@@ -167,7 +168,7 @@ const AutocompleteControl: FC<Props> = ({
         course => !allChosenIds.includes(getCourseId(course)),
       )
       availableOptions.sort((a, b) => +(a.code > b.code) - +(a.code < b.code))
-      const cachedOptions: CourseData[] = availableOptions.map(o => ({ ...o, lowerCode: o.code }))
+      const cachedOptions: CourseData[] = availableOptions.map(o => ({ ...o, lowerCode: o.code.toLowerCase() }))
       return cachedOptions
     },
     [courses, allChosen],
@@ -175,16 +176,6 @@ const AutocompleteControl: FC<Props> = ({
 
   const [filteredOptions, setFilteredOptions] = useState<typeof allOptions>(allOptions)
 
-  const worker = useMemo(
-    () => {
-      const filterWorker = new FilterWorker()
-      filterWorker.onmessage = event => {
-        setFilteredOptions(event.data)
-      }
-      return filterWorker
-    },
-    [],
-  )
 
   useEffect(
     () => {
@@ -211,7 +202,7 @@ const AutocompleteControl: FC<Props> = ({
           if (inputValue.length === 0) {
             setFilteredOptions(allOptions)
           } else {
-            worker.postMessage({ options: allOptions, inputValue })
+            setFilteredOptions(runFilter(allOptions, inputValue))
           }
         },
         SEARCH_DEBOUNCE,
@@ -222,7 +213,7 @@ const AutocompleteControl: FC<Props> = ({
         clearTimeout(fullSearch)
       }
     },
-    [inputValue, allOptions, worker],
+    [inputValue, allOptions],
   )
 
   // This hack prevents the ref of this dummy value array from changing
