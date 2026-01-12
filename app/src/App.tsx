@@ -52,8 +52,17 @@ const styles = (theme: Theme): StyleRules => ({
     marginBottom: theme.spacing(4),
   },
   spaceAbove: { marginTop: theme.spacing(8) },
-  moderateSpaceAbove: { paddingTop: theme.spacing(4) },
-  spaceBelow: { marginBottom: theme.spacing(8) },
+  spaceBelow: { marginBottom: theme.spacing(0) },
+  timetableSpace: {
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(4),
+    maxWidth: 1080,
+  },
+  infoSpace: { marginBottom: theme.spacing(8) }
 })
 
 export interface OwnProps extends WithStyles<typeof styles> {
@@ -207,19 +216,23 @@ class App extends PureComponent<Props, State> {
           onViewChangelog={this.handleChangelogShow}
         />
         <div className={classes.appBarSpacer} />
-
         <Container
           maxWidth="md"
           className={classes.spaceBelow}
         >
           <CourseSelection />
+        </Container>
 
-          <div className={classes.moderateSpaceAbove}>
+          <div className={classes.timetableSpace}>
             <Suspense fallback={<Skeleton variant="rect" height={465} />}>
               <TimetableContainer />
             </Suspense>
           </div>
 
+        <Container
+          maxWidth="md"
+          className={classes.infoSpace}
+        >
           <ActionButtons
             additional={this.props.additional}
             meta={this.props.meta}
