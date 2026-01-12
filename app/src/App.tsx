@@ -223,11 +223,11 @@ class App extends PureComponent<Props, State> {
           <CourseSelection />
         </Container>
 
-          <div className={classes.timetableSpace}>
-            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
-              <TimetableContainer />
-            </Suspense>
-          </div>
+        <div className={classes.timetableSpace}>
+          <Suspense fallback={<Skeleton variant="rect" height={465} />}>
+            <TimetableContainer />
+          </Suspense>
+        </div>
 
         <Container
           maxWidth="md"
