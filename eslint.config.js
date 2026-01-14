@@ -9,8 +9,8 @@ import reactPlugin from 'eslint-plugin-react'
 export default defineConfig([
   globalIgnores([
     'node_modules',
-    'build',
-    'dist',
+    '**/build',
+    '**/dist',
     'coverage',
     '**/setupTests.ts',
     '**/*.d.ts',

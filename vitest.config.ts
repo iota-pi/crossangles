@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     projects: [
       {
-        extends: 'app/vite.config.ts',
+        extends: 'vite.config.ts',
         test: {
           name: 'app',
           environment: 'jsdom',
