@@ -20,6 +20,7 @@ import {
   linkStream,
   Meta,
   Options,
+  RootState,
 } from '../state'
 import SessionManager from '../components/Timetable/SessionManager'
 import { search, TimetableSearchResult } from './timetableSearch'
@@ -29,7 +30,7 @@ import { TimetableScoreConfig } from './scoreTimetable'
 
 
 export interface UpdateTimetableArgs {
-  dispatch: ThunkDispatch<{}, {}, AnyAction>,
+  dispatch: ThunkDispatch<RootState, undefined, AnyAction>,
   sessionManager: SessionManager,
   selection: TimetableSelection,
   searchConfig?: GeneticSearchOptionalConfig,
@@ -162,7 +163,7 @@ export async function recommendTimetable({
   searchConfig = { timeout: 100 },
   scoreConfig,
 }: {
-  dispatch: ThunkDispatch<{}, {}, AnyAction>,
+  dispatch: ThunkDispatch<RootState, undefined, AnyAction>,
   selection: TimetableSelection,
   maxSpawn?: number,
   searchConfig?: GeneticSearchOptionalConfig,

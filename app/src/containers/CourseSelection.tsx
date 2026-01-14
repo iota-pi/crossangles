@@ -63,7 +63,7 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export interface OwnProps extends WithStyles<typeof styles> {}
+export type OwnProps = WithStyles<typeof styles>
 
 export interface StateProps {
   additional: CourseData[],

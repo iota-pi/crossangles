@@ -183,7 +183,12 @@ function TimetableTable({
     [dimensions.width, updateDimensions],
   )
   const { version } = timetable
+
+  // These state mutations are reasonable despite the re-renders
+  // due to code simplicity and low performance cost of re-rendering
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(forceUpdate, [version, forceUpdate])
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(updateDimensions, [updateDimensions, timetable])
 
   const [dragging, setDragging] = useState<LinkedSession | null>(null)
@@ -191,6 +196,7 @@ function TimetableTable({
   useEffect(
     () => {
       if (dragging) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setDropzones(
           getDropzones({
             dragging,

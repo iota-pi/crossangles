@@ -1,4 +1,4 @@
-export interface ICache<T> extends Array<T | undefined | ICache<T>> {}
+export type ICache<T> = Array<T | undefined | ICache<T>>
 
 export class TimetableScorerCache<T> {
   private cache: ICache<T>
