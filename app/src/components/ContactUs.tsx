@@ -1,4 +1,4 @@
-import React, { PureComponent, ChangeEvent } from 'react'
+import { PureComponent, ChangeEvent } from 'react'
 
 // Styles
 import { Theme } from '@material-ui/core/styles'

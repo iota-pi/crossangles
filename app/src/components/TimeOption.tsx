@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import { ChangeEvent } from 'react'
 
 // Styles
 import makeStyles from '@material-ui/core/styles/makeStyles'
@@ -29,15 +29,15 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
- 
+
 const dayOptions = [
-  { text: 'Monday',    letter: 'M' },
-  { text: 'Tuesday',   letter: 'T' },
+  { text: 'Monday', letter: 'M' },
+  { text: 'Tuesday', letter: 'T' },
   { text: 'Wednesday', letter: 'W' },
-  { text: 'Thursday',  letter: 'H' },
-  { text: 'Friday',    letter: 'F' },
-  { text: 'Saturday',  letter: 'S' },
-  { text: 'Sunday',    letter: 's' },
+  { text: 'Thursday', letter: 'H' },
+  { text: 'Friday', letter: 'F' },
+  { text: 'Saturday', letter: 'S' },
+  { text: 'Sunday', letter: 's' },
 ]
 
 const timeOptions = [

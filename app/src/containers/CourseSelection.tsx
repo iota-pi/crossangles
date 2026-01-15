@@ -1,4 +1,4 @@
-import React, { lazy, PureComponent, Suspense } from 'react'
+import { lazy, PureComponent, Suspense } from 'react'
 import { connect } from 'react-redux'
 import { exception } from 'react-ga'
 import { Theme } from '@material-ui/core/styles'

@@ -1,4 +1,4 @@
-import React, { PureComponent, ChangeEvent } from 'react'
+import { PureComponent, ChangeEvent } from 'react'
 import { modalview } from 'react-ga'
 
 // Styles
