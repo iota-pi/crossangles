@@ -87,7 +87,7 @@ describe('POST method responses', () => {
     const resultBody = JSON.parse(result.body)
     expect(resultBody.error).toBe(true)
     expect(resultBody.message).toBe(
-      `Event body too long. (${event.body.length} > ${MAX_BODY_LENGTH})`
+      `Event body too long. (${event.body.length} > ${MAX_BODY_LENGTH})`,
     )
   })
 
@@ -110,7 +110,7 @@ describe('POST method responses', () => {
     const body: RequestBody = {
       name: 'Gandalf the White',
       email,
-      message: 'Many that live deserve death. Some that die deserve life.'
+      message: 'Many that live deserve death. Some that die deserve life.',
     }
     const event = { ...fakeEvent, body: JSON.stringify(body) }
     const result = await handler(event)

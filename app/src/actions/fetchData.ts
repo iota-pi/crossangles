@@ -1,7 +1,7 @@
-import { Action, AnyAction } from 'redux'
-import { ThunkAction } from 'redux-thunk'
+import type { Action, AnyAction } from 'redux'
+import type { ThunkAction } from 'redux-thunk'
 import { requestData } from '../requestData'
-import { CourseData, Meta } from '../state'
+import type { CourseData, Meta, RootState } from '../state'
 
 export const SET_COURSE_DATA = 'SET_COURSE_DATA'
 
@@ -12,7 +12,7 @@ export interface CourseListAction extends Action {
   isNewTerm: boolean,
 }
 
-type FetchDataAction = ThunkAction<Promise<CourseListAction | void>, {}, undefined, AnyAction>
+type FetchDataAction = ThunkAction<Promise<CourseListAction | void>, RootState, undefined, AnyAction>
 export function fetchData(prevMeta: Meta): FetchDataAction {
   return async dispatch => requestData().then(data => {
     const { term, year } = data.meta

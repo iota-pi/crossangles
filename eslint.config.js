@@ -62,25 +62,14 @@ export default defineConfig([
       'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
       'import-x/no-rename-default': 'off',
       '@stylistic/semi': ['error', 'never'],
+      '@stylistic/comma-dangle': ['error', 'always-multiline'],
       '@stylistic/indent': ['error', 2],
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',
 
-      // Fix missing rule definitions from legacy configs or internal calls
+      // Fix missing rule overwrites from premade configs
       'import/no-unresolved': 'off', // We use import-x/no-unresolved
       '@typescript-eslint/indent': 'off', // We use @stylistic/indent
-
-      // Disable strict type checks for legacy code
-      '@typescript-eslint/no-empty-object-type': 'off',
-
-      // Disable strict react-hooks checks causing errors
-      // Note: 'react-hooks/set-state-in-effect' might not be a standard rule name in standard plugin,
-      // but if it is appearing, we disable it. Checking docs, it's not standard.
-      // However, if it's coming from a preset, we'll try to disable it.
-      // Actually, looking at the error log, the error ID is "react-hooks/set-state-in-effect".
-      // This implies the plugin provides it.
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks/preserve-manual-memoization': 'off',
     },
   },
   {

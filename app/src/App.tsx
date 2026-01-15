@@ -56,8 +56,7 @@ const styles = (theme: Theme): StyleRules => ({
   spaceBelow: { marginBottom: theme.spacing(8) },
 })
 
-export interface OwnProps extends WithStyles<typeof styles> {
-}
+export type OwnProps = WithStyles<typeof styles>
 
 export interface StateProps {
   showSignup: boolean,
