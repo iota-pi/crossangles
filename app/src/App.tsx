@@ -206,9 +206,9 @@ class App extends PureComponent<Props, State> {
           onViewChangelog={this.handleChangelogShow}
         />
         <div className={classes.appBarSpacer} />
-
+        
         <Container
-          maxWidth="md"
+          maxWidth="lg"
           className={classes.spaceBelow}
         >
           <CourseSelection />
@@ -218,7 +218,7 @@ class App extends PureComponent<Props, State> {
               <TimetableContainer />
             </Suspense>
           </div>
-
+          
           <ActionButtons
             additional={this.props.additional}
             meta={this.props.meta}
