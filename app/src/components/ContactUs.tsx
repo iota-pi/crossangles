@@ -1,20 +1,16 @@
-import { PureComponent, ChangeEvent } from 'react'
+import { useState, ChangeEvent } from 'react'
+import { makeStyles } from 'tss-react/mui'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import DialogContent from '@mui/material/DialogContent'
+import Button from '@mui/material/Button'
+import DialogActions from '@mui/material/DialogActions'
+import TextField from '@mui/material/TextField'
+import CloseIcon from '@mui/icons-material/Close'
 
-// Styles
-import { Theme } from '@material-ui/core/styles'
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles'
-import createStyles from '@material-ui/core/styles/createStyles'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import DialogContent from '@material-ui/core/DialogContent'
-import Button from '@material-ui/core/Button'
-import DialogActions from '@material-ui/core/DialogActions'
-import TextField from '@material-ui/core/TextField'
-import CloseIcon from '@material-ui/icons/Close'
-
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles()(theme => ({
   dialog: {},
   dialogTitle: {
     display: 'flex',
@@ -37,183 +33,158 @@ const styles = (theme: Theme) => createStyles({
     marginRight: theme.spacing(3),
     cursor: 'pointer',
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   open: boolean,
   onSend: (name: string, email: string, message: string) => void,
   onClose: () => void,
 }
-
-export interface State {
-  name: string,
-  email: string,
-  showEmailError: boolean,
-  message: string,
-}
-
 
 const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 function isValidEmail(email: string) {
   return emailRegex.test(email)
 }
 
+const ContactUs = ({
+  open,
+  onSend,
+  onClose,
+}: Props) => {
+  const { classes } = useStyles()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [showEmailError, setShowEmailError] = useState(false)
+  const [message, setMessage] = useState('')
 
-class CreateCustom extends PureComponent<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      name: '',
-      email: '',
-      showEmailError: false,
-      message: '',
-    }
+  const handleClickSave = () => {
+    onSend(name, email, message)
+    onClose()
   }
 
-  private handleClickSave = () => {
-    this.props.onSend(
-      this.state.name,
-      this.state.email,
-      this.state.message,
-    )
-    this.props.onClose()
-  }
-
-  private handleClose = (event: Event, reason: string) => {
+  const handleClose = (_event: unknown, reason: string) => {
     if (reason === 'backdropClick') {
-      const partiallyCompleted = (
-        this.state.name || this.state.email || this.state.message
-      )
+      const partiallyCompleted = name || email || message
       if (partiallyCompleted) {
         return
       }
     }
-    this.props.onClose()
+    onClose()
   }
 
-  private handleExited = () => {
-    this.setState({
-      name: '',
-      email: '',
-      showEmailError: false,
-      message: '',
-    })
+  const handleExited = () => {
+    setName('')
+    setEmail('')
+    setShowEmailError(false)
+    setMessage('')
   }
 
-  private handleChangeName = (event: ChangeEvent<{ value: unknown }>) => {
-    this.setState({ name: event.target.value as string })
+  const handleChangeName = (event: ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value)
   }
 
-  private handleChangeEmail = (event: ChangeEvent<{ value: unknown }>) => {
-    const email = event.target.value as string
-    this.setState(({ showEmailError }) => ({
-      email,
-      showEmailError: showEmailError && !isValidEmail(email),
-    }))
+  const handleChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    const newEmail = event.target.value
+    setEmail(newEmail)
+    setShowEmailError(prev => prev && !isValidEmail(newEmail))
   }
 
-  private handleBlurEmail = () => {
-    this.setState(({ email }) => (
-      { showEmailError: !isValidEmail(email) && email.length > 0 }
-    ))
+  const handleBlurEmail = () => {
+    setShowEmailError(!isValidEmail(email) && email.length > 0)
   }
 
-  private handleChangeMessage = (event: ChangeEvent<{ value: unknown }>) => {
-    this.setState({ message: event.target.value as string })
+  const handleChangeMessage = (event: ChangeEvent<HTMLInputElement>) => {
+    setMessage(event.target.value)
   }
 
-  private canSubmit = (): boolean => {
-    const nameError = !this.state.name
-    const emailError = !this.state.email || !isValidEmail(this.state.email)
-    const messageError = !this.state.message
+  const canSubmit = (): boolean => {
+    const nameError = !name
+    const emailError = !email || !isValidEmail(email)
+    const messageError = !message
 
     return !nameError && !emailError && !messageError
   }
 
-  render() {
-    const classes = this.props.classes
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      TransitionProps={{
+        onExited: handleExited,
+      }}
+      aria-labelledby="contact-us-title"
+      className={classes.dialog}
+      fullWidth
+      maxWidth="sm"
+    >
+      <DialogTitle className={classes.dialogTitle}>
+        <Typography variant="h6" id="contact-us-title" className={classes.flexGrow}>
+          Get in Contact
+        </Typography>
 
-    return (
-      <Dialog
-        open={this.props.open}
-        onClose={this.handleClose}
-        TransitionProps={{
-          onExited: this.handleExited,
-        }}
-        aria-labelledby="contact-us-title"
-        className={classes.dialog}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle disableTypography className={classes.dialogTitle}>
-          <Typography variant="h6" id="contact-us-title" className={classes.flexGrow}>
-            Get in Contact
-          </Typography>
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          className={classes.moveRight}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-          <IconButton
-            aria-label="close"
-            onClick={this.props.onClose}
-            className={classes.moveRight}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+      <DialogContent>
+        <TextField
+          label="Name"
+          placeholder="Joe Bloggs"
+          value={name}
+          onChange={handleChangeName}
+          inputProps={{ maxLength: 40 }}
+          helperText={`${name.length} / 40`}
+          autoFocus
+          className={classes.paddingBottom}
+          fullWidth
+        />
 
-        <DialogContent>
-          <TextField
-            label="Name"
-            placeholder="Joe Bloggs"
-            value={this.state.name}
-            onChange={this.handleChangeName}
-            inputProps={{ maxLength: 40 }}
-            helperText={`${this.state.name.length} / 40`}
-            autoFocus
-            className={classes.paddingBottom}
-            fullWidth
-          />
+        <TextField
+          label="Email"
+          type="email"
+          placeholder="joe.bloggs@example.com"
+          value={email}
+          onChange={handleChangeEmail}
+          onBlur={handleBlurEmail}
+          helperText={
+            !showEmailError
+              ? 'We only use your email address to reply to you'
+              : 'Please enter a valid email address'
+          }
+          error={showEmailError}
+          className={classes.paddingBottom}
+          fullWidth
+        />
 
-          <TextField
-            label="Email"
-            type="email"
-            placeholder="joe.bloggs@example.com"
-            value={this.state.email}
-            onChange={this.handleChangeEmail}
-            onBlur={this.handleBlurEmail}
-            helperText={
-              !this.state.showEmailError
-                ? 'We only use your email address to reply to you'
-                : 'Please enter a valid email address'
-            }
-            error={this.state.showEmailError}
-            className={classes.paddingBottom}
-            fullWidth
-          />
+        <TextField
+          label="Message"
+          value={message}
+          onChange={handleChangeMessage}
+          className={classes.paddingBottom}
+          fullWidth
+          multiline
+          rows={5}
+        />
+      </DialogContent>
 
-          <TextField
-            label="Message"
-            value={this.state.message}
-            onChange={this.handleChangeMessage}
-            className={classes.paddingBottom}
-            fullWidth
-            multiline
-            rows={5}
-          />
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            color="primary"
-            variant="contained"
-            fullWidth
-            disabled={!this.canSubmit()}
-            onClick={this.handleClickSave}
-          >
-            Send Message
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  }
+      <DialogActions>
+        <Button
+          color="primary"
+          variant="contained"
+          fullWidth
+          disabled={!canSubmit()}
+          onClick={handleClickSave}
+        >
+          Send Message
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
 }
 
-export default withStyles(styles)(CreateCustom)
+export default ContactUs

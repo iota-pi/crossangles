@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { event } from 'react-ga'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import Typography, { TypographyProps } from '@material-ui/core/Typography'
+import { makeStyles } from 'tss-react/mui'
+import Typography, { TypographyProps } from '@mui/material/Typography'
 import { CourseData, Meta } from '../state'
 import { CATEGORY } from '../analytics'
 
@@ -15,7 +15,7 @@ export interface Props {
   onShowContact: () => void,
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   link: {
     color: theme.palette.primary.main,
     textDecoration: 'underline',
@@ -32,7 +32,7 @@ const InfoText = ({
   className,
   onShowContact,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   // Assumption: only one additional course will be auto-selected and has metadata
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0]

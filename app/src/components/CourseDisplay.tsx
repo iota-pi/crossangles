@@ -1,12 +1,12 @@
 import React from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 import { event } from 'react-ga'
 
-import ListItem from '@material-ui/core/ListItem'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
-import Edit from '@material-ui/icons/Edit'
-import OpenInNew from '@material-ui/icons/OpenInNew'
+import ListItem from '@mui/material/ListItem'
+import IconButton from '@mui/material/IconButton'
+import Close from '@mui/icons-material/Close'
+import Edit from '@mui/icons-material/Edit'
+import OpenInNew from '@mui/icons-material/OpenInNew'
 import WebStream from './WebStream'
 import { CourseActionButton } from './CourseActionButton'
 import ColourControl from './Colour'
@@ -17,7 +17,7 @@ import { isUNSW } from '../getCampus'
 import { CATEGORY } from '../analytics'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   noVertPadding: {
     marginTop: -theme.spacing(0.5),
     paddingTop: 0,
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   courseTitle: {
     display: 'flex',
     flexGrow: 1,
-    ...theme.typography.body1,
+    ...(theme.typography.body1 as any),
     overflow: 'hidden',
     paddingRight: theme.spacing(1),
   },
@@ -100,7 +100,7 @@ export const CourseDisplay = ({
   onToggleWeb,
   onShowPopover,
 }: CourseDisplayProps) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const handbookLink = getHandbookLink(course, meta)
   const clarification = getClarificationText(course)
   const courseTitle = (

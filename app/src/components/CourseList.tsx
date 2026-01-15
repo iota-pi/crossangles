@@ -1,9 +1,9 @@
 import { TransitionGroup } from 'react-transition-group'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
-import Popover from '@material-ui/core/Popover'
-import { Collapse } from '@material-ui/core'
+import { makeStyles } from 'tss-react/mui'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import Popover from '@mui/material/Popover'
+import { Collapse } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { CourseDisplay } from './CourseDisplay'
 import { AdditionalCourseDisplay } from './AdditionalCourseDisplay'
@@ -21,7 +21,7 @@ import {
 } from '../state'
 import { FC, memo, MouseEvent, useCallback, useMemo, useState } from 'react'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
   },
@@ -50,7 +50,7 @@ export interface PopoverState {
 }
 
 const CourseListComponent: FC<Props> = (props: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [showPopover, setShowPopover] = useState<PopoverState>()
   const reducedMotion = useSelector((state: RootState) => state.options.reducedMotion)
   const { chosen, custom, additional, onColourChange } = props

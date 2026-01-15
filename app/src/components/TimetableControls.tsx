@@ -1,18 +1,18 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import ButtonBase from '@material-ui/core/ButtonBase'
-import IconButton from '@material-ui/core/IconButton'
-import Toolbar from '@material-ui/core/Toolbar'
-import Tooltip from '@material-ui/core/Tooltip'
-import Undo from '@material-ui/icons/Undo'
-import Redo from '@material-ui/icons/Redo'
-import Refresh from '@material-ui/icons/Refresh'
-import Warning from '@material-ui/icons/Warning'
-import EventIcon from '@material-ui/icons/Event'
+import { makeStyles } from 'tss-react/mui'
+import ButtonBase from '@mui/material/ButtonBase'
+import IconButton from '@mui/material/IconButton'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import Undo from '@mui/icons-material/Undo'
+import Redo from '@mui/icons-material/Redo'
+import Refresh from '@mui/icons-material/Refresh'
+import Warning from '@mui/icons-material/Warning'
+import EventIcon from '@mui/icons-material/Event'
 import { useSelector } from 'react-redux'
 import { HistoryData, RootState } from '../state'
 import { useCallback, useEffect } from 'react'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   primary: {
     transition: theme.transitions.create('color'),
     color: theme.palette.primary.main,
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
   },
   unplacedCount: {
-    ...theme.typography.body1,
+    ...(theme.typography.body1 as any),
     fontWeight: 500,
     paddingRight: theme.spacing(0.25),
   },
@@ -66,7 +66,7 @@ export const TimetableControls = ({
   onIncludeFull,
   onCreateCustom,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   let updateClass = classes.primary
   if (improvementScore > 100) {
     if (improvementScore < 800) {

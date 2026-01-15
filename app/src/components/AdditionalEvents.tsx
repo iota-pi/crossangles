@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
+import { makeStyles } from 'tss-react/mui'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 import { AdditionalEvent, CourseData, getEvents } from '../state'
 import { getOptions } from '../state/selectors'
 import { memo } from 'react'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     width: '100%',
     display: 'flex',
@@ -52,7 +52,7 @@ const AdditionalEventsComponent = ({
   events,
   onToggleEvent,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { darkMode } = useSelector(getOptions)
 
   const baseEventList = getEvents(course)

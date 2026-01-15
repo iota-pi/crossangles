@@ -1,21 +1,21 @@
 import { useSelector, useDispatch } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import AppBar from '@material-ui/core/AppBar'
-import IconButton from '@material-ui/core/IconButton'
-import Toolbar from '@material-ui/core/Toolbar'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
-import InvertColors from '@material-ui/icons/InvertColors'
-import InvertColorsOff from '@material-ui/icons/InvertColorsOff'
+import { makeStyles } from 'tss-react/mui'
+import AppBar from '@mui/material/AppBar'
+import IconButton from '@mui/material/IconButton'
+import Toolbar from '@mui/material/Toolbar'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import InvertColors from '@mui/icons-material/InvertColors'
+import InvertColorsOff from '@mui/icons-material/InvertColorsOff'
 import AppOptions from './AppOptions'
 import AboutCrossAngles from './AboutCrossAngles'
 import { RootState } from '../state'
 import { getOptions } from '../state/selectors'
 import { toggleOption } from '../actions'
-import { useMediaQuery, useTheme } from '@material-ui/core'
+import { useMediaQuery, useTheme } from '@mui/material'
 import { useCallback } from 'react'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   grow: {
     flexGrow: 1,
   },
@@ -39,7 +39,7 @@ export function CrossAnglesAppBar({
   onShowContact,
   onViewChangelog,
 }: Props) {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const dispatch = useDispatch()
   const { darkMode } = useSelector(getOptions)
   const { term, year } = useSelector((state: RootState) => state.meta)
@@ -55,6 +55,7 @@ export function CrossAnglesAppBar({
     <AppBar
       position="fixed"
       color={darkMode ? 'secondary' : 'primary'}
+      enableColorOnDark
     >
       <Toolbar>
         <Typography variant="h6" color="inherit" className={classes.grow}>

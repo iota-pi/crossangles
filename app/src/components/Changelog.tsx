@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   Button,
   Dialog,
@@ -11,7 +11,7 @@ import {
   DialogContent,
   IconButton,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 import {
   Timeline,
   TimelineConnector,
@@ -20,13 +20,13 @@ import {
   TimelineItem,
   TimelineOppositeContent,
   TimelineSeparator,
-} from '@material-ui/lab'
+} from '@mui/lab'
 import changelog from '../changelog'
 import { setChangelogView } from '../actions'
 import { RootState } from '../state'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     marginTop: '15vh',
     marginBottom: '15vh',
@@ -78,7 +78,7 @@ export function formatTimelineDate(date: Date) {
 
 
 const Changelog = ({ onClose, open }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const dispatch = useDispatch()
   const lastView = useSelector((state: RootState) => state.changelogView)
   const handleClose = useCallback(
@@ -97,7 +97,7 @@ const Changelog = ({ onClose, open }: Props) => {
       maxWidth="sm"
       fullWidth
     >
-      <DialogTitle disableTypography className={classes.dialogTitle}>
+      <DialogTitle className={classes.dialogTitle}>
         <Typography variant="h6" className={classes.flexGrow}>
           CrossAngles Changelog
         </Typography>

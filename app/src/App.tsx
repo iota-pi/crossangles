@@ -9,16 +9,16 @@ import { exception, event, modalview } from 'react-ga'
 
 
 // Theme
-import { Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
 // Styles
-import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles'
+import { withStyles } from 'tss-react/mui'
 
 // Components
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Container from '@material-ui/core/Container'
-import Skeleton from '@material-ui/lab/Skeleton'
-import Button from '@material-ui/core/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import Container from '@mui/material/Container'
+import Skeleton from '@mui/material/Skeleton'
+import Button from '@mui/material/Button'
 import { initialiseGA, pageView, CATEGORY } from './analytics'
 import { clearNotice, setChangelogView, setNotice, toggleOption } from './actions'
 import {
@@ -46,9 +46,10 @@ const NoticeDisplay = lazy(() => import('./components/Notice'))
 const ContactUs = lazy(() => import('./components/ContactUs'))
 const Changelog = lazy(() => import('./components/Changelog'))
 
-const styles = (theme: Theme): StyleRules => ({
+ 
+const styles = (theme: Theme) => ({
   appBarSpacer: {
-    ...theme.mixins.toolbar,
+    ...(theme.mixins.toolbar as any),
     marginBottom: theme.spacing(4),
   },
   spaceAbove: { marginTop: theme.spacing(8) },
@@ -56,7 +57,8 @@ const styles = (theme: Theme): StyleRules => ({
   spaceBelow: { marginBottom: theme.spacing(8) },
 })
 
-export type OwnProps = WithStyles<typeof styles>
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type OwnProps = {}
 
 export interface StateProps {
   showSignup: boolean,
@@ -75,7 +77,7 @@ export interface DispatchProps {
   setChangelogView: () => void,
 }
 
-export type Props = OwnProps & StateProps & DispatchProps
+export type Props = StateProps & DispatchProps & OwnProps & { classes: Record<keyof ReturnType<typeof styles>, string> }
 
 export interface State {
   showChangelog: boolean,
@@ -216,7 +218,7 @@ class App extends PureComponent<Props, State> {
           <CourseSelection />
 
           <div className={classes.moderateSpaceAbove}>
-            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
+            <Suspense fallback={<Skeleton variant="rectangular" height={465} />}>
               <TimetableContainer />
             </Suspense>
           </div>
@@ -295,5 +297,5 @@ const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> =
 })
 
 const connection = connect(mapStateToProps, mapDispatchToProps)
-const styledApp = withStyles(styles)(connection(App))
+const styledApp = withStyles(connection(App), styles) as unknown as React.ComponentType<OwnProps>
 export default styledApp

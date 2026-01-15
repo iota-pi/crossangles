@@ -1,11 +1,11 @@
 import { FC, memo, useMemo } from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 import { DROPZONE_Z } from './timetableUtil'
 import { Placement } from './timetableTypes'
 import { LinkedSession, Options } from '../../state'
 import SessionDetails from './SessionDetails'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     position: 'absolute',
     overflow: 'hidden',
@@ -57,7 +57,7 @@ const Dropzone: FC<Props> = ({
   position,
   session,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const styles = useMemo(
     () => {
       const { width, height, x, y, z } = position

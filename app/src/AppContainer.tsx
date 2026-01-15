@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider } from '@mui/material/styles'
 import { getOptions } from './state/selectors'
 import { theme } from './theme'
 import App from './AppWrapper'

@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
+import { makeStyles } from 'tss-react/mui'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 import { StreamData } from '../state'
 import { getOptions } from '../state/selectors'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   lessSpaceAbove: {
     marginTop: -theme.spacing(1),
   },
@@ -22,7 +22,7 @@ export interface Props {
 }
 
 function WebStream({ checked, stream, onChange }: Props) {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { darkMode, includeFull } = useSelector(getOptions)
 
   const disabled = stream.full && !includeFull

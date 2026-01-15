@@ -1,16 +1,16 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import IconButton from '@material-ui/core/IconButton'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import Typography from '@material-ui/core/Typography'
-import InfoIcon from '@material-ui/icons/InfoOutlined'
-import CloseIcon from '@material-ui/icons/Close'
+import { makeStyles } from 'tss-react/mui'
+import IconButton from '@mui/material/IconButton'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import Typography from '@mui/material/Typography'
+import InfoIcon from '@mui/icons-material/InfoOutlined'
+import CloseIcon from '@mui/icons-material/Close'
 import { modalview } from 'react-ga'
 import { useCallback, useState } from 'react'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   dialogTitle: {
     display: 'flex',
     alignItems: 'center',
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 
 const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [showDialog, setShowDialog] = useState(false)
 
   const handleOpen = useCallback(
@@ -59,7 +59,7 @@ const AboutCrossAngles = ({ onShowContact }: { onShowContact: () => void }) => {
         open={showDialog}
         onClose={handleClose}
       >
-        <DialogTitle disableTypography className={classes.dialogTitle}>
+        <DialogTitle className={classes.dialogTitle}>
           <Typography variant="h6" className={classes.flexGrow}>
             About CrossAngles
           </Typography>
