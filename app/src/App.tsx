@@ -6,7 +6,7 @@ import React, {
 } from 'react'
 import { connect, MapDispatchToPropsNonObject } from 'react-redux'
 import { exception, event, modalview } from 'react-ga'
-import loadable from '@loadable/component'
+
 
 // Theme
 import { Theme } from '@material-ui/core/styles'
@@ -39,12 +39,12 @@ import changelog, { getUpdateMessage } from './changelog'
 import { saveAsICS } from './saveAsICS'
 import SessionManager from './components/Timetable/SessionManager'
 
-const AppBar = loadable(() => import('./components/AppBar'))
+const AppBar = lazy(() => import('./components/AppBar'))
 const TimetableContainer = lazy(() => import('./containers/TimetableContainer'))
-const ActionButtons = loadable(() => import('./components/ActionButtons'))
-const NoticeDisplay = loadable(() => import('./components/Notice'))
-const ContactUs = loadable(() => import('./components/ContactUs'))
-const Changelog = loadable(() => import('./components/Changelog'))
+const ActionButtons = lazy(() => import('./components/ActionButtons'))
+const NoticeDisplay = lazy(() => import('./components/Notice'))
+const ContactUs = lazy(() => import('./components/ContactUs'))
+const Changelog = lazy(() => import('./components/Changelog'))
 
 const styles = (theme: Theme): StyleRules => ({
   appBarSpacer: {
@@ -201,10 +201,12 @@ class App extends PureComponent<Props, State> {
       <div>
         <CssBaseline />
 
-        <AppBar
-          onShowContact={this.handleContactShow}
-          onViewChangelog={this.handleChangelogShow}
-        />
+        <Suspense fallback={<div />}>
+          <AppBar
+            onShowContact={this.handleContactShow}
+            onViewChangelog={this.handleChangelogShow}
+          />
+        </Suspense>
         <div className={classes.appBarSpacer} />
 
         <Container
@@ -219,15 +221,17 @@ class App extends PureComponent<Props, State> {
             </Suspense>
           </div>
 
-          <ActionButtons
-            additional={this.props.additional}
-            meta={this.props.meta}
-            disabled={this.props.timetable.order.length === 0}
-            showSignup={this.props.showSignup}
-            isSavingICS={this.state.isSavingICS}
-            onSaveAsICS={this.handleSaveAsICS}
-            className={classes.spaceAbove}
-          />
+          <Suspense fallback={<div />}>
+            <ActionButtons
+              additional={this.props.additional}
+              meta={this.props.meta}
+              disabled={this.props.timetable.order.length === 0}
+              showSignup={this.props.showSignup}
+              isSavingICS={this.state.isSavingICS}
+              onSaveAsICS={this.handleSaveAsICS}
+              className={classes.spaceAbove}
+            />
+          </Suspense>
 
           <InfoText
             additional={this.props.additional}
@@ -243,21 +247,27 @@ class App extends PureComponent<Props, State> {
           />
         </Container>
 
-        <NoticeDisplay
-          notice={this.props.notice}
-          onSnackbarClose={this.handleSnackbarClose}
-        />
+        <Suspense fallback={<div />}>
+          <NoticeDisplay
+            notice={this.props.notice}
+            onSnackbarClose={this.handleSnackbarClose}
+          />
+        </Suspense>
 
-        <ContactUs
-          open={this.state.showContact}
-          onSend={this.handleContactSend}
-          onClose={this.handleContactClose}
-        />
+        <Suspense fallback={<div />}>
+          <ContactUs
+            open={this.state.showContact}
+            onSend={this.handleContactSend}
+            onClose={this.handleContactClose}
+          />
+        </Suspense>
 
-        <Changelog
-          open={this.state.showChangelog}
-          onClose={this.handleChangelogClose}
-        />
+        <Suspense fallback={<div />}>
+          <Changelog
+            open={this.state.showChangelog}
+            onClose={this.handleChangelogClose}
+          />
+        </Suspense>
       </div>
     )
   }

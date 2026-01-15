@@ -5,7 +5,7 @@ import { Theme } from '@material-ui/core/styles'
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles'
 import createStyles from '@material-ui/core/styles/createStyles'
 import Skeleton from '@material-ui/lab/Skeleton'
-import loadable from '@loadable/component'
+
 import {
   AdditionalEvent,
   ColourMap,
@@ -45,7 +45,7 @@ import { TimetableScoreConfig } from '../timetable/scoreTimetable'
 const Autocomplete = lazy(() => import('../components/Autocomplete'))
 const CourseList = lazy(() => import('../components/CourseList'))
 const TimetableOptions = lazy(() => import('../components/TimetableOptions'))
-const CreateCustom = loadable(() => import('../components/CreateCustom'))
+const CreateCustom = lazy(() => import('../components/CreateCustom'))
 
 
 const styles = (theme: Theme) => createStyles({
@@ -274,14 +274,16 @@ class CourseSelection extends PureComponent<Props, State> {
           </Suspense>
         </div>
 
-        <CreateCustom
-          open={this.state.showCreateCustom}
-          editing={this.state.editingCourse}
-          defaultName={this.state.defaultName}
-          onSave={this.addCustom}
-          onClose={this.handleCloseCustom}
-          onExited={this.handleExitedCustom}
-        />
+        <Suspense fallback={null}>
+          <CreateCustom
+            open={this.state.showCreateCustom}
+            editing={this.state.editingCourse}
+            defaultName={this.state.defaultName}
+            onSave={this.addCustom}
+            onClose={this.handleCloseCustom}
+            onExited={this.handleExitedCustom}
+          />
+        </Suspense>
       </>
     )
   }
