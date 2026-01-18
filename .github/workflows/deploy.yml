@@ -29,6 +29,10 @@ jobs:
           aws-region: ap-southeast-2
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
 
+      # Temporary workaround for Pulumi version conflict (https://github.com/anomalyco/sst/issues/6314)
+      - name: Fix Pulumi version conflict
+        run: sudo rm -f /usr/local/bin/pulumi-language-nodejs
+
       - run: yarn deploy --stage staging --print-logs
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -70,6 +74,10 @@ jobs:
         with:
           aws-region: ap-southeast-2
           role-to-assume: ${{ secrets.AWS_ROLE_ARN_PRODUCTION }}
+
+      # Temporary workaround for Pulumi version conflict (https://github.com/anomalyco/sst/issues/6314)
+      - name: Fix Pulumi version conflict
+        run: sudo rm -f /usr/local/bin/pulumi-language-nodejs
 
       - run: yarn deploy --stage production --print-logs
         env:
