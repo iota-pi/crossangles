@@ -1,6 +1,6 @@
-import type StateManager from '../state/StateManager';
+import type StateManager from '../state/StateManager'
 
 export interface ScrapeCampusArgs {
-  state?: StateManager | null,
-  outputPrefix: string,
+  state?: StateManager | null;
+  outputPrefix: string;
 }
