@@ -131,10 +131,12 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.HANG,
           times: [{ time: 'T16' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.HANG,
           times: [{ time: 'W16' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.LUNCH,
@@ -164,14 +166,17 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
         {
           component: CBSComponent.BLT,
           times: [{ time: 'T16' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.BLT,
           times: [{ time: 'W10' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.BLT,
           times: [{ time: 'H12' }],
+          options: { notOnlyEvent: true },
         },
         {
           component: CBSComponent.OUTREACH,
