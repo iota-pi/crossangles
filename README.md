@@ -66,8 +66,6 @@ yarn lint
 yarn typecheck
 ```
 
-*Note: There is also a legacy `ci.sh` script, but `yarn` scripts are preferred.*
-
 ## Contributing
 
 If you wish to contribute, please fork this repository and submit a pull request.
