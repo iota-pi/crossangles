@@ -68,9 +68,7 @@ export class TimetableScraper {
     logger.info(`Scraping from ${TIMETABLE_UNSW}`)
     const coursePages = await this.scrapeFacultyPages()
     const result = await this.scrapeCoursePages(coursePages)
-    logger.info('Persisting state to DynamoDB')
-    await this.persistState(result)
-    logger.info('Finished persisting state to DynamoDB')
+    logger.info('Finished scraping')
     this.scraper.report()
     return result
   }

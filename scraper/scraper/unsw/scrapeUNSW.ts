@@ -3,10 +3,11 @@ import type { CourseData } from '../../../app/src/state/Course'
 import { getTermStart } from '../../../app/src/state/Stream'
 import { TimetableScraper, TIMETABLE_UNSW } from './TimetableScraper'
 import generateMetaData from '../meta'
+import type { ScrapeCampusArgs } from '../types'
 import { getLogger } from '../../logging'
 import getAdditional from '../../data'
+import { writeData } from '../../writeData'
 import { getCurrentTerm } from '../../../app/src/state/Meta'
-import type { ScrapeCampusArgs } from '../../scrapeCampus'
 
 export const UNSW = 'unsw'
 const logger = getLogger('scrapeUNSW', { campus: UNSW })
@@ -15,7 +16,7 @@ const TERMS = [1, 2, 3]
 
 
 export async function scrapeUNSW(
-  { state }: ScrapeCampusArgs,
+  { state, outputPrefix }: ScrapeCampusArgs,
 ): Promise<CampusData[] | null> {
   const timetable = new TimetableScraper({ state })
   await timetable.setup()
@@ -29,7 +30,14 @@ export async function scrapeUNSW(
   const timetableData = await scrapeTimetable(timetable)
   logger.info('Finished scraping for UNSW')
 
-  return splitByTerm(timetableData)
+  const data = splitByTerm(timetableData)
+  await writeData(data, outputPrefix, UNSW)
+  logger.info('Finished writing data')
+
+  await timetable.persistState(timetableData)
+  logger.info('Persisted state')
+
+  return data
 }
 
 export function splitByTerm(
