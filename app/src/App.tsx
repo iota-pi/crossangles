@@ -46,7 +46,7 @@ const NoticeDisplay = lazy(() => import('./components/Notice'))
 const ContactUs = lazy(() => import('./components/ContactUs'))
 const Changelog = lazy(() => import('./components/Changelog'))
 
- 
+
 const styles = (theme: Theme) => ({
   appBarSpacer: {
     ...(theme.mixins.toolbar as any),
@@ -212,7 +212,7 @@ class App extends PureComponent<Props, State> {
         <div className={classes.appBarSpacer} />
 
         <Container
-          maxWidth="md"
+          maxWidth="lg"
           className={classes.spaceBelow}
         >
           <CourseSelection />
