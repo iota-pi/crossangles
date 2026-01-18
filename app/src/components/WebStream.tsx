@@ -1,19 +1,9 @@
 import { useSelector } from 'react-redux'
-import { makeStyles } from 'tss-react/mui'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
 import { StreamData } from '../state'
 import { getOptions } from '../state/selectors'
 
-
-const useStyles = makeStyles()(theme => ({
-  lessSpaceAbove: {
-    marginTop: -theme.spacing(1),
-  },
-  secondaryText: {
-    color: theme.palette.text.secondary,
-  },
-}))
 
 export interface Props {
   checked: boolean,
@@ -22,7 +12,6 @@ export interface Props {
 }
 
 function WebStream({ checked, stream, onChange }: Props) {
-  const { classes } = useStyles()
   const { darkMode, includeFull } = useSelector(getOptions)
 
   const disabled = stream.full && !includeFull
@@ -35,7 +24,10 @@ function WebStream({ checked, stream, onChange }: Props) {
   return (
     <FormControlLabel
       label={label}
-      className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
+      sx={{
+        mt: -1,
+        color: 'text.secondary',
+      }}
       control={(
         <Checkbox
           checked={checked && !disabled}

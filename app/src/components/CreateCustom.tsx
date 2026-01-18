@@ -295,7 +295,7 @@ class CreateCustom extends PureComponent<InternalProps, State> {
         maxWidth="sm"
       >
         <DialogTitle className={classes.dialogTitle}>
-          <Typography variant="h6" id="custom-event-title" className={classes.flexGrow}>
+          <Typography variant="h6" component="div" id="custom-event-title" className={classes.flexGrow}>
             Add Personal Event
           </Typography>
 

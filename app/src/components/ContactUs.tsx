@@ -118,7 +118,12 @@ const ContactUs = ({
       maxWidth="sm"
     >
       <DialogTitle className={classes.dialogTitle}>
-        <Typography variant="h6" id="contact-us-title" className={classes.flexGrow}>
+        <Typography
+          variant="h6"
+          component="div"
+          id="contact-us-title"
+          className={classes.flexGrow}
+        >
           Get in Contact
         </Typography>
 

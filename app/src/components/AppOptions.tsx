@@ -119,7 +119,7 @@ const AppOptions = ({ onViewChangelog }: Props) => {
         fullWidth
       >
         <DialogTitle className={classes.dialogTitle}>
-          <Typography variant="h6" className={classes.flexGrow}>
+          <Typography variant="h6" component="div" className={classes.flexGrow}>
             Settings
           </Typography>
 

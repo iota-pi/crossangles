@@ -42,6 +42,13 @@ const useStyles = makeStyles()(theme => ({
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
     transition: theme.transitions.create('opacity'),
+
+    // This smaller font-size preserves defaults from MUI v4
+    // This is done only for the timetable because the cell widths
+    // and heights were carefully chosen around these values
+    fontSize: '0.875rem',
+    lineHeight: 1.43,
+    letterSpacing: '0.01071em',
   },
   progress: {
     position: 'absolute',
