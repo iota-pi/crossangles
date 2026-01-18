@@ -1,10 +1,10 @@
 import React, { PropsWithChildren } from 'react'
-import { makeStyles } from '@material-ui/core'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import IconButton from '@material-ui/core/IconButton'
+import { makeStyles } from 'tss-react/mui'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import IconButton from '@mui/material/IconButton'
 
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles()(theme => {
   const transition = {
     duration: theme.transitions.duration.shorter,
   }
@@ -13,12 +13,10 @@ const useStyles = makeStyles(theme => {
     expandIcon: {
       transform: 'rotate(0deg)',
       transition: theme.transitions.create('transform', transition),
-
-      '&$flipped': {
-        transform: 'rotate(180deg)',
-      },
     },
-    flipped: {},
+    flipped: {
+      transform: 'rotate(180deg)',
+    },
     listIcon: {
       minWidth: 'initial',
     },
@@ -35,7 +33,7 @@ export const CourseActionButton: React.FC<PropsWithChildren<Props>> = ({
   flipped,
   onClick,
 }) => {
-  const classes = useStyles()
+  const { classes, cx } = useStyles()
   return (
     <ListItemIcon
       className={classes.listIcon}
@@ -43,7 +41,7 @@ export const CourseActionButton: React.FC<PropsWithChildren<Props>> = ({
       <IconButton
         size="small"
         onClick={onClick}
-        className={`${classes.expandIcon} ${flipped ? classes.flipped : ''}`}
+        className={cx(classes.expandIcon, flipped && classes.flipped)}
       >
         {children}
       </IconButton>

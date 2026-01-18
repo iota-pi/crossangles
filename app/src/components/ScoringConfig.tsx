@@ -1,8 +1,8 @@
-import { ChangeEvent, Fragment, useCallback, useState } from 'react'
+import { Fragment, useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
-import CloseIcon from '@material-ui/icons/Close'
+import CloseIcon from '@mui/icons-material/Close'
 import {
   Button,
   Dialog,
@@ -12,13 +12,13 @@ import {
   IconButton,
   Slider,
   Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 import { setScoreConfig } from '../actions'
 import { RootState } from '../state'
 import { defaultScoreConfig, TimetableScoreConfig } from '../timetable/scoreTimetable'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     marginTop: '15vh',
     marginBottom: '15vh',
@@ -73,13 +73,13 @@ const MAX_WEIGHT = 2
 
 
 const ScoringConfig = ({ onClose, open }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const dispatch = useDispatch()
   const initialConfig = useSelector((state: RootState) => state.scoreConfig)
   const [config, setConfig] = useState(initialConfig)
   const onChange = useCallback(
     (changedKey: keyof TimetableScoreConfig) => (
-      (event: ChangeEvent<any>, _value: number | number[]) => {
+      (event: Event, _value: number | number[]) => {
         const value = _value as number
         const change = value - config[changedKey]
         const configEntries = Object.entries(config).filter(([key, _]) => key !== changedKey)
@@ -123,8 +123,8 @@ const ScoringConfig = ({ onClose, open }: Props) => {
       maxWidth="xs"
       fullWidth
     >
-      <DialogTitle disableTypography className={classes.dialogTitle}>
-        <Typography variant="h6" className={classes.flexGrow}>
+      <DialogTitle className={classes.dialogTitle}>
+        <Typography variant="h6" component="div" className={classes.flexGrow}>
           Customise Auto-Timetabling
         </Typography>
 

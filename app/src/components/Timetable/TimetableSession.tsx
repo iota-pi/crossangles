@@ -1,13 +1,12 @@
-import { useMemo, useCallback, memo } from 'react'
+import { useMemo, useCallback, memo, CSSProperties, useRef } from 'react'
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
+import { makeStyles } from 'tss-react/mui'
 import { TimetablePosition, Placement } from './timetableTypes'
 import { Options, LinkedSession } from '../../state'
 import { useCache } from '../../hooks'
 import SessionDetails from './SessionDetails'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()((theme, _params, classes: any) => ({
   main: {
     position: 'absolute',
     display: 'flex',
@@ -21,11 +20,11 @@ const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create(['box-shadow', 'transform', 'height']),
     boxShadow: theme.shadows[3],
 
-    '&$snapped:not($hovering)': {
+    [`&.${classes.snapped}:not(.${classes.hovering})`]: {
       boxShadow: theme.shadows[0],
     },
 
-    '&$dragging': {
+    [`&.${classes.dragging}`]: {
       cursor: 'grabbing',
       transition: theme.transitions.create(['box-shadow', 'height']),
       boxShadow: theme.shadows[8],
@@ -74,7 +73,7 @@ const Session: React.FC<Props> = ({
   position,
   session,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const rootClasses = [
     classes.main,
     isDragging ? classes.dragging : '',
@@ -103,6 +102,7 @@ const Session: React.FC<Props> = ({
     [colour],
   )
 
+  const nodeRef = useRef<HTMLDivElement>(null)
   const handleStart = useCallback(
     () => {
       if (onDrag) {
@@ -132,14 +132,15 @@ const Session: React.FC<Props> = ({
 
   return (
     <DraggableCore
+      nodeRef={nodeRef}
       onStart={handleStart}
       onDrag={handleDrag}
       onStop={handleStop}
     >
       <div
+        ref={nodeRef}
         className={rootClasses}
-        // TODO this cast shouldn't be necessary after updating React and MUI
-        style={styles as React.CSSProperties}
+        style={styles}
         data-session
       >
         <div

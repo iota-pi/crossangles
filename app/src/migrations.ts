@@ -1,6 +1,6 @@
 import {
   pink, deepPurple, indigo, blue, teal, lightGreen, amber, deepOrange,
-} from '@material-ui/core/colors'
+} from '@mui/material/colors'
 import { SessionManagerData } from './components/Timetable/SessionManager'
 import { CourseMap } from './state'
 

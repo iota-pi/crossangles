@@ -1,12 +1,12 @@
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
+import { makeStyles } from 'tss-react/mui'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Switch from '@mui/material/Switch'
 import { timetableOptionList, Options, OptionName } from '../state'
 import { getOptions } from '../state/selectors'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     width: '100%',
     display: 'flex',
@@ -43,7 +43,7 @@ const TimetableOptionsComponent = ({
   options,
   onToggleOption,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { darkMode } = useSelector(getOptions)
 
   return (

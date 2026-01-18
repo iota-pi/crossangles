@@ -1,12 +1,12 @@
 import { memo, ReactNode, useMemo } from 'react'
 import { TransitionGroup } from 'react-transition-group'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import Fade from '@material-ui/core/Fade'
-import Collapse from '@material-ui/core/Collapse'
+import { makeStyles } from 'tss-react/mui'
+import Fade from '@mui/material/Fade'
+import Collapse from '@mui/material/Collapse'
 import { Options, LinkedSession, getDuration, DeliveryType, getComponentName, getOption } from '../../state'
 import DeliveryModeIcon from './DeliveryModeIcon'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()((_theme, _params, classes: any) => ({
   root: {
     position: 'relative',
     textAlign: 'center',
@@ -15,14 +15,14 @@ const useStyles = makeStyles(() => ({
     paddingLeft: 2,
     paddingRight: 2,
 
-    '& > $label': {
+    [`& > .${classes.label}`]: {
       fontSize: '105%',
 
-      '& > $em': {
+      [`& > .${classes.em}`]: {
         fontWeight: 400,
       },
 
-      '& > $largerFont': {
+      [`& > .${classes.largerFont}`]: {
         fontSize: '115%',
       },
     },
@@ -33,12 +33,12 @@ const useStyles = makeStyles(() => ({
   details: {
     fontSize: '88%',
 
-    '&$compact': {
+    [`&.${classes.compact}`]: {
       fontSize: '82%',
       lineHeight: 1.15,
     },
 
-    '&$largerDetails': {
+    [`&.${classes.largerDetails}`]: {
       fontSize: '100%',
     },
   },
@@ -66,7 +66,7 @@ const SessionDetailsBase: React.FC<Props> = ({
   hideDetails,
   largerDetails,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { course, stream } = session
   const compactView = getOption(options, 'compactView')
   const showMode = getOption(options, 'showMode')

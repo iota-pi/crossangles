@@ -1,19 +1,20 @@
-import React, { ChangeEvent } from 'react'
+import { ChangeEvent } from 'react'
 
 // Styles
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
-import Grid from '@material-ui/core/Grid'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import CloseIcon from '@material-ui/icons/Close'
-import CalendarToday from '@material-ui/icons/CalendarToday'
-import AccessTime from '@material-ui/icons/AccessTime'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
+import Grid from '@mui/material/Grid'
+import InputAdornment from '@mui/material/InputAdornment'
+import CloseIcon from '@mui/icons-material/Close'
+import CalendarToday from '@mui/icons-material/CalendarToday'
+import AccessTime from '@mui/icons-material/AccessTime'
 import { DayLetter } from '../state'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   flexGrow: {
     flexGrow: 1,
   },
@@ -29,15 +30,15 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
- 
+
 const dayOptions = [
-  { text: 'Monday',    letter: 'M' },
-  { text: 'Tuesday',   letter: 'T' },
+  { text: 'Monday', letter: 'M' },
+  { text: 'Tuesday', letter: 'T' },
   { text: 'Wednesday', letter: 'W' },
-  { text: 'Thursday',  letter: 'H' },
-  { text: 'Friday',    letter: 'F' },
-  { text: 'Saturday',  letter: 'S' },
-  { text: 'Sunday',    letter: 's' },
+  { text: 'Thursday', letter: 'H' },
+  { text: 'Friday', letter: 'F' },
+  { text: 'Saturday', letter: 'S' },
+  { text: 'Sunday', letter: 's' },
 ]
 
 const timeOptions = [
@@ -98,7 +99,7 @@ export const TimeOption = ({
   onChangeTime,
   onClickClearTime,
 }: TimeOptionProps) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   return (
     <Grid
@@ -107,17 +108,17 @@ export const TimeOption = ({
       alignItems="flex-end"
       className={classes.paddingBottom}
     >
-      <Grid item xs={12} sm={2}>
+      <Grid size={{ xs: 12, sm: 2 }}>
         <Typography>
           Option {index + 1}
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={5}>
+      <Grid size={{ xs: 12, sm: 5 }}>
         <Grid container spacing={1}>
-          <Grid item>
+          <Grid>
             <CalendarToday className={classes.marginTop} />
           </Grid>
-          <Grid item className={classes.flexGrow}>
+          <Grid className={classes.flexGrow}>
             <TextField
               label="Day"
               select
@@ -153,12 +154,12 @@ export const TimeOption = ({
         </Grid>
       </Grid>
 
-      <Grid item xs={12} sm={5}>
+      <Grid size={{ xs: 12, sm: 5 }}>
         <Grid container spacing={1}>
-          <Grid item>
+          <Grid>
             <AccessTime className={classes.marginTop} />
           </Grid>
-          <Grid item className={classes.flexGrow}>
+          <Grid className={classes.flexGrow}>
             <TextField
               label="Start time"
               select

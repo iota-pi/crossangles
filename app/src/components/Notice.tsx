@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import Snackbar from '@material-ui/core/Snackbar'
+import Snackbar from '@mui/material/Snackbar'
 import { DEFAULT_NOTICE_TIMEOUT, Notice } from '../state'
 
 export interface Props {

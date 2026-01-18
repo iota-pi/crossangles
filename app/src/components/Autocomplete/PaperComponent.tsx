@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Button, DialogActions, makeStyles, Paper, PaperProps } from '@material-ui/core'
-import EventIcon from '@material-ui/icons/Event'
+import { Button, DialogActions, Paper, PaperProps } from '@mui/material'
+import { makeStyles } from 'tss-react/mui'
+import EventIcon from '@mui/icons-material/Event'
 import { getOption } from '../../state'
 import { getOptions } from '../../state/selectors'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   actions: {
     boxShadow: theme.shadows[2],
     padding: 0,
@@ -24,7 +25,7 @@ const PaperComponent: React.FC<Props> = (props: Props) => {
   const { children, onAddPersonalEvent, ...other } = props
   const options = useSelector(getOptions)
   const darkMode = getOption(options, 'darkMode')
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   return (
     <Paper {...other}>

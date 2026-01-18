@@ -1,11 +1,11 @@
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 import { event } from 'react-ga'
 
-import ListItem from '@material-ui/core/ListItem'
-import Collapse from '@material-ui/core/Collapse'
-import Expand from '@material-ui/icons/ExpandMore'
-import Close from '@material-ui/icons/Close'
-import OpenInNew from '@material-ui/icons/OpenInNew'
+import ListItem from '@mui/material/ListItem'
+import Collapse from '@mui/material/Collapse'
+import Expand from '@mui/icons-material/ExpandMore'
+import Close from '@mui/icons-material/Close'
+import OpenInNew from '@mui/icons-material/OpenInNew'
 import { AdditionalEvents } from './AdditionalEvents'
 import ColourControl from './Colour'
 import {
@@ -33,7 +33,7 @@ export interface AdditionalCourseDisplayProps extends BaseCourseDisplayProps {
 }
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   noVertPadding: {
     marginTop: -theme.spacing(0.5),
     paddingTop: 0,
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   courseTitle: {
     display: 'flex',
     flexGrow: 1,
-    ...theme.typography.body1,
+    ...(theme.typography.body1 as any),
     overflow: 'hidden',
     paddingRight: theme.spacing(1),
   },
@@ -84,7 +84,7 @@ const AdditionalCourseDisplayComponent: React.FC<AdditionalCourseDisplayProps> =
   onRemoveCourse,
   onToggleShowEvents,
 }: AdditionalCourseDisplayProps) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const eventList = getEvents(course)
 
   const courseId = getCourseId(course)

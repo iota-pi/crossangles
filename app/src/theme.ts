@@ -1,8 +1,5 @@
- 
-import { createTheme } from '@material-ui/core/styles'
-import indigo from '@material-ui/core/colors/indigo'
-import lightBlue from '@material-ui/core/colors/blue'
-import { PaletteOptions } from '@material-ui/core/styles/createPalette'
+import { createTheme, PaletteOptions } from '@mui/material/styles'
+import { indigo, lightBlue } from '@mui/material/colors'
 
 export const theme = (dark = false) => {
   let palette: PaletteOptions
@@ -11,27 +8,40 @@ export const theme = (dark = false) => {
       // In dark theme, we swap the primary and secondary colours
       secondary: { main: indigo[500] },
       primary: { main: lightBlue[400] },
-      type: 'dark',
+      mode: 'dark',
+      background: {
+        default: 'rgb(48, 48, 48)',
+        paper: 'rgb(66, 66, 66)',
+      },
     }
   } else {
     palette = {
       primary: { main: indigo[600] },
       secondary: { main: lightBlue[600] },
+      mode: 'light',
+      background: {
+        default: 'rgb(250, 250, 250)',
+        paper: 'rgb(255, 255, 255)',
+      },
     }
   }
   return createTheme({
     palette,
-    overrides: {
+    components: {
       MuiSelect: {
-        select: {
-          '&:focus': {
-            backgroundColor: 'none',
+        styleOverrides: {
+          select: {
+            '&:focus': {
+              backgroundColor: 'none',
+            },
           },
         },
       },
       MuiIconButton: {
-        sizeSmall: {
-          padding: 6,
+        styleOverrides: {
+          sizeSmall: {
+            padding: 6,
+          },
         },
       },
     },

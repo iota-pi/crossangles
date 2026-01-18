@@ -5,11 +5,11 @@ import {
   useMemo,
   useState,
 } from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 import { event } from 'react-ga'
 
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Fade from '@material-ui/core/Fade'
+import LinearProgress from '@mui/material/LinearProgress'
+import Fade from '@mui/material/Fade'
 import { TransitionGroup } from 'react-transition-group'
 import TimetableGrid from './TimetableGrid'
 import TimetableSession from './TimetableSession'
@@ -34,7 +34,7 @@ import { CATEGORY } from '../../analytics'
 import { getDropzones } from './dropzones'
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     position: 'relative',
     overflowX: 'auto',
@@ -42,6 +42,13 @@ const useStyles = makeStyles(theme => ({
     zIndex: 0,
     backgroundColor: theme.palette.background.paper,
     transition: theme.transitions.create('opacity'),
+
+    // This smaller font-size preserves defaults from MUI v4
+    // This is done only for the timetable because the cell widths
+    // and heights were carefully chosen around these values
+    fontSize: '0.875rem',
+    lineHeight: 1.43,
+    letterSpacing: '0.01071em',
   },
   progress: {
     position: 'absolute',
@@ -289,7 +296,7 @@ function TimetableTable({
   )
 
 
-  const classes = useStyles()
+  const { classes } = useStyles()
   const rootClasses = [classes.root]
   const disabled = timetable.renderOrder.length === 0
   if (disabled) {

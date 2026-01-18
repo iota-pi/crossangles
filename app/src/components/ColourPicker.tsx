@@ -1,9 +1,9 @@
 import React from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 import ColourControl from './Colour'
 import { Colour } from '../state'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     padding: theme.spacing(1),
   },
@@ -36,7 +36,7 @@ export interface Props {
 export const ColourPicker: React.FC<Props> = (
   { colours, columns, onChange, size, value }: Props,
 ) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   return (
     <div className={classes.root}>

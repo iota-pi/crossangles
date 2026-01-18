@@ -1,6 +1,6 @@
 import { Children, cloneElement, createContext, forwardRef, PropsWithChildren, useContext, useEffect, useRef } from 'react'
 import { VariableSizeList, ListChildComponentProps } from 'react-window'
-import { useMediaQuery, useTheme } from '@material-ui/core'
+import { useMediaQuery, useTheme } from '@mui/material'
 
 const LISTBOX_PADDING = 8
 const MAX_ITEMS = 8

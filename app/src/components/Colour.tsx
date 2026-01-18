@@ -1,28 +1,25 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import ButtonBase from '@material-ui/core/ButtonBase'
-import Check from '@material-ui/icons/Check'
+import { makeStyles } from 'tss-react/mui'
+import ButtonBase from '@mui/material/ButtonBase'
+import Check from '@mui/icons-material/Check'
 import { Colour, getColour } from '../state'
 import { getOptions } from '../state/selectors'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     color: 'white',
     transition: theme.transitions.create('background-color'),
-
-    '&$selected': {
-      border: '1px solid white',
-    },
-    '&$rounded': {
-      borderRadius: '50%',
-    },
   },
-  selected: {},
-  rounded: {},
+  selected: {
+    border: '1px solid white',
+  },
+  rounded: {
+    borderRadius: '50%',
+  },
 }))
 
 export interface Props {
@@ -40,13 +37,13 @@ function ColourComponent({
   onClick,
   size,
 }: Props) {
-  const classes = useStyles()
+  const { classes, cx } = useStyles()
   const { darkMode } = useSelector(getOptions)
-  const appliedClasses = [
+  const appliedClasses = cx(
     classes.root,
-    isSelected ? classes.selected : '',
-    isCircle ? classes.rounded : '',
-  ].join(' ')
+    isSelected && classes.selected,
+    isCircle && classes.rounded,
+  )
 
   return (
     <ButtonBase

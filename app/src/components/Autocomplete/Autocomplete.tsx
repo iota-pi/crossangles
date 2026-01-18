@@ -1,10 +1,10 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import parse from 'autosuggest-highlight/parse'
 import match from 'autosuggest-highlight/match'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete, { AutocompleteRenderInputParams, AutocompleteRenderOptionState } from '@material-ui/lab/Autocomplete'
-import SearchIcon from '@material-ui/icons/Search'
+import { makeStyles } from 'tss-react/mui'
+import TextField from '@mui/material/TextField'
+import Autocomplete, { AutocompleteRenderInputParams, AutocompleteRenderOptionState } from '@mui/material/Autocomplete'
+import SearchIcon from '@mui/icons-material/Search'
 import ListboxComponent from './ListboxComponent'
 import PaperComponent, { Props as PaperComponentProps } from './PaperComponent'
 import { CourseData, getCourseId, getClarificationText } from '../../state'
@@ -36,7 +36,7 @@ function earlyExitFilter<T>(items: T[], func: (item: T) => boolean) {
 }
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     display: 'flex',
     transition: theme.transitions.create('border-color'),
@@ -72,7 +72,7 @@ type InputProps = AutocompleteRenderInputParams & {
 }
 
 const AutocompleteInput: FC<InputProps> = (props: InputProps) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [focused, setFocused] = useState(true)
   const onFocus = useCallback(() => setFocused(true), [])
   const onBlur = useCallback(() => setFocused(false), [])
@@ -117,7 +117,7 @@ export interface OptionProps {
 }
 
 const AutocompleteOption: FC<OptionProps> = ({ option, value }: OptionProps) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const name = ` — ${option.name}`
   const codeMatches = match(option.code, value)
@@ -155,7 +155,7 @@ const AutocompleteControl: FC<Props> = ({
   chooseCourse,
   onAddPersonalEvent,
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [inputValue, setInputValue] = useState('')
 
@@ -242,11 +242,17 @@ const AutocompleteControl: FC<Props> = ({
 
   const renderOption = useCallback(
     (
+      props: React.HTMLAttributes<HTMLLIElement>,
       option: CourseData,
       { inputValue: value }: AutocompleteRenderOptionState,
-    ) => (
-      <AutocompleteOption option={option} value={value} />
-    ),
+    ) => {
+      const { key, ...otherProps } = props as any
+      return (
+        <li key={key} {...otherProps}>
+          <AutocompleteOption option={option} value={value} />
+        </li>
+      )
+    },
     [],
   )
 
@@ -281,7 +287,7 @@ const AutocompleteControl: FC<Props> = ({
 
 
   return (
-    <Autocomplete
+    <Autocomplete<CourseData, true, true, false>
       id="course-selection-autocomplete"
       options={filteredOptions}
       filterOptions={noFilter}

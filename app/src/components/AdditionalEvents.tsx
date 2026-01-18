@@ -1,12 +1,12 @@
 import { useSelector } from 'react-redux'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
+import { makeStyles } from 'tss-react/mui'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Checkbox from '@mui/material/Checkbox'
 import { AdditionalEvent, CourseData, getEvents } from '../state'
 import { getOptions } from '../state/selectors'
 import { memo } from 'react'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     width: '100%',
     display: 'flex',
@@ -33,12 +33,6 @@ const useStyles = makeStyles(theme => ({
       flexBasis: '25%',
     },
   },
-  lessSpaceAbove: {
-    marginTop: -theme.spacing(0.75),
-  },
-  secondaryText: {
-    color: theme.palette.text.secondary,
-  },
 }))
 
 export interface Props {
@@ -52,7 +46,7 @@ const AdditionalEventsComponent = ({
   events,
   onToggleEvent,
 }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const { darkMode } = useSelector(getOptions)
 
   const baseEventList = getEvents(course)
@@ -86,7 +80,10 @@ const AdditionalEventsComponent = ({
                 inputProps={{ 'data-cy': `event-${event.id}` } as any}
               />
             )}
-            className={`${classes.secondaryText} ${classes.lessSpaceAbove}`}
+            sx={{
+              mt: -0.75,
+              color: 'text.secondary',
+            }}
             label={event.name}
           />
         </div>

@@ -1,11 +1,10 @@
-import React, { lazy, PureComponent, Suspense } from 'react'
+import { lazy, PureComponent, Suspense } from 'react'
 import { connect } from 'react-redux'
 import { exception } from 'react-ga'
-import { Theme } from '@material-ui/core/styles'
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles'
-import createStyles from '@material-ui/core/styles/createStyles'
-import Skeleton from '@material-ui/lab/Skeleton'
-import loadable from '@loadable/component'
+import { Theme } from '@mui/material/styles'
+import { withStyles } from 'tss-react/mui'
+import Skeleton from '@mui/material/Skeleton'
+
 import {
   AdditionalEvent,
   ColourMap,
@@ -45,10 +44,10 @@ import { TimetableScoreConfig } from '../timetable/scoreTimetable'
 const Autocomplete = lazy(() => import('../components/Autocomplete'))
 const CourseList = lazy(() => import('../components/CourseList'))
 const TimetableOptions = lazy(() => import('../components/TimetableOptions'))
-const CreateCustom = loadable(() => import('../components/CreateCustom'))
+const CreateCustom = lazy(() => import('../components/CreateCustom'))
 
 
-const styles = (theme: Theme) => createStyles({
+const styles = (theme: Theme) => ({
   slightSpaceAbove: {
     paddingTop: theme.spacing(2),
   },
@@ -63,7 +62,8 @@ const styles = (theme: Theme) => createStyles({
   },
 })
 
-export type OwnProps = WithStyles<typeof styles>
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type OwnProps = {}
 
 export interface StateProps {
   additional: CourseData[],
@@ -81,7 +81,7 @@ export interface StateProps {
   webStreams: CourseId[],
 }
 
-export type Props = WithDispatch<OwnProps & StateProps>
+export type Props = WithDispatch<OwnProps & StateProps> & { classes: Record<keyof ReturnType<typeof styles>, string> }
 
 export interface State {
   defaultName: string | null,
@@ -232,7 +232,7 @@ class CourseSelection extends PureComponent<Props, State> {
       <>
         <div className={classes.flex}>
           <div className={classes.flexGrow}>
-            <Suspense fallback={<Skeleton variant="rect" height={56} />}>
+            <Suspense fallback={<Skeleton variant="rectangular" height={56} />}>
               <Autocomplete
                 courses={this.props.courseList}
                 chosen={this.props.chosen}
@@ -245,7 +245,7 @@ class CourseSelection extends PureComponent<Props, State> {
         </div>
 
         <div className={classes.slightSpaceAbove}>
-          <Suspense fallback={<Skeleton variant="rect" height={this.courseListSkeletonHeight} />}>
+          <Suspense fallback={<Skeleton variant="rectangular" height={this.courseListSkeletonHeight} />}>
             <CourseList
               chosen={this.props.chosen}
               custom={this.props.custom}
@@ -274,14 +274,16 @@ class CourseSelection extends PureComponent<Props, State> {
           </Suspense>
         </div>
 
-        <CreateCustom
-          open={this.state.showCreateCustom}
-          editing={this.state.editingCourse}
-          defaultName={this.state.defaultName}
-          onSave={this.addCustom}
-          onClose={this.handleCloseCustom}
-          onExited={this.handleExitedCustom}
-        />
+        <Suspense fallback={null}>
+          <CreateCustom
+            open={this.state.showCreateCustom}
+            editing={this.state.editingCourse}
+            defaultName={this.state.defaultName}
+            onSave={this.addCustom}
+            onClose={this.handleCloseCustom}
+            onExited={this.handleExitedCustom}
+          />
+        </Suspense>
       </>
     )
   }
@@ -304,4 +306,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 const connection = connect(mapStateToProps)
-export default withStyles(styles)(connection(CourseSelection))
+export default withStyles(connection(CourseSelection), styles) as unknown as React.ComponentType<OwnProps>

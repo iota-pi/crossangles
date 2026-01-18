@@ -1,15 +1,16 @@
-import React, { ReactNode } from 'react'
-import { Theme, createStyles, WithStyles, withStyles } from '@material-ui/core/styles'
+import { ReactNode } from 'react'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 import { event } from 'react-ga'
 
-import Button from '@material-ui/core/Button'
-import OpenInNewIcon from '@material-ui/icons/OpenInNew'
-import CalendarIcon from '@material-ui/icons/CalendarToday'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Button from '@mui/material/Button'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import CalendarIcon from '@mui/icons-material/CalendarToday'
+import CircularProgress from '@mui/material/CircularProgress'
 import { CourseData, Meta } from '../state'
 import { CATEGORY } from '../analytics'
 
-const styles = (theme: Theme) => createStyles({
+const useStyles = makeStyles()((theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'center',
@@ -53,9 +54,9 @@ const styles = (theme: Theme) => createStyles({
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5),
   },
-})
+}))
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   additional: CourseData[],
   meta: Meta,
   disabled?: boolean,
@@ -65,7 +66,7 @@ export interface Props extends WithStyles<typeof styles> {
   className?: string,
 }
 
-export const ActionButtons = withStyles(styles)(({
+export const ActionButtons = ({
   additional,
   meta,
   disabled,
@@ -73,8 +74,8 @@ export const ActionButtons = withStyles(styles)(({
   isSavingICS,
   onSaveAsICS,
   className,
-  classes,
 }: Props) => {
+  const { classes } = useStyles()
   // Assumption: only one additional course will be auto-selected and has metadata
   const ministry = additional.filter(c => c.autoSelect && c.metadata)[0]
 
@@ -151,6 +152,6 @@ export const ActionButtons = withStyles(styles)(({
       </div>
     </div>
   )
-})
+}
 
 export default ActionButtons

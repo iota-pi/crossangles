@@ -1,26 +1,25 @@
-import React, { PureComponent, ChangeEvent } from 'react'
+import { PureComponent, ChangeEvent } from 'react'
 import { modalview } from 'react-ga'
 
 // Styles
-import { Theme } from '@material-ui/core/styles'
-import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles'
-import createStyles from '@material-ui/core/styles/createStyles'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import DialogContent from '@material-ui/core/DialogContent'
-import Button from '@material-ui/core/Button'
-import DialogActions from '@material-ui/core/DialogActions'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
-import Grid from '@material-ui/core/Grid'
-import CloseIcon from '@material-ui/icons/Close'
-import TimelapseIcon from '@material-ui/icons/Timelapse'
+import { Theme } from '@mui/material/styles'
+import { withStyles } from 'tss-react/mui'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import DialogContent from '@mui/material/DialogContent'
+import Button from '@mui/material/Button'
+import DialogActions from '@mui/material/DialogActions'
+import TextField from '@mui/material/TextField'
+import MenuItem from '@mui/material/MenuItem'
+import Grid from '@mui/material/Grid'
+import CloseIcon from '@mui/icons-material/Close'
+import TimelapseIcon from '@mui/icons-material/Timelapse'
 import { CourseData, DayLetter, ClassTime, getSessions, StreamData, getDuration } from '../state'
 import { CustomTimeOption, TimeOption } from './TimeOption'
 
-const styles = (theme: Theme) => createStyles({
+const styles = (theme: Theme) => ({
   dialog: {},
   dialogTitle: {
     display: 'flex',
@@ -47,7 +46,7 @@ export const getBlankOption = (): CustomTimeOption => ({
   key: Math.random().toString(),
 })
 
-export interface Props extends WithStyles<typeof styles> {
+export interface Props {
   open: boolean,
   editing?: CourseData | null,
   defaultName?: string | null,
@@ -56,12 +55,22 @@ export interface Props extends WithStyles<typeof styles> {
   onExited?: () => void,
 }
 
+interface InternalProps extends Props {
+  classes: Record<keyof ReturnType<typeof styles>, string>
+}
+
 export interface State {
   placeholderName: string,
   name: string,
   duration: number,
   options: CustomTimeOption[],
 }
+
+
+// ... (omitting middle section for brevity, will targeted replace around imports and export)
+// Actually I need to split this because file is large.
+
+// I will do multi_replace.
 
 
 const durationOptions = [
@@ -88,8 +97,8 @@ const durationOptions = [
 ]
 
 
-class CreateCustom extends PureComponent<Props, State> {
-  constructor(props: Props) {
+class CreateCustom extends PureComponent<InternalProps, State> {
+  constructor(props: InternalProps) {
     super(props)
     this.state = {
       placeholderName: '',
@@ -285,8 +294,8 @@ class CreateCustom extends PureComponent<Props, State> {
         fullWidth
         maxWidth="sm"
       >
-        <DialogTitle disableTypography className={classes.dialogTitle}>
-          <Typography variant="h6" id="custom-event-title" className={classes.flexGrow}>
+        <DialogTitle className={classes.dialogTitle}>
+          <Typography variant="h6" component="div" id="custom-event-title" className={classes.flexGrow}>
             Add Personal Event
           </Typography>
 
@@ -313,10 +322,10 @@ class CreateCustom extends PureComponent<Props, State> {
           />
 
           <Grid container spacing={1} className={classes.paddingBottom}>
-            <Grid item>
+            <Grid>
               <TimelapseIcon className={classes.marginTop} />
             </Grid>
-            <Grid item className={classes.flexGrow}>
+            <Grid className={classes.flexGrow}>
               <TextField
                 label="Duration"
                 select
@@ -373,4 +382,4 @@ class CreateCustom extends PureComponent<Props, State> {
   }
 }
 
-export default withStyles(styles)(CreateCustom)
+export default withStyles(CreateCustom, styles) as unknown as React.ComponentType<Props>

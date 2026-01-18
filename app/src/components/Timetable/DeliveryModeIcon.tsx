@@ -1,10 +1,10 @@
 import { memo } from 'react'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import OnlineIcon from '@material-ui/icons/Laptop'
-import PersonIcon from '@material-ui/icons/Person'
+import { makeStyles } from 'tss-react/mui'
+import OnlineIcon from '@mui/icons-material/Laptop'
+import PersonIcon from '@mui/icons-material/Person'
 import { DeliveryType } from '../../state'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -28,7 +28,7 @@ export interface Props {
 }
 
 const DeliveryTypeIconBase: React.FC<Props> = ({ delivery, padded }: Props) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const rootClasses = [classes.root]
   if (padded) {
     rootClasses.push(classes.padded)

@@ -2,7 +2,7 @@ import React from 'react'
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { exception } from 'react-ga'
-import Button from '@material-ui/core/Button'
+import Button from '@mui/material/Button'
 
 import {
   clearNotice,

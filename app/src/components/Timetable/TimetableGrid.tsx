@@ -1,14 +1,13 @@
-import { CSSProperties } from '@material-ui/core/styles/withStyles'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import IconButton from '@material-ui/core/IconButton'
-import Schedule from '@material-ui/icons/Schedule'
+import { CSSProperties, FC, memo, useMemo  } from 'react'
+import { makeStyles } from 'tss-react/mui'
+import IconButton from '@mui/material/IconButton'
+import Schedule from '@mui/icons-material/Schedule'
 import {
   getCellHeight,
   TIMETABLE_BORDER_WIDTH,
   TIMETABLE_FIRST_CELL_WIDTH,
   TIMETABLE_CELL_MIN_WIDTH,
 } from './timetableUtil'
-import { FC, memo, useMemo } from 'react'
 
 const noSelect: CSSProperties = {
   WebkitTouchCallout: 'none',
@@ -19,7 +18,7 @@ const noSelect: CSSProperties = {
   userSelect: 'none',
 }
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles<Props>()((theme, props, classes: any) => {
   const STANDARD_BORDER = theme.palette.divider
   const DARKER_BORDER = theme.palette.action.disabled
 
@@ -33,7 +32,7 @@ const useStyles = makeStyles(theme => {
       borderWidth: TIMETABLE_BORDER_WIDTH,
       borderRightWidth: 0,
       borderBottomWidth: 0,
-      minWidth: (props: Props) =>
+      minWidth:
         TIMETABLE_FIRST_CELL_WIDTH + (TIMETABLE_CELL_MIN_WIDTH * props.numDisplayDays) + TIMETABLE_BORDER_WIDTH,
       zIndex: -1,
     },
@@ -48,13 +47,13 @@ const useStyles = makeStyles(theme => {
       '&:last-child': {
         borderBottomColor: DARKER_BORDER,
       },
-      '&$compact': {
+      [`&.${classes.compact}`]: {
         height: getCellHeight(true, false),
       },
-      '&$spacious': {
+      [`&.${classes.spacious}`]: {
         height: getCellHeight(false, true),
       },
-      '&$disableTransitions': {
+      [`&.${classes.disableTransitions}`]: {
         transition: 'none',
       },
     },
@@ -86,7 +85,7 @@ const useStyles = makeStyles(theme => {
       paddingRight: theme.spacing(1.5),
       justifyContent: 'flex-end',
       borderRightColor: DARKER_BORDER,
-      '&$timeCentred': {
+      [`&.${classes.timeCentred}`]: {
         justifyContent: 'center',
         paddingRight: 0,
       },
@@ -151,7 +150,7 @@ const Grid: FC<Props> = props => {
     onToggleTwentyFourHours,
   } = props
 
-  const classes = useStyles(props)
+  const { classes } = useStyles(props)
 
   const hoursArray = useMemo(() => {
     const duration = end - start

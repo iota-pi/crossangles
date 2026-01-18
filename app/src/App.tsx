@@ -6,19 +6,19 @@ import React, {
 } from 'react'
 import { connect, MapDispatchToPropsNonObject } from 'react-redux'
 import { exception, event, modalview } from 'react-ga'
-import loadable from '@loadable/component'
+
 
 // Theme
-import { Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 
 // Styles
-import withStyles, { StyleRules, WithStyles } from '@material-ui/core/styles/withStyles'
+import { withStyles } from 'tss-react/mui'
 
 // Components
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Container from '@material-ui/core/Container'
-import Skeleton from '@material-ui/lab/Skeleton'
-import Button from '@material-ui/core/Button'
+import CssBaseline from '@mui/material/CssBaseline'
+import Container from '@mui/material/Container'
+import Skeleton from '@mui/material/Skeleton'
+import Button from '@mui/material/Button'
 import { initialiseGA, pageView, CATEGORY } from './analytics'
 import { clearNotice, setChangelogView, setNotice, toggleOption } from './actions'
 import {
@@ -39,16 +39,17 @@ import changelog, { getUpdateMessage } from './changelog'
 import { saveAsICS } from './saveAsICS'
 import SessionManager from './components/Timetable/SessionManager'
 
-const AppBar = loadable(() => import('./components/AppBar'))
+const AppBar = lazy(() => import('./components/AppBar'))
 const TimetableContainer = lazy(() => import('./containers/TimetableContainer'))
-const ActionButtons = loadable(() => import('./components/ActionButtons'))
-const NoticeDisplay = loadable(() => import('./components/Notice'))
-const ContactUs = loadable(() => import('./components/ContactUs'))
-const Changelog = loadable(() => import('./components/Changelog'))
+const ActionButtons = lazy(() => import('./components/ActionButtons'))
+const NoticeDisplay = lazy(() => import('./components/Notice'))
+const ContactUs = lazy(() => import('./components/ContactUs'))
+const Changelog = lazy(() => import('./components/Changelog'))
 
-const styles = (theme: Theme): StyleRules => ({
+
+const styles = (theme: Theme) => ({
   appBarSpacer: {
-    ...theme.mixins.toolbar,
+    ...(theme.mixins.toolbar as any),
     marginBottom: theme.spacing(4),
   },
   spaceAbove: { marginTop: theme.spacing(8) },
@@ -56,7 +57,8 @@ const styles = (theme: Theme): StyleRules => ({
   spaceBelow: { marginBottom: theme.spacing(8) },
 })
 
-export type OwnProps = WithStyles<typeof styles>
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type OwnProps = {}
 
 export interface StateProps {
   showSignup: boolean,
@@ -75,7 +77,7 @@ export interface DispatchProps {
   setChangelogView: () => void,
 }
 
-export type Props = OwnProps & StateProps & DispatchProps
+export type Props = StateProps & DispatchProps & OwnProps & { classes: Record<keyof ReturnType<typeof styles>, string> }
 
 export interface State {
   showChangelog: boolean,
@@ -201,12 +203,14 @@ class App extends PureComponent<Props, State> {
       <div>
         <CssBaseline />
 
-        <AppBar
-          onShowContact={this.handleContactShow}
-          onViewChangelog={this.handleChangelogShow}
-        />
+        <Suspense fallback={<div />}>
+          <AppBar
+            onShowContact={this.handleContactShow}
+            onViewChangelog={this.handleChangelogShow}
+          />
+        </Suspense>
         <div className={classes.appBarSpacer} />
-        
+
         <Container
           maxWidth="lg"
           className={classes.spaceBelow}
@@ -214,20 +218,22 @@ class App extends PureComponent<Props, State> {
           <CourseSelection />
 
           <div className={classes.moderateSpaceAbove}>
-            <Suspense fallback={<Skeleton variant="rect" height={465} />}>
+            <Suspense fallback={<Skeleton variant="rectangular" height={465} />}>
               <TimetableContainer />
             </Suspense>
           </div>
-          
-          <ActionButtons
-            additional={this.props.additional}
-            meta={this.props.meta}
-            disabled={this.props.timetable.order.length === 0}
-            showSignup={this.props.showSignup}
-            isSavingICS={this.state.isSavingICS}
-            onSaveAsICS={this.handleSaveAsICS}
-            className={classes.spaceAbove}
-          />
+
+          <Suspense fallback={<div />}>
+            <ActionButtons
+              additional={this.props.additional}
+              meta={this.props.meta}
+              disabled={this.props.timetable.order.length === 0}
+              showSignup={this.props.showSignup}
+              isSavingICS={this.state.isSavingICS}
+              onSaveAsICS={this.handleSaveAsICS}
+              className={classes.spaceAbove}
+            />
+          </Suspense>
 
           <InfoText
             additional={this.props.additional}
@@ -243,21 +249,27 @@ class App extends PureComponent<Props, State> {
           />
         </Container>
 
-        <NoticeDisplay
-          notice={this.props.notice}
-          onSnackbarClose={this.handleSnackbarClose}
-        />
+        <Suspense fallback={<div />}>
+          <NoticeDisplay
+            notice={this.props.notice}
+            onSnackbarClose={this.handleSnackbarClose}
+          />
+        </Suspense>
 
-        <ContactUs
-          open={this.state.showContact}
-          onSend={this.handleContactSend}
-          onClose={this.handleContactClose}
-        />
+        <Suspense fallback={<div />}>
+          <ContactUs
+            open={this.state.showContact}
+            onSend={this.handleContactSend}
+            onClose={this.handleContactClose}
+          />
+        </Suspense>
 
-        <Changelog
-          open={this.state.showChangelog}
-          onClose={this.handleChangelogClose}
-        />
+        <Suspense fallback={<div />}>
+          <Changelog
+            open={this.state.showChangelog}
+            onClose={this.handleChangelogClose}
+          />
+        </Suspense>
       </div>
     )
   }
@@ -285,5 +297,5 @@ const mapDispatchToProps: MapDispatchToPropsNonObject<DispatchProps, OwnProps> =
 })
 
 const connection = connect(mapStateToProps, mapDispatchToProps)
-const styledApp = withStyles(styles)(connection(App))
+const styledApp = withStyles(connection(App), styles) as unknown as React.ComponentType<OwnProps>
 export default styledApp
