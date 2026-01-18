@@ -1,5 +1,4 @@
 import scrapeCampus from './scrapeCampus'
-import code_version from './version'
 import { getLogger } from './logging'
 
 const bucketName = process.env.S3_OUTPUT_BUCKET || 'crossangles-course-data'
@@ -13,7 +12,7 @@ export interface CloudwatchScraperEvent {
 
 export const handler = async (event: CloudwatchScraperEvent) => {
   const { campuses = ['unsw'] } = event
-  logger.info('Scraper invoked', { code_version, event, campuses })
+  logger.info('Scraper invoked', { event, campuses })
   const promises: Promise<void>[] = []
   for (const campus of campuses) {
     const promise = scrapeCampus(campus, S3_BUCKET).catch(e => {
