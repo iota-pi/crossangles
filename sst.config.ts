@@ -23,8 +23,7 @@ export default $config({
     const isProd = stage === PROD
     const isStaging = stage === STAGING
 
-    // 1. Storage (Existing Resources)
-    // We import existing resources so SST controls them.
+    // 1. Storage
     const table = new sst.aws.Dynamo("ScraperState", {
       fields: {
         campus: "string",

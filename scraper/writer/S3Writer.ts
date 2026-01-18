@@ -57,7 +57,6 @@ export class S3Writer implements Writer {
       ContentType: 'application/json',
       Body: content,
       ContentMD5: this.getHash(content),
-      ACL: 'public-read',
       CacheControl: `max-age=${maxAge}`,
       ...additionalParams,
     })
