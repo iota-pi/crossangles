@@ -15,22 +15,14 @@ const TERMS = [1, 2, 3]
 
 
 export async function scrapeUNSW(
-  { state, forceUpdate = false }: ScrapeCampusArgs,
+  { state }: ScrapeCampusArgs,
 ): Promise<CampusData[] | null> {
   const timetable = new TimetableScraper({ state })
   await timetable.setup()
 
-  let dataUpdated = true
   const updated = await timetable.checkIfDataUpdated()
   if (!updated) {
     logger.info('Data has not been updated yet')
-    dataUpdated = false
-  }
-
-  logger.info('scrapeUNSW decision', { forceUpdate, dataUpdated })
-
-  // Don't need to update data if only using info from cache
-  if (!forceUpdate && !dataUpdated) {
     return null
   }
 

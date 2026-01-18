@@ -2,7 +2,6 @@ import { getWriter } from './writer'
 import { CampusData } from './scraper/Scraper'
 import { UNSW, scrapeUNSW } from './scraper/unsw/scrapeUNSW'
 import getStateManager from './state/getStateManager'
-import { checkVersionChange, updateVersion } from './state/util'
 import { getLogger } from './logging'
 import CampusError from './scraper/CampusError'
 import StateManager from './state/StateManager'
@@ -11,7 +10,6 @@ const logger = getLogger('scrapeCampus')
 
 export interface ScrapeCampusArgs {
   state?: StateManager | null,
-  forceUpdate?: boolean,
 }
 
 async function scrapeCampus(
@@ -21,18 +19,11 @@ async function scrapeCampus(
 ) {
   const state = useState ? getStateManager() : null
 
-  let forceUpdate = !useState
-  if (state && await checkVersionChange(campus, state)) {
-    await updateVersion(campus, state)
-    forceUpdate = true
-    logger.info('Scraper code updated, forcing data update.')
-  }
-
   let data: CampusData[] | null = null
-  logger.info('Invoking campus scraper', { campus, forceUpdate })
+  logger.info('Invoking campus scraper', { campus })
   switch (campus) {
     case UNSW:
-      data = await scrapeUNSW({ state, forceUpdate })
+      data = await scrapeUNSW({ state })
       break
     default:
       throw new CampusError(`Unhandled campus ${campus}`)
