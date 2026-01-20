@@ -3096,15 +3096,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/moment-timezone@npm:^0.5.30":
-  version: 0.5.30
-  resolution: "@types/moment-timezone@npm:0.5.30"
-  dependencies:
-    moment-timezone: "npm:*"
-  checksum: 10c0/bdaffcec51073393cebacacf4880195fd5b1e1e4657ce84b5526d7721ad426a89dbb27c350cd172ab78e11dd9f306a6d9061c46535334ce293c493b49b4415ec
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*":
   version: 25.0.3
   resolution: "@types/node@npm:25.0.3"
@@ -4692,7 +4683,6 @@ __metadata:
     "@types/aws-lambda": "npm:^8.10.159"
     "@types/downloadjs": "npm:^1.4.6"
     "@types/jsdom": "npm:^27.0.0"
-    "@types/moment-timezone": "npm:^0.5.30"
     "@types/node": "npm:^25.0.8"
     "@types/react": "npm:^19.2.8"
     "@types/react-dom": "npm:^19.2.3"
@@ -7650,7 +7640,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment-timezone@npm:*, moment-timezone@npm:^0.6.0":
+"moment-timezone@npm:^0.6.0":
   version: 0.6.0
   resolution: "moment-timezone@npm:0.6.0"
   dependencies:

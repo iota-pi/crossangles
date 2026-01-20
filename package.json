@@ -55,7 +55,6 @@
     "@types/aws-lambda": "^8.10.159",
     "@types/downloadjs": "^1.4.6",
     "@types/jsdom": "^27.0.0",
-    "@types/moment-timezone": "^0.5.30",
     "@types/node": "^25.0.8",
     "@types/react": "^19.2.8",
     "@types/react-dom": "^19.2.3",
