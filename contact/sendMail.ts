@@ -1,16 +1,17 @@
-import mailgun from 'mailgun-js'
+import Mailgun from 'mailgun.js'
 import { domain, from, to } from './mailgun.json'
 import { RequestBody } from './parseBody.js'
 
-let mg: mailgun.Mailgun
+let mg: ReturnType<Mailgun['client']>
 
 export const initMailgun = () => {
   const apiKey = process.env.MAILGUN_API_KEY || ''
-  mg = mailgun({ apiKey, domain })
+  const mailgun = new Mailgun(FormData)
+  mg = mailgun.client({ username: 'api', key: apiKey })
 }
 
-export const sendMail = ({ email, name, message }: RequestBody): Promise<mailgun.messages.SendResponse> => {
-  return mg.messages().send({
+export const sendMail = ({ email, name, message }: RequestBody) => {
+  return mg.messages.create(domain, {
     to,
     from,
     "h:Reply-To": `${name} <${email}>`,

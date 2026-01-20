@@ -122,7 +122,7 @@ describe('POST method responses', () => {
   })
 
   it('sends mail successfully', async () => {
-    mock_sendMail.mockImplementationOnce(async () => ({ id: '', message: '' }))
+    mock_sendMail.mockImplementationOnce(async () => ({ id: '', message: '', status: 200 }))
     const body: RequestBody = {
       name: 'Mithrandir',
       email: 'gandalf.the.grey@middle.earth',
