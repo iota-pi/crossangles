@@ -310,10 +310,6 @@ export function shouldSkipTime(time: ClassTime) {
     return true
   }
 
-  if (isOnWeekend(time.time)) {
-    return true
-  }
-
   return false
 }
 
