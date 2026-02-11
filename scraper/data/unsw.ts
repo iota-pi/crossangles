@@ -1,5 +1,5 @@
 import type { MinistryMeta } from '../../app/src/state/Meta'
-import { ALL_DAYS } from '../../app/src/state/Session'
+import { WEEKDAY_DAYS } from '../../app/src/state/Session'
 import type { CampusAdditional } from './types'
 
 
@@ -205,7 +205,7 @@ function transformCBSEvents(data: CampusAdditional<CBSComponent>): CampusAdditio
           // Add a stream for every possible time slot if it's a placeholder event
           const startHour = 8
           const endHour = 21
-          for (const day of ALL_DAYS) {
+          for (const day of WEEKDAY_DAYS) {
             for (let hour = startHour; hour < endHour; ++hour) {
               const time = `${day}${hour}`
               updatedCourse.streams.push({
