@@ -9,7 +9,6 @@ import {
   getShortActivity,
   getTermNumber,
   isIntensive,
-  isOnWeekend,
   shortenTime,
   shouldSkipStream,
   splitLocation,
@@ -224,19 +223,5 @@ describe('parsing utilities', () => {
     ${'MTW10-16'} | ${true}
   `('isIntensive("$status") = $expected', ({ status, expected }) => {
     expect(isIntensive(status)).toEqual(expected)
-  })
-
-  it.each`
-    status        | expected
-    ${'M10'}      | ${false}
-    ${'T9-12'}    | ${false}
-    ${'W9'}       | ${false}
-    ${'H15-18'}   | ${false}
-    ${'S14-16'}   | ${true}
-    ${'s10'}      | ${true}
-    ${'MTW10-16'} | ${false}
-    ${'MTS10-16'} | ${true}
-  `('isOnWeekend("$status") = $expected', ({ status, expected }) => {
-    expect(isOnWeekend(status)).toEqual(expected)
   })
 })

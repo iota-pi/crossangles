@@ -412,10 +412,6 @@ export function isIntensive(time: string) {
   return time.replace(/[^a-z].*/i, '').length > 1
 }
 
-export function isOnWeekend(time: string) {
-  return time.replace(/[^a-z].*/i, '').toLowerCase().includes('s')
-}
-
 export function isCourseEnrolment(data: StreamTableData) {
   return data.Activity.toLowerCase() === 'course enrolment'
 }
