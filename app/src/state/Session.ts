@@ -5,7 +5,7 @@ export type SessionId = string
 
 export type DayLetter = 'M' | 'T' | 'W' | 'H' | 'F' | 'S' | 's'
 export const WEEKDAY_DAYS: DayLetter[] = ['M', 'T', 'W', 'H', 'F']
-export const ALL_DAYS: DayLetter[] = ['M', 'T', 'W', 'H', 'F', 'S', 's']
+export const ALL_DAYS: DayLetter[] = [...WEEKDAY_DAYS, 'S', 's'];
 
 export interface SessionCommon {
   index: number,
