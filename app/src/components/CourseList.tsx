@@ -54,6 +54,7 @@ const CourseListComponent: FC<Props> = (props: Props) => {
   const [showPopover, setShowPopover] = useState<PopoverState>()
   const reducedMotion = useSelector((state: RootState) => state.options.reducedMotion)
   const { chosen, custom, additional, onColourChange } = props
+  console.log(chosen, custom)
   const allCourses = useMemo(
     () => [...chosen, ...custom, ...additional],
     [chosen, custom, additional],
@@ -83,7 +84,7 @@ const CourseListComponent: FC<Props> = (props: Props) => {
     },
     [showPopover, handleHidePopover, onColourChange],
   )
-
+  // console.log(allCourses) TODO 
   return (
     <List className={classes.root} disablePadding id="course-display">
       <TransitionGroup>
@@ -122,7 +123,6 @@ const CourseListComponent: FC<Props> = (props: Props) => {
           </Collapse>
         ))}
       </TransitionGroup>
-      <Divider light />
 
       <Popover
         open={showPopover !== undefined}

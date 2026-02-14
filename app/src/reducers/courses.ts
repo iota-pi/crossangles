@@ -45,6 +45,7 @@ export function chosen(
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
+  console.log(action)
   if (action.type === ADD_COURSE && !action.course.isCustom) {
     return [
       ...state,
