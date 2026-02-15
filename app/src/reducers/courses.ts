@@ -45,7 +45,6 @@ export function chosen(
   state: CourseId[] = [],
   action: AllActions,
 ): CourseId[] {
-
   if (action.type === ADD_COURSE && !action.course.isCustom) {
     return [
       ...state,
