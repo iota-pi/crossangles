@@ -4,17 +4,21 @@ import { store, persistor } from './configureStore'
 import { fetchData } from './actions'
 import App from './App'
 
-const previousMeta = store.getState().meta
-store.dispatch(fetchData(previousMeta))
-
 export function wrapApp(AppComponent: typeof App) {
-  const AppWraper = () => (
-    <Provider store={store}>
-      <PersistGate persistor={persistor} loading={null}>
-        <AppComponent />
-      </PersistGate>
-    </Provider>
-  )
+  const AppWraper = () => {
+    const handleBeforeLift = () => {
+      const previousMeta = store.getState().meta
+      store.dispatch(fetchData(previousMeta))
+    }
+
+    return (
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={null} onBeforeLift={handleBeforeLift}>
+          <AppComponent />
+        </PersistGate>
+      </Provider>
+    )
+  }
   return AppWraper
 }
 

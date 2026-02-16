@@ -123,7 +123,6 @@ const CourseListComponent: FC<Props> = (props: Props) => {
         ))}
       </TransitionGroup>
       <Divider light />
-
       <Popover
         open={showPopover !== undefined}
         anchorEl={showPopover ? showPopover.target : undefined}
