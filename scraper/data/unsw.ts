@@ -126,7 +126,7 @@ const BASE_UNSW_DATA: CampusAdditional<CBSComponent> = {
         },
         {
           component: CBSComponent.PRAYER,
-          times: [{ time: 'H15' }],
+          times: [{ time: 'H10' }],
         },
         {
           component: CBSComponent.HANG,
