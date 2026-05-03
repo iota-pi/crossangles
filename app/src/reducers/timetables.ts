@@ -38,7 +38,11 @@ function findMissingSessions(
 ): Set<SessionId> {
   const sessionsToRemove = new Set<SessionId>()
   for (const [sessionId, placement] of timetableData) {
-    const course = courses.get(placement.session.course)
+    const courseId = placement.session.course
+    const course = courses.get(courseId)
+    if (courseId.startsWith('custom_')) {
+      continue
+    }
     if (course === undefined) {
       sessionsToRemove.add(sessionId)
     } else {
