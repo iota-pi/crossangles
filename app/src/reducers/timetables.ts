@@ -1,6 +1,7 @@
 import { UPDATE_SESSION_MANAGER, UPDATE_SUGGESTED_TIMETABLE, AllActions, UPDATE_UNPLACED_COUNT, SET_COURSE_DATA } from '../actions'
 import { initialState, Timetables, getCurrentTerm, SessionId, getCourseId, getStreamId, CourseId, CourseData } from '../state'
 import { SessionManagerData, SessionManagerEntriesData } from '../components/Timetable/SessionManager'
+import { isCustomCode } from '../components/Timetable/timetableUtil'
 
 export function timetables(
   state: Timetables = initialState.timetables,
@@ -21,7 +22,7 @@ export function timetables(
     if (!timetable) {
       return state
     }
-    const sessionsToRemove = findMissingSessions(courses, timetable.map)
+    const sessionsToRemove = listOrphanedSessions(courses, timetable.map)
     const newTimetable = { ...timetable }
     newTimetable.map = newTimetable.map.filter(([id, _]) => !sessionsToRemove.has(id))
     newTimetable.order = newTimetable.order.filter(id => !sessionsToRemove.has(id))
@@ -32,7 +33,7 @@ export function timetables(
   return state
 }
 
-function findMissingSessions(
+function listOrphanedSessions(
   courses: Map<CourseId, CourseData>,
   timetableData: SessionManagerEntriesData,
 ): Set<SessionId> {
@@ -40,7 +41,7 @@ function findMissingSessions(
   for (const [sessionId, placement] of timetableData) {
     const courseId = placement.session.course
     const course = courses.get(courseId)
-    if (courseId.startsWith('custom_')) {
+    if (isCustomCode(courseId)) {
       continue
     }
     if (course === undefined) {
