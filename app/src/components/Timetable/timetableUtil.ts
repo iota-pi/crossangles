@@ -84,8 +84,14 @@ export function findFreeDepth(takenDepths: Set<number>): number {
   return takenDepths.size
 }
 
+const CUSTOM_CODE_PREFIX = 'custom_'
+
 export function getCustomCode() {
-  return `custom_${Math.random()}`
+  return `${CUSTOM_CODE_PREFIX}${Math.random()}`
+}
+
+export function isCustomCode(code: string) {
+  return code.startsWith(CUSTOM_CODE_PREFIX)
 }
 
 // From Monday, find number of days to display on the grid
