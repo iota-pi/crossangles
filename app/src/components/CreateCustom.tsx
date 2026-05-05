@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import TimelapseIcon from '@mui/icons-material/Timelapse'
 import { CourseData, DayLetter, ClassTime, getSessions, StreamData, getDuration } from '../state'
 import { CustomTimeOption, TimeOption } from './TimeOption'
+import { InputAdornment, Stack } from '@mui/material'
 
 const styles = (theme: Theme) => ({
   dialog: {},
@@ -35,8 +36,9 @@ const styles = (theme: Theme) => ({
   marginTop: {
     marginTop: theme.spacing(2.5),
   },
-  paddingBottom: {
-    paddingBottom: theme.spacing(2),
+  paddedField: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
 })
 
@@ -309,61 +311,64 @@ class CreateCustom extends PureComponent<InternalProps, State> {
         </DialogTitle>
 
         <DialogContent>
-          <TextField
-            label="Event Name"
-            placeholder={this.state.placeholderName}
-            value={this.state.name}
-            onChange={this.handleChangeName}
-            inputProps={{ maxLength: 40 }}
-            helperText={`${this.state.name.length} / 40`}
-            autoFocus
-            className={classes.paddingBottom}
-            fullWidth
-          />
-
-          <Grid container spacing={1} className={classes.paddingBottom}>
-            <Grid>
-              <TimelapseIcon className={classes.marginTop} />
-            </Grid>
-            <Grid className={classes.flexGrow}>
-              <TextField
-                label="Duration"
-                select
-                fullWidth
-                value={this.state.duration}
-                error={this.durationError()}
-                onChange={this.handleChangeDuration}
-                helperText={this.durationError() ? 'Events cannot be timetabled past midnight' : ''}
-              >
-                {durationOptions.map(item => (
-                  <MenuItem
-                    value={item.duration}
-                    key={item.text}
-                  >
-                    {item.text}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
-
-          <Typography paragraph>
-            You may enter multiple possible times below,
-            your event will be able to be scheduled in any one of them.
-          </Typography>
-
-          {this.state.options.map((option, index) => (
-            <TimeOption
-              option={option}
-              index={index}
-              hasStartTimeError={this.startTimeError(option)}
-              onChangeDay={this.handleChangeDay}
-              onClickClearDay={this.handleClickClearDay}
-              onChangeTime={this.handleChangeTime}
-              onClickClearTime={this.handleClickClearTime}
-              key={`option-${option.key}`}
+          <Stack spacing={2} mt={1}>
+            <TextField
+              label="Event Name"
+              placeholder={this.state.placeholderName}
+              value={this.state.name}
+              onChange={this.handleChangeName}
+              inputProps={{ maxLength: 40 }}
+              helperText={`${this.state.name.length} / 40`}
+              autoFocus
+              fullWidth
             />
-          ))}
+
+            <TextField
+              label="Duration"
+              select
+              fullWidth
+              value={this.state.duration}
+              error={this.durationError()}
+              onChange={this.handleChangeDuration}
+              helperText={this.durationError() ? 'Events cannot be timetabled past midnight' : ''}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <TimelapseIcon />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            >
+              {durationOptions.map(item => (
+                <MenuItem
+                  value={item.duration}
+                  key={item.text}
+                >
+                  {item.text}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            <Typography>
+              You may enter multiple possible times below,
+              your event will be able to be scheduled in any one of them.
+            </Typography>
+
+            {this.state.options.map((option, index) => (
+              <TimeOption
+                option={option}
+                index={index}
+                hasStartTimeError={this.startTimeError(option)}
+                onChangeDay={this.handleChangeDay}
+                onClickClearDay={this.handleClickClearDay}
+                onChangeTime={this.handleChangeTime}
+                onClickClearTime={this.handleClickClearTime}
+                key={`option-${option.key}`}
+              />
+            ))}
+          </Stack>
         </DialogContent>
 
         <DialogActions>

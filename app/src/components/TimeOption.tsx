@@ -18,15 +18,15 @@ const useStyles = makeStyles()((theme: Theme) => ({
   flexGrow: {
     flexGrow: 1,
   },
-  marginTop: {
-    marginTop: theme.spacing(2.5),
-  },
   paddingBottom: {
     paddingBottom: theme.spacing(2),
   },
   clearButton: {
-    marginRight: theme.spacing(3),
+    marginRight: theme.spacing(2),
     cursor: 'pointer',
+  },
+  lessPaddingInput: {
+    paddingRight: `${theme.spacing(1)} !important`,
   },
 }))
 
@@ -105,95 +105,102 @@ export const TimeOption = ({
     <Grid
       container
       spacing={1}
-      alignItems="flex-end"
+      alignItems="center"
       className={classes.paddingBottom}
     >
       <Grid size={{ xs: 12, sm: 2 }}>
         <Typography>
-          Option {index + 1}
+          Option <strong>{index + 1}</strong>
         </Typography>
       </Grid>
       <Grid size={{ xs: 12, sm: 5 }}>
-        <Grid container spacing={1}>
-          <Grid>
-            <CalendarToday className={classes.marginTop} />
-          </Grid>
-          <Grid className={classes.flexGrow}>
-            <TextField
-              label="Day"
-              select
-              fullWidth
-              value={option.day || ''}
-              onChange={event => onChangeDay(event, index)}
-              InputProps={{
-                endAdornment: option.day && (
-                  <InputAdornment position="end" className={classes.clearButton}>
-                    <IconButton
-                      aria-label="clear"
-                      disableRipple
-                      disableFocusRipple
-                      size="small"
-                      onClick={() => onClickClearDay(index)}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+        <TextField
+          label="Day"
+          select
+          fullWidth
+          value={option.day || ''}
+          onChange={event => onChangeDay(event, index)}
+
+          slotProps={{
+            input: {
+              classes: {
+                input: classes.lessPaddingInput,
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <CalendarToday />
+                </InputAdornment>
+              ),
+              endAdornment: option.day && (
+                <InputAdornment position="end" className={classes.clearButton}>
+                  <IconButton
+                    aria-label="clear"
+                    disableRipple
+                    disableFocusRipple
+                    size="small"
+                    onClick={() => onClickClearDay(index)}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        >
+          {dayOptions.map(item => (
+            <MenuItem
+              value={item.letter}
+              key={item.text}
             >
-              {dayOptions.map(item => (
-                <MenuItem
-                  value={item.letter}
-                  key={item.text}
-                >
-                  {item.text}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        </Grid>
+              {item.text}
+            </MenuItem>
+          ))}
+        </TextField>
       </Grid>
 
       <Grid size={{ xs: 12, sm: 5 }}>
-        <Grid container spacing={1}>
-          <Grid>
-            <AccessTime className={classes.marginTop} />
-          </Grid>
-          <Grid className={classes.flexGrow}>
-            <TextField
-              label="Start time"
-              select
-              fullWidth
-              value={option.start || ''}
-              onChange={event => onChangeTime(event, index)}
-              error={hasStartTimeError}
-              InputProps={{
-                endAdornment: option.start && (
-                  <InputAdornment position="end" className={classes.clearButton}>
-                    <IconButton
-                      aria-label="clear"
-                      disableRipple
-                      disableFocusRipple
-                      size="small"
-                      onClick={() => onClickClearTime(index)}
-                    >
-                      <CloseIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
+        <TextField
+          label="Start time"
+          select
+          fullWidth
+          value={option.start || ''}
+          onChange={event => onChangeTime(event, index)}
+          error={hasStartTimeError}
+          slotProps={{
+            input: {
+              classes: {
+                input: classes.lessPaddingInput,
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccessTime />
+                </InputAdornment>
+              ),
+              endAdornment: option.start && (
+                <InputAdornment position="end" className={classes.clearButton}>
+                  <IconButton
+                    aria-label="clear"
+                    disableRipple
+                    disableFocusRipple
+                    size="small"
+                    onClick={() => onClickClearTime(index)}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        >
+          {timeOptions.map(item => (
+            <MenuItem
+              value={item.time}
+              key={item.text}
             >
-              {timeOptions.map(item => (
-                <MenuItem
-                  value={item.time}
-                  key={item.text}
-                >
-                  {item.text}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        </Grid>
+              {item.text}
+            </MenuItem>
+          ))}
+        </TextField>
       </Grid>
     </Grid>
   )
