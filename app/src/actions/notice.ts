@@ -6,15 +6,15 @@ export const SET_CHANGELOG_VIEW = 'SET_CHANGELOG_VIEW'
 export const SET_NOTICE = 'SET_NOTICE'
 export const CLEAR_NOTICE = 'CLEAR_NOTICE'
 
-export interface SetNoticeAction extends Action, Notice {
+export type SetNoticeAction = Action & Notice & {
   type: typeof SET_NOTICE,
 }
 
-export interface ClearNoticeAction extends Action {
+export type ClearNoticeAction = Action & {
   type: typeof CLEAR_NOTICE,
 }
 
-export interface SetChangelogViewAction extends Action {
+export type SetChangelogViewAction = Action & {
   type: typeof SET_CHANGELOG_VIEW,
 }
 

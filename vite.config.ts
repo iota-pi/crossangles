@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   root: 'app',
-  plugins: [react(), viteTsconfigPaths()],
+  plugins: [react()],
   server: {
     open: true,
     port: 3000,
@@ -12,5 +11,8 @@ export default defineConfig({
   build: {
     outDir: '../dist',
     emptyOutDir: true,
+  },
+  resolve: {
+    tsconfigPaths: true,
   },
 })

@@ -1,14 +1,14 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk, { ThunkMiddleware } from 'redux-thunk'
 import { persistStore, persistReducer, PersistConfig, createMigrate } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import storage from 'redux-persist/es/storage'
 import reducer from './reducers'
 import transforms from './transforms'
 import { RootState } from './state'
 import { AllActions } from './actions'
 import { migrations } from './migrations'
 
-const persistConfig: PersistConfig = {
+const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   storage,
   transforms,

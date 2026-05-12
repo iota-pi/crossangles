@@ -1,8 +1,8 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export const DEFAULT_NOTICE_TIMEOUT = 6000
 
-export interface Notice {
+export type Notice = {
   message: string,
   actions: ReactNode,
   timeout: number | null,
