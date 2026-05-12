@@ -4,7 +4,7 @@ import { CATEGORY } from '../analytics'
 
 export const UNDO = 'UNDO'
 export const REDO = 'REDO'
-export interface HistoryAction extends Action {
+export type HistoryAction = Action & {
   type: typeof UNDO | typeof REDO,
 }
 

@@ -4,7 +4,7 @@ import { SessionManagerData } from '../components/Timetable/SessionManagerTypes'
 
 export const UPDATE_SESSION_MANAGER = 'UPDATE_SESSION_MANAGER'
 
-export interface SessionManagerAction extends Action {
+export type SessionManagerAction = Action & {
   type: typeof UPDATE_SESSION_MANAGER,
   sessionManager: SessionManagerData,
   term: string,
@@ -13,7 +13,7 @@ export interface SessionManagerAction extends Action {
 
 export const UPDATE_SUGGESTED_TIMETABLE = 'UPDATE_SUGGESTED_TIMETABLE'
 
-export interface SuggestionAction extends Action {
+export type SuggestionAction = Action & {
   type: typeof UPDATE_SUGGESTED_TIMETABLE,
   score: number | null,
 }
@@ -21,7 +21,7 @@ export interface SuggestionAction extends Action {
 
 export const UPDATE_UNPLACED_COUNT = 'UPDATE_UNPLACED_COUNT'
 
-export interface UnplacedCountAction extends Action {
+export type UnplacedCountAction = Action & {
   type: typeof UPDATE_UNPLACED_COUNT,
   count: number,
 }

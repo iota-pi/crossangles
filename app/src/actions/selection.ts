@@ -9,7 +9,7 @@ export const ADD_COURSE = 'ADD_COURSE'
 export const REMOVE_COURSE = 'REMOVE_COURSE'
 export const TOGGLE_WEB_STREAM = 'TOGGLE_WEB_STREAM'
 
-export interface CourseAction extends Action {
+export type CourseAction = Action & {
   type: typeof ADD_COURSE | typeof REMOVE_COURSE | typeof TOGGLE_WEB_STREAM;
   course: CourseData;
 }
@@ -57,7 +57,7 @@ export function toggleWebStream(course: CourseData): CourseAction {
 // Events
 export const TOGGLE_EVENT = 'TOGGLE_EVENT'
 
-export interface EventAction extends Action {
+export type EventAction = Action & {
   type: typeof TOGGLE_EVENT;
   event: AdditionalEvent;
 }
@@ -77,7 +77,7 @@ export function toggleEvent(additionalEvent: AdditionalEvent): EventAction {
 
 export const TOGGLE_SHOW_EVENTS = 'TOGGLE_SHOW_EVENTS'
 
-export interface ToggleShowEventsAction extends Action {
+export type ToggleShowEventsAction = Action & {
   type: typeof TOGGLE_SHOW_EVENTS;
   course: CourseId;
 }
@@ -98,7 +98,7 @@ export function toggleShowEvents(courseId: CourseId): ToggleShowEventsAction {
 // Options
 export const TOGGLE_OPTION = 'TOGGLE_OPTION'
 
-export interface ToggleOptionAction extends Action {
+export type ToggleOptionAction = Action & {
   type: typeof TOGGLE_OPTION;
   option: OptionName;
   value?: boolean;
@@ -121,7 +121,7 @@ export function toggleOption(option: OptionName, value?: boolean): ToggleOptionA
 // Score Config
 export const SET_SCORE_CONFIG = 'SET_SCORE_CONFIG'
 
-export interface SetScoreConfigAction extends Action {
+export type SetScoreConfigAction = Action & {
   type: typeof SET_SCORE_CONFIG;
   config: TimetableScoreConfig;
 }

@@ -5,7 +5,7 @@ import type { CourseData, Meta, RootState } from '../state'
 
 export const SET_COURSE_DATA = 'SET_COURSE_DATA'
 
-export interface CourseListAction extends Action {
+export type CourseListAction = Action & {
   type: typeof SET_COURSE_DATA;
   courses: CourseData[];
   meta: Meta;

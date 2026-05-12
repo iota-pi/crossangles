@@ -5,7 +5,7 @@ import { CATEGORY } from '../analytics'
 
 export const SET_COLOUR = 'SET_COLOUR'
 
-export interface ColourAction extends Action {
+export type ColourAction = Action & {
   type: typeof SET_COLOUR;
   course: CourseId;
   colour?: Colour;
