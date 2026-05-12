@@ -61,7 +61,6 @@
     "@types/react-transition-group": "^4.4.0",
     "@types/react-window": "^1.8.2",
     "@vitest/coverage-v8": "^4.0.17",
-    "bestzip": "^2.2.1",
     "cypress": "^15.9.0",
     "eslint": "^9.39.2",
     "eslint-import-resolver-typescript": "^4.4.4",
