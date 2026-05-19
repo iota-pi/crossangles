@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers, ReducersMapObject } from 'redux'
 import { meta } from './meta'
 import { courses, chosen, custom, additional } from './courses'
 import { events, hiddenEvents, options, scoreConfig } from './options'
@@ -21,7 +21,7 @@ import {
 import { getCurrentTimetable } from '../state/selectors'
 import { SessionManagerData } from '../components/Timetable/SessionManagerTypes'
 
-const basicReducer = combineReducers<RootState>({
+const reducers = {
   additional,
   colours,
   changelogView,
@@ -39,7 +39,8 @@ const basicReducer = combineReducers<RootState>({
   timetables,
   unplacedCount,
   webStreams,
-})
+} satisfies ReducersMapObject<RootState, AllActions>
+const basicReducer = combineReducers(reducers)
 
 
 function getStateFromHistory(
