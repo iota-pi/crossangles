@@ -114,6 +114,7 @@ export default $config({
         VITE_CONTACT_ENDPOINT: api.url,
         VITE_DATA_ROOT_URI: `https://${bucketName}.s3.amazonaws.com`,
         VITE_CAMPUS: "unsw",
+        VITE_ROBOTS_META: isProd ? "index, follow" : "noindex, nofollow",
       },
     })
 
