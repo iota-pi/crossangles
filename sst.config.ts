@@ -97,6 +97,13 @@ export default $config({
     api.route("POST /", contact.arn)
 
     // 4. App (Static Site hosted on Cloudflare)
+    const domain = (
+      isProd
+        ? "crossangles.app"
+        : isStaging
+          ? "staging.crossangles.app"
+          : undefined
+    )
     const site = new sst.cloudflare.StaticSite("CA_App", {
       path: ".",
       build: {
@@ -113,6 +120,7 @@ export default $config({
       environment: {
         VITE_CONTACT_ENDPOINT: api.url,
         VITE_DATA_ROOT_URI: `https://${bucketName}.s3.amazonaws.com`,
+        VITE_BASE_URL: domain,
         VITE_CAMPUS: "unsw",
         VITE_ROBOTS_META: isProd ? "index, follow" : "noindex, nofollow",
       },
