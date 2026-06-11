@@ -12,11 +12,16 @@ export function saveAsICS({
   meta: Meta,
 }) {
   const eventAttributes = sessions.map((s): EventAttributes => {
+    const weeksArray = weeksToArray(s.weeks ? s.weeks : '1-10')
+    const startWeek = weeksArray[0] || 1
+    const endWeek = weeksArray[weeksArray.length - 1] || 1
+    const count = endWeek - startWeek + 1
+
     const realStartTime = getRealTime({
       day: s.day,
       hour: s.start,
       termStart: getTermStart(s, meta),
-      week: s.weeks ? getFirstWeek(s.weeks) : 1,
+      week: startWeek,
     })
     const duration = getDuration(s)
     const isSpecialCourse = s.course.isAdditional || s.course.isCustom || false
@@ -34,10 +39,10 @@ export function saveAsICS({
       descriptionParts.push(s.stream.notes)
     }
     const description = descriptionParts.join('\\n\\n')
-    const recurrenceDates = getRecurrenceDates(s, meta)
-    const rdate = getRDATEParam(recurrenceDates)
 
-    return {
+    const exclusionDates = getExclusionDates(s, meta, weeksArray, startWeek, endWeek)
+
+    const event: EventAttributes = {
       description,
       duration: {
         hours: Math.floor(duration),
@@ -46,10 +51,16 @@ export function saveAsICS({
       productId: 'CrossAngles',
       start: toDateArray(realStartTime),
       startOutputType: 'local',
-      recurrenceRule: `FREQ=WEEKLY;COUNT=1\r\n${rdate}`,
+      recurrenceRule: `FREQ=WEEKLY;COUNT=${count}`,
       location: s.location,
       title,
     }
+
+    if (exclusionDates.length > 0) {
+      event.exclusionDates = exclusionDates
+    }
+
+    return event
   })
 
   const icsOutput = createEvents(eventAttributes)
@@ -73,10 +84,6 @@ export function getTermStart(session: LinkedSession, meta: Meta) {
   )
 }
 
-export function getFirstWeek(weeksString: string) {
-  return weeksToArray(weeksString)[0]
-}
-
 export function weeksToArray(weeksString: string): number[] {
   const resultSet = new Set<number>()
   const ranges = weeksString.split(/,\s*/g)
@@ -90,32 +97,6 @@ export function weeksToArray(weeksString: string): number[] {
   // Sort result numerically
   const weekList = Array.from(resultSet.values()).sort((a, b) => +(a > b) - +(a < b))
   return weekList
-}
-
-export function getRecurrenceDates(session: LinkedSession, meta: Meta): Date[] {
-  const weeksArray = weeksToArray(session.weeks ? session.weeks : '1-10')
-  return weeksArray.map(week => getRealTime({
-    day: session.day,
-    hour: session.start,
-    termStart: getTermStart(session, meta),
-    week,
-  }))
-}
-
-export function getRDATEParam(dates: Date[]): string {
-  // We can skip the first date since it will be created anyway
-  const dateString = dates.slice(1).map(
-    d => {
-      const year = d.getFullYear().toString()
-      const month = (d.getMonth() + 1).toString().padStart(2, '0')
-      const day = d.getDate().toString().padStart(2, '0')
-      const hours = d.getHours().toString().padStart(2, '0')
-      const minutes = d.getMinutes().toString().padStart(2, '0')
-      const seconds = d.getSeconds().toString().padStart(2, '0')
-      return `${year}${month}${day}T${hours}${minutes}${seconds}`
-    },
-  ).join(',\r\n ')
-  return `RDATE;VALUE=DATE-TIME:${dateString}`
 }
 
 export function getRealTime({
@@ -144,4 +125,27 @@ export function toDateArray(date: Date): DateArray {
     date.getHours(),
     date.getMinutes(),
   ]
+}
+
+export function getExclusionDates(
+  session: LinkedSession,
+  meta: Meta,
+  weeksArray: number[],
+  startWeek: number,
+  endWeek: number,
+): DateArray[] {
+  const exclusionDates: DateArray[] = []
+  const weeksSet = new Set(weeksArray)
+  for (let week = startWeek; week <= endWeek; week++) {
+    if (!weeksSet.has(week)) {
+      const exclStartTime = getRealTime({
+        day: session.day,
+        hour: session.start,
+        termStart: getTermStart(session, meta),
+        week,
+      })
+      exclusionDates.push(toDateArray(exclStartTime))
+    }
+  }
+  return exclusionDates
 }
