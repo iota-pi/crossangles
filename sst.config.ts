@@ -62,6 +62,24 @@ export default $config({
       }
     })
 
+    // Access logs bucket
+    const logsBucket = new sst.aws.Bucket("AccessLogs", {
+      transform: {
+        bucket: args => {
+          args.bucket = isProd
+            ? "crossangles-access-logs"
+            : `crossangles-access-logs-${stage}`
+          args.forceDestroy = false
+        }
+      }
+    })
+
+    new aws.s3.BucketLoggingV2("CourseDataLogging", {
+      bucket: bucket.name,
+      targetBucket: logsBucket.name,
+      targetPrefix: "course-data-logs/",
+    })
+
     // 2. Scraper
     const scraper = new sst.aws.Function("Scraper", {
       handler: "scraper/lambda.handler",
