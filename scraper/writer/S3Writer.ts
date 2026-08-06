@@ -7,8 +7,6 @@ import {
 import crypto from 'crypto'
 import { Writer } from './Writer'
 
-const ENVIRONMENT = process.env.ENVIRONMENT || ''
-
 export class S3Writer implements Writer {
   private readonly s3 = new S3Client()
 
@@ -50,7 +48,7 @@ export class S3Writer implements Writer {
   }
 
   private upload(content: string, additionalParams?: Partial<PutObjectRequest>) {
-    const maxAge = ENVIRONMENT === 'staging' ? 600 : 7200
+    const maxAge = 7200
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: this.path,

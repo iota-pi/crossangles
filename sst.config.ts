@@ -87,7 +87,6 @@ export default $config({
       environment: {
         S3_OUTPUT_BUCKET: bucketName,
         STATE_TABLE: `ScraperState_${stage}`,
-        ENVIRONMENT: stage,
       },
       timeout: "5 minutes",
       memory: "2048 MB",
