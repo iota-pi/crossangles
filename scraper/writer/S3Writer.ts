@@ -7,8 +7,6 @@ import {
 import crypto from 'crypto'
 import { Writer } from './Writer'
 
-const ENVIRONMENT = process.env.ENVIRONMENT || ''
-
 export class S3Writer implements Writer {
   private readonly s3 = new S3Client()
 
