@@ -1,10 +1,12 @@
-import { useMemo, useCallback, memo, CSSProperties, useRef } from 'react'
+import { useMemo, useCallback, memo, CSSProperties, useRef} from 'react'
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable'
 import { makeStyles } from 'tss-react/mui'
 import { TimetablePosition, Placement } from './timetableTypes'
 import { Options, LinkedSession } from '../../state'
 import { useCache } from '../../hooks'
 import SessionDetails from './SessionDetails'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import IconButton from '@mui/material/IconButton'
 
 const useStyles = makeStyles()((theme, _params, classes: any) => ({
   main: {
@@ -32,6 +34,13 @@ const useStyles = makeStyles()((theme, _params, classes: any) => ({
   },
   disableTransitions: {
     transition: 'none !important',
+  },
+  settingsButton: {
+    height: '100%',
+    position: 'absolute',
+    top: 2,
+    right: 1,
+    zIndex: 20,
   },
   background: {
     transition: theme.transitions.create(['background-color', 'height']),
@@ -97,6 +106,11 @@ const Session: React.FC<Props> = ({
     [position],
   )
 
+  const handleOpenOptions = useCallback(() => {
+    // find particular event's concurrent sessions
+    // display component that allows user to choose multiple sessions
+  }, [])
+   
   const backgroundStyle = useMemo(
     () => ({ backgroundColor: colour }),
     [colour],
@@ -148,11 +162,18 @@ const Session: React.FC<Props> = ({
           style={backgroundStyle}
         />
 
+        <div className={classes.settingsButton}>
+          <IconButton size="small" onClick={handleOpenOptions} sx={{ padding: '2px' }}>
+            <MoreVertIcon fontSize="small" />
+          </IconButton>
+        </div>
+
         <SessionDetails
           session={session}
           options={options}
           hideDetails={!isSnapped}
         />
+
       </div>
     </DraggableCore>
   )
