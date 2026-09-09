@@ -1,4 +1,4 @@
-import { useMemo, useCallback, memo, CSSProperties, useRef} from 'react'
+import React, { useMemo, useCallback, memo, CSSProperties, useRef, useState} from 'react'
 import { DraggableCore, DraggableData, DraggableEvent } from 'react-draggable'
 import { makeStyles } from 'tss-react/mui'
 import { TimetablePosition, Placement } from './timetableTypes'
@@ -7,6 +7,7 @@ import { useCache } from '../../hooks'
 import SessionDetails from './SessionDetails'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import IconButton from '@mui/material/IconButton'
+import ViewEvent from '../ViewEvent'
 
 const useStyles = makeStyles()((theme, _params, classes: any) => ({
   main: {
@@ -106,10 +107,15 @@ const Session: React.FC<Props> = ({
     [position],
   )
 
-  const handleOpenOptions = useCallback(() => {
-    // find particular event's concurrent sessions
-    // display component that allows user to choose multiple sessions
-  }, [])
+  const [showEvent, setShowEvent] = useState(false)
+  // find particular event's concurrent sessions
+  // display component that allows user to choose multiple sessions
+  const handleOpenOptions = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation()
+      setShowEvent(true)
+    }, [],
+  )
    
   const backgroundStyle = useMemo(
     () => ({ backgroundColor: colour }),
@@ -172,6 +178,12 @@ const Session: React.FC<Props> = ({
           session={session}
           options={options}
           hideDetails={!isSnapped}
+        />
+
+        <ViewEvent
+          open={showEvent}
+          session={session}
+          onClose={() => setShowEvent(false)}
         />
 
       </div>
