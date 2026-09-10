@@ -13,8 +13,8 @@ import DialogActions from '@mui/material/DialogActions'
 import TextField from '@mui/material/TextField'
 import MenuItem from '@mui/material/MenuItem'
 import CloseIcon from '@mui/icons-material/Close'
-import TimelapseIcon from '@mui/icons-material/Timelapse'
-import { CourseData, DayLetter, ClassTime, getSessions, getDuration, LinkedSession } from '../state'
+import PlaceIcon from '@mui/icons-material/Place'
+import { CourseData, DayLetter, ClassTime, getSessions, getDuration, LinkedSession, getComponentName  } from '../state'
 import { CustomTimeOption } from './TimeOption'
 import { InputAdornment, Stack } from '@mui/material'
 
@@ -47,10 +47,6 @@ export const getBlankOption = (): CustomTimeOption => ({
 })
 
 export interface Props {
-  // editing?: CourseData | null,
-  // defaultName?: string | null,
-  // onSave: (courseData: Omit<CourseData, 'code'>) => void,
-  // onExited?: () => void,
   open: boolean,
   session: LinkedSession,
   onClose: () => void,
@@ -74,29 +70,29 @@ export interface State {
 // I will do multi_replace.
 
 
-const durationOptions = [
-  // needs to be a function that finds concurrent classes of indentical event
-  { text: '½ an hour', duration: 0.5 },
-  { text: '1 hour', duration: 1 },
-  { text: '1½ hours', duration: 1.5 },
-  { text: '2 hours', duration: 2 },
-  { text: '2½ hours', duration: 2.5 },
-  { text: '3 hours', duration: 3 },
-  { text: '3½ hours', duration: 3.5 },
-  { text: '4 hours', duration: 4 },
-  { text: '4½ hours', duration: 4.5 },
-  { text: '5 hours', duration: 5 },
-  { text: '5½ hours', duration: 5.5 },
-  { text: '6 hours', duration: 6 },
-  { text: '6½ hours', duration: 6.5 },
-  { text: '7 hours', duration: 7 },
-  { text: '7½ hours', duration: 7.5 },
-  { text: '8 hours', duration: 8 },
-  { text: '8½ hours', duration: 8.5 },
-  { text: '9 hours', duration: 9 },
-  { text: '9½ hours', duration: 9.5 },
-  { text: '10 hours', duration: 10 },
-]
+// const durationOptions = [
+//   // needs to be a function that finds concurrent classes of indentical event
+//   { text: '½ an hour', duration: 0.5 },
+//   { text: '1 hour', duration: 1 },
+//   { text: '1½ hours', duration: 1.5 },
+//   { text: '2 hours', duration: 2 },
+//   { text: '2½ hours', duration: 2.5 },
+//   { text: '3 hours', duration: 3 },
+//   { text: '3½ hours', duration: 3.5 },
+//   { text: '4 hours', duration: 4 },
+//   { text: '4½ hours', duration: 4.5 },
+//   { text: '5 hours', duration: 5 },
+//   { text: '5½ hours', duration: 5.5 },
+//   { text: '6 hours', duration: 6 },
+//   { text: '6½ hours', duration: 6.5 },
+//   { text: '7 hours', duration: 7 },
+//   { text: '7½ hours', duration: 7.5 },
+//   { text: '8 hours', duration: 8 },
+//   { text: '8½ hours', duration: 8.5 },
+//   { text: '9 hours', duration: 9 },
+//   { text: '9½ hours', duration: 9.5 },
+//   { text: '10 hours', duration: 10 },
+// ]
 
 
 class ViewEvent extends PureComponent<InternalProps, State> {
@@ -226,6 +222,7 @@ class ViewEvent extends PureComponent<InternalProps, State> {
   render() {
     const classes = this.props.classes
     const session = this.props.session
+    const durationOptions = getSessions(session.course, session.stream)
     return (
       <Dialog
         open={this.props.open}
@@ -240,7 +237,7 @@ class ViewEvent extends PureComponent<InternalProps, State> {
       >
         <DialogTitle className={classes.dialogTitle}>
           <Typography variant="h6" component="div" id="custom-event-title" className={classes.flexGrow}>
-            {session.course.code + ': ' + session.course.name} {/* class code + event type  */}
+            {session.course.code + ' ' + session.course.name } {/* class code + event type  */}
           </Typography>
 
           <IconButton
@@ -251,32 +248,26 @@ class ViewEvent extends PureComponent<InternalProps, State> {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-
         <DialogContent>
           {/* info: 
-            class full name 
-            class location 
-            active weeks 
-            class time 
             class capacity 
           */}
+          
+
           <Stack spacing={2} mt={1}>
-            <TextField
-              label="Event a"
-              placeholder={this.state.placeholderName}
-              value={this.state.name}
-              onChange={this.handleChangeName}
-              inputProps={{ maxLength: 40 }}
-              helperText={`${this.state.name.length} / 40`}
-              autoFocus
-              fullWidth
-            />
+            <Typography component="div" id="custom-event-title" className={classes.flexGrow}>
+              {"Event type: " + getComponentName(session.stream)} 
+            </Typography>
+            <Typography component="div" id="custom-event-title" className={classes.flexGrow}>
+              {"Event capacity: " + session.stream.enrols} 
+            </Typography>
+
 
             <TextField
-              label="Duration"
+              label="Choose location"
               select
               fullWidth
-              value={this.state.duration}
+              value={session.location}
               // error={this.durationError()}
               onChange={this.handleChangeDuration}
               // helperText={this.durationError() ? 'Events cannot be timetabled past midnight' : ''}
@@ -284,7 +275,7 @@ class ViewEvent extends PureComponent<InternalProps, State> {
                 input: {
                   startAdornment: (
                     <InputAdornment position="start">
-                      <TimelapseIcon />
+                      <PlaceIcon />
                     </InputAdornment>
                   ),
                 },
@@ -292,12 +283,14 @@ class ViewEvent extends PureComponent<InternalProps, State> {
             >
               {durationOptions.map(item => (
                 <MenuItem
-                  value={item.duration}
-                  key={item.text}
+                  value={item.location}
+                  key={item.location}
                 >
-                  {item.text}
+                  {item.location}
                 </MenuItem>
               ))}
+
+              
             </TextField>
 
           </Stack>

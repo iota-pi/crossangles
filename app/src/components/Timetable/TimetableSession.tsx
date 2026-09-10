@@ -153,6 +153,7 @@ const Session: React.FC<Props> = ({
   return (
     <DraggableCore
       nodeRef={nodeRef}
+      disabled={showEvent}
       onStart={handleStart}
       onDrag={handleDrag}
       onStop={handleStop}
