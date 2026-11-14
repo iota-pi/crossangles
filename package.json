@@ -24,11 +24,11 @@
     "@mui/material": "^7.3.7",
     "@vitejs/plugin-react": "^6.0.1",
     "autosuggest-highlight": "^3.3.4",
-    "axios": "^1.13.2",
+    "axios": "^1.21.1",
     "axios-retry": "^4.5.0",
     "cheerio": "^1.0.0",
     "downloadjs": "^1.4.7",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.2",
     "ics": "^3.8.1",
     "mailgun.js": "^13.0.1",
     "match-sorter": "^8.2.0",
@@ -45,7 +45,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^5.1.1",
     "tss-react": "^4.9.20",
-    "vite": "^8.0.12",
+    "vite": "^8.3.8",
     "winston": "^3.19.0"
   },
   "devDependencies": {
@@ -71,7 +71,7 @@
     "sst": "^3.17.37",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0",
-    "vitest": "^4.0.16"
+    "vitest": "^5.1.0"
   },
   "browserslist": {
     "production": [
